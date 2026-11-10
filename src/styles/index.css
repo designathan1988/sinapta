@@ -1,2 +1,6 @@
 /* The one place the cascade layer order is declared. */
 @layer reset, tokens, base, ui, blocks, features;
+
+@import url("./reset.css");
+@import url("./tokens.generated.css");
+@import url("./base.css");

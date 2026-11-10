@@ -1,0 +1,158 @@
+{
+  "color": {
+    "$type": "color",
+    "bg": {
+      "app": {
+        "$value": "{base.color.neutral.950}"
+      },
+      "sidebar": {
+        "$value": "{base.color.neutral.1000}"
+      },
+      "raised": {
+        "$value": "{base.color.neutral.900}"
+      },
+      "hover": {
+        "$value": "{base.color.neutral.850}"
+      },
+      "active": {
+        "$value": "{base.color.neutral.800}"
+      },
+      "selected": {
+        "$value": "{base.color.indigo.900}"
+      },
+      "code": {
+        "$value": "{base.color.neutral.900}"
+      },
+      "scrim": {
+        "$value": "{base.color.black.scrim}"
+      }
+    },
+    "text": {
+      "primary": {
+        "$value": "{base.color.neutral.150}"
+      },
+      "secondary": {
+        "$value": "{base.color.neutral.400}"
+      },
+      "tertiary": {
+        "$value": "{base.color.neutral.400}"
+      },
+      "onAccent": {
+        "$value": "{base.color.neutral.1000}"
+      },
+      "link": {
+        "$value": "{base.color.indigo.300}"
+      },
+      "danger": {
+        "$value": "{base.color.status.red.300}"
+      },
+      "success": {
+        "$value": "{base.color.status.green.300}"
+      },
+      "warning": {
+        "$value": "{base.color.status.amber.300}"
+      }
+    },
+    "border": {
+      "subtle": {
+        "$value": "{base.color.neutral.850}"
+      },
+      "default": {
+        "$value": "{base.color.neutral.800}"
+      },
+      "strong": {
+        "$value": "{base.color.neutral.500}"
+      },
+      "focus": {
+        "$value": "{base.color.indigo.300}"
+      }
+    },
+    "accent": {
+      "default": {
+        "$value": "{base.color.indigo.300}"
+      },
+      "hover": {
+        "$value": "{base.color.indigo.200}"
+      },
+      "subtle": {
+        "$value": "{base.color.indigo.900}"
+      }
+    },
+    "status": {
+      "dangerBg": {
+        "$value": "{base.color.status.red.shade}"
+      }
+    },
+    "shadow": {
+      "overlay": {
+        "$value": "{base.color.black.shadowStrong}"
+      }
+    },
+    "chip": {
+      "gray": {
+        "bg": {
+          "$value": "{base.color.chip.gray.shade}"
+        },
+        "text": {
+          "$value": "{base.color.chip.gray.glow}"
+        }
+      },
+      "brown": {
+        "bg": {
+          "$value": "{base.color.chip.brown.shade}"
+        },
+        "text": {
+          "$value": "{base.color.chip.brown.glow}"
+        }
+      },
+      "orange": {
+        "bg": {
+          "$value": "{base.color.chip.orange.shade}"
+        },
+        "text": {
+          "$value": "{base.color.chip.orange.glow}"
+        }
+      },
+      "yellow": {
+        "bg": {
+          "$value": "{base.color.chip.yellow.shade}"
+        },
+        "text": {
+          "$value": "{base.color.chip.yellow.glow}"
+        }
+      },
+      "green": {
+        "bg": {
+          "$value": "{base.color.chip.green.shade}"
+        },
+        "text": {
+          "$value": "{base.color.chip.green.glow}"
+        }
+      },
+      "blue": {
+        "bg": {
+          "$value": "{base.color.chip.blue.shade}"
+        },
+        "text": {
+          "$value": "{base.color.chip.blue.glow}"
+        }
+      },
+      "purple": {
+        "bg": {
+          "$value": "{base.color.chip.purple.shade}"
+        },
+        "text": {
+          "$value": "{base.color.chip.purple.glow}"
+        }
+      },
+      "red": {
+        "bg": {
+          "$value": "{base.color.chip.red.shade}"
+        },
+        "text": {
+          "$value": "{base.color.chip.red.glow}"
+        }
+      }
+    }
+  }
+}

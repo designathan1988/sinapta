@@ -1,0 +1,29 @@
+@layer base {
+  body {
+    background-color: var(--color-bg-app);
+    color: var(--color-text-primary);
+    font-family: var(--font-family-text);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-regular);
+    line-height: var(--font-line-height-ui);
+  }
+
+  :focus-visible {
+    outline: var(--size-focus-width) solid var(--color-border-focus);
+    outline-offset: var(--size-focus-offset);
+  }
+
+  ::selection {
+    background-color: var(--color-bg-selected);
+  }
+
+  /* Text for assistive technology only. */
+  .visually-hidden {
+    position: absolute;
+    inline-size: var(--size-border-thin);
+    block-size: var(--size-border-thin);
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}

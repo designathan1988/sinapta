@@ -26,4 +26,5 @@ paths:
 - Token paths are dot-separated lower camelCase; `color.text.primary`
   becomes `--color-text-primary`.
 - Never edit `src/styles/tokens.generated.css`; run `npm run tokens`.
-- A new visual value is a new token first, then a use.
+- A new visual value is a new token first, then a use. States and voice:
+  `docs/design-system.md`.

@@ -1,0 +1,32 @@
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  :where(html) {
+    text-size-adjust: none;
+  }
+
+  :where(body, h1, h2, h3, p, ul, ol, figure, blockquote, pre) {
+    margin: 0;
+  }
+
+  :where(ul, ol) {
+    padding: 0;
+    list-style: none;
+  }
+
+  :where(button, input, select, textarea) {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    color: inherit;
+  }
+
+  :where(html, body) {
+    block-size: 100%;
+  }
+}
