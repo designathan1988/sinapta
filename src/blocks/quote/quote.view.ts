@@ -1,3 +1,4 @@
+import "./quote.css";
 import { html, type TemplateResult } from "lit-html";
 import { COPY } from "../../ui/copy.ts";
 import { renderRichText } from "../../ui/rich-text/index.ts";

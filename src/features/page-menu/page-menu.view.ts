@@ -1,3 +1,4 @@
+import "./page-menu.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import {
   createPage,

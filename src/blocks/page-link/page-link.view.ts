@@ -1,3 +1,4 @@
+import "./page-link.css";
 import { html, type TemplateResult } from "lit-html";
 import {
   setActivePage,

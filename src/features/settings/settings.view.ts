@@ -1,3 +1,4 @@
+import "./settings.css";
 import { html, type TemplateResult } from "lit-html";
 import type { Theme } from "../../model/index.ts";
 import {

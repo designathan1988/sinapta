@@ -1,3 +1,4 @@
+import "./trash.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import {
   deletePage,

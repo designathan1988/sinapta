@@ -1,32 +1,7 @@
-/* The one place the cascade layer order is declared. */
+/* The one place the cascade layer order is declared. Component styles are
+   imported by the view that uses them and name their own layer. */
 @layer reset, tokens, base, ui, blocks, features;
 
 @import url("./reset.css");
 @import url("./tokens.generated.css");
 @import url("./base.css");
-@import url("../ui/icon/icon.css");
-@import url("../ui/button/button.css");
-@import url("../ui/dialog/dialog.css");
-@import url("../ui/overlay/overlay.css");
-@import url("../ui/menu/menu.css");
-@import url("../ui/rich-text/rich-text.css");
-@import url("../blocks/paragraph/paragraph.css");
-@import url("../blocks/heading/heading.css");
-@import url("../blocks/bulleted-list/bulleted-list.css");
-@import url("../blocks/numbered-list/numbered-list.css");
-@import url("../blocks/to-do/to-do.css");
-@import url("../blocks/quote/quote.css");
-@import url("../blocks/divider/divider.css");
-@import url("../blocks/toggle/toggle.css");
-@import url("../blocks/callout/callout.css");
-@import url("../blocks/code/code.css");
-@import url("../blocks/page-link/page-link.css");
-@import url("../features/settings/settings.css");
-@import url("../features/sidebar/sidebar.css");
-@import url("../features/editor/editor.css");
-@import url("../features/page-menu/page-menu.css");
-@import url("../features/breadcrumbs/breadcrumbs.css");
-@import url("../features/trash/trash.css");
-@import url("../features/slash-menu/slash-menu.css");
-@import url("../features/move-to/move-to.css");
-@import url("../app/shell.css");

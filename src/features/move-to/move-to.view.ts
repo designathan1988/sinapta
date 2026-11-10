@@ -1,3 +1,4 @@
+import "./move-to.css";
 import { html, type TemplateResult } from "lit-html";
 import {
   movePage,

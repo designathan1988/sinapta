@@ -1,3 +1,4 @@
+import "./sidebar.css";
 import { html, type TemplateResult } from "lit-html";
 import { createPage } from "../../blocks/page/index.ts";
 import {

@@ -1,3 +1,4 @@
+import "./toggle.css";
 import { html, type TemplateResult } from "lit-html";
 import type { Dispatch } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";

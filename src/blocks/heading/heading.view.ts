@@ -1,3 +1,4 @@
+import "./heading.css";
 import { html, type TemplateResult } from "lit-html";
 import { COPY } from "../../ui/copy.ts";
 import { renderRichText, type RichTextTag } from "../../ui/rich-text/index.ts";

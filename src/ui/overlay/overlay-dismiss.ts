@@ -1,5 +1,6 @@
 // Light dismiss for menus and popovers: a press outside the open overlay
 // and outside the control that opened it closes the overlay.
+import "./overlay.css";
 import {
   closeOverlay,
   type AppStore,

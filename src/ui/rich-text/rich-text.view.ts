@@ -1,3 +1,4 @@
+import "./rich-text.css";
 import { html, type TemplateResult } from "lit-html";
 import type { DirectiveResult } from "lit-html/directive.js";
 import { ref } from "lit-html/directives/ref.js";

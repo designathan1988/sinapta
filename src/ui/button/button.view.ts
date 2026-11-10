@@ -1,3 +1,4 @@
+import "./button.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { renderIcon, type IconName } from "../icon/index.ts";
 

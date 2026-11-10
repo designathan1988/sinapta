@@ -1,3 +1,4 @@
+import "./icon.css";
 import { html, svg, type TemplateResult } from "lit-html";
 
 export type IconName =

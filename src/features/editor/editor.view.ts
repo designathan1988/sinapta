@@ -1,3 +1,4 @@
+import "./editor.css";
 import { html, type TemplateResult } from "lit-html";
 import {
   renamePage,

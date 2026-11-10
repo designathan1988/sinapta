@@ -1,3 +1,4 @@
+import "./menu.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import { renderIcon, type IconName } from "../icon/index.ts";

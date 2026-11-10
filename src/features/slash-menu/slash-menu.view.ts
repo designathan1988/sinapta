@@ -1,3 +1,4 @@
+import "./slash-menu.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import {

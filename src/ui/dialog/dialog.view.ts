@@ -1,3 +1,4 @@
+import "./dialog.css";
 import { html, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import { renderButton } from "../button/index.ts";
