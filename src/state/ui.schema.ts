@@ -1,11 +1,12 @@
 // The part of the `ui` slice that is saved and restored on reload.
 import * as v from "valibot";
-import { blockIdSchema } from "../model/index.ts";
+import { blockIdSchema, viewIdSchema } from "../model/index.ts";
 import { createInitialUiState, type UiState } from "./app-state.ts";
 
 const persistedUiSchema = v.object({
   activePageId: v.nullable(blockIdSchema),
   expandedPageIds: v.optional(v.array(blockIdSchema), []),
+  activeViewIds: v.optional(v.record(blockIdSchema, viewIdSchema), {}),
   sidebarWidth: v.number(),
   isSidebarCollapsed: v.boolean(),
 });
@@ -13,13 +14,12 @@ const persistedUiSchema = v.object({
 export type PersistedUi = v.InferOutput<typeof persistedUiSchema>;
 
 export function toPersistedUi(ui: UiState): PersistedUi {
-  const { activePageId, expandedPageIds, sidebarWidth, isSidebarCollapsed } =
-    ui;
   return {
-    activePageId,
-    expandedPageIds: [...expandedPageIds],
-    sidebarWidth,
-    isSidebarCollapsed,
+    activePageId: ui.activePageId,
+    expandedPageIds: [...ui.expandedPageIds],
+    activeViewIds: { ...ui.activeViewIds },
+    sidebarWidth: ui.sidebarWidth,
+    isSidebarCollapsed: ui.isSidebarCollapsed,
   };
 }
 

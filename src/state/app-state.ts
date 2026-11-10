@@ -3,6 +3,8 @@ import {
   createEmptyWorkspace,
   type BlockId,
   type Operation,
+  type PropertyId,
+  type ViewId,
   type Workspace,
 } from "../model/index.ts";
 
@@ -11,6 +13,13 @@ export interface TextSelection {
   // UTF-16 offsets that always sit on grapheme cluster boundaries.
   readonly anchorOffset: number;
   readonly focusOffset: number;
+}
+
+export interface ActiveCell {
+  readonly rowId: BlockId;
+  // Null for the title column.
+  readonly propertyId: PropertyId | null;
+  readonly isEditing: boolean;
 }
 
 export interface OpenOverlay {
@@ -30,6 +39,10 @@ export interface UiState {
   // Pages whose children are shown in the sidebar tree.
   readonly expandedPageIds: readonly BlockId[];
   readonly selection: TextSelection | null;
+  // The view shown for each database that has been opened.
+  readonly activeViewIds: Readonly<Record<BlockId, ViewId>>;
+  // The table cell that has focus, and whether it is being edited.
+  readonly activeCell: ActiveCell | null;
   // Sidebar width in rem.
   readonly sidebarWidth: number;
   readonly isSidebarCollapsed: boolean;
@@ -78,6 +91,8 @@ export function createInitialUiState(): UiState {
     activePageId: null,
     expandedPageIds: [],
     selection: null,
+    activeViewIds: {},
+    activeCell: null,
     sidebarWidth: SIDEBAR_WIDTH.initial,
     isSidebarCollapsed: false,
     overlay: null,

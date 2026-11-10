@@ -2,6 +2,8 @@
 import {
   applyOperations,
   createBlockId,
+  createPropertyId,
+  createViewId,
   findInvariantViolation,
   type InvariantViolation,
   type OperationError,
@@ -12,6 +14,7 @@ import type {
   CommandEffect,
   CommandMeta,
   CommandRegistry,
+  NewIds,
 } from "./command-registry.ts";
 import {
   REDO_COMMAND,
@@ -95,6 +98,17 @@ interface Sources {
   readonly createId: typeof createBlockId;
 }
 
+function createMeta(sources: Sources, ids: NewIds): CommandMeta {
+  const make = <TId>(count: number | undefined, create: () => TId): TId[] =>
+    Array.from({ length: count ?? 0 }, create);
+  return {
+    now: sources.now(),
+    blockIds: make(ids.blocks, sources.createId),
+    viewIds: make(ids.views, createViewId),
+    propertyIds: make(ids.properties, createPropertyId),
+  };
+}
+
 function nextState(state: AppState, command: Command, sources: Sources): Next {
   if (command.type === UNDO_COMMAND) {
     return { state: travelHistory(state, "undo") };
@@ -106,10 +120,7 @@ function nextState(state: AppState, command: Command, sources: Sources): Next {
   if (definition === undefined) {
     return { error: { kind: "unknown-command", type: command.type } };
   }
-  const meta: CommandMeta = {
-    now: sources.now(),
-    blockIds: Array.from({ length: definition.newBlockIds }, sources.createId),
-  };
+  const meta = createMeta(sources, definition.newIds);
   return applyEffect(state, definition.handle(state, command, meta), meta.now);
 }
 

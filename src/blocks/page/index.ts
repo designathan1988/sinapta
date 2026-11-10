@@ -21,6 +21,8 @@ export {
   trashPage,
 } from "./page-trash.commands.ts";
 export {
+  DATABASE_TYPE,
+  PAGE_LIKE_TYPES,
   PAGE_TYPE,
   pagePropsSchema,
   type PageBlock,
@@ -29,6 +31,7 @@ export {
 export {
   selectBreadcrumbs,
   selectFavoritePages,
+  isPageLike,
   selectIsInTrash,
   selectPage,
   selectPagePosition,

@@ -135,6 +135,11 @@ export default defineConfig([
           message: "Only src/state/dispatch.ts writes to the store.",
         },
       ],
+      // `const { removed, ...rest } = record` is how a key is left out.
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { ignoreRestSiblings: true },
+      ],
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/no-non-null-assertion": "error",
       "@typescript-eslint/consistent-type-assertions": [

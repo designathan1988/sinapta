@@ -4,6 +4,7 @@ import type { BlockDefinition } from "./block-definition.ts";
 import { bulletedListDefinition } from "./bulleted-list/index.ts";
 import { calloutDefinition } from "./callout/index.ts";
 import { codeDefinition } from "./code/index.ts";
+import { databaseDefinition } from "./database/index.ts";
 import { dividerDefinition } from "./divider/index.ts";
 import { headingDefinition } from "./heading/index.ts";
 import { numberedListDefinition } from "./numbered-list/index.ts";
@@ -16,6 +17,7 @@ import { toggleDefinition } from "./toggle/index.ts";
 
 export const BLOCK_DEFINITIONS: readonly BlockDefinition[] = [
   pageDefinition,
+  databaseDefinition,
   paragraphDefinition,
   headingDefinition,
   bulletedListDefinition,

@@ -2,6 +2,7 @@ export {
   createInitialState,
   createInitialUiState,
   SIDEBAR_WIDTH,
+  type ActiveCell,
   type AppState,
   type HistoryEntry,
   type HistoryState,
@@ -20,6 +21,7 @@ export {
   type CommandEffect,
   type CommandMeta,
   type CommandRegistry,
+  type NewIds,
   type NoPayload,
 } from "./command-registry.ts";
 export {

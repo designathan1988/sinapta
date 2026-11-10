@@ -1,6 +1,12 @@
-import { isBlockOfType, type BlockId } from "../../model/index.ts";
+import type { Block, BlockId } from "../../model/index.ts";
 import type { AppState } from "../../state/index.ts";
-import { PAGE_TYPE, type PageBlock } from "./page.schema.ts";
+import { PAGE_LIKE_TYPES, type PageBlock } from "./page.schema.ts";
+
+// Props were checked by the type's schema, and both page-like types carry
+// the page props.
+export function isPageLike(block: Block): block is Block & PageBlock {
+  return PAGE_LIKE_TYPES.includes(block.type);
+}
 
 export function selectPage(
   state: AppState,
@@ -9,7 +15,7 @@ export function selectPage(
   if (pageId === null) return undefined;
   const block = state.workspace.blocks[pageId];
   if (block === undefined) return undefined;
-  return isBlockOfType<PageBlock>(block, PAGE_TYPE) ? block : undefined;
+  return isPageLike(block) ? block : undefined;
 }
 
 // The title as plain text; empty for an untitled page.
@@ -33,7 +39,7 @@ export function selectBreadcrumbs(
 
 function allPages(state: AppState): PageBlock[] {
   return Object.values(state.workspace.blocks).flatMap((block) =>
-    isBlockOfType<PageBlock>(block, PAGE_TYPE) ? [block] : [],
+    isPageLike(block) ? [block] : [],
   );
 }
 

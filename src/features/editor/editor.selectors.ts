@@ -1,4 +1,4 @@
-import { PAGE_TYPE } from "../../blocks/page/index.ts";
+import { isPageLike } from "../../blocks/page/index.ts";
 import { isTextBlock, type TextBlock } from "../../blocks/text-block.ts";
 import type { Block, BlockId } from "../../model/index.ts";
 import type { AppState } from "../../state/index.ts";
@@ -9,7 +9,7 @@ export function selectChildBlocks(state: AppState, parentId: BlockId): Block[] {
   const parent = state.workspace.blocks[parentId];
   return (parent?.childIds ?? []).flatMap((id) => {
     const block = state.workspace.blocks[id];
-    return block === undefined || block.type === PAGE_TYPE ? [] : [block];
+    return block === undefined || isPageLike(block) ? [] : [block];
   });
 }
 
@@ -28,7 +28,7 @@ export function selectPageIdOf(
   blockId: BlockId,
 ): BlockId | undefined {
   let block = state.workspace.blocks[blockId];
-  while (block !== undefined && block.type !== PAGE_TYPE) {
+  while (block !== undefined && !isPageLike(block)) {
     block =
       block.parentId === null
         ? undefined

@@ -1,5 +1,11 @@
 // Defines commands and looks up their handlers by type.
-import type { BlockId, Operation, Workspace } from "../model/index.ts";
+import type {
+  BlockId,
+  Operation,
+  PropertyId,
+  ViewId,
+  Workspace,
+} from "../model/index.ts";
 import type { AppState, PersistenceState, UiState } from "./app-state.ts";
 
 // A plain serializable object: { type: "block.move", blockId, ... }.
@@ -12,6 +18,15 @@ export interface Command {
 export interface CommandMeta {
   readonly now: string;
   readonly blockIds: readonly BlockId[];
+  readonly viewIds: readonly ViewId[];
+  readonly propertyIds: readonly PropertyId[];
+}
+
+// How many new ids of each kind a command needs.
+export interface NewIds {
+  readonly blocks?: number;
+  readonly views?: number;
+  readonly properties?: number;
 }
 
 // What a command changes. Workspace data changes only through operations.
@@ -34,15 +49,17 @@ export type CommandHandler<TPayload> = (
 
 export interface CommandDefinition<TPayload extends object = object> {
   readonly type: string;
-  // How many new block ids the dispatcher creates for the handler.
-  readonly newBlockIds: number;
+  // The new ids the dispatcher creates for the handler.
+  readonly newIds: NewIds;
   create(payload: TPayload): Command;
   handle(state: AppState, command: Command, meta: CommandMeta): CommandEffect;
 }
 
 export interface CommandOptions<TPayload> {
   readonly type: string;
+  // Shorthand for `newIds: { blocks: n }`.
   readonly newBlockIds?: number;
+  readonly newIds?: NewIds;
   readonly handle: CommandHandler<TPayload>;
 }
 
@@ -58,7 +75,7 @@ export function defineCommand<TPayload extends object>(
     command.type === options.type;
   return {
     type: options.type,
-    newBlockIds: options.newBlockIds ?? 0,
+    newIds: options.newIds ?? { blocks: options.newBlockIds ?? 0 },
     create(payload) {
       // The command's own type would silently replace such a field.
       if ("type" in payload) {
