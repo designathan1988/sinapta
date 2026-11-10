@@ -80,13 +80,52 @@
     }
   }
 
-  /* Row actions appear on hover and on keyboard focus. */
-  .sidebar__add {
+  /* Row actions appear on hover, on keyboard focus and while open. */
+  .sidebar__row :is(.sidebar__add, .page-menu__button) {
     opacity: 0;
   }
 
-  .sidebar__row:is(:hover, :focus-visible, :focus-within) .sidebar__add {
+  .sidebar__row:is(:hover, :focus-visible, :focus-within)
+    :is(.sidebar__add, .page-menu__button),
+  .sidebar__row .page-menu__button[aria-expanded="true"] {
     opacity: 1;
+  }
+
+  .sidebar__section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xxs);
+  }
+
+  .sidebar__heading {
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .sidebar__favorite {
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    inline-size: 100%;
+    min-block-size: var(--size-row-height);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    text-align: start;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    &[aria-current="page"] {
+      color: var(--color-text-primary);
+      font-weight: var(--font-weight-medium);
+    }
   }
 
   .sidebar__row[data-untitled] .sidebar__title {

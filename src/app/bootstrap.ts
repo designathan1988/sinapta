@@ -2,7 +2,11 @@
 // owns the single root render.
 import { render } from "lit-html";
 import { BLOCK_PROPS_SCHEMAS } from "../blocks/block-registry.ts";
-import { pageCommands } from "../blocks/page/index.ts";
+import {
+  pageCommands,
+  pageMoveCommands,
+  pageTrashCommands,
+} from "../blocks/page/index.ts";
 import type { Theme } from "../model/index.ts";
 import {
   createAppStore,
@@ -19,6 +23,7 @@ import {
   createIndexedDbAdapter,
   startRepository,
 } from "../persistence/index.ts";
+import { installOverlayDismiss } from "../ui/overlay/index.ts";
 import { matchShortcut } from "../ui/shortcuts/index.ts";
 import { startRouter } from "./router.ts";
 import { renderShell } from "./shell.view.ts";
@@ -29,6 +34,8 @@ const COMMANDS = [
   ...persistenceCommands,
   ...workspaceCommands,
   ...pageCommands,
+  ...pageTrashCommands,
+  ...pageMoveCommands,
 ];
 
 // A manual theme is an attribute on the root element; "system" removes it.
@@ -60,6 +67,7 @@ export async function startApp(container: HTMLElement): Promise<void> {
     propsSchemas: BLOCK_PROPS_SCHEMAS,
   });
   startRouter(store, dispatch);
+  installOverlayDismiss(store, dispatch);
   document.addEventListener("keydown", (event) => {
     const shortcut = matchShortcut(event);
     if (shortcut === undefined) return;

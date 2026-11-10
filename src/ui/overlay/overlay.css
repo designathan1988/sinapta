@@ -1,0 +1,30 @@
+@layer ui {
+  /* The control that opened the overlay is the anchor of the overlay. */
+  [data-overlay-anchor][aria-expanded="true"] {
+    anchor-name: --overlay-anchor;
+  }
+
+  [data-overlay][popover] {
+    padding: var(--space-inset-xs);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-raised);
+    box-shadow: var(--shadow-overlay);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+  }
+
+  /* Without anchor positioning the popover keeps its centered default. */
+  @supports (position-area: block-end) {
+    [data-overlay][popover] {
+      inset: auto;
+      margin: var(--space-stack-xs) var(--space-none);
+      position-anchor: --overlay-anchor;
+      position-area: block-end span-inline-end;
+      position-try-fallbacks:
+        flip-block,
+        flip-inline,
+        flip-block flip-inline;
+    }
+  }
+}

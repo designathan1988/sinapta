@@ -57,3 +57,4 @@ export {
   type BlockSpec,
 } from "./workspace-builder.ts";
 export { diffWorkspace } from "./workspace-diff.ts";
+export { firstGrapheme } from "./grapheme.ts";

@@ -6,6 +6,7 @@ import {
 } from "../../blocks/page/index.ts";
 import type { AppState, Dispatch } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { renderIconControl } from "./editor-icon.view.ts";
 
 // The open page: its title now, its blocks from milestone 3.
 export function renderEditor(
@@ -24,6 +25,7 @@ export function renderEditor(
     }
   };
   return html`<article class="editor">
+    ${renderIconControl(state, page, dispatch)}
     <input
       class="editor__title"
       type="text"

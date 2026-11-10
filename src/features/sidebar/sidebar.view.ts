@@ -4,6 +4,7 @@ import { repeat } from "lit-html/directives/repeat.js";
 import { createPage } from "../../blocks/page/index.ts";
 import { parseBlockId, type BlockId } from "../../model/index.ts";
 import {
+  openOverlay,
   setActivePage,
   togglePageExpanded,
   type AppState,
@@ -12,6 +13,9 @@ import {
 import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
+import { renderPageMenuButton } from "../page-menu/index.ts";
+import { TRASH_OVERLAY } from "../trash/index.ts";
+import { renderFavorites } from "./sidebar-favorites.view.ts";
 import { selectTreeRows, type TreeRow } from "./sidebar.selectors.ts";
 
 const LEVEL_PROPERTY = "--sidebar-level";
@@ -46,7 +50,12 @@ function setLevel(row: Element | undefined, level: number): void {
   }
 }
 
-function renderRow(row: TreeRow): TemplateResult {
+interface Context {
+  readonly state: AppState;
+  readonly dispatch: Dispatch;
+}
+
+function renderRow(row: TreeRow, context: Context): TemplateResult {
   const title = row.title === "" ? COPY.sidebar.untitled : row.title;
   return html`<li
     class="sidebar__row"
@@ -75,6 +84,7 @@ function renderRow(row: TreeRow): TemplateResult {
     </button>
     <span class="sidebar__icon" aria-hidden="true">${row.icon ?? ""}</span>
     <span class="sidebar__title">${title}</span>
+    ${renderPageMenuButton({ place: "tree", pageId: row.id, ...context })}
     ${renderAddButton()}
   </li>`;
 }
@@ -132,6 +142,20 @@ function onTreeKeyDown(event: KeyboardEvent, dispatch: Dispatch): void {
   action();
 }
 
+function renderFooter(dispatch: Dispatch): TemplateResult {
+  return html`${renderButton({
+    label: COPY.sidebar.newPage,
+    icon: "plus",
+    onClick: () => dispatch(createPage.create({ parentId: null })),
+  })}
+  ${renderButton({
+    label: COPY.trash.open,
+    icon: "trash",
+    onClick: () =>
+      dispatch(openOverlay.create({ overlay: { kind: TRASH_OVERLAY } })),
+  })}`;
+}
+
 export function renderSidebar(
   state: AppState,
   dispatch: Dispatch,
@@ -148,18 +172,19 @@ export function renderSidebar(
       onTreeKeyDown(event, dispatch);
     }}
   >
-    ${repeat(rows, (row) => row.id, renderRow)}
+    ${repeat(
+      rows,
+      (row) => row.id,
+      (row) => renderRow(row, { state, dispatch }),
+    )}
   </ul>`;
   return html`<div class="sidebar">
+    ${renderFavorites(state, dispatch)}
     ${
       rows.length === 0
         ? html`<p class="sidebar__empty">${COPY.shell.emptyWorkspace}</p>`
         : tree
     }
-    ${renderButton({
-      label: COPY.sidebar.newPage,
-      icon: "plus",
-      onClick: () => dispatch(createPage.create({ parentId: null })),
-    })}
+    ${renderFooter(dispatch)}
   </div>`;
 }

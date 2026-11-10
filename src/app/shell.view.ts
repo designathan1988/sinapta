@@ -14,6 +14,9 @@ import {
   type AppState,
   type Dispatch,
 } from "../state/index.ts";
+import { renderBreadcrumbs } from "../features/breadcrumbs/index.ts";
+import { renderPageMenu } from "../features/page-menu/index.ts";
+import { renderTrash, TRASH_OVERLAY } from "../features/trash/index.ts";
 import { renderButton } from "../ui/button/index.ts";
 import { COPY, PRODUCT_NAME } from "../ui/copy.ts";
 
@@ -106,6 +109,7 @@ function renderTopBar(state: AppState, dispatch: Dispatch): TemplateResult {
   });
   return html`<header class="app__top-bar">
     ${state.ui.isSidebarCollapsed ? showSidebar : nothing}
+    ${renderBreadcrumbs(state, dispatch)}
     <span class="app__spacer"></span>
     <span class="app__save-status" role="status"
       >${COPY.saveStatus[state.persistence.status]}</span
@@ -120,11 +124,22 @@ function renderTopBar(state: AppState, dispatch: Dispatch): TemplateResult {
   </header>`;
 }
 
+// At most one overlay is open at a time.
+function renderOverlay(
+  state: AppState,
+  dispatch: Dispatch,
+): TemplateResult | typeof nothing {
+  const kind = state.ui.overlay?.kind;
+  if (kind === SETTINGS_OVERLAY) return renderSettings(state, dispatch);
+  if (kind === TRASH_OVERLAY) return renderTrash(state, dispatch);
+  return renderPageMenu(state, dispatch);
+}
+
 export function renderShell(
   state: AppState,
   dispatch: Dispatch,
 ): TemplateResult {
-  const { isSidebarCollapsed, sidebarWidth, overlay } = state.ui;
+  const { isSidebarCollapsed, sidebarWidth } = state.ui;
   return html`<div
     class="app"
     ?data-sidebar-collapsed=${isSidebarCollapsed}
@@ -139,10 +154,6 @@ export function renderShell(
       ${renderTopBar(state, dispatch)}
       <div class="app__page">${renderEditor(state, dispatch)}</div>
     </main>
-    ${
-      overlay?.kind === SETTINGS_OVERLAY
-        ? renderSettings(state, dispatch)
-        : nothing
-    }
+    ${renderOverlay(state, dispatch)}
   </div>`;
 }

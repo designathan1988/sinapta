@@ -1,0 +1,40 @@
+@layer features {
+  .trash__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xs);
+  }
+
+  .trash__row {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    min-block-size: var(--size-row-height);
+  }
+
+  .trash__title {
+    flex: 1;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .trash__empty {
+    color: var(--color-text-secondary);
+  }
+
+  .trash__confirm {
+    display: grid;
+    gap: var(--space-stack-xs);
+    padding: var(--space-inset-md);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-status-danger-bg);
+  }
+
+  .trash__actions {
+    display: flex;
+    gap: var(--space-inline-sm);
+    justify-content: flex-end;
+  }
+}

@@ -1,0 +1,45 @@
+@layer features {
+  .breadcrumbs {
+    min-inline-size: 0;
+  }
+
+  .breadcrumbs__list {
+    display: flex;
+    align-items: center;
+  }
+
+  .breadcrumbs__item {
+    display: flex;
+    align-items: center;
+    min-inline-size: 0;
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-sm);
+
+    & + &::before {
+      content: "/";
+      padding-inline: var(--space-inline-xs);
+    }
+  }
+
+  .breadcrumbs__link {
+    max-inline-size: var(--size-sidebar-min);
+    min-block-size: var(--size-target-min);
+    padding: var(--space-none) var(--space-inset-xs);
+    overflow: hidden;
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    &[aria-current="page"] {
+      color: var(--color-text-primary);
+    }
+  }
+}

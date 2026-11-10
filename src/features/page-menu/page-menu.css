@@ -1,0 +1,21 @@
+@layer features {
+  .page-menu__button {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    inline-size: var(--size-target-min);
+    block-size: var(--size-target-min);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-tertiary);
+    cursor: pointer;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: var(--color-bg-active);
+      color: var(--color-text-primary);
+    }
+  }
+}

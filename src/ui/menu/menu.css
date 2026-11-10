@@ -1,0 +1,45 @@
+@layer ui {
+  .menu {
+    min-inline-size: var(--size-menu-min-width);
+    max-block-size: var(--size-menu-max-height);
+    overflow: hidden auto;
+
+    &:popover-open {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-stack-xxs);
+    }
+  }
+
+  .menu__item {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    min-block-size: var(--size-row-height);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-primary);
+    text-align: start;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--color-bg-hover);
+    }
+
+    &:focus-visible {
+      outline-offset: calc(var(--size-focus-offset) * -1);
+    }
+
+    &[data-danger] {
+      color: var(--color-text-danger);
+    }
+
+    &:disabled {
+      color: var(--color-text-tertiary);
+      cursor: default;
+    }
+  }
+}
