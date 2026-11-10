@@ -41,8 +41,36 @@ function tokensPlugin(): Plugin {
   };
 }
 
+const CONTENT_SECURITY_POLICY = [
+  "default-src 'self'",
+  "script-src 'self'",
+  "style-src 'self'",
+  "img-src 'self' data: blob:",
+  "object-src 'none'",
+  "base-uri 'none'",
+].join("; ");
+
+// The policy is added to the built page only: the dev server injects
+// style elements for hot reload, which the policy forbids.
+function contentSecurityPolicyPlugin(): Plugin {
+  return {
+    name: "pagecraft-content-security-policy",
+    apply: "build",
+    transformIndexHtml: () => [
+      {
+        tag: "meta",
+        attrs: {
+          "http-equiv": "Content-Security-Policy",
+          content: CONTENT_SECURITY_POLICY,
+        },
+        injectTo: "head-prepend",
+      },
+    ],
+  };
+}
+
 export default defineConfig({
-  plugins: [tokensPlugin()],
+  plugins: [tokensPlugin(), contentSecurityPolicyPlugin()],
   build: {
     target: "baseline-widely-available",
     sourcemap: true,

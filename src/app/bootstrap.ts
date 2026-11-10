@@ -19,6 +19,8 @@ import {
   createIndexedDbAdapter,
   startRepository,
 } from "../persistence/index.ts";
+import { matchShortcut } from "../ui/shortcuts/index.ts";
+import { startRouter } from "./router.ts";
 import { renderShell } from "./shell.view.ts";
 
 const COMMANDS = [
@@ -56,6 +58,13 @@ export async function startApp(container: HTMLElement): Promise<void> {
     dispatch,
     adapter: createIndexedDbAdapter(),
     propsSchemas: BLOCK_PROPS_SCHEMAS,
+  });
+  startRouter(store, dispatch);
+  document.addEventListener("keydown", (event) => {
+    const shortcut = matchShortcut(event);
+    if (shortcut === undefined) return;
+    event.preventDefault();
+    dispatch(shortcut.command);
   });
   store.subscribe(renderRoot);
   renderRoot();

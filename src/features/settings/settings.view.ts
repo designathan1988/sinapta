@@ -9,8 +9,9 @@ import {
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderDialog } from "../../ui/dialog/index.ts";
+import { SETTINGS_OVERLAY_KIND } from "../../ui/shortcuts/index.ts";
 
-export const SETTINGS_OVERLAY = "settings";
+export const SETTINGS_OVERLAY = SETTINGS_OVERLAY_KIND;
 
 const THEME_OPTIONS: readonly { value: Theme; label: string }[] = [
   { value: "system", label: COPY.settings.themeSystem },
