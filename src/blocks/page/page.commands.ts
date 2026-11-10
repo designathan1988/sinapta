@@ -1,6 +1,7 @@
 import type { BlockId, Operation } from "../../model/index.ts";
 import { defineCommand, type AppState } from "../../state/index.ts";
 import { PAGE_TYPE, type PageProps } from "./page.schema.ts";
+import { selectPage } from "./page.selectors.ts";
 
 function emptyPageProps(): PageProps {
   return { title: [], icon: null, isFavorite: false, isTrashed: false };
@@ -73,4 +74,46 @@ export const renamePage = defineCommand<{ pageId: BlockId; title: string }>({
   },
 });
 
-export const pageCommands = [createPage, renamePage];
+function updateProps(
+  state: AppState,
+  pageId: BlockId,
+  change: (props: PageProps) => PageProps,
+): Operation[] {
+  const page = selectPage(state, pageId);
+  if (page === undefined) return [];
+  const props = change(page.props);
+  return [
+    { type: "record.update", kind: "block", id: pageId, patch: { props } },
+  ];
+}
+
+// Sets the icon to one emoji, or removes it with null.
+export const setPageIcon = defineCommand<{
+  pageId: BlockId;
+  icon: string | null;
+}>({
+  type: "page.setIcon",
+  handle: (state, command) => ({
+    operations: updateProps(state, command.pageId, (props) => ({
+      ...props,
+      icon: command.icon,
+    })),
+  }),
+});
+
+export const togglePageFavorite = defineCommand<{ pageId: BlockId }>({
+  type: "page.toggleFavorite",
+  handle: (state, command) => ({
+    operations: updateProps(state, command.pageId, (props) => ({
+      ...props,
+      isFavorite: !props.isFavorite,
+    })),
+  }),
+});
+
+export const pageCommands = [
+  createPage,
+  renamePage,
+  setPageIcon,
+  togglePageFavorite,
+];
