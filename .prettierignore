@@ -1,0 +1,6 @@
+dist
+src/styles/tokens.generated.css
+package-lock.json
+# Documents keep their authored layout: CLAUDE.md must match the
+# specification text exactly.
+*.md
