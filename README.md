@@ -32,12 +32,17 @@ press Enter in its title and start typing.
   the block menu, or a shortcut at the start of a line: `#`, `##`, `###`,
   `-`, `1.`, `[]`, `>`, `---`, then a space.
 - **Text.** Bold (Ctrl+B), italic (Ctrl+I), inline code (Ctrl+E) and links
-  (Ctrl+K on selected text). Tab and Shift+Tab indent and outdent.
+  (Ctrl+K on selected text). Tab and Shift+Tab indent and outdent. Pasted
+  text keeps these marks, and each pasted line becomes a block. Shift with
+  Up or Down past the end of a block selects whole blocks, to delete, copy
+  or cut.
 - **Databases.** A page whose rows are pages, with seven property types:
   text, number, select, multi-select, date, checkbox and URL. Edit cells in
-  place with Enter, move with the arrow keys.
+  place with Enter, move with the arrow keys. A row opens as a page that
+  shows and edits its property values.
 - **Views.** Each database has one or more saved table views, each with its
-  own sort, filters, column order, widths and hidden columns.
+  own name, sort (by one property or several: Shift and a header), filters,
+  column order (drag a header), widths and hidden columns.
 - **Tools.** Search and commands on Ctrl+K, undo and redo, light and dark
   themes, export and import of the whole workspace in Settings.
 

@@ -25,7 +25,8 @@ One command, step by step:
 1. A view translates a DOM event into a command object and calls
    `dispatch(command)`.
 2. The dispatcher stamps the command with what purity forbids handlers to
-   create: new ids and the current time.
+   create: new ids and the current time. A command declares how many ids
+   it needs, as a fixed count or as a function of what it carries.
 3. The dispatcher looks up the handler in the command registry and calls it:
    `(state, command) => CommandEffect`. The effect holds the operations for
    workspace data and, when the command also changes them, the next `ui` or
@@ -44,7 +45,7 @@ One command, step by step:
 | Slice | Holds | Saved | In history |
 | --- | --- | --- | --- |
 | `workspace` | `blocks`, `views`, `rootIds`, `settings` (theme) | Yes, per record | Yes, except `settings` |
-| `ui` | Active page, expanded pages, selection, sidebar, open overlay, active view per database, active table cell | The lasting part, as one `meta` value | No |
+| `ui` | Active page, expanded pages, text selection, block selection, sidebar, open overlay, active view per database, active table cell | The lasting part, as one `meta` value | No |
 | `history` | Undo and redo stacks of inverse transactions | No | Is the history |
 | `persistence` | Save status, skipped record count, export and import requests | No | No |
 

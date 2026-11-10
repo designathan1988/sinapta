@@ -18,7 +18,8 @@ Safari 27.1 to 27.2. The default stands.
 
 - Used without fallback: `<dialog>`, `popover="auto"`, CSS nesting,
   `@layer`, container queries, `light-dark()`, `color-scheme`,
-  `Intl.Segmenter`, same-document View Transitions (as an enhancement).
+  `Intl.Segmenter`, `@starting-style` for entry motion (without it the
+  page simply appears).
 - Used behind a gate with a scripted fallback, as the web guidance
   requires:
   - CSS anchor positioning inside `@supports (position-area: block-end)`,

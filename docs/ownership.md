@@ -67,7 +67,8 @@ owner listed here exists.
 | Database columns and rows | `src/features/database/database.commands.ts` | 5 |
 | Saved views of a database | `src/features/database/view.commands.ts` | 6 |
 | Table interface state (active cell, scroll window) | `src/features/database/table.commands.ts` | 5 |
-| Row window and cell navigation | `src/features/database/table.selectors.ts` | 5 |
+| Row window, cell navigation and column drop order | `src/features/database/table.selectors.ts` | 5 |
+| Property values on a row's page | `src/features/database/row-properties.view.ts` | 7 |
 | Table markup, headers, cells and their events | `src/features/database/table*.view.ts` | 5 |
 | Table menus and popovers | `src/features/database/*-menu.view.ts`, `view-*.view.ts`, `cell-options.view.ts` | 6 |
 | The database block type | `src/blocks/database/` | 5 |
@@ -80,12 +81,16 @@ owner listed here exists.
 | Dialog primitive | `src/ui/dialog/` | 1 |
 | Button primitive | `src/ui/button/` | 1 |
 | Caret reading and restoring in the DOM, selection sync | `src/ui/caret/` | 3 |
+| Tooltips for icon-only controls | `src/ui/tooltip/` | 7 |
+| Reading pasted HTML as rich text | `src/ui/rich-text/pasted-html.ts` | 7 |
 | Projecting `RichText` into an editable element | `src/ui/rich-text/` | 3 |
 | `beforeinput` to command translation | `src/features/editor/editor-input.view.ts` | 3 |
 | Keys inside text blocks | `src/features/editor/editor-keys.view.ts` | 3 |
 | Text and block commands | `src/features/editor/*.commands.ts` | 3 |
 | Shortcuts typed at the start of a paragraph | `src/features/editor/block-shortcut.ts` | 3 |
 | Block handle, block menus, block drag | `src/features/editor/editor-block-menu.view.ts` | 4 |
+| Selection of whole blocks: commands, keys and clipboard | `src/features/editor/editor-selection.commands.ts`, `editor-selection.view.ts` | 7 |
+| Paste and drop into a block | `src/features/editor/editor-paste.commands.ts`, `editor-paste.view.ts` | 7 |
 | Link field | `src/features/editor/editor-link.view.ts` | 4 |
 | Slash menu | `src/features/slash-menu/` | 4 |
 | What a block type declares | `src/blocks/block-definition.ts` | 3 |

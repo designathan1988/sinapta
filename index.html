@@ -9,7 +9,9 @@
   <body>
     <div data-app-root></div>
     <div class="visually-hidden" role="status" data-announcer></div>
-    <div class="tooltip" id="tooltip" popover="hint"></div>
+    <!-- Repeats the name of the control it is shown for, so it is hidden from
+         assistive technology. -->
+    <div class="tooltip" id="tooltip" popover="hint" aria-hidden="true"></div>
     <script type="module" src="/src/app/main.ts"></script>
   </body>
 </html>

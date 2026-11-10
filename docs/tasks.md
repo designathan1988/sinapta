@@ -401,12 +401,12 @@ Fixed after review:
 
 Known and not fixed:
 
-- Icon-only buttons rely on the native `title` tooltip, which does not show
-  on keyboard focus. A tooltip primitive is planned with milestone 7.
+- Icon-only buttons relied on the native `title` tooltip, which does not
+  show on keyboard focus. Fixed later: see "Completion pass" at the end.
 - Each keystroke in the page title is its own undo step. Coalescing comes
   with text editing in milestone 3.
-- Back and forward work through the URL; View Transitions between pages are
-  planned with milestone 7.
+- Back and forward work through the URL; motion between pages came later:
+  see "Completion pass" at the end.
 
 ---
 
@@ -422,24 +422,19 @@ Known and not fixed:
 | 3.6 Headings, lists, to-do, quote, divider | done | `editor-convert.test.ts` |
 | 3.7 Indent and outdent | done | `editor-structure.test.ts` |
 | 3.8 Bold, italic, inline code, link | done | `editor.test.ts`, `src/model/link-href.test.ts` |
-| 3.9 Typing on 1,000 blocks | done | Production build: median 6.9 ms, worst 10.4 ms per keystroke |
+| 3.9 Typing on 1,000 blocks | done | Production build: median 6.9 ms, worst 10.4 ms per keystroke (remeasured in the completion pass) |
 | 4.1 Slash menu | done | `src/features/slash-menu/slash-menu.test.ts` |
 | 4.2 Convert block type | done | `editor-convert.test.ts` |
 | 4.3 Block drag and menu move actions | done | `editor-move.test.ts`, `src/ui/drag/pointer-drag.test.ts` |
-| 4.4 Block-level selection across blocks | not done | See below |
+| 4.4 Block-level selection across blocks | done in the completion pass | `editor-selection.test.ts` |
 | 4.5 Toggle and callout | done | `block-registry.test.ts` |
 | 4.6 Code and page link | done | `block-registry.test.ts` |
 | 4.7 A new block type is one folder and one line | done | `block-registry.test.ts`; component styles are imported by their own view |
 | Review and audits | done | axe: no violations in 16 state and theme combinations |
 
-Not done in these milestones:
-
-- Selecting across several blocks (task 4.4). Selection works inside one
-  block only.
-- Pasting several lines keeps them in one block instead of creating one
-  block per line.
-- The block menu returns focus to the handle, not to the caret.
-- A tooltip primitive for icon-only buttons (carried from milestone 2).
+Left out of these milestones and done in the completion pass at the end of
+this file: selecting several blocks (task 4.4), one block per pasted line,
+returning the caret after the block menu, and the tooltip primitive.
 
 ---
 
@@ -458,25 +453,71 @@ Not done in these milestones:
 | 6.1 Sort from the header and the column menu | done | `table-model.test.ts` |
 | 6.2 Filters with per-type operators | done | `property-registry.test.ts`, `table-model.test.ts` |
 | 6.3 Column resize by drag and by keyboard | done | `database.test.ts`; checked in the running app |
-| 6.4 Column reorder and hide | done, by menu | `table-model.test.ts` |
+| 6.4 Column reorder and hide | done, by menu; by drag in the completion pass | `table-model.test.ts`, `table.test.ts` |
 | 6.5 Several saved views per database | done | `database.test.ts` |
 | 6.6 5,000-row measurement | done | Production build: load 548 ms, sort 37 ms, scroll 43 ms, cell commit 55 ms, filter 92 ms |
 | 7.1 Command palette and page search | done | `src/features/command-palette/command-palette.test.ts` |
 | 7.2 JSON export | done | `src/persistence/workspace-file.test.ts` |
 | 7.3 JSON import with migrations and error report | done | `workspace-file.test.ts`; export, import into an empty profile and export again gave a byte-identical file |
 | 7.4 Settings: theme and data tools | done | Checked in the running app |
-| 7.5 View transitions and motion polish | not done | See below |
+| 7.5 View transitions and motion polish | done in the completion pass, as entry motion | Measured in the running app |
 | 7.6 Final audit, README, documents | done | axe: no violations in 32 state and theme combinations |
 
-Not done in these milestones:
+Left out of these milestones and done in the completion pass below: column
+drag, sorting by several properties, renaming a view, property values on a
+row's page, motion between pages and the tooltip primitive.
 
-- Reordering columns by drag. Columns move with "Move left" and "Move
-  right" in the column menu.
-- Sorting by more than one property from the interface. The view record and
-  the table model support several sorts; the header and menu set one.
-- Renaming a view. New views are named "View 2", "View 3".
-- A row opened as a page does not show its property values on the page.
-- View Transitions between pages. The root render is synchronous, and
-  several interactions rely on the page being updated when `dispatch`
-  returns; wrapping it in a transition would make it asynchronous.
-- A tooltip primitive for icon-only buttons (carried from milestone 2).
+---
+
+# Completion pass: record
+
+Everything the earlier records listed as not done, plus one gap found
+between the specification and the code.
+
+| Item | Status | Tests or check |
+| --- | --- | --- |
+| Sort by several properties: Shift and a header press, "Then sort" in the column menu, rank shown in the header | done | `src/features/database/view.test.ts` |
+| Rename a view, in the Properties popover | done | `view.test.ts` |
+| Reorder columns by dragging a header | done | `table.test.ts`, `src/ui/drag/pointer-drag.test.ts` |
+| Property values on a row's page, editable there | done | `row-properties.test.ts` |
+| Tooltip for icon-only controls | done | `src/ui/tooltip/tooltip.test.ts` |
+| Caret returns to the text when the block menu closes | done | `src/ui/caret/caret.test.ts`; checked in the running app |
+| One block per pasted line | done | `src/features/editor/editor-paste.test.ts` |
+| Paste keeps bold, italic, code and links (specification 5.3; the code pasted plain text only) | done | `src/ui/rich-text/pasted-html.test.ts`, `editor-paste.test.ts` |
+| Select whole blocks with Shift and Up or Down; delete, copy and cut them (task 4.4) | done | `editor-selection.test.ts` |
+| Motion when a page or a menu opens; none with reduced motion (task 7.5) | done | Opacity sampled in the running app: 0, 0.73, 0.98, 1 over 270 ms; constant 1 with reduced motion |
+
+Decisions taken in this pass:
+
+- **Page change motion is an entry animation, not a View Transition.** A
+  View Transition runs its update in a callback on a later frame and blocks
+  input while it plays. The root render is synchronous, and typing right
+  after a page opens must reach the new page. The page element is keyed by
+  page id and fades and rises in with `@starting-style`.
+- **Tooltips use interest invokers without a polyfill.** One
+  `popover="hint"` element in `index.html` takes the control's accessible
+  name when interest is shown. Browsers without `interestfor` get the
+  native `title` attribute, as before. No dependency was added.
+- **A command may ask for a number of new ids that depends on what it
+  carries** (`newIds` as a function of the payload). Pasting several lines
+  needs one new block per line in one undo step.
+
+Checks after the pass:
+
+- 476 tests pass; type check and lint are clean.
+- axe: no violations in the audited states of the shell, the editor and the
+  database, in both themes.
+- Export, import into an empty profile and export again still give the same
+  file.
+- 1,000-block typing, production build, same machine and hour: 15 ms median
+  before the pass and 16 ms after it. The machine was about twice as slow
+  as when 6.9 ms was recorded, so the two figures are not comparable with
+  the earlier one; the pass itself added about 1 ms.
+- 5,000-row table: load 680 ms, sort 38 ms, scroll 29 ms, cell commit
+  36 ms, filter 87 ms.
+
+Not done:
+
+- Partial text selection across blocks. A selection that crosses a block
+  boundary is a selection of whole blocks, as the specification says.
+- Indenting or moving several selected blocks at once.

@@ -55,6 +55,7 @@ them; a feature never restyles one.
 | Dialog | `<dialog>` opened with `showModal()` | `default`, `wide` |
 | Text field | `<input>` with a visible `<label>` | Single line |
 | Chip | `<span>` | Eight hues |
+| Tooltip | One `popover="hint"` element; a control points at it with `interestfor` | Shows the control's accessible name; `title` where `interestfor` is missing |
 
 ### States
 
@@ -86,8 +87,9 @@ attributes, never modifier classes.
 | Element | Trigger | Animation | Duration | Easing |
 | --- | --- | --- | --- | --- |
 | Control background | Hover, press | Color change | `duration.fast` | `easing.standard` |
-| Menu, dialog | Open, close | Opacity and a small rise | `duration.medium` | `easing.standard` |
-| Page change | Navigation | Cross-fade through View Transitions | `duration.medium` | `easing.standard` |
+| Menu, popover | Open | Opacity | `duration.fast` | `easing.standard` |
+| Page change | Navigation | The opened page fades and rises in (`@starting-style`) | `duration.medium` | `easing.standard` |
+| Tooltip | Hover or focus on an icon-only control | Shown after `duration.hintDelay` | `duration.hintDelay` | none |
 
 All of it is removed under `prefers-reduced-motion: reduce`.
 
