@@ -17,7 +17,9 @@ exists.
 | Applying commands and transactions | `src/state/dispatch.ts` | 1 |
 | Command handler registration and lookup | `src/state/command-registry.ts` | 1 |
 | Undo and redo | `src/state/history.ts` | 1 |
-| `ui` slice commands that belong to no feature (theme, overlay, selection) | `src/state/ui.commands.ts` | 1 |
+| `ui` slice commands that belong to no feature (sidebar, overlay, selection) | `src/state/ui.commands.ts` | 1 |
+| Settings commands (theme) | `src/state/settings.commands.ts` | 1 |
+| Save status commands | `src/state/persistence.commands.ts` | 1 |
 | Cross-feature selectors over `AppState` | `src/state/app-state.selectors.ts` | 1 |
 | Domain types and JSON schemas | `src/model/` | 1 |
 | Operation types and inverses | `src/model/operation.ts` | 1 |
@@ -51,6 +53,7 @@ exists.
 | Keyboard shortcuts | `src/ui/shortcuts/shortcut-registry.ts` | 1 |
 | Overlays: menus, dialogs, popovers | `src/ui/overlay/` | 1 |
 | Caret reading and restoring in the DOM | `src/ui/caret/` | 3 |
+| Projecting `RichText` into an editable element | `src/ui/rich-text/` | 3 |
 | `beforeinput` to command translation | `src/features/editor/editor.view.ts` | 3 |
 | Pointer drag sessions and drop targets | `src/ui/drag/` | 2 |
 | Live-region announcements | `src/ui/announcer/` | 2 |

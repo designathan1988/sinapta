@@ -29,10 +29,10 @@ is not open to change in version 1.
 - A stored `schemaVersion` newer than the app is a typed load error; the
   data is left untouched.
 
-One conflict with the web guidance needs a decision at the plan review. The
+One conflict with the web guidance was decided at the plan review. The
 dark mode toggle guide applies the stored theme in a blocking inline script
 from `localStorage`, to avoid a flash of the wrong theme. The specification
-forbids inline scripts and storage outside `src/persistence/`. Proposal:
+forbids inline scripts and storage outside `src/persistence/`. Decision:
 follow the specification. The document paints only the page background
 until the workspace has loaded, so a user with a manual override may see
 the system-themed background for a few milliseconds on reload, and never

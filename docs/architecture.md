@@ -40,7 +40,7 @@ One command, step by step:
 
 | Slice | Holds | Saved | In history |
 | --- | --- | --- | --- |
-| `workspace` | `blocks`, `views`, `rootIds`, `settings` | Yes, per record | Yes |
+| `workspace` | `blocks`, `views`, `rootIds`, `settings` (theme) | Yes, per record | Yes, except `settings` |
 | `ui` | Active page, selection, sidebar, open overlay, drag preview | Yes, as one `meta` value | No |
 | `history` | Undo and redo stacks of inverse transactions | No | Is the history |
 | `persistence` | Save status, load errors | No | No |

@@ -19,7 +19,7 @@ paths:
   transaction that fails validation changes nothing and returns a typed
   error.
 - Workspace transactions push their inverse on the undo stack and clear the
-  redo stack. Commands that touch only `ui` are not recorded.
+  redo stack. Commands that touch only `ui` or `settings` are not recorded.
 - Undo restores the `ui` selection that was current before the transaction.
 - Subscribers never dispatch during notification.
 - Selectors are named `selectX`, take state (plus arguments) and return

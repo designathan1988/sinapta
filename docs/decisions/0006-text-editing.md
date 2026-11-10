@@ -24,19 +24,19 @@ default stands, with five precisions.
    One read-back path handles all of them: on `input` or `compositionend`
    the block text is read from the DOM, diffed against the store and
    dispatched as one `block.replaceText` command. The specification names
-   IME as "the one case"; this widens it and needs approval.
+   IME as "the one case"; the specification was widened to match.
 3. **Undo.** `historyUndo` and `historyRedo`, and the shortcut keys, are
    cancelled and routed to app history. The browser undo stack is never
    used.
 4. **Offsets.** The specification says positions "count grapheme clusters".
    DOM ranges are UTF-16, target ranges can split a cluster, and cluster
    boundaries differ between browser ICU versions, so a persisted grapheme
-   count can point at a different place after a browser update. Proposal:
+   count can point at a different place after a browser update. Decision:
    offsets in commands, history and the `ui` slice are UTF-16 code unit
    indices that are always snapped to grapheme boundaries by
    `src/model/grapheme.ts` (`Intl.Segmenter`). Caret movement and deletion
    still act on whole clusters, which is the behavior the specification
-   asks for. This changes a specification sentence and needs approval.
+   asks for. The specification sentence was changed to match.
 5. **Cross-block selection.** Selection inside one block is native. Once a
    selection crosses a block boundary it becomes a block-level selection
    (whole blocks) held in the `ui` slice. This keeps one editing host per
