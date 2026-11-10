@@ -3,6 +3,8 @@ export {
   createPropertyId,
   createViewId,
   parseBlockId,
+  parsePropertyId,
+  parseViewId,
 } from "./id.ts";
 export {
   blockIdSchema,
@@ -54,6 +56,7 @@ export {
   TEST_PROPS_SCHEMAS,
   TEST_TIME,
   toBlockId,
+  toPropertyId,
   type BlockSpec,
 } from "./workspace-builder.ts";
 export { diffWorkspace } from "./workspace-diff.ts";

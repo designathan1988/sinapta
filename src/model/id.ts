@@ -27,3 +27,13 @@ export function parseBlockId(text: string): BlockId | undefined {
   const result = v.safeParse(blockIdSchema, text);
   return result.success && text !== "" ? result.output : undefined;
 }
+
+export function parsePropertyId(text: string): PropertyId | undefined {
+  const result = v.safeParse(propertyIdSchema, text);
+  return result.success && text !== "" ? result.output : undefined;
+}
+
+export function parseViewId(text: string): ViewId | undefined {
+  const result = v.safeParse(viewIdSchema, text);
+  return result.success && text !== "" ? result.output : undefined;
+}

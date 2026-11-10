@@ -2,7 +2,12 @@
 // large object literals by hand.
 import * as v from "valibot";
 import type { Block, BlockProps } from "./block.schema.ts";
-import { blockIdSchema, type BlockId } from "./id.schema.ts";
+import {
+  blockIdSchema,
+  propertyIdSchema,
+  type BlockId,
+  type PropertyId,
+} from "./id.schema.ts";
 import type { PropsSchemas, Workspace } from "./workspace.schema.ts";
 import { createEmptyWorkspace } from "./workspace.ts";
 
@@ -15,6 +20,10 @@ export const TEST_TIME = "2026-11-10T12:00:00.000Z";
 
 export function toBlockId(id: string): BlockId {
   return v.parse(blockIdSchema, id);
+}
+
+export function toPropertyId(id: string): PropertyId {
+  return v.parse(propertyIdSchema, id);
 }
 
 export interface BlockSpec {
