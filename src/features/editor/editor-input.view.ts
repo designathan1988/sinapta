@@ -5,10 +5,12 @@ import { matchBlockShortcut } from "./block-shortcut.ts";
 import { convertBlock } from "./editor-convert.commands.ts";
 import { mergeBlockBackward, splitBlock } from "./editor-structure.commands.ts";
 import { selectNeighborTextBlock } from "./editor.selectors.ts";
+import { blockDefinition } from "../../blocks/block-registry.ts";
 import { PARAGRAPH_TYPE } from "../../blocks/paragraph/index.ts";
 import { isTextBlock, textOf } from "../../blocks/text-block.ts";
 import { diffText, type BlockId, type Mark } from "../../model/index.ts";
 import {
+  openOverlay,
   REDO_COMMAND,
   UNDO_COMMAND,
   type AppState,
@@ -82,11 +84,25 @@ function shortcutFor(target: Target, text: string, state: AppState) {
     : { ...shortcut, removePrefix: prefix.length };
 }
 
+// The slash menu feature shows the menu; the editor only says where the
+// "/" is.
+const SLASH_MENU_OVERLAY = "slash-menu";
+
+function openSlashMenu(target: Target, dispatch: Dispatch): void {
+  const overlay = {
+    kind: SLASH_MENU_OVERLAY,
+    anchorId: target.blockId,
+    start: target.start,
+  };
+  dispatch(openOverlay.create({ overlay }));
+}
+
 const insert: Handler = (target, event, { state, dispatch }) => {
   const text = insertedText(event);
   const shortcut = shortcutFor(target, text, state);
   if (shortcut === undefined) {
     dispatch(replaceText.create({ ...target, text }));
+    if (text === "/") openSlashMenu(target, dispatch);
   } else {
     dispatch(convertBlock.create({ blockId: target.blockId, ...shortcut }));
   }
@@ -96,7 +112,13 @@ const lineBreak: Handler = (target, _event, { dispatch }) => {
   dispatch(replaceText.create({ ...target, text: "\n" }));
 };
 
-const paragraph: Handler = (target, _event, { dispatch }) => {
+const paragraph: Handler = (target, event, context) => {
+  const { state, dispatch } = context;
+  const type = state.workspace.blocks[target.blockId]?.type ?? "";
+  if (blockDefinition(type)?.isMultiline === true) {
+    lineBreak(target, event, context);
+    return;
+  }
   if (target.start !== target.end)
     dispatch(replaceText.create({ ...target, text: "" }));
   dispatch(

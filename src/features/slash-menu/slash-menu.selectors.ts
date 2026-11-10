@@ -1,0 +1,113 @@
+import { BLOCK_DEFINITIONS } from "../../blocks/block-registry.ts";
+import { HEADING_TYPE } from "../../blocks/heading/index.ts";
+import { PAGE_LINK_TYPE } from "../../blocks/page-link/index.ts";
+import { isTextBlock, textOf } from "../../blocks/text-block.ts";
+import type { BlockId, BlockProps } from "../../model/index.ts";
+import type { AppState } from "../../state/index.ts";
+import { COPY } from "../../ui/copy.ts";
+import { selectTreeRows } from "../sidebar/index.ts";
+
+export const SLASH_MENU_OVERLAY = "slash-menu";
+const PAGE_LINK_LIMIT = 5;
+
+// One thing the slash menu can turn the block into.
+export interface SlashItem {
+  readonly label: string;
+  readonly blockType: string;
+  readonly extraProps?: BlockProps;
+}
+
+const EXTRA_HEADINGS: readonly SlashItem[] = [
+  {
+    label: COPY.blockNames.heading2,
+    blockType: HEADING_TYPE,
+    extraProps: { level: 2 },
+  },
+  {
+    label: COPY.blockNames.heading3,
+    blockType: HEADING_TYPE,
+    extraProps: { level: 3 },
+  },
+];
+
+function blockItems(): SlashItem[] {
+  return BLOCK_DEFINITIONS.flatMap((definition): SlashItem[] => {
+    if (definition.label === undefined) return [];
+    const item = { label: definition.label, blockType: definition.type };
+    return definition.type === HEADING_TYPE
+      ? [item, ...EXTRA_HEADINGS]
+      : [item];
+  });
+}
+
+function pageItems(state: AppState): SlashItem[] {
+  return selectTreeRows({
+    ...state,
+    ui: { ...state.ui, expandedPageIds: [] },
+  }).map((row) => ({
+    label: `${COPY.blockNames.pageLink}: ${row.title === "" ? COPY.sidebar.untitled : row.title}`,
+    blockType: PAGE_LINK_TYPE,
+    extraProps: { pageId: row.id },
+  }));
+}
+
+// Comparison that ignores case in every language.
+function fold(text: string): string {
+  return text.normalize("NFKC").toLocaleLowerCase("en-US");
+}
+
+export function selectSlashItems(state: AppState, query: string): SlashItem[] {
+  const needle = fold(query);
+  const matches = (item: SlashItem): boolean =>
+    fold(item.label).includes(needle);
+  const pages = pageItems(state).filter(matches).slice(0, PAGE_LINK_LIMIT);
+  return [...blockItems().filter(matches), ...pages];
+}
+
+export interface OpenSlashMenu {
+  readonly blockId: BlockId;
+  // Offsets of the "/" and of the caret in the block's text.
+  readonly start: number;
+  readonly end: number;
+  readonly items: readonly SlashItem[];
+  readonly activeIndex: number;
+}
+
+// The "/query" being typed, when the caret is still after the slash that
+// opened the menu.
+function typedQuery(
+  state: AppState,
+): { start: number; end: number; query: string } | undefined {
+  const { overlay, selection } = state.ui;
+  const block =
+    selection === null ? undefined : state.workspace.blocks[selection.blockId];
+  if (
+    selection === null ||
+    !isTextBlock(block) ||
+    block.id !== overlay?.anchorId
+  ) {
+    return undefined;
+  }
+  const start = overlay.start ?? -1;
+  const end = selection.focusOffset;
+  const text = textOf(block);
+  if (text[start] !== "/" || end <= start) return undefined;
+  return { start, end, query: text.slice(start + 1, end) };
+}
+
+// The open slash menu, or undefined when it is closed, the "/" that opened
+// it is gone, or nothing matches.
+export function selectOpenSlashMenu(
+  state: AppState,
+): OpenSlashMenu | undefined {
+  const { overlay, selection } = state.ui;
+  if (overlay?.kind !== SLASH_MENU_OVERLAY || selection === null)
+    return undefined;
+  const typed = typedQuery(state);
+  if (typed === undefined) return undefined;
+  const items = selectSlashItems(state, typed.query);
+  if (items.length === 0) return undefined;
+  const activeIndex = Math.min(overlay.activeIndex ?? 0, items.length - 1);
+  const { start, end } = typed;
+  return { blockId: selection.blockId, start, end, items, activeIndex };
+}

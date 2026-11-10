@@ -1,6 +1,10 @@
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import { renderEditor } from "../features/editor/index.ts";
+import {
+  renderSlashMenu,
+  SLASH_MENU_OVERLAY,
+} from "../features/slash-menu/index.ts";
 import { renderSidebar } from "../features/sidebar/index.ts";
 import {
   renderSettings,
@@ -151,6 +155,7 @@ function renderOverlay(
   if (kind === SETTINGS_OVERLAY) return renderSettings(state, dispatch);
   if (kind === TRASH_OVERLAY) return renderTrash(state, dispatch);
   if (kind === MOVE_TO_OVERLAY) return renderMoveTo(state, dispatch);
+  if (kind === SLASH_MENU_OVERLAY) return renderSlashMenu(state, dispatch);
   return renderPageMenu(state, dispatch);
 }
 

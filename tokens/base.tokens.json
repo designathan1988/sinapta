@@ -600,6 +600,12 @@
           "value": 46,
           "unit": "rem"
         }
+      },
+      "20": {
+        "$value": {
+          "value": 20,
+          "unit": "rem"
+        }
       }
     },
     "radius": {

@@ -35,6 +35,21 @@ export const COPY = {
     moved: "Page moved.",
     notMoved: "The page cannot move further that way.",
   },
+  slashMenu: { label: "Turn into" },
+  blockMenu: {
+    open: "Block actions",
+    turnInto: "Turn into",
+    moveUp: "Move up",
+    moveDown: "Move down",
+    delete: "Delete",
+    moved: "Block moved.",
+  },
+  link: {
+    fieldLabel: "Link address",
+    apply: "Apply",
+    remove: "Remove link",
+    invalid: "Enter an address that starts with http, https or mailto.",
+  },
   breadcrumbs: { label: "Breadcrumb" },
   favorites: { heading: "Favorites" },
   trash: {

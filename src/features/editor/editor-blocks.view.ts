@@ -15,25 +15,27 @@ import {
 import { onBlockKeyDown } from "./editor-keys.view.ts";
 import { selectBlockOrder, selectChildBlocks } from "./editor.selectors.ts";
 
-function renderBlock(block: Block, context: InputContext): TemplateResult {
-  const definition = blockDefinition(block.type);
-  const content = definition?.render?.(block, context.dispatch, context.state);
+function renderChildren(block: Block, context: InputContext): unknown {
   // A closed toggle keeps its children but does not show them.
-  const isOpen = definition?.showsChildren?.(block) ?? true;
+  const isOpen = blockDefinition(block.type)?.showsChildren?.(block) ?? true;
   const children = isOpen ? selectChildBlocks(context.state, block.id) : [];
+  if (children.length === 0) return nothing;
+  return html`<div class="editor__children">
+    ${renderList(children, context)}
+  </div>`;
+}
+
+function renderBlock(block: Block, context: InputContext): TemplateResult {
+  const { state, dispatch } = context;
+  const content = blockDefinition(block.type)?.render?.(block, dispatch, state);
+  const isAnchor = state.ui.overlay?.anchorId === block.id;
   return html`<div
     class="editor__block"
     data-block-id=${block.id}
     data-type=${block.type}
+    data-overlay-anchor=${isAnchor ? "open" : nothing}
   >
-    ${content ?? nothing}
-    ${
-      children.length === 0
-        ? nothing
-        : html`<div class="editor__children">
-            ${renderList(children, context)}
-          </div>`
-    }
+    ${content ?? nothing} ${renderChildren(block, context)}
   </div>`;
 }
 

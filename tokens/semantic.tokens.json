@@ -283,7 +283,7 @@
         "$value": "{base.size.14}"
       },
       "maxHeight": {
-        "$value": "{base.size.30}"
+        "$value": "{base.size.20}"
       }
     },
     "dialog": {

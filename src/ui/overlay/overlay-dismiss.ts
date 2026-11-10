@@ -6,8 +6,12 @@ import {
   type Dispatch,
 } from "../../state/index.ts";
 
-const INSIDE =
-  "[data-overlay], [data-overlay-anchor][aria-expanded='true'], dialog";
+const INSIDE = [
+  "[data-overlay]",
+  "[data-overlay-anchor][aria-expanded='true']",
+  "[data-overlay-anchor='open']",
+  "dialog",
+].join(", ");
 
 export function installOverlayDismiss(
   store: AppStore,

@@ -1,6 +1,7 @@
 @layer ui {
   /* The control that opened the overlay is the anchor of the overlay. */
-  [data-overlay-anchor][aria-expanded="true"] {
+  [data-overlay-anchor][aria-expanded="true"],
+  [data-overlay-anchor="open"] {
     anchor-name: --overlay-anchor;
   }
 

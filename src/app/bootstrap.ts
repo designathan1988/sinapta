@@ -10,6 +10,7 @@ import {
 import { toDoCommands } from "../blocks/to-do/index.ts";
 import { toggleCommands } from "../blocks/toggle/index.ts";
 import { editorCommands } from "../features/editor/index.ts";
+import { installSlashMenuKeys } from "../features/slash-menu/index.ts";
 import type { Theme } from "../model/index.ts";
 import {
   createAppStore,
@@ -77,6 +78,7 @@ export async function startApp(container: HTMLElement): Promise<void> {
   startRouter(store, dispatch);
   installOverlayDismiss(store, dispatch);
   installSelectionSync(store, dispatch);
+  installSlashMenuKeys(store, dispatch);
   document.addEventListener("keydown", (event) => {
     const shortcut = matchShortcut(event);
     if (shortcut === undefined) return;
