@@ -57,4 +57,19 @@ export {
   type BlockSpec,
 } from "./workspace-builder.ts";
 export { diffWorkspace } from "./workspace-diff.ts";
-export { firstGrapheme } from "./grapheme.ts";
+export {
+  firstGrapheme,
+  nextBoundary,
+  previousBoundary,
+  snapToBoundary,
+} from "./grapheme.ts";
+export {
+  concatRichText,
+  deleteRange,
+  insertText,
+  plainText,
+  splitRichText,
+  toggleMark,
+  type Mark,
+  type MarkRange,
+} from "./rich-text.ts";
