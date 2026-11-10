@@ -11,7 +11,6 @@ export {
   pageMoveCommands,
   selectDropTarget,
   selectStepTarget,
-  type DropPosition,
   type MoveDirection,
   type MovePagePayload,
 } from "./page-move.commands.ts";

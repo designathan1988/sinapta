@@ -1,4 +1,9 @@
-import type { Block, BlockId, ListRef, Operation } from "../../model/index.ts";
+import {
+  listOf,
+  type Block,
+  type BlockId,
+  type Operation,
+} from "../../model/index.ts";
 import {
   defineCommand,
   type AppState,
@@ -62,12 +67,6 @@ function subtree(state: AppState, block: Block): Block[] {
   return [block, ...children];
 }
 
-export function listContaining(block: Block): ListRef {
-  return block.parentId === null
-    ? { kind: "rootIds" }
-    : { kind: "childIds", blockId: block.parentId };
-}
-
 // Removes a trashed page and everything inside it for good.
 export const deletePage = defineCommand<{ pageId: BlockId }>({
   type: "page.delete",
@@ -81,7 +80,7 @@ export const deletePage = defineCommand<{ pageId: BlockId }>({
     }));
     return {
       operations: [
-        { type: "list.remove", list: listContaining(page), id: page.id },
+        { type: "list.remove", list: listOf(page.parentId), id: page.id },
         ...deletions,
       ],
       ui: closeIfInside(state, page.id),

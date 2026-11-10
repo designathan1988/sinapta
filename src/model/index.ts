@@ -76,3 +76,13 @@ export {
 } from "./rich-text.ts";
 export { safeHref } from "./link-href.ts";
 export { diffText, type TextEdit } from "./text-diff.ts";
+export {
+  dropMove,
+  isSelfOrInside,
+  listOf,
+  planMove,
+  siblingIds,
+  type BlockMove,
+  type Drop,
+  type DropPosition,
+} from "./block-tree.ts";
