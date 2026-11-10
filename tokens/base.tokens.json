@@ -39,6 +39,12 @@
             "components": [0.86, 0.01, 85]
           }
         },
+        "350": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.8, 0.011, 85]
+          }
+        },
         "400": {
           "$value": {
             "colorSpace": "oklch",
@@ -55,6 +61,12 @@
           "$value": {
             "colorSpace": "oklch",
             "components": [0.5, 0.012, 85]
+          }
+        },
+        "650": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.45, 0.012, 85]
           }
         },
         "700": {

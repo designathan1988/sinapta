@@ -27,14 +27,17 @@ One command, step by step:
 2. The dispatcher stamps the command with what purity forbids handlers to
    create: new ids and the current time.
 3. The dispatcher looks up the handler in the command registry and calls it:
-   `(state, command) => Operation[]`.
+   `(state, command) => CommandEffect`. The effect holds the operations for
+   workspace data and, when the command also changes them, the next `ui` or
+   `persistence` slice. Workspace data changes only through operations.
 4. `applyOperations` in `src/model/` produces the next workspace and the
    inverse operations. `workspace-invariants` checks the result. On failure
    nothing changes and `dispatch` returns a typed error.
 5. The dispatcher builds the next `AppState` (workspace, `ui`, `history`,
    `persistence`) and writes it with one `setState` call.
 6. Subscribers run: the root render re-renders from the new state; the
-   repository queues the changed record ids and saves them after 300 ms.
+   repository compares the previous and next workspace, queues the changed
+   record ids and saves them after 300 ms; the router writes the URL.
 
 ## AppState
 

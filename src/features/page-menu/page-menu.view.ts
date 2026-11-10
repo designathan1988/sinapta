@@ -25,7 +25,7 @@ export const MOVE_TO_OVERLAY_KIND = "move-to";
 
 // The same page can show its menu button in several places, so an anchor
 // id names the place as well as the page.
-function anchorIdFor(place: string, pageId: BlockId): string {
+export function pageMenuAnchorId(place: string, pageId: BlockId): string {
   return `${place}:${pageId}`;
 }
 
@@ -36,6 +36,8 @@ function pageIdOfAnchor(anchorId: string | undefined): BlockId | undefined {
 export interface PageMenuButtonOptions {
   readonly place: string;
   readonly pageId: BlockId;
+  // False inside a composite widget that manages focus itself.
+  readonly isTabStop?: boolean;
   readonly state: AppState;
   readonly dispatch: Dispatch;
 }
@@ -44,7 +46,7 @@ export function renderPageMenuButton(
   options: PageMenuButtonOptions,
 ): TemplateResult {
   const { state, dispatch } = options;
-  const anchorId = anchorIdFor(options.place, options.pageId);
+  const anchorId = pageMenuAnchorId(options.place, options.pageId);
   const { overlay } = state.ui;
   const isOpen =
     overlay?.kind === PAGE_MENU_OVERLAY && overlay.anchorId === anchorId;
@@ -61,6 +63,7 @@ export function renderPageMenuButton(
   return html`<button
     type="button"
     class="page-menu__button"
+    tabindex=${options.isTabStop === false ? "-1" : "0"}
     data-overlay-anchor
     aria-haspopup="menu"
     aria-expanded=${String(isOpen)}

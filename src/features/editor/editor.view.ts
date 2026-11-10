@@ -26,13 +26,15 @@ export function renderEditor(
   };
   return html`<article class="editor">
     ${renderIconControl(state, page, dispatch)}
-    <input
-      class="editor__title"
-      type="text"
-      aria-label=${COPY.editor.titleLabel}
-      placeholder=${COPY.sidebar.untitled}
-      .value=${selectPageTitle(page)}
-      @input=${onInput}
-    />
+    <h1 class="editor__heading">
+      <input
+        class="editor__title"
+        type="text"
+        aria-label=${COPY.editor.titleLabel}
+        placeholder=${COPY.sidebar.untitled}
+        .value=${selectPageTitle(page)}
+        @input=${onInput}
+      />
+    </h1>
   </article>`;
 }

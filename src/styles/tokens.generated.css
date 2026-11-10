@@ -8,9 +8,11 @@
     --base-color-neutral-150: oklch(0.94 0.008 85);
     --base-color-neutral-200: oklch(0.91 0.009 85);
     --base-color-neutral-300: oklch(0.86 0.01 85);
+    --base-color-neutral-350: oklch(0.8 0.011 85);
     --base-color-neutral-400: oklch(0.74 0.011 85);
     --base-color-neutral-500: oklch(0.6 0.012 85);
     --base-color-neutral-600: oklch(0.5 0.012 85);
+    --base-color-neutral-650: oklch(0.45 0.012 85);
     --base-color-neutral-700: oklch(0.4 0.011 85);
     --base-color-neutral-800: oklch(0.3 0.01 85);
     --base-color-neutral-850: oklch(0.255 0.009 85);
@@ -128,7 +130,7 @@
     --color-bg-code: light-dark(var(--base-color-neutral-100), var(--base-color-neutral-900));
     --color-bg-scrim: light-dark(var(--base-color-black-scrim), var(--base-color-black-scrim));
     --color-text-primary: light-dark(var(--base-color-neutral-900), var(--base-color-neutral-150));
-    --color-text-secondary: light-dark(var(--base-color-neutral-600), var(--base-color-neutral-400));
+    --color-text-secondary: light-dark(var(--base-color-neutral-650), var(--base-color-neutral-350));
     --color-text-tertiary: light-dark(var(--base-color-neutral-600), var(--base-color-neutral-400));
     --color-text-on-accent: light-dark(var(--base-color-neutral-0), var(--base-color-neutral-1000));
     --color-text-link: light-dark(var(--base-color-indigo-600), var(--base-color-indigo-300));

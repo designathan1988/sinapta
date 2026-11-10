@@ -16,16 +16,22 @@ created in `src/state/store.ts`. The default stands.
 
 - A transaction is one `setState(next, true)` call with the complete next
   `AppState`. Subscribers see `(state, previousState)` once per command.
-- `store.ts` exports `getState` and `subscribe` to the project and exports
-  `setState` only to `dispatch.ts`. Lint bans `setState` everywhere else.
+- `store.ts` exports a factory, `createAppStore`. The app creates the one
+  instance in `src/app/bootstrap.ts`; tests create their own, which the
+  shared-module test runner setting requires. Lint bans calling `setState`
+  everywhere except `dispatch.ts`.
 - Zustand has no re-entrancy guard, so `dispatch.ts` owns one: a dispatch
   that starts while subscribers are being notified throws a programmer
   error. This enforces "subscribers never dispatch during notification".
 - A throwing listener would skip later listeners, so the two subscribers
   (root render, repository) catch their own errors and report them through
   the save status or the console.
-- No middleware. `subscribeWithSelector` is not needed: the repository
-  computes changed ids from the transaction, not by diffing state.
+- No middleware. `subscribeWithSelector` is not needed. The repository
+  finds changed records by comparing the previous and next workspace by
+  reference (`src/model/workspace-diff.ts`), which the store's
+  `(state, previousState)` callback makes possible without a second
+  notification channel. Records are never edited in place, so a reference
+  comparison is exact.
 
 ## Options considered
 

@@ -16,6 +16,7 @@ import {
 } from "../state/index.ts";
 import { renderBreadcrumbs } from "../features/breadcrumbs/index.ts";
 import { MOVE_TO_OVERLAY, renderMoveTo } from "../features/move-to/index.ts";
+import { renderPageMenuButton } from "../features/page-menu/index.ts";
 import { renderPageMenu } from "../features/page-menu/index.ts";
 import { renderTrash, TRASH_OVERLAY } from "../features/trash/index.ts";
 import { renderButton } from "../ui/button/index.ts";
@@ -101,6 +102,15 @@ function renderSidebarPanel(
   </nav>`;
 }
 
+function renderActivePageMenu(
+  state: AppState,
+  dispatch: Dispatch,
+): TemplateResult | typeof nothing {
+  const pageId = state.ui.activePageId;
+  if (pageId === null) return nothing;
+  return renderPageMenuButton({ place: "bar", pageId, state, dispatch });
+}
+
 function renderTopBar(state: AppState, dispatch: Dispatch): TemplateResult {
   const showSidebar = renderButton({
     label: COPY.shell.showSidebar,
@@ -115,6 +125,7 @@ function renderTopBar(state: AppState, dispatch: Dispatch): TemplateResult {
     <span class="app__save-status" role="status"
       >${COPY.saveStatus[state.persistence.status]}</span
     >
+    ${renderActivePageMenu(state, dispatch)}
     ${renderButton({
       label: COPY.shell.openSettings,
       icon: "settings",

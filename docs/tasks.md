@@ -16,7 +16,7 @@ code ahead of its milestone.
 
 ## Task 1.1: Project setup
 
-> **Status:** not started · **Effort:** m · **Depends on:** none
+> **Status:** done · **Effort:** m · **Depends on:** none
 
 **Delivers:** a Vite project that serves a blank page, type-checks, formats
 and runs one test, with every script from specification section 7.
@@ -42,7 +42,7 @@ passing; `npm run check` exits 0.
 
 ## Task 1.2: Lint limits
 
-> **Status:** not started · **Effort:** m · **Depends on:** 1.1
+> **Status:** done · **Effort:** m · **Depends on:** 1.1
 
 **Delivers:** lint as a build failure for layer direction, entry-point
 imports, size limits, banned names, casts and default exports; Stylelint
@@ -75,7 +75,7 @@ standard config.
 
 ## Task 1.3: Tokens pipeline
 
-> **Status:** not started · **Effort:** m · **Depends on:** 1.2
+> **Status:** done · **Effort:** m · **Depends on:** 1.2
 
 **Delivers:** token JSON in three tiers and the script that generates
 `src/styles/tokens.generated.css`, rerun by a Vite plugin on change. Token
@@ -109,7 +109,7 @@ change with the system theme.
 
 ## Task 1.4: Model records
 
-> **Status:** not started · **Effort:** m · **Depends on:** 1.1
+> **Status:** done · **Effort:** m · **Depends on:** 1.1
 
 **Delivers:** branded ids, the workspace envelope schema (blocks with
 opaque props, views, root ids, settings) and typed parse errors.
@@ -138,7 +138,7 @@ schemas arrive as a parameter (D3).
 
 ## Task 1.5: Model operations
 
-> **Status:** not started · **Effort:** m · **Depends on:** 1.4
+> **Status:** done · **Effort:** m · **Depends on:** 1.4
 
 **Delivers:** the five operation types, `applyOperations` returning the
 next workspace, the inverse and the changed ids, and the invariant check.
@@ -168,7 +168,7 @@ next workspace, the inverse and the changed ids, and the invariant check.
 
 ## Task 1.6: Store, command registry, dispatcher
 
-> **Status:** not started · **Effort:** m · **Depends on:** 1.5
+> **Status:** done · **Effort:** m · **Depends on:** 1.5
 
 **Delivers:** `AppState` with four slices, the one store, handler
 registration and `dispatch`.
@@ -197,7 +197,7 @@ changes when a button dispatches a command.
 
 ## Task 1.7: History
 
-> **Status:** not started · **Effort:** s · **Depends on:** 1.6
+> **Status:** done · **Effort:** s · **Depends on:** 1.6
 
 **Delivers:** undo and redo of workspace transactions.
 
@@ -220,7 +220,7 @@ test workspace change shown in the status line.
 
 ## Task 1.8: App shell
 
-> **Status:** not started · **Effort:** m · **Depends on:** 1.6, 1.3
+> **Status:** done · **Effort:** m · **Depends on:** 1.6, 1.3
 
 **Delivers:** the grid shell with sidebar and main areas, top bar, sidebar
 resize and collapse, and the build-time Content Security Policy.
@@ -250,7 +250,7 @@ keyboard and collapses.
 
 ## Task 1.9: Theme
 
-> **Status:** not started · **Effort:** s · **Depends on:** 1.8
+> **Status:** done · **Effort:** s · **Depends on:** 1.8
 
 **Delivers:** light, dark and system themes with a manual override.
 
@@ -273,7 +273,7 @@ dark; screenshots of both.
 
 ## Task 1.10: Repository with the in-memory adapter
 
-> **Status:** not started · **Effort:** m · **Depends on:** 1.7
+> **Status:** done · **Effort:** m · **Depends on:** 1.7
 
 **Delivers:** the storage adapter contract, an in-memory adapter, load at
 startup and debounced save of changed records with a save status.
@@ -300,7 +300,7 @@ live region), `src/ui/copy.ts`.
 
 ## Task 1.11: IndexedDB adapter and migrations
 
-> **Status:** not started · **Effort:** m · **Depends on:** 1.10
+> **Status:** done · **Effort:** m · **Depends on:** 1.10
 
 **Delivers:** real persistence and the migration runner with version 1 as
 the baseline.
@@ -324,7 +324,7 @@ persist. Screenshots before and after reload.
 
 ## Task 1.12: Shortcuts and overlay host
 
-> **Status:** not started · **Effort:** m · **Depends on:** 1.9, 1.7
+> **Status:** done · **Effort:** m · **Depends on:** 1.9, 1.7
 
 **Delivers:** the shortcut registry with undo and redo, and the overlay
 host with one settings dialog.
@@ -351,7 +351,7 @@ its shortcut and closes with Escape; undo keys work.
 
 ## Task 1.13: Milestone review
 
-> **Status:** not started · **Effort:** m · **Depends on:** 1.1 to 1.12
+> **Status:** in progress · **Effort:** m · **Depends on:** 1.1 to 1.12
 
 **Delivers:** the review and audit pass the build prompt requires: code
 review, complexity check on the diff, UI audit and accessibility review on

@@ -34,7 +34,8 @@
     color: var(--color-text-secondary);
     cursor: pointer;
 
-    &:hover {
+    &:hover,
+    &:focus-visible {
       background-color: var(--color-bg-hover);
     }
 

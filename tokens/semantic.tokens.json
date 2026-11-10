@@ -32,7 +32,7 @@
         "$value": "{base.color.neutral.900}"
       },
       "secondary": {
-        "$value": "{base.color.neutral.600}"
+        "$value": "{base.color.neutral.650}"
       },
       "tertiary": {
         "$value": "{base.color.neutral.600}"
