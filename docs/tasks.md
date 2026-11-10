@@ -440,3 +440,43 @@ Not done in these milestones:
   block per line.
 - The block menu returns focus to the handle, not to the caret.
 - A tooltip primitive for icon-only buttons (carried from milestone 2).
+
+---
+
+# Milestones 5 to 7, Database, views and workspace tools: record
+
+| Task | Status | Tests or check |
+| --- | --- | --- |
+| 5.1 Database block, default view, empty table | done | `src/features/database/database.test.ts` |
+| 5.2 Property registry; add and remove property | done | `property-registry.test.ts`, `database.test.ts` |
+| 5.3 Rows as pages, add row, open row as page | done | `database.test.ts`, `table-keys.test.ts` |
+| 5.4 Table engine adapter and table rendering | done | `table-model.test.ts` |
+| 5.5 Cell navigation and editing | done | `table.test.ts`, `table-keys.test.ts` |
+| 5.6 Select and multi-select with option chips | done | `table.test.ts`; checked in the running app |
+| 5.7 Date, checkbox, URL | done | `property-registry.test.ts` |
+| 5.8 Row windowing above 200 rows | done | `table.test.ts`; 60 of 5,000 rows rendered |
+| 6.1 Sort from the header and the column menu | done | `table-model.test.ts` |
+| 6.2 Filters with per-type operators | done | `property-registry.test.ts`, `table-model.test.ts` |
+| 6.3 Column resize by drag and by keyboard | done | `database.test.ts`; checked in the running app |
+| 6.4 Column reorder and hide | done, by menu | `table-model.test.ts` |
+| 6.5 Several saved views per database | done | `database.test.ts` |
+| 6.6 5,000-row measurement | done | Production build: load 548 ms, sort 37 ms, scroll 43 ms, cell commit 55 ms, filter 92 ms |
+| 7.1 Command palette and page search | done | `src/features/command-palette/command-palette.test.ts` |
+| 7.2 JSON export | done | `src/persistence/workspace-file.test.ts` |
+| 7.3 JSON import with migrations and error report | done | `workspace-file.test.ts`; export, import into an empty profile and export again gave a byte-identical file |
+| 7.4 Settings: theme and data tools | done | Checked in the running app |
+| 7.5 View transitions and motion polish | not done | See below |
+| 7.6 Final audit, README, documents | done | axe: no violations in 32 state and theme combinations |
+
+Not done in these milestones:
+
+- Reordering columns by drag. Columns move with "Move left" and "Move
+  right" in the column menu.
+- Sorting by more than one property from the interface. The view record and
+  the table model support several sorts; the header and menu set one.
+- Renaming a view. New views are named "View 2", "View 3".
+- A row opened as a page does not show its property values on the page.
+- View Transitions between pages. The root render is synchronous, and
+  several interactions rely on the page being updated when `dispatch`
+  returns; wrapping it in a transition would make it asynchronous.
+- A tooltip primitive for icon-only buttons (carried from milestone 2).

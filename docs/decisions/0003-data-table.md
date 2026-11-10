@@ -44,6 +44,16 @@ Two findings changed details of the specification, approved at the review:
 Arrow-key movement between cells needs `role="grid"` on the `<table>` with
 roving `tabindex` on cells; the native table elements stay.
 
+## Measured
+
+Milestone 6, production build, 5,000 rows and three properties: load
+548 ms, sort from the header 37 ms, scroll to the middle 43 ms, cell commit
+55 ms, a text filter 92 ms. 60 rows are rendered at a time.
+
+The engine is used for sorted and filtered row models only. Column order,
+visibility and width are read from the View record directly, which is
+simpler than routing them through the engine and back.
+
 ## Options considered
 
 | Option | Complexity | Controlled from the store | Risk |

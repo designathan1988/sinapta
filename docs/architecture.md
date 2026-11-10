@@ -44,9 +44,9 @@ One command, step by step:
 | Slice | Holds | Saved | In history |
 | --- | --- | --- | --- |
 | `workspace` | `blocks`, `views`, `rootIds`, `settings` (theme) | Yes, per record | Yes, except `settings` |
-| `ui` | Active page, selection, sidebar, open overlay, drag preview | Yes, as one `meta` value | No |
+| `ui` | Active page, expanded pages, selection, sidebar, open overlay, active view per database, active table cell | The lasting part, as one `meta` value | No |
 | `history` | Undo and redo stacks of inverse transactions | No | Is the history |
-| `persistence` | Save status, load errors | No | No |
+| `persistence` | Save status, skipped record count, export and import requests | No | No |
 
 - Workspace data is normalized: maps keyed by id, relations by id.
 - Derived values (breadcrumbs, visible tree, table row models) come from
@@ -94,6 +94,24 @@ they are configuration, not state.
   Everything between is pure.
 - The exported workspace file is a public contract, changed only through a
   `schemaVersion` bump and a migration.
+
+## Requests to the edges
+
+Some things a view asks for are effects, not state changes: writing an
+export file, reading an imported one. A view cannot reach the persistence
+layer, and a command handler is pure. So the view dispatches a command that
+only records the request in the `persistence` slice
+(`persistence.requestExport`, `persistence.requestImport`), and
+`src/persistence/workspace-file.ts`, which subscribes to the store, carries
+it out after the store has finished notifying and dispatches the outcome.
+
+## Overlays
+
+`ui.overlay` holds at most one open overlay: its kind, the element it is
+anchored to and, where needed, a text range, a highlighted option or a
+search query. The shell renders the overlay that matches the kind. Dialogs
+use `<dialog>` with `showModal()`; menus and popovers use the Popover API
+in manual mode, with dismissal owned by `src/ui/overlay/`.
 
 ## Rendering
 

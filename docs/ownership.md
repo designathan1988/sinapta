@@ -4,9 +4,8 @@ Every concern has exactly one owning module. Code for a concern anywhere
 else is a defect. Before adding code, find the owner here. If there is none,
 add a row first, then write the code there.
 
-Status: `planned` means the module does not exist yet; it is created in the
-milestone shown. The Phase 5 close-out removes this column once every owner
-exists.
+The last column is the milestone in which the owner was created. Every
+owner listed here exists.
 
 ## State and model
 
@@ -19,7 +18,7 @@ exists.
 | Undo and redo | `src/state/history.ts` | 1 |
 | `ui` slice commands that belong to no feature (sidebar, overlay, selection) | `src/state/ui.commands.ts` | 1 |
 | Settings commands (theme) | `src/state/settings.commands.ts` | 1 |
-| Save status commands | `src/state/persistence.commands.ts` | 1 |
+| Save status, export and import request commands | `src/state/persistence.commands.ts` | 1 |
 | Cross-feature selectors over `AppState` | `src/state/app-state.selectors.ts` | 1 |
 | Loading a whole workspace into the store | `src/state/workspace.commands.ts` | 1 |
 | The saved part of the `ui` slice | `src/state/ui.schema.ts` | 1 |
@@ -45,7 +44,7 @@ exists.
 | IndexedDB access | `src/persistence/indexed-db-adapter.ts` | 1 |
 | Storage adapter contract and in-memory adapter for tests | `src/persistence/storage-adapter.ts` | 1 |
 | Migrations | `src/persistence/migrations/run-migrations.ts` plus one file per format change | 1 |
-| JSON export and import | `src/persistence/workspace-file.ts` | 7 |
+| JSON export and import, and carrying out export and import requests | `src/persistence/workspace-file.ts` | 7 |
 
 ## Interface
 
@@ -64,6 +63,16 @@ exists.
 | Move-to dialog | `src/features/move-to/` | 2 |
 | Settings dialog | `src/features/settings/` | 1 |
 | Property type definitions | `src/features/database/property-registry.ts` plus one folder per type | 5 |
+| What a property type declares | `src/features/database/property-definition.ts` | 5 |
+| Database columns and rows | `src/features/database/database.commands.ts` | 5 |
+| Saved views of a database | `src/features/database/view.commands.ts` | 6 |
+| Table interface state (active cell, scroll window) | `src/features/database/table.commands.ts` | 5 |
+| Row window and cell navigation | `src/features/database/table.selectors.ts` | 5 |
+| Table markup, headers, cells and their events | `src/features/database/table*.view.ts` | 5 |
+| Table menus and popovers | `src/features/database/*-menu.view.ts`, `view-*.view.ts`, `cell-options.view.ts` | 6 |
+| The database block type | `src/blocks/database/` | 5 |
+| Command palette and search | `src/features/command-palette/` | 7 |
+| Focusing and showing elements once they are in the page | `src/ui/focus/` | 5 |
 | Table row models (sort, filter, order through the table engine) | `src/features/database/table-model.selectors.ts` | 5 |
 | Keyboard shortcuts | `src/ui/shortcuts/shortcut-registry.ts` | 1 |
 | Overlay dismissal, anchoring and focus return | `src/ui/overlay/` | 1 |
