@@ -1,5 +1,6 @@
 import "./editor.css";
 import { html, type nothing, type TemplateResult } from "lit-html";
+import { keyed } from "lit-html/directives/keyed.js";
 import {
   DATABASE_TYPE,
   renamePage,
@@ -60,10 +61,15 @@ export function renderEditor(
     page.type === DATABASE_TYPE
       ? renderDatabase(state, dispatch)
       : [renderRowProperties(state, dispatch), renderBlocks(page.id, context)];
-  return html`<article class="editor" ?data-wide=${page.type === DATABASE_TYPE}>
-    ${renderIconControl(state, page, dispatch)} ${renderTitle(page, context)}
-    ${content}
-  </article>`;
+  // Each page gets its own element, so opening a page plays the entry
+  // motion and nothing of the page before it is carried over.
+  return html`${keyed(
+    page.id,
+    html`<article class="editor" ?data-wide=${page.type === DATABASE_TYPE}>
+      ${renderIconControl(state, page, dispatch)} ${renderTitle(page, context)}
+      ${content}
+    </article>`,
+  )}`;
 }
 
 // The editor's own overlays: the block menus and the link field.
