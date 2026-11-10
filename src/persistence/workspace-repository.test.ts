@@ -184,4 +184,16 @@ describe("workspace repository", () => {
 
     expect(store.getState().persistence.status).toBe("failed");
   });
+
+  it("does not save over stored data that it could not read", async () => {
+    const newer = { file: { schemaVersion: 99 }, ui: null };
+    const adapter = createMemoryAdapter(newer);
+    const { store, dispatch } = await start(adapter);
+
+    dispatch(addPage);
+    await vi.advanceTimersByTimeAsync(SAVE_DEBOUNCE_MS);
+
+    expect(adapter.saves).toHaveLength(0);
+    expect(store.getState().persistence.status).toBe("failed");
+  });
 });

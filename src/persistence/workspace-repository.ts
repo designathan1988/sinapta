@@ -76,13 +76,14 @@ function toStorageChanges(pending: Pending, state: AppState): StorageChanges {
   };
 }
 
-async function load(options: RepositoryOptions): Promise<void> {
+// Resolves to false when stored data exists but cannot be used.
+async function load(options: RepositoryOptions): Promise<boolean> {
   const stored = await options.adapter.load();
-  if (stored === null) return;
+  if (stored === null) return true;
   const migrated = runMigrations(stored.file);
-  if (!migrated.ok) return;
+  if (!migrated.ok) return false;
   const parsed = parseWorkspaceFile(migrated.file, options.propsSchemas);
-  if (!parsed.ok) return;
+  if (!parsed.ok) return false;
   options.dispatch(
     loadWorkspace.create({
       workspace: parsed.workspace,
@@ -90,6 +91,7 @@ async function load(options: RepositoryOptions): Promise<void> {
       skippedCount: parsed.skipped.length,
     }),
   );
+  return true;
 }
 
 function watch(options: RepositoryOptions): void {
@@ -127,14 +129,13 @@ function toPersistedUiKey(state: AppState): string {
 }
 
 // Loads stored data into the store, then starts saving changes. Changes
-// made by the load itself are not written back.
+// made by the load itself are not written back. When stored data cannot be
+// read, nothing is saved in this session, so that the data is not
+// overwritten by an empty workspace.
 export async function startRepository(
   options: RepositoryOptions,
 ): Promise<void> {
-  try {
-    await load(options);
-  } catch {
-    options.dispatch(setSaveStatus.create({ status: "failed" }));
-  }
-  watch(options);
+  const isLoaded = await load(options).catch(() => false);
+  if (isLoaded) watch(options);
+  else options.dispatch(setSaveStatus.create({ status: "failed" }));
 }

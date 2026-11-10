@@ -1,6 +1,7 @@
 import type { BlockId, ListRef, Operation } from "../../model/index.ts";
 import { defineCommand, type AppState } from "../../state/index.ts";
 import { listContaining } from "./page-trash.commands.ts";
+import type { PageBlock } from "./page.schema.ts";
 import { selectPage } from "./page.selectors.ts";
 
 function idsIn(state: AppState, list: ListRef): readonly BlockId[] {
@@ -67,34 +68,50 @@ export const movePage = defineCommand<MovePagePayload>({
 
 export type MoveDirection = "up" | "down" | "in" | "out";
 
+type Step = (state: AppState, page: PageBlock) => MovePagePayload | undefined;
+
+function stepWithin(offset: number): Step {
+  return (state, page) => {
+    const siblings = idsIn(state, listContaining(page));
+    const index = siblings.indexOf(page.id) + offset;
+    if (index < 0 || index >= siblings.length) return undefined;
+    return { pageId: page.id, parentId: page.parentId, index };
+  };
+}
+
+// Becomes the last child of the page above it.
+const stepIn: Step = (state, page) => {
+  const siblings = idsIn(state, listContaining(page));
+  const above = siblings[siblings.indexOf(page.id) - 1];
+  if (above === undefined) return undefined;
+  const index = state.workspace.blocks[above]?.childIds.length ?? 0;
+  return { pageId: page.id, parentId: above, index };
+};
+
+// Goes right after its parent.
+const stepOut: Step = (state, page) => {
+  const parent = selectPage(state, page.parentId);
+  if (parent === undefined) return undefined;
+  const index = idsIn(state, listContaining(parent)).indexOf(parent.id) + 1;
+  return { pageId: page.id, parentId: parent.parentId, index };
+};
+
+const STEPS: Record<MoveDirection, Step> = {
+  up: stepWithin(-1),
+  down: stepWithin(1),
+  in: stepIn,
+  out: stepOut,
+};
+
 // Where one keyboard step takes a page, or undefined when it cannot go
-// further that way. "in" makes it the last child of the page above it;
-// "out" puts it right after its parent.
+// further that way.
 export function selectStepTarget(
   state: AppState,
   pageId: BlockId,
   direction: MoveDirection,
 ): MovePagePayload | undefined {
   const page = selectPage(state, pageId);
-  if (page === undefined) return undefined;
-  const siblings = idsIn(state, listContaining(page));
-  const index = siblings.indexOf(pageId);
-  const { parentId } = page;
-  if (direction === "up" || direction === "down") {
-    const target = index + (direction === "up" ? -1 : 1);
-    if (target < 0 || target >= siblings.length) return undefined;
-    return { pageId, parentId, index: target };
-  }
-  if (direction === "in") {
-    const above = siblings[index - 1];
-    if (above === undefined) return undefined;
-    const count = state.workspace.blocks[above]?.childIds.length ?? 0;
-    return { pageId, parentId: above, index: count };
-  }
-  const parent = selectPage(state, parentId);
-  if (parent === undefined) return undefined;
-  const parentIndex = idsIn(state, listContaining(parent)).indexOf(parent.id);
-  return { pageId, parentId: parent.parentId, index: parentIndex + 1 };
+  return page === undefined ? undefined : STEPS[direction](state, page);
 }
 
 export type DropPosition = "before" | "after" | "inside";

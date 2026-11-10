@@ -110,6 +110,7 @@ export default defineConfig([
       "max-lines": ["error", { max: 250 }],
       "max-lines-per-function": ["error", { max: 40 }],
       "max-params": ["error", { max: 3 }],
+      complexity: ["error", 10],
       "no-restricted-exports": [
         "error",
         {
