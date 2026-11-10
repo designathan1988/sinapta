@@ -74,6 +74,26 @@ interface Drag {
   readonly abort: AbortController;
 }
 
+// The click that follows a drag must not also activate the item. A drag
+// that ends over another element may produce no click at all, so the next
+// press cancels the wait.
+function swallowNextClick(container: HTMLElement): void {
+  const wait = new AbortController();
+  const options = { capture: true, once: true, signal: wait.signal };
+  const swallow = (click: Event): void => {
+    click.stopPropagation();
+    wait.abort();
+  };
+  container.addEventListener("click", swallow, options);
+  container.addEventListener(
+    "pointerdown",
+    () => {
+      wait.abort();
+    },
+    options,
+  );
+}
+
 function finish(drag: Drag, isDrop: boolean): void {
   const { session, container, options } = drag;
   const { source, target, position, isDragging } = session;
@@ -81,11 +101,7 @@ function finish(drag: Drag, isDrop: boolean): void {
   source.removeAttribute("data-dragging");
   drag.abort.abort();
   if (!isDragging) return;
-  // The click that follows a drag must not also activate the item.
-  const swallow = (click: Event): void => {
-    click.stopPropagation();
-  };
-  container.addEventListener("click", swallow, { capture: true, once: true });
+  swallowNextClick(container);
   if (isDrop && target !== undefined) options.onDrop(source, target, position);
 }
 
