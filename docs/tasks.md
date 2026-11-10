@@ -351,7 +351,7 @@ its shortcut and closes with Escape; undo keys work.
 
 ## Task 1.13: Milestone review
 
-> **Status:** in progress · **Effort:** m · **Depends on:** 1.1 to 1.12
+> **Status:** done · **Effort:** m · **Depends on:** 1.1 to 1.12
 
 **Delivers:** the review and audit pass the build prompt requires: code
 review, complexity check on the diff, UI audit and accessibility review on
@@ -364,3 +364,46 @@ direction fails lint.
 
 **Visible result:** a short report with screenshots in both themes and the
 `npm run verify` and `npm run build` timings against their budgets.
+
+---
+
+# Milestone 2, Pages and sidebar: record
+
+Built in the same pass as milestone 1, without separate task
+specifications; the tests listed are the specification of each slice.
+
+| Task | Status | Tests |
+| --- | --- | --- |
+| 2.1 Page block, `page.create`, root list | done | `src/blocks/page/page.test.ts` |
+| 2.2 Sidebar tree, expand and collapse, tree keys | done | `src/features/sidebar/sidebar.test.ts`, `sidebar-keys.test.ts` |
+| 2.3 Router, active page, title editing | done | `src/app/router.test.ts`, `src/state/ui.test.ts` |
+| 2.4 Page icon | done | `src/blocks/page/page-tree.test.ts`, `src/model/grapheme.test.ts` |
+| 2.5 Breadcrumbs, back and forward | done | `page-tree.test.ts` |
+| 2.6 Favorite, trash, restore, delete | done | `page-tree.test.ts` |
+| 2.7 Move by keyboard and menu actions | done | `page-tree.test.ts`, `sidebar-keys.test.ts` |
+| 2.8 Move by drag | done | Drop target logic in `page-tree.test.ts`; the gesture checked in the running app |
+| 2.9 Review and audits | done | See the review notes below |
+
+## Review notes for milestones 1 and 2
+
+Fixed after review:
+
+- A stored workspace that failed to load was followed by saves that would
+  have overwritten it. Saving now stops for the session.
+- Enter on a button inside a tree row was swallowed by the tree.
+- Row actions had no keyboard path: Shift+F10 opens the row's menu, and the
+  open page has a menu button in the top bar.
+- The page had no level-one heading; the resizer and menus sat outside
+  landmarks; the title field had no focus indicator.
+- Secondary and danger text were too faint in the dark theme.
+- Moving a page by keyboard dropped focus.
+- Two functions were above a complexity of 10; lint now caps it at 10.
+
+Known and not fixed:
+
+- Icon-only buttons rely on the native `title` tooltip, which does not show
+  on keyboard focus. A tooltip primitive is planned with milestone 7.
+- Each keystroke in the page title is its own undo step. Coalescing comes
+  with text editing in milestone 3.
+- Back and forward work through the URL; View Transitions between pages are
+  planned with milestone 7.
