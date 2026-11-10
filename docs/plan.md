@@ -1,6 +1,6 @@
 # Pagecraft implementation plan
 
-**Status:** Draft, awaiting approval at the Phase 2 review.
+**Status:** Approved on 2026-11-10 with every recommended decision.
 **Source:** `docs/specification.md`. **Branch:** `claude/charming-darwin-7tmtef`.
 
 ## Goal
@@ -34,11 +34,11 @@ Full notes are in `docs/research/`; decisions are in `docs/decisions/`.
 - Browser edits can break lit-html's markers inside a `contenteditable`, so
   block text is projected by one imperative owner (ADR-0001, ADR-0006).
 
-## Decisions needed at this review
+## Decisions approved at the review
 
 Each is a place where the specification, the prompt and research disagree.
-The recommendation is first. Nothing below is applied until approved; on
-approval the specification, the ADR and `CLAUDE.md` change in one commit.
+The owner approved every recommendation on 2026-11-10; the specification,
+ADRs and `CLAUDE.md` were updated in one commit.
 
 | # | Topic | Specification says | Finding | Recommendation |
 | --- | --- | --- | --- | --- |

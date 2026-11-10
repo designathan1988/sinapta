@@ -1,7 +1,7 @@
 # ADR-0006: Text editing
 
-**Status:** Proposed (accepted at the plan review)
-**Date:** 2026-11-10
+**Status:** Accepted
+**Date:** 2026-11-10 (approved by the owner at the plan review)
 **Deciders:** Project owner
 
 ## Context

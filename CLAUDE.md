@@ -19,7 +19,8 @@ No UI framework. Full specification: docs/specification.md.
 - Import direction: app -> features -> blocks -> ui -> state -> model.
   persistence imports state and model only. model imports nothing.
 - Import other folders through their index.ts only.
-- JSON is parsed only in src/model/ schemas, at storage load and file import.
+- JSON is parsed only by schemas (src/model/ and *.schema.ts files), at
+  storage load and file import.
 
 ## Where new code goes
 - New block type: one folder in src/blocks/ + one line in block-registry.ts.

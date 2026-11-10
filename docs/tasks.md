@@ -1,8 +1,7 @@
 # Tasks: milestone 1, Foundation
 
-**Status:** Draft, awaiting approval with `docs/plan.md`. The specifications
-assume the recommended option of every decision in the plan (D1 to D22); a
-different ruling changes the affected task before work starts.
+**Status:** Approved on 2026-11-10. The specifications use the approved
+decisions in the plan (D1 to D22).
 
 Each task is test-first: write the listed scenarios, watch them fail,
 implement, then look at the running app. Every task ends with

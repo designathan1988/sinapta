@@ -1,7 +1,7 @@
 # ADR-0001: Rendering
 
-**Status:** Proposed (accepted at the plan review)
-**Date:** 2026-11-10
+**Status:** Accepted
+**Date:** 2026-11-10 (approved by the owner at the plan review)
 **Deciders:** Project owner
 
 ## Context
@@ -22,8 +22,7 @@ every store commit. The default stands, with three precisions:
    are moved, not recreated), `keyed` (rebuild one block after an
    uncancelled browser edit) and `ref` (hand an element to an imperative
    owner). No directive classes are written and no component classes exist.
-   This widens the specification line "`html` and `render` only" and needs
-   approval.
+   The specification was updated to list them.
 2. The inside of a `contenteditable` block is not a lit child binding.
    Browser edits can eject lit's comment markers. `src/ui/rich-text/`
    projects `RichText` into the element with plain DOM calls, through a

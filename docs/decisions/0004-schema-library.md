@@ -1,7 +1,7 @@
 # ADR-0004: Schema library
 
-**Status:** Proposed (accepted at the plan review)
-**Date:** 2026-11-10
+**Status:** Accepted
+**Date:** 2026-11-10 (approved by the owner at the plan review)
 **Deciders:** Project owner
 
 ## Context
@@ -21,7 +21,7 @@ stands.
 - Ids are branded in the schema with `v.brand("BlockId")`. The specification
   shows `string & { readonly __brand: "BlockId" }`; the inferred Valibot
   brand is a different, equivalent type. The inferred type is used and the
-  specification snippet is updated. This needs approval.
+  specification snippet was updated.
 - `safeParse` only. Issues are mapped to one typed error,
   `{ kind: "invalid-record", recordId, path, expected, received }`.
 - Strict on the fields the app uses; unknown keys on a record are dropped,
@@ -29,7 +29,7 @@ stands.
 - Two specification rules pull against each other: Valibot is "used only in
   `src/model/`", and a new block type must touch "exactly one new folder and
   one registry line". A block type's props need a schema, so one rule has
-  to give. Proposal, which needs approval: each block type's props schema
+  to give. Approved resolution: each block type's props schema
   lives in that block's folder as `<type>.schema.ts` (and each property
   type's value schema in its folder), collected by the registry.
   `src/model/` owns the envelope schema and takes the props schemas as a

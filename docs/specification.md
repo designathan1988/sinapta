@@ -28,7 +28,7 @@ with no server and no account.
 | Area | Version 1 behavior |
 | --- | --- |
 | Workspace | Sidebar tree of nested pages: create, rename, move by drag, favorite, move to trash, restore |
-| Page | Title, icon, body made of blocks |
+| Page | Title, icon (one emoji), body made of blocks |
 | Block types | Paragraph, heading 1 to 3, bulleted list, numbered list, to-do, toggle, quote, callout, divider, code, page link |
 | Block editing | Type, split and merge with Enter and Backspace, indent and outdent with Tab, drag to reorder, slash menu to insert or convert |
 | Inline formatting | Bold, italic, inline code, link |
@@ -83,9 +83,9 @@ Views never write state; the store never knows about views.
 ### 2.1 Single source of truth
 
 - `AppState` in `src/state/store.ts` is the only place state lives. It has
-  four slices: `workspace` (blocks and views), `ui` (active page, selection,
-  sidebar, open overlay, theme), `history` (undo and redo stacks) and
-  `persistence` (save status).
+  four slices: `workspace` (blocks, views and settings, including the
+  theme), `ui` (active page, selection, sidebar, open overlay), `history`
+  (undo and redo stacks) and `persistence` (save status).
 - Workspace data is normalized: records in maps keyed by id, relations by
   id. A record is never nested inside another or copied.
 - Views hold no state. The only exception is what the browser owns during an
@@ -111,7 +111,8 @@ Views never write state; the store never knows about views.
   applies it atomically. A transaction that fails validation changes
   nothing.
 - Each workspace transaction stores its inverse, which is what undo applies.
-  Commands that change only the `ui` slice are not recorded in history.
+  Commands that change only the `ui` slice or only `settings` are not
+  recorded in history.
 - Subscribers react after a transaction: the renderer updates the DOM, the
   repository saves the changed records. Subscribers never dispatch during
   notification.
@@ -152,6 +153,9 @@ defect. `docs/ownership.md` holds the full, current table.
   them in.
 - The lint configuration enforces the import direction, the 250-line file
   limit and the 40-line function limit. A lint error is a build failure.
+  Two exemptions: the function limit is off in `*.test.ts` files, where a
+  `describe` callback is one long function, and default exports are allowed
+  in root `*.config.*` files, where the tools require them.
 - New block type: one new folder under `src/blocks/` and one line in the
   registry. New feature: one new folder under `src/features/` and one line
   in `src/app/bootstrap.ts`. A change that needs edits in more places than
@@ -160,8 +164,11 @@ defect. `docs/ownership.md` holds the full, current table.
 ### 2.5 Parse at the boundary
 
 JSON enters the app in two places: storage load and file import. Both pass
-through the schemas in `src/model/` and produce typed values or a typed
-error. No other code checks the shape of workspace data.
+through the schemas and produce typed values or a typed error. The envelope
+schemas live in `src/model/`; the props schema of a block type and the value
+schema of a property type live in that type's folder as `<type>.schema.ts`
+and are passed to the envelope schema through the registries. No other code
+checks the shape of workspace data.
 
 ---
 
@@ -173,15 +180,15 @@ in the official docs first, and record the exact version in its ADR.
 
 | Concern | Choice | Rule |
 | --- | --- | --- |
-| Language | TypeScript, `strict` and `noUncheckedIndexedAccess` on | No `any`, no non-null `!`, no type casts outside `src/model/` schemas |
+| Language | TypeScript 6.0, `strict` and `noUncheckedIndexedAccess` on | No `any`, no non-null `!`, no type casts outside schema files and `src/model/id.ts`. Move to TypeScript 7 when typescript-eslint supports it |
 | Markup | Semantic HTML, one `index.html` | Native `<dialog>`, `popover`, `<details>`, `<table>` before any custom widget |
 | Styles | Native CSS with `@layer`, nesting and custom properties | No preprocessor, no utility framework, no CSS-in-JS |
 | Dev server and build | Vite | Hot reload stays on during all work |
 | Tests | Vitest | Watch mode during work; see section 7 |
-| Templates | `lit-html`, `html` and `render` only | No component classes, no component state |
+| Templates | `lit-html`: `html`, `render`, `nothing` and the directives `repeat`, `keyed`, `ref` | No component classes, no directive classes, no component state |
 | Store | `createStore` from `zustand/vanilla` | Exactly one store instance |
 | Data table | `@tanstack/table-core` | Row models only, state controlled from the store |
-| Schemas | Valibot | Used only in `src/model/` |
+| Schemas | Valibot | Imported only in `src/model/` and in `*.schema.ts` files |
 | Storage | IndexedDB through `idb` | Used only in `src/persistence/` |
 | Tokens | Design Tokens Format 2025.10 JSON, built to CSS by `scripts/build-tokens.ts` | See section 5.4 |
 | Lint and format | ESLint with typescript-eslint, Stylelint, Prettier | Zero warnings allowed |
@@ -254,9 +261,11 @@ user actions become operations grouped into transactions.
 ### Records
 
 ```ts
-type BlockId = string & { readonly __brand: "BlockId" };
-type ViewId = string & { readonly __brand: "ViewId" };
-type PropertyId = string & { readonly __brand: "PropertyId" };
+// Id types are inferred from the schemas, which brand them:
+// v.pipe(v.string(), v.brand("BlockId")), and likewise for the others.
+type BlockId = v.InferOutput<typeof blockIdSchema>;
+type ViewId = v.InferOutput<typeof viewIdSchema>;
+type PropertyId = v.InferOutput<typeof propertyIdSchema>;
 
 interface Block {
   id: BlockId;
@@ -368,7 +377,11 @@ Every visual value comes from a design token.
   page: title, then either the block list or the database table.
 - Overlays (slash menu, command palette, property menus, dialogs) render in
   the browser top layer through `src/ui/overlay/`. The `ui` slice holds at
-  most one open overlay at a time.
+  most one open overlay at a time and is the truth: the overlay owner shows
+  the element after render and turns its `toggle` and `close` events into a
+  close command. Menus are flat in version 1, with no nested submenus.
+- The slash menu follows the combobox pattern: focus stays in the block and
+  the list is driven by `aria-activedescendant`.
 
 ### 5.2 View rules
 
@@ -391,10 +404,18 @@ Every visual value comes from a design token.
   is the truth; the DOM is a projection of it.
 - Handle `beforeinput`: cancel the browser default, translate the
   `inputType` into a command, dispatch it, and restore the caret from the
-  selection in the `ui` slice. Composition input (IME) is the one case where
-  the browser edits first and the result is read back at `compositionend`.
-- Caret positions and text lengths count grapheme clusters through
-  `Intl.Segmenter`, never UTF-16 code units.
+  selection in the `ui` slice. Input the browser will not let the app cancel
+  (IME composition, spellcheck replacement, autocorrect, autofill) is the
+  one case where the browser edits first; the result is read back on `input`
+  or `compositionend` and dispatched as one command.
+- The inside of an editable block is projected from `RichText` by one owner,
+  `src/ui/rich-text/`, with plain DOM calls, not by a template binding.
+- Offsets in commands, history and the `ui` slice are UTF-16 code unit
+  indices that always sit on a grapheme cluster boundary, snapped through
+  `Intl.Segmenter` in `src/model/grapheme.ts`. Caret movement, deletion and
+  length limits act on whole clusters, never on single code units.
+- A selection that crosses a block boundary becomes a selection of whole
+  blocks.
 - Paste is parsed to plain text and the four supported marks. Pasted HTML is
   never inserted as HTML.
 
@@ -409,7 +430,10 @@ stable version of the W3C Design Tokens Community Group specification
   reassign semantic color tokens for light and dark.
 - `scripts/build-tokens.ts` generates `src/styles/tokens.generated.css`: one
   custom property per token, `color.text.primary` becoming
-  `--color-text-primary`. The generated file is never edited by hand.
+  `--color-text-primary`. Each camelCase segment becomes kebab-case:
+  `font.lineHeight.body` becomes `--font-line-height-body`. Base tokens sit
+  under a top-level `base` group and become `--base-*`. The generated file
+  is never edited by hand.
 - CSS uses semantic tokens only. Base tokens and raw values (hex colors, px,
   ms, font names) are forbidden outside the generated file; Stylelint
   enforces this.
@@ -417,12 +441,16 @@ stable version of the W3C Design Tokens Community Group specification
   (family, size, weight, line height), `duration`, `easing`, `layer`
   (z-order).
 - Theme: `color-scheme: light dark` on the root, with `data-theme="light"`
-  or `"dark"` set only when the user overrides the system setting.
+  or `"dark"` set only when the user overrides the system setting. The
+  override is applied after the workspace loads; until then only the page
+  background paints, in the system theme.
 
 ### 5.5 Data table
 
 - Markup is a real `<table>` with `<thead>`, `<tbody>`, `<th scope="col">`;
   column headers that sort are buttons with `aria-sort` on the header cell.
+  The table carries `role="grid"` with a roving `tabindex` on cells, which
+  cell-to-cell arrow keys require.
 - `@tanstack/table-core` receives rows from a selector and sort, filter,
   order, width and visibility from the active `View` record. Every change it
   reports is turned into a `view.*` command; its internal state is never
@@ -433,9 +461,10 @@ stable version of the W3C Design Tokens Community Group specification
   folder under `src/features/database/properties/`.
 - Editing: Enter or a double click opens the cell editor, Enter commits one
   `row.setValue` command, Escape cancels. Arrow keys move between cells.
-- Rows beyond the viewport are not rendered once a database passes 200 rows;
-  use CSS `content-visibility` first and add windowing only if the 5,000-row
-  target is missed.
+- Rows beyond the viewport are not rendered once a database passes 200 rows.
+  Rows are windowed with spacer rows, because `content-visibility` has no
+  effect on table rows; `aria-rowcount` and `aria-rowindex` keep the full
+  size announced.
 
 ### 5.6 Web best practices
 
@@ -448,12 +477,17 @@ stable version of the W3C Design Tokens Community Group specification
 - Accessibility: WCAG 2.2 AA, a visible focus ring on every interactive
   element, the sidebar as an ARIA tree with roving tabindex, live-region
   announcements for save status and drag results, `prefers-reduced-motion`
-  respected by every animation.
+  respected by every animation. Every drag action also has a keyboard path
+  and a single-pointer path ("Move up", "Move down", "Move to").
 - Performance: no layout reads inside render, event delegation on list
-  containers, fonts from the system stack, no runtime dependency beyond the
-  five in section 3.
-- Security: a Content Security Policy without `unsafe-inline` scripts, link
-  `href` values limited to `http`, `https` and `mailto`.
+  containers, fonts from the system stack, no direct runtime dependency
+  beyond the five in section 3 (the table engine brings `@tanstack/store`
+  with it) and no polyfill packages: a missing platform feature gets a small
+  scripted fallback.
+- Security: a Content Security Policy without `unsafe-inline` scripts or
+  styles, added to `index.html` by the production build (the dev server
+  needs injected styles for hot reload), link `href` values limited to
+  `http`, `https` and `mailto`.
 
 ---
 
@@ -468,7 +502,7 @@ abbreviations except `id`, `url`, `ui`, `css`, `html` and `json`.
 | Files | kebab-case name plus a role suffix | `sidebar.view.ts`, `sidebar.commands.ts`, `sidebar.selectors.ts`, `sidebar.css`, `sidebar.test.ts` |
 | Role suffixes | Closed list: `.view`, `.commands`, `.selectors`, `.definition`, `.schema`, `.test` | `to-do.definition.ts` |
 | Folder entry | `index.ts`, re-exports only, no logic | `features/sidebar/index.ts` |
-| Types and interfaces | PascalCase nouns, no `I` or `T` prefix | `Block`, `TableView` |
+| Types and interfaces | PascalCase nouns, no `I` or `T` prefix | `Block`, `View` |
 | Id types | Branded, suffix `Id` | `BlockId`, `ViewId` |
 | Functions | camelCase, verb first | `moveBlock`, `parseWorkspace` |
 | Selectors | `select` prefix | `selectVisibleRows` |
@@ -480,7 +514,7 @@ abbreviations except `id`, `url`, `ui`, `css`, `html` and `json`.
 | JSON keys | camelCase | `childIds`, `schemaVersion` |
 | String enum values | kebab-case | `"to-do"`, `"multi-select"` |
 | CSS classes | Folder name prefix, then `__part`, state through `data-*` or ARIA attributes | `.sidebar__item[aria-expanded="true"]` |
-| CSS custom properties | Token path joined by hyphens | `--color-text-primary` |
+| CSS custom properties | Token path joined by hyphens, segments in kebab-case | `--color-text-primary` |
 | Token paths | Dot-separated, lower camelCase segments | `color.text.primary` |
 | Tests | `describe` names the unit, `it` states the behavior in present tense | `it("moves a block to a new parent")` |
 | Docs | kebab-case `.md`; ADRs numbered with four digits | `docs/decisions/0003-data-table.md` |
@@ -594,7 +628,8 @@ No UI framework. Full specification: docs/specification.md.
 - Import direction: app -> features -> blocks -> ui -> state -> model.
   persistence imports state and model only. model imports nothing.
 - Import other folders through their index.ts only.
-- JSON is parsed only in src/model/ schemas, at storage load and file import.
+- JSON is parsed only by schemas (src/model/ and *.schema.ts files), at
+  storage load and file import.
 
 ## Where new code goes
 - New block type: one folder in src/blocks/ + one line in block-registry.ts.
@@ -666,8 +701,8 @@ until the previous one meets its acceptance line.
 1. **Foundation.** Project setup, lint limits, tokens pipeline, app shell,
    store, dispatcher, history, repository.
    - Accept: an empty workspace loads, the three watchers run, a
-     `ui.setTheme` command switches theme and survives reload, and an import
-     that breaks the layer direction fails lint.
+     `settings.setTheme` command switches theme and survives reload, and an
+     import that breaks the layer direction fails lint.
 2. **Pages and sidebar.** Page blocks, tree, create, rename, move, favorite,
    trash, router, breadcrumbs.
    - Accept: nested pages can be created and reordered by keyboard and by
@@ -698,9 +733,10 @@ until the previous one meets its acceptance line.
 ### Acceptance for the whole project
 
 - No file over 250 lines, no function over 40, zero lint warnings.
-- Searching the code for writes to the store finds them only in
-  `src/state/dispatch.ts`; searching for `indexedDB` or `idb` finds them
-  only in `src/persistence/`.
+- Searching the code for calls to the store's `setState` finds them only in
+  `src/state/dispatch.ts` (`src/state/store.ts` creates the store and
+  exports `setState` to the dispatcher alone); searching for `indexedDB` or
+  `idb` finds them only in `src/persistence/`.
 - Outside media and container query conditions, hex colors and px values
   appear in the CSS only in `tokens.generated.css`.
 - `docs/ownership.md` matches the code: every listed owner exists and no

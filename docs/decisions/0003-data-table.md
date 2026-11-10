@@ -1,7 +1,7 @@
 # ADR-0003: Data table engine
 
-**Status:** Proposed (accepted at the plan review)
-**Date:** 2026-11-10
+**Status:** Accepted
+**Date:** 2026-11-10 (approved by the owner at the plan review)
 **Deciders:** Project owner
 
 ## Context
@@ -30,7 +30,7 @@ but must not own state. Research: `docs/research/tanstack-table.md`,
 - Measured in Node on 5,000 rows by 7 columns: first sort and filter 46 ms,
   re-sort 8 ms.
 
-Two findings change details of the specification and need approval:
+Two findings changed details of the specification, approved at the review:
 
 1. The library brings one transitive runtime dependency,
    `@tanstack/store`. The project still installs five direct runtime
