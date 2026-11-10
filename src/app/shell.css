@@ -119,4 +119,11 @@
     inline-size: var(--size-border-thick);
     background-color: var(--color-border-focus);
   }
+
+  /* A database page uses the full width and height of the main area. */
+  .app__page:has(> [data-wide]) {
+    flex: 1;
+    inline-size: 100%;
+    min-block-size: 0;
+  }
 }

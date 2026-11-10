@@ -14,6 +14,7 @@ import {
   databaseCommands,
   setRowValue,
 } from "./database.commands.ts";
+import { tableCommands } from "./table.commands.ts";
 import { viewCommands } from "./view.commands.ts";
 import {
   pageCommands,
@@ -88,6 +89,7 @@ export function createDatabaseApp(
       ...viewCommands,
       ...pageCommands,
       ...pageTrashCommands,
+      ...tableCommands,
     ],
   });
   const { store } = base;

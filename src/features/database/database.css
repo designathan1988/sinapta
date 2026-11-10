@@ -1,0 +1,305 @@
+@layer features {
+  .database {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--space-stack-sm);
+    min-block-size: 0;
+  }
+
+  .database__toolbar,
+  .database__tabs,
+  .database__footer {
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+  }
+
+  .database__toolbar .database__spacer {
+    flex: 1;
+  }
+
+  .database__tab {
+    min-block-size: var(--size-control-sm);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: none;
+    border-block-end: var(--size-border-thick) solid transparent;
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-text-primary);
+    }
+
+    &[aria-selected="true"] {
+      border-block-end-color: var(--color-accent-default);
+      color: var(--color-text-primary);
+    }
+  }
+
+  /* The table scrolls inside this box, so its header can stay in view. */
+  .database__scroll {
+    flex: 1;
+    min-block-size: 0;
+    overflow: auto;
+    border-block: var(--size-border-thin) solid var(--color-border-subtle);
+  }
+
+  .database__table {
+    border-collapse: collapse;
+    font-size: var(--font-size-sm);
+    table-layout: fixed;
+  }
+
+  .database__header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: var(--layer-sticky);
+    block-size: var(--size-row-height);
+    padding: var(--space-none);
+    border-block-end: var(--size-border-thin) solid var(--color-border-default);
+    background-color: var(--color-bg-app);
+    font-weight: var(--font-weight-medium);
+    text-align: start;
+    white-space: nowrap;
+
+    &[data-add] {
+      inline-size: var(--size-control-md);
+    }
+  }
+
+  .database__sort {
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    max-inline-size: calc(100% - var(--size-control-md));
+    min-block-size: var(--size-row-height);
+    padding: var(--space-none) var(--space-inset-sm);
+    overflow: hidden;
+    border: none;
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    font-weight: inherit;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-text-primary);
+    }
+
+    &:focus-visible {
+      outline-offset: calc(var(--size-focus-offset) * -1);
+    }
+  }
+
+  .database__header-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .database__column-menu,
+  .database__add-property,
+  .database__open {
+    display: inline-grid;
+    place-items: center;
+    inline-size: var(--size-target-min);
+    block-size: var(--size-target-min);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-tertiary);
+    vertical-align: middle;
+    cursor: pointer;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: var(--color-bg-hover);
+      color: var(--color-text-primary);
+    }
+  }
+
+  /* A hairline at the column's edge that is the handle to resize it. */
+  .database__resizer {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    inline-size: var(--space-inline-xs);
+    cursor: col-resize;
+    touch-action: none;
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--color-border-focus);
+    }
+  }
+
+  .database__cell {
+    block-size: var(--size-row-height);
+    padding: var(--space-none) var(--space-inset-sm);
+    overflow: hidden;
+    border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &[data-type="number"] {
+      font-variant-numeric: tabular-nums;
+      text-align: end;
+    }
+
+    &[data-type="title"] {
+      font-weight: var(--font-weight-medium);
+    }
+
+    &:focus-visible,
+    &[data-active] {
+      outline: var(--size-focus-width) solid var(--color-border-focus);
+      outline-offset: calc(var(--size-focus-width) * -1);
+    }
+  }
+
+  .database__title[data-untitled] {
+    color: var(--color-text-tertiary);
+  }
+
+  .database__open {
+    float: inline-end;
+    opacity: 0;
+  }
+
+  .database__cell:is(:hover, :focus-visible) .database__open {
+    opacity: 1;
+  }
+
+  .database__input {
+    inline-size: 100%;
+    block-size: 100%;
+    padding: var(--space-none);
+    border: none;
+    background-color: transparent;
+    color: var(--color-text-primary);
+
+    &:focus-visible {
+      outline: none;
+    }
+
+    &[aria-invalid="true"] {
+      color: var(--color-text-danger);
+    }
+  }
+
+  .database__link {
+    color: var(--color-text-link);
+  }
+
+  .database__table .database__spacer {
+    block-size: calc(var(--database-spacer-rows, 0) * var(--size-row-height));
+  }
+
+  .database__chip {
+    display: inline-block;
+    margin-inline-end: var(--space-inline-xs);
+    padding: var(--space-none) var(--space-inset-sm);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    line-height: var(--font-line-height-body);
+  }
+
+  .database__chip[data-color="gray"] {
+    background-color: var(--color-chip-gray-bg);
+    color: var(--color-chip-gray-text);
+  }
+
+  .database__chip[data-color="brown"] {
+    background-color: var(--color-chip-brown-bg);
+    color: var(--color-chip-brown-text);
+  }
+
+  .database__chip[data-color="orange"] {
+    background-color: var(--color-chip-orange-bg);
+    color: var(--color-chip-orange-text);
+  }
+
+  .database__chip[data-color="yellow"] {
+    background-color: var(--color-chip-yellow-bg);
+    color: var(--color-chip-yellow-text);
+  }
+
+  .database__chip[data-color="green"] {
+    background-color: var(--color-chip-green-bg);
+    color: var(--color-chip-green-text);
+  }
+
+  .database__chip[data-color="blue"] {
+    background-color: var(--color-chip-blue-bg);
+    color: var(--color-chip-blue-text);
+  }
+
+  .database__chip[data-color="purple"] {
+    background-color: var(--color-chip-purple-bg);
+    color: var(--color-chip-purple-text);
+  }
+
+  .database__chip[data-color="red"] {
+    background-color: var(--color-chip-red-bg);
+    color: var(--color-chip-red-text);
+  }
+
+  .database__count {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+  }
+
+  .database__popover:popover-open {
+    display: grid;
+    gap: var(--space-stack-sm);
+    padding: var(--space-inset-md);
+  }
+
+  .database__filters {
+    display: grid;
+    gap: var(--space-stack-xs);
+  }
+
+  .database__filter {
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+  }
+
+  .database__field {
+    min-inline-size: 0;
+    min-block-size: var(--size-control-md);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: var(--size-border-thin) solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-app);
+    color: var(--color-text-primary);
+  }
+
+  .database__check {
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .database__option {
+    display: flex;
+    align-items: center;
+    inline-size: 100%;
+    min-block-size: var(--size-row-height);
+    padding: var(--space-none) var(--space-inset-xs);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    cursor: pointer;
+
+    &:hover,
+    &[aria-selected="true"] {
+      background-color: var(--color-bg-hover);
+    }
+  }
+}

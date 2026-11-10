@@ -2,6 +2,7 @@ import "./dialog.css";
 import { html, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import { renderButton } from "../button/index.ts";
+import { whenConnected } from "../focus/index.ts";
 
 export interface DialogOptions {
   readonly title: string;
@@ -11,16 +12,11 @@ export interface DialogOptions {
   readonly onClose: () => void;
 }
 
-// lit calls this while the element is still in a detached fragment on the
-// first render, and a detached dialog cannot be shown, so wait one
-// microtask for it to be connected.
 function showWhenConnected(element: Element | undefined): void {
-  if (!(element instanceof HTMLDialogElement) || element.open) return;
-  if (element.isConnected) element.showModal();
-  else
-    queueMicrotask(() => {
-      showWhenConnected(element);
-    });
+  if (!(element instanceof HTMLDialogElement)) return;
+  whenConnected(element, () => {
+    if (element.isConnected && !element.open) element.showModal();
+  });
 }
 
 function closeFrom(event: Event): void {

@@ -8,6 +8,7 @@ import {
 } from "../../state/index.ts";
 import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { createDatabase } from "../database/index.ts";
 import { TRASH_OVERLAY } from "../trash/index.ts";
 import { renderFavorites } from "./sidebar-favorites.view.ts";
 import { renderTree } from "./sidebar-tree.view.ts";
@@ -18,6 +19,11 @@ function renderFooter(dispatch: Dispatch): TemplateResult {
     label: COPY.sidebar.newPage,
     icon: "plus",
     onClick: () => dispatch(createPage.create({ parentId: null })),
+  })}
+  ${renderButton({
+    label: COPY.database.newDatabase,
+    icon: "plus",
+    onClick: () => dispatch(createDatabase.create({ parentId: null })),
   })}
   ${renderButton({
     label: COPY.trash.open,

@@ -43,6 +43,8 @@ export interface UiState {
   readonly activeViewIds: Readonly<Record<BlockId, ViewId>>;
   // The table cell that has focus, and whether it is being edited.
   readonly activeCell: ActiveCell | null;
+  // The first row of a long table that is scrolled into view.
+  readonly tableFirstRow: number;
   // Sidebar width in rem.
   readonly sidebarWidth: number;
   readonly isSidebarCollapsed: boolean;
@@ -93,6 +95,7 @@ export function createInitialUiState(): UiState {
     selection: null,
     activeViewIds: {},
     activeCell: null,
+    tableFirstRow: 0,
     sidebarWidth: SIDEBAR_WIDTH.initial,
     isSidebarCollapsed: false,
     overlay: null,

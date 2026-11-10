@@ -1,6 +1,7 @@
 // Light dismiss for menus and popovers: a press outside the open overlay
 // and outside the control that opened it closes the overlay.
 import "./overlay.css";
+import { whenConnected } from "../focus/index.ts";
 import {
   closeOverlay,
   type AppStore,
@@ -36,12 +37,9 @@ export function focusOverlayAnchor(): void {
 // Shows a popover element once it is in the document.
 export function showPopoverWhenConnected(element: Element | undefined): void {
   if (!(element instanceof HTMLElement)) return;
-  if (!element.isConnected) {
-    queueMicrotask(() => {
-      showPopoverWhenConnected(element);
-    });
-    return;
-  }
-  if (!element.matches(":popover-open")) element.showPopover();
-  element.querySelector<HTMLElement>("[data-autofocus]")?.focus();
+  whenConnected(element, () => {
+    if (!element.isConnected) return;
+    if (!element.matches(":popover-open")) element.showPopover();
+    element.querySelector<HTMLElement>("[data-autofocus]")?.focus();
+  });
 }

@@ -1,4 +1,8 @@
-import { selectPage, selectPageTitle } from "../../blocks/page/index.ts";
+import {
+  DATABASE_TYPE,
+  selectPage,
+  selectPageTitle,
+} from "../../blocks/page/index.ts";
 import type { BlockId } from "../../model/index.ts";
 import type { AppState } from "../../state/index.ts";
 
@@ -25,7 +29,9 @@ function addRows(state: AppState, walk: Walk, rows: TreeRow[]): void {
   for (const id of walk.ids) {
     const page = selectPage(state, id);
     if (page === undefined || page.props.isTrashed) continue;
-    const childPageIds = page.childIds.filter((childId) => {
+    // The rows of a database are shown in its table, not in the tree.
+    const childIds = page.type === DATABASE_TYPE ? [] : page.childIds;
+    const childPageIds = childIds.filter((childId) => {
       const child = selectPage(state, childId);
       return child !== undefined && !child.props.isTrashed;
     });

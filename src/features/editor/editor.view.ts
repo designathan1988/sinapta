@@ -1,28 +1,23 @@
 import "./editor.css";
 import { html, type nothing, type TemplateResult } from "lit-html";
 import {
+  DATABASE_TYPE,
   renamePage,
   selectPage,
   selectPageTitle,
+  type PageBlock,
 } from "../../blocks/page/index.ts";
 import type { AppState, Dispatch } from "../../state/index.ts";
 import { COPY, PRODUCT_NAME } from "../../ui/copy.ts";
+import { renderDatabase } from "../database/index.ts";
 import { continueWriting, renderBlocks } from "./editor-blocks.view.ts";
 import { renderBlockMenu } from "./editor-block-menu.view.ts";
 import { LINK_OVERLAY, renderLinkField } from "./editor-link.view.ts";
+import type { InputContext } from "./editor-input.view.ts";
 import { renderIconControl } from "./editor-icon.view.ts";
 
-// The open page: its icon, its title and its blocks.
-export function renderEditor(
-  state: AppState,
-  dispatch: Dispatch,
-): TemplateResult {
-  const page = selectPage(state, state.ui.activePageId);
-  if (page === undefined || page.props.isTrashed) {
-    return html`<h1 class="visually-hidden">${PRODUCT_NAME}</h1>
-      <p class="editor__empty">${COPY.editor.noPage}</p>`;
-  }
-  const context = { state, dispatch };
+function renderTitle(page: PageBlock, context: InputContext): TemplateResult {
+  const { dispatch } = context;
   const onInput = (event: Event): void => {
     if (event.target instanceof HTMLInputElement) {
       dispatch(
@@ -36,20 +31,37 @@ export function renderEditor(
     event.preventDefault();
     continueWriting(page.id, context);
   };
-  return html`<article class="editor">
-    ${renderIconControl(state, page, dispatch)}
-    <h1 class="editor__heading">
-      <input
-        class="editor__title"
-        type="text"
-        aria-label=${COPY.editor.titleLabel}
-        placeholder=${COPY.sidebar.untitled}
-        .value=${selectPageTitle(page)}
-        @input=${onInput}
-        @keydown=${onKeyDown}
-      />
-    </h1>
-    ${renderBlocks(page.id, context)}
+  return html`<h1 class="editor__heading">
+    <input
+      class="editor__title"
+      type="text"
+      aria-label=${COPY.editor.titleLabel}
+      placeholder=${COPY.sidebar.untitled}
+      .value=${selectPageTitle(page)}
+      @input=${onInput}
+      @keydown=${onKeyDown}
+    />
+  </h1>`;
+}
+
+// The open page: its icon, its title and its blocks.
+export function renderEditor(
+  state: AppState,
+  dispatch: Dispatch,
+): TemplateResult {
+  const page = selectPage(state, state.ui.activePageId);
+  if (page === undefined || page.props.isTrashed) {
+    return html`<h1 class="visually-hidden">${PRODUCT_NAME}</h1>
+      <p class="editor__empty">${COPY.editor.noPage}</p>`;
+  }
+  const context = { state, dispatch };
+  return html`<article class="editor" ?data-wide=${page.type === DATABASE_TYPE}>
+    ${renderIconControl(state, page, dispatch)} ${renderTitle(page, context)}
+    ${
+      page.type === DATABASE_TYPE
+        ? renderDatabase(state, dispatch)
+        : renderBlocks(page.id, context)
+    }
   </article>`;
 }
 

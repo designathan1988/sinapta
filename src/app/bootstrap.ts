@@ -9,6 +9,7 @@ import {
 } from "../blocks/page/index.ts";
 import { toDoCommands } from "../blocks/to-do/index.ts";
 import { toggleCommands } from "../blocks/toggle/index.ts";
+import { databaseCommands } from "../features/database/index.ts";
 import { editorCommands } from "../features/editor/index.ts";
 import { installSlashMenuKeys } from "../features/slash-menu/index.ts";
 import type { Theme } from "../model/index.ts";
@@ -44,6 +45,7 @@ const COMMANDS = [
   ...toDoCommands,
   ...toggleCommands,
   ...editorCommands,
+  ...databaseCommands,
 ];
 
 // A manual theme is an attribute on the root element; "system" removes it.

@@ -1,0 +1,202 @@
+// The header row of the table: sort buttons, column menus, resize handles
+// and the button that adds a property.
+import { html, type TemplateResult } from "lit-html";
+import { closeOverlay, openOverlay } from "../../state/index.ts";
+import { COPY } from "../../ui/copy.ts";
+import { renderIcon } from "../../ui/icon/index.ts";
+import type { TableContext } from "./table-cell.view.ts";
+import type { TableColumn } from "./table-model.selectors.ts";
+import {
+  MAX_COLUMN_WIDTH,
+  MIN_COLUMN_WIDTH,
+  resizeProperty,
+  setViewSorts,
+} from "./view.commands.ts";
+
+export const COLUMN_MENU_OVERLAY = "column-menu";
+export const PROPERTY_TYPES_OVERLAY = "property-types";
+const RESIZE_STEP = 16;
+const RESIZE_KEYS: Record<string, number> = {
+  ArrowLeft: -RESIZE_STEP,
+  ArrowRight: RESIZE_STEP,
+};
+
+// Column widths come from the store as numbers, so they are set through
+// the CSSOM, not through a style attribute.
+export function setColumnWidth(
+  column: Element | undefined,
+  width: number,
+): void {
+  if (column instanceof HTMLElement) {
+    column.style.setProperty("inline-size", `${String(width)}px`);
+  }
+}
+
+const NEXT_SORT = {
+  none: "ascending",
+  ascending: "descending",
+  descending: "none",
+} as const;
+
+// A press on a header cycles its sort: ascending, descending, none.
+function cycleSort(column: TableColumn, context: TableContext): void {
+  const next = NEXT_SORT[column.sortDirection ?? "none"];
+  const propertyId = column.property.id;
+  const sorts = next === "none" ? [] : [{ propertyId, direction: next }];
+  context.dispatch(
+    setViewSorts.create({ viewId: context.model.view.id, sorts }),
+  );
+}
+
+// The width a pointer position asks for: its distance from the header's
+// start edge.
+function widthAt(event: PointerEvent): number {
+  const header =
+    event.target instanceof Element ? event.target.closest("th") : null;
+  return event.clientX - (header?.getBoundingClientRect().left ?? 0);
+}
+
+function capture(event: PointerEvent): void {
+  if (event.currentTarget instanceof Element) {
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }
+}
+
+// While dragging, the browser owns the width; the store gets it once.
+function preview(event: PointerEvent): void {
+  const handle = event.currentTarget;
+  if (
+    !(handle instanceof Element) ||
+    !handle.hasPointerCapture(event.pointerId)
+  )
+    return;
+  const id =
+    handle.closest<HTMLElement>("[data-property-id]")?.dataset.propertyId ?? "";
+  const column = handle
+    .closest("table")
+    ?.querySelector(`col[data-property-id="${id}"]`);
+  setColumnWidth(
+    column ?? undefined,
+    Math.max(MIN_COLUMN_WIDTH, widthAt(event)),
+  );
+}
+
+function renderResizer(
+  column: TableColumn,
+  context: TableContext,
+): TemplateResult {
+  const viewId = context.model.view.id;
+  const propertyId = column.property.id;
+  const resize = (width: number): void => {
+    context.dispatch(resizeProperty.create({ viewId, propertyId, width }));
+  };
+  const onKeyDown = (event: KeyboardEvent): void => {
+    const step = RESIZE_KEYS[event.key];
+    if (step === undefined) return;
+    event.preventDefault();
+    resize(column.width + step);
+  };
+  return html`<span
+    class="database__resizer"
+    role="separator"
+    tabindex="0"
+    aria-orientation="vertical"
+    aria-label=${`${COPY.database.resizeColumn} ${column.property.name}`}
+    aria-valuenow=${column.width}
+    aria-valuemin=${MIN_COLUMN_WIDTH}
+    aria-valuemax=${MAX_COLUMN_WIDTH}
+    @pointerdown=${capture}
+    @pointermove=${preview}
+    @pointerup=${(event: PointerEvent) => {
+      resize(widthAt(event));
+    }}
+    @keydown=${onKeyDown}
+  ></span>`;
+}
+
+function renderMenuButton(
+  column: TableColumn,
+  context: TableContext,
+): TemplateResult {
+  const { overlay } = context.state.ui;
+  const anchorId = column.property.id;
+  const isOpen =
+    overlay?.kind === COLUMN_MENU_OVERLAY && overlay.anchorId === anchorId;
+  const toggle = (): void => {
+    const next = { kind: COLUMN_MENU_OVERLAY, anchorId };
+    context.dispatch(
+      isOpen ? closeOverlay.create({}) : openOverlay.create({ overlay: next }),
+    );
+  };
+  return html`<button
+    type="button"
+    class="database__column-menu"
+    data-overlay-anchor
+    aria-haspopup="menu"
+    aria-expanded=${String(isOpen)}
+    aria-label=${`${COPY.database.columnActions}: ${column.property.name}`}
+    @click=${toggle}
+  >
+    ${renderIcon("more")}
+  </button>`;
+}
+
+const SORT_ARROWS = { ascending: "↑", descending: "↓" } as const;
+
+function renderHeader(
+  column: TableColumn,
+  context: TableContext,
+): TemplateResult {
+  const { property, sortDirection } = column;
+  return html`<th
+    class="database__header"
+    scope="col"
+    data-property-id=${property.id}
+    aria-sort=${sortDirection ?? "none"}
+  >
+    <button
+      type="button"
+      class="database__sort"
+      @click=${() => {
+        cycleSort(column, context);
+      }}
+    >
+      <span class="database__header-name">${property.name}</span>
+      <span aria-hidden="true"
+        >${sortDirection ? SORT_ARROWS[sortDirection] : ""}</span
+      >
+    </button>
+    ${renderMenuButton(column, context)} ${renderResizer(column, context)}
+  </th>`;
+}
+
+function renderAddProperty(context: TableContext): TemplateResult {
+  const isOpen = context.state.ui.overlay?.kind === PROPERTY_TYPES_OVERLAY;
+  const toggle = (): void => {
+    const overlay = { kind: PROPERTY_TYPES_OVERLAY };
+    context.dispatch(
+      isOpen ? closeOverlay.create({}) : openOverlay.create({ overlay }),
+    );
+  };
+  return html`<th class="database__header" scope="col" data-add>
+    <button
+      type="button"
+      class="database__add-property"
+      data-overlay-anchor
+      aria-haspopup="menu"
+      aria-expanded=${String(isOpen)}
+      aria-label=${COPY.database.addProperty}
+      title=${COPY.database.addProperty}
+      @click=${toggle}
+    >
+      ${renderIcon("plus")}
+    </button>
+  </th>`;
+}
+
+export function renderHeaderRow(context: TableContext): TemplateResult {
+  return html`<tr aria-rowindex="1">
+    ${context.model.columns.map((column) => renderHeader(column, context))}
+    ${renderAddProperty(context)}
+  </tr>`;
+}
