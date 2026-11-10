@@ -436,6 +436,9 @@
     },
     "medium": {
       "$value": "{base.duration.2}"
+    },
+    "hintDelay": {
+      "$value": "{base.duration.3}"
     }
   },
   "easing": {

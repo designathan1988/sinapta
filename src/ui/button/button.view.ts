@@ -1,6 +1,7 @@
 import "./button.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { renderIcon, type IconName } from "../icon/index.ts";
+import { TOOLTIP_TARGET, tooltipTitle } from "../tooltip/index.ts";
 
 export interface ButtonOptions {
   readonly label: string;
@@ -18,7 +19,8 @@ export function renderButton(options: ButtonOptions): TemplateResult {
     class="button"
     data-variant=${options.variant ?? "quiet"}
     aria-label=${isIconOnly ? options.label : nothing}
-    title=${isIconOnly ? options.label : nothing}
+    title=${isIconOnly ? tooltipTitle(options.label) : nothing}
+    interestfor=${isIconOnly ? TOOLTIP_TARGET : nothing}
     @click=${options.onClick}
   >
     ${options.icon === undefined ? nothing : renderIcon(options.icon)}

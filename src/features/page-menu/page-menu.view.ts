@@ -18,6 +18,7 @@ import {
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
+import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { renderMenu, type MenuItem } from "../../ui/menu/index.ts";
 
 export const PAGE_MENU_OVERLAY = "page-menu";
@@ -69,7 +70,8 @@ export function renderPageMenuButton(
     aria-haspopup="menu"
     aria-expanded=${String(isOpen)}
     aria-label=${COPY.pageMenu.open}
-    title=${COPY.pageMenu.open}
+    title=${tooltipTitle(COPY.pageMenu.open)}
+    interestfor=${TOOLTIP_TARGET}
     @click=${onClick}
   >
     ${renderIcon("more")}

@@ -32,6 +32,7 @@ import {
 import { installSelectionSync, restoreSelection } from "../ui/caret/index.ts";
 import { installOverlayDismiss } from "../ui/overlay/index.ts";
 import { matchShortcut } from "../ui/shortcuts/index.ts";
+import { installTooltip } from "../ui/tooltip/index.ts";
 import { startRouter } from "./router.ts";
 import { renderShell } from "./shell.view.ts";
 
@@ -83,6 +84,7 @@ export async function startApp(container: HTMLElement): Promise<void> {
   installOverlayDismiss(store, dispatch);
   installSelectionSync(store, dispatch);
   installSlashMenuKeys(store, dispatch);
+  installTooltip();
   document.addEventListener("keydown", (event) => {
     const shortcut = matchShortcut(event);
     if (shortcut === undefined) return;

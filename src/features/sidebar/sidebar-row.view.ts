@@ -3,6 +3,7 @@ import { ref } from "lit-html/directives/ref.js";
 import type { AppState, Dispatch } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
+import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { renderPageMenuButton } from "../page-menu/index.ts";
 import type { TreeRow } from "./sidebar.selectors.ts";
 
@@ -17,7 +18,8 @@ function renderAddButton(): TemplateResult {
     tabindex="-1"
     data-action="add"
     aria-label=${COPY.sidebar.addSubpage}
-    title=${COPY.sidebar.addSubpage}
+    title=${tooltipTitle(COPY.sidebar.addSubpage)}
+    interestfor=${TOOLTIP_TARGET}
   >
     ${renderIcon("plus")}
   </button>`;

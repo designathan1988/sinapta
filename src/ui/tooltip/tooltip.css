@@ -1,0 +1,21 @@
+@layer ui {
+  [interestfor] {
+    interest-delay-start: var(--duration-hint-delay);
+    interest-delay-end: var(--duration-fast);
+  }
+
+  .tooltip {
+    inset: auto;
+    margin: var(--space-stack-xs) var(--space-none);
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: var(--color-text-primary);
+    color: var(--color-bg-app);
+    font-size: var(--font-size-xs);
+    white-space: nowrap;
+    pointer-events: none;
+    position-area: block-end;
+    position-try-fallbacks: flip-block;
+  }
+}

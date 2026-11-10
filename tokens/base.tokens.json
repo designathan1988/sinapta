@@ -752,6 +752,12 @@
           "value": 200,
           "unit": "ms"
         }
+      },
+      "3": {
+        "$value": {
+          "value": 500,
+          "unit": "ms"
+        }
       }
     },
     "easing": {

@@ -15,6 +15,7 @@ import { COPY } from "../../ui/copy.ts";
 import { startPointerDrag } from "../../ui/drag/index.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { renderMenu, type MenuItem } from "../../ui/menu/index.ts";
+import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { convertBlock } from "./editor-convert.commands.ts";
 import type { InputContext } from "./editor-input.view.ts";
 import {
@@ -53,7 +54,8 @@ export function renderHandle(
     aria-haspopup="menu"
     aria-expanded=${String(isOpen)}
     aria-label=${COPY.blockMenu.open}
-    title=${COPY.blockMenu.open}
+    title=${tooltipTitle(COPY.blockMenu.open)}
+    interestfor=${TOOLTIP_TARGET}
     @click=${onClick}
   >
     ${renderIcon("grip")}

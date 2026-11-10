@@ -4,6 +4,7 @@ import { html, type TemplateResult } from "lit-html";
 import { closeOverlay, openOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
+import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import type { TableColumn } from "./table-model.selectors.ts";
 import { startColumnDrag } from "./table-column-drag.view.ts";
@@ -152,6 +153,7 @@ function renderMenuButton(
     aria-haspopup="menu"
     aria-expanded=${String(isOpen)}
     aria-label=${`${COPY.database.columnActions}: ${column.property.name}`}
+    interestfor=${TOOLTIP_TARGET}
     @click=${toggle}
   >
     ${renderIcon("more")}
@@ -203,7 +205,8 @@ function renderAddProperty(context: TableContext): TemplateResult {
       aria-haspopup="menu"
       aria-expanded=${String(isOpen)}
       aria-label=${COPY.database.addProperty}
-      title=${COPY.database.addProperty}
+      title=${tooltipTitle(COPY.database.addProperty)}
+      interestfor=${TOOLTIP_TARGET}
       @click=${toggle}
     >
       ${renderIcon("plus")}

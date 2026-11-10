@@ -4,6 +4,7 @@ import type { AppState, Dispatch } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { whenConnected } from "../../ui/focus/index.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
+import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { propertyType } from "./property-registry.ts";
 import type {
   TableColumn,
@@ -83,7 +84,8 @@ function renderTitle(row: TableRow): TemplateResult {
       tabindex="-1"
       data-action="open"
       aria-label=${COPY.database.openRow}
-      title=${COPY.database.openRow}
+      title=${tooltipTitle(COPY.database.openRow)}
+      interestfor=${TOOLTIP_TARGET}
     >
       ${renderIcon("chevron")}
     </button>`;
