@@ -32,3 +32,20 @@ export {
 } from "./workspace.schema.ts";
 export { createEmptyWorkspace } from "./workspace.ts";
 export type { RecordError, WorkspaceFileError } from "./parse-error.ts";
+export { applyOperations, type ApplyResult } from "./apply-operation.ts";
+export type {
+  ChangedRecords,
+  ListRef,
+  Operation,
+  OperationError,
+} from "./operation.ts";
+export {
+  findInvariantViolation,
+  type InvariantViolation,
+} from "./workspace-invariants.ts";
+export {
+  buildWorkspace,
+  TEST_TIME,
+  toBlockId,
+  type BlockSpec,
+} from "./workspace-builder.ts";
