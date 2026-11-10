@@ -15,6 +15,7 @@ import {
   type Dispatch,
 } from "../state/index.ts";
 import { renderBreadcrumbs } from "../features/breadcrumbs/index.ts";
+import { MOVE_TO_OVERLAY, renderMoveTo } from "../features/move-to/index.ts";
 import { renderPageMenu } from "../features/page-menu/index.ts";
 import { renderTrash, TRASH_OVERLAY } from "../features/trash/index.ts";
 import { renderButton } from "../ui/button/index.ts";
@@ -132,6 +133,7 @@ function renderOverlay(
   const kind = state.ui.overlay?.kind;
   if (kind === SETTINGS_OVERLAY) return renderSettings(state, dispatch);
   if (kind === TRASH_OVERLAY) return renderTrash(state, dispatch);
+  if (kind === MOVE_TO_OVERLAY) return renderMoveTo(state, dispatch);
   return renderPageMenu(state, dispatch);
 }
 

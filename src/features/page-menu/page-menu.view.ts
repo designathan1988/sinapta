@@ -20,6 +20,8 @@ import { renderIcon } from "../../ui/icon/index.ts";
 import { renderMenu, type MenuItem } from "../../ui/menu/index.ts";
 
 export const PAGE_MENU_OVERLAY = "page-menu";
+// Opened from this menu; rendered by the move-to feature.
+export const MOVE_TO_OVERLAY_KIND = "move-to";
 
 // The same page can show its menu button in several places, so an anchor
 // id names the place as well as the page.
@@ -91,6 +93,16 @@ function moveItems(
       icon: "down",
       onSelect: move(1),
       isDisabled: index >= count - 1,
+    },
+    {
+      label: COPY.moveTo.action,
+      icon: "chevron",
+      onSelect: () =>
+        dispatch(
+          openOverlay.create({
+            overlay: { kind: MOVE_TO_OVERLAY_KIND, anchorId: pageId },
+          }),
+        ),
     },
   ];
 }

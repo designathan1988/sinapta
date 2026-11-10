@@ -1,7 +1,13 @@
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import { repeat } from "lit-html/directives/repeat.js";
-import { createPage } from "../../blocks/page/index.ts";
+import {
+  createPage,
+  movePage,
+  selectDropTarget,
+  selectStepTarget,
+  type MoveDirection,
+} from "../../blocks/page/index.ts";
 import { parseBlockId, type BlockId } from "../../model/index.ts";
 import {
   openOverlay,
@@ -10,8 +16,10 @@ import {
   type AppState,
   type Dispatch,
 } from "../../state/index.ts";
+import { announce } from "../../ui/announcer/index.ts";
 import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { startPointerDrag } from "../../ui/drag/index.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { renderPageMenuButton } from "../page-menu/index.ts";
 import { TRASH_OVERLAY } from "../trash/index.ts";
@@ -107,8 +115,55 @@ function focusSibling(row: HTMLElement, offset: number): void {
   rows[rows.indexOf(row) + offset]?.focus();
 }
 
+const MOVE_KEYS: Record<string, MoveDirection> = {
+  ArrowUp: "up",
+  ArrowDown: "down",
+  ArrowRight: "in",
+  ArrowLeft: "out",
+};
+
+// Alt with an arrow key moves the focused page; focus stays on it.
+function movePageByKey(event: KeyboardEvent, context: Context): boolean {
+  const direction = MOVE_KEYS[event.key];
+  const pageId = pageIdOf(rowOf(event));
+  if (!event.altKey || direction === undefined || pageId === undefined) {
+    return false;
+  }
+  event.preventDefault();
+  const target = selectStepTarget(context.state, pageId, direction);
+  if (target !== undefined) context.dispatch(movePage.create(target));
+  announce(target === undefined ? COPY.moveTo.notMoved : COPY.moveTo.moved);
+  return true;
+}
+
+function startRowDrag(event: PointerEvent, context: Context): void {
+  if (
+    event.target instanceof Element &&
+    event.target.closest("button") !== null
+  ) {
+    return;
+  }
+  startPointerDrag(event, {
+    itemSelector: "[data-page-id]",
+    onDrop(source, target, position) {
+      const pageId = pageIdOf(source);
+      const targetId = pageIdOf(target);
+      if (pageId === undefined || targetId === undefined) return;
+      const drop = selectDropTarget(context.state, pageId, {
+        targetId,
+        position,
+      });
+      if (drop === undefined) return;
+      const result = context.dispatch(movePage.create(drop));
+      announce(result.ok ? COPY.moveTo.moved : COPY.moveTo.notMoved);
+    },
+  });
+}
+
 // Keyboard support of the ARIA tree pattern.
-function onTreeKeyDown(event: KeyboardEvent, dispatch: Dispatch): void {
+function onTreeKeyDown(event: KeyboardEvent, context: Context): void {
+  const { dispatch } = context;
+  if (movePageByKey(event, context)) return;
   const row = rowOf(event);
   const pageId = pageIdOf(row);
   if (row === null || pageId === undefined) return;
@@ -168,8 +223,11 @@ export function renderSidebar(
     @click=${(event: Event) => {
       onTreeClick(event, dispatch);
     }}
+    @pointerdown=${(event: PointerEvent) => {
+      startRowDrag(event, { state, dispatch });
+    }}
     @keydown=${(event: KeyboardEvent) => {
-      onTreeKeyDown(event, dispatch);
+      onTreeKeyDown(event, { state, dispatch });
     }}
   >
     ${repeat(

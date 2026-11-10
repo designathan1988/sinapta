@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { buildWorkspace, toBlockId } from "../../model/index.ts";
 import { createTestApp, uiCommands, setActivePage } from "../../state/index.ts";
-import { movePage, pageMoveCommands } from "./page-move.commands.ts";
+import {
+  movePage,
+  pageMoveCommands,
+  selectDropTarget,
+  selectStepTarget,
+} from "./page-move.commands.ts";
 import {
   deletePage,
   pageTrashCommands,
@@ -183,5 +188,55 @@ describe("page tree commands", () => {
     );
 
     expect(trail).toEqual([A, A1]);
+  });
+
+  it.each([
+    ["up", A2, { parentId: A, index: 0 }],
+    ["down", A1, { parentId: A, index: 1 }],
+    ["in", A2, { parentId: A1, index: 0 }],
+    ["out", A1, { parentId: null, index: 1 }],
+  ] as const)("steps a page %s", (direction, pageId, expected) => {
+    const { store } = createApp();
+
+    const target = selectStepTarget(store.getState(), pageId, direction);
+
+    expect(target).toEqual({ pageId, ...expected });
+  });
+
+  it.each([
+    ["up", A1],
+    ["down", A2],
+    ["in", A1],
+    ["out", A],
+  ] as const)("has no step %s from the edge", (direction, pageId) => {
+    const { store } = createApp();
+
+    expect(
+      selectStepTarget(store.getState(), pageId, direction),
+    ).toBeUndefined();
+  });
+
+  it.each([
+    { position: "before", pageId: B, targetId: A, parentId: null, index: 0 },
+    { position: "after", pageId: A1, targetId: B, parentId: null, index: 2 },
+    { position: "inside", pageId: B, targetId: A, parentId: A, index: 2 },
+    { position: "after", pageId: A1, targetId: A2, parentId: A, index: 1 },
+  ] as const)("drops a page $position another", (row) => {
+    const { store } = createApp();
+    const { pageId, targetId, position, parentId, index } = row;
+
+    const target = selectDropTarget(store.getState(), pageId, {
+      targetId,
+      position,
+    });
+
+    expect(target).toEqual({ pageId, parentId, index });
+  });
+
+  it("has no drop target when a page is dropped on itself", () => {
+    const { store } = createApp();
+    const drop = { targetId: A, position: "inside" } as const;
+
+    expect(selectDropTarget(store.getState(), A, drop)).toBeUndefined();
   });
 });

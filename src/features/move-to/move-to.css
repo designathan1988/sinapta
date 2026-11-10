@@ -1,0 +1,31 @@
+@layer features {
+  .move-to__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xxs);
+    max-block-size: var(--size-menu-max-height);
+    overflow: hidden auto;
+  }
+
+  .move-to__option {
+    inline-size: 100%;
+    min-block-size: var(--size-row-height);
+    padding: var(--space-none) var(--space-inset-sm);
+    overflow: hidden;
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    text-align: start;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    &:focus-visible {
+      outline-offset: calc(var(--size-focus-offset) * -1);
+    }
+  }
+}

@@ -65,4 +65,58 @@ export const movePage = defineCommand<MovePagePayload>({
   },
 });
 
+export type MoveDirection = "up" | "down" | "in" | "out";
+
+// Where one keyboard step takes a page, or undefined when it cannot go
+// further that way. "in" makes it the last child of the page above it;
+// "out" puts it right after its parent.
+export function selectStepTarget(
+  state: AppState,
+  pageId: BlockId,
+  direction: MoveDirection,
+): MovePagePayload | undefined {
+  const page = selectPage(state, pageId);
+  if (page === undefined) return undefined;
+  const siblings = idsIn(state, listContaining(page));
+  const index = siblings.indexOf(pageId);
+  const { parentId } = page;
+  if (direction === "up" || direction === "down") {
+    const target = index + (direction === "up" ? -1 : 1);
+    if (target < 0 || target >= siblings.length) return undefined;
+    return { pageId, parentId, index: target };
+  }
+  if (direction === "in") {
+    const above = siblings[index - 1];
+    if (above === undefined) return undefined;
+    const count = state.workspace.blocks[above]?.childIds.length ?? 0;
+    return { pageId, parentId: above, index: count };
+  }
+  const parent = selectPage(state, parentId);
+  if (parent === undefined) return undefined;
+  const parentIndex = idsIn(state, listContaining(parent)).indexOf(parent.id);
+  return { pageId, parentId: parent.parentId, index: parentIndex + 1 };
+}
+
+export type DropPosition = "before" | "after" | "inside";
+
+// Where dropping one page on another puts it.
+export function selectDropTarget(
+  state: AppState,
+  pageId: BlockId,
+  drop: { readonly targetId: BlockId; readonly position: DropPosition },
+): MovePagePayload | undefined {
+  const target = selectPage(state, drop.targetId);
+  if (target === undefined || drop.targetId === pageId) return undefined;
+  if (drop.position === "inside") {
+    const count = target.childIds.filter((id) => id !== pageId).length;
+    return { pageId, parentId: target.id, index: count };
+  }
+  const siblings = idsIn(state, listContaining(target)).filter(
+    (id) => id !== pageId,
+  );
+  const index =
+    siblings.indexOf(target.id) + (drop.position === "after" ? 1 : 0);
+  return { pageId, parentId: target.parentId, index };
+}
+
 export const pageMoveCommands = [movePage];

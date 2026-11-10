@@ -5,7 +5,15 @@ export {
   setPageIcon,
   togglePageFavorite,
 } from "./page.commands.ts";
-export { movePage, pageMoveCommands } from "./page-move.commands.ts";
+export {
+  movePage,
+  pageMoveCommands,
+  selectDropTarget,
+  selectStepTarget,
+  type DropPosition,
+  type MoveDirection,
+  type MovePagePayload,
+} from "./page-move.commands.ts";
 export {
   deletePage,
   pageTrashCommands,

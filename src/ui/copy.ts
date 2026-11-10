@@ -27,6 +27,14 @@ export const COPY = {
     addSubpage: "Add a page inside",
     trash: "Move to trash",
   },
+  moveTo: {
+    action: "Move to",
+    title: "Move to",
+    close: "Close",
+    topLevel: "Top level",
+    moved: "Page moved.",
+    notMoved: "The page cannot move further that way.",
+  },
   breadcrumbs: { label: "Breadcrumb" },
   favorites: { heading: "Favorites" },
   trash: {

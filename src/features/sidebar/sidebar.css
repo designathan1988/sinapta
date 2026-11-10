@@ -17,6 +17,8 @@
 
   .sidebar__tree {
     display: flex;
+    touch-action: none;
+    user-select: none;
     flex-direction: column;
     gap: var(--space-stack-xxs);
   }
@@ -134,5 +136,23 @@
 
   .sidebar__row[aria-expanded="true"] .sidebar__toggle {
     rotate: 90deg;
+  }
+
+  /* Drop markers while a page is dragged. */
+  .sidebar__row[data-dragging] {
+    opacity: 0.5;
+  }
+
+  .sidebar__row[data-drop="before"] {
+    box-shadow: 0 calc(var(--size-border-thick) * -1) 0
+      var(--color-accent-default);
+  }
+
+  .sidebar__row[data-drop="after"] {
+    box-shadow: 0 var(--size-border-thick) 0 var(--color-accent-default);
+  }
+
+  .sidebar__row[data-drop="inside"] {
+    background-color: var(--color-bg-selected);
   }
 }
