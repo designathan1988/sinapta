@@ -87,6 +87,28 @@ export function installSlashMenuKeys(
   document.addEventListener("keydown", onKeyDown, { capture: true });
 }
 
+function keepInView(option: Element | undefined, isActive: boolean): void {
+  if (isActive) option?.scrollIntoView({ block: "nearest" });
+}
+
+function renderOption(
+  item: SlashItem,
+  index: number,
+  isActive: boolean,
+): TemplateResult {
+  return html`<div
+    class="slash-menu__item"
+    role="option"
+    data-index=${index}
+    aria-selected=${String(isActive)}
+    ${ref((option) => {
+      keepInView(option, isActive);
+    })}
+  >
+    ${item.label}
+  </div>`;
+}
+
 // The list of block types offered after "/" is typed.
 export function renderSlashMenu(
   state: AppState,
@@ -106,22 +128,15 @@ export function renderSlashMenu(
   return html`<div
     class="slash-menu"
     role="listbox"
+    tabindex="0"
     popover="manual"
     data-overlay
     aria-label=${COPY.slashMenu.label}
     ${ref(showPopoverWhenConnected)}
     @pointerdown=${onPointerDown}
   >
-    ${menu.items.map(
-      (item, index) =>
-        html`<div
-          class="slash-menu__item"
-          role="option"
-          data-index=${index}
-          aria-selected=${String(index === menu.activeIndex)}
-        >
-          ${item.label}
-        </div>`,
+    ${menu.items.map((item, index) =>
+      renderOption(item, index, index === menu.activeIndex),
     )}
   </div>`;
 }

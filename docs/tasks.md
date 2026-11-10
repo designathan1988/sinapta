@@ -407,3 +407,36 @@ Known and not fixed:
   with text editing in milestone 3.
 - Back and forward work through the URL; View Transitions between pages are
   planned with milestone 7.
+
+---
+
+# Milestones 3 and 4, Block editor: record
+
+| Task | Status | Tests or check |
+| --- | --- | --- |
+| 3.1 Block registry, paragraph, rich text projection | done | `src/blocks/block-registry.test.ts` |
+| 3.2 Grapheme and rich text math | done | `src/model/grapheme.test.ts`, `rich-text.test.ts`, `text-diff.test.ts` |
+| 3.3 Typing and deleting through `beforeinput`, caret restore | done | `src/features/editor/editor.test.ts`; typed in the running app, including emoji |
+| 3.4 Split, merge, arrow keys between blocks | done | `editor-structure.test.ts` |
+| 3.5 Read-back path for composition | done | Composed and committed Japanese text through the browser's input method interface; stored correctly after reload |
+| 3.6 Headings, lists, to-do, quote, divider | done | `editor-convert.test.ts` |
+| 3.7 Indent and outdent | done | `editor-structure.test.ts` |
+| 3.8 Bold, italic, inline code, link | done | `editor.test.ts`, `src/model/link-href.test.ts` |
+| 3.9 Typing on 1,000 blocks | done | Production build: median 6.9 ms, worst 10.4 ms per keystroke |
+| 4.1 Slash menu | done | `src/features/slash-menu/slash-menu.test.ts` |
+| 4.2 Convert block type | done | `editor-convert.test.ts` |
+| 4.3 Block drag and menu move actions | done | `editor-move.test.ts`, `src/ui/drag/pointer-drag.test.ts` |
+| 4.4 Block-level selection across blocks | not done | See below |
+| 4.5 Toggle and callout | done | `block-registry.test.ts` |
+| 4.6 Code and page link | done | `block-registry.test.ts` |
+| 4.7 A new block type is one folder and one line | done | `block-registry.test.ts`; component styles are imported by their own view |
+| Review and audits | done | axe: no violations in 16 state and theme combinations |
+
+Not done in these milestones:
+
+- Selecting across several blocks (task 4.4). Selection works inside one
+  block only.
+- Pasting several lines keeps them in one block instead of creating one
+  block per line.
+- The block menu returns focus to the handle, not to the caret.
+- A tooltip primitive for icon-only buttons (carried from milestone 2).

@@ -31,7 +31,9 @@ exists.
 | Id generation and parsing | `src/model/id.ts` | 1 |
 | What changed between two workspaces | `src/model/workspace-diff.ts` | 1 |
 | Test workspaces | `src/model/workspace-builder.ts` | 1 |
-| Rich text editing math (splice, split, merge, marks) | `src/model/rich-text.ts` | 3 |
+| Rich text editing math (splice, split, merge, marks, links) | `src/model/rich-text.ts` | 3 |
+| Finding the edit between two texts | `src/model/text-diff.ts` | 3 |
+| Moving a block within the tree | `src/model/block-tree.ts` | 4 |
 | Grapheme segmentation and offset conversion | `src/model/grapheme.ts` | 2 |
 | Link `href` scheme allow-list | `src/model/link-href.ts` | 3 |
 
@@ -68,9 +70,17 @@ exists.
 | Menu primitive | `src/ui/menu/` | 2 |
 | Dialog primitive | `src/ui/dialog/` | 1 |
 | Button primitive | `src/ui/button/` | 1 |
-| Caret reading and restoring in the DOM | `src/ui/caret/` | 3 |
+| Caret reading and restoring in the DOM, selection sync | `src/ui/caret/` | 3 |
 | Projecting `RichText` into an editable element | `src/ui/rich-text/` | 3 |
-| `beforeinput` to command translation | `src/features/editor/editor.view.ts` | 3 |
+| `beforeinput` to command translation | `src/features/editor/editor-input.view.ts` | 3 |
+| Keys inside text blocks | `src/features/editor/editor-keys.view.ts` | 3 |
+| Text and block commands | `src/features/editor/*.commands.ts` | 3 |
+| Shortcuts typed at the start of a paragraph | `src/features/editor/block-shortcut.ts` | 3 |
+| Block handle, block menus, block drag | `src/features/editor/editor-block-menu.view.ts` | 4 |
+| Link field | `src/features/editor/editor-link.view.ts` | 4 |
+| Slash menu | `src/features/slash-menu/` | 4 |
+| What a block type declares | `src/blocks/block-definition.ts` | 3 |
+| The shape shared by blocks that hold text | `src/blocks/text-block.ts` | 3 |
 | Pointer drag sessions and drop targets | `src/ui/drag/` | 2 |
 | Live-region announcements | `src/ui/announcer/` | 2 |
 | Icons | `src/ui/icon/` | 1 |
@@ -83,6 +93,7 @@ exists.
 | Design token values | `tokens/*.tokens.json` | 1 |
 | Token to CSS generation | `scripts/build-tokens.ts` | 1 |
 | CSS layer order and global styles | `src/styles/index.css` | 1 |
+| A component's styles | The CSS file beside its view, imported by that view | 1 |
 
 ## Tooling
 
