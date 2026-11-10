@@ -4,3 +4,8 @@
 @import url("./reset.css");
 @import url("./tokens.generated.css");
 @import url("./base.css");
+@import url("../ui/icon/icon.css");
+@import url("../ui/button/button.css");
+@import url("../ui/dialog/dialog.css");
+@import url("../features/settings/settings.css");
+@import url("../app/shell.css");

@@ -1,4 +1,8 @@
 @layer base {
+  [data-app-root] {
+    block-size: 100%;
+  }
+
   body {
     background-color: var(--color-bg-app);
     color: var(--color-text-primary);

@@ -1,0 +1,50 @@
+@layer ui {
+  .button {
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    justify-content: center;
+    min-inline-size: var(--size-control-sm);
+    min-block-size: var(--size-control-sm);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: var(--size-border-thin) solid transparent;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--font-line-height-tight);
+    cursor: pointer;
+    transition: background-color var(--duration-fast) var(--easing-standard);
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+      color: var(--color-text-primary);
+    }
+
+    &:active {
+      background-color: var(--color-bg-active);
+    }
+
+    &[aria-label] {
+      padding: var(--space-none);
+    }
+
+    &[data-variant="primary"] {
+      background-color: var(--color-accent-default);
+      color: var(--color-text-on-accent);
+
+      &:hover {
+        background-color: var(--color-accent-hover);
+      }
+    }
+
+    &[data-variant="danger"] {
+      color: var(--color-text-danger);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+}

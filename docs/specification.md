@@ -185,7 +185,7 @@ in the official docs first, and record the exact version in its ADR.
 | Styles | Native CSS with `@layer`, nesting and custom properties | No preprocessor, no utility framework, no CSS-in-JS |
 | Dev server and build | Vite | Hot reload stays on during all work |
 | Tests | Vitest | Watch mode during work; see section 7 |
-| Templates | `lit-html`: `html`, `render`, `nothing` and the directives `repeat`, `keyed`, `ref` | No component classes, no directive classes, no component state |
+| Templates | `lit-html`: `html`, `svg`, `render`, `nothing` and the directives `repeat`, `keyed`, `ref` | No component classes, no directive classes, no component state |
 | Store | `createStore` from `zustand/vanilla` | Exactly one store instance |
 | Data table | `@tanstack/table-core` | Row models only, state controlled from the store |
 | Schemas | Valibot | Imported only in `src/model/` and in `*.schema.ts` files |

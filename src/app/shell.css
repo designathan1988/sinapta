@@ -1,0 +1,111 @@
+@layer features {
+  .app {
+    display: grid;
+    grid-template-columns: var(--app-sidebar-width) auto minmax(0, 1fr);
+    block-size: 100%;
+
+    &[data-sidebar-collapsed] {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .app__skip-link {
+    position: absolute;
+    inset-block-start: var(--space-inset-sm);
+    inset-inline-start: var(--space-inset-sm);
+    z-index: var(--layer-sticky);
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-raised);
+    color: var(--color-text-link);
+
+    &:not(:focus-visible) {
+      clip-path: inset(50%);
+    }
+  }
+
+  .app__sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-sm);
+    min-inline-size: 0;
+    padding: var(--space-inset-sm);
+    overflow: hidden auto;
+    background-color: var(--color-bg-sidebar);
+    font-size: var(--font-size-sm);
+  }
+
+  .app__sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-block-size: var(--size-row-height);
+    padding-inline-start: var(--space-inset-sm);
+  }
+
+  .app__product {
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-strong);
+  }
+
+  .app__empty {
+    padding: var(--space-inset-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .app__resizer {
+    inline-size: var(--size-border-thin);
+    background-color: var(--color-border-subtle);
+    cursor: col-resize;
+    touch-action: none;
+
+    /* A wider grab area than the hairline that is drawn. */
+    &::after {
+      content: "";
+      position: absolute;
+      inset-block: 0;
+      inline-size: var(--space-inline-sm);
+      translate: -50% 0;
+    }
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--color-border-focus);
+    }
+  }
+
+  .app__main {
+    display: flex;
+    flex-direction: column;
+    min-inline-size: 0;
+    overflow: hidden auto;
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  .app__top-bar {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    min-block-size: var(--size-control-md);
+    padding: var(--space-inset-sm) var(--space-inset-md);
+  }
+
+  .app__spacer {
+    flex: 1;
+  }
+
+  .app__save-status {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+  }
+
+  .app__page {
+    inline-size: min(var(--size-content-max), 100%);
+    margin-inline: auto;
+    padding: var(--space-inset-xl) var(--space-inset-lg);
+  }
+}

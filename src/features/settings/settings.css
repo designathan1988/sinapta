@@ -1,0 +1,29 @@
+@layer features {
+  .settings__field {
+    display: flex;
+    gap: var(--space-inline-lg);
+    margin: var(--space-none);
+    padding: var(--space-none);
+    border: none;
+  }
+
+  .settings__legend {
+    margin-block-end: var(--space-stack-sm);
+    padding: var(--space-none);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .settings__option {
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    min-block-size: var(--size-target-min);
+    cursor: pointer;
+
+    & input {
+      accent-color: var(--color-accent-default);
+    }
+  }
+}

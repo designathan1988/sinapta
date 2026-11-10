@@ -1,0 +1,7 @@
+@layer ui {
+  .icon {
+    flex: none;
+    inline-size: var(--size-icon-sm);
+    block-size: var(--size-icon-sm);
+  }
+}
