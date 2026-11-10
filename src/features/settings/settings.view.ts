@@ -1,13 +1,16 @@
 import "./settings.css";
-import { html, type TemplateResult } from "lit-html";
+import { html, nothing, type TemplateResult } from "lit-html";
 import type { Theme } from "../../model/index.ts";
 import {
   closeOverlay,
+  requestExport,
+  requestImport,
   selectTheme,
   setTheme,
   type AppState,
   type Dispatch,
 } from "../../state/index.ts";
+import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderDialog } from "../../ui/dialog/index.ts";
 import { SETTINGS_OVERLAY_KIND } from "../../ui/shortcuts/index.ts";
@@ -48,6 +51,59 @@ function renderThemeField(current: Theme, dispatch: Dispatch): TemplateResult {
   </fieldset>`;
 }
 
+// Reads the chosen file as text and hands it on; the persistence layer
+// decides whether it is a workspace.
+function onFileChosen(event: Event, dispatch: Dispatch): void {
+  const input = event.target;
+  const file = input instanceof HTMLInputElement ? input.files?.[0] : undefined;
+  if (file === undefined || !(input instanceof HTMLInputElement)) return;
+  void file.text().then((text) => {
+    input.value = "";
+    dispatch(requestImport.create({ text }));
+  });
+}
+
+function renderMessages(state: AppState): TemplateResult | typeof nothing {
+  const { importError, skippedCount } = state.persistence;
+  if (importError !== null) {
+    return html`<p class="settings__message" role="alert" data-error>
+      ${COPY.settings.importErrors[importError]}
+    </p>`;
+  }
+  if (skippedCount === 0) return nothing;
+  return html`<p class="settings__message" role="status">
+    ${String(skippedCount)} ${COPY.settings.skipped}
+  </p>`;
+}
+
+function renderDataField(state: AppState, dispatch: Dispatch): TemplateResult {
+  return html`<fieldset class="settings__field" data-stacked>
+    <legend class="settings__legend">${COPY.settings.dataLegend}</legend>
+    <div class="settings__actions">
+      ${renderButton({
+        label: COPY.settings.export,
+        onClick: () => dispatch(requestExport.create({})),
+      })}
+      <label class="button settings__file" data-variant="quiet">
+        ${COPY.settings.import}
+        <input
+          class="visually-hidden"
+          type="file"
+          accept="application/json,.json"
+          aria-describedby="settings-import-hint"
+          @change=${(event: Event) => {
+            onFileChosen(event, dispatch);
+          }}
+        />
+      </label>
+    </div>
+    <p class="settings__hint" id="settings-import-hint">
+      ${COPY.settings.importHint}
+    </p>
+    ${renderMessages(state)}
+  </fieldset>`;
+}
+
 export function renderSettings(
   state: AppState,
   dispatch: Dispatch,
@@ -55,7 +111,8 @@ export function renderSettings(
   return renderDialog({
     title: COPY.settings.title,
     closeLabel: COPY.settings.close,
-    content: renderThemeField(selectTheme(state), dispatch),
+    content: html`${renderThemeField(selectTheme(state), dispatch)}
+    ${renderDataField(state, dispatch)}`,
     onClose: () => dispatch(closeOverlay.create({})),
   });
 }

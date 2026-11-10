@@ -28,6 +28,7 @@ export interface Shortcut {
 }
 
 export const SETTINGS_OVERLAY_KIND = "settings";
+export const PALETTE_OVERLAY_KIND = "command-palette";
 
 export const SHORTCUTS: readonly Shortcut[] = [
   {
@@ -53,6 +54,12 @@ export const SHORTCUTS: readonly Shortcut[] = [
     withModifier: true,
     withShift: false,
     command: toggleSidebar.create({}),
+  },
+  {
+    key: "k",
+    withModifier: true,
+    withShift: false,
+    command: openOverlay.create({ overlay: { kind: PALETTE_OVERLAY_KIND } }),
   },
   {
     key: ",",

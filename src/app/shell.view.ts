@@ -1,6 +1,10 @@
 import "./shell.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
+import {
+  PALETTE_OVERLAY,
+  renderCommandPalette,
+} from "../features/command-palette/index.ts";
 import { renderEditor, renderEditorOverlay } from "../features/editor/index.ts";
 import {
   renderSlashMenu,
@@ -158,6 +162,7 @@ function renderOverlay(
   const kind = state.ui.overlay?.kind;
   if (kind === SETTINGS_OVERLAY) return renderSettings(state, dispatch);
   if (kind === TRASH_OVERLAY) return renderTrash(state, dispatch);
+  if (kind === PALETTE_OVERLAY) return renderCommandPalette(state, dispatch);
   if (kind === MOVE_TO_OVERLAY) return renderMoveTo(state, dispatch);
   if (kind === SLASH_MENU_OVERLAY) return renderSlashMenu(state, dispatch);
   if (kind === PAGE_MENU_OVERLAY) return renderPageMenu(state, dispatch);

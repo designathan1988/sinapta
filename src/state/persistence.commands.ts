@@ -1,5 +1,5 @@
-import type { SaveStatus } from "./app-state.ts";
-import { defineCommand } from "./command-registry.ts";
+import type { ImportError, SaveStatus } from "./app-state.ts";
+import { defineCommand, type NoPayload } from "./command-registry.ts";
 
 export const setSaveStatus = defineCommand<{ status: SaveStatus }>({
   type: "persistence.setSaveStatus",
@@ -9,4 +9,45 @@ export const setSaveStatus = defineCommand<{ status: SaveStatus }>({
   },
 });
 
-export const persistenceCommands = [setSaveStatus];
+// Asks for the workspace to be written to a file. The persistence layer
+// does the writing; the store only records that it was asked.
+export const requestExport = defineCommand<NoPayload>({
+  type: "persistence.requestExport",
+  handle: (state) => ({
+    persistence: {
+      ...state.persistence,
+      exportRequests: state.persistence.exportRequests + 1,
+    },
+  }),
+});
+
+// Hands the text of a chosen file to the persistence layer to read.
+export const requestImport = defineCommand<{ text: string }>({
+  type: "persistence.requestImport",
+  handle: (state, command) => ({
+    persistence: {
+      ...state.persistence,
+      pendingImport: command.text,
+      importError: null,
+    },
+  }),
+});
+
+// Records how reading the chosen file ended: null when it was imported.
+export const finishImport = defineCommand<{ error: ImportError | null }>({
+  type: "persistence.finishImport",
+  handle: (state, command) => ({
+    persistence: {
+      ...state.persistence,
+      pendingImport: null,
+      importError: command.error,
+    },
+  }),
+});
+
+export const persistenceCommands = [
+  setSaveStatus,
+  requestExport,
+  requestImport,
+  finishImport,
+];

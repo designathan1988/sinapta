@@ -1,5 +1,6 @@
 import "./dialog.css";
 import { html, type TemplateResult } from "lit-html";
+import { keyed } from "lit-html/directives/keyed.js";
 import { ref } from "lit-html/directives/ref.js";
 import { renderButton } from "../button/index.ts";
 import { whenConnected } from "../focus/index.ts";
@@ -32,15 +33,26 @@ function closeOnBackdrop(event: Event): void {
   }
 }
 
+// The browser reports a close a moment after it happens. By then another
+// dialog may have taken this one's place, and it must not be closed for it:
+// a dialog that is no longer in the page, or is open again, is ignored.
+function onClosed(event: Event, onClose: () => void): void {
+  const dialog = event.target;
+  if (!(dialog instanceof HTMLDialogElement)) return;
+  if (dialog.isConnected && !dialog.open) onClose();
+}
+
 // A modal dialog. It is rendered only while it is open; closing it by any
 // means fires `close`, which the caller turns into a command.
 export function renderDialog(options: DialogOptions): TemplateResult {
-  return html`<dialog
+  const dialog = html`<dialog
     class="dialog"
     closedby="any"
     aria-labelledby="dialog-title"
     ${ref(showWhenConnected)}
-    @close=${options.onClose}
+    @close=${(event: Event) => {
+      onClosed(event, options.onClose);
+    }}
     @click=${closeOnBackdrop}
   >
     <div class="dialog__panel">
@@ -56,4 +68,8 @@ export function renderDialog(options: DialogOptions): TemplateResult {
       ${options.content}
     </div>
   </dialog>`;
+  // Each dialog gets its own element. A dialog that the browser has just
+  // closed still reports its close a moment later, and that report must
+  // not land on a different dialog shown in the same element.
+  return html`${keyed(options.title, dialog)}`;
 }

@@ -1,0 +1,46 @@
+@layer features {
+  .command-palette__field {
+    inline-size: 100%;
+    min-block-size: var(--size-control-md);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: var(--size-border-thin) solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-app);
+    color: var(--color-text-primary);
+  }
+
+  .command-palette__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xxs);
+    max-block-size: var(--size-menu-max-height);
+    overflow: hidden auto;
+  }
+
+  .command-palette__item {
+    display: flex;
+    align-items: center;
+    min-block-size: var(--size-row-height);
+    padding: var(--space-none) var(--space-inset-sm);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+
+    &:hover,
+    &[aria-selected="true"] {
+      background-color: var(--color-bg-hover);
+    }
+
+    &[data-kind="action"] {
+      color: var(--color-text-secondary);
+    }
+  }
+
+  .command-palette__empty {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+
+    &:empty {
+      display: none;
+    }
+  }
+}

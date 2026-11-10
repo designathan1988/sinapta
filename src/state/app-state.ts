@@ -32,6 +32,8 @@ export interface OpenOverlay {
   readonly end?: number;
   // The highlighted option of a list the keyboard moves through.
   readonly activeIndex?: number;
+  // What has been typed into the overlay's search field.
+  readonly query?: string;
 }
 
 export interface UiState {
@@ -68,10 +70,19 @@ export interface HistoryState {
 
 export type SaveStatus = "idle" | "saving" | "saved" | "failed";
 
+// Why an import did not happen.
+export type ImportError = "not-a-workspace" | "newer-version" | "unreadable";
+
 export interface PersistenceState {
   readonly status: SaveStatus;
   // Stored records that failed their schema on load and were skipped.
   readonly skippedCount: number;
+  // Raised by one each time the user asks for an export; the persistence
+  // layer writes the file when it changes.
+  readonly exportRequests: number;
+  // The text of a file the user chose to import, until it has been read.
+  readonly pendingImport: string | null;
+  readonly importError: ImportError | null;
 }
 
 export interface AppState {
@@ -107,6 +118,12 @@ export function createInitialState(): AppState {
     workspace: createEmptyWorkspace(),
     ui: createInitialUiState(),
     history: { undo: [], redo: [] },
-    persistence: { status: "idle", skippedCount: 0 },
+    persistence: {
+      status: "idle",
+      skippedCount: 0,
+      exportRequests: 0,
+      pendingImport: null,
+      importError: null,
+    },
   };
 }

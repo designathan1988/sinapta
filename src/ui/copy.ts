@@ -155,5 +155,39 @@ export const COPY = {
     themeSystem: "System",
     themeLight: "Light",
     themeDark: "Dark",
+    dataLegend: "Workspace data",
+    export: "Export workspace",
+    import: "Import workspace",
+    importHint:
+      "Importing replaces everything in this browser with the file's content.",
+    skipped: "items could not be read and were skipped.",
+    importErrors: {
+      "not-a-workspace":
+        "This file could not be imported. It is not a Pagecraft workspace file.",
+      "newer-version":
+        "This file was made by a newer version of Pagecraft. Update the app, then import it again.",
+      unreadable:
+        "This file could not be read. Choose a workspace file exported from Pagecraft.",
+    },
+  },
+  palette: {
+    open: "Search",
+    title: "Search and commands",
+    close: "Close search",
+    fieldLabel: "Search pages and commands",
+    placeholder: "Search pages or type a command",
+    empty: "Nothing matches.",
+    pages: "Open page",
+    newPage: "New page",
+    newDatabase: "New database",
+    settings: "Open settings",
+    trash: "Open trash",
+    export: "Export workspace",
+    themeLight: "Use light theme",
+    themeDark: "Use dark theme",
+    themeSystem: "Follow the system theme",
+    toggleSidebar: "Show or hide the sidebar",
+    undo: "Undo",
+    redo: "Redo",
   },
 } as const;

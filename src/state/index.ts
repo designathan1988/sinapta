@@ -6,6 +6,7 @@ export {
   type AppState,
   type HistoryEntry,
   type HistoryState,
+  type ImportError,
   type OpenOverlay,
   type PersistenceState,
   type SaveStatus,
@@ -42,7 +43,13 @@ export {
   uiCommands,
 } from "./ui.commands.ts";
 export { setTheme, settingsCommands } from "./settings.commands.ts";
-export { persistenceCommands, setSaveStatus } from "./persistence.commands.ts";
+export {
+  finishImport,
+  persistenceCommands,
+  requestExport,
+  requestImport,
+  setSaveStatus,
+} from "./persistence.commands.ts";
 export {
   selectCanRedo,
   selectCanUndo,
@@ -50,6 +57,7 @@ export {
 } from "./app-state.selectors.ts";
 export { restoreUi, toPersistedUi, type PersistedUi } from "./ui.schema.ts";
 export {
+  importWorkspace,
   loadWorkspace,
   workspaceCommands,
   type LoadWorkspacePayload,

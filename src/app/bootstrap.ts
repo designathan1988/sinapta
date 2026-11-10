@@ -26,6 +26,7 @@ import {
 } from "../state/index.ts";
 import {
   createIndexedDbAdapter,
+  startFileTools,
   startRepository,
 } from "../persistence/index.ts";
 import { installSelectionSync, restoreSelection } from "../ui/caret/index.ts";
@@ -71,6 +72,7 @@ export async function startApp(container: HTMLElement): Promise<void> {
   };
   // Nothing is rendered until stored data is in the store, so the first
   // paint already has the saved theme and layout.
+  startFileTools({ store, dispatch, propsSchemas: BLOCK_PROPS_SCHEMAS });
   await startRepository({
     store,
     dispatch,

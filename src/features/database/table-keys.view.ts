@@ -50,6 +50,12 @@ function startEditing(cell: CellRef, context: TableContext): void {
   }
 }
 
+// Marks an editor as dealt with. Closing it removes it from the page,
+// which makes it lose focus, and that must not store its text again.
+function settle(input: HTMLInputElement): void {
+  input.dataset.settled = "";
+}
+
 // Stores what an editor holds. Returns false when the text does not fit
 // the property type, and leaves the editor open.
 function commit(input: HTMLInputElement, context: TableContext): boolean {
@@ -57,15 +63,16 @@ function commit(input: HTMLInputElement, context: TableContext): boolean {
   const column = cell === undefined ? undefined : columnOf(cell, context);
   if (cell === undefined || column === undefined) return false;
   const text = input.value;
+  const value = propertyType(column.property.type).parse(text);
+  if (cell.propertyId !== null && value === undefined && text.trim() !== "") {
+    input.setAttribute("aria-invalid", "true");
+    announce(COPY.database.invalidValue);
+    return false;
+  }
+  settle(input);
   if (cell.propertyId === null) {
     context.dispatch(renamePage.create({ pageId: cell.rowId, title: text }));
   } else {
-    const value = propertyType(column.property.type).parse(text);
-    if (value === undefined && text.trim() !== "") {
-      input.setAttribute("aria-invalid", "true");
-      announce(COPY.database.invalidValue);
-      return false;
-    }
     const { rowId, propertyId } = cell;
     context.dispatch(setRowValue.create({ rowId, propertyId, value }));
   }
@@ -83,8 +90,7 @@ function onEditorKey(
     event.preventDefault();
     commit(input, context);
   } else if (event.key === "Escape" && cell !== undefined) {
-    // Marks the editor so that losing focus does not store its text.
-    input.dataset.cancelled = "";
+    settle(input);
     event.preventDefault();
     activate(cell, false, context);
   }
@@ -194,13 +200,12 @@ export function onBodyClick(event: MouseEvent, context: TableContext): void {
   else activate(cell, false, context);
 }
 
-// Leaving an editor stores its text, unless Escape cancelled it.
+// Leaving an editor stores its text, unless it was already stored or
+// cancelled.
 export function onBodyFocusOut(event: FocusEvent, context: TableContext): void {
   const input = event.target;
-  if (!(input instanceof HTMLInputElement) || "cancelled" in input.dataset)
-    return;
-  if (!input.isConnected) return;
-  commit(input, context);
+  if (!(input instanceof HTMLInputElement)) return;
+  if (!("settled" in input.dataset)) commit(input, context);
 }
 
 export function onBodyFocusIn(event: FocusEvent, context: TableContext): void {
