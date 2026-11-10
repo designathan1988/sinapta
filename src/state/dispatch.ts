@@ -44,7 +44,11 @@ export interface DispatcherOptions {
 
 type Next = { readonly state: AppState } | { readonly error: DispatchError };
 
-function applyEffect(state: AppState, effect: CommandEffect): Next {
+function applyEffect(
+  state: AppState,
+  effect: CommandEffect,
+  now: string,
+): Next {
   const operations = effect.operations ?? [];
   const ui = effect.ui ?? state.ui;
   const persistence = effect.persistence ?? state.persistence;
@@ -65,7 +69,12 @@ function applyEffect(state: AppState, effect: CommandEffect): Next {
   if (violation !== undefined) {
     return { error: { kind: "invariant-broken", violation } };
   }
-  const history = recordTransaction(state, operations, result.inverse);
+  const history = recordTransaction(state, {
+    applied: operations,
+    inverse: result.inverse,
+    mergeKey: effect.mergeKey,
+    now,
+  });
   return {
     state: { workspace: result.workspace, ui, history, persistence },
   };
@@ -101,7 +110,7 @@ function nextState(state: AppState, command: Command, sources: Sources): Next {
     now: sources.now(),
     blockIds: Array.from({ length: definition.newBlockIds }, sources.createId),
   };
-  return applyEffect(state, definition.handle(state, command, meta));
+  return applyEffect(state, definition.handle(state, command, meta), meta.now);
 }
 
 export function createDispatcher(options: DispatcherOptions): Dispatch {

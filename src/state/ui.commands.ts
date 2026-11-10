@@ -1,6 +1,10 @@
 // Commands for the parts of the `ui` slice that belong to no feature.
 import type { BlockId } from "../model/index.ts";
-import { SIDEBAR_WIDTH, type OpenOverlay } from "./app-state.ts";
+import {
+  SIDEBAR_WIDTH,
+  type OpenOverlay,
+  type TextSelection,
+} from "./app-state.ts";
 import { defineCommand, type NoPayload } from "./command-registry.ts";
 
 function clampSidebarWidth(width: number): number {
@@ -64,7 +68,29 @@ export const togglePageExpanded = defineCommand<{ pageId: BlockId }>({
   },
 });
 
+function isSameSelection(
+  a: TextSelection | null,
+  b: TextSelection | null,
+): boolean {
+  if (a === null || b === null) return a === b;
+  return (
+    a.blockId === b.blockId &&
+    a.anchorOffset === b.anchorOffset &&
+    a.focusOffset === b.focusOffset
+  );
+}
+
+// Records where the caret is once the browser has moved it.
+export const setSelection = defineCommand<{ selection: TextSelection | null }>({
+  type: "ui.setSelection",
+  handle(state, command) {
+    if (isSameSelection(state.ui.selection, command.selection)) return {};
+    return { ui: { ...state.ui, selection: command.selection } };
+  },
+});
+
 export const uiCommands = [
+  setSelection,
   setSidebarWidth,
   toggleSidebar,
   openOverlay,

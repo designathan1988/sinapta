@@ -36,6 +36,9 @@ export interface HistoryEntry {
   readonly operations: readonly Operation[];
   readonly selection: TextSelection | null;
   readonly activePageId: BlockId | null;
+  // Set on entries that later transactions may be merged into.
+  readonly mergeKey?: string;
+  readonly time?: string;
 }
 
 export interface HistoryState {

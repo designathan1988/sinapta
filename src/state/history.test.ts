@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { buildWorkspace, toBlockId } from "../model/index.ts";
+import { defineCommand } from "./command-registry.ts";
 import { HISTORY_LIMIT, REDO_COMMAND, UNDO_COMMAND } from "./history.ts";
 import { setTheme } from "./settings.commands.ts";
 import { addTestBlock, createTestApp } from "./state-builder.ts";
@@ -9,6 +11,22 @@ function createApp() {
 }
 
 const addPage = addTestBlock.create({ blockType: "page" });
+
+// A recorded change that asks to be merged with its neighbors.
+const typeLetter = defineCommand<{ theme: "light" | "dark" }>({
+  type: "test.type",
+  handle: (state, command) => ({
+    mergeKey: "typing",
+    operations: [
+      {
+        type: "record.update",
+        kind: "block",
+        id: toBlockId("a"),
+        patch: { props: { theme: command.theme } },
+      },
+    ],
+  }),
+});
 
 describe("history", () => {
   it("undoes a workspace command", () => {
@@ -84,5 +102,20 @@ describe("history", () => {
     for (let count = 0; count <= HISTORY_LIMIT; count += 1) dispatch(addPage);
 
     expect(store.getState().history.undo).toHaveLength(HISTORY_LIMIT);
+  });
+
+  it("merges transactions with the same key into one undo step", () => {
+    const { store, dispatch } = createTestApp({
+      workspace: buildWorkspace([{ id: "a" }]),
+      commands: [typeLetter],
+    });
+    const before = store.getState().workspace;
+
+    dispatch(typeLetter.create({ theme: "light" }));
+    dispatch(typeLetter.create({ theme: "dark" }));
+
+    expect(store.getState().history.undo).toHaveLength(1);
+    dispatch({ type: UNDO_COMMAND });
+    expect(store.getState().workspace).toEqual(before);
   });
 });

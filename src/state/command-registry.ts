@@ -22,6 +22,9 @@ export interface CommandEffect {
   readonly workspace?: Workspace;
   readonly ui?: UiState;
   readonly persistence?: PersistenceState;
+  // Transactions with the same key that follow each other closely become
+  // one undo step, so that undo removes a typed word, not one letter.
+  readonly mergeKey?: string;
 }
 
 export type CommandHandler<TPayload> = (

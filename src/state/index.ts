@@ -33,6 +33,7 @@ export {
   closeOverlay,
   openOverlay,
   setActivePage,
+  setSelection,
   setSidebarWidth,
   togglePageExpanded,
   toggleSidebar,

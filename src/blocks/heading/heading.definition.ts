@@ -1,0 +1,21 @@
+import { isBlockOfType } from "../../model/index.ts";
+import type { BlockDefinition } from "../block-definition.ts";
+import { PARAGRAPH_TYPE } from "../paragraph/index.ts";
+import {
+  HEADING_TYPE,
+  headingPropsSchema,
+  type HeadingBlock,
+} from "./heading.schema.ts";
+import { renderHeading } from "./heading.view.ts";
+
+export const headingDefinition: BlockDefinition = {
+  type: HEADING_TYPE,
+  propsSchema: headingPropsSchema,
+  // Enter after a heading starts body text.
+  continuesAs: PARAGRAPH_TYPE,
+  createProps: (text) => ({ text, level: 1 }),
+  render: (block) =>
+    isBlockOfType<HeadingBlock>(block, HEADING_TYPE)
+      ? renderHeading(block)
+      : undefined,
+};

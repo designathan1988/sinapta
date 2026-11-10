@@ -1,0 +1,37 @@
+@layer ui {
+  .rich-text {
+    flex: 1;
+    min-inline-size: 0;
+    min-block-size: calc(1em * var(--font-line-height-body));
+    line-height: var(--font-line-height-body);
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+
+    &:focus-visible {
+      outline: none;
+    }
+
+    &:empty:focus::before {
+      content: attr(data-placeholder);
+      color: var(--color-text-tertiary);
+      pointer-events: none;
+    }
+
+    & code {
+      padding: var(--space-none) var(--space-inset-xs);
+      border-radius: var(--radius-sm);
+      background-color: var(--color-bg-code);
+      font-family: var(--font-family-mono);
+      font-size: var(--font-size-sm);
+    }
+
+    & a {
+      color: var(--color-text-link);
+      text-underline-offset: var(--size-focus-offset);
+    }
+
+    & strong {
+      font-weight: var(--font-weight-bold);
+    }
+  }
+}

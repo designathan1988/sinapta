@@ -26,16 +26,44 @@ function entryFor(
   };
 }
 
-// The history after a transaction whose inverse is `inverse`, applied to
-// `before`.
+// How long after the previous transaction a new one still joins its step.
+export const MERGE_WINDOW_MS = 1000;
+
+export interface Recorded {
+  readonly applied: readonly Operation[];
+  readonly inverse: readonly Operation[];
+  readonly mergeKey: string | undefined;
+  readonly now: string;
+}
+
+function canMerge(last: HistoryEntry | undefined, recorded: Recorded): boolean {
+  if (last?.mergeKey === undefined || last.time === undefined) return false;
+  if (last.mergeKey !== recorded.mergeKey) return false;
+  return Date.parse(recorded.now) - Date.parse(last.time) <= MERGE_WINDOW_MS;
+}
+
+// The history after a transaction applied to `before`.
 export function recordTransaction(
   before: AppState,
-  applied: readonly Operation[],
-  inverse: readonly Operation[],
+  recorded: Recorded,
 ): HistoryState {
-  if (!isRecorded(applied)) return before.history;
-  const undo = [...before.history.undo, entryFor(before, inverse)];
-  return { undo: undo.slice(-HISTORY_LIMIT), redo: [] };
+  if (!isRecorded(recorded.applied)) return before.history;
+  const { undo } = before.history;
+  const last = undo.at(-1);
+  if (last !== undefined && canMerge(last, recorded)) {
+    // Undoing the merged step undoes the newer change first.
+    const operations = [...recorded.inverse, ...last.operations];
+    const merged = { ...last, operations, time: recorded.now };
+    return { undo: [...undo.slice(0, -1), merged], redo: [] };
+  }
+  const entry: HistoryEntry = {
+    ...entryFor(before, recorded.inverse),
+    ...(recorded.mergeKey !== undefined && {
+      mergeKey: recorded.mergeKey,
+      time: recorded.now,
+    }),
+  };
+  return { undo: [...undo, entry].slice(-HISTORY_LIMIT), redo: [] };
 }
 
 type Direction = "undo" | "redo";

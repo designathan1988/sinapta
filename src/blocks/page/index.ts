@@ -1,3 +1,4 @@
+export { pageDefinition } from "./page.definition.ts";
 export {
   createPage,
   pageCommands,

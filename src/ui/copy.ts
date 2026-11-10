@@ -55,6 +55,14 @@ export const COPY = {
     fieldLabel: "Icon (one emoji)",
     remove: "Remove icon",
   },
+  blocks: {
+    paragraph: "Type something",
+    heading: "Heading",
+    listItem: "List item",
+    toDo: "To-do",
+    toDoCheck: "Done",
+    quote: "Quote",
+  },
   editor: {
     titleLabel: "Page title",
     noPage: "Select a page, or create one, to start writing.",

@@ -73,3 +73,4 @@ export {
   type Mark,
   type MarkRange,
 } from "./rich-text.ts";
+export { safeHref } from "./link-href.ts";

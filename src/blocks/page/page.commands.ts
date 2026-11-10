@@ -59,6 +59,7 @@ export const renamePage = defineCommand<{ pageId: BlockId; title: string }>({
     if (page === undefined) return {};
     const title = command.title === "" ? [] : [{ text: command.title }];
     return {
+      mergeKey: `page.rename:${command.pageId}`,
       operations: [
         {
           type: "record.update",
