@@ -1,3 +1,4 @@
+export { parsePastedHtml } from "./pasted-html.ts";
 export { projectRichText } from "./rich-text-projection.ts";
 export {
   renderRichText,

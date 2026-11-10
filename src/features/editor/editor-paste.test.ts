@@ -5,6 +5,7 @@ import { createApp, text } from "./editor-builder.ts";
 import { pasteLines } from "./editor-paste.commands.ts";
 
 const A = toBlockId("a");
+const plain = (value: string) => [{ text: value }];
 
 describe("block.pasteLines", () => {
   it("puts each pasted line in a block of its own", () => {
@@ -15,7 +16,7 @@ describe("block.pasteLines", () => {
         blockId: A,
         start: 5,
         end: 5,
-        lines: [" one", "two", "three"],
+        lines: [plain(" one"), plain("two"), plain("three")],
       }),
     );
 
@@ -38,7 +39,12 @@ describe("block.pasteLines", () => {
     ]);
 
     dispatch(
-      pasteLines.create({ blockId: A, start: 4, end: 7, lines: ["x", "y"] }),
+      pasteLines.create({
+        blockId: A,
+        start: 4,
+        end: 7,
+        lines: [plain("x"), plain("y")],
+      }),
     );
 
     expect(outline()).toEqual([
@@ -51,11 +57,52 @@ describe("block.pasteLines", () => {
   it("is undone in one step", () => {
     const { dispatch, outline } = createApp([text("a", "Hello")]);
     dispatch(
-      pasteLines.create({ blockId: A, start: 5, end: 5, lines: ["1", "2"] }),
+      pasteLines.create({
+        blockId: A,
+        start: 5,
+        end: 5,
+        lines: [plain("1"), plain("2")],
+      }),
     );
 
     dispatch({ type: UNDO_COMMAND });
 
     expect(outline()).toEqual(["paragraph:Hello"]);
+  });
+
+  it("puts one pasted line inside the text and the caret after it", () => {
+    const { store, dispatch, outline } = createApp([text("a", "Hello world")]);
+
+    dispatch(
+      pasteLines.create({ blockId: A, start: 5, end: 5, lines: [plain(",")] }),
+    );
+
+    expect(outline()).toEqual(["paragraph:Hello, world"]);
+    expect(store.getState().ui.selection).toMatchObject({
+      blockId: A,
+      focusOffset: 6,
+    });
+  });
+
+  it("keeps the marks and links of what is pasted", () => {
+    const { store, dispatch } = createApp([text("a", "ab")]);
+    const bold = { text: "B", marks: ["bold" as const] };
+    const link = { text: "L", href: "https://example.com/" };
+
+    dispatch(
+      pasteLines.create({
+        blockId: A,
+        start: 1,
+        end: 1,
+        lines: [[bold, link]],
+      }),
+    );
+
+    expect(store.getState().workspace.blocks[A]?.props.text).toEqual([
+      { text: "a" },
+      bold,
+      link,
+      { text: "b" },
+    ]);
   });
 });

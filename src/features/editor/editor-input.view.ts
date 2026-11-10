@@ -3,7 +3,7 @@
 import { toggleTextMark, replaceText } from "./editor.commands.ts";
 import { matchBlockShortcut } from "./block-shortcut.ts";
 import { convertBlock } from "./editor-convert.commands.ts";
-import { pasteLines } from "./editor-paste.commands.ts";
+import { pasteInto } from "./editor-paste.view.ts";
 import { mergeBlockBackward, splitBlock } from "./editor-structure.commands.ts";
 import { selectNeighborTextBlock } from "./editor.selectors.ts";
 import { blockDefinition } from "../../blocks/block-registry.ts";
@@ -98,22 +98,8 @@ function openSlashMenu(target: Target, dispatch: Dispatch): void {
   dispatch(openOverlay.create({ overlay }));
 }
 
-// Pasted text with several lines becomes one block per line, except in a
-// block that keeps line breaks itself. Blank lines are dropped.
-function pastedLines(target: Target, text: string, state: AppState) {
-  const type = state.workspace.blocks[target.blockId]?.type ?? "";
-  if (!text.includes("\n") || blockDefinition(type)?.isMultiline === true)
-    return undefined;
-  return text.split("\n").filter((line) => line.trim() !== "");
-}
-
 const insert: Handler = (target, event, { state, dispatch }) => {
-  const lines = pastedLines(target, insertedText(event), state);
-  if (lines !== undefined && lines.length > 1) {
-    dispatch(pasteLines.create({ ...target, lines }));
-    return;
-  }
-  const text = lines === undefined ? insertedText(event) : (lines[0] ?? "");
+  const text = insertedText(event);
   const shortcut = shortcutFor(target, text, state);
   if (shortcut === undefined) {
     dispatch(replaceText.create({ ...target, text }));
@@ -172,9 +158,9 @@ function history(type: string): Handler {
 const HANDLERS: Record<string, Handler> = {
   insertText: insert,
   insertReplacementText: insert,
-  insertFromPaste: insert,
-  insertFromDrop: insert,
-  insertFromYank: insert,
+  insertFromPaste: pasteInto,
+  insertFromDrop: pasteInto,
+  insertFromYank: pasteInto,
   insertParagraph: paragraph,
   insertLineBreak: lineBreak,
   deleteContentBackward: remove(-1),
