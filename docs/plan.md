@@ -20,6 +20,13 @@ Full notes are in `docs/research/`; decisions are in `docs/decisions/`.
 - Current stable majors are newer than older guides assume: Vite 8, Vitest
   5, ESLint 10, Stylelint 18, TypeScript 7 (native compiler).
 - `typescript-eslint` 8.72 does not support TypeScript 7 (decision D1).
+- Vitest with `pool: "threads"` and `isolate: false` ran 202 test files in
+  1.8 s, against 11.8 s with defaults; happy-dom is the DOM environment,
+  chosen per file.
+- Tokens build with plain `node scripts/build-tokens.ts` (Node 22 strips
+  types), no extra dependency, in about 0.1 s.
+- Layer direction is enforced with ESLint core `no-restricted-imports`, one
+  block per layer; no lint plugin beyond typescript-eslint is needed.
 - `@tanstack/table-core` 9.3.1 runs fully controlled; measured 46 ms for the
   first sort and filter of 5,000 rows.
 - `content-visibility` cannot skip `<tr>` rows, so the table needs row
@@ -49,6 +56,14 @@ approval the specification, the ADR and `CLAUDE.md` change in one commit.
 | D12 | Drag alternative | Keyboard and drag | WCAG 2.2 SC 2.5.7 also needs a single-pointer path | Add "Move up", "Move down", "Move to" menu actions (ADR-0007) |
 | D13 | Slash menu pattern | A menu | Focus stays in the editor, which is the combobox pattern | `role="listbox"` popover driven by `aria-activedescendant` on the block |
 | D14 | Pipeline state file | Not in the folder structure | The SDLC skill writes `.agentic-sdlc/active/` | Keep it git-ignored |
+| D15 | Home of the theme | `theme` is in the `ui` slice (2.1) and in `settings.theme` of the workspace file (4) | One value with two homes | One home, `workspace.settings.theme`, so export carries it. The command becomes `settings.setTheme` and settings changes are not recorded in undo history. Milestone 1 acceptance is reworded to match |
+| D16 | Store write search | Writes to the store are found "only in `src/state/dispatch.ts`" | `store.ts` must create the store and hand `setState` to the dispatcher | Acceptance reads: `setState` is called only in `dispatch.ts`; `store.ts` exports it only to `dispatch.ts`, enforced by lint |
+| D17 | Base token names | "one custom property per token"; base tokens forbidden in CSS | The ban is lintable only if base tokens share a prefix | Base tokens sit under a top-level `base` group and become `--base-*`; Stylelint bans `--base-*` outside the generated file |
+| D18 | Custom property casing | Token segments are lower camelCase, joined by hyphens | `font.lineHeight.body` becomes `--font-lineHeight-body` | Convert each segment to kebab-case in CSS: `--font-line-height-body` |
+| D19 | Lint exemptions | 40-line functions and named exports everywhere | A `describe` callback is one long function; Vite, ESLint and Stylelint configs must default-export | Function length limit off in `*.test.ts` (file limit stays); default exports allowed only in root `*.config.*` files |
+| D20 | CSP in development | A CSP without `unsafe-inline` scripts | The Vite dev server injects `<style>` tags for hot reload | The strict policy is injected into `index.html` at build; `npm run build` output is what the audits check |
+| D21 | Page icon input | "Title, icon" | No file uploads in version 1 | The icon is one emoji (a single grapheme cluster) typed or pasted into a small popover field; no icon library picker |
+| D22 | Naming example | Section 6 cites `TableView` | Section 4 defines `View` | Correct the example to `View` |
 
 ## Architecture in brief
 
@@ -102,7 +117,8 @@ Design checks applied (skills named in the build prompt):
 ## Milestones and tasks
 
 Each task is a vertical slice of about an hour that ends in something
-visible. `docs/tasks.md` holds the test-first specification of each task for
+visible. Four tasks are pure logic with no interface to show (1.4, 1.5,
+3.2, 3.9); they report test counts or a measured figure instead. `docs/tasks.md` holds the test-first specification of each task for
 the current milestone; the next milestone's specifications are written when
 the previous one is accepted.
 
@@ -113,13 +129,16 @@ the previous one is accepted.
 | 1.1 Project setup: Vite, TypeScript, Vitest, Prettier, scripts | A blank page served by `npm run dev`; one passing test |
 | 1.2 Lint limits: ESLint layers, size limits, banned names; Stylelint raw-value ban | A deliberate upward import fails `npm run lint` |
 | 1.3 Tokens pipeline: three tiers, `build-tokens.ts`, Vite plugin | Page background and text use generated custom properties |
-| 1.4 Model core: ids, envelope schema, operations, apply, invariants | Tests only; counts shown in the report |
-| 1.5 Store, command registry, dispatcher, history | A temporary status line shows state changing on a key press |
-| 1.6 App shell: grid, sidebar and main areas, top bar, CSP | The empty shell with a resizable, collapsible sidebar |
-| 1.7 Theme: `ui.setTheme`, `color-scheme`, `data-theme` override | A theme control switches light, dark, system |
-| 1.8 Repository: adapter contract, IndexedDB adapter, load, debounced save, migration runner | Theme and sidebar width survive reload; save status shows |
-| 1.9 Shortcut registry and overlay host with one dialog | Undo and redo keys work; a settings dialog opens and closes |
-| 1.10 Milestone review, UI audit, accessibility review, fixes | Audit findings closed |
+| 1.4 Model records: ids, workspace and settings schemas, typed parse errors | Tests only (no interface yet); counts in the report |
+| 1.5 Model operations: five operation types, apply with inverses, invariants | Tests only; counts in the report |
+| 1.6 Store, command registry, dispatcher | A temporary status line shows state changing on a button press |
+| 1.7 History: undo and redo of workspace transactions | Undo and redo buttons revert the status line |
+| 1.8 App shell: grid, sidebar and main areas, top bar, CSP at build | The empty shell with a resizable, collapsible sidebar |
+| 1.9 Theme: `settings.setTheme`, `color-scheme`, `data-theme` override | A theme control switches light, dark, system |
+| 1.10 Storage adapter contract, in-memory adapter, repository load and debounced save | Tests; save status shows "Saved" in the top bar |
+| 1.11 IndexedDB adapter and migration runner with the baseline | Theme and sidebar width survive reload |
+| 1.12 Shortcut registry and overlay host with one dialog | Undo and redo keys work; a settings dialog opens and closes |
+| 1.13 Milestone review, UI audit, accessibility review, fixes | Audit findings closed |
 
 ### Milestone 2: Pages and sidebar
 
@@ -127,12 +146,13 @@ the previous one is accepted.
 | --- | --- |
 | 2.1 Page block, `page.create`, root list | A "New page" button adds pages to the sidebar |
 | 2.2 Sidebar tree with nesting, expand and collapse, ARIA tree keys | Arrow keys walk the tree |
-| 2.3 Router and active page, title editing, rename | Clicking a page opens it; the URL changes; title edits show in the tree |
-| 2.4 Breadcrumbs, back and forward | Breadcrumb trail on a nested page |
-| 2.5 Favorite, trash, restore | Favorites section; trash dialog with restore |
-| 2.6 Move by keyboard and menu actions | "Move up", "Move down", "Move to" reorder the tree |
-| 2.7 Move by drag: pointer drag owner, drop marker, announcements | Dragging a page reorders or re-parents it |
-| 2.8 Milestone review and audits | Audit findings closed |
+| 2.3 Router and active page, title editing as plain single-span text, rename | Clicking a page opens it; the URL changes; title edits show in the tree |
+| 2.4 Page icon: one emoji set from a popover field | The icon shows in the title, tree and breadcrumbs |
+| 2.5 Breadcrumbs, back and forward | Breadcrumb trail on a nested page |
+| 2.6 Favorite, trash, restore | Favorites section; trash dialog with restore |
+| 2.7 Move by keyboard and menu actions | "Move up", "Move down", "Move to" reorder the tree |
+| 2.8 Move by drag: pointer drag owner, drop marker, announcements | Dragging a page reorders or re-parents it |
+| 2.9 Milestone review and audits | Audit findings closed |
 
 ### Milestone 3: Block editor, text
 
@@ -219,7 +239,7 @@ the previous one is accepted.
 | `npm run test` | All tests pass in under 10 s |
 | `npm run lint` | 0 errors, 0 warnings |
 | `npm run build` | Exit 0 in under 20 s |
-| Search for `setState` in `src/` | Found only in `src/state/store.ts` and `src/state/dispatch.ts` |
+| Search for `setState(` in `src/` | Called only in `src/state/dispatch.ts` (decision D16) |
 | Search for `idb` or `indexedDB` in `src/` | Found only in `src/persistence/` |
 
 ## Out of scope
@@ -228,3 +248,18 @@ Everything listed under "Out of scope for version 1" in the specification,
 plus: nested submenus, partial text selection across blocks, a
 user-selectable density setting, polyfill packages, an end-to-end test
 suite.
+
+## Plan review record
+
+An independent review on 2026-11-10 returned "proceed with changes": one
+blocker and three should-fix findings, all accepted after checking them
+against the specification.
+
+- Blocker, page icon had no task: added task 2.4 and decision D21.
+- Tasks 1.4 and 1.8 were larger than an hour: split into 1.4 and 1.5, and
+  1.10 and 1.11; history split from the dispatcher as 1.7.
+- Theme had two homes: decision D15.
+- Store write search differed from the acceptance line: decision D16.
+- Three minor notes: pure-logic tasks are labelled, the naming example is
+  decision D22, and task 2.3 edits the title as plain single-span text so it
+  does not need the milestone 3 rich text module.
