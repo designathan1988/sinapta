@@ -86,6 +86,7 @@ export const COPY = {
     openRow: "Open as page",
     options: "Options",
     addOption: "Add an option",
+    noOptions: "No options yet. Add options from the table.",
     clearValue: "Clear",
     invalidValue: "This value does not fit the property type.",
     rowCount: "rows",

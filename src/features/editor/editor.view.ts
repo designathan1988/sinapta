@@ -9,7 +9,7 @@ import {
 } from "../../blocks/page/index.ts";
 import type { AppState, Dispatch } from "../../state/index.ts";
 import { COPY, PRODUCT_NAME } from "../../ui/copy.ts";
-import { renderDatabase } from "../database/index.ts";
+import { renderDatabase, renderRowProperties } from "../database/index.ts";
 import { continueWriting, renderBlocks } from "./editor-blocks.view.ts";
 import { renderBlockMenu } from "./editor-block-menu.view.ts";
 import { LINK_OVERLAY, renderLinkField } from "./editor-link.view.ts";
@@ -55,13 +55,14 @@ export function renderEditor(
       <p class="editor__empty">${COPY.editor.noPage}</p>`;
   }
   const context = { state, dispatch };
+  // A row of a database shows its property values above its text.
+  const content =
+    page.type === DATABASE_TYPE
+      ? renderDatabase(state, dispatch)
+      : [renderRowProperties(state, dispatch), renderBlocks(page.id, context)];
   return html`<article class="editor" ?data-wide=${page.type === DATABASE_TYPE}>
     ${renderIconControl(state, page, dispatch)} ${renderTitle(page, context)}
-    ${
-      page.type === DATABASE_TYPE
-        ? renderDatabase(state, dispatch)
-        : renderBlocks(page.id, context)
-    }
+    ${content}
   </article>`;
 }
 

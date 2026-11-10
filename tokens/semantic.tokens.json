@@ -278,6 +278,11 @@
         "$value": "{base.size.46}"
       }
     },
+    "label": {
+      "width": {
+        "$value": "{base.size.12}"
+      }
+    },
     "menu": {
       "minWidth": {
         "$value": "{base.size.14}"
