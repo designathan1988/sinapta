@@ -127,10 +127,12 @@ export function renderCell(
     active && state.ui.activeCell?.isEditing === true && usesInput(column);
   const key = cellKey(row.id, column);
   const isAnchor = state.ui.overlay?.anchorId === key;
+  // While its editor is open the cell itself is not a focus target.
+  const tabIndex = isEditing ? nothing : active ? "0" : "-1";
   return html`<td
     class="database__cell"
     role="gridcell"
-    tabindex=${active ? "0" : "-1"}
+    tabindex=${tabIndex}
     data-cell=${key}
     data-type=${column.isTitle ? TITLE_KEY : column.property.type}
     data-overlay-anchor=${isAnchor ? "open" : nothing}

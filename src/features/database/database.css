@@ -34,7 +34,7 @@
       color: var(--color-text-primary);
     }
 
-    &[aria-selected="true"] {
+    &[aria-pressed="true"] {
       border-block-end-color: var(--color-accent-default);
       color: var(--color-text-primary);
     }

@@ -29,8 +29,7 @@ function renderTabs(context: TableContext): TemplateResult {
     return html`<button
       type="button"
       class="database__tab"
-      role="tab"
-      aria-selected=${String(view.id === model.view.id)}
+      aria-pressed=${String(view.id === model.view.id)}
       @click=${() => dispatch(setActiveView.create({ databaseId, viewId }))}
     >
       ${view.name}
@@ -40,7 +39,7 @@ function renderTabs(context: TableContext): TemplateResult {
   const name = `${COPY.database.viewName} ${String(count + 1)}`;
   return html`<div
     class="database__tabs"
-    role="tablist"
+    role="group"
     aria-label=${COPY.database.views}
   >
     ${tabs}
