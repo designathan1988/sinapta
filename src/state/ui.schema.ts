@@ -5,6 +5,7 @@ import { createInitialUiState, type UiState } from "./app-state.ts";
 
 const persistedUiSchema = v.object({
   activePageId: v.nullable(blockIdSchema),
+  expandedPageIds: v.optional(v.array(blockIdSchema), []),
   sidebarWidth: v.number(),
   isSidebarCollapsed: v.boolean(),
 });
@@ -12,8 +13,14 @@ const persistedUiSchema = v.object({
 export type PersistedUi = v.InferOutput<typeof persistedUiSchema>;
 
 export function toPersistedUi(ui: UiState): PersistedUi {
-  const { activePageId, sidebarWidth, isSidebarCollapsed } = ui;
-  return { activePageId, sidebarWidth, isSidebarCollapsed };
+  const { activePageId, expandedPageIds, sidebarWidth, isSidebarCollapsed } =
+    ui;
+  return {
+    activePageId,
+    expandedPageIds: [...expandedPageIds],
+    sidebarWidth,
+    isSidebarCollapsed,
+  };
 }
 
 // Stored interface state that does not parse is dropped, not repaired: the

@@ -21,3 +21,9 @@ export function createViewId(): ViewId {
 export function createPropertyId(): PropertyId {
   return v.parse(propertyIdSchema, crypto.randomUUID());
 }
+
+// Turns text from outside the store (a URL, a DOM attribute) into an id.
+export function parseBlockId(text: string): BlockId | undefined {
+  const result = v.safeParse(blockIdSchema, text);
+  return result.success && text !== "" ? result.output : undefined;
+}

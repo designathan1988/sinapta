@@ -30,10 +30,8 @@ export interface Workspace {
 
 // Block type name to the schema of that type's props, supplied by the
 // block registry so that the model does not know any block type.
-export type PropsSchemas = ReadonlyMap<
-  string,
-  v.GenericSchema<unknown, BlockProps>
->;
+export type PropsSchema = v.GenericSchema<unknown, BlockProps>;
+export type PropsSchemas = ReadonlyMap<string, PropsSchema>;
 
 export type ParseWorkspaceResult =
   | {

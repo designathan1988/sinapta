@@ -11,6 +11,17 @@ export const COPY = {
     emptyWorkspace: "No pages yet. Create a page to start writing.",
     openSettings: "Settings",
   },
+  sidebar: {
+    newPage: "New page",
+    untitled: "Untitled",
+    addSubpage: "Add a page inside",
+    expandPage: "Expand",
+    collapsePage: "Collapse",
+  },
+  editor: {
+    titleLabel: "Page title",
+    noPage: "Select a page, or create one, to start writing.",
+  },
   saveStatus: {
     idle: "",
     saving: "Saving",

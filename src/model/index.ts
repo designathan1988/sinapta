@@ -1,4 +1,9 @@
-export { createBlockId, createPropertyId, createViewId } from "./id.ts";
+export {
+  createBlockId,
+  createPropertyId,
+  createViewId,
+  parseBlockId,
+} from "./id.ts";
 export {
   blockIdSchema,
   propertyIdSchema,
@@ -25,6 +30,7 @@ export {
   parseWorkspaceFile,
   settingsSchema,
   type ParseWorkspaceResult,
+  type PropsSchema,
   type PropsSchemas,
   type Settings,
   type Theme,

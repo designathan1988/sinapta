@@ -22,6 +22,8 @@ export interface OpenOverlay {
 
 export interface UiState {
   readonly activePageId: BlockId | null;
+  // Pages whose children are shown in the sidebar tree.
+  readonly expandedPageIds: readonly BlockId[];
   readonly selection: TextSelection | null;
   // Sidebar width in rem.
   readonly sidebarWidth: number;
@@ -66,6 +68,7 @@ export const SIDEBAR_WIDTH = {
 export function createInitialUiState(): UiState {
   return {
     activePageId: null,
+    expandedPageIds: [],
     selection: null,
     sidebarWidth: SIDEBAR_WIDTH.initial,
     isSidebarCollapsed: false,

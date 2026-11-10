@@ -1,0 +1,99 @@
+@layer features {
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-sm);
+    align-items: stretch;
+
+    & > .button {
+      justify-content: flex-start;
+    }
+  }
+
+  .sidebar__empty {
+    padding: var(--space-inset-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .sidebar__tree {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xxs);
+  }
+
+  .sidebar__row {
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    min-block-size: var(--size-row-height);
+    padding-inline: calc((var(--sidebar-level, 1) - 1) * var(--space-inset-lg))
+      var(--space-inset-xs);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    &[aria-current="page"] {
+      background-color: var(--color-bg-active);
+      color: var(--color-text-primary);
+      font-weight: var(--font-weight-medium);
+    }
+  }
+
+  .sidebar__title {
+    flex: 1;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sidebar__icon:empty {
+    display: none;
+  }
+
+  .sidebar__toggle,
+  .sidebar__add {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    inline-size: var(--size-target-min);
+    block-size: var(--size-target-min);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-tertiary);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-active);
+      color: var(--color-text-primary);
+    }
+
+    &[hidden] {
+      display: inline-grid;
+      visibility: hidden;
+    }
+  }
+
+  /* Row actions appear on hover and on keyboard focus. */
+  .sidebar__add {
+    opacity: 0;
+  }
+
+  .sidebar__row:is(:hover, :focus-visible, :focus-within) .sidebar__add {
+    opacity: 1;
+  }
+
+  .sidebar__row[data-untitled] .sidebar__title {
+    color: var(--color-text-tertiary);
+  }
+
+  .sidebar__row[aria-expanded="true"] .sidebar__toggle {
+    rotate: 90deg;
+  }
+}

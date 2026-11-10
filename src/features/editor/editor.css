@@ -1,0 +1,31 @@
+@layer features {
+  .editor {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-md);
+  }
+
+  .editor__title {
+    inline-size: 100%;
+    padding: var(--space-none);
+    border: none;
+    background-color: transparent;
+    color: var(--color-text-primary);
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-title);
+    font-weight: var(--font-weight-strong);
+    line-height: var(--font-line-height-tight);
+
+    &::placeholder {
+      color: var(--color-text-tertiary);
+    }
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  .editor__empty {
+    color: var(--color-text-secondary);
+  }
+}

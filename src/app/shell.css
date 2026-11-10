@@ -49,11 +49,6 @@
     font-weight: var(--font-weight-strong);
   }
 
-  .app__empty {
-    padding: var(--space-inset-sm);
-    color: var(--color-text-secondary);
-  }
-
   .app__resizer {
     inline-size: var(--size-border-thin);
     background-color: var(--color-border-subtle);

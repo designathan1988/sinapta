@@ -1,6 +1,8 @@
 // The composition root: creates the one store, registers every command and
 // owns the single root render.
 import { render } from "lit-html";
+import { BLOCK_PROPS_SCHEMAS } from "../blocks/block-registry.ts";
+import { pageCommands } from "../blocks/page/index.ts";
 import type { Theme } from "../model/index.ts";
 import {
   createAppStore,
@@ -24,6 +26,7 @@ const COMMANDS = [
   ...settingsCommands,
   ...persistenceCommands,
   ...workspaceCommands,
+  ...pageCommands,
 ];
 
 // A manual theme is an attribute on the root element; "system" removes it.
@@ -52,7 +55,7 @@ export async function startApp(container: HTMLElement): Promise<void> {
     store,
     dispatch,
     adapter: createIndexedDbAdapter(),
-    propsSchemas: new Map(),
+    propsSchemas: BLOCK_PROPS_SCHEMAS,
   });
   store.subscribe(renderRoot);
   renderRoot();

@@ -1,5 +1,7 @@
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
+import { renderEditor } from "../features/editor/index.ts";
+import { renderSidebar } from "../features/sidebar/index.ts";
 import {
   renderSettings,
   SETTINGS_OVERLAY,
@@ -77,7 +79,10 @@ function renderResizer(state: AppState, dispatch: Dispatch): TemplateResult {
   ></div>`;
 }
 
-function renderSidebar(dispatch: Dispatch): TemplateResult {
+function renderSidebarPanel(
+  state: AppState,
+  dispatch: Dispatch,
+): TemplateResult {
   return html`<nav class="app__sidebar" aria-label=${COPY.shell.pagesLabel}>
     <header class="app__sidebar-header">
       <span class="app__product">${PRODUCT_NAME}</span>
@@ -88,7 +93,7 @@ function renderSidebar(dispatch: Dispatch): TemplateResult {
         onClick: () => dispatch(toggleSidebar.create({})),
       })}
     </header>
-    <p class="app__empty">${COPY.shell.emptyWorkspace}</p>
+    ${renderSidebar(state, dispatch)}
   </nav>`;
 }
 
@@ -128,11 +133,11 @@ export function renderShell(
     })}
   >
     <a class="app__skip-link" href="#main">${COPY.shell.skipToContent}</a>
-    ${isSidebarCollapsed ? nothing : renderSidebar(dispatch)}
+    ${isSidebarCollapsed ? nothing : renderSidebarPanel(state, dispatch)}
     ${isSidebarCollapsed ? nothing : renderResizer(state, dispatch)}
     <main class="app__main" id="main" tabindex="-1">
       ${renderTopBar(state, dispatch)}
-      <div class="app__page"></div>
+      <div class="app__page">${renderEditor(state, dispatch)}</div>
     </main>
     ${
       overlay?.kind === SETTINGS_OVERLAY

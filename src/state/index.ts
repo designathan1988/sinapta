@@ -32,7 +32,9 @@ export { REDO_COMMAND, UNDO_COMMAND } from "./history.ts";
 export {
   closeOverlay,
   openOverlay,
+  setActivePage,
   setSidebarWidth,
+  togglePageExpanded,
   toggleSidebar,
   uiCommands,
 } from "./ui.commands.ts";

@@ -1,4 +1,5 @@
 // Commands for the parts of the `ui` slice that belong to no feature.
+import type { BlockId } from "../model/index.ts";
 import { SIDEBAR_WIDTH, type OpenOverlay } from "./app-state.ts";
 import { defineCommand, type NoPayload } from "./command-registry.ts";
 
@@ -38,9 +39,36 @@ export const closeOverlay = defineCommand<NoPayload>({
   },
 });
 
+// Opens a page, or none. A page that does not exist cannot be opened.
+export const setActivePage = defineCommand<{ pageId: BlockId | null }>({
+  type: "ui.setActivePage",
+  handle(state, command) {
+    const { pageId } = command;
+    if (pageId === state.ui.activePageId) return {};
+    if (pageId !== null && state.workspace.blocks[pageId] === undefined) {
+      return {};
+    }
+    return { ui: { ...state.ui, activePageId: pageId } };
+  },
+});
+
+export const togglePageExpanded = defineCommand<{ pageId: BlockId }>({
+  type: "ui.togglePageExpanded",
+  handle(state, command) {
+    const { expandedPageIds } = state.ui;
+    const isExpanded = expandedPageIds.includes(command.pageId);
+    const next = isExpanded
+      ? expandedPageIds.filter((id) => id !== command.pageId)
+      : [...expandedPageIds, command.pageId];
+    return { ui: { ...state.ui, expandedPageIds: next } };
+  },
+});
+
 export const uiCommands = [
   setSidebarWidth,
   toggleSidebar,
   openOverlay,
   closeOverlay,
+  setActivePage,
+  togglePageExpanded,
 ];
