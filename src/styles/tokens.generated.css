@@ -60,7 +60,7 @@
     --base-color-chip-red-ink: oklch(0.36 0.1 25);
     --base-color-chip-red-shade: oklch(0.36 0.06 25);
     --base-color-chip-red-glow: oklch(0.9 0.06 25);
-    --base-color-status-red-300: oklch(0.76 0.14 25);
+    --base-color-status-red-300: oklch(0.8 0.12 25);
     --base-color-status-red-500: oklch(0.55 0.2 27);
     --base-color-status-red-tint: oklch(0.95 0.03 25);
     --base-color-status-red-shade: oklch(0.3 0.07 25);

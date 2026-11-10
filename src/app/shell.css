@@ -1,11 +1,16 @@
 @layer features {
   .app {
     display: grid;
-    grid-template-columns: var(--app-sidebar-width) auto minmax(0, 1fr);
+    grid-template-columns: var(--app-sidebar-width) minmax(0, 1fr);
     block-size: 100%;
 
     &[data-sidebar-collapsed] {
       grid-template-columns: minmax(0, 1fr);
+    }
+
+    &[data-resizing] {
+      cursor: col-resize;
+      user-select: none;
     }
   }
 
@@ -25,6 +30,7 @@
   }
 
   .app__sidebar {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: var(--space-stack-sm);
@@ -49,7 +55,11 @@
     font-weight: var(--font-weight-strong);
   }
 
+  /* A hairline on the sidebar's edge; it is the handle that resizes it. */
   .app__resizer {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
     inline-size: var(--size-border-thin);
     background-color: var(--color-border-subtle);
     cursor: col-resize;
@@ -102,5 +112,11 @@
     inline-size: min(var(--size-content-max), 100%);
     margin-inline: auto;
     padding: var(--space-inset-xl) var(--space-inset-lg);
+  }
+
+  /* While the sidebar is being resized. */
+  .app[data-resizing] .app__resizer {
+    inline-size: var(--size-border-thick);
+    background-color: var(--color-border-focus);
   }
 }

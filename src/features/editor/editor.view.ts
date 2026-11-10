@@ -5,7 +5,7 @@ import {
   selectPageTitle,
 } from "../../blocks/page/index.ts";
 import type { AppState, Dispatch } from "../../state/index.ts";
-import { COPY } from "../../ui/copy.ts";
+import { COPY, PRODUCT_NAME } from "../../ui/copy.ts";
 import { renderIconControl } from "./editor-icon.view.ts";
 
 // The open page: its title now, its blocks from milestone 3.
@@ -15,7 +15,8 @@ export function renderEditor(
 ): TemplateResult {
   const page = selectPage(state, state.ui.activePageId);
   if (page === undefined || page.props.isTrashed) {
-    return html`<p class="editor__empty">${COPY.editor.noPage}</p>`;
+    return html`<h1 class="visually-hidden">${PRODUCT_NAME}</h1>
+      <p class="editor__empty">${COPY.editor.noPage}</p>`;
   }
   const onInput = (event: Event): void => {
     if (event.target instanceof HTMLInputElement) {

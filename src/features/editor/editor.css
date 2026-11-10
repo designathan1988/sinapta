@@ -24,8 +24,10 @@
       color: var(--color-text-tertiary);
     }
 
+    /* A text field shows its caret; the underline is the focus indicator. */
     &:focus-visible {
       outline: none;
+      box-shadow: 0 var(--size-focus-width) 0 var(--color-border-focus);
     }
   }
 
@@ -47,7 +49,7 @@
     }
 
     &[data-empty] {
-      color: var(--color-text-tertiary);
+      color: var(--color-text-secondary);
       font-size: var(--font-size-sm);
     }
   }

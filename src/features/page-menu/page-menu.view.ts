@@ -75,6 +75,8 @@ export function renderPageMenuButton(
   </button>`;
 }
 
+// Move actions that cannot apply are left out: a greyed-out item would not
+// say why it is unavailable.
 function moveItems(
   state: AppState,
   page: PageBlock,
@@ -84,30 +86,17 @@ function moveItems(
   const { index, count } = selectPagePosition(state, page);
   const move = (offset: number) => () =>
     dispatch(movePage.create({ pageId, parentId, index: index + offset }));
-  return [
-    {
-      label: COPY.pageMenu.moveUp,
-      icon: "up",
-      onSelect: move(-1),
-      isDisabled: index <= 0,
-    },
-    {
-      label: COPY.pageMenu.moveDown,
-      icon: "down",
-      onSelect: move(1),
-      isDisabled: index >= count - 1,
-    },
-    {
-      label: COPY.moveTo.action,
-      icon: "chevron",
-      onSelect: () =>
-        dispatch(
-          openOverlay.create({
-            overlay: { kind: MOVE_TO_OVERLAY_KIND, anchorId: pageId },
-          }),
-        ),
-    },
-  ];
+  const up: MenuItem = {
+    label: COPY.pageMenu.moveUp,
+    icon: "up",
+    onSelect: move(-1),
+  };
+  const down: MenuItem = {
+    label: COPY.pageMenu.moveDown,
+    icon: "down",
+    onSelect: move(1),
+  };
+  return [...(index > 0 ? [up] : []), ...(index < count - 1 ? [down] : [])];
 }
 
 function menuItems(

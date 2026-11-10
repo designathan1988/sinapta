@@ -43,9 +43,12 @@ const KEY_STEPS: Record<string, (width: number) => number> = {
   End: () => SIDEBAR_WIDTH.max,
 };
 
+// The attribute tells the styles, and anyone looking, that a resize is
+// under way.
 function capturePointer(event: PointerEvent): void {
   if (event.currentTarget instanceof Element) {
     event.currentTarget.setPointerCapture(event.pointerId);
+    event.currentTarget.closest(".app")?.setAttribute("data-resizing", "");
   }
 }
 
@@ -60,6 +63,9 @@ function previewWidth(event: PointerEvent): void {
 function renderResizer(state: AppState, dispatch: Dispatch): TemplateResult {
   const { sidebarWidth } = state.ui;
   const onPointerUp = (event: PointerEvent): void => {
+    if (event.currentTarget instanceof Element) {
+      event.currentTarget.closest(".app")?.removeAttribute("data-resizing");
+    }
     dispatch(setSidebarWidth.create({ width: widthAt(event) }));
   };
   const onKeyDown = (event: KeyboardEvent): void => {
@@ -98,7 +104,7 @@ function renderSidebarPanel(
         onClick: () => dispatch(toggleSidebar.create({})),
       })}
     </header>
-    ${renderSidebar(state, dispatch)}
+    ${renderSidebar(state, dispatch)} ${renderResizer(state, dispatch)}
   </nav>`;
 }
 
@@ -162,11 +168,10 @@ export function renderShell(
   >
     <a class="app__skip-link" href="#main">${COPY.shell.skipToContent}</a>
     ${isSidebarCollapsed ? nothing : renderSidebarPanel(state, dispatch)}
-    ${isSidebarCollapsed ? nothing : renderResizer(state, dispatch)}
     <main class="app__main" id="main" tabindex="-1">
       ${renderTopBar(state, dispatch)}
       <div class="app__page">${renderEditor(state, dispatch)}</div>
+      ${renderOverlay(state, dispatch)}
     </main>
-    ${renderOverlay(state, dispatch)}
   </div>`;
 }
