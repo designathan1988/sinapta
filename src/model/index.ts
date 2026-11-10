@@ -7,3 +7,28 @@ export {
   type PropertyId,
   type ViewId,
 } from "./id.schema.ts";
+export {
+  richTextSchema,
+  textSpanSchema,
+  type RichText,
+  type TextSpan,
+} from "./rich-text.schema.ts";
+export {
+  isBlockOfType,
+  type Block,
+  type BlockProps,
+  type TypedBlock,
+} from "./block.schema.ts";
+export { type Filter, type View } from "./view.schema.ts";
+export {
+  SCHEMA_VERSION,
+  parseWorkspaceFile,
+  settingsSchema,
+  type ParseWorkspaceResult,
+  type PropsSchemas,
+  type Settings,
+  type Theme,
+  type Workspace,
+} from "./workspace.schema.ts";
+export { createEmptyWorkspace } from "./workspace.ts";
+export type { RecordError, WorkspaceFileError } from "./parse-error.ts";
