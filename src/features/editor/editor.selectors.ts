@@ -49,3 +49,17 @@ export function selectNeighborTextBlock(
   const index = texts.findIndex((block) => block.id === blockId);
   return index === -1 ? undefined : texts[index + offset];
 }
+
+// The blocks of a block selection, in reading order. Empty when nothing
+// is selected or the selection names blocks that are gone.
+export function selectSelectedBlocks(state: AppState): Block[] {
+  const range = state.ui.blockSelection;
+  const pageId =
+    range === null ? undefined : selectPageIdOf(state, range.anchorId);
+  if (range === null || pageId === undefined) return [];
+  const order = selectBlockOrder(state, pageId);
+  const anchor = order.findIndex((block) => block.id === range.anchorId);
+  const focus = order.findIndex((block) => block.id === range.focusId);
+  if (anchor === -1 || focus === -1) return [];
+  return order.slice(Math.min(anchor, focus), Math.max(anchor, focus) + 1);
+}

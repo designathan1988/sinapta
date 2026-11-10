@@ -146,6 +146,8 @@ export const COPY = {
     titleLabel: "Page title",
     continueWriting: "Click here, or press Enter in the title, to write",
     noPage: "Select a page, or create one, to start writing.",
+    blocksSelected:
+      "Blocks selected. Shift with Up or Down changes the selection, Delete removes the blocks, Escape returns to the text.",
   },
   saveStatus: {
     idle: "",

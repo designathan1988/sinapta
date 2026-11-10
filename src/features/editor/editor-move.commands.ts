@@ -69,6 +69,19 @@ export const moveBlockBy = defineCommand<{ blockId: BlockId; offset: -1 | 1 }>({
   },
 });
 
+// The operations that delete a block and everything inside it.
+export function deleteOperations(state: AppState, block: Block): Operation[] {
+  const deletions = subtree(state, block).map((item): Operation => ({
+    type: "record.delete",
+    kind: "block",
+    id: item.id,
+  }));
+  return [
+    { type: "list.remove", list: listOf(block.parentId), id: block.id },
+    ...deletions,
+  ];
+}
+
 function subtree(state: AppState, block: Block): Block[] {
   const children = block.childIds.flatMap((id) => {
     const child = state.workspace.blocks[id];
@@ -85,20 +98,12 @@ export const deleteBlock = defineCommand<{ blockId: BlockId }>({
     const block = state.workspace.blocks[command.blockId];
     if (block === undefined || block.type === PAGE_TYPE) return {};
     const previous = selectNeighborTextBlock(state, block.id, -1);
-    const deletions = subtree(state, block).map((item): Operation => ({
-      type: "record.delete",
-      kind: "block",
-      id: item.id,
-    }));
     const selection =
       previous === undefined
         ? null
         : caretAt(previous.id, textOf(previous).length);
     return {
-      operations: [
-        { type: "list.remove", list: listOf(block.parentId), id: block.id },
-        ...deletions,
-      ],
+      operations: deleteOperations(state, block),
       ui: { ...state.ui, selection },
     };
   },

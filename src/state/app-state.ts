@@ -15,6 +15,13 @@ export interface TextSelection {
   readonly focusOffset: number;
 }
 
+// Whole blocks selected together: every block of the page from the anchor
+// to the focus, in reading order.
+export interface BlockSelection {
+  readonly anchorId: BlockId;
+  readonly focusId: BlockId;
+}
+
 export interface ActiveCell {
   readonly rowId: BlockId;
   // Null for the title column.
@@ -41,6 +48,7 @@ export interface UiState {
   // Pages whose children are shown in the sidebar tree.
   readonly expandedPageIds: readonly BlockId[];
   readonly selection: TextSelection | null;
+  readonly blockSelection: BlockSelection | null;
   // The view shown for each database that has been opened.
   readonly activeViewIds: Readonly<Record<BlockId, ViewId>>;
   // The table cell that has focus, and whether it is being edited.
@@ -104,6 +112,7 @@ export function createInitialUiState(): UiState {
     activePageId: null,
     expandedPageIds: [],
     selection: null,
+    blockSelection: null,
     activeViewIds: {},
     activeCell: null,
     tableFirstRow: 0,

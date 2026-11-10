@@ -3,6 +3,7 @@ export {
   createInitialUiState,
   SIDEBAR_WIDTH,
   type ActiveCell,
+  type BlockSelection,
   type AppState,
   type HistoryEntry,
   type HistoryState,

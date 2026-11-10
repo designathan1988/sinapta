@@ -9,6 +9,10 @@ import { setSelection } from "../../state/index.ts";
 import { readSelection, textElementOf } from "../../ui/caret/index.ts";
 import { openBlockMenu } from "./editor-block-menu.view.ts";
 import { openLinkField } from "./editor-link.view.ts";
+import {
+  onSelectionKeyDown,
+  startBlockSelection,
+} from "./editor-selection.view.ts";
 import { indentBlock, outdentBlock } from "./editor-structure.commands.ts";
 import { caretAt, toggleTextMark } from "./editor.commands.ts";
 import type { InputContext } from "./editor-input.view.ts";
@@ -136,7 +140,12 @@ export function onBlockKeyDown(
   context: InputContext,
 ): void {
   if (event.isComposing) return;
+  if (context.state.ui.blockSelection !== null) {
+    onSelectionKeyDown(event, context);
+    return;
+  }
   const isHandled =
+    startBlockSelection(event, context) ||
     indent(event, context) ||
     inlineCode(event, context) ||
     menuKeys(event, context) ||

@@ -153,6 +153,16 @@
     opacity: 1;
   }
 
+  .editor__block[data-selected] {
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-selected);
+  }
+
+  /* The selected blocks show where the keyboard is. */
+  .editor__blocks:focus-visible {
+    outline: none;
+  }
+
   .editor__block[data-dragging] {
     opacity: 0.5;
   }

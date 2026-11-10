@@ -14,9 +14,19 @@ import {
   type InputContext,
 } from "./editor-input.view.ts";
 import { onBlockKeyDown } from "./editor-keys.view.ts";
-import { selectBlockOrder, selectChildBlocks } from "./editor.selectors.ts";
+import { onSelectionCopy, onSelectionLeave } from "./editor-selection.view.ts";
+import {
+  selectBlockOrder,
+  selectChildBlocks,
+  selectSelectedBlocks,
+} from "./editor.selectors.ts";
 
-function renderChildren(block: Block, context: InputContext): unknown {
+interface BlockContext extends InputContext {
+  // Ids of the blocks in the block selection.
+  readonly selected: ReadonlySet<BlockId>;
+}
+
+function renderChildren(block: Block, context: BlockContext): unknown {
   // A closed toggle keeps its children but does not show them.
   const isOpen = blockDefinition(block.type)?.showsChildren?.(block) ?? true;
   const children = isOpen ? selectChildBlocks(context.state, block.id) : [];
@@ -26,7 +36,7 @@ function renderChildren(block: Block, context: InputContext): unknown {
   </div>`;
 }
 
-function renderBlock(block: Block, context: InputContext): TemplateResult {
+function renderBlock(block: Block, context: BlockContext): TemplateResult {
   const { state, dispatch } = context;
   const content = blockDefinition(block.type)?.render?.(block, dispatch, state);
   const isAnchor = state.ui.overlay?.anchorId === block.id;
@@ -35,13 +45,14 @@ function renderBlock(block: Block, context: InputContext): TemplateResult {
     data-block-id=${block.id}
     data-type=${block.type}
     data-overlay-anchor=${isAnchor ? "open" : nothing}
+    ?data-selected=${context.selected.has(block.id)}
   >
     ${renderHandle(block, context)} ${content ?? nothing}
     ${renderChildren(block, context)}
   </div>`;
 }
 
-function renderList(blocks: readonly Block[], context: InputContext): unknown {
+function renderList(blocks: readonly Block[], context: BlockContext): unknown {
   return repeat(
     blocks,
     (block) => block.id,
@@ -86,6 +97,22 @@ function renderContinue(
   </button>`;
 }
 
+function onPointerDown(event: PointerEvent, context: InputContext): void {
+  onSelectionLeave(event, context);
+  startBlockDrag(event, context);
+}
+
+function onCompositionEnd(event: Event, context: InputContext): void {
+  setComposing(event, false);
+  reconcileText(event.target, context);
+}
+
+function onInput(event: Event, context: InputContext): void {
+  if (event instanceof InputEvent && !event.isComposing) {
+    reconcileText(event.target, context);
+  }
+}
+
 // The content of a page: its blocks, with input handled once for all of
 // them on the container.
 export function renderBlocks(
@@ -93,33 +120,30 @@ export function renderBlocks(
   context: InputContext,
 ): TemplateResult {
   const blocks = selectChildBlocks(context.state, pageId);
-  const onCompositionEnd = (event: Event): void => {
-    setComposing(event, false);
-    reconcileText(event.target, context);
-  };
-  const onInput = (event: Event): void => {
-    if (event instanceof InputEvent && !event.isComposing) {
-      reconcileText(event.target, context);
-    }
-  };
+  const selected = new Set(
+    selectSelectedBlocks(context.state).map((block) => block.id),
+  );
+  const on =
+    <TEvent>(handler: (event: TEvent, context: InputContext) => void) =>
+    (event: TEvent): void => {
+      handler(event, context);
+    };
   return html`<div
       class="editor__blocks"
-      @beforeinput=${(event: InputEvent) => {
-        onBeforeInput(event, context);
-      }}
-      @keydown=${(event: KeyboardEvent) => {
-        onBlockKeyDown(event, context);
-      }}
-      @pointerdown=${(event: PointerEvent) => {
-        startBlockDrag(event, context);
-      }}
+      tabindex="-1"
+      @copy=${on(onSelectionCopy)}
+      @cut=${on(onSelectionCopy)}
+      @focusout=${on(onSelectionLeave)}
+      @beforeinput=${on(onBeforeInput)}
+      @keydown=${on(onBlockKeyDown)}
+      @pointerdown=${on(onPointerDown)}
       @compositionstart=${(event: Event) => {
         setComposing(event, true);
       }}
-      @compositionend=${onCompositionEnd}
-      @input=${onInput}
+      @compositionend=${on(onCompositionEnd)}
+      @input=${on(onInput)}
     >
-      ${renderList(blocks, context)}
+      ${renderList(blocks, { ...context, selected })}
     </div>
     ${renderContinue(pageId, blocks.length === 0, context)}`;
 }
