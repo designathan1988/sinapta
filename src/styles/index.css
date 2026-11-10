@@ -9,6 +9,14 @@
 @import url("../ui/dialog/dialog.css");
 @import url("../ui/overlay/overlay.css");
 @import url("../ui/menu/menu.css");
+@import url("../ui/rich-text/rich-text.css");
+@import url("../blocks/paragraph/paragraph.css");
+@import url("../blocks/heading/heading.css");
+@import url("../blocks/bulleted-list/bulleted-list.css");
+@import url("../blocks/numbered-list/numbered-list.css");
+@import url("../blocks/to-do/to-do.css");
+@import url("../blocks/quote/quote.css");
+@import url("../blocks/divider/divider.css");
 @import url("../features/settings/settings.css");
 @import url("../features/sidebar/sidebar.css");
 @import url("../features/editor/editor.css");

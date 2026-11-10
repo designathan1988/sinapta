@@ -45,6 +45,14 @@ describe("text.replace", () => {
     expect(outline()).toEqual(["paragraph:ab"]);
   });
 
+  it("widens a range that ends inside an emoji to the whole emoji", () => {
+    const { dispatch, outline } = createApp([text("a", `a${FAMILY}b`)]);
+
+    dispatch(replaceText.create({ blockId: A, start: 0, end: 3, text: "" }));
+
+    expect(outline()).toEqual(["paragraph:b"]);
+  });
+
   it("undoes a run of typed letters in one step", () => {
     const { dispatch, outline } = createApp([text("a", "")]);
     dispatch(replaceText.create({ blockId: A, start: 0, end: 0, text: "H" }));

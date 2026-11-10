@@ -1,3 +1,4 @@
+export { installSelectionSync } from "./selection-sync.ts";
 export {
   blockIdOf,
   offsetWithin,

@@ -7,6 +7,8 @@ import {
   pageMoveCommands,
   pageTrashCommands,
 } from "../blocks/page/index.ts";
+import { toDoCommands } from "../blocks/to-do/index.ts";
+import { editorCommands } from "../features/editor/index.ts";
 import type { Theme } from "../model/index.ts";
 import {
   createAppStore,
@@ -23,6 +25,7 @@ import {
   createIndexedDbAdapter,
   startRepository,
 } from "../persistence/index.ts";
+import { installSelectionSync, restoreSelection } from "../ui/caret/index.ts";
 import { installOverlayDismiss } from "../ui/overlay/index.ts";
 import { matchShortcut } from "../ui/shortcuts/index.ts";
 import { startRouter } from "./router.ts";
@@ -36,6 +39,8 @@ const COMMANDS = [
   ...pageCommands,
   ...pageTrashCommands,
   ...pageMoveCommands,
+  ...toDoCommands,
+  ...editorCommands,
 ];
 
 // A manual theme is an attribute on the root element; "system" removes it.
@@ -57,6 +62,7 @@ export async function startApp(container: HTMLElement): Promise<void> {
     const state = store.getState();
     applyTheme(selectTheme(state));
     render(renderShell(state, dispatch), container);
+    restoreSelection(container, state.ui.selection);
   };
   // Nothing is rendered until stored data is in the store, so the first
   // paint already has the saved theme and layout.
@@ -68,6 +74,7 @@ export async function startApp(container: HTMLElement): Promise<void> {
   });
   startRouter(store, dispatch);
   installOverlayDismiss(store, dispatch);
+  installSelectionSync(store, dispatch);
   document.addEventListener("keydown", (event) => {
     const shortcut = matchShortcut(event);
     if (shortcut === undefined) return;

@@ -37,6 +37,13 @@ export function snapToBoundary(text: string, offset: number): number {
   return clusterAt(text, clamped)?.index ?? clamped;
 }
 
+// The end of the cluster that contains the offset; an offset that is
+// already on a boundary is returned unchanged.
+export function snapToBoundaryAfter(text: string, offset: number): number {
+  const start = snapToBoundary(text, offset);
+  return start === clamp(text, offset) ? start : nextBoundary(text, start);
+}
+
 // The boundary one whole character before the offset.
 export function previousBoundary(text: string, offset: number): number {
   const start = snapToBoundary(text, offset);

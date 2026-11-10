@@ -62,6 +62,7 @@ export {
   nextBoundary,
   previousBoundary,
   snapToBoundary,
+  snapToBoundaryAfter,
 } from "./grapheme.ts";
 export {
   concatRichText,
@@ -74,3 +75,4 @@ export {
   type MarkRange,
 } from "./rich-text.ts";
 export { safeHref } from "./link-href.ts";
+export { diffText, type TextEdit } from "./text-diff.ts";

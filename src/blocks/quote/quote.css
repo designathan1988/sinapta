@@ -1,0 +1,11 @@
+@layer blocks {
+  .quote {
+    display: flex;
+    padding-inline-start: var(--space-inset-lg);
+    border-inline-start: var(--size-border-thick) solid
+      var(--color-border-strong);
+    color: var(--color-text-secondary);
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-lg);
+  }
+}

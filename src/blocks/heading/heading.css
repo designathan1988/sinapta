@@ -1,0 +1,24 @@
+@layer blocks {
+  .heading {
+    display: flex;
+    margin-block-start: var(--space-stack-md);
+    font-weight: var(--font-weight-strong);
+
+    & .rich-text {
+      line-height: var(--font-line-height-tight);
+    }
+
+    &[data-level="1"] {
+      font-family: var(--font-family-display);
+      font-size: var(--font-size-xxl);
+    }
+
+    &[data-level="2"] {
+      font-size: var(--font-size-xl);
+    }
+
+    &[data-level="3"] {
+      font-size: var(--font-size-lg);
+    }
+  }
+}

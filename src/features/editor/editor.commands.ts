@@ -5,6 +5,7 @@ import {
   insertText,
   plainText,
   snapToBoundary,
+  snapToBoundaryAfter,
   toggleMark,
   type BlockId,
   type Mark,
@@ -51,7 +52,10 @@ export const replaceText = defineCommand<ReplaceTextPayload>({
     if (!isTextBlock(block)) return {};
     const current = plainText(block.props.text);
     const start = snapToBoundary(current, Math.min(command.start, command.end));
-    const end = snapToBoundary(current, Math.max(command.start, command.end));
+    const end = snapToBoundaryAfter(
+      current,
+      Math.max(command.start, command.end),
+    );
     if (start === end && command.text === "") return {};
     const kept = deleteRange(block.props.text, start, end);
     const text = insertText(kept, start, command.text);

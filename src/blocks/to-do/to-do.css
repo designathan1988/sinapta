@@ -1,0 +1,21 @@
+@layer blocks {
+  .to-do {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: flex-start;
+
+    &[data-checked] .rich-text {
+      color: var(--color-text-tertiary);
+      text-decoration: line-through;
+    }
+  }
+
+  .to-do__check {
+    flex: none;
+    inline-size: var(--size-icon-sm);
+    block-size: var(--size-icon-sm);
+    margin: var(--space-inset-xs) var(--space-none);
+    accent-color: var(--color-accent-default);
+    cursor: pointer;
+  }
+}
