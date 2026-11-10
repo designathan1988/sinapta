@@ -97,4 +97,14 @@ describe("findInvariantViolation", () => {
 
     expect(violation).toEqual({ kind: "parent-mismatch", blockId: A });
   });
+
+  it("rejects a root list that names a block that does not exist", () => {
+    const ghost = toBlockId("ghost");
+
+    const violation = violationAfter([
+      { type: "list.insert", list: { kind: "rootIds" }, id: ghost, index: 0 },
+    ]);
+
+    expect(violation).toEqual({ kind: "dangling-child", blockId: ghost });
+  });
 });

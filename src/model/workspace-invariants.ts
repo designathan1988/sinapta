@@ -84,7 +84,11 @@ function checkBlock(
   const block = next.blocks[blockId];
   if (block === undefined) {
     const deleted = previous.blocks[blockId];
-    return deleted === undefined ? undefined : checkDeleted(next, deleted);
+    if (deleted !== undefined) return checkDeleted(next, deleted);
+    // An id that names no block must not be listed anywhere.
+    return next.rootIds.includes(blockId)
+      ? { kind: "dangling-child", blockId }
+      : undefined;
   }
   return (
     checkChildren(next, block) ??
