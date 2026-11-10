@@ -1,0 +1,15 @@
+@layer blocks {
+  .callout {
+    display: flex;
+    gap: var(--space-inline-md);
+    align-items: flex-start;
+    padding: var(--space-inset-md) var(--space-inset-lg);
+    border-radius: var(--radius-md);
+    background-color: var(--color-chip-yellow-bg);
+    color: var(--color-chip-yellow-text);
+  }
+
+  .callout__icon {
+    line-height: var(--font-line-height-body);
+  }
+}

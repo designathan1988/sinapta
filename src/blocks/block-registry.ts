@@ -2,13 +2,17 @@
 import type { PropsSchemas } from "../model/index.ts";
 import type { BlockDefinition } from "./block-definition.ts";
 import { bulletedListDefinition } from "./bulleted-list/index.ts";
+import { calloutDefinition } from "./callout/index.ts";
+import { codeDefinition } from "./code/index.ts";
 import { dividerDefinition } from "./divider/index.ts";
 import { headingDefinition } from "./heading/index.ts";
 import { numberedListDefinition } from "./numbered-list/index.ts";
+import { pageLinkDefinition } from "./page-link/index.ts";
 import { pageDefinition } from "./page/index.ts";
 import { paragraphDefinition } from "./paragraph/index.ts";
 import { quoteDefinition } from "./quote/index.ts";
 import { toDoDefinition } from "./to-do/index.ts";
+import { toggleDefinition } from "./toggle/index.ts";
 
 export const BLOCK_DEFINITIONS: readonly BlockDefinition[] = [
   pageDefinition,
@@ -17,8 +21,12 @@ export const BLOCK_DEFINITIONS: readonly BlockDefinition[] = [
   bulletedListDefinition,
   numberedListDefinition,
   toDoDefinition,
+  toggleDefinition,
   quoteDefinition,
+  calloutDefinition,
+  codeDefinition,
   dividerDefinition,
+  pageLinkDefinition,
 ];
 
 const BY_TYPE: ReadonlyMap<string, BlockDefinition> = new Map(

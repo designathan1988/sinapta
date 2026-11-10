@@ -18,6 +18,11 @@ export interface OpenOverlay {
   readonly kind: string;
   // The element the overlay is anchored to, if any.
   readonly anchorId?: string;
+  // A range of text the overlay is about, as offsets into a block.
+  readonly start?: number;
+  readonly end?: number;
+  // The highlighted option of a list the keyboard moves through.
+  readonly activeIndex?: number;
 }
 
 export interface UiState {

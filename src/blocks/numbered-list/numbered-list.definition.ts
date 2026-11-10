@@ -1,4 +1,5 @@
 import { isBlockOfType } from "../../model/index.ts";
+import { COPY } from "../../ui/copy.ts";
 import type { BlockDefinition } from "../block-definition.ts";
 import {
   NUMBERED_LIST_TYPE,
@@ -9,6 +10,7 @@ import { renderNumberedList } from "./numbered-list.view.ts";
 
 export const numberedListDefinition: BlockDefinition = {
   type: NUMBERED_LIST_TYPE,
+  label: COPY.blockNames.numberedList,
   propsSchema: numberedListPropsSchema,
   continuesAs: NUMBERED_LIST_TYPE,
   createProps: (text) => ({ text }),

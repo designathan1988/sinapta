@@ -91,6 +91,26 @@ export function deleteRange(
   return concatRichText(before, after);
 }
 
+export interface LinkRange {
+  readonly start: number;
+  readonly end: number;
+  // The link target, or undefined to remove the link.
+  readonly href: string | undefined;
+}
+
+export function setLink(rich: RichText, range: LinkRange): RichText {
+  const { start, end, href } = range;
+  if (start === end) return rich;
+  const [before, rest] = splitRichText(rich, Math.min(start, end));
+  const [middle, after] = splitRichText(rest, Math.abs(end - start));
+  const changed = middle.map((span) => {
+    const plain: TextSpan = { text: span.text };
+    if (span.marks !== undefined) plain.marks = span.marks;
+    return href === undefined ? plain : { ...plain, href };
+  });
+  return normalize([...before, ...changed, ...after]);
+}
+
 export interface MarkRange {
   readonly start: number;
   readonly end: number;

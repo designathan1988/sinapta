@@ -1,4 +1,5 @@
 import { isBlockOfType } from "../../model/index.ts";
+import { COPY } from "../../ui/copy.ts";
 import type { BlockDefinition } from "../block-definition.ts";
 import {
   BULLETED_LIST_TYPE,
@@ -9,6 +10,7 @@ import { renderBulletedList } from "./bulleted-list.view.ts";
 
 export const bulletedListDefinition: BlockDefinition = {
   type: BULLETED_LIST_TYPE,
+  label: COPY.blockNames.bulletedList,
   propsSchema: bulletedListPropsSchema,
   continuesAs: BULLETED_LIST_TYPE,
   createProps: (text) => ({ text }),

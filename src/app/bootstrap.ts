@@ -8,6 +8,7 @@ import {
   pageTrashCommands,
 } from "../blocks/page/index.ts";
 import { toDoCommands } from "../blocks/to-do/index.ts";
+import { toggleCommands } from "../blocks/toggle/index.ts";
 import { editorCommands } from "../features/editor/index.ts";
 import type { Theme } from "../model/index.ts";
 import {
@@ -40,6 +41,7 @@ const COMMANDS = [
   ...pageTrashCommands,
   ...pageMoveCommands,
   ...toDoCommands,
+  ...toggleCommands,
   ...editorCommands,
 ];
 

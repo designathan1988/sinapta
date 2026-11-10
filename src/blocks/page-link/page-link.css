@@ -1,0 +1,31 @@
+@layer blocks {
+  .page-link {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    inline-size: 100%;
+    min-block-size: var(--size-control-md);
+    padding: var(--space-none) var(--space-inset-xs);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-primary);
+    text-align: start;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    &[data-missing] {
+      color: var(--color-text-tertiary);
+      cursor: default;
+    }
+  }
+
+  .page-link__title {
+    text-decoration: underline;
+    text-decoration-color: var(--color-border-default);
+    text-underline-offset: var(--size-focus-offset);
+  }
+}

@@ -1,4 +1,5 @@
 import { isBlockOfType } from "../../model/index.ts";
+import { COPY } from "../../ui/copy.ts";
 import type { BlockDefinition } from "../block-definition.ts";
 import { PARAGRAPH_TYPE } from "../paragraph/index.ts";
 import {
@@ -10,6 +11,7 @@ import { renderHeading } from "./heading.view.ts";
 
 export const headingDefinition: BlockDefinition = {
   type: HEADING_TYPE,
+  label: COPY.blockNames.heading,
   propsSchema: headingPropsSchema,
   // Enter after a heading starts body text.
   continuesAs: PARAGRAPH_TYPE,

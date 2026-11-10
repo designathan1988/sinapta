@@ -1,0 +1,17 @@
+@layer blocks {
+  .code {
+    display: flex;
+    padding: var(--space-inset-md) var(--space-inset-lg);
+    overflow-x: auto;
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-code);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-sm);
+
+    & .rich-text {
+      overflow-wrap: normal;
+      white-space: pre;
+      tab-size: 2;
+    }
+  }
+}

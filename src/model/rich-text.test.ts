@@ -5,6 +5,7 @@ import {
   deleteRange,
   insertText,
   plainText,
+  setLink,
   splitRichText,
   toggleMark,
 } from "./rich-text.ts";
@@ -140,5 +141,28 @@ describe("toggleMark", () => {
     expect(toggleMark(HELLO, { start: 4, end: 4, mark: "bold" })).toEqual(
       HELLO,
     );
+  });
+});
+
+describe("setLink", () => {
+  it("links a range and keeps its marks", () => {
+    const result = setLink(HELLO, {
+      start: 6,
+      end: 11,
+      href: "https://example.com/",
+    });
+
+    expect(result).toEqual([
+      { text: "Hello " },
+      { text: "world", marks: ["bold"], href: "https://example.com/" },
+    ]);
+  });
+
+  it("removes a link", () => {
+    const linked: RichText = [{ text: "site", href: "https://example.com/" }];
+
+    expect(setLink(linked, { start: 0, end: 4, href: undefined })).toEqual([
+      { text: "site" },
+    ]);
   });
 });

@@ -1,0 +1,29 @@
+@layer blocks {
+  .toggle {
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: flex-start;
+  }
+
+  .toggle__button {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    inline-size: var(--size-target-min);
+    block-size: var(--size-target-min);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    &[aria-expanded="true"] .icon {
+      rotate: 90deg;
+    }
+  }
+}

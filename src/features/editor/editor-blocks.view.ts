@@ -16,11 +16,11 @@ import { onBlockKeyDown } from "./editor-keys.view.ts";
 import { selectBlockOrder, selectChildBlocks } from "./editor.selectors.ts";
 
 function renderBlock(block: Block, context: InputContext): TemplateResult {
-  const content = blockDefinition(block.type)?.render?.(
-    block,
-    context.dispatch,
-  );
-  const children = selectChildBlocks(context.state, block.id);
+  const definition = blockDefinition(block.type);
+  const content = definition?.render?.(block, context.dispatch, context.state);
+  // A closed toggle keeps its children but does not show them.
+  const isOpen = definition?.showsChildren?.(block) ?? true;
+  const children = isOpen ? selectChildBlocks(context.state, block.id) : [];
   return html`<div
     class="editor__block"
     data-block-id=${block.id}

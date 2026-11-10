@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { toBlockId } from "../../model/index.ts";
 import { createApp, text } from "./editor-builder.ts";
-import { replaceText, toggleTextMark } from "./editor.commands.ts";
+import { replaceText, setTextLink, toggleTextMark } from "./editor.commands.ts";
 
 const A = toBlockId("a");
 const FAMILY = "👨‍👩‍👧";
@@ -76,5 +76,41 @@ describe("text.toggleMark", () => {
       { text: "He", marks: ["bold"] },
       { text: "llo" },
     ]);
+  });
+});
+
+describe("text.setLink", () => {
+  it("links a range to an allowed target", () => {
+    const { store, dispatch } = createApp([text("a", "see site")]);
+
+    dispatch(
+      setTextLink.create({
+        blockId: A,
+        start: 4,
+        end: 8,
+        href: "https://example.com",
+      }),
+    );
+
+    expect(store.getState().workspace.blocks[A]?.props.text).toEqual([
+      { text: "see " },
+      { text: "site", href: "https://example.com/" },
+    ]);
+  });
+
+  it("refuses a script target", () => {
+    const { store, dispatch } = createApp([text("a", "click")]);
+    const before = store.getState().workspace;
+
+    dispatch(
+      setTextLink.create({
+        blockId: A,
+        start: 0,
+        end: 5,
+        href: "javascript:alert(1)",
+      }),
+    );
+
+    expect(store.getState().workspace).toBe(before);
   });
 });

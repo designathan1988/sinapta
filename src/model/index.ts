@@ -69,8 +69,10 @@ export {
   deleteRange,
   insertText,
   plainText,
+  setLink,
   splitRichText,
   toggleMark,
+  type LinkRange,
   type Mark,
   type MarkRange,
 } from "./rich-text.ts";

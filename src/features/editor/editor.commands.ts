@@ -4,6 +4,8 @@ import {
   deleteRange,
   insertText,
   plainText,
+  safeHref,
+  setLink,
   snapToBoundary,
   snapToBoundaryAfter,
   toggleMark,
@@ -96,4 +98,31 @@ export const toggleTextMark = defineCommand<ToggleMarkPayload>({
   },
 });
 
-export const editorCommands = [replaceText, toggleTextMark];
+export interface SetLinkPayload {
+  readonly blockId: BlockId;
+  readonly start: number;
+  readonly end: number;
+  // A link target, or null to remove the link. Targets other than http,
+  // https and mailto are refused.
+  readonly href: string | null;
+}
+
+export const setTextLink = defineCommand<SetLinkPayload>({
+  type: "text.setLink",
+  handle(state, command) {
+    const block = state.workspace.blocks[command.blockId];
+    if (!isTextBlock(block)) return {};
+    const href = command.href === null ? undefined : safeHref(command.href);
+    if (command.href !== null && href === undefined) return {};
+    const text = setLink(block.props.text, { ...command, href });
+    return {
+      operations: setText(state, {
+        blockId: block.id,
+        text,
+        now: command.meta.now,
+      }),
+    };
+  },
+});
+
+export const editorCommands = [replaceText, toggleTextMark, setTextLink];

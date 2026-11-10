@@ -17,6 +17,10 @@
 @import url("../blocks/to-do/to-do.css");
 @import url("../blocks/quote/quote.css");
 @import url("../blocks/divider/divider.css");
+@import url("../blocks/toggle/toggle.css");
+@import url("../blocks/callout/callout.css");
+@import url("../blocks/code/code.css");
+@import url("../blocks/page-link/page-link.css");
 @import url("../features/settings/settings.css");
 @import url("../features/sidebar/sidebar.css");
 @import url("../features/editor/editor.css");
