@@ -1,0 +1,5 @@
+.agentic-sdlc/
+node_modules/
+dist/
+.eslintcache
+.stylelintcache
