@@ -1,8 +1,11 @@
 // Translates input inside text blocks into commands. The browser's default
 // edit is cancelled; the store changes and the text is projected back.
 import { toggleTextMark, replaceText } from "./editor.commands.ts";
+import { matchBlockShortcut } from "./block-shortcut.ts";
+import { convertBlock } from "./editor-convert.commands.ts";
 import { mergeBlockBackward, splitBlock } from "./editor-structure.commands.ts";
 import { selectNeighborTextBlock } from "./editor.selectors.ts";
+import { PARAGRAPH_TYPE } from "../../blocks/paragraph/index.ts";
 import { isTextBlock, textOf } from "../../blocks/text-block.ts";
 import { diffText, type BlockId, type Mark } from "../../model/index.ts";
 import {
@@ -63,8 +66,30 @@ type Handler = (
   context: InputContext,
 ) => void;
 
-const insert: Handler = (target, event, { dispatch }) => {
-  dispatch(replaceText.create({ ...target, text: insertedText(event) }));
+// A space after a shortcut at the start of a paragraph converts the
+// paragraph instead of being typed.
+function shortcutFor(target: Target, text: string, state: AppState) {
+  const block = state.workspace.blocks[target.blockId];
+  const isCandidate =
+    text === " " &&
+    target.start === target.end &&
+    block?.type === PARAGRAPH_TYPE;
+  if (!isCandidate || !isTextBlock(block)) return undefined;
+  const prefix = textOf(block).slice(0, target.start);
+  const shortcut = matchBlockShortcut(prefix);
+  return shortcut === undefined
+    ? undefined
+    : { ...shortcut, removePrefix: prefix.length };
+}
+
+const insert: Handler = (target, event, { state, dispatch }) => {
+  const text = insertedText(event);
+  const shortcut = shortcutFor(target, text, state);
+  if (shortcut === undefined) {
+    dispatch(replaceText.create({ ...target, text }));
+  } else {
+    dispatch(convertBlock.create({ blockId: target.blockId, ...shortcut }));
+  }
 };
 
 const lineBreak: Handler = (target, _event, { dispatch }) => {

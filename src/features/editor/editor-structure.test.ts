@@ -67,6 +67,18 @@ describe("block.split", () => {
   });
 });
 
+describe("block.split in an empty nested paragraph", () => {
+  it("moves the paragraph out one level instead of adding a block", () => {
+    const { dispatch, outline } = createApp([
+      { ...text("a", "parent"), children: [text("b", "")] },
+    ]);
+
+    dispatch(splitBlock.create({ blockId: B, offset: 0 }));
+
+    expect(outline()).toEqual(["paragraph:parent", "paragraph:"]);
+  });
+});
+
 describe("block.mergeBackward", () => {
   it("joins a paragraph onto the one before and puts the caret at the seam", () => {
     const { store, dispatch, outline } = createApp([

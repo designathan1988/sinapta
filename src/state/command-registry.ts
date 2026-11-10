@@ -59,7 +59,15 @@ export function defineCommand<TPayload extends object>(
   return {
     type: options.type,
     newBlockIds: options.newBlockIds ?? 0,
-    create: (payload) => ({ ...payload, type: options.type }),
+    create(payload) {
+      // The command's own type would silently replace such a field.
+      if ("type" in payload) {
+        throw new Error(
+          `A payload of "${options.type}" has a field named "type".`,
+        );
+      }
+      return { ...payload, type: options.type };
+    },
     handle(state, command, meta) {
       if (!isOwn(command)) return {};
       return options.handle(state, { ...command, meta });

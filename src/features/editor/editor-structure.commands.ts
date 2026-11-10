@@ -12,65 +12,26 @@ import {
   splitRichText,
   type Block,
   type BlockId,
-  type ListRef,
   type Operation,
-  type RichText,
 } from "../../model/index.ts";
 import {
   defineCommand,
   type AppState,
   type CommandEffect,
 } from "../../state/index.ts";
-import { caretAt, setText } from "./editor.commands.ts";
+import {
+  childList,
+  convertOperation,
+  createBlock,
+  indexIn,
+  moveOperations,
+  withSelection,
+} from "./editor-operations.ts";
+import { setText } from "./editor.commands.ts";
 import {
   selectChildBlocks,
   selectNeighborTextBlock,
 } from "./editor.selectors.ts";
-
-interface NewBlock {
-  readonly id: BlockId;
-  readonly type: string;
-  readonly parentId: BlockId;
-  readonly text: RichText;
-  readonly now: string;
-}
-
-function createBlock(spec: NewBlock): Block {
-  const props = blockDefinition(spec.type)?.createProps(spec.text) ?? {};
-  const { id, type, parentId, now } = spec;
-  return {
-    id,
-    type,
-    parentId,
-    childIds: [],
-    props,
-    createdAt: now,
-    updatedAt: now,
-  };
-}
-
-function childList(blockId: BlockId): ListRef {
-  return { kind: "childIds", blockId };
-}
-
-function indexIn(state: AppState, block: Block): number {
-  const parent =
-    block.parentId === null
-      ? undefined
-      : state.workspace.blocks[block.parentId];
-  return parent?.childIds.indexOf(block.id) ?? -1;
-}
-
-function withSelection(state: AppState, blockId: BlockId, offset: number) {
-  return { ...state.ui, selection: caretAt(blockId, offset) };
-}
-
-// Turns a block into another type, keeping its text.
-function convert(block: TextBlock, type: string, now: string): Operation {
-  const props = blockDefinition(type)?.createProps(block.props.text) ?? {};
-  const patch = { type, props, updatedAt: now };
-  return { type: "record.update", kind: "block", id: block.id, patch };
-}
 
 // Adds an empty paragraph at the end of a page and puts the caret in it.
 export const appendParagraph = defineCommand<{ pageId: BlockId }>({
@@ -99,8 +60,19 @@ export const appendParagraph = defineCommand<{ pageId: BlockId }>({
   },
 });
 
+function outdent(state: AppState, block: Block): Operation[] {
+  const parent =
+    block.parentId === null
+      ? undefined
+      : state.workspace.blocks[block.parentId];
+  if (parent === undefined || !isTextBlock(parent) || parent.parentId === null)
+    return [];
+  return moveOperations(block, parent.parentId, indexIn(state, parent) + 1);
+}
+
 // Enter: the text after the caret moves to a new block below. Enter in an
-// empty list item or to-do leaves the list instead.
+// empty list item or to-do leaves the list, and in an empty nested
+// paragraph leaves the nesting, instead.
 export const splitBlock = defineCommand<{ blockId: BlockId; offset: number }>({
   type: "block.split",
   newBlockIds: 1,
@@ -111,8 +83,11 @@ export const splitBlock = defineCommand<{ blockId: BlockId; offset: number }>({
       return {};
     const { now } = command.meta;
     if (textOf(block) === "" && block.type !== PARAGRAPH_TYPE) {
-      return { operations: [convert(block, PARAGRAPH_TYPE, now)] };
+      return { operations: [convertOperation(block, PARAGRAPH_TYPE, now)] };
     }
+    // Enter in an empty nested paragraph steps out one level.
+    const outdented = textOf(block) === "" ? outdent(state, block) : [];
+    if (outdented.length > 0) return { operations: outdented };
     const offset = snapToBoundary(textOf(block), command.offset);
     const [before, after] = splitRichText(block.props.text, offset);
     const type = blockDefinition(block.type)?.continuesAs ?? PARAGRAPH_TYPE;
@@ -130,26 +105,6 @@ export const splitBlock = defineCommand<{ blockId: BlockId; offset: number }>({
   },
 });
 
-// Moves a block to a new parent and position.
-function move(block: Block, parentId: BlockId, index: number): Operation[] {
-  if (block.parentId === null) return [];
-  return [
-    { type: "list.remove", list: childList(block.parentId), id: block.id },
-    { type: "list.insert", list: childList(parentId), id: block.id, index },
-    { type: "record.update", kind: "block", id: block.id, patch: { parentId } },
-  ];
-}
-
-function outdent(state: AppState, block: Block): Operation[] {
-  const parent =
-    block.parentId === null
-      ? undefined
-      : state.workspace.blocks[block.parentId];
-  if (parent === undefined || !isTextBlock(parent) || parent.parentId === null)
-    return [];
-  return move(block, parent.parentId, indexIn(state, parent) + 1);
-}
-
 // Tab: the block becomes the last child of the block above it.
 export const indentBlock = defineCommand<{ blockId: BlockId }>({
   type: "block.indent",
@@ -160,7 +115,9 @@ export const indentBlock = defineCommand<{ blockId: BlockId }>({
     const above =
       siblings[siblings.findIndex((item) => item.id === block.id) - 1];
     if (!isTextBlock(above)) return {};
-    return { operations: move(block, above.id, above.childIds.length) };
+    return {
+      operations: moveOperations(block, above.id, above.childIds.length),
+    };
   },
 });
 
@@ -187,7 +144,7 @@ function joinInto(
     const child = state.workspace.blocks[childId];
     return child === undefined
       ? []
-      : move(child, block.parentId ?? child.id, index + position);
+      : moveOperations(child, block.parentId ?? child.id, index + position);
   });
   const text = concatRichText(previous.props.text, block.props.text);
   return {
@@ -210,7 +167,7 @@ export const mergeBlockBackward = defineCommand<{ blockId: BlockId }>({
     if (!isTextBlock(block)) return {};
     const { now } = command.meta;
     if (block.type !== PARAGRAPH_TYPE) {
-      return { operations: [convert(block, PARAGRAPH_TYPE, now)] };
+      return { operations: [convertOperation(block, PARAGRAPH_TYPE, now)] };
     }
     const outdented = outdent(state, block);
     if (outdented.length > 0) return { operations: outdented };

@@ -94,4 +94,13 @@ describe("dispatch", () => {
 
     expect(listener).not.toHaveBeenCalled();
   });
+
+  it("refuses a payload with a field that would replace the command type", () => {
+    const command = defineCommand<{ type: string }>({
+      type: "test.clash",
+      handle: () => ({}),
+    });
+
+    expect(() => command.create({ type: "other" })).toThrow(/named "type"/);
+  });
 });

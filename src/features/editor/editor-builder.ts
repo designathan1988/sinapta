@@ -6,6 +6,7 @@ import {
   type BlockSpec,
 } from "../../model/index.ts";
 import { createTestApp } from "../../state/index.ts";
+import { editorConvertCommands } from "./editor-convert.commands.ts";
 import { editorStructureCommands } from "./editor-structure.commands.ts";
 import { editorCommands } from "./editor.commands.ts";
 
@@ -22,7 +23,11 @@ export function text(id: string, value: string, type = "paragraph"): BlockSpec {
 
 export function createApp(blocks: BlockSpec[]) {
   const workspace = buildWorkspace([{ id: "page", children: blocks }]);
-  const commands = [...editorCommands, ...editorStructureCommands];
+  const commands = [
+    ...editorCommands,
+    ...editorStructureCommands,
+    ...editorConvertCommands,
+  ];
   const app = createTestApp({ workspace, commands });
   // The page's content as "type:text" with two spaces of indent per level.
   const outline = (parentId = PAGE, depth = 0): string[] =>
