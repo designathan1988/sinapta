@@ -1,5 +1,5 @@
 // Defines commands and looks up their handlers by type.
-import type { BlockId, Operation } from "../model/index.ts";
+import type { BlockId, Operation, Workspace } from "../model/index.ts";
 import type { AppState, PersistenceState, UiState } from "./app-state.ts";
 
 // A plain serializable object: { type: "block.move", blockId, ... }.
@@ -17,6 +17,9 @@ export interface CommandMeta {
 // What a command changes. Workspace data changes only through operations.
 export interface CommandEffect {
   readonly operations?: readonly Operation[];
+  // Replaces all workspace data and clears history. Only loading from
+  // storage and importing a file use this.
+  readonly workspace?: Workspace;
   readonly ui?: UiState;
   readonly persistence?: PersistenceState;
 }

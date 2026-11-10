@@ -45,7 +45,9 @@ export {
 } from "./workspace-invariants.ts";
 export {
   buildWorkspace,
+  TEST_PROPS_SCHEMAS,
   TEST_TIME,
   toBlockId,
   type BlockSpec,
 } from "./workspace-builder.ts";
+export { diffWorkspace } from "./workspace-diff.ts";

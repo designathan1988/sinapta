@@ -11,10 +11,20 @@ import {
   selectTheme,
   settingsCommands,
   uiCommands,
+  workspaceCommands,
 } from "../state/index.ts";
+import {
+  createIndexedDbAdapter,
+  startRepository,
+} from "../persistence/index.ts";
 import { renderShell } from "./shell.view.ts";
 
-const COMMANDS = [...uiCommands, ...settingsCommands, ...persistenceCommands];
+const COMMANDS = [
+  ...uiCommands,
+  ...settingsCommands,
+  ...persistenceCommands,
+  ...workspaceCommands,
+];
 
 // A manual theme is an attribute on the root element; "system" removes it.
 function applyTheme(theme: Theme): void {
@@ -25,7 +35,7 @@ function applyTheme(theme: Theme): void {
   meta?.setAttribute("content", theme === "system" ? "light dark" : theme);
 }
 
-export function startApp(container: HTMLElement): void {
+export async function startApp(container: HTMLElement): Promise<void> {
   const store = createAppStore(createInitialState());
   const dispatch = createDispatcher({
     store,
@@ -36,6 +46,14 @@ export function startApp(container: HTMLElement): void {
     applyTheme(selectTheme(state));
     render(renderShell(state, dispatch), container);
   };
+  // Nothing is rendered until stored data is in the store, so the first
+  // paint already has the saved theme and layout.
+  await startRepository({
+    store,
+    dispatch,
+    adapter: createIndexedDbAdapter(),
+    propsSchemas: new Map(),
+  });
   store.subscribe(renderRoot);
   renderRoot();
 }

@@ -1,0 +1,46 @@
+// Brings a stored or imported workspace file up to the current format.
+import { SCHEMA_VERSION, type WorkspaceFileError } from "../../model/index.ts";
+
+// A pure function from format version n to n + 1.
+export type Migration = (
+  file: Record<string, unknown>,
+) => Record<string, unknown>;
+
+// MIGRATIONS[0] turns version 1 into version 2, and so on. Each format
+// change adds one file here, `0002-<what-changed>.ts`.
+export const MIGRATIONS: readonly Migration[] = [];
+
+export type MigrationResult =
+  | { readonly ok: true; readonly file: Record<string, unknown> }
+  | { readonly ok: false; readonly error: WorkspaceFileError };
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+export function runMigrations(
+  json: unknown,
+  migrations: readonly Migration[] = MIGRATIONS,
+): MigrationResult {
+  if (!isRecord(json)) {
+    return { ok: false, error: { kind: "invalid-file", path: "" } };
+  }
+  const { schemaVersion } = json;
+  if (typeof schemaVersion !== "number" || !Number.isInteger(schemaVersion)) {
+    return { ok: false, error: { kind: "missing-version" } };
+  }
+  const current = migrations.length + 1;
+  if (schemaVersion > current || schemaVersion < 1) {
+    return { ok: false, error: { kind: "newer-version", schemaVersion } };
+  }
+  let file = json;
+  for (const migrate of migrations.slice(schemaVersion - 1)) {
+    file = { ...migrate(file), schemaVersion: Number(file.schemaVersion) + 1 };
+  }
+  return { ok: true, file };
+}
+
+// The app's format version is one more than the number of migrations.
+export function isMigrationListComplete(): boolean {
+  return MIGRATIONS.length + 1 === SCHEMA_VERSION;
+}

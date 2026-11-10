@@ -48,6 +48,10 @@ function applyEffect(state: AppState, effect: CommandEffect): Next {
   const operations = effect.operations ?? [];
   const ui = effect.ui ?? state.ui;
   const persistence = effect.persistence ?? state.persistence;
+  if (effect.workspace !== undefined) {
+    const history = { undo: [], redo: [] };
+    return { state: { workspace: effect.workspace, ui, history, persistence } };
+  }
   if (operations.length === 0) return { state: { ...state, ui, persistence } };
   const result = applyOperations(state.workspace, operations);
   if (!result.ok) {

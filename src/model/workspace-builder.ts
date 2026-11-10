@@ -3,8 +3,13 @@
 import * as v from "valibot";
 import type { Block, BlockProps } from "./block.schema.ts";
 import { blockIdSchema, type BlockId } from "./id.schema.ts";
-import type { Workspace } from "./workspace.schema.ts";
+import type { PropsSchemas, Workspace } from "./workspace.schema.ts";
 import { createEmptyWorkspace } from "./workspace.ts";
+
+// Accepts any props, for tests that do not care about a block type's shape.
+export const TEST_PROPS_SCHEMAS: PropsSchemas = new Map([
+  ["page", v.record(v.string(), v.unknown())],
+]);
 
 export const TEST_TIME = "2026-11-10T12:00:00.000Z";
 

@@ -43,3 +43,10 @@ export {
   selectCanUndo,
   selectTheme,
 } from "./app-state.selectors.ts";
+export { restoreUi, toPersistedUi, type PersistedUi } from "./ui.schema.ts";
+export {
+  loadWorkspace,
+  workspaceCommands,
+  type LoadWorkspacePayload,
+} from "./workspace.commands.ts";
+export { addTestBlock, createTestApp, type TestApp } from "./state-builder.ts";
