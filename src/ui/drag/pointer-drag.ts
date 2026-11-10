@@ -3,6 +3,9 @@
 export type DragPosition = "before" | "after" | "inside";
 
 export interface DragOptions {
+  // Which way the items run. Items in a row ("inline") are dropped before
+  // or after each other, never inside. Defaults to "block".
+  readonly axis?: "block" | "inline";
   // Matches every item that can be dragged and dropped on.
   readonly itemSelector: string;
   readonly onDrop: (
@@ -33,8 +36,15 @@ function itemAt(
   return element?.closest<HTMLElement>(selector) ?? undefined;
 }
 
-function positionIn(target: HTMLElement, event: PointerEvent): DragPosition {
+function positionIn(
+  target: HTMLElement,
+  event: PointerEvent,
+  axis: DragOptions["axis"],
+): DragPosition {
   const box = target.getBoundingClientRect();
+  if (axis === "inline") {
+    return event.clientX < box.left + box.width / 2 ? "before" : "after";
+  }
   const share = (event.clientY - box.top) / box.height;
   if (share < EDGE_SHARE) return "before";
   return share > 1 - EDGE_SHARE ? "after" : "inside";
@@ -51,7 +61,11 @@ function mark(
   session.target?.setAttribute("data-drop", position);
 }
 
-function track(session: Session, event: PointerEvent, selector: string): void {
+function track(
+  session: Session,
+  event: PointerEvent,
+  options: DragOptions,
+): void {
   const distance = Math.hypot(
     event.clientX - session.startX,
     event.clientY - session.startY,
@@ -59,12 +73,10 @@ function track(session: Session, event: PointerEvent, selector: string): void {
   if (!session.isDragging && distance < DRAG_THRESHOLD) return;
   session.isDragging = true;
   session.source.setAttribute("data-dragging", "");
-  const target = itemAt(event, selector);
-  mark(
-    session,
-    target,
-    target === undefined ? "inside" : positionIn(target, event),
-  );
+  const target = itemAt(event, options.itemSelector);
+  const position =
+    target === undefined ? "inside" : positionIn(target, event, options.axis);
+  mark(session, target, position);
 }
 
 interface Drag {
@@ -109,7 +121,7 @@ function listen(drag: Drag): void {
   const { session, container, options } = drag;
   const { signal } = drag.abort;
   const onMove = (move: PointerEvent): void => {
-    track(session, move, options.itemSelector);
+    track(session, move, options);
   };
   const onKey = (key: KeyboardEvent): void => {
     if (key.key === "Escape") finish(drag, false);

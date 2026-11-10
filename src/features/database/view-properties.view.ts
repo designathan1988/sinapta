@@ -1,5 +1,5 @@
-// The properties of a database as a view shows them: rename, show or hide
-// in this view, and delete.
+// The settings of a view: its name, and the database's properties as the
+// view shows them: rename, show or hide in this view, and delete.
 import { html, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import type { PropertyDefinition } from "../../blocks/database/index.ts";
@@ -9,7 +9,7 @@ import { COPY } from "../../ui/copy.ts";
 import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
 import { changeProperty, removeProperty } from "./database.commands.ts";
 import type { TableContext } from "./table-cell.view.ts";
-import { togglePropertyHidden } from "./view.commands.ts";
+import { renameView, togglePropertyHidden } from "./view.commands.ts";
 
 function renderProperty(
   property: PropertyDefinition,
@@ -53,6 +53,13 @@ function renderProperty(
 
 export function renderProperties(context: TableContext): TemplateResult {
   const { model, dispatch } = context;
+  // An empty name would leave a tab with nothing to press.
+  const renameCurrent = (event: Event): void => {
+    if (!(event.target instanceof HTMLInputElement)) return;
+    const name = event.target.value.trim();
+    if (name === "") event.target.value = model.view.name;
+    else dispatch(renameView.create({ viewId: model.view.id, name }));
+  };
   return html`<div
     class="database__popover"
     popover="manual"
@@ -62,6 +69,15 @@ export function renderProperties(context: TableContext): TemplateResult {
       if (event.key === "Escape") dispatch(closeOverlay.create({}));
     }}
   >
+    <label class="database__view-name">
+      ${COPY.database.viewNameLabel}
+      <input
+        class="database__field"
+        type="text"
+        .value=${model.view.name}
+        @change=${renameCurrent}
+      />
+    </label>
     <ul class="database__filters">
       ${model.database.props.properties.map((property) => renderProperty(property, context))}
     </ul>

@@ -6,11 +6,12 @@ import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import type { TableColumn } from "./table-model.selectors.ts";
+import { startColumnDrag } from "./table-column-drag.view.ts";
 import {
   MAX_COLUMN_WIDTH,
   MIN_COLUMN_WIDTH,
   resizeProperty,
-  setViewSorts,
+  sortByProperty,
 } from "./view.commands.ts";
 
 export const COLUMN_MENU_OVERLAY = "column-menu";
@@ -35,17 +36,33 @@ export function setColumnWidth(
 const NEXT_SORT = {
   none: "ascending",
   ascending: "descending",
-  descending: "none",
+  descending: null,
 } as const;
 
-// A press on a header cycles its sort: ascending, descending, none.
-function cycleSort(column: TableColumn, context: TableContext): void {
-  const next = NEXT_SORT[column.sortDirection ?? "none"];
-  const propertyId = column.property.id;
-  const sorts = next === "none" ? [] : [{ propertyId, direction: next }];
+// A press on a header cycles its sort: ascending, descending, none. With
+// Shift held the view's other sorts stay, so several properties sort.
+function cycleSort(
+  event: MouseEvent,
+  column: TableColumn,
+  context: TableContext,
+): void {
   context.dispatch(
-    setViewSorts.create({ viewId: context.model.view.id, sorts }),
+    sortByProperty.create({
+      viewId: context.model.view.id,
+      propertyId: column.property.id,
+      direction: NEXT_SORT[column.sortDirection ?? "none"],
+      keepOthers: event.shiftKey,
+    }),
   );
+}
+
+// The place of a column in the sort order, shown when several sort.
+function sortRank(column: TableColumn, context: TableContext): string {
+  const { sorts } = context.model.view;
+  const index = sorts.findIndex(
+    (sort) => sort.propertyId === column.property.id,
+  );
+  return sorts.length > 1 && index !== -1 ? String(index + 1) : "";
 }
 
 // The width a pointer position asks for: its distance from the header's
@@ -157,13 +174,13 @@ function renderHeader(
     <button
       type="button"
       class="database__sort"
-      @click=${() => {
-        cycleSort(column, context);
+      @click=${(event: MouseEvent) => {
+        cycleSort(event, column, context);
       }}
     >
       <span class="database__header-name">${property.name}</span>
       <span aria-hidden="true"
-        >${sortDirection ? SORT_ARROWS[sortDirection] : ""}</span
+        >${sortDirection ? SORT_ARROWS[sortDirection] : ""}${sortRank(column, context)}</span
       >
     </button>
     ${renderMenuButton(column, context)} ${renderResizer(column, context)}
@@ -195,7 +212,12 @@ function renderAddProperty(context: TableContext): TemplateResult {
 }
 
 export function renderHeaderRow(context: TableContext): TemplateResult {
-  return html`<tr aria-rowindex="1">
+  return html`<tr
+    aria-rowindex="1"
+    @pointerdown=${(event: PointerEvent) => {
+      startColumnDrag(event, context);
+    }}
+  >
     ${context.model.columns.map((column) => renderHeader(column, context))}
     ${renderAddProperty(context)}
   </tr>`;

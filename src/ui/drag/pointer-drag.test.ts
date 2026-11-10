@@ -78,4 +78,37 @@ describe("startPointerDrag", () => {
 
     expect(onClick).toHaveBeenCalledOnce();
   });
+
+  it("drops before or after, never inside, along the inline axis", () => {
+    const row = document.createElement("div");
+    row.innerHTML = "<span data-item>one</span><span data-item>two</span>";
+    document.body.replaceChildren(row);
+    const [one, two] = [...row.querySelectorAll<HTMLElement>("[data-item]")];
+    if (one === undefined || two === undefined) throw new Error("setup");
+    const positions: DragPosition[] = [];
+    row.addEventListener("pointerdown", (event) => {
+      startPointerDrag(event, {
+        axis: "inline",
+        itemSelector: "[data-item]",
+        onDrop: (_source, _target, position) => positions.push(position),
+      });
+    });
+    two.getBoundingClientRect = () => new DOMRect(100, 0, 100, 20);
+    let under: Element = one;
+    document.elementFromPoint = () => under;
+    const fire = (type: string, target: Element, x: number): void => {
+      under = target;
+      const init = { bubbles: true, clientX: x, clientY: 0, button: 0 };
+      target.dispatchEvent(new PointerEvent(type, init));
+    };
+
+    fire("pointerdown", one, 0);
+    fire("pointermove", two, 150);
+    fire("pointerup", two, 150);
+    fire("pointerdown", one, 0);
+    fire("pointermove", two, 120);
+    fire("pointerup", two, 120);
+
+    expect(positions).toEqual(["after", "before"]);
+  });
 });

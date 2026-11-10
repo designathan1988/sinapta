@@ -1,5 +1,6 @@
 // What the table shows of a model: the window of rows when it is long, and
 // where the arrow keys take the active cell.
+import type { PropertyId } from "../../model/index.ts";
 import type { ActiveCell } from "../../state/index.ts";
 import type { TableModel, TableRow } from "./table-model.selectors.ts";
 
@@ -65,4 +66,29 @@ export function selectCellNeighbor(
   if (row === undefined || column === undefined) return cell;
   const propertyId = column.isTitle ? null : column.property.id;
   return { rowId: row.id, propertyId, isEditing: false };
+}
+
+export interface ColumnDrop {
+  readonly sourceId: string;
+  readonly targetId: string;
+  readonly position: "before" | "after" | "inside";
+}
+
+// The property order after one column is dropped beside another, or
+// undefined when the drop changes nothing. The title column stays first:
+// it cannot be moved, and a drop on it lands right after it.
+export function selectColumnDrop(
+  model: TableModel,
+  drop: ColumnDrop,
+): readonly PropertyId[] | undefined {
+  const movable = model.columns.filter((column) => !column.isTitle);
+  const order = movable.map((column) => column.property.id);
+  const source = order.find((id) => id === drop.sourceId);
+  if (source === undefined || drop.sourceId === drop.targetId) return undefined;
+  const rest = order.filter((id) => id !== source);
+  const target = rest.findIndex((id) => id === drop.targetId);
+  const index =
+    target === -1 ? 0 : target + (drop.position === "before" ? 0 : 1);
+  const next = rest.toSpliced(index, 0, source);
+  return next.every((id, at) => id === order[at]) ? undefined : next;
 }

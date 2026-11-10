@@ -5,6 +5,7 @@ import { selectTableModel } from "./table-model.selectors.ts";
 import { addOption, setActiveCell, tableCommands } from "./table.commands.ts";
 import {
   selectCellNeighbor,
+  selectColumnDrop,
   selectRowWindow,
   WINDOW_SIZE,
 } from "./table.selectors.ts";
@@ -113,5 +114,48 @@ describe("table commands", () => {
 
   it("is registered with the commands of the table", () => {
     expect(tableCommands).toContain(setActiveCell);
+  });
+});
+
+describe("selectColumnDrop", () => {
+  it("moves a column to the other side of the one it is dropped on", () => {
+    const { model, propertyIds } = createApp();
+    const [points, stage] = propertyIds;
+    if (points === undefined || stage === undefined) throw new Error("setup");
+
+    const order = selectColumnDrop(model(), {
+      sourceId: points,
+      targetId: stage,
+      position: "after",
+    });
+
+    expect(order).toEqual([stage, points]);
+  });
+
+  it("puts a column dropped on the title right after the title", () => {
+    const { model, propertyIds } = createApp();
+    const [points, stage] = propertyIds;
+    if (points === undefined || stage === undefined) throw new Error("setup");
+
+    const order = selectColumnDrop(model(), {
+      sourceId: stage,
+      targetId: "title",
+      position: "before",
+    });
+
+    expect(order).toEqual([stage, points]);
+  });
+
+  it("reports nothing when the drop leaves the order as it was", () => {
+    const { model, propertyIds } = createApp();
+    const [points, stage] = propertyIds;
+    if (points === undefined || stage === undefined) throw new Error("setup");
+    const drop = { targetId: stage, position: "before" } as const;
+
+    const same = selectColumnDrop(model(), { ...drop, sourceId: points });
+    const title = selectColumnDrop(model(), { ...drop, sourceId: "title" });
+
+    expect(same).toBe(undefined);
+    expect(title).toBe(undefined);
   });
 });

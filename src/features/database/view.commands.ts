@@ -109,6 +109,33 @@ export const setViewSorts = defineCommand<{
     updateView(state, command.viewId, { sorts: [...command.sorts] }),
 });
 
+export interface SortByPayload {
+  readonly viewId: ViewId;
+  readonly propertyId: PropertyId;
+  // Null removes the sort on this property.
+  readonly direction: Sort["direction"] | null;
+  // True keeps the view's other sorts; false leaves only this one.
+  readonly keepOthers: boolean;
+}
+
+// Sorts a view by one property. A property already sorted keeps its place
+// in the order; a new one goes last.
+export const sortByProperty = defineCommand<SortByPayload>({
+  type: "view.sortBy",
+  handle(state, command) {
+    const view = state.workspace.views[command.viewId];
+    if (view === undefined) return {};
+    const { propertyId, direction, keepOthers } = command;
+    const own = direction === null ? [] : [{ propertyId, direction }];
+    const isSorted = view.sorts.some((sort) => sort.propertyId === propertyId);
+    const kept = view.sorts.flatMap((sort) =>
+      sort.propertyId === propertyId ? own : [sort],
+    );
+    const merged = isSorted ? kept : [...view.sorts, ...own];
+    return updateView(state, view.id, { sorts: keepOthers ? merged : own });
+  },
+});
+
 export const setViewFilters = defineCommand<{
   viewId: ViewId;
   filters: readonly Filter[];
@@ -192,6 +219,7 @@ export const viewCommands = [
   renameView,
   deleteView,
   setViewSorts,
+  sortByProperty,
   setViewFilters,
   resizeProperty,
   setPropertyOrder,

@@ -69,6 +69,19 @@
     &[data-add] {
       inline-size: var(--size-control-md);
     }
+
+    &[data-dragging] {
+      opacity: 0.5;
+    }
+
+    &[data-drop="before"] {
+      box-shadow: inset var(--size-border-thick) 0 0 var(--color-accent-default);
+    }
+
+    &[data-drop="after"] {
+      box-shadow: inset calc(var(--size-border-thick) * -1) 0 0
+        var(--color-accent-default);
+    }
   }
 
   .database__sort {
@@ -277,6 +290,14 @@
     border-radius: var(--radius-sm);
     background-color: var(--color-bg-app);
     color: var(--color-text-primary);
+  }
+
+  .database__view-name {
+    display: grid;
+    gap: var(--space-stack-xs);
+    margin-block-end: var(--space-stack-sm);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
   }
 
   .database__check {

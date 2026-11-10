@@ -9,7 +9,7 @@ import type { TableContext } from "./table-cell.view.ts";
 import type { TableColumn } from "./table-model.selectors.ts";
 import {
   setPropertyOrder,
-  setViewSorts,
+  sortByProperty,
   togglePropertyHidden,
 } from "./view.commands.ts";
 
@@ -31,29 +31,37 @@ function moveColumn(
   dispatch(setPropertyOrder.create({ viewId: model.view.id, propertyOrder }));
 }
 
+type Direction = "ascending" | "descending";
+
+// "Then sort" adds this column to a sort that other columns started.
 function sortItems(column: TableColumn, context: TableContext): MenuItem[] {
-  const viewId = context.model.view.id;
+  const { view } = context.model;
   const propertyId = column.property.id;
-  const sort = (direction: "ascending" | "descending") => () =>
+  const sort = (direction: Direction | null, keepOthers: boolean) => () =>
     context.dispatch(
-      setViewSorts.create({ viewId, sorts: [{ propertyId, direction }] }),
+      sortByProperty.create({
+        viewId: view.id,
+        propertyId,
+        direction,
+        keepOthers,
+      }),
     );
+  const item = (label: string, direction: Direction, keepOthers = false) => ({
+    label,
+    icon: direction === "ascending" ? ("up" as const) : ("down" as const),
+    onSelect: sort(direction, keepOthers),
+  });
+  const { database: copy } = COPY;
+  const hasOtherSort = view.sorts.some((one) => one.propertyId !== propertyId);
+  const then = [
+    item(copy.thenAscending, "ascending", true),
+    item(copy.thenDescending, "descending", true),
+  ];
   return [
-    {
-      label: COPY.database.sortAscending,
-      icon: "up",
-      onSelect: sort("ascending"),
-    },
-    {
-      label: COPY.database.sortDescending,
-      icon: "down",
-      onSelect: sort("descending"),
-    },
-    {
-      label: COPY.database.clearSort,
-      onSelect: () =>
-        context.dispatch(setViewSorts.create({ viewId, sorts: [] })),
-    },
+    item(copy.sortAscending, "ascending"),
+    item(copy.sortDescending, "descending"),
+    ...(hasOtherSort ? then : []),
+    { label: copy.clearSort, onSelect: sort(null, true) },
   ];
 }
 
