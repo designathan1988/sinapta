@@ -39,6 +39,11 @@ function sentinel(rich: RichText): Node[] {
   return plainText(rich).endsWith("\n") ? [document.createElement("br")] : [];
 }
 
+// The text each element was last made to show. Text in the store is never
+// edited in place, so the same reference means the same text, and a page
+// of a thousand unchanged blocks costs a thousand lookups per keystroke.
+const projected = new WeakMap<Element, RichText>();
+
 // Makes the element show the given text. Does nothing when it already
 // does, so the caret is not disturbed, and nothing while the browser is
 // composing inside the element.
@@ -47,12 +52,14 @@ export function projectRichText(
   rich: RichText,
 ): void {
   if (!(element instanceof HTMLElement)) return;
+  if (projected.get(element) === rich) return;
   if (element.hasAttribute("data-composing")) return;
-  const signature = JSON.stringify(rich);
+  projected.set(element, rich);
+  // The browser may already show this text: it typed it during composition.
   const isCurrent =
-    element.dataset.projected === signature &&
+    element.dataset.projected === JSON.stringify(rich) &&
     element.textContent === plainText(rich);
   if (isCurrent) return;
   element.replaceChildren(...rich.map(spanNode), ...sentinel(rich));
-  element.dataset.projected = signature;
+  element.dataset.projected = JSON.stringify(rich);
 }
