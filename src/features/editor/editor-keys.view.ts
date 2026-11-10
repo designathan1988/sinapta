@@ -7,6 +7,8 @@ import {
 } from "../../blocks/text-block.ts";
 import { setSelection } from "../../state/index.ts";
 import { readSelection, textElementOf } from "../../ui/caret/index.ts";
+import { openBlockMenu } from "./editor-block-menu.view.ts";
+import { openLinkField } from "./editor-link.view.ts";
 import { indentBlock, outdentBlock } from "./editor-structure.commands.ts";
 import { caretAt, toggleTextMark } from "./editor.commands.ts";
 import type { InputContext } from "./editor-input.view.ts";
@@ -114,6 +116,21 @@ function inlineCode(event: KeyboardEvent, context: InputContext): boolean {
   return true;
 }
 
+// Ctrl or Command with "/" opens the menu of the block the caret is in;
+// with "k" it opens the link field for the selected text.
+function menuKeys(event: KeyboardEvent, context: InputContext): boolean {
+  const selection = readSelection();
+  if (!(event.ctrlKey || event.metaKey) || selection === null) return false;
+  if (event.key === "/") {
+    openBlockMenu(selection.blockId, context.dispatch);
+    return true;
+  }
+  return (
+    event.key.toLowerCase() === "k" &&
+    openLinkField(selection, context.dispatch)
+  );
+}
+
 export function onBlockKeyDown(
   event: KeyboardEvent,
   context: InputContext,
@@ -122,6 +139,7 @@ export function onBlockKeyDown(
   const isHandled =
     indent(event, context) ||
     inlineCode(event, context) ||
+    menuKeys(event, context) ||
     moveBetweenBlocks(event, context);
   if (isHandled) event.preventDefault();
 }

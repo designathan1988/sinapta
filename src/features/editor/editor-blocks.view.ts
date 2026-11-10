@@ -6,6 +6,7 @@ import type { Block, BlockId } from "../../model/index.ts";
 import { setSelection } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { appendParagraph } from "./editor-structure.commands.ts";
+import { renderHandle, startBlockDrag } from "./editor-block-menu.view.ts";
 import { caretAt } from "./editor.commands.ts";
 import {
   onBeforeInput,
@@ -35,7 +36,8 @@ function renderBlock(block: Block, context: InputContext): TemplateResult {
     data-type=${block.type}
     data-overlay-anchor=${isAnchor ? "open" : nothing}
   >
-    ${content ?? nothing} ${renderChildren(block, context)}
+    ${renderHandle(block, context)} ${content ?? nothing}
+    ${renderChildren(block, context)}
   </div>`;
 }
 
@@ -107,6 +109,9 @@ export function renderBlocks(
       }}
       @keydown=${(event: KeyboardEvent) => {
         onBlockKeyDown(event, context);
+      }}
+      @pointerdown=${(event: PointerEvent) => {
+        startBlockDrag(event, context);
       }}
       @compositionstart=${(event: Event) => {
         setComposing(event, true);

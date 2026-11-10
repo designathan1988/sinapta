@@ -1,5 +1,5 @@
 import "./editor.css";
-import { html, type TemplateResult } from "lit-html";
+import { html, type nothing, type TemplateResult } from "lit-html";
 import {
   renamePage,
   selectPage,
@@ -8,6 +8,8 @@ import {
 import type { AppState, Dispatch } from "../../state/index.ts";
 import { COPY, PRODUCT_NAME } from "../../ui/copy.ts";
 import { continueWriting, renderBlocks } from "./editor-blocks.view.ts";
+import { renderBlockMenu } from "./editor-block-menu.view.ts";
+import { LINK_OVERLAY, renderLinkField } from "./editor-link.view.ts";
 import { renderIconControl } from "./editor-icon.view.ts";
 
 // The open page: its icon, its title and its blocks.
@@ -49,4 +51,15 @@ export function renderEditor(
     </h1>
     ${renderBlocks(page.id, context)}
   </article>`;
+}
+
+// The editor's own overlays: the block menus and the link field.
+export function renderEditorOverlay(
+  state: AppState,
+  dispatch: Dispatch,
+): TemplateResult | typeof nothing {
+  if (state.ui.overlay?.kind === LINK_OVERLAY) {
+    return renderLinkField(state, dispatch);
+  }
+  return renderBlockMenu(state, dispatch);
 }

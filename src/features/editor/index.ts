@@ -5,7 +5,7 @@ import { editorCommands as textCommands } from "./editor.commands.ts";
 
 export { convertBlock } from "./editor-convert.commands.ts";
 export { replaceText } from "./editor.commands.ts";
-export { renderEditor } from "./editor.view.ts";
+export { renderEditor, renderEditorOverlay } from "./editor.view.ts";
 
 // Every command of the editor, registered in one line at startup.
 export const editorCommands = [

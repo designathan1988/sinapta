@@ -12,7 +12,8 @@ export type IconName =
   | "trash"
   | "up"
   | "down"
-  | "restore";
+  | "restore"
+  | "grip";
 
 // 16-unit outline icons, drawn with the current text color.
 // Fragments use the `svg` tag so that they are parsed as SVG, not HTML.
@@ -33,6 +34,9 @@ const PATHS: Record<IconName, TemplateResult<2>> = {
   trash: svg`<path d="M3 4.5h10M6.5 4.5v-2h3v2M4.5 4.5l.6 9h5.8l.6-9" />`,
   up: svg`<path d="M8 13V3M4 7l4-4 4 4" />`,
   down: svg`<path d="M8 3v10M4 9l4 4 4-4" />`,
+  grip: svg`<path
+    d="M6 3.5h.01M10 3.5h.01M6 8h.01M10 8h.01M6 12.5h.01M10 12.5h.01"
+  />`,
   restore: svg`<path d="M3 8a5 5 0 1 0 1.6-3.7M3 3v3h3" />`,
 };
 

@@ -75,6 +75,10 @@
     }
   }
 
+  .editor__block {
+    position: relative;
+  }
+
   .editor__blocks,
   .editor__children,
   .editor__block:not([data-type="numbered-list"]) {
@@ -111,6 +115,95 @@
     &:focus-visible {
       color: var(--color-text-tertiary);
     }
+  }
+
+  /* The handle sits in the margin and appears on hover or while open. */
+  .editor__handle {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: calc(var(--space-inset-xl) * -1);
+    display: inline-grid;
+    place-items: center;
+    inline-size: var(--size-target-min);
+    block-size: var(--size-target-min);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-tertiary);
+    opacity: 0;
+    cursor: grab;
+    touch-action: none;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
+  .editor__handle:is(:focus-visible, [aria-expanded="true"]) {
+    opacity: 1;
+  }
+
+  .editor__block:hover > .editor__handle {
+    opacity: 1;
+  }
+
+  .editor__block[data-dragging] {
+    opacity: 0.5;
+  }
+
+  .editor__block[data-drop="before"] {
+    box-shadow: 0 calc(var(--size-border-thick) * -1) 0
+      var(--color-accent-default);
+  }
+
+  .editor__block[data-drop="after"] {
+    box-shadow: 0 var(--size-border-thick) 0 var(--color-accent-default);
+  }
+
+  .editor__block[data-drop="inside"] {
+    background-color: var(--color-bg-selected);
+  }
+
+  .editor__link:popover-open {
+    display: grid;
+    gap: var(--space-stack-sm);
+    padding: var(--space-inset-md);
+  }
+
+  .editor__link-field {
+    display: grid;
+    gap: var(--space-stack-xs);
+    color: var(--color-text-secondary);
+
+    & input {
+      min-inline-size: var(--size-menu-min-width);
+      min-block-size: var(--size-control-md);
+      padding: var(--space-none) var(--space-inset-sm);
+      border: var(--size-border-thin) solid var(--color-border-strong);
+      border-radius: var(--radius-sm);
+      background-color: var(--color-bg-app);
+    }
+
+    & input[aria-invalid="true"] {
+      border-color: var(--color-text-danger);
+    }
+  }
+
+  .editor__link-hint {
+    display: none;
+    color: var(--color-text-danger);
+    font-size: var(--font-size-xs);
+  }
+
+  .editor__link:has([aria-invalid="true"]) .editor__link-hint {
+    display: block;
+  }
+
+  .editor__link-actions {
+    display: flex;
+    gap: var(--space-inline-sm);
+    justify-content: flex-end;
   }
 
   .editor__empty {

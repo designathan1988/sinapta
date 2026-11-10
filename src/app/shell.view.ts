@@ -1,7 +1,7 @@
 import "./shell.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
-import { renderEditor } from "../features/editor/index.ts";
+import { renderEditor, renderEditorOverlay } from "../features/editor/index.ts";
 import {
   renderSlashMenu,
   SLASH_MENU_OVERLAY,
@@ -22,7 +22,10 @@ import {
 import { renderBreadcrumbs } from "../features/breadcrumbs/index.ts";
 import { MOVE_TO_OVERLAY, renderMoveTo } from "../features/move-to/index.ts";
 import { renderPageMenuButton } from "../features/page-menu/index.ts";
-import { renderPageMenu } from "../features/page-menu/index.ts";
+import {
+  PAGE_MENU_OVERLAY,
+  renderPageMenu,
+} from "../features/page-menu/index.ts";
 import { renderTrash, TRASH_OVERLAY } from "../features/trash/index.ts";
 import { renderButton } from "../ui/button/index.ts";
 import { COPY, PRODUCT_NAME } from "../ui/copy.ts";
@@ -157,7 +160,8 @@ function renderOverlay(
   if (kind === TRASH_OVERLAY) return renderTrash(state, dispatch);
   if (kind === MOVE_TO_OVERLAY) return renderMoveTo(state, dispatch);
   if (kind === SLASH_MENU_OVERLAY) return renderSlashMenu(state, dispatch);
-  return renderPageMenu(state, dispatch);
+  if (kind === PAGE_MENU_OVERLAY) return renderPageMenu(state, dispatch);
+  return renderEditorOverlay(state, dispatch);
 }
 
 export function renderShell(
