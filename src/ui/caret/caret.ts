@@ -89,12 +89,16 @@ function isSame(a: TextSelection | null, b: TextSelection): boolean {
 }
 
 // Makes the document's selection match the store's. Does nothing when it
-// already matches, so the browser's own caret movement is left alone.
+// already matches, so the browser's own caret movement is left alone. A
+// block that was moved in the document keeps its selection but loses
+// focus; focus that went nowhere is given back to it.
 export function restoreSelection(
   root: ParentNode,
   selection: TextSelection | null,
 ): void {
-  if (selection === null || isSame(readSelection(), selection)) return;
+  if (selection === null) return;
+  const isFocusLost = document.activeElement === document.body;
+  if (!isFocusLost && isSame(readSelection(), selection)) return;
   const text = textElementFor(root, selection.blockId);
   if (text === null) return;
   const anchor = positionAt(text, selection.anchorOffset);

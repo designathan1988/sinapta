@@ -7,8 +7,11 @@ import { parseBlockId, type Block, type BlockId } from "../../model/index.ts";
 import {
   closeOverlay,
   openOverlay,
+  setSelection,
   type AppState,
   type Dispatch,
+  type OpenOverlay,
+  type TextSelection,
 } from "../../state/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
@@ -29,9 +32,26 @@ export const BLOCK_MENU_OVERLAY = "block-menu";
 const TURN_INTO_OVERLAY = "turn-into";
 const BLOCK = ".editor__block";
 
-export function openBlockMenu(blockId: BlockId, dispatch: Dispatch): void {
-  const overlay = { kind: BLOCK_MENU_OVERLAY, anchorId: blockId };
+// Opened from the keyboard, the menu remembers where the caret was so
+// that closing it puts the caret back.
+export function openBlockMenu(
+  blockId: BlockId,
+  dispatch: Dispatch,
+  caret?: TextSelection,
+): void {
+  const anchor = { kind: BLOCK_MENU_OVERLAY, anchorId: blockId };
+  const overlay =
+    caret === undefined
+      ? anchor
+      : { ...anchor, start: caret.anchorOffset, end: caret.focusOffset };
   dispatch(openOverlay.create({ overlay }));
+}
+
+// The caret a menu was opened from, if it was opened from one.
+function caretOf(overlay: OpenOverlay, blockId: BlockId) {
+  const { start, end } = overlay;
+  if (start === undefined || end === undefined) return undefined;
+  return { blockId, anchorOffset: start, focusOffset: end };
 }
 
 // A handle shown beside a block: press to open its menu, drag to move it.
@@ -91,7 +111,11 @@ export function startBlockDrag(
   });
 }
 
-function actionItems(block: Block, dispatch: Dispatch): MenuItem[] {
+function actionItems(
+  block: Block,
+  overlay: OpenOverlay,
+  dispatch: Dispatch,
+): MenuItem[] {
   const blockId = block.id;
   const turnInto: MenuItem = {
     label: COPY.blockMenu.turnInto,
@@ -99,7 +123,7 @@ function actionItems(block: Block, dispatch: Dispatch): MenuItem[] {
     onSelect: () =>
       dispatch(
         openOverlay.create({
-          overlay: { kind: TURN_INTO_OVERLAY, anchorId: blockId },
+          overlay: { ...overlay, kind: TURN_INTO_OVERLAY },
         }),
       ),
   };
@@ -124,17 +148,21 @@ function actionItems(block: Block, dispatch: Dispatch): MenuItem[] {
   ];
 }
 
-function typeItems(blockId: BlockId, dispatch: Dispatch): MenuItem[] {
+// Converting keeps the caret where the menu was opened from.
+function typeItems(
+  blockId: BlockId,
+  overlay: OpenOverlay,
+  dispatch: Dispatch,
+): MenuItem[] {
+  const selection = caretOf(overlay, blockId);
+  const convert = (blockType: string) => (): void => {
+    dispatch(convertBlock.create({ blockId, blockType }));
+    if (selection !== undefined) dispatch(setSelection.create({ selection }));
+  };
   return BLOCK_DEFINITIONS.flatMap((definition): MenuItem[] => {
     if (definition.label === undefined || definition.type === "divider")
       return [];
-    const blockType = definition.type;
-    return [
-      {
-        label: definition.label,
-        onSelect: () => dispatch(convertBlock.create({ blockId, blockType })),
-      },
-    ];
+    return [{ label: definition.label, onSelect: convert(definition.type) }];
   });
 }
 
@@ -147,16 +175,18 @@ export function renderBlockMenu(
   const blockId = parseBlockId(overlay?.anchorId ?? "");
   const block =
     blockId === undefined ? undefined : state.workspace.blocks[blockId];
-  if (block === undefined) return nothing;
+  if (block === undefined || overlay === null) return nothing;
   const onClose = (): void => {
     dispatch(closeOverlay.create({}));
+    const selection = caretOf(overlay, block.id);
+    if (selection !== undefined) dispatch(setSelection.create({ selection }));
   };
-  if (overlay?.kind === BLOCK_MENU_OVERLAY) {
-    const items = actionItems(block, dispatch);
+  if (overlay.kind === BLOCK_MENU_OVERLAY) {
+    const items = actionItems(block, overlay, dispatch);
     return renderMenu({ label: COPY.blockMenu.open, items, onClose });
   }
-  if (overlay?.kind === TURN_INTO_OVERLAY) {
-    const items = typeItems(block.id, dispatch);
+  if (overlay.kind === TURN_INTO_OVERLAY) {
+    const items = typeItems(block.id, overlay, dispatch);
     return renderMenu({ label: COPY.blockMenu.turnInto, items, onClose });
   }
   return nothing;

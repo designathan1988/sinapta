@@ -122,7 +122,7 @@ function menuKeys(event: KeyboardEvent, context: InputContext): boolean {
   const selection = readSelection();
   if (!(event.ctrlKey || event.metaKey) || selection === null) return false;
   if (event.key === "/") {
-    openBlockMenu(selection.blockId, context.dispatch);
+    openBlockMenu(selection.blockId, context.dispatch, selection);
     return true;
   }
   return (
