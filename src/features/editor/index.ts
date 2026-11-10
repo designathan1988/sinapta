@@ -1,5 +1,6 @@
 import { editorConvertCommands } from "./editor-convert.commands.ts";
 import { editorMoveCommands } from "./editor-move.commands.ts";
+import { editorPasteCommands } from "./editor-paste.commands.ts";
 import { editorStructureCommands } from "./editor-structure.commands.ts";
 import { editorCommands as textCommands } from "./editor.commands.ts";
 
@@ -13,4 +14,5 @@ export const editorCommands = [
   ...editorStructureCommands,
   ...editorConvertCommands,
   ...editorMoveCommands,
+  ...editorPasteCommands,
 ];

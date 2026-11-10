@@ -49,8 +49,8 @@ export type CommandHandler<TPayload> = (
 
 export interface CommandDefinition<TPayload extends object = object> {
   readonly type: string;
-  // The new ids the dispatcher creates for the handler.
-  readonly newIds: NewIds;
+  // The new ids the dispatcher creates for the handler of one command.
+  newIdsFor(command: Command): NewIds;
   create(payload: TPayload): Command;
   handle(state: AppState, command: Command, meta: CommandMeta): CommandEffect;
 }
@@ -59,7 +59,8 @@ export interface CommandOptions<TPayload> {
   readonly type: string;
   // Shorthand for `newIds: { blocks: n }`.
   readonly newBlockIds?: number;
-  readonly newIds?: NewIds;
+  // A fixed count, or one that depends on what the command carries.
+  readonly newIds?: NewIds | ((payload: TPayload) => NewIds);
   readonly handle: CommandHandler<TPayload>;
 }
 
@@ -75,7 +76,11 @@ export function defineCommand<TPayload extends object>(
     command.type === options.type;
   return {
     type: options.type,
-    newIds: options.newIds ?? { blocks: options.newBlockIds ?? 0 },
+    newIdsFor(command) {
+      const { newIds = { blocks: options.newBlockIds ?? 0 } } = options;
+      if (typeof newIds !== "function") return newIds;
+      return isOwn(command) ? newIds(command) : {};
+    },
     create(payload) {
       // The command's own type would silently replace such a field.
       if ("type" in payload) {

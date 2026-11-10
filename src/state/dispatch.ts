@@ -120,7 +120,7 @@ function nextState(state: AppState, command: Command, sources: Sources): Next {
   if (definition === undefined) {
     return { error: { kind: "unknown-command", type: command.type } };
   }
-  const meta = createMeta(sources, definition.newIds);
+  const meta = createMeta(sources, definition.newIdsFor(command));
   return applyEffect(state, definition.handle(state, command, meta), meta.now);
 }
 
