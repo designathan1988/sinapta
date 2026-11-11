@@ -13,6 +13,10 @@ import {
   databaseCommands,
 } from "./database.commands.ts";
 import { optionCommands } from "./option.commands.ts";
+import {
+  relationCommands,
+  relationTidier,
+} from "./properties/relation/index.ts";
 import { addRow, rowCommands, setRowValue } from "./row.commands.ts";
 import { tableCommands } from "./table.commands.ts";
 import { calendarCommands } from "./layouts/calendar/calendar.commands.ts";
@@ -93,13 +97,17 @@ const DATABASE_TEST_COMMANDS = [
   ...pageTrashCommands,
   ...tableCommands,
   ...optionCommands,
+  ...relationCommands,
 ];
 
 export function createDatabaseApp(
   properties: readonly PropertySpec[],
   rows: readonly RowSpec[],
 ): DatabaseApp {
-  const base = createTestApp({ commands: DATABASE_TEST_COMMANDS });
+  const base = createTestApp({
+    commands: DATABASE_TEST_COMMANDS,
+    tidiers: [relationTidier],
+  });
   const { store } = base;
   base.dispatch(createDatabase.create({ parentId: null }));
   const databaseId = mustFind(

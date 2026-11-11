@@ -5,6 +5,8 @@ import type {
   PropertyConfigSchema,
   PropertyDefinition,
 } from "../../blocks/database/index.ts";
+import type { BlockId } from "../../model/index.ts";
+import type { AppState, Dispatch } from "../../state/index.ts";
 
 // What a filter knows besides the value and the operand.
 export interface FilterContext {
@@ -45,12 +47,31 @@ export interface StartingSettings {
 
 // How a cell of this type is edited; "none" for values the app keeps.
 export type CellEditor =
-  "text" | "number" | "date" | "url" | "toggle" | "options" | "files" | "none";
+  | "text"
+  | "number"
+  | "date"
+  | "url"
+  | "toggle"
+  | "options"
+  | "files"
+  | "relation"
+  | "none";
 
 // What a cell may need besides its value, such as the addresses of the
 // files kept for the workspace.
 export interface CellContext {
   readonly assetUrls: Readonly<Record<string, string>>;
+  // The title of a page that is shown; undefined for a page that is gone
+  // or in the trash.
+  readonly titleOf?: (pageId: string) => string | undefined;
+}
+
+// What a type's settings may need besides the property: the database it
+// belongs to, the workspace and the way to change it.
+export interface ConfigContext {
+  readonly databaseId: BlockId;
+  readonly state: AppState;
+  readonly dispatch: Dispatch;
 }
 
 // The `type` and `inputmode` of the field that edits a value as text.
@@ -88,7 +109,11 @@ export interface PropertyType {
   // as the end of a date range.
   readonly parse: (text: string, previous?: unknown) => unknown;
   // The value as plain text, for editing and for search.
-  readonly format: (value: unknown, property: PropertyDefinition) => string;
+  readonly format: (
+    value: unknown,
+    property: PropertyDefinition,
+    cell?: CellContext,
+  ) => string;
   // Ascending order of two values that `read` returned.
   readonly compare: (a: unknown, b: unknown) => number;
   readonly filterOperators: readonly FilterOperator[];
@@ -108,6 +133,7 @@ export interface PropertyType {
   readonly renderConfigEditor?: (
     property: PropertyDefinition,
     onChange: (config: unknown) => void,
+    context: ConfigContext,
   ) => TemplateResult;
 }
 

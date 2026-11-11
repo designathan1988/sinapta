@@ -16,6 +16,7 @@ import { filesProperty } from "./properties/files/index.ts";
 import { multiSelectProperty } from "./properties/multi-select/index.ts";
 import { numberProperty } from "./properties/number/index.ts";
 import { phoneProperty } from "./properties/phone/index.ts";
+import { relationProperty } from "./properties/relation/index.ts";
 import { selectProperty } from "./properties/select/index.ts";
 import { statusProperty } from "./properties/status/index.ts";
 import { textProperty } from "./properties/text/index.ts";
@@ -34,6 +35,7 @@ export const PROPERTY_TYPES: readonly PropertyType[] = [
   emailProperty,
   phoneProperty,
   filesProperty,
+  relationProperty,
   createdTimeProperty,
   editedTimeProperty,
   uniqueIdProperty,

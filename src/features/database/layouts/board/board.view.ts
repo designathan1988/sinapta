@@ -12,6 +12,7 @@ import { whenConnected } from "../../../../ui/focus/index.ts";
 import { addRow, setRowValue } from "../../row.commands.ts";
 import type { TableContext } from "../../table-cell.view.ts";
 import type { TableRow } from "../../table-model.selectors.ts";
+import { selectCellContext } from "../../cell-context.selectors.ts";
 import { renderRowCard } from "../row-card/index.ts";
 import {
   selectBoard,
@@ -108,7 +109,7 @@ function renderCards(
         columns: model.columns,
         dispatch,
         omit: board.property.id,
-        cell: { assetUrls: context.state.persistence.assetUrls },
+        cell: selectCellContext(context.state),
         description: COPY.database.moveCardHint,
         onKeyDown: (event) => {
           onCardKey(event, context, row.id);

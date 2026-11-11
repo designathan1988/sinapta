@@ -12,7 +12,11 @@ import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { dateFromParts, renderDateRange } from "./properties/date/index.ts";
 import { setRowValue } from "./row.commands.ts";
-import { renderRowFiles, type RowPage } from "./row-files.view.ts";
+import {
+  renderRowFiles,
+  renderRowRelation,
+  type RowPage,
+} from "./row-files.view.ts";
 import { propertyType } from "./property-registry.ts";
 import { selectRowValues } from "./row-values.selectors.ts";
 
@@ -117,6 +121,7 @@ function renderProperty(
   }
   const { editor } = propertyType(property.type);
   if (editor === "files") return renderRowFiles(row, property, page);
+  if (editor === "relation") return renderRowRelation(row, property, page);
   const controls: Partial<Record<string, typeof renderInput>> = {
     toggle: renderToggle,
     options: renderSelect,

@@ -2,6 +2,7 @@
 import "./database-menus.css";
 import { nothing, type TemplateResult } from "lit-html";
 import { renderCellFiles } from "./cell-files.view.ts";
+import { renderCellRelation } from "./cell-relation.view.ts";
 import { renderCellOptions } from "./cell-options.view.ts";
 import { renderColumnMenu, renderTypeMenu } from "./column-menu.view.ts";
 import {
@@ -11,6 +12,7 @@ import {
 import {
   CELL_FILES_OVERLAY,
   CELL_OPTIONS_OVERLAY,
+  CELL_RELATION_OVERLAY,
   type TableContext,
 } from "./table-cell.view.ts";
 import {
@@ -31,6 +33,7 @@ const OVERLAYS: Record<string, Render> = {
   [PROPERTY_TYPES_OVERLAY]: renderTypeMenu,
   [CELL_OPTIONS_OVERLAY]: renderCellOptions,
   [CELL_FILES_OVERLAY]: renderCellFiles,
+  [CELL_RELATION_OVERLAY]: renderCellRelation,
   [FILTERS_OVERLAY]: renderFilters,
   [PROPERTIES_OVERLAY]: renderProperties,
   [NEW_VIEW_OVERLAY]: renderNewViewMenu,

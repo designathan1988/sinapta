@@ -14,6 +14,7 @@ import {
   pageTrashCommands,
 } from "../blocks/page/index.ts";
 import {
+  DATABASE_TIDIERS,
   databaseCommands,
   withPropertyConfigs,
 } from "../features/database/index.ts";
@@ -113,7 +114,7 @@ export async function startApp(container: HTMLElement): Promise<void> {
   const dispatch = createDispatcher({
     store,
     registry: createCommandRegistry(COMMANDS),
-    tidiers: BLOCK_TIDIERS,
+    tidiers: [...BLOCK_TIDIERS, ...DATABASE_TIDIERS],
   });
   const renderRoot = (): void => {
     const state = store.getState();

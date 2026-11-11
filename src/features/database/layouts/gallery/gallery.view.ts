@@ -7,6 +7,7 @@ import { renderButton } from "../../../../ui/button/index.ts";
 import { COPY } from "../../../../ui/copy.ts";
 import { addRow } from "../../row.commands.ts";
 import type { TableContext } from "../../table-cell.view.ts";
+import { selectCellContext } from "../../cell-context.selectors.ts";
 import { renderRowCard } from "../row-card/index.ts";
 import { selectRowCover } from "./gallery.selectors.ts";
 
@@ -25,7 +26,7 @@ export function renderGallery(context: TableContext): TemplateResult {
               columns: model.columns,
               dispatch,
               cover: selectRowCover(state, row.id),
-              cell: { assetUrls: state.persistence.assetUrls },
+              cell: selectCellContext(state),
             })}
           </li>`,
       )}

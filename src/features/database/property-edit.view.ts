@@ -48,10 +48,12 @@ function renderConfig(
   if (editor === undefined) return nothing;
   const databaseId = context.model.database.id;
   const propertyId = property.id;
-  return editor(property, (config) =>
-    context.dispatch(
-      setPropertyConfig.create({ databaseId, propertyId, config }),
-    ),
+  const { state, dispatch } = context;
+  return editor(
+    property,
+    (config) =>
+      dispatch(setPropertyConfig.create({ databaseId, propertyId, config })),
+    { databaseId, state, dispatch },
   );
 }
 

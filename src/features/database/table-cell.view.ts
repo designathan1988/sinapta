@@ -5,6 +5,7 @@ import { COPY } from "../../ui/copy.ts";
 import { afterRender, whenConnected } from "../../ui/focus/index.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
+import { selectCellContext } from "./cell-context.selectors.ts";
 import { propertyType } from "./property-registry.ts";
 import type {
   TableColumn,
@@ -15,6 +16,14 @@ import type {
 export const TITLE_KEY = "title";
 export const CELL_OPTIONS_OVERLAY = "cell-options";
 export const CELL_FILES_OVERLAY = "cell-files";
+export const CELL_RELATION_OVERLAY = "cell-relation";
+
+// The popover that edits a cell, for types not edited as text.
+export const CELL_POPOVERS: Readonly<Record<string, string>> = {
+  options: CELL_OPTIONS_OVERLAY,
+  files: CELL_FILES_OVERLAY,
+  relation: CELL_RELATION_OVERLAY,
+};
 
 export interface TableContext {
   readonly state: AppState;
@@ -96,11 +105,10 @@ function renderValue(
 ): TemplateResult | string {
   if (column.isTitle) return renderTitle(row);
   const type = propertyType(column.property.type);
-  const { assetUrls } = context.state.persistence;
   return type.renderCell(
     type.read(row.values[column.property.id]),
     column.property,
-    { assetUrls },
+    selectCellContext(context.state),
   );
 }
 
@@ -117,7 +125,10 @@ function editText(row: TableRow, column: TableColumn): string {
 function usesInput(column: TableColumn): boolean {
   const { editor } = propertyType(column.property.type);
   return (
-    column.isTitle || !["toggle", "options", "files", "none"].includes(editor)
+    column.isTitle ||
+    (editor !== "toggle" &&
+      editor !== "none" &&
+      CELL_POPOVERS[editor] === undefined)
   );
 }
 

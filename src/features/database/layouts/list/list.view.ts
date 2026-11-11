@@ -6,6 +6,7 @@ import { repeat } from "lit-html/directives/repeat.js";
 import { setActivePage } from "../../../../state/index.ts";
 import { renderButton } from "../../../../ui/button/index.ts";
 import { COPY } from "../../../../ui/copy.ts";
+import { selectCellContext } from "../../cell-context.selectors.ts";
 import { propertyType } from "../../property-registry.ts";
 import { addRow } from "../../row.commands.ts";
 import type { TableContext } from "../../table-cell.view.ts";
@@ -17,8 +18,8 @@ function renderLine(row: TableRow, context: TableContext): TemplateResult {
     const type = propertyType(column.property.type);
     const value = type.read(row.values[column.property.id]);
     if (value === undefined || value === false) return [];
-    const { assetUrls } = context.state.persistence;
-    const shown = type.renderCell(value, column.property, { assetUrls });
+    const cell = selectCellContext(context.state);
+    const shown = type.renderCell(value, column.property, cell);
     return [html`<span>${shown}</span>`];
   });
   const title = row.title === "" ? COPY.sidebar.untitled : row.title;
