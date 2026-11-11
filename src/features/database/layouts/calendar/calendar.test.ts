@@ -7,6 +7,8 @@ import {
   monthOf,
   selectCalendarEntries,
   selectMonthWeeks,
+  selectShownDays,
+  selectWeekDays,
   shiftDateValue,
   shiftMonth,
 } from "./calendar.selectors.ts";
@@ -84,6 +86,35 @@ describe("shiftDateValue", () => {
     expect(shiftDateValue(undefined, "2026-11-12", "2026-11-15")).toEqual({
       start: "2026-11-15",
     });
+  });
+});
+
+describe("calendar options", () => {
+  it("starts weeks on Monday when asked", () => {
+    expect(selectMonthWeeks("2026-11", 1)[0]?.[0]).toBe("2026-10-26");
+    expect(selectWeekDays("2026-11-11", 0)).toEqual([
+      "2026-11-08",
+      "2026-11-09",
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13",
+      "2026-11-14",
+    ]);
+    expect(selectWeekDays("2026-11-11", 1)[0]).toBe("2026-11-09");
+  });
+
+  it("leaves Saturdays and Sundays out when weekends are hidden", () => {
+    const week = selectWeekDays("2026-11-11", 0);
+
+    expect(selectShownDays(week, false)).toEqual([
+      "2026-11-09",
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13",
+    ]);
+    expect(selectShownDays(week, true)).toEqual(week);
   });
 });
 

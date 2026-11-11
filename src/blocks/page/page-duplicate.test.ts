@@ -54,6 +54,7 @@ function createApp() {
     cardSize: "medium",
     cardPreview: "cover",
     colorColumns: true,
+    calendar: { mode: "month", showWeekends: true, weekStartsOn: 0 },
   };
   const workspace = { ...base, views: { [VIEW]: view } };
   return createTestApp({ workspace, commands: pageDuplicateCommands });

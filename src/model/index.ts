@@ -35,6 +35,7 @@ export {
   CALCULATION_KINDS,
   viewTypeSchema,
   type CalculationKind,
+  type CalendarOptions,
   type Conjunction,
   type Filter,
   type FilterGroup,

@@ -73,6 +73,15 @@ export const CALCULATION_KINDS = [
 
 export const calculationSchema = v.picklist(CALCULATION_KINDS);
 
+// How a calendar shows its rows (version 22): a month or a week, with or
+// without Saturdays and Sundays, its weeks starting on Sunday (0) or
+// Monday (1).
+export const calendarOptionsSchema = v.object({
+  mode: v.picklist(["month", "week"]),
+  showWeekends: v.boolean(),
+  weekStartsOn: v.picklist([0, 1]),
+});
+
 export const viewSchema = v.object({
   id: viewIdSchema,
   databaseId: blockIdSchema,
@@ -106,6 +115,7 @@ export const viewSchema = v.object({
   colorColumns: v.boolean(),
   // The date property a calendar places its rows by (version 3).
   datePropertyId: v.optional(propertyIdSchema),
+  calendar: calendarOptionsSchema,
 });
 
 export type Filter = v.InferOutput<typeof filterSchema>;
@@ -117,3 +127,4 @@ export type GroupBy = v.InferOutput<typeof groupBySchema>;
 export type CalculationKind = v.InferOutput<typeof calculationSchema>;
 export type View = v.InferOutput<typeof viewSchema>;
 export type ViewType = v.InferOutput<typeof viewTypeSchema>;
+export type CalendarOptions = v.InferOutput<typeof calendarOptionsSchema>;

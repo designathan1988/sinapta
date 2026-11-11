@@ -51,6 +51,7 @@ function view(ids: TaskIds, index: number, type: ViewType): View[] {
     cardSize: "medium",
     cardPreview: "cover",
     colorColumns: true,
+    calendar: { mode: "month", showWeekends: true, weekStartsOn: 0 },
   };
   if (type === "board") {
     return [{ ...record, groupBy: groupByProperty(status) }];

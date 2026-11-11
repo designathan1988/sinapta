@@ -11,6 +11,7 @@ import { calculationCommands } from "./calculation.commands.ts";
 import { rowBulkCommands } from "./row-bulk.commands.ts";
 import { tableLayoutCommands } from "./table-layout.commands.ts";
 import { cardCommands } from "./card.commands.ts";
+import { calendarOptionCommands } from "./calendar-options.commands.ts";
 import { boardCardCommands } from "./layouts/board/board-card.commands.ts";
 
 export { createDatabase } from "./database.commands.ts";
@@ -47,6 +48,7 @@ export const databaseCommands = [
   ...rowBulkCommands,
   ...tableLayoutCommands,
   ...cardCommands,
+  ...calendarOptionCommands,
   ...boardCardCommands,
   ...viewLayoutCommands,
   ...viewSearchCommands,

@@ -18,6 +18,7 @@ const TABLE = {
   cardSize: "medium",
   cardPreview: "cover",
   colorColumns: true,
+  calendar: { mode: "month", showWeekends: true, weekStartsOn: 0 },
 };
 
 const GROUP_BY = {
@@ -47,6 +48,18 @@ describe("viewSchema", () => {
       });
     },
   );
+
+  it("reads a calendar's options, and refuses a mode it does not know", () => {
+    const week = { mode: "week", showWeekends: false, weekStartsOn: 1 };
+    const byDay = { ...week, mode: "day" };
+
+    expect(v.parse(viewSchema, { ...TABLE, calendar: week })).toMatchObject({
+      calendar: week,
+    });
+    expect(v.safeParse(viewSchema, { ...TABLE, calendar: byDay }).success).toBe(
+      false,
+    );
+  });
 
   it("refuses a grouping with a sort or a date step it does not know", () => {
     const bySort = { ...TABLE, groupBy: { ...GROUP_BY, sort: "random" } };

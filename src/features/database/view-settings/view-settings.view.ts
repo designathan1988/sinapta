@@ -9,6 +9,7 @@ import { renderMenu } from "../../../ui/menu/index.ts";
 import type { TableContext } from "../table-cell.view.ts";
 import {
   calendarDatePanel,
+  calendarModePanel,
   cardPreviewPanel,
   cardSizePanel,
   groupByPanel,
@@ -38,6 +39,7 @@ const PANELS: Readonly<
   "card-preview": cardPreviewPanel,
   "card-size": cardSizePanel,
   "calendar-date": calendarDatePanel,
+  "calendar-mode": calendarModePanel,
 };
 
 export function renderViewSettings(context: TableContext): TemplateResult {

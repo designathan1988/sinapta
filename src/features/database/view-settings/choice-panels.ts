@@ -2,6 +2,7 @@
 // what to group by, how groups sort, how dates group, a card's picture
 // and size, and a calendar's date property; and the panel that shows and
 // hides properties.
+import { setCalendarOptions } from "../calendar-options.commands.ts";
 import type { GroupBy, View } from "../../../model/index.ts";
 import { COPY } from "../../../ui/copy.ts";
 import { setCardOptions, type CardOptions } from "../card.commands.ts";
@@ -129,6 +130,28 @@ export function calendarDatePanel(context: TableContext): SettingsPanel {
         if (date === undefined) return;
         const viewId = model.view.id;
         dispatch(setViewDateProperty.create({ viewId, propertyId: date.id }));
+      },
+    }),
+  };
+}
+
+// A calendar by month or by week.
+export function calendarModePanel(context: TableContext): SettingsPanel {
+  const { model, dispatch } = context;
+  const modes = COPY.database.calendarModes;
+  return {
+    title: COPY.database.calendarAs,
+    back: "layout",
+    items: choiceItems(context, {
+      choices: (["month", "week"] as const).map((value) => ({
+        value,
+        label: modes[value],
+      })),
+      value: model.view.calendar.mode,
+      back: "layout",
+      choose: (mode) => {
+        const viewId = model.view.id;
+        dispatch(setCalendarOptions.create({ viewId, options: { mode } }));
       },
     }),
   };

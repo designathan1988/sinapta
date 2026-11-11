@@ -1,5 +1,7 @@
 // The layout panel: a tile per layout, the chosen one ringed in blue,
 // then the chosen layout's own settings.
+import type { CalendarOptions } from "../../../model/index.ts";
+import { setCalendarOptions } from "../calendar-options.commands.ts";
 import { html, type TemplateResult } from "lit-html";
 import type { ViewType } from "../../../model/index.ts";
 import { COPY } from "../../../ui/copy.ts";
@@ -94,6 +96,39 @@ function layoutItems(context: TableContext): MenuEntry[] {
       },
       "calendar-date",
     ),
+    ...calendarItems(context),
+  ];
+}
+
+// How a calendar shows its days, as Notion's layout settings: by month or
+// by week, with or without weekends, from Sunday or Monday.
+function calendarItems(context: TableContext): MenuEntry[] {
+  const { view } = context.model;
+  const { calendar } = view;
+  const set = (options: Partial<CalendarOptions>) => (): void => {
+    context.dispatch(setCalendarOptions.create({ viewId: view.id, options }));
+  };
+  return [
+    panelRow(
+      context,
+      {
+        label: COPY.database.calendarAs,
+        value: COPY.database.calendarModes[calendar.mode],
+      },
+      "calendar-mode",
+    ),
+    {
+      label: COPY.database.showWeekends,
+      check: "switch",
+      isChecked: calendar.showWeekends,
+      onSelect: set({ showWeekends: !calendar.showWeekends }),
+    },
+    {
+      label: COPY.database.weekStartsMonday,
+      check: "switch",
+      isChecked: calendar.weekStartsOn === 1,
+      onSelect: set({ weekStartsOn: calendar.weekStartsOn === 1 ? 0 : 1 }),
+    },
   ];
 }
 

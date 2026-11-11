@@ -42,6 +42,7 @@ export function emptyView(
     cardSize: "medium",
     cardPreview: "cover",
     colorColumns: true,
+    calendar: { mode: "month", showWeekends: true, weekStartsOn: 0 },
   };
 }
 

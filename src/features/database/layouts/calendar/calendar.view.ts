@@ -1,5 +1,6 @@
-// A calendar: the month in weeks, each row on the day of its date
-// property. Rows move between days by drag, or by Alt with an arrow key.
+// A calendar: a month in weeks or a single week, with or without its
+// weekends, each row on the days of its date property. Rows move between
+// days by drag, or by Alt with an arrow key.
 import "./calendar.css";
 import { html, type TemplateResult } from "lit-html";
 import type { BlockId } from "../../../../model/index.ts";
@@ -11,20 +12,25 @@ import { whenConnected } from "../../../../ui/focus/index.ts";
 import { addRow, setRowValue } from "../../row.commands.ts";
 import type { TableContext } from "../../table-cell.view.ts";
 import type { TableRow } from "../../table-model.selectors.ts";
-import { renderCalendarHeader } from "./calendar-header.view.ts";
+import {
+  renderCalendarHeader,
+  type CalendarShown,
+} from "./calendar-header.view.ts";
 import { setCalendarMonth } from "./calendar.commands.ts";
 import {
   addDays,
   monthOf,
   selectCalendarEntries,
   selectMonthWeeks,
+  selectShownDays,
+  selectWeekDays,
   shiftDateValue,
   type CalendarEntries,
 } from "./calendar.selectors.ts";
 
 interface CalendarContext extends TableContext {
   readonly entries: CalendarEntries;
-  readonly month: string;
+  readonly shown: CalendarShown;
   readonly today: string;
 }
 
@@ -71,7 +77,8 @@ interface Move {
 // Moves a row's date by the days between the day it was shown on and the
 // day it goes to, so a range keeps its length.
 function moveEntry(context: CalendarContext, rowId: BlockId, move: Move) {
-  const { dispatch, entries, month } = context;
+  const { dispatch, entries } = context;
+  const { month } = context.shown;
   const propertyId = context.model.database.props.properties.find(
     (item) => item.id === entries.propertyId,
   )?.id;
@@ -117,7 +124,7 @@ function renderDay(context: CalendarContext, day: string): TemplateResult {
   return html`<td
     class="calendar__day"
     data-day=${day}
-    ?data-other-month=${monthOf(day) !== context.month}
+    ?data-other-month=${context.shown.mode === "month" && monthOf(day) !== context.shown.month}
     ?data-today=${day === context.today}
   >
     <span class="calendar__date">${Number(day.slice(8))}</span>
@@ -149,8 +156,19 @@ function startEntryDrag(event: PointerEvent, context: CalendarContext): void {
   });
 }
 
+// The weeks the calendar shows, each without its weekend when hidden.
+function shownWeeks(context: CalendarContext): string[][] {
+  const { calendar } = context.model.view;
+  const { shown } = context;
+  const weeks =
+    shown.mode === "week"
+      ? [selectWeekDays(shown.week, calendar.weekStartsOn)]
+      : selectMonthWeeks(shown.month, calendar.weekStartsOn);
+  return weeks.map((week) => selectShownDays(week, calendar.showWeekends));
+}
+
 function renderGrid(context: CalendarContext): TemplateResult {
-  const weeks = selectMonthWeeks(context.month);
+  const weeks = shownWeeks(context);
   return html`<table
     class="calendar__grid"
     @pointerdown=${(event: PointerEvent) => {
@@ -181,9 +199,16 @@ export function renderCalendar(context: TableContext): TemplateResult {
     return html`<p class="calendar__empty">${COPY.database.noDateProperty}</p>`;
   }
   const today = localToday();
-  const month = context.state.ui.calendarMonth ?? monthOf(today);
-  const calendar = { ...context, entries, month, today };
-  return html`<div class="calendar">
-    ${renderCalendarHeader(month, context.dispatch)} ${renderGrid(calendar)}
+  const { ui } = context.state;
+  const { mode, weekStartsOn } = context.model.view.calendar;
+  const week = selectWeekDays(ui.calendarWeek ?? today, weekStartsOn)[0];
+  const shown = {
+    mode,
+    month: ui.calendarMonth ?? monthOf(today),
+    week: week ?? today,
+  };
+  const calendar = { ...context, entries, shown, today };
+  return html`<div class="calendar" data-mode=${mode}>
+    ${renderCalendarHeader(shown, context.dispatch)} ${renderGrid(calendar)}
   </div>`;
 }

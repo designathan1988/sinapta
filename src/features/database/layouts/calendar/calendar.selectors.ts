@@ -28,11 +28,18 @@ export function shiftMonth(month: string, count: number): string {
   return toDay(shifted.getTime()).slice(0, 7);
 }
 
-// The weeks that hold the month, Sunday first, with the days of the
-// months around it that fill the first and last week.
-export function selectMonthWeeks(month: string): string[][] {
+// The first day of the week that holds a day, weeks starting on Sunday
+// (0) or Monday (1).
+function weekStart(time: number, weekStartsOn: number): number {
+  const back = (new Date(time).getUTCDay() - weekStartsOn + WEEK) % WEEK;
+  return time - back * DAY_MS;
+}
+
+// The weeks that hold the month, from the chosen first weekday, with the
+// days of the months around it that fill the first and last week.
+export function selectMonthWeeks(month: string, weekStartsOn = 0): string[][] {
   const first = toTime(`${month}-01`);
-  const start = first - new Date(first).getUTCDay() * DAY_MS;
+  const start = weekStart(first, weekStartsOn);
   const next = toTime(`${shiftMonth(month, 1)}-01`);
   const weeks: string[][] = [];
   for (let week = start; week < next; week += WEEK * DAY_MS) {
@@ -41,6 +48,28 @@ export function selectMonthWeeks(month: string): string[][] {
     );
   }
   return weeks;
+}
+
+// The seven days of the week that holds a day.
+export function selectWeekDays(day: string, weekStartsOn = 0): string[] {
+  const start = weekStart(toTime(day), weekStartsOn);
+  return Array.from({ length: WEEK }, (_, index) =>
+    toDay(start + index * DAY_MS),
+  );
+}
+
+const SATURDAY = 6;
+
+// The days a calendar shows: all, or all but Saturdays and Sundays.
+export function selectShownDays(
+  days: readonly string[],
+  showWeekends: boolean,
+): string[] {
+  if (showWeekends) return [...days];
+  return days.filter((day) => {
+    const weekday = new Date(toTime(day)).getUTCDay();
+    return weekday !== 0 && weekday !== SATURDAY;
+  });
 }
 
 export interface CalendarEntries {

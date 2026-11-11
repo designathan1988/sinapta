@@ -83,6 +83,9 @@ export interface UiState {
   readonly selectedRowIds: readonly BlockId[];
   // The month calendar views show, as "2026-11"; null for the current one.
   readonly calendarMonth: string | null;
+  // The first day of the week a calendar shows in week mode; null for
+  // the current week.
+  readonly calendarWeek: string | null;
   // What has been typed into each view's search field.
   readonly viewSearches: Readonly<Record<ViewId, string>>;
   // Sidebar width in rem.
@@ -180,6 +183,7 @@ export function createInitialUiState(): UiState {
     tableFirstRow: 0,
     selectedRowIds: [],
     calendarMonth: null,
+    calendarWeek: null,
     viewSearches: {},
     sidebarWidth: SIDEBAR_WIDTH.initial,
     isSidebarCollapsed: false,

@@ -10,6 +10,7 @@ import { addCalculations } from "./0018-calculations.ts";
 import { addTableLayout } from "./0019-table-layout.ts";
 import { repairStaleRecords } from "./0020-repair-stale-records.ts";
 import { addBoardCards } from "./0021-board-cards.ts";
+import { addCalendarOptions } from "./0022-calendar-options.ts";
 import { runMigrations } from "./run-migrations.ts";
 
 const NO_FILTER = { conjunction: "and", items: [] };
@@ -160,6 +161,22 @@ describe("version 21", () => {
           cardSize: "medium",
           cardPreview: "content",
           colorColumns: true,
+        },
+      },
+    });
+  });
+});
+
+describe("version 22: calendar options", () => {
+  it("shows every view's calendar by month, with weekends, from Sunday", () => {
+    const file = { views: { c: { id: "c", type: "calendar" } } };
+
+    expect(addCalendarOptions(file)).toEqual({
+      views: {
+        c: {
+          id: "c",
+          type: "calendar",
+          calendar: { mode: "month", showWeekends: true, weekStartsOn: 0 },
         },
       },
     });
