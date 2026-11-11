@@ -1,17 +1,19 @@
 // Dragging a block by its handle: onto another block to move it there,
-// with Alt to drop a copy instead, or onto a page in the sidebar to move
-// it to the end of that page.
+// with Alt to drop a copy instead, beside another block to make columns,
+// or onto a page in the sidebar to move it to the end of that page.
 import {
   countBlockTree,
   parseBlockId,
   type BlockId,
 } from "../../model/index.ts";
+import { dropBeside } from "../../blocks/column-list/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import {
   PAGE_DROP_SELECTOR,
   startPointerDrag,
   type DragPosition,
+  type DragSide,
 } from "../../ui/drag/index.ts";
 import type { InputContext } from "./editor-input.view.ts";
 import { copyBlockTo } from "./editor-insert.commands.ts";
@@ -81,10 +83,21 @@ export function startBlockDrag(
       const drop = { blockId, target, position };
       if (!dropOnPage(drop, context)) onBlock(drop, context);
     };
+  const onSideDrop = (
+    source: HTMLElement,
+    target: HTMLElement,
+    side: DragSide,
+  ): void => {
+    const blockId = idOf(source);
+    const targetId = idOf(target);
+    if (blockId === undefined || targetId === undefined) return;
+    context.dispatch(dropBeside.create({ blockId, targetId, side }));
+  };
   startPointerDrag(event, {
     itemSelector: BLOCK,
     elsewhereSelector: PAGE_DROP_SELECTOR,
     onDrop: dropWith(dropOnBlock),
     onCopy: dropWith(copyOnBlock),
+    onSideDrop,
   });
 }

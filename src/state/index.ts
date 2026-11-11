@@ -74,3 +74,4 @@ export {
   type LoadWorkspacePayload,
 } from "./workspace.commands.ts";
 export { addTestBlock, createTestApp, type TestApp } from "./state-builder.ts";
+export { type Tidier } from "./tidy.ts";

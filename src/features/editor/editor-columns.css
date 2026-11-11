@@ -1,0 +1,37 @@
+@layer features {
+  /* A column list lays its columns side by side; each column takes its
+     share of the row and holds its blocks one under another. */
+  .editor__block[data-type="column-list"] > .editor__children {
+    flex-direction: row;
+    gap: var(--space-inline-md);
+    align-items: flex-start;
+    margin-block-start: var(--space-none);
+    padding-inline-start: var(--space-none);
+  }
+
+  .editor__block[data-type="column"] {
+    flex: var(--column-share, 1) 1 0;
+    min-inline-size: 0;
+
+    & > .editor__children {
+      margin-block-start: var(--space-none);
+      padding-inline-start: var(--space-none);
+    }
+  }
+
+  /* Lists and columns are moved by their blocks, not by handles of their
+     own. */
+  .editor__block:is([data-type="column-list"], [data-type="column"])
+    > .editor__handle {
+    display: none;
+  }
+
+  .editor__block[data-drop="left"] {
+    box-shadow: inset var(--size-border-thick) 0 0 var(--color-accent-default);
+  }
+
+  .editor__block[data-drop="right"] {
+    box-shadow: inset calc(var(--size-border-thick) * -1) 0 0
+      var(--color-accent-default);
+  }
+}

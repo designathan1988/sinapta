@@ -18,7 +18,16 @@ export interface DragOptions {
   readonly onDrop: DropHandler;
   // Called instead of `onDrop` when Alt is held at the drop.
   readonly onCopy?: DropHandler;
+  // When given, a drop near the left or right edge of an item is a drop
+  // beside it, as when blocks are put in columns.
+  readonly onSideDrop?: (
+    source: HTMLElement,
+    target: HTMLElement,
+    side: DragSide,
+  ) => void;
 }
+
+export type DragSide = "left" | "right";
 
 export type DropHandler = (
   source: HTMLElement,
@@ -29,6 +38,9 @@ export type DropHandler = (
 // How far the pointer must travel, in CSS pixels, before a press is a drag.
 const DRAG_THRESHOLD = 4;
 const EDGE_SHARE = 0.3;
+// How close to the left or right edge, as a share of the width, a drop
+// is beside an item.
+const SIDE_SHARE = 0.1;
 
 interface Session {
   readonly container: HTMLElement;
@@ -39,6 +51,7 @@ interface Session {
   isCopy: boolean;
   target: HTMLElement | undefined;
   position: DragPosition;
+  side: DragSide | undefined;
 }
 
 function elementAt(event: PointerEvent): Element | null {
@@ -79,15 +92,25 @@ function positionIn(
   return share > 1 - EDGE_SHARE ? "after" : "inside";
 }
 
-function mark(
-  session: Session,
-  target: HTMLElement | undefined,
-  position: DragPosition,
-): void {
+function sideIn(target: HTMLElement, event: PointerEvent) {
+  const box = target.getBoundingClientRect();
+  const share = (event.clientX - box.left) / Math.max(1, box.width);
+  if (share < SIDE_SHARE) return "left";
+  return share > 1 - SIDE_SHARE ? "right" : undefined;
+}
+
+interface Mark {
+  readonly target: HTMLElement | undefined;
+  readonly position: DragPosition;
+  readonly side?: DragSide | undefined;
+}
+
+function mark(session: Session, { target, position, side }: Mark): void {
   session.target?.removeAttribute("data-drop");
   session.target = target === session.source ? undefined : target;
   session.position = position;
-  session.target?.setAttribute("data-drop", position);
+  session.side = side;
+  session.target?.setAttribute("data-drop", side ?? position);
 }
 
 function track(
@@ -104,11 +127,15 @@ function track(
   session.isCopy = event.altKey;
   session.source.setAttribute("data-dragging", "");
   const target = targetAt(event, session, options);
-  const position =
-    target === undefined || target.isElsewhere
-      ? "inside"
-      : positionIn(target.item, event, options.axis);
-  mark(session, target?.item, position);
+  const isInList = target !== undefined && !target.isElsewhere;
+  const position = isInList
+    ? positionIn(target.item, event, options.axis)
+    : "inside";
+  const side =
+    isInList && options.onSideDrop !== undefined
+      ? sideIn(target.item, event)
+      : undefined;
+  mark(session, { target: target?.item, position, side });
 }
 
 interface Drag {
@@ -139,13 +166,17 @@ function swallowNextClick(container: HTMLElement): void {
 
 function finish(drag: Drag, isDrop: boolean): void {
   const { session, options } = drag;
-  const { source, target, position, isDragging } = session;
-  mark(session, undefined, "inside");
+  const { source, target, position, side, isDragging } = session;
+  mark(session, { target: undefined, position: "inside" });
   source.removeAttribute("data-dragging");
   drag.abort.abort();
   if (!isDragging) return;
   swallowNextClick(session.container);
   if (!isDrop || target === undefined) return;
+  if (side !== undefined && options.onSideDrop !== undefined) {
+    options.onSideDrop(source, target, side);
+    return;
+  }
   const onDrop = session.isCopy
     ? (options.onCopy ?? options.onDrop)
     : options.onDrop;
@@ -200,6 +231,7 @@ export function startPointerDrag(
     isCopy: false,
     target: undefined,
     position: "inside",
+    side: undefined,
   };
   listen({ session, options, abort: new AbortController() });
 }

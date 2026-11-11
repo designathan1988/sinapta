@@ -166,4 +166,32 @@ describe("startPointerDrag", () => {
 
     expect(drops).toEqual([]);
   });
+
+  it("reports a drop near the side of an item as a side drop", () => {
+    const sides: string[] = [];
+    const { one, two, drops, fire } = mount({
+      onSideDrop: (_source, target, side) =>
+        sides.push(`${target.textContent}:${side}`),
+    });
+    two.getBoundingClientRect = () => new DOMRect(0, 0, 200, 80);
+    const fireAt = (type: string, x: number): void => {
+      document.elementFromPoint = () => two;
+      two.dispatchEvent(
+        new PointerEvent(type, {
+          bubbles: true,
+          clientX: x,
+          clientY: 40,
+          button: 0,
+        }),
+      );
+    };
+
+    fire("pointerdown", one);
+    fireAt("pointermove", 195);
+    expect(two.dataset.drop).toBe("right");
+    fireAt("pointerup", 195);
+
+    expect(sides).toEqual(["two:right"]);
+    expect(drops).toEqual([]);
+  });
 });

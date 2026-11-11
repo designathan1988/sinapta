@@ -1,7 +1,7 @@
 // Builds a page of blocks for the editor's tests.
 import { editorMentionCommands } from "./editor-mention.commands.ts";
 import { editorColorCommands } from "./editor-color.commands.ts";
-import { isTextBlock, textOf } from "../../blocks/index.ts";
+import { BLOCK_TIDIERS, isTextBlock, textOf } from "../../blocks/index.ts";
 import {
   buildWorkspace,
   toBlockId,
@@ -46,7 +46,7 @@ export function createApp(blocks: BlockSpec[], otherPages: BlockSpec[] = []) {
     ...editorPasteBlocksCommands,
     ...editorSelectionCommands,
   ];
-  const app = createTestApp({ workspace, commands });
+  const app = createTestApp({ workspace, commands, tidiers: BLOCK_TIDIERS });
   // The page's content as "type:text" with two spaces of indent per level.
   const outline = (parentId = PAGE, depth = 0): string[] =>
     (app.store.getState().workspace.blocks[parentId]?.childIds ?? []).flatMap(

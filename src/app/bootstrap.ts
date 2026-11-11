@@ -1,7 +1,11 @@
 // The composition root: creates the one store, registers every command and
 // owns the single root render.
 import { render } from "lit-html";
-import { BLOCK_COMMANDS, BLOCK_PROPS_SCHEMAS } from "../blocks/index.ts";
+import {
+  BLOCK_COMMANDS,
+  BLOCK_PROPS_SCHEMAS,
+  BLOCK_TIDIERS,
+} from "../blocks/index.ts";
 import {
   pageCommands,
   pageStyleCommands,
@@ -73,6 +77,7 @@ export async function startApp(container: HTMLElement): Promise<void> {
   const dispatch = createDispatcher({
     store,
     registry: createCommandRegistry(COMMANDS),
+    tidiers: BLOCK_TIDIERS,
   });
   const renderRoot = (): void => {
     const state = store.getState();

@@ -1,5 +1,7 @@
-// Block menu items that reach beyond the page: turning the block into a
-// page of its own, copying a link to it and moving it to another page.
+// Block menu items that move the block or reach beyond it: turning it
+// into a page of its own, copying a link to it, moving it to another page
+// and into a new column.
+import { moveToNewColumn } from "../../blocks/column-list/index.ts";
 import { isTextBlock } from "../../blocks/index.ts";
 import { PAGE_TYPE } from "../../blocks/page/index.ts";
 import type { Block } from "../../model/index.ts";
@@ -55,5 +57,10 @@ export function pageItems(
     ...turnIntoPageItem(block, state, dispatch),
     { label: COPY.blockMenu.copyLink, icon: "link", onSelect: copyLink },
     { label: COPY.blockMenu.moveTo, icon: "move", onSelect: moveTo },
+    {
+      label: COPY.blockMenu.moveToNewColumn,
+      icon: "move",
+      onSelect: () => dispatch(moveToNewColumn.create({ blockId })),
+    },
   ];
 }

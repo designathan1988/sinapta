@@ -9,6 +9,7 @@ import {
 } from "./command-registry.ts";
 import { createDispatcher, type Dispatch } from "./dispatch.ts";
 import { createAppStore, type AppStore } from "./store.ts";
+import type { Tidier } from "./tidy.ts";
 
 export interface TestApp {
   readonly store: AppStore;
@@ -18,6 +19,7 @@ export interface TestApp {
 export interface TestAppOptions {
   readonly workspace?: Workspace;
   readonly commands?: readonly CommandDefinition<never>[];
+  readonly tidiers?: readonly Tidier[];
 }
 
 export function createTestApp(options: TestAppOptions = {}): TestApp {
@@ -33,6 +35,7 @@ export function createTestApp(options: TestAppOptions = {}): TestApp {
     registry: createCommandRegistry(options.commands ?? []),
     now: () => TEST_TIME,
     createId: () => toBlockId(`new-${String((nextId += 1))}`),
+    ...(options.tidiers && { tidiers: options.tidiers }),
   });
   return { store, dispatch };
 }

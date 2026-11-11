@@ -1,6 +1,7 @@
 export type { BlockDefinition } from "./block-definition.ts";
 export {
   BLOCK_COMMANDS,
+  BLOCK_TIDIERS,
   BLOCK_DEFINITIONS,
   BLOCK_PROPS_SCHEMAS,
   blockDefinition,

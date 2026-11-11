@@ -1,0 +1,25 @@
+@layer blocks {
+  /* The bar between two columns that resizes them; it shows on hover and
+     while focused. */
+  .column__gutter {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: calc(var(--space-inline-md) / -2);
+    z-index: var(--layer-sticky);
+    inline-size: var(--space-inline-xs);
+    border-radius: var(--radius-full);
+    background-color: var(--color-border-strong);
+    cursor: col-resize;
+    opacity: 0;
+    touch-action: none;
+
+    &:is(:hover, :focus-visible) {
+      opacity: 1;
+    }
+
+    &:focus-visible {
+      outline: var(--size-focus-width) solid var(--color-border-focus);
+      outline-offset: var(--size-focus-offset);
+    }
+  }
+}

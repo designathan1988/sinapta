@@ -1,6 +1,6 @@
 // Moving and deleting whole blocks.
 import { PAGE_TYPE } from "../../blocks/page/index.ts";
-import { isTextBlock, textOf } from "../../blocks/index.ts";
+import { blockDefinition, isTextBlock, textOf } from "../../blocks/index.ts";
 import {
   dropMove,
   isSelfOrInside,
@@ -17,13 +17,13 @@ import { defineCommand, type AppState } from "../../state/index.ts";
 import { caretAt } from "./editor.commands.ts";
 import { selectNeighborTextBlock } from "./editor.selectors.ts";
 
-// Pages and text blocks hold other blocks.
+// Pages, text blocks and columns hold other blocks.
 export function canHold(state: AppState, parentId: BlockId | null): boolean {
   const parent =
     parentId === null ? undefined : state.workspace.blocks[parentId];
-  return (
-    parent !== undefined && (parent.type === PAGE_TYPE || isTextBlock(parent))
-  );
+  if (parent === undefined) return false;
+  const holds = blockDefinition(parent.type)?.holdsBlocks === true;
+  return parent.type === PAGE_TYPE || isTextBlock(parent) || holds;
 }
 
 // Moves a content block to a parent and position. Blocks live inside a

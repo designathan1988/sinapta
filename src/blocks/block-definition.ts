@@ -6,7 +6,12 @@ import type {
   PropsSchema,
   RichText,
 } from "../model/index.ts";
-import type { AppState, CommandDefinition, Dispatch } from "../state/index.ts";
+import type {
+  AppState,
+  CommandDefinition,
+  Dispatch,
+  Tidier,
+} from "../state/index.ts";
 
 export interface BlockDefinition {
   readonly type: string;
@@ -23,6 +28,16 @@ export interface BlockDefinition {
   readonly createProps: (text: RichText) => BlockProps;
   // Commands that only this block type uses, registered with all others.
   readonly commands?: readonly CommandDefinition<never>[];
+  // Keeps blocks of this type tidy after any command; see state/tidy.ts.
+  readonly tidy?: Tidier;
+  // Other blocks may be moved inside it, as into a column, though it has
+  // no text of its own.
+  readonly holdsBlocks?: boolean;
+  // CSS custom properties set on the block's element, such as a column's
+  // share of its row.
+  readonly customProperties?: (
+    block: Block,
+  ) => Readonly<Record<string, string>>;
   // The block's own content, without its children. Undefined for a block
   // of another type.
   readonly render?: (

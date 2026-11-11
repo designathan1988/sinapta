@@ -14,6 +14,7 @@ owner listed here exists.
 | State shape and initial state | `src/state/app-state.ts` | 1 |
 | Store instance and subscription | `src/state/store.ts` | 1 |
 | Applying commands and transactions | `src/state/dispatch.ts` | 1 |
+| Tidying the workspace after every command (block types' tidiers) | `src/state/tidy.ts` | 14 |
 | Command handler registration and lookup | `src/state/command-registry.ts` | 1 |
 | Undo and redo | `src/state/history.ts` | 1 |
 | `ui` slice commands that belong to no feature (sidebar, overlay, selection) | `src/state/ui.commands.ts` | 1 |

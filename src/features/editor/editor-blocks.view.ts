@@ -1,4 +1,6 @@
+import "./editor-columns.css";
 import { html, nothing, type TemplateResult } from "lit-html";
+import { ref } from "lit-html/directives/ref.js";
 import { repeat } from "lit-html/directives/repeat.js";
 import { blockDefinition, isTextBlock, textOf } from "../../blocks/index.ts";
 import { isBlockColor, type Block, type BlockId } from "../../model/index.ts";
@@ -43,12 +45,26 @@ function renderChildren(block: Block, context: BlockContext): unknown {
   </div>`;
 }
 
+// A block type may set CSS custom properties on its element, such as a
+// column's share of its row; they change with the block, so they are set
+// through the CSSOM.
+function customProperties(block: Block) {
+  const properties = blockDefinition(block.type)?.customProperties?.(block);
+  return ref((element) => {
+    if (!(element instanceof HTMLElement) || properties === undefined) return;
+    for (const [name, value] of Object.entries(properties)) {
+      element.style.setProperty(name, value);
+    }
+  });
+}
+
 function renderBlock(block: Block, context: BlockContext): TemplateResult {
   const { state, dispatch } = context;
   const content = blockDefinition(block.type)?.render?.(block, dispatch, state);
   const isAnchor = state.ui.overlay?.anchorId === block.id;
   return html`<div
     class="editor__block"
+    ${customProperties(block)}
     data-block-id=${block.id}
     data-type=${block.type}
     data-color=${isBlockColor(block.props.color) ? block.props.color : nothing}

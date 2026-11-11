@@ -1,6 +1,5 @@
 // The only write path to the store: dispatch(command).
 import {
-  applyOperations,
   createBlockId,
   createPropertyId,
   createViewId,
@@ -24,6 +23,7 @@ import {
   UNDO_COMMAND,
 } from "./history.ts";
 import type { AppStore } from "./store.ts";
+import { applyTidily, type Tidier } from "./tidy.ts";
 import { loadWorkspace } from "./workspace.commands.ts";
 
 export type DispatchError =
@@ -47,6 +47,8 @@ export interface DispatcherOptions {
   // Injected so that tests are deterministic.
   readonly now?: () => string;
   readonly createId?: typeof createBlockId;
+  // Rules that tidy the workspace after every command; see tidy.ts.
+  readonly tidiers?: readonly Tidier[];
 }
 
 type Next = { readonly state: AppState } | { readonly error: DispatchError };
@@ -63,10 +65,15 @@ function findWholeWorkspaceViolation(
   return findInvariantViolation(workspace, workspace, ids);
 }
 
+interface EffectContext {
+  readonly now: string;
+  readonly tidiers: readonly Tidier[];
+}
+
 function applyEffect(
   state: AppState,
   effect: CommandEffect,
-  now: string,
+  { now, tidiers }: EffectContext,
 ): Next {
   const operations = effect.operations ?? [];
   const ui = effect.ui ?? state.ui;
@@ -80,7 +87,7 @@ function applyEffect(
     return { state: { workspace: effect.workspace, ui, history, persistence } };
   }
   if (operations.length === 0) return { state: { ...state, ui, persistence } };
-  const result = applyOperations(state.workspace, operations);
+  const result = applyTidily(state.workspace, operations, tidiers);
   if (!result.ok) {
     return { error: { kind: "operation-failed", error: result.error } };
   }
@@ -93,7 +100,7 @@ function applyEffect(
     return { error: { kind: "invariant-broken", violation } };
   }
   const history = recordTransaction(state, {
-    applied: operations,
+    applied: result.applied,
     inverse: result.inverse,
     mergeKey: effect.mergeKey,
     now,
@@ -116,6 +123,7 @@ interface Sources {
   readonly registry: CommandRegistry;
   readonly now: () => string;
   readonly createId: typeof createBlockId;
+  readonly tidiers: readonly Tidier[];
 }
 
 function createMeta(sources: Sources, ids: NewIds): CommandMeta {
@@ -158,7 +166,10 @@ function nextState(state: AppState, command: Command, sources: Sources): Next {
   if (isRefusedWhileReadOnly(state, command, effect)) {
     return { error: { kind: "read-only" } };
   }
-  return applyEffect(state, effect, meta.now);
+  return applyEffect(state, effect, {
+    now: meta.now,
+    tidiers: sources.tidiers,
+  });
 }
 
 export function createDispatcher(options: DispatcherOptions): Dispatch {
@@ -167,6 +178,7 @@ export function createDispatcher(options: DispatcherOptions): Dispatch {
     registry: options.registry,
     now: options.now ?? (() => new Date().toISOString()),
     createId: options.createId ?? createBlockId,
+    tidiers: options.tidiers ?? [],
   };
   let isNotifying = false;
 

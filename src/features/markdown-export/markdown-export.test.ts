@@ -157,3 +157,36 @@ describe("simple tables", () => {
     );
   });
 });
+
+describe("columns", () => {
+  it("are written as their blocks, one column after another", () => {
+    const column = (id: string, children: BlockSpec[]): BlockSpec => ({
+      id,
+      type: "column",
+      props: { ratio: 0.5 },
+      children,
+    });
+    const workspace = buildWorkspace([
+      {
+        id: "page",
+        props: { title: [] },
+        children: [
+          {
+            id: "list",
+            type: "column-list",
+            props: {},
+            children: [
+              column("c1", [textBlock("a", "paragraph", { text: "Left" })]),
+              column("c2", [textBlock("b", "paragraph", { text: "Right" })]),
+            ],
+          },
+        ],
+      },
+    ]);
+    const state = { ...createInitialState(), workspace };
+
+    expect(selectPageMarkdown(state, toBlockId("page"))).toBe(
+      "# Untitled\n\nLeft\n\nRight\n",
+    );
+  });
+});

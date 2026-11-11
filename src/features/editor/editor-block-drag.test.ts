@@ -32,7 +32,8 @@ function setup() {
     under = target;
     // The press is at the top; the drag goes 40 pixels down from it.
     const clientY = type === "pointerdown" ? 0 : 40;
-    const init = { bubbles: true, clientY, button: 0, altKey };
+    // In the middle of the block's width, away from the side zones.
+    const init = { bubbles: true, clientX: 50, clientY, button: 0, altKey };
     target.dispatchEvent(new PointerEvent(type, init));
   };
   const handle = container.querySelector("[data-handle]");
@@ -75,6 +76,29 @@ describe("dragging a block", () => {
         targetId: "b",
         position: "after",
         blockCount: 1,
+      }),
+    ]);
+  });
+
+  it("puts it beside a block it is dropped next to, in columns", () => {
+    const { commands, fire, handle, blockB } = setup();
+    if (blockB === null) throw new Error("setup failed");
+    const side = (type: string): void => {
+      document.elementFromPoint = () => blockB;
+      const init = { bubbles: true, clientX: 98, clientY: 40, button: 0 };
+      blockB.dispatchEvent(new PointerEvent(type, init));
+    };
+
+    fire("pointerdown", handle);
+    side("pointermove");
+    side("pointerup");
+
+    expect(commands).toEqual([
+      expect.objectContaining({
+        type: "columns.dropBeside",
+        blockId: "a",
+        targetId: "b",
+        side: "right",
       }),
     ]);
   });

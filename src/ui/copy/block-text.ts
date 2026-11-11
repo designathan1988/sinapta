@@ -1,5 +1,8 @@
 // Text inside particular kinds of blocks.
 export const BLOCK_TEXT = {
+  columns: {
+    resize: "Resize columns",
+  },
   simpleTable: {
     name: "Table",
     label: "Table",

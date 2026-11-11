@@ -7,6 +7,8 @@ import {
 import { BULLETED_LIST_TYPE } from "../../blocks/bulleted-list/index.ts";
 import { CALLOUT_TYPE, type CalloutBlock } from "../../blocks/callout/index.ts";
 import { CODE_TYPE } from "../../blocks/code/index.ts";
+import { COLUMN_LIST_TYPE } from "../../blocks/column-list/index.ts";
+import { COLUMN_TYPE } from "../../blocks/column/index.ts";
 import { DIVIDER_TYPE } from "../../blocks/divider/index.ts";
 import { HEADING_TYPE, type HeadingBlock } from "../../blocks/heading/index.ts";
 import { IMAGE_TYPE, type ImageBlock } from "../../blocks/image/index.ts";
@@ -144,11 +146,24 @@ function ownLines(block: Block): string[] {
 function blockLines(state: AppState, block: Block, depth: number): string[] {
   const indent = INDENT.repeat(depth);
   const own = ownLines(block).map((line) => `${indent}${line}`);
-  const children = block.childIds.flatMap((id) => {
-    const child = state.workspace.blocks[id];
-    return child === undefined ? [] : blockLines(state, child, depth + 1);
-  });
+  const children = contentOf(state, block.childIds).flatMap((child) =>
+    blockLines(state, child, depth + 1),
+  );
   return [...own, ...children];
+}
+
+// Column lists and columns only lay blocks out: their blocks are written
+// in their place, one column after another.
+const LAYOUT_TYPES: readonly string[] = [COLUMN_LIST_TYPE, COLUMN_TYPE];
+
+function contentOf(state: AppState, ids: readonly BlockId[]): Block[] {
+  return ids.flatMap((id) => {
+    const block = state.workspace.blocks[id];
+    if (block === undefined) return [];
+    return LAYOUT_TYPES.includes(block.type)
+      ? contentOf(state, block.childIds)
+      : [block];
+  });
 }
 
 // Neighbors in the same list are written without a blank line between.
@@ -167,9 +182,7 @@ export function selectPageMarkdown(state: AppState, pageId: BlockId): string {
   const page = selectPage(state, pageId);
   if (page === undefined) return "";
   const title = selectPageTitle(page);
-  const blocks = page.childIds
-    .map((id) => state.workspace.blocks[id])
-    .filter(isWritten);
+  const blocks = contentOf(state, page.childIds).filter(isWritten);
   const parts = blocks.map((block, index) => {
     const separator =
       index === 0 || isSameList(blocks[index - 1], block) ? "" : "\n";

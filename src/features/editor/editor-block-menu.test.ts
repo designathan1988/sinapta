@@ -45,6 +45,20 @@ describe("the block menu", () => {
     expect(choose("Turn into page", blocks).item).toBeUndefined();
   });
 
+  it("puts the block in a new column", () => {
+    const { sent } = choose("Move to new column", [
+      text("b", "Before"),
+      text("a", "Plan"),
+    ]);
+
+    expect(sent).toContainEqual(
+      expect.objectContaining({
+        type: "columns.moveToNewColumn",
+        blockId: "a",
+      }),
+    );
+  });
+
   it("opens the dialog to move the block to another page", () => {
     const { sent } = choose("Move to");
 
