@@ -1,0 +1,60 @@
+@layer features {
+  .database__popover:popover-open {
+    display: grid;
+    gap: var(--space-stack-sm);
+    padding: var(--space-inset-md);
+  }
+
+  .database__filters {
+    display: grid;
+    gap: var(--space-stack-xs);
+  }
+
+  .database__filter {
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+  }
+
+  .database__field {
+    min-inline-size: 0;
+    min-block-size: var(--size-control-md);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: var(--size-border-thin) solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-app);
+    color: var(--color-text-primary);
+  }
+
+  .database__view-name {
+    display: grid;
+    gap: var(--space-stack-xs);
+    margin-block-end: var(--space-stack-sm);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+  }
+
+  .database__check {
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .database__option {
+    display: flex;
+    align-items: center;
+    inline-size: 100%;
+    min-block-size: var(--size-row-height);
+    padding: var(--space-none) var(--space-inset-xs);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    cursor: pointer;
+
+    &:hover,
+    &[aria-selected="true"] {
+      background-color: var(--color-bg-hover);
+    }
+  }
+}

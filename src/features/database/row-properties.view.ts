@@ -1,5 +1,6 @@
 // The property values of a database row, shown on the row's own page so
 // they can be read and changed there as well as in the table.
+import "./row-properties.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import {
   selectDatabase,

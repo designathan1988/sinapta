@@ -1,4 +1,5 @@
 // Chooses which of the table's menus and popovers is open.
+import "./database-menus.css";
 import { nothing, type TemplateResult } from "lit-html";
 import { renderCellOptions } from "./cell-options.view.ts";
 import { renderColumnMenu, renderTypeMenu } from "./column-menu.view.ts";

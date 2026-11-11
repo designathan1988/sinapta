@@ -1,0 +1,50 @@
+@layer features {
+  .database__row-properties {
+    display: grid;
+    gap: var(--space-stack-xs);
+    margin-block-end: var(--space-stack-lg);
+    padding-block-end: var(--space-stack-md);
+    border-block-end: var(--size-border-thin) solid var(--color-border-default);
+  }
+
+  .database__row-property {
+    display: grid;
+    grid-template-columns: var(--size-label-width) minmax(0, 1fr);
+    gap: var(--space-inline-md);
+    align-items: center;
+    min-block-size: var(--size-control-md);
+    margin: var(--space-none);
+    padding: var(--space-none);
+    border: none;
+
+    & > input[type="checkbox"] {
+      justify-self: start;
+    }
+
+    & [aria-invalid] {
+      border-color: var(--color-text-danger);
+    }
+  }
+
+  /* A legend does not take part in its fieldset's grid. */
+  .database__row-property > legend {
+    float: inline-start;
+    inline-size: var(--size-label-width);
+    padding: var(--space-none);
+  }
+
+  .database__row-name {
+    overflow: hidden;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .database__row-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-inline-md);
+    color: var(--color-text-secondary);
+  }
+}
