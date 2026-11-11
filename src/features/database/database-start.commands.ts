@@ -67,6 +67,8 @@ export const startDatabase = defineCommand<StartPayload>({
       ...{ title, icon, isFavorite, isTrashed },
       properties: startingProperties(viewType, ids),
       viewIds: [viewId],
+      templateIds: [],
+      defaultTemplateId: null,
     };
     const view = startingView(
       emptyView(viewId, page.id, TEXT.layouts[viewType]),

@@ -1,0 +1,45 @@
+@layer ui {
+  /* A row with its own actions: a "…" at its end that shows while the
+     row is pointed at or in use, as on Notion's templates. */
+  .menu__row {
+    position: relative;
+    display: grid;
+
+    & > .menu__item {
+      padding-inline-end: calc(var(--size-control-sm) + var(--space-inset-sm));
+    }
+  }
+
+  .menu__more {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: var(--space-inset-xs);
+    display: inline-grid;
+    place-items: center;
+    inline-size: var(--size-control-sm);
+    block-size: var(--size-control-sm);
+    margin-block: auto;
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-tertiary);
+    cursor: pointer;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: var(--color-bg-hover);
+      color: var(--color-text-primary);
+    }
+
+    & > .icon {
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+    }
+  }
+
+  .menu__row:not(:hover, :focus-within)
+    > .menu__more:not([aria-expanded="true"]) {
+    opacity: 0;
+  }
+}

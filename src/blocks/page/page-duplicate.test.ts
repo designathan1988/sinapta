@@ -32,7 +32,13 @@ function createApp() {
         {
           id: "d",
           type: "database",
-          props: { ...pageProps("Tasks"), properties: [], viewIds: ["v1"] },
+          props: {
+            ...pageProps("Tasks"),
+            properties: [],
+            viewIds: ["v1"],
+            templateIds: [],
+            defaultTemplateId: null,
+          },
         },
       ],
     },

@@ -49,6 +49,8 @@ function createApp() {
         isTrashed: false,
         properties: [{ id: "stage", name: "Stage", type: "text" }],
         viewIds: ["source-view"],
+        templateIds: [],
+        defaultTemplateId: null,
       },
       children: [row("r1", "open"), row("r2", "done")],
     },

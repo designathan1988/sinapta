@@ -1,0 +1,20 @@
+@layer features {
+  /* Notion's template note: a quiet strip above the template's page. */
+  .database__template-banner {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    margin: var(--space-none);
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-hover);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+
+    & > .icon {
+      flex: none;
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+    }
+  }
+}

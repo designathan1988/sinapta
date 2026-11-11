@@ -91,6 +91,9 @@ owner listed here exists.
 | Property values on a row's page | `src/features/database/row-properties.view.ts` | 7 |
 | Where a view opens its rows (side peek, center peek, full page) | `src/features/database/row-open.commands.ts` | 16 |
 | The row peek: its panel, bar, mode switch and stepping through rows | `src/features/row-peek/` | 16 |
+| Row templates: adding, the default, duplicating, deleting, and new rows made from them | `src/features/database/template.commands.ts`, `row-template.ts` | 16 |
+| The New button's template list and the note over a template | `src/features/database/templates-menu.view.ts`, `template-banner.view.ts` | 16 |
+| A menu row's own actions behind its "…" | `src/ui/menu/menu-submenu.ts`, `menu-item.view.ts`, `menu-more.css` | 16 |
 | Table markup, headers, cells and their events | `src/features/database/table*.view.ts` | 5 |
 | Table menus and popovers | `src/features/database/*-menu.view.ts`, `view-*.view.ts`, `cell-options.view.ts` | 6 |
 | The database block type | `src/blocks/database/` | 5 |

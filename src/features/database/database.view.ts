@@ -13,6 +13,8 @@ import { renderIcon, type IconName } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { addRow } from "./row.commands.ts";
+import { withDefaultTemplate } from "./template.commands.ts";
+import { TEMPLATES_OVERLAY } from "./templates-menu.view.ts";
 import {
   FILTERS_OVERLAY,
   VIEW_SETTINGS_OVERLAY,
@@ -89,7 +91,7 @@ function renderSearch(context: TableContext): TemplateResult {
 }
 
 function renderToolbar(context: TableContext): TemplateResult {
-  const { model, dispatch } = context;
+  const { model } = context;
   const filters = {
     kind: FILTERS_OVERLAY,
     label: COPY.database.filter,
@@ -101,20 +103,52 @@ function renderToolbar(context: TableContext): TemplateResult {
     label: COPY.database.viewSettings,
     icon: "more",
   } as const;
-  const addAndOpen = (): void => {
-    dispatch(addRow.create({ databaseId: model.database.id, opensPage: true }));
-  };
   return html`<div class="database__toolbar">
     ${renderViewTabs(context)}
     <span class="database__spacer"></span>
     ${renderPopoverButton(filters, context)} ${renderSearch(context)}
-    ${renderPopoverButton(settings, context)}
+    ${renderPopoverButton(settings, context)} ${renderNewButton(context)}
+  </div>`;
+}
+
+// Notion's New: a new row from the default template, opened as the view
+// opens rows; the arrow beside it lists the templates.
+function renderNewButton(context: TableContext): TemplateResult {
+  const { model, state, dispatch } = context;
+  const overlay = { kind: TEMPLATES_OVERLAY, anchorId: model.holderId };
+  const isOpen = isOpenFor(state, overlay);
+  const addAndOpen = (): void => {
+    const payload = {
+      databaseId: model.database.id,
+      opensPage: true,
+      viewId: model.view.id,
+    };
+    dispatch(addRow.create(withDefaultTemplate(state, payload)));
+  };
+  return html`<span class="database__new">
     ${renderButton({
       label: COPY.database.newItem,
       variant: "primary",
       onClick: addAndOpen,
     })}
-  </div>`;
+    <button
+      type="button"
+      class="button database__new-templates"
+      data-variant="primary"
+      data-overlay-anchor
+      aria-haspopup="menu"
+      aria-expanded=${String(isOpen)}
+      aria-label=${COPY.database.templates}
+      title=${tooltipTitle(COPY.database.templates)}
+      interestfor=${TOOLTIP_TARGET}
+      @click=${() =>
+        dispatch(
+          isOpen ? closeOverlay.create({}) : openOverlay.create({ overlay }),
+        )}
+    >
+      ${renderIcon("chevron")}
+    </button>
+  </span>`;
 }
 
 // A database page: its views as tabs, the view's tools and its table.

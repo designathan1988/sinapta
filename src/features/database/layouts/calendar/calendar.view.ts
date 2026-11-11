@@ -1,6 +1,7 @@
 // A calendar: a month in weeks or a single week, with or without its
 // weekends, each row on the days of its date property. Rows move between
 // days by drag, or by Alt with an arrow key.
+import { withDefaultTemplate } from "../../template.commands.ts";
 import { openRow } from "../../row-open.commands.ts";
 import "./calendar.css";
 import { html, type TemplateResult } from "lit-html";
@@ -135,7 +136,16 @@ function renderDay(context: CalendarContext, day: string): TemplateResult {
         icon: "plus",
         isIconOnly: true,
         onClick: () =>
-          dispatch(addRow.create({ databaseId, values, opensPage: true })),
+          dispatch(
+            addRow.create(
+              withDefaultTemplate(context.state, {
+                databaseId,
+                values,
+                opensPage: true,
+                viewId: context.model.view.id,
+              }),
+            ),
+          ),
       })}
     </span>
   </td>`;

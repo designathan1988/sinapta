@@ -21,7 +21,13 @@ function createApp() {
     {
       id: "db",
       type: "database",
-      props: { ...props, properties: [], viewIds: [] },
+      props: {
+        ...props,
+        properties: [],
+        viewIds: [],
+        templateIds: [],
+        defaultTemplateId: null,
+      },
     },
   ]);
   const app = createTestApp({ workspace, commands: pageStyleCommands });

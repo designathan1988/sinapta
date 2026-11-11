@@ -76,6 +76,8 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 
 | Row peek | `features/row-peek/` | Notion (no comments, Share, link or favorite in its bar) | side or center peek with Close, Open as full page, mode switch, Previous and Next, page actions; Escape closes, K and J step |
 | Open pages in | `view-settings/choice-panels.ts` | Notion | row in the Layout panel opening Side peek, Center peek, Full page |
+| New and its templates | `database.view.ts`, `templates-menu.view.ts` | Notion (default for the whole database, not per view) | split blue button; the arrow lists "Templates for …", each template with "…" (Set as default, Edit, Duplicate, Delete), Empty page, New template; Default marks the one new rows start from |
+| Template note | `template-banner.view.ts` | Notion | a strip over a template's page: "You're editing a template in …" |
 | Date cell and date value | `ui/date-picker/`, `date-menu.ts`, `cell-date.view.ts` | Notion (no Date format & timezone or Remind rows) | the chosen days in fields, the month with Today and arrows, six weeks of days, End date and Include time switches, Clear |
 
 ### Property settings
@@ -151,6 +153,7 @@ against the reference on every run.
 ## Open
 
 - Row peek: comments, Share, copy link and favorite in the bar; resizing the side peek; the peek in the address.
+- Templates: a default per view; repeating templates; a formula over an empty value shows its error in red where Notion shows nothing.
 - Sorts: reorder by dragging the grip (Move up and down by keyboard).
 - Date picker: Date format & timezone, and Remind rows; typing a date into its field.
 - Light theme measurements of the menu reference.

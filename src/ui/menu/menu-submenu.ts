@@ -15,6 +15,7 @@ import {
   isMenuItem,
   type MenuEntry,
   type MenuItem,
+  type Submenu,
   type SubmenuItem,
 } from "./menu-entry.ts";
 
@@ -83,17 +84,17 @@ function submenuSearch(
   return { search: { placeholder, query, onQuery } };
 }
 
-// The open submenu of a row, drawn by the menu's own renderer.
-export function renderSubmenu(
-  item: MenuItem,
+// A submenu, open or not, drawn by the menu's own renderer.
+export function renderSubmenuOf(
+  submenu: Submenu | undefined,
   context: MenuContext | undefined,
   draw: (options: SubmenuOptions) => TemplateResult,
 ): TemplateResult | typeof nothing {
-  if (!hasSubmenu(item) || context === undefined) return nothing;
-  const index = childIndexOf(context.overlay, item.submenu.id);
+  if (submenu === undefined || context === undefined) return nothing;
+  const index = childIndexOf(context.overlay, submenu.id);
   if (index === -1) return nothing;
   const { dispatch } = context;
-  const { searchPlaceholder, ...content } = item.submenu.menu();
+  const { searchPlaceholder, ...content } = submenu.menu();
   return draw({
     ...content,
     isChild: true,
@@ -103,6 +104,58 @@ export function renderSubmenu(
     onClose: () => dispatch(closeChildOverlay.create({ depth: index })),
     onDone: () => dispatch(closeOverlay.create({})),
   });
+}
+
+// The open submenu of a row.
+export function renderSubmenu(
+  item: MenuItem,
+  context: MenuContext | undefined,
+  draw: (options: SubmenuOptions) => TemplateResult,
+): TemplateResult | typeof nothing {
+  return renderSubmenuOf(item.submenu, context, draw);
+}
+
+export function isMoreOpen(
+  item: MenuItem,
+  context: MenuContext | undefined,
+): boolean {
+  return (
+    item.more !== undefined &&
+    childIndexOf(context?.overlay ?? null, item.more.id) !== -1
+  );
+}
+
+// Opens or closes a row's actions from its "…", or from the arrow keys.
+export function toggleMore(
+  item: MenuItem,
+  context: MenuContext | undefined,
+  control: Element,
+): void {
+  if (item.more === undefined || context === undefined) return;
+  const index = childIndexOf(context.overlay, item.more.id);
+  const depth = childDepthOf(control);
+  context.dispatch(
+    index === -1
+      ? openChildOverlay.create({ anchorId: item.more.id, depth })
+      : closeChildOverlay.create({ depth: index }),
+  );
+}
+
+// A press on a row's "…" in this menu, which opens the row's actions.
+export function onMoreClick(
+  event: Event,
+  items: readonly MenuEntry[],
+  context: MenuContext | undefined,
+): boolean {
+  if (!(event.target instanceof Element)) return false;
+  const control = event.target.closest<HTMLElement>("[data-more]");
+  if (control === null) return false;
+  if (control.closest(".menu") !== event.currentTarget) return false;
+  const item = items[Number(control.dataset.more ?? -1)];
+  if (item === undefined || !isMenuItem(item)) return false;
+  event.stopPropagation();
+  toggleMore(item, context, control);
+  return true;
 }
 
 // A mouse resting on a row with a submenu opens it, as in Notion.

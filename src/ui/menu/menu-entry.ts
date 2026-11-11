@@ -52,11 +52,15 @@ export interface Submenu {
 export interface ActionItem extends ItemLook {
   readonly onSelect: () => void;
   readonly submenu?: undefined;
+  // The row's own actions, behind a "…" at its end that shows while the
+  // row is pointed at, as on Notion's templates.
+  readonly more?: Submenu;
 }
 
 export interface SubmenuItem extends ItemLook {
   readonly submenu: Submenu;
   readonly onSelect?: undefined;
+  readonly more?: undefined;
 }
 
 export type MenuItem = ActionItem | SubmenuItem;

@@ -1,5 +1,6 @@
 import * as v from "valibot";
 import {
+  blockIdSchema,
   propertyIdSchema,
   richTextSchema,
   viewIdSchema,
@@ -41,6 +42,11 @@ export const databasePropsSchema = v.object({
   isInline: v.optional(v.boolean()),
   properties: v.array(propertyDefinitionSchema),
   viewIds: v.array(viewIdSchema),
+  // Pages new rows can start from (version 27): kept among its children,
+  // so they hold values like rows, but shown in no view. New rows start
+  // from the default one.
+  templateIds: v.array(blockIdSchema),
+  defaultTemplateId: v.nullable(blockIdSchema),
 });
 
 // Property type name to the schema of that type's config, supplied by the

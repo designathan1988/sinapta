@@ -1,5 +1,6 @@
 // What a group of rows can do besides collapsing: add a row that takes
 // the group's value, and open the group's menu, anchored to its "…".
+import { withDefaultTemplate } from "./template.commands.ts";
 import {
   groupValues,
   selectRowGroups,
@@ -34,5 +35,14 @@ export function addRowInGroup(group: RowGroup, context: TableContext): void {
   const grouped = selectRowGroups(model);
   const values = grouped === undefined ? {} : groupValues(grouped, group.key);
   const databaseId = model.database.id;
-  dispatch(addRow.create({ databaseId, values, opensPage: true }));
+  dispatch(
+    addRow.create(
+      withDefaultTemplate(context.state, {
+        databaseId,
+        values,
+        opensPage: true,
+        viewId: context.model.view.id,
+      }),
+    ),
+  );
 }

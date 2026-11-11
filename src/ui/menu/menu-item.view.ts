@@ -1,8 +1,10 @@
 // One entry of a menu: a section label, a line, or an item with its
 // icon, label or chip, description, value, and its check, switch or
 // chevron at the end.
+import "./menu-more.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { renderChip, renderChipSwatch } from "../chip/index.ts";
+import { COPY } from "../copy.ts";
 import { renderIcon } from "../icon/index.ts";
 import { renderSwitchMark } from "../switch/index.ts";
 import type { MenuEntry, MenuItem } from "./menu-entry.ts";
@@ -54,6 +56,32 @@ export interface EntryPlace {
   readonly isFirst: boolean;
   // Whether the item's submenu is open beside the menu.
   readonly isExpanded?: boolean;
+  // Whether the item's actions are open, and their menu when they are.
+  readonly isMoreExpanded?: boolean;
+  readonly moreMenu?: unknown;
+}
+
+// A row with its own actions: the row, then its "…" and their menu.
+function renderWithMore(
+  row: TemplateResult,
+  place: EntryPlace,
+): TemplateResult {
+  return html`<div class="menu__row" role="none">
+    ${row}
+    <button
+      type="button"
+      class="menu__more"
+      tabindex="-1"
+      data-more=${place.index}
+      aria-label=${COPY.menu.more}
+      aria-haspopup="menu"
+      aria-expanded=${String(place.isMoreExpanded === true)}
+      data-overlay-child-anchor
+    >
+      ${renderIcon("more")}
+    </button>
+    ${place.moreMenu ?? nothing}
+  </div>`;
 }
 
 export function renderEntry(
@@ -68,6 +96,11 @@ export function renderEntry(
   if (entry.kind === "divider") {
     return html`<hr class="menu__divider" role="separator" />`;
   }
+  const row = renderItem(entry, place);
+  return entry.more === undefined ? row : renderWithMore(row, place);
+}
+
+function renderItem(entry: MenuItem, place: EntryPlace): TemplateResult {
   const role = roleOf(entry, place.isListbox);
   const isChecked = String(entry.isChecked === true);
   return html`<button

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createDatabaseApp } from "./database-builder.ts";
 import { openRow, setOpenMode } from "./row-open.commands.ts";
+import { addRow } from "./row.commands.ts";
 
 function createApp() {
   const app = createDatabaseApp([], [["One"], ["Two"]]);
@@ -34,5 +35,22 @@ describe("openRow", () => {
     const { ui } = app.store.getState();
     expect(ui.activePageId).toBe(app.rowId);
     expect(ui.peek).toBeNull();
+  });
+});
+
+describe("a new row from a view", () => {
+  it("opens in the view's peek, as Notion's New does", () => {
+    const app = createApp();
+    const { databaseId, viewId } = app;
+
+    app.dispatch(addRow.create({ databaseId, opensPage: true, viewId }));
+
+    const { ui } = app.store.getState();
+    expect(ui.peek).toEqual({
+      pageId: app.database().childIds.at(-1),
+      viewId,
+      mode: "side",
+    });
+    expect(ui.activePageId).toBe(databaseId);
   });
 });

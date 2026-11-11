@@ -13,6 +13,14 @@ const renameLabel: Migration = ({ label, ...rest }) => ({
 });
 const MIGRATIONS = [addLabel, renameLabel];
 
+// Version 27 gives every database its templates, none at first.
+function withNoTemplates<T extends { props: object }>(database: T): T {
+  return {
+    ...database,
+    props: { ...database.props, templateIds: [], defaultTemplateId: null },
+  };
+}
+
 describe("runMigrations", () => {
   it("returns a file at the current version unchanged", () => {
     const file = { schemaVersion: 3, name: "kept" };
@@ -80,7 +88,10 @@ describe("the migration list", () => {
 
     expect(runMigrations({ schemaVersion: 12, blocks })).toEqual({
       ok: true,
-      file: { schemaVersion: SCHEMA_VERSION, blocks },
+      file: {
+        schemaVersion: SCHEMA_VERSION,
+        blocks: { db: withNoTemplates(blocks.db) },
+      },
     });
   });
 
@@ -114,6 +125,7 @@ describe("the migration list", () => {
         schemaVersion: SCHEMA_VERSION,
         blocks: {
           ...blocks,
+          db: withNoTemplates(blocks.db),
           r1: row({ due: { start: "2026-11-10" }, code: "2026-01-01" }),
         },
       },
@@ -127,7 +139,28 @@ describe("version 15", () => {
 
     expect(runMigrations({ schemaVersion: 14, blocks })).toEqual({
       ok: true,
-      file: { schemaVersion: SCHEMA_VERSION, blocks },
+      file: {
+        schemaVersion: SCHEMA_VERSION,
+        blocks: { db: withNoTemplates(blocks.db) },
+      },
+    });
+  });
+});
+
+describe("version 27", () => {
+  it("gives a version 26 database no templates and no default", () => {
+    const page = { type: "page", props: { title: [] } };
+    const blocks = {
+      db: { type: "database", props: { viewIds: ["v"] } },
+      page,
+    };
+
+    expect(runMigrations({ schemaVersion: 26, blocks })).toEqual({
+      ok: true,
+      file: {
+        schemaVersion: SCHEMA_VERSION,
+        blocks: { db: withNoTemplates(blocks.db), page },
+      },
     });
   });
 });

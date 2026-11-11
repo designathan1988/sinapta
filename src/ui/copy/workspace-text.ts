@@ -45,7 +45,12 @@ export const WORKSPACE_TEXT = {
     moved: "Page moved.",
     notMoved: "The page cannot move further that way.",
   },
-  menu: { back: "Back", close: "Close", noMatches: "No matches" },
+  menu: {
+    back: "Back",
+    close: "Close",
+    noMatches: "No matches",
+    more: "More actions",
+  },
   // Notion's date picker.
   datePicker: {
     weekdays: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],

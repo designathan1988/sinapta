@@ -67,6 +67,8 @@ export const createDatabase = defineCommand<{ parentId: BlockId | null }>({
       isTrashed: false,
       properties: [],
       viewIds: [viewId],
+      templateIds: [],
+      defaultTemplateId: null,
     };
     const record: Block = {
       id,

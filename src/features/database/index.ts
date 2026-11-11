@@ -16,6 +16,7 @@ import { timelineOptionCommands } from "./timeline-options.commands.ts";
 import { chartOptionCommands } from "./chart-options.commands.ts";
 import { formOptionCommands } from "./form-options.commands.ts";
 import { rowOpenCommands } from "./row-open.commands.ts";
+import { templateCommands } from "./template.commands.ts";
 import { formCommands } from "./layouts/form/form.commands.ts";
 import { boardCardCommands } from "./layouts/board/board-card.commands.ts";
 
@@ -33,6 +34,7 @@ export { createInlineDatabase } from "./inline-database.commands.ts";
 export { readDateValue, type DateValue } from "./properties/date/index.ts";
 export { withPropertyConfigs } from "./property-registry.ts";
 export { renderRowProperties } from "./row-properties.view.ts";
+export { renderTemplateBanner } from "./template-banner.view.ts";
 
 import { optionCommands } from "./option.commands.ts";
 import { propertyCopyCommands } from "./property-copy.commands.ts";
@@ -61,6 +63,7 @@ export const databaseCommands = [
   ...chartOptionCommands,
   ...formOptionCommands,
   ...rowOpenCommands,
+  ...templateCommands,
   ...formCommands,
   ...boardCardCommands,
   ...viewLayoutCommands,

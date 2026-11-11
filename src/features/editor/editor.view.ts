@@ -15,7 +15,11 @@ import type { BlockId } from "../../model/index.ts";
 import type { AppState, Dispatch } from "../../state/index.ts";
 import { COPY, PRODUCT_NAME } from "../../ui/copy.ts";
 import { whenConnected } from "../../ui/focus/index.ts";
-import { renderDatabase, renderRowProperties } from "../database/index.ts";
+import {
+  renderDatabase,
+  renderRowProperties,
+  renderTemplateBanner,
+} from "../database/index.ts";
 import { continueWriting, renderBlocks } from "./editor-blocks.view.ts";
 import { renderBlockMenu } from "./editor-block-menu.view.ts";
 import { INLINE_EQUATION_OVERLAY } from "./editor-equation.commands.ts";
@@ -105,6 +109,7 @@ export function renderEditor(
       data-font=${page.props.font ?? "default"}
       ?data-small-text=${page.props.isSmallText === true}
     >
+      ${renderTemplateBanner(state, page.id)}
       ${isPage ? renderCover(state, page, dispatch) : nothing}
       <div
         class="editor__page-actions"

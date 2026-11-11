@@ -7,7 +7,13 @@ import {
   type MenuEntry,
   type MenuItem,
 } from "./menu-entry.ts";
-import { hasSubmenu, openSubmenu, type MenuContext } from "./menu-submenu.ts";
+import {
+  hasSubmenu,
+  isMoreOpen,
+  openSubmenu,
+  toggleMore,
+  type MenuContext,
+} from "./menu-submenu.ts";
 
 const ITEMS = "[data-index]:not(:disabled)";
 
@@ -74,10 +80,25 @@ function onSideKey(
     return false;
   }
   const item = choosing.items[Number(event.target.dataset.index ?? -1)];
-  if (item === undefined || !isMenuItem(item) || !hasSubmenu(item)) {
-    return false;
+  if (item === undefined || !isMenuItem(item)) return false;
+  return openBeside(item, choosing, event.target);
+}
+
+// Opens what the row shows beside the menu: its actions or its submenu.
+function openBeside(
+  item: MenuItem,
+  choosing: Choosing,
+  row: HTMLElement,
+): boolean {
+  if (item.more !== undefined) {
+    const more = row.parentElement?.querySelector(".menu__more");
+    if (!isMoreOpen(item, choosing.context) && more instanceof Element) {
+      toggleMore(item, choosing.context, more);
+    }
+    return true;
   }
-  openSubmenu(item, choosing.context, event.target);
+  if (!hasSubmenu(item)) return false;
+  openSubmenu(item, choosing.context, row);
   return true;
 }
 

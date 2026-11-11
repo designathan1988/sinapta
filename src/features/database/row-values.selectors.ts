@@ -1,8 +1,9 @@
 // The rows of a database as the views read them: each row's title and its
 // cell values, stored or kept by the app on the row's record.
-import type {
-  DatabaseBlock,
-  PropertyDefinition,
+import {
+  rowIdsOf,
+  type DatabaseBlock,
+  type PropertyDefinition,
 } from "../../blocks/database/index.ts";
 import {
   selectPage,
@@ -53,7 +54,7 @@ export function selectRows(
   database: DatabaseBlock,
 ): TableRow[] {
   const { properties } = database.props;
-  return database.childIds.flatMap((id) => {
+  return rowIdsOf(database).flatMap((id) => {
     const page = selectPage(context.state, id);
     if (page === undefined || page.props.isTrashed) return [];
     const values = selectAllRowValues(context, page, properties);

@@ -1,5 +1,6 @@
 // Under a table or a list: "New page", right under the last row, and how
 // many rows the view shows.
+import { withDefaultTemplate } from "./template.commands.ts";
 import { html, type TemplateResult } from "lit-html";
 import { COPY, pluralize } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
@@ -22,10 +23,13 @@ export function renderFooter(context: TableContext): TemplateResult {
   const noun = pluralize(model.totalRowCount, COPY.database.rowCount);
   const add = (): void => {
     dispatch(
-      addRow.create({
-        databaseId: model.database.id,
-        opensPage: model.view.type !== "table",
-      }),
+      addRow.create(
+        withDefaultTemplate(context.state, {
+          databaseId: model.database.id,
+          opensPage: model.view.type !== "table",
+          viewId: context.model.view.id,
+        }),
+      ),
     );
   };
   return html`<div class="database__footer">

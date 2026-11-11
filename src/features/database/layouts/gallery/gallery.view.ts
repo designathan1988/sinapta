@@ -1,5 +1,6 @@
 // A gallery: rows as cards in a grid, each with the first image on its
 // page as a cover; a grouped gallery shows a grid for each group.
+import { withDefaultTemplate } from "../../template.commands.ts";
 import "./gallery.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { repeat } from "lit-html/directives/repeat.js";
@@ -20,7 +21,6 @@ function renderCards(
   adds: boolean,
 ): TemplateResult {
   const { model, state, dispatch } = context;
-  const databaseId = model.database.id;
   return html`<ul class="gallery__cards">
     ${repeat(
       rows,
@@ -37,19 +37,26 @@ function renderCards(
           })}
         </li>`,
     )}
-    ${
-      adds
-        ? html`<li>
-            ${renderButton({
-              label: COPY.database.newCard,
-              icon: "plus",
-              onClick: () =>
-                dispatch(addRow.create({ databaseId, opensPage: true })),
-            })}
-          </li>`
-        : nothing
-    }
+    ${adds ? renderAddCard(context) : nothing}
   </ul>`;
+}
+
+// The last card, which adds a row from the default template.
+function renderAddCard(context: TableContext): TemplateResult {
+  const { model, state, dispatch } = context;
+  const payload = {
+    databaseId: model.database.id,
+    opensPage: true,
+    viewId: model.view.id,
+  };
+  return html`<li>
+    ${renderButton({
+      label: COPY.database.newCard,
+      icon: "plus",
+      onClick: () =>
+        dispatch(addRow.create(withDefaultTemplate(state, payload))),
+    })}
+  </li>`;
 }
 
 export function renderGallery(context: TableContext): TemplateResult {

@@ -3,6 +3,13 @@ import type { AppState } from "../../state/index.ts";
 import { DATABASE_TYPE } from "../page/index.ts";
 import type { DatabaseBlock } from "./database.schema.ts";
 
+// A database's rows: its child pages that are not templates.
+export function rowIdsOf(database: DatabaseBlock): readonly BlockId[] {
+  const { templateIds } = database.props;
+  if (templateIds.length === 0) return database.childIds;
+  return database.childIds.filter((id) => !templateIds.includes(id));
+}
+
 export function selectDatabase(
   state: AppState,
   blockId: BlockId | null,

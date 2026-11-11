@@ -18,8 +18,11 @@ import { choose, firstItem, onMenuKey, type Choosing } from "./menu-keys.ts";
 import { renderEntry } from "./menu-item.view.ts";
 import {
   isSubmenuOpen,
+  isMoreOpen,
+  onMoreClick,
   onSubmenuHover,
   renderSubmenu,
+  renderSubmenuOf,
   type MenuContext,
 } from "./menu-submenu.ts";
 
@@ -132,7 +135,19 @@ function renderRows(entries: readonly MenuEntry[], options: MenuOptions) {
   // An open submenu is drawn right after its row, which anchors it.
   return entries.map((entry, index) => {
     const isExpanded = isMenuItem(entry) && isSubmenuOpen(entry, context);
-    const place = { index, isListbox, isFirst: entry === first, isExpanded };
+    const isMoreExpanded = isMenuItem(entry) && isMoreOpen(entry, context);
+    const moreMenu =
+      isMoreExpanded && isMenuItem(entry)
+        ? renderSubmenuOf(entry.more, context, renderMenu)
+        : nothing;
+    const place = {
+      index,
+      isListbox,
+      isFirst: entry === first,
+      isExpanded,
+      isMoreExpanded,
+      moreMenu,
+    };
     return html`${renderEntry(entry, place)}${
       isExpanded && isMenuItem(entry)
         ? renderSubmenu(entry, context, renderMenu)
@@ -163,6 +178,7 @@ function choosingOf(
 
 function onRowClick(event: Event, choosing: Choosing): void {
   if (!(event.target instanceof Element)) return;
+  if (onMoreClick(event, choosing.items, choosing.context)) return;
   const row = event.target.closest<HTMLElement>("[data-index]");
   if (row === null) return;
   // A press inside a list open in this menu belongs to that list.

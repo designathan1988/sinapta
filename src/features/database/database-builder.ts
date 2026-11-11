@@ -36,6 +36,7 @@ import { timelineOptionCommands } from "./timeline-options.commands.ts";
 import { chartOptionCommands } from "./chart-options.commands.ts";
 import { formOptionCommands } from "./form-options.commands.ts";
 import { rowOpenCommands } from "./row-open.commands.ts";
+import { templateCommands } from "./template.commands.ts";
 import { formCommands } from "./layouts/form/form.commands.ts";
 import { boardCardCommands } from "./layouts/board/board-card.commands.ts";
 import {
@@ -115,6 +116,7 @@ const DATABASE_TEST_COMMANDS = [
   ...chartOptionCommands,
   ...formOptionCommands,
   ...rowOpenCommands,
+  ...templateCommands,
   ...formCommands,
   ...boardCardCommands,
   ...viewLayoutCommands,

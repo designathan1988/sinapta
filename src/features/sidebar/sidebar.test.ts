@@ -76,7 +76,13 @@ describe("selectTreeRows", () => {
       {
         id: "d",
         type: "database",
-        props: { ...page("Tasks"), properties: [], viewIds: [] },
+        props: {
+          ...page("Tasks"),
+          properties: [],
+          viewIds: [],
+          templateIds: [],
+          defaultTemplateId: null,
+        },
       },
     ]);
     const rows = selectTreeRows({ ...createInitialState(), workspace });

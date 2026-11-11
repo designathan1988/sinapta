@@ -127,6 +127,8 @@ export function taskBlocks(ids: TaskIds, now: string): Block[] {
       isTrashed: false,
       properties: properties(ids),
       viewIds: [...ids.viewIds],
+      templateIds: [],
+      defaultTemplateId: null,
     },
     createdAt: now,
     updatedAt: now,

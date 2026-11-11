@@ -11,4 +11,4 @@ export {
   type PropertyDefinition,
   type SelectOption,
 } from "./database.schema.ts";
-export { selectDatabase } from "./database.selectors.ts";
+export { rowIdsOf, selectDatabase } from "./database.selectors.ts";

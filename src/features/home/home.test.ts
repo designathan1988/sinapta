@@ -28,6 +28,8 @@ function createState(recent: string[]): AppState {
         ...page("Tasks"),
         properties: [{ id: "due", name: "Due", type: "date" }],
         viewIds: [],
+        templateIds: [],
+        defaultTemplateId: null,
       },
       children: [
         row("today", "2026-11-11"),

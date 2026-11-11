@@ -1,5 +1,6 @@
 // A list: one line per row, its title then the values of the view's
 // visible properties; a grouped list shows its lines group by group.
+import { withDefaultTemplate } from "../../template.commands.ts";
 import { openRow } from "../../row-open.commands.ts";
 import "./list.css";
 import { html, type TemplateResult } from "lit-html";
@@ -71,7 +72,16 @@ export function renderList(context: TableContext): TemplateResult {
     ${renderButton({
       label: COPY.database.newCard,
       icon: "plus",
-      onClick: () => dispatch(addRow.create({ databaseId, opensPage: true })),
+      onClick: () =>
+        dispatch(
+          addRow.create(
+            withDefaultTemplate(context.state, {
+              databaseId,
+              opensPage: true,
+              viewId: context.model.view.id,
+            }),
+          ),
+        ),
     })}
   </div>`;
 }

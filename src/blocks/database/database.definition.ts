@@ -13,6 +13,8 @@ export const databaseDefinition: BlockDefinition = {
     isTrashed: false,
     properties: [],
     viewIds: [],
+    templateIds: [],
+    defaultTemplateId: null,
   }),
   // Inside a page, a database is one line that opens it.
   showsChildren: () => false,

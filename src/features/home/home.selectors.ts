@@ -1,6 +1,6 @@
 // What Home shows: the pages opened lately and the dates coming up in the
 // next week, from every date property of every database.
-import { selectDatabase } from "../../blocks/database/index.ts";
+import { rowIdsOf, selectDatabase } from "../../blocks/database/index.ts";
 import {
   DATABASE_TYPE,
   selectPage,
@@ -41,7 +41,7 @@ function datesOfDatabase(state: AppState, databaseId: BlockId): UpcomingDate[] {
   const dateProperties = database.props.properties.filter(
     (property) => property.type === "date",
   );
-  return database.childIds.flatMap((rowId) => {
+  return rowIdsOf(database).flatMap((rowId) => {
     const row = selectPage(state, rowId);
     if (row === undefined || row.props.isTrashed) return [];
     return dateProperties.flatMap((property) => {

@@ -31,6 +31,8 @@ function databaseRecord(
       isInline: true,
       properties: [],
       viewIds: [meta.viewId],
+      templateIds: [],
+      defaultTemplateId: null,
     },
     createdAt: meta.now,
     updatedAt: meta.now,

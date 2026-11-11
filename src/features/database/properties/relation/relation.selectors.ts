@@ -1,7 +1,7 @@
 // The pages a relation cell can hold: the rows of its related database
 // that are not in the trash.
 import type { PropertyDefinition } from "../../../../blocks/database/index.ts";
-import { selectDatabase } from "../../../../blocks/database/index.ts";
+import { rowIdsOf, selectDatabase } from "../../../../blocks/database/index.ts";
 import {
   selectIsInTrash,
   selectPage,
@@ -22,7 +22,7 @@ export function selectRelationChoices(
 ): RelationChoice[] {
   const config = readRelationConfig(property.config);
   const database = selectDatabase(state, config?.databaseId ?? null);
-  return (database?.childIds ?? []).flatMap((id) => {
+  return (database === undefined ? [] : rowIdsOf(database)).flatMap((id) => {
     const page = selectPage(state, id);
     if (page === undefined || selectIsInTrash(state, page)) return [];
     return [{ id: page.id, title: selectPageTitle(page) }];
