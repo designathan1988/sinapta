@@ -18,6 +18,7 @@ import { addFilterGroups } from "./0016-filter-groups.ts";
 import { addGroupBy } from "./0017-group-by.ts";
 import { addCalculations } from "./0018-calculations.ts";
 import { addTableLayout } from "./0019-table-layout.ts";
+import { repairStaleRecords } from "./0020-repair-stale-records.ts";
 
 // A pure function from format version n to n + 1.
 export type Migration = (
@@ -45,6 +46,7 @@ export const MIGRATIONS: readonly Migration[] = [
   addGroupBy,
   addCalculations,
   addTableLayout,
+  repairStaleRecords,
 ];
 
 export type MigrationResult =

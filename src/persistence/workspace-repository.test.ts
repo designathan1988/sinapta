@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   buildWorkspace,
+  SCHEMA_VERSION,
   toBlockId,
   TEST_PROPS_SCHEMAS,
 } from "../model/index.ts";
@@ -34,9 +35,13 @@ async function start(adapter: StorageAdapter) {
   return app;
 }
 
-function storedPage(id: string, ui: unknown = null): StoredData {
+function storedPage(
+  id: string,
+  ui: unknown = null,
+  schemaVersion = SCHEMA_VERSION,
+): StoredData {
   const workspace = buildWorkspace([{ id }]);
-  return { file: { schemaVersion: 1, ...workspace }, ui };
+  return { file: { schemaVersion, ...workspace }, ui };
 }
 
 const addPage = addTestBlock.create({ blockType: "page" });
@@ -153,6 +158,17 @@ describe("workspace repository", () => {
     expect(store.getState().workspace.rootIds).toEqual([toBlockId("a")]);
     expect(store.getState().ui.sidebarWidth).toBe(22);
     expect(adapter.saves).toHaveLength(0);
+  });
+
+  it("writes every record back once when stored data was of an older version", async () => {
+    const adapter = createMemoryAdapter(storedPage("a", null, 1));
+
+    await start(adapter);
+    await vi.advanceTimersByTimeAsync(SAVE_DEBOUNCE_MS);
+
+    expect(adapter.saves).toHaveLength(1);
+    expect(adapter.saves[0]?.putBlocks.map((block) => block.id)).toEqual(["a"]);
+    expect(adapter.saves[0]?.meta?.schemaVersion).toBe(SCHEMA_VERSION);
   });
 
   it("skips a stored record that fails its schema and counts it", async () => {

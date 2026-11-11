@@ -83,9 +83,17 @@ function toStorageChanges(pending: Pending, state: AppState): StorageChanges {
   };
 }
 
-// "moved" when a migration moved files out of the stored records into the
-// asset store: the records are then written back once, as they are now.
-type LoadResult = "loaded" | "moved" | "empty" | "unreadable";
+// "migrated" when the stored records are not as they are now: they were of
+// an older version, or a migration moved their files into the asset store.
+// Every record is then written back once, so that what is stored matches
+// the version the next save records.
+type LoadResult = "loaded" | "migrated" | "empty" | "unreadable";
+
+function storedVersion(file: unknown): unknown {
+  return typeof file === "object" && file !== null && "schemaVersion" in file
+    ? file.schemaVersion
+    : undefined;
+}
 
 // "unreadable" when stored data exists but cannot be used. A reload keeps
 // the interface state the tab already has.
@@ -112,7 +120,8 @@ async function load(
     }),
   );
   if (!result.ok) return "unreadable";
-  return assets.length > 0 ? "moved" : "loaded";
+  const isOlder = storedVersion(stored.file) !== SCHEMA_VERSION;
+  return assets.length > 0 || isOlder ? "migrated" : "loaded";
 }
 
 // Asks the browser not to evict the workspace under storage pressure. It
@@ -217,6 +226,6 @@ export async function startRepository(
     followWriter(options, tabs);
     return { isFirstRun: false };
   }
-  watch(options, tabs, result === "moved");
+  watch(options, tabs, result === "migrated");
   return { isFirstRun: result === "empty" };
 }

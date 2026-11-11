@@ -134,3 +134,73 @@ describe("version 19", () => {
     });
   });
 });
+
+describe("version 20", () => {
+  it("brings a view stored in an older shape under a newer version to the current shape", () => {
+    const stale = {
+      id: "v",
+      type: "board",
+      filters: [{ propertyId: "a", operator: "is", value: "x" }],
+      groupPropertyId: "p",
+    };
+
+    const result = runMigrations({ schemaVersion: 19, views: { v: stale } });
+
+    expect(result).toMatchObject({
+      ok: true,
+      file: {
+        views: {
+          v: {
+            filter: { conjunction: "and", items: stale.filters },
+            groupBy: { propertyId: "p", sort: "manual" },
+            calculations: {},
+            wrappedPropertyIds: [],
+            frozenCount: 0,
+          },
+        },
+      },
+    });
+    expect(result.ok && result.file.views).not.toHaveProperty("v.filters");
+  });
+
+  it("leaves a view already in the current shape as it is", () => {
+    const view = {
+      id: "v",
+      type: "table",
+      filter: { conjunction: "or", items: [] },
+      calculations: { p: "sum" },
+      wrappedPropertyIds: ["p"],
+      frozenCount: 2,
+    };
+
+    expect(runMigrations({ schemaVersion: 19, views: { v: view } })).toEqual({
+      ok: true,
+      file: { schemaVersion: SCHEMA_VERSION, views: { v: view } },
+    });
+  });
+
+  it("turns a date still stored as text into a date value", () => {
+    const blocks = {
+      db: {
+        type: "database",
+        props: { properties: [{ id: "due", type: "date" }] },
+      },
+      row: {
+        type: "page",
+        parentId: "db",
+        props: { values: { due: "2026-11-11" } },
+      },
+    };
+
+    const result = runMigrations({ schemaVersion: 19, blocks });
+
+    expect(result).toMatchObject({
+      ok: true,
+      file: {
+        blocks: {
+          row: { props: { values: { due: { start: "2026-11-11" } } } },
+        },
+      },
+    });
+  });
+});
