@@ -57,12 +57,23 @@ describe("matchBlockShortcut", () => {
     ["#", "heading"],
     ["###", "heading"],
     ["-", "bulleted-list"],
+    ["*", "bulleted-list"],
+    ["+", "bulleted-list"],
     ["1.", "numbered-list"],
+    ["a.", "numbered-list"],
+    ["i.", "numbered-list"],
     ["[]", "to-do"],
-    [">", "quote"],
+    ["[x]", "to-do"],
+    ['"', "quote"],
+    [">", "toggle"],
+    ["```", "code"],
     ["---", "divider"],
   ])("matches %j as %s", (prefix, type) => {
     expect(matchBlockShortcut(prefix)?.blockType).toBe(type);
+  });
+
+  it("checks a to-do typed as [x]", () => {
+    expect(matchBlockShortcut("[x]")?.extraProps).toEqual({ isChecked: true });
   });
 
   it.each(["", "####", "hello", "constructor"])(
