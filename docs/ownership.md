@@ -53,6 +53,7 @@ owner listed here exists.
 | Concern | Owner | Milestone |
 | --- | --- | --- |
 | Composition root, the one root render | `src/app/bootstrap.ts` | 1 |
+| Applying the theme to the document | `src/app/theme.ts` | 10 |
 | URL and active page | `src/app/router.ts` | 2 |
 | App shell layout | `src/app/shell.view.ts` | 1 |
 | Block type definitions | `src/blocks/block-registry.ts` plus one folder per type | 2 |

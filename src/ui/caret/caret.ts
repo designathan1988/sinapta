@@ -103,7 +103,10 @@ export function restoreSelection(
   if (text === null) return;
   const anchor = positionAt(text, selection.anchorOffset);
   const focus = positionAt(text, selection.focusOffset);
-  text.focus({ preventScroll: true });
+  // Focusing makes the browser lay out the page first. While typing, the
+  // block already has focus, and on a long page that layout is most of the
+  // cost of a keystroke.
+  if (document.activeElement !== text) text.focus({ preventScroll: true });
   document
     .getSelection()
     ?.setBaseAndExtent(anchor.node, anchor.offset, focus.node, focus.offset);

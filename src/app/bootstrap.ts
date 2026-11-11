@@ -20,7 +20,6 @@ import {
   seedGettingStarted,
 } from "../features/onboarding/index.ts";
 import { installSlashMenuKeys } from "../features/slash-menu/index.ts";
-import type { Theme } from "../model/index.ts";
 import {
   createAppStore,
   createCommandRegistry,
@@ -42,6 +41,7 @@ import { installOverlayDismiss } from "../ui/overlay/index.ts";
 import { matchShortcut } from "../ui/shortcuts/index.ts";
 import { installTooltip } from "../ui/tooltip/index.ts";
 import { startRouter } from "./router.ts";
+import { applyTheme } from "./theme.ts";
 import { renderShell } from "./shell.view.ts";
 
 const COMMANDS = [
@@ -59,15 +59,6 @@ const COMMANDS = [
   ...databaseCommands,
   ...onboardingCommands,
 ];
-
-// A manual theme is an attribute on the root element; "system" removes it.
-function applyTheme(theme: Theme): void {
-  const root = document.documentElement;
-  const meta = document.querySelector('meta[name="color-scheme"]');
-  if (theme === "system") root.removeAttribute("data-theme");
-  else root.dataset.theme = theme;
-  meta?.setAttribute("content", theme === "system" ? "light dark" : theme);
-}
 
 export async function startApp(container: HTMLElement): Promise<void> {
   const store = createAppStore(createInitialState());

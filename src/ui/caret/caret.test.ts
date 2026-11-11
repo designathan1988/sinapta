@@ -34,6 +34,20 @@ describe("restoreSelection", () => {
     expect(document.activeElement).toBe(text);
   });
 
+  it("does not focus a block that already has focus, so typing forces no layout", () => {
+    const text = mount();
+    text.focus();
+    let focusCalls = 0;
+    text.focus = () => {
+      focusCalls += 1;
+    };
+
+    restoreSelection(document, { ...CARET, anchorOffset: 4, focusOffset: 4 });
+
+    expect(focusCalls).toBe(0);
+    expect(document.getSelection()?.anchorOffset).toBe(4);
+  });
+
   it("leaves focus alone when there is no selection to restore", () => {
     mount();
     const button = document.querySelector("button");
