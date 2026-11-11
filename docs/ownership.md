@@ -85,7 +85,7 @@ owner listed here exists.
 | The pages a first visit starts with | `src/features/onboarding/` | 10 |
 | The keyboard shortcut reference | `src/features/shortcut-help/` | 10 |
 | Finding pages by the text of their blocks | `src/features/command-palette/command-palette-text.selectors.ts` | 10 |
-| Focusing and showing elements once they are in the page | `src/ui/focus/` | 5 |
+| Focusing and showing elements once they are in the page, and the only deferral views use (`afterRender`) | `src/ui/focus/` | 5 |
 | Table row models (sort, filter, order through the table engine) | `src/features/database/table-model.selectors.ts` | 5 |
 | Keyboard shortcuts | `src/ui/shortcuts/shortcut-registry.ts` | 1 |
 | Overlay dismissal, anchoring and focus return | `src/ui/overlay/` | 1 |

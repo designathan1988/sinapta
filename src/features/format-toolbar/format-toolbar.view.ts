@@ -11,6 +11,7 @@ import {
   type Dispatch,
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { afterRender } from "../../ui/focus/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { openLinkField, toggleTextMark } from "../editor/index.ts";
 import {
@@ -40,7 +41,7 @@ function keepSelection(event: Event): void {
 // layout during the render.
 function placeToolbar(element: Element | undefined): void {
   if (!(element instanceof HTMLElement)) return;
-  queueMicrotask(() => {
+  afterRender(() => {
     if (!element.isConnected) return;
     if (!element.matches(":popover-open")) element.showPopover();
     const selection = document.getSelection();

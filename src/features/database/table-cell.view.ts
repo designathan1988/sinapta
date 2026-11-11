@@ -2,7 +2,7 @@ import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import type { AppState, Dispatch } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
-import { whenConnected } from "../../ui/focus/index.ts";
+import { afterRender, whenConnected } from "../../ui/focus/index.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { propertyType } from "./property-registry.ts";
@@ -42,7 +42,7 @@ function isActive(
 // render to finish: the editor that had focus is removed after this runs.
 function focusCell(element: Element | undefined): void {
   if (!(element instanceof HTMLElement)) return;
-  queueMicrotask(() => {
+  afterRender(() => {
     const current = document.activeElement;
     const isFree =
       current === document.body || current?.closest("[role=grid]") != null;
