@@ -63,7 +63,7 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Set property on ticked rows | `table-bulk.view.ts` | custom (a list, not a button per property) | a button per property in the bar |
 | Linked view source | `linked-view.view.ts` | Notion | searchable list of databases |
 | Row properties on a row page | `row-properties.view.ts`, `row-option.view.ts` | custom (options are a list; other values are fields, not the table's editors) | property rows; values open their editors |
-| Column menu | `column-menu.view.ts` | custom (Notion's panel; icons and items missing) | menu with icons: sort, filter, hide, wrap, freeze, insert, duplicate, delete |
+| Column menu | `column-menu.view.ts` | Notion (Insert left and right, Duplicate missing) | menu with icons: sort, filter, hide, wrap, freeze, insert, duplicate, delete |
 | Board column menu | `board-column-menu.view.ts` | menu | menu |
 | Row tick box | `table-gutter.view.ts` | Notion | Notion checkbox |
 | Group header | `group-header.view.ts` | custom | caret, chip, count; hover shows "+" and "…" |
@@ -77,7 +77,7 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Relation database | `relation-config.view.ts` | Notion | searchable list of databases |
 | Rollup relation, property, calculation | `rollup-config.view.ts` | custom (a list in a form, not a menu row) | rows with values opening option lists |
 | Button property action | `button-property-config.view.ts` | custom (a list in a form) | option list |
-| Option color | `option-list.view.ts` | custom (chips, not swatches) | color menu with swatches and a check |
+| Options and their colors | `option-list.view.ts` | Notion (colors as chips) | color menu with swatches and a check |
 
 ### Blocks
 
@@ -125,10 +125,9 @@ against the reference on every run.
 
 ## Open
 
-- Property settings as Notion's menu: name and type rows, each setting a
-  row with its value opening a list; Duplicate and Delete at the end.
-- Column menu with Notion's icons and items: filter, insert left and
-  right, duplicate.
+- Property settings: a Type row that changes the type, and each type
+  setting as a row with its value instead of a labeled list; Duplicate.
+- Column menu: Insert left and right, Duplicate property.
 - The view settings' Sort panel: the view's sorts, added and removed.
 - A row page's values open the table's own editors.
 - Group headers show "+" and "…" on hover.

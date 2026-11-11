@@ -69,6 +69,8 @@ export function optionEntries(
     { kind: "section", label: TEXT.options },
     ...options.map((option): MenuEntry => ({
       label: option.name,
+      // Notion's grip; its panel's Move up and down move it by keyboard.
+      icon: "grip",
       color: option.color,
       opensPanel: true,
       onSelect: () =>

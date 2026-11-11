@@ -186,9 +186,9 @@ describe("tokenize", () => {
       'const total = items.map((item) => item.price * 2); // "sum"\n';
     const text = line.repeat(300);
 
-    // The fastest of five runs: other test files share the processor, and
-    // a slow algorithm is slow every time.
-    const times = Array.from({ length: 5 }, () => {
+    // The fastest of fifteen runs: other test files and the watchers share
+    // the processor in bursts, and a slow algorithm is slow every time.
+    const times = Array.from({ length: 15 }, () => {
       const started = performance.now();
       tokenize("typescript", text);
       return performance.now() - started;

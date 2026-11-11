@@ -78,10 +78,10 @@ describe("paintCode", () => {
     const text = line.repeat(300);
     const element = codeElement(text);
 
-    // The fastest of five paints, each of new text as typing makes it:
-    // other test files share the processor, and a slow algorithm is slow
-    // every time.
-    const times = Array.from({ length: 5 }, () => {
+    // The fastest of fifteen paints, each of new text as typing makes it:
+    // other test files and the watchers share the processor in bursts, and
+    // a slow algorithm is slow every time.
+    const times = Array.from({ length: 15 }, () => {
       const started = performance.now();
       paintCode(element, { language: "typescript", text: [{ text }] });
       return performance.now() - started;
