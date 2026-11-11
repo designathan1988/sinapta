@@ -199,6 +199,10 @@ function renderFooter(context: TableContext): TemplateResult {
   </div>`;
 }
 
+// Layouts that list rows one under another end with "New page" and a
+// count; boards, galleries and calendars add rows where they sit.
+const LISTED_LAYOUTS: ReadonlySet<string> = new Set(["table", "list"]);
+
 // A database page: its views as tabs, the view's tools and its table.
 export function renderDatabase(
   state: AppState,
@@ -215,7 +219,8 @@ export function renderDatabase(
   const model = selectSearchedModel(state, viewModel);
   const context = { state, dispatch, model };
   return html`<section class="database">
-    ${renderToolbar(context)} ${renderLayout(context)} ${renderFooter(context)}
+    ${renderToolbar(context)} ${renderLayout(context)}
+    ${LISTED_LAYOUTS.has(model.view.type) ? renderFooter(context) : nothing}
     ${renderTableOverlay(context)}
   </section>`;
 }

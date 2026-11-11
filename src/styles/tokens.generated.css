@@ -270,6 +270,7 @@
     --size-label-width: var(--base-size-12);
     --size-menu-min-width: var(--base-size-14);
     --size-menu-max-height: var(--base-size-20);
+    --size-menu-width: var(--base-size-20);
     --size-dialog-width: var(--base-size-32);
     --size-dialog-wide: var(--base-size-36);
     --size-board-column: var(--base-size-18);

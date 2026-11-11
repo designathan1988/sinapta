@@ -3,20 +3,52 @@
     display: flex;
     flex: 1;
     gap: var(--space-inline-md);
-    align-items: stretch;
+    align-items: flex-start;
     min-block-size: 0;
     padding-block: var(--space-stack-sm);
     overflow: auto;
   }
 
+  /* Each column is tinted with its group's color, as in Notion. */
   .board__column {
+    --board-tint: var(--color-chip-gray-bg);
+
     display: grid;
     flex: none;
     gap: var(--space-stack-sm);
     align-content: start;
     inline-size: var(--size-board-column);
-    padding: var(--space-inset-xs);
+    padding: var(--space-inset-sm);
     border-radius: var(--radius-md);
+    background-color: color-mix(in oklch, var(--board-tint) 45%, transparent);
+
+    &[data-color="brown"] {
+      --board-tint: var(--color-chip-brown-bg);
+    }
+
+    &[data-color="orange"] {
+      --board-tint: var(--color-chip-orange-bg);
+    }
+
+    &[data-color="yellow"] {
+      --board-tint: var(--color-chip-yellow-bg);
+    }
+
+    &[data-color="green"] {
+      --board-tint: var(--color-chip-green-bg);
+    }
+
+    &[data-color="blue"] {
+      --board-tint: var(--color-chip-blue-bg);
+    }
+
+    &[data-color="purple"] {
+      --board-tint: var(--color-chip-purple-bg);
+    }
+
+    &[data-color="red"] {
+      --board-tint: var(--color-chip-red-bg);
+    }
 
     &[data-drop] {
       background-color: var(--color-bg-selected);

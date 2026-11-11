@@ -1,8 +1,9 @@
 import "./icon.css";
 import { html, svg, type TemplateResult } from "lit-html";
+import { BLOCK_PATHS, isBlockIcon, type BlockIconName } from "./block-icons.ts";
 import { DATA_PATHS, isDataIcon, type DataIconName } from "./data-icons.ts";
 
-export type IconName =
+export type BaseIconName =
   | "sidebar"
   | "settings"
   | "close"
@@ -29,32 +30,13 @@ export type IconName =
   | "align-left"
   | "align-center"
   | "align-right"
-  | "expand"
-  | "table"
-  | "board"
-  | "gallery"
-  | "list"
-  | "calendar"
-  | "filter"
-  | "sort"
-  | "title"
-  | "text"
-  | "number"
-  | "select"
-  | "multi-select"
-  | "status"
-  | "checkbox"
-  | "email"
-  | "phone"
-  | "file"
-  | "relation"
-  | "rollup"
-  | "clock"
-  | "id";
+  | "expand";
+
+export type IconName = BaseIconName | DataIconName | BlockIconName;
 
 // 16-unit outline icons, drawn with the current text color.
 // Fragments use the `svg` tag so that they are parsed as SVG, not HTML.
-const PATHS: Record<Exclude<IconName, DataIconName>, TemplateResult<2>> = {
+const PATHS: Record<BaseIconName, TemplateResult<2>> = {
   sidebar: svg`<rect x="2" y="3" width="12" height="10" rx="1.5" />
     <path d="M6 3v10" />`,
   settings: svg`<circle cx="8" cy="8" r="2" />
@@ -96,6 +78,11 @@ const PATHS: Record<Exclude<IconName, DataIconName>, TemplateResult<2>> = {
     <path d="M10.5 3.5V3A1.5 1.5 0 0 0 9 1.5H4A1.5 1.5 0 0 0 2.5 3v5A1.5 1.5 0 0 0 4 9.5h.5" />`,
 };
 
+function pathsOf(name: IconName): TemplateResult<2> {
+  if (isDataIcon(name)) return DATA_PATHS[name];
+  return isBlockIcon(name) ? BLOCK_PATHS[name] : PATHS[name];
+}
+
 // Icons are decoration; the control that holds one carries the name.
 export function renderIcon(name: IconName): TemplateResult {
   return html`<svg
@@ -109,6 +96,6 @@ export function renderIcon(name: IconName): TemplateResult {
     aria-hidden="true"
     data-icon=${name}
   >
-    ${isDataIcon(name) ? DATA_PATHS[name] : PATHS[name]}
+    ${pathsOf(name)}
   </svg>`;
 }

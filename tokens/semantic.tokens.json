@@ -318,6 +318,9 @@
       },
       "maxHeight": {
         "$value": "{base.size.20}"
+      },
+      "width": {
+        "$value": "{base.size.20}"
       }
     },
     "dialog": {

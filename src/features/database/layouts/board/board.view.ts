@@ -138,6 +138,7 @@ function renderColumn(
   return html`<section
     class="board__column"
     data-option-id=${column.optionId ?? ""}
+    data-color=${column.option?.color ?? "gray"}
     aria-label=${name}
   >
     <header class="board__header">

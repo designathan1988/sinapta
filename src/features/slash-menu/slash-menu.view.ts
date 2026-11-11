@@ -10,6 +10,7 @@ import {
 import { createPage } from "../../blocks/page/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { renderIcon } from "../../ui/icon/index.ts";
 import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
 import type { ScopedKeyHandler, ScopedKeys } from "../../ui/shortcuts/index.ts";
 import { convertBlock, replaceText, setBlockColor } from "../editor/index.ts";
@@ -122,8 +123,26 @@ function renderOption(
       keepInView(option, isActive);
     })}
   >
-    ${item.label}
+    <span class="slash-menu__icon">${renderIcon(item.icon)}</span>
+    <span class="slash-menu__label">${item.label}</span>
+    ${
+      item.hint === undefined
+        ? nothing
+        : html`<span class="slash-menu__hint">${item.hint}</span>`
+    }
   </div>`;
+}
+
+// The options, with the name of each group before its first option.
+function renderOptions(menu: OpenSlashMenu): TemplateResult[] {
+  return menu.items.flatMap((item, index) => {
+    const option = renderOption(item, index, index === menu.activeIndex);
+    if (menu.items[index - 1]?.group === item.group) return [option];
+    const heading = html`<div class="slash-menu__group" role="presentation">
+      ${COPY.slashMenu.groups[item.group]}
+    </div>`;
+    return [heading, option];
+  });
 }
 
 // The list of block types offered after "/" is typed.
@@ -152,8 +171,6 @@ export function renderSlashMenu(
     ${ref(showPopoverWhenConnected)}
     @pointerdown=${onPointerDown}
   >
-    ${menu.items.map((item, index) =>
-      renderOption(item, index, index === menu.activeIndex),
-    )}
+    ${renderOptions(menu)}
   </div>`;
 }

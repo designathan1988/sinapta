@@ -1,6 +1,15 @@
 // Text of the block editor, its menus and the formatting toolbar.
 export const EDITOR_TEXT = {
-  slashMenu: { label: "Turn into" },
+  slashMenu: {
+    label: "Turn into",
+    groups: {
+      basic: "Basic blocks",
+      media: "Media",
+      advanced: "Advanced blocks",
+      pages: "Pages",
+      colors: "Colors",
+    },
+  },
   emoji: {
     search: "Search emoji",
     results: "Results",

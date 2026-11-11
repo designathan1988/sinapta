@@ -6,7 +6,7 @@
     inline-size: 100%;
     padding: var(--space-inset-sm);
     overflow: hidden;
-    border: var(--size-border-thin) solid var(--color-border-default);
+    border: none;
     border-radius: var(--radius-md);
     background-color: var(--color-bg-raised);
     box-shadow: var(--shadow-card);

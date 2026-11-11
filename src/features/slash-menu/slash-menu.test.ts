@@ -54,8 +54,32 @@ describe("selectSlashItems", () => {
         label: "Link to page: Roadmap",
         blockType: "page-link",
         extraProps: { pageId: "page" },
+        icon: "link",
+        group: "pages",
       },
     ]);
+  });
+
+  it("gives each block its icon, its group and its Markdown shortcut", () => {
+    const items = selectSlashItems(createInitialState(), "");
+    const item = (label: string) => items.find((each) => each.label === label);
+
+    expect(item("Heading 1")).toMatchObject({
+      icon: "heading-1",
+      group: "basic",
+      hint: "#",
+    });
+    expect(item("To-do list")).toMatchObject({ icon: "checkbox", hint: "[]" });
+    expect(item("Image")).toMatchObject({ icon: "image", group: "media" });
+    expect(item("Table of contents")).toMatchObject({ group: "advanced" });
+  });
+
+  it("lists basic blocks first, then media, then advanced ones", () => {
+    const groups = selectSlashItems(createInitialState(), "").map(
+      (item) => item.group,
+    );
+
+    expect([...new Set(groups)]).toEqual(["basic", "media", "advanced"]);
   });
 });
 
@@ -86,8 +110,12 @@ describe("color items", () => {
 
     expect(items).toEqual(
       expect.arrayContaining([
-        { label: "Blue", color: "blue" },
-        { label: "Blue background", color: "blue-background" },
+        expect.objectContaining({ label: "Blue", color: "blue" }),
+        expect.objectContaining({
+          label: "Blue background",
+          color: "blue-background",
+          group: "colors",
+        }),
       ]),
     );
   });
@@ -95,7 +123,9 @@ describe("color items", () => {
   it("offers the default color to remove one", () => {
     const items = selectSlashItems(createInitialState(), "default");
 
-    expect(items).toContainEqual({ label: "Default", color: null });
+    expect(items).toContainEqual(
+      expect.objectContaining({ label: "Default", color: null }),
+    );
   });
 
   it("keeps colors out of the list before anything is typed", () => {

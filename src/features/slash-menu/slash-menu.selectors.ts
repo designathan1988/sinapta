@@ -10,25 +10,31 @@ import {
 import type { AppState } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { selectTreeRows } from "../sidebar/index.ts";
+import {
+  headingLook,
+  lookOf,
+  SLASH_GROUPS,
+  type SlashLook,
+} from "./slash-menu-catalog.ts";
 
 export const SLASH_MENU_OVERLAY = "slash-menu";
 const PAGE_LINK_LIMIT = 5;
 
 // One thing the slash menu can turn the block into.
-export interface BlockSlashItem {
+export interface BlockSlashItem extends SlashLook {
   readonly label: string;
   readonly blockType: string;
   readonly extraProps?: BlockProps;
 }
 
 // A color for the whole block; null takes the color away.
-export interface ColorSlashItem {
+export interface ColorSlashItem extends SlashLook {
   readonly label: string;
   readonly color: BlockColor | null;
 }
 
 // A new subpage, below the block, opened at once.
-export interface PageSlashItem {
+export interface PageSlashItem extends SlashLook {
   readonly label: string;
   readonly createsPage: true;
 }
@@ -38,16 +44,24 @@ export type SlashItem = BlockSlashItem | ColorSlashItem | PageSlashItem;
 const PAGE_ITEM: PageSlashItem = {
   label: COPY.blockNames.page,
   createsPage: true,
+  ...lookOf("page"),
 };
+
+const COLOR_LOOK: SlashLook = { icon: "color", group: "colors" };
 
 // Typed as /red, /red background or /default, as in Notion.
 function colorItems(): ColorSlashItem[] {
   return [
-    { label: COPY.formatToolbar.defaultColor, color: null },
-    ...TONES.map((tone) => ({ label: COPY.tones[tone], color: tone })),
+    { label: COPY.formatToolbar.defaultColor, color: null, ...COLOR_LOOK },
+    ...TONES.map((tone) => ({
+      label: COPY.tones[tone],
+      color: tone,
+      ...COLOR_LOOK,
+    })),
     ...TONES.map((tone) => ({
       label: `${COPY.tones[tone]} ${COPY.blockMenu.background}`,
       color: `${tone}-background` as const,
+      ...COLOR_LOOK,
     })),
   ];
 }
@@ -57,28 +71,36 @@ const EXTRA_HEADINGS: readonly BlockSlashItem[] = [
     label: COPY.blockNames.heading2,
     blockType: HEADING_TYPE,
     extraProps: { level: 2 },
+    ...headingLook(2, false),
   },
   {
     label: COPY.blockNames.heading3,
     blockType: HEADING_TYPE,
     extraProps: { level: 3 },
+    ...headingLook(3, false),
   },
   {
     label: COPY.blockNames.heading4,
     blockType: HEADING_TYPE,
     extraProps: { level: 4 },
+    ...headingLook(4, false),
   },
   ...[1, 2, 3].map((level) => ({
     label: `${COPY.blockNames.toggleHeading} ${String(level)}`,
     blockType: HEADING_TYPE,
     extraProps: { level, isToggleable: true, isOpen: true },
+    ...headingLook(level, true),
   })),
 ];
 
 function blockItems(): BlockSlashItem[] {
   return BLOCK_DEFINITIONS.flatMap((definition): BlockSlashItem[] => {
     if (definition.label === undefined) return [];
-    const item = { label: definition.label, blockType: definition.type };
+    const item = {
+      label: definition.label,
+      blockType: definition.type,
+      ...lookOf(definition.type),
+    };
     return definition.type === HEADING_TYPE
       ? [item, ...EXTRA_HEADINGS]
       : [item];
@@ -93,6 +115,8 @@ function pageItems(state: AppState): BlockSlashItem[] {
     label: `${COPY.blockNames.pageLink}: ${row.title === "" ? COPY.sidebar.untitled : row.title}`,
     blockType: PAGE_LINK_TYPE,
     extraProps: { pageId: row.id },
+    icon: "link" as const,
+    group: "pages" as const,
   }));
 }
 
@@ -108,7 +132,9 @@ export function selectSlashItems(state: AppState, query: string): SlashItem[] {
   const pages = pageItems(state).filter(matches).slice(0, PAGE_LINK_LIMIT);
   const colors = needle === "" ? [] : colorItems().filter(matches);
   const blocks = [PAGE_ITEM, ...blockItems()].filter(matches);
-  return [...blocks, ...pages, ...colors];
+  // Sorted by group, keeping the order within each group.
+  const rank = (item: SlashItem): number => SLASH_GROUPS.indexOf(item.group);
+  return [...blocks, ...pages, ...colors].toSorted((a, b) => rank(a) - rank(b));
 }
 
 export interface OpenSlashMenu {

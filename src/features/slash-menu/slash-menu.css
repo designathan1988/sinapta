@@ -1,7 +1,11 @@
 @layer features {
+  /* Notion's block menu: groups of blocks, each with an icon in a tile,
+     its name and the Markdown that makes it. */
   .slash-menu {
-    min-inline-size: var(--size-menu-min-width);
+    inline-size: var(--size-menu-width);
+    max-inline-size: calc(100vw - var(--space-inset-xl));
     max-block-size: var(--size-menu-max-height);
+    padding: var(--space-inset-xs);
     overflow: hidden auto;
 
     &:popover-open {
@@ -11,17 +15,52 @@
     }
   }
 
+  .slash-menu__group {
+    padding: var(--space-inset-sm) var(--space-inset-sm) var(--space-inset-xs);
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+  }
+
   .slash-menu__item {
     display: flex;
+    gap: var(--space-inline-sm);
     align-items: center;
-    min-block-size: var(--size-row-height);
+    min-block-size: var(--size-control-md);
     padding: var(--space-none) var(--space-inset-sm);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
     cursor: pointer;
 
     &:hover,
     &[aria-selected="true"] {
       background-color: var(--color-bg-hover);
     }
+  }
+
+  .slash-menu__icon {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    inline-size: var(--size-control-sm);
+    block-size: var(--size-control-sm);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-raised);
+    color: var(--color-text-secondary);
+  }
+
+  .slash-menu__label {
+    flex: 1;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .slash-menu__hint {
+    flex: none;
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
   }
 }
