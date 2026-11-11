@@ -7,19 +7,14 @@ import {
   PAGE_TYPE,
   selectPage,
 } from "../../blocks/page/index.ts";
-import type { BlockId, ViewType } from "../../model/index.ts";
+import { VIEW_TYPES, type BlockId, type ViewType } from "../../model/index.ts";
 import type { AppState, Dispatch } from "../../state/index.ts";
 import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { startDatabase } from "../database/index.ts";
 
-const LAYOUTS: readonly ViewType[] = [
-  "table",
-  "board",
-  "list",
-  "gallery",
-  "calendar",
-];
+// The layouts in Notion's order.
+const LAYOUTS = VIEW_TYPES;
 
 interface StartContext {
   readonly state: AppState;

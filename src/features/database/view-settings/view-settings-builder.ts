@@ -16,6 +16,7 @@ export interface Setup {
   readonly board?: boolean;
   readonly sorted?: boolean;
   readonly calendar?: boolean;
+  readonly timeline?: boolean;
 }
 
 type App = ReturnType<typeof createDatabaseApp>;
@@ -23,12 +24,12 @@ type App = ReturnType<typeof createDatabaseApp>;
 // The view as the test asks: its layout, its grouping and its sort.
 function arrange(app: App, setup: Setup, due: PropertyId): void {
   const viewId = app.view().id;
-  const layout =
-    setup.board === true
-      ? "board"
-      : setup.calendar === true
-        ? "calendar"
-        : undefined;
+  const layouts = [
+    setup.board === true && ("board" as const),
+    setup.calendar === true && ("calendar" as const),
+    setup.timeline === true && ("timeline" as const),
+  ];
+  const layout = layouts.find((item) => item !== false);
   if (layout !== undefined) {
     app.dispatch(setViewType.create({ viewId, viewType: layout }));
   }

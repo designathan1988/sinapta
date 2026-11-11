@@ -43,6 +43,7 @@ export function emptyView(
     cardPreview: "cover",
     colorColumns: true,
     calendar: { mode: "month", showWeekends: true, weekStartsOn: 0 },
+    timeline: { zoom: "month", showTable: true },
   };
 }
 

@@ -19,6 +19,7 @@ const TABLE = {
   cardPreview: "cover",
   colorColumns: true,
   calendar: { mode: "month", showWeekends: true, weekStartsOn: 0 },
+  timeline: { zoom: "month", showTable: true },
 };
 
 const GROUP_BY = {
@@ -119,8 +120,8 @@ describe("viewSchema", () => {
   });
 
   it("rejects a layout it does not know", () => {
-    expect(
-      v.safeParse(viewSchema, { ...TABLE, type: "timeline" }).success,
-    ).toBe(false);
+    expect(v.safeParse(viewSchema, { ...TABLE, type: "map" }).success).toBe(
+      false,
+    );
   });
 });

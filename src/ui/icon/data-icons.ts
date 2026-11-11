@@ -22,6 +22,7 @@ export const DATA_PATHS = {
     <rect x="2" y="9" width="5" height="5" rx="1" />
     <rect x="9" y="9" width="5" height="5" rx="1" />`,
   list: svg`<path d="M5.5 4h8M5.5 8h8M5.5 12h8M2.5 4h.01M2.5 8h.01M2.5 12h.01" />`,
+  timeline: svg`<path d="M2.5 4h6M5.5 8h7M3.5 12h5" />`,
   calendar: svg`<rect x="2" y="3" width="12" height="11" rx="1.5" />
     <path d="M2 6.5h12M5.5 1.5v3M10.5 1.5v3" />`,
   filter: svg`<path d="M2 3h12l-4.5 5.5v4.5l-3-1.5v-3z" />`,

@@ -23,13 +23,17 @@ export const filterGroupSchema = v.object({
 
 // How a view lays out its rows. Every layout but the table was added in
 // schema version 3.
+// The layouts, in the order Notion lists them.
 export const viewTypeSchema = v.picklist([
   "table",
   "board",
-  "gallery",
-  "list",
+  "timeline",
   "calendar",
+  "list",
+  "gallery",
 ]);
+
+export const VIEW_TYPES = viewTypeSchema.options;
 
 // How a view groups its rows: by one property's values, the groups in the
 // property's own order or by name, and collapsed groups by their key.
@@ -82,6 +86,14 @@ export const calendarOptionsSchema = v.object({
   weekStartsOn: v.picklist([0, 1]),
 });
 
+// How a timeline shows its rows (version 23): by which date property, how
+// much time a screen holds, and whether the table of rows sits beside it.
+export const timelineOptionsSchema = v.object({
+  datePropertyId: v.optional(propertyIdSchema),
+  zoom: v.picklist(["day", "week", "month", "quarter", "year"]),
+  showTable: v.boolean(),
+});
+
 export const viewSchema = v.object({
   id: viewIdSchema,
   databaseId: blockIdSchema,
@@ -116,6 +128,7 @@ export const viewSchema = v.object({
   // The date property a calendar places its rows by (version 3).
   datePropertyId: v.optional(propertyIdSchema),
   calendar: calendarOptionsSchema,
+  timeline: timelineOptionsSchema,
 });
 
 export type Filter = v.InferOutput<typeof filterSchema>;
@@ -128,3 +141,4 @@ export type CalculationKind = v.InferOutput<typeof calculationSchema>;
 export type View = v.InferOutput<typeof viewSchema>;
 export type ViewType = v.InferOutput<typeof viewTypeSchema>;
 export type CalendarOptions = v.InferOutput<typeof calendarOptionsSchema>;
+export type TimelineOptions = v.InferOutput<typeof timelineOptionsSchema>;

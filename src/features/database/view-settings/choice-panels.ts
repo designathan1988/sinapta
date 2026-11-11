@@ -2,6 +2,7 @@
 // what to group by, how groups sort, how dates group, a card's picture
 // and size, and a calendar's date property; and the panel that shows and
 // hides properties.
+import { setTimelineOptions } from "../timeline-options.commands.ts";
 import { setCalendarOptions } from "../calendar-options.commands.ts";
 import type { GroupBy, View } from "../../../model/index.ts";
 import { COPY } from "../../../ui/copy.ts";
@@ -152,6 +153,28 @@ export function calendarModePanel(context: TableContext): SettingsPanel {
       choose: (mode) => {
         const viewId = model.view.id;
         dispatch(setCalendarOptions.create({ viewId, options: { mode } }));
+      },
+    }),
+  };
+}
+
+// The date property a timeline places its bars by.
+export function timelineDatePanel(context: TableContext): SettingsPanel {
+  const { model, dispatch } = context;
+  const dates = propertiesOfTypes(model.database, DATE_PROPERTY_TYPES);
+  const viewId = model.view.id;
+  return {
+    title: COPY.database.showTimelineBy,
+    back: "layout",
+    items: choiceItems(context, {
+      choices: dates.map((date) => ({ value: date.id, label: date.name })),
+      value: model.view.timeline.datePropertyId ?? dates[0]?.id,
+      back: "layout",
+      choose: (id) => {
+        const date = dates.find((item) => item.id === id);
+        if (date === undefined) return;
+        const options = { datePropertyId: date.id };
+        dispatch(setTimelineOptions.create({ viewId, options }));
       },
     }),
   };

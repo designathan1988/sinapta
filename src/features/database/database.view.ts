@@ -1,3 +1,4 @@
+import { LAYOUT_ICONS } from "./view-settings/index.ts";
 import "./database.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import type { BlockId } from "../../model/index.ts";
@@ -58,14 +59,6 @@ function renderNewViewButton(context: TableContext): TemplateResult {
   </button>`;
 }
 
-const VIEW_ICONS: Readonly<Record<string, IconName>> = {
-  table: "table",
-  board: "board",
-  gallery: "gallery",
-  list: "list",
-  calendar: "calendar",
-};
-
 function renderTabs(context: TableContext): TemplateResult {
   const { model, state, dispatch } = context;
   const databaseId = model.holderId;
@@ -78,7 +71,7 @@ function renderTabs(context: TableContext): TemplateResult {
       aria-pressed=${String(view.id === model.view.id)}
       @click=${() => dispatch(setActiveView.create({ databaseId, viewId }))}
     >
-      ${renderIcon(VIEW_ICONS[view.type] ?? "table")}
+      ${renderIcon(LAYOUT_ICONS[view.type])}
       <span>${view.name}</span>
     </button>`;
   });

@@ -10,6 +10,7 @@ import type { TableContext } from "../table-cell.view.ts";
 import {
   calendarDatePanel,
   calendarModePanel,
+  timelineDatePanel,
   cardPreviewPanel,
   cardSizePanel,
   groupByPanel,
@@ -40,6 +41,7 @@ const PANELS: Readonly<
   "card-size": cardSizePanel,
   "calendar-date": calendarDatePanel,
   "calendar-mode": calendarModePanel,
+  "timeline-date": timelineDatePanel,
 };
 
 export function renderViewSettings(context: TableContext): TemplateResult {

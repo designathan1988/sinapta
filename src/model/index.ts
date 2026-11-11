@@ -34,8 +34,10 @@ export {
 export {
   CALCULATION_KINDS,
   viewTypeSchema,
+  VIEW_TYPES,
   type CalculationKind,
   type CalendarOptions,
+  type TimelineOptions,
   type Conjunction,
   type Filter,
   type FilterGroup,

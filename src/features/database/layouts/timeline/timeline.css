@@ -1,0 +1,202 @@
+@layer features {
+  /* Notion's timeline: the zoom and Today above; the titles' table
+     beside; then the time units, today's line in red and a bar per row,
+     placed by days through --offset and --span. */
+  .timeline {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-stack-xs);
+
+    &[data-zoom="day"] {
+      --timeline-day: var(--size-timeline-day);
+    }
+
+    &[data-zoom="week"] {
+      --timeline-day: var(--size-timeline-week);
+    }
+
+    &[data-zoom="month"] {
+      --timeline-day: var(--size-timeline-month);
+    }
+
+    &[data-zoom="quarter"] {
+      --timeline-day: var(--size-timeline-quarter);
+    }
+
+    &[data-zoom="year"] {
+      --timeline-day: var(--size-timeline-year);
+    }
+  }
+
+  .timeline__header {
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .timeline__today-button {
+    min-block-size: var(--size-control-sm);
+    padding: var(--space-none) var(--space-inline-sm);
+    border: none;
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
+  .timeline__body {
+    display: flex;
+    min-inline-size: 0;
+    border-block: var(--size-border-thin) solid var(--color-border-subtle);
+  }
+
+  .timeline__table {
+    display: grid;
+    flex: none;
+    align-content: start;
+    inline-size: var(--size-timeline-table);
+    border-inline-end: var(--size-border-thin) solid var(--color-border-subtle);
+  }
+
+  .timeline__table-head,
+  .timeline__units {
+    block-size: var(--size-property-row);
+    border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
+  }
+
+  .timeline__table-head {
+    display: flex;
+    align-items: center;
+    padding-inline: var(--space-inline-sm);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+  }
+
+  .timeline__title {
+    overflow: hidden;
+    min-block-size: var(--size-property-row);
+    padding: var(--space-none) var(--space-inline-sm);
+    border: none;
+    background: none;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    text-align: start;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
+  /* The chart scrolls sideways inside the page, never widening it. */
+  .timeline__scroll {
+    overflow-x: auto;
+    flex: 1;
+    min-inline-size: 0;
+  }
+
+  .timeline__canvas {
+    position: relative;
+    inline-size: calc(var(--span) * var(--timeline-day));
+  }
+
+  .timeline__units {
+    position: relative;
+  }
+
+  .timeline__unit,
+  .timeline__today,
+  .timeline__bar {
+    position: absolute;
+    inset-inline-start: calc(var(--offset) * var(--timeline-day));
+  }
+
+  .timeline__unit {
+    overflow: hidden;
+    inline-size: calc(var(--span) * var(--timeline-day));
+    block-size: 100%;
+    padding: var(--space-inset-xs) var(--space-inline-xs);
+    border-inline-start: var(--size-border-thin) solid
+      var(--color-border-subtle);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    white-space: nowrap;
+  }
+
+  .timeline__today {
+    inset-block: 0;
+    inline-size: var(--size-border-thin);
+    background-color: var(--color-text-danger);
+  }
+
+  .timeline__lane {
+    position: relative;
+    block-size: var(--size-property-row);
+  }
+
+  .timeline__bar {
+    container-type: inline-size;
+    inset-block: var(--space-inset-xs);
+    inline-size: max(
+      calc(var(--span) * var(--timeline-day)),
+      var(--size-control-sm)
+    );
+    padding: var(--space-none) var(--space-inline-sm);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-raised);
+    box-shadow: var(--shadow-overlay);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    text-align: start;
+    white-space: nowrap;
+    cursor: grab;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
+  .timeline__bar-title {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* A bar too short for its title shows the title beside it, as
+     Notion's do. */
+  @container (inline-size < 6rem) {
+    .timeline__bar-title {
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: calc(100% + var(--space-inline-xs));
+      display: flex;
+      align-items: center;
+      overflow: visible;
+    }
+  }
+
+  .timeline__undated {
+    display: grid;
+    justify-items: start;
+  }
+
+  .timeline__undated-title {
+    margin: var(--space-none);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .timeline__empty {
+    color: var(--color-text-secondary);
+  }
+}

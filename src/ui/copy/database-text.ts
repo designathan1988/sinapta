@@ -160,6 +160,7 @@ export const DATABASE_TEXT = {
     layouts: {
       table: "Table",
       board: "Board",
+      timeline: "Timeline",
       gallery: "Gallery",
       list: "List",
       calendar: "Calendar",

@@ -22,13 +22,13 @@ interface StartPayload {
 // A board needs a status property and its three options; a calendar a date.
 function propertyIdCount(viewType: ViewType): number {
   if (viewType === "board") return 4;
-  return viewType === "calendar" ? 1 : 0;
+  return viewType === "calendar" || viewType === "timeline" ? 1 : 0;
 }
 
 function startingProperties(viewType: ViewType, ids: readonly PropertyId[]) {
   const [id, todo = "", doing = "", done = ""] = ids;
   if (id === undefined) return [];
-  if (viewType === "calendar") {
+  if (viewType === "calendar" || viewType === "timeline") {
     return [{ id, name: TEXT.dateName, type: "date" }];
   }
   const options = [

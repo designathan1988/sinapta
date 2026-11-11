@@ -32,6 +32,7 @@ import { rowBulkCommands } from "./row-bulk.commands.ts";
 import { tableLayoutCommands } from "./table-layout.commands.ts";
 import { cardCommands } from "./card.commands.ts";
 import { calendarOptionCommands } from "./calendar-options.commands.ts";
+import { timelineOptionCommands } from "./timeline-options.commands.ts";
 import { boardCardCommands } from "./layouts/board/board-card.commands.ts";
 import {
   pageCommands,
@@ -106,6 +107,7 @@ const DATABASE_TEST_COMMANDS = [
   ...tableLayoutCommands,
   ...cardCommands,
   ...calendarOptionCommands,
+  ...timelineOptionCommands,
   ...boardCardCommands,
   ...viewLayoutCommands,
   ...viewSearchCommands,

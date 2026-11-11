@@ -428,6 +428,32 @@
         "$description": "A property's row on a row page, as Notion's: 34 px.",
         "$value": "{base.size.2x125}"
       }
+    },
+    "timeline": {
+      "day": {
+        "$description": "A day's width on a timeline zoomed to days.",
+        "$value": "{base.size.3x0}"
+      },
+      "week": {
+        "$description": "A day's width zoomed to weeks.",
+        "$value": "{base.size.5}"
+      },
+      "month": {
+        "$description": "A day's width zoomed to months.",
+        "$value": "{base.size.0x375}"
+      },
+      "quarter": {
+        "$description": "A day's width zoomed to quarters.",
+        "$value": "{base.size.0x15625}"
+      },
+      "year": {
+        "$description": "A day's width zoomed to years.",
+        "$value": "{base.size.0x05}"
+      },
+      "table": {
+        "$description": "The table of titles beside a timeline.",
+        "$value": "{base.size.14}"
+      }
     }
   },
   "radius": {

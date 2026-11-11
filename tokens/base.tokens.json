@@ -1092,6 +1092,30 @@
           "value": 2.125,
           "unit": "rem"
         }
+      },
+      "3x0": {
+        "$value": {
+          "value": 3,
+          "unit": "rem"
+        }
+      },
+      "0x375": {
+        "$value": {
+          "value": 0.375,
+          "unit": "rem"
+        }
+      },
+      "0x15625": {
+        "$value": {
+          "value": 0.15625,
+          "unit": "rem"
+        }
+      },
+      "0x05": {
+        "$value": {
+          "value": 0.05,
+          "unit": "rem"
+        }
       }
     },
     "radius": {

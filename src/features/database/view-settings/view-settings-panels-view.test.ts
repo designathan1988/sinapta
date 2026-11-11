@@ -95,3 +95,22 @@ describe("a calendar's layout settings", () => {
     ]);
   });
 });
+
+describe("a timeline's layout settings", () => {
+  it("shows the timeline by a date, with or without the table", () => {
+    const { sent, row } = rendered({ panel: "layout", timeline: true });
+
+    row("Show table").click();
+
+    expect(
+      row("Show timeline by").querySelector(".menu__value")?.textContent,
+    ).toBe("Due");
+    expect(row("Show table").getAttribute("aria-checked")).toBe("true");
+    expect(sent).toEqual([
+      expect.objectContaining({
+        type: "view.setTimelineOptions",
+        options: { showTable: false },
+      }),
+    ]);
+  });
+});
