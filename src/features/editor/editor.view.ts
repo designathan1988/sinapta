@@ -1,4 +1,5 @@
 import "./editor.css";
+import "./editor-page-header.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { keyed } from "lit-html/directives/keyed.js";
 import { ref } from "lit-html/directives/ref.js";

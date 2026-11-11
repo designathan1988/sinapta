@@ -11,6 +11,7 @@ import {
   startBlockDrag,
 } from "./editor-block-menu.view.ts";
 import { onBlockContextMenu } from "./editor-context-menu.view.ts";
+import { renderStartList } from "./editor-start.view.ts";
 import { caretAt } from "./editor.commands.ts";
 import {
   onBeforeInput,
@@ -157,5 +158,6 @@ export function renderBlocks(
     >
       ${renderList(blocks, { ...context, selected })}
     </div>
-    ${renderContinue(pageId, blocks.length === 0, context)}`;
+    ${renderContinue(pageId, blocks.length === 0, context)}
+    ${renderStartList(pageId, context)}`;
 }

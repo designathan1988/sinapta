@@ -1,0 +1,30 @@
+@layer features {
+  /* An empty page's choice of layouts to start from. */
+  .editor__start {
+    display: grid;
+    gap: var(--space-stack-xs);
+  }
+
+  .editor__start-label {
+    margin: var(--space-none);
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-sm);
+  }
+
+  .editor__start-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-inline-xs);
+
+    & .button {
+      color: var(--color-text-secondary);
+    }
+  }
+
+  /* With a start list below it, the line that invites writing keeps to
+     its own height, so the list sits right under it. */
+  .editor__continue:has(+ .editor__start) {
+    flex: none;
+    min-block-size: auto;
+  }
+}

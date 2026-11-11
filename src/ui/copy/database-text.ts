@@ -2,6 +2,10 @@
 export const DATABASE_TEXT = {
   database: {
     newDatabase: "New database",
+    startWith: "Get started with",
+    statusName: "Status",
+    statusOptions: { todo: "Not started", doing: "In progress", done: "Done" },
+    dateName: "Date",
     untitled: "Untitled database",
     nameColumn: "Name",
     newRow: "New row",

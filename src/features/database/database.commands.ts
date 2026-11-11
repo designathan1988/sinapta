@@ -19,7 +19,11 @@ import { defineCommand } from "../../state/index.ts";
 
 export const DEFAULT_VIEW_NAME = "Table";
 
-function emptyView(id: View["id"], databaseId: BlockId, name: string): View {
+export function emptyView(
+  id: View["id"],
+  databaseId: BlockId,
+  name: string,
+): View {
   return {
     id,
     databaseId,

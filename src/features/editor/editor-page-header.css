@@ -1,0 +1,113 @@
+/* The page header: icon, cover actions and title. */
+@layer features {
+  .editor__heading {
+    display: flex;
+  }
+
+  .editor__page-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-inline-xs);
+    align-items: flex-end;
+
+    /* A page icon sits on its own line, and over the cover's edge. */
+    &[data-has-icon] {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  .editor__cover + .editor__page-actions[data-has-icon] {
+    margin-block-start: calc(var(--font-size-page-icon) / -2);
+  }
+
+  /* The quiet page actions appear when the page is hovered or holds focus;
+     touch screens always show them. */
+  @media (hover: hover) {
+    .editor__page-actions > :is(.button, .editor__icon[data-empty]) {
+      opacity: 0;
+
+      @media (prefers-reduced-motion: no-preference) {
+        transition: opacity var(--duration-fast) var(--easing-standard);
+      }
+    }
+
+    .editor:is(:hover, :focus-within)
+      .editor__page-actions
+      > :is(.button, .editor__icon[data-empty]) {
+      opacity: 1;
+    }
+  }
+
+  .editor__title {
+    inline-size: 100%;
+    padding: var(--space-none);
+    border: none;
+    background-color: transparent;
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: var(--font-size-title);
+    font-weight: var(--font-weight-strong);
+    line-height: var(--font-line-height-tight);
+
+    &::placeholder {
+      color: var(--color-text-tertiary);
+    }
+
+    /* A text field shows its caret; the underline is the focus indicator. */
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 var(--size-focus-width) 0 var(--color-border-focus);
+    }
+  }
+
+  .editor__icon {
+    align-self: flex-start;
+    min-inline-size: var(--size-control-md);
+    min-block-size: var(--size-control-md);
+    padding: var(--space-none) var(--space-inset-xs);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    font-size: var(--font-size-xxl);
+    line-height: var(--font-line-height-tight);
+    cursor: pointer;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: var(--color-bg-hover);
+    }
+
+    &:not([data-empty]) {
+      position: relative;
+      font-size: var(--font-size-page-icon);
+      line-height: 1;
+    }
+
+    &[data-empty] {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-sm);
+    }
+  }
+
+  .editor__icon-popover:popover-open {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-sm);
+    padding: var(--space-inset-md);
+  }
+
+  .editor__icon-field {
+    display: grid;
+    gap: var(--space-stack-xs);
+    color: var(--color-text-secondary);
+
+    & input {
+      min-block-size: var(--size-control-md);
+      padding: var(--space-none) var(--space-inset-sm);
+      border: var(--size-border-thin) solid var(--color-border-default);
+      border-radius: var(--radius-sm);
+      background-color: var(--color-bg-app);
+    }
+  }
+}

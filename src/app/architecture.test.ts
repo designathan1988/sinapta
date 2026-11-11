@@ -36,6 +36,7 @@ const KEY_OWNERS = [
 const KEBAB = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const BANNED = new Set(["utils", "helpers", "common", "shared", "misc", "lib"]);
 const IMPORT = /from "(\.{1,2}\/[^"]+)"/g;
+const MAX_LINES = 250;
 
 function importsOf(path: string): string[] {
   return [...read(path).matchAll(IMPORT)].flatMap((match) =>
@@ -91,5 +92,15 @@ describe("architecture", () => {
       });
     });
     expect(offenders).toEqual([]);
+  });
+
+  it("keeps every style sheet within the file length limit", () => {
+    const sheets = PATHS.filter(
+      (path) => path.endsWith(".css") && !path.endsWith("tokens.generated.css"),
+    );
+    const longest = sheets.filter(
+      (path) => read(path).split("\n").length > MAX_LINES,
+    );
+    expect(longest.map(fromSrc)).toEqual([]);
   });
 });

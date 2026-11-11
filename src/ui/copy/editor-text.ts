@@ -66,7 +66,7 @@ export const EDITOR_TEXT = {
     callout: "Callout",
     code: "Code",
     missingPage: "Page not found",
-    paragraph: "Type something",
+    paragraph: "Type '/' for commands",
     heading: "Heading",
     listItem: "List item",
     toDo: "To-do",
