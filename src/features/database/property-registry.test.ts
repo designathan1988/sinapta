@@ -141,7 +141,8 @@ function storedWithConfigs(configs: readonly unknown[]) {
     [database.id]: { ...database, props: { ...database.props, properties } },
   };
   const file = { schemaVersion: SCHEMA_VERSION, ...workspace, blocks };
-  return { databaseId: database.id, json: JSON.parse(JSON.stringify(file)) };
+  const json: unknown = JSON.parse(JSON.stringify(file));
+  return { databaseId: database.id, json };
 }
 
 // Configs checked with the shape of a select option, so that the test
