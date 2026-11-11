@@ -1,11 +1,13 @@
 export { pageDefinition } from "./page.definition.ts";
 export {
   coverFor,
-  pageCoverCommands,
+  pageStyleCommands,
   setCoverPosition,
   setPageCover,
+  setPageFont,
   togglePageFullWidth,
-} from "./page-cover.commands.ts";
+  togglePageSmallText,
+} from "./page-style.commands.ts";
 export {
   duplicatePage,
   pageDuplicateCommands,
@@ -37,10 +39,12 @@ export {
   COVER_PRESETS,
   DATABASE_TYPE,
   isCover,
+  PAGE_FONTS,
   PAGE_LIKE_TYPES,
   PAGE_TYPE,
   pagePropsSchema,
   type PageBlock,
+  type PageFont,
   type PageProps,
 } from "./page.schema.ts";
 export {

@@ -16,7 +16,8 @@ export type IconName =
   | "grip"
   | "duplicate"
   | "download"
-  | "back";
+  | "back"
+  | "check";
 
 // 16-unit outline icons, drawn with the current text color.
 // Fragments use the `svg` tag so that they are parsed as SVG, not HTML.
@@ -31,6 +32,7 @@ const PATHS: Record<IconName, TemplateResult<2>> = {
   plus: svg`<path d="M8 3v10M3 8h10" />`,
   chevron: svg`<path d="M6 4l4 4-4 4" />`,
   back: svg`<path d="M10 4L6 8l4 4" />`,
+  check: svg`<path d="M3.5 8.5l3 3 6-7" />`,
   more: svg`<path d="M3.5 8h.01M8 8h.01M12.5 8h.01" />`,
   star: svg`<path
     d="M8 2.2l1.8 3.7 4 .6-2.9 2.8.7 4L8 11.4l-3.6 1.9.7-4L2.2 6.5l4-.6z"

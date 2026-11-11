@@ -42,4 +42,9 @@
       cursor: default;
     }
   }
+
+  /* A check mark sits at the end of a chosen option. */
+  .menu__label {
+    flex: 1;
+  }
 }

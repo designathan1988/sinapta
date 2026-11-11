@@ -4,7 +4,7 @@ import { render } from "lit-html";
 import { BLOCK_COMMANDS, BLOCK_PROPS_SCHEMAS } from "../blocks/index.ts";
 import {
   pageCommands,
-  pageCoverCommands,
+  pageStyleCommands,
   pageDuplicateCommands,
   pageMoveCommands,
   pageTrashCommands,
@@ -51,7 +51,7 @@ const COMMANDS = [
   ...pageTrashCommands,
   ...pageMoveCommands,
   ...pageDuplicateCommands,
-  ...pageCoverCommands,
+  ...pageStyleCommands,
   ...BLOCK_COMMANDS,
   ...editorCommands,
   ...databaseCommands,

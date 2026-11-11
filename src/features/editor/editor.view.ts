@@ -85,6 +85,8 @@ export function renderEditor(
       class="editor"
       ?data-wide=${page.type === DATABASE_TYPE}
       ?data-full-width=${page.props.isFullWidth === true}
+      data-font=${page.props.font ?? "default"}
+      ?data-small-text=${page.props.isSmallText === true}
     >
       ${isPage ? renderCover(state, page, dispatch) : nothing}
       <div

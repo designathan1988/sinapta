@@ -1,5 +1,6 @@
-// A page's cover and its width. Only pages have them: a database already
-// fills the width and shows its rows where a cover would go.
+// How a page looks: its cover, width, font and text size. Only pages have
+// them: a database already fills the width and shows its rows where a
+// cover would go.
 import { safeImageSource, type BlockId } from "../../model/index.ts";
 import {
   defineCommand,
@@ -10,6 +11,7 @@ import {
   COVER_PRESETS,
   isCover,
   PAGE_TYPE,
+  type PageFont,
   type PageProps,
 } from "./page.schema.ts";
 import { selectPage } from "./page.selectors.ts";
@@ -77,8 +79,31 @@ export const setCoverPosition = defineCommand<{
     })),
 });
 
-export const pageCoverCommands = [
+export const setPageFont = defineCommand<{
+  pageId: BlockId;
+  font: PageFont;
+}>({
+  type: "page.setFont",
+  handle: (state, command) =>
+    updatePage(state, command.pageId, (props) => ({
+      ...props,
+      font: command.font,
+    })),
+});
+
+export const togglePageSmallText = defineCommand<{ pageId: BlockId }>({
+  type: "page.toggleSmallText",
+  handle: (state, command) =>
+    updatePage(state, command.pageId, (props) => ({
+      ...props,
+      isSmallText: props.isSmallText !== true,
+    })),
+});
+
+export const pageStyleCommands = [
   setPageCover,
   togglePageFullWidth,
   setCoverPosition,
+  setPageFont,
+  togglePageSmallText,
 ];

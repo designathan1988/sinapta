@@ -29,6 +29,9 @@ export function isCover(cover: string): boolean {
   );
 }
 
+export const PAGE_FONTS = ["default", "serif", "mono"] as const;
+const pageFontSchema = v.picklist(PAGE_FONTS);
+
 export const pagePropsSchema = v.object({
   title: richTextSchema,
   // One emoji, or null for no icon.
@@ -44,7 +47,11 @@ export const pagePropsSchema = v.object({
   // How far down the cover image is shown, from 0 (top) to 100 (bottom)
   // (schema version 5).
   coverPosition: v.optional(v.pipe(v.number(), v.minValue(0), v.maxValue(100))),
+  // The typeface of the page's text, and a smaller text size (version 5).
+  font: v.optional(pageFontSchema),
+  isSmallText: v.optional(v.boolean()),
 });
 
 export type PageProps = v.InferOutput<typeof pagePropsSchema>;
+export type PageFont = v.InferOutput<typeof pageFontSchema>;
 export type PageBlock = TypedBlock<string, PageProps>;

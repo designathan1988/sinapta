@@ -17,6 +17,24 @@
       --editor-column: 100%;
     }
 
+    /* The page's style: its typeface, which the title, headings and
+       quotes take too, and a smaller size for its text. */
+    &[data-font="default"] {
+      font-family: var(--font-family-text);
+    }
+
+    &[data-font="serif"] {
+      font-family: var(--font-family-display);
+    }
+
+    &[data-font="mono"] {
+      font-family: var(--font-family-mono);
+    }
+
+    &[data-small-text] {
+      font-size: var(--font-size-sm);
+    }
+
     /* A database uses the full width and height of the page area. */
     &[data-wide] {
       block-size: 100%;
@@ -80,7 +98,7 @@
     border: none;
     background-color: transparent;
     color: var(--color-text-primary);
-    font-family: var(--font-family-display);
+    font-family: inherit;
     font-size: var(--font-size-title);
     font-weight: var(--font-weight-strong);
     line-height: var(--font-line-height-tight);

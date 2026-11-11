@@ -3,11 +3,13 @@ import { buildWorkspace, toBlockId } from "../../model/index.ts";
 import { createTestApp } from "../../state/index.ts";
 import {
   coverFor,
-  pageCoverCommands,
+  pageStyleCommands,
   setCoverPosition,
   setPageCover,
+  setPageFont,
+  togglePageSmallText,
   togglePageFullWidth,
-} from "./page-cover.commands.ts";
+} from "./page-style.commands.ts";
 
 const A = toBlockId("a");
 const DB = toBlockId("db");
@@ -22,7 +24,7 @@ function createApp() {
       props: { ...props, properties: [], viewIds: [] },
     },
   ]);
-  const app = createTestApp({ workspace, commands: pageCoverCommands });
+  const app = createTestApp({ workspace, commands: pageStyleCommands });
   const props_ = (id = A) => app.store.getState().workspace.blocks[id]?.props;
   return { ...app, props: props_ };
 }
@@ -82,5 +84,38 @@ describe("page.setCoverPosition", () => {
 
     dispatch(setCoverPosition.create({ pageId: A, position: -5 }));
     expect(props()?.coverPosition).toBe(0);
+  });
+});
+
+describe("page.setFont", () => {
+  it("sets the page's font and leaves undo one step back", () => {
+    const { dispatch, props, store } = createApp();
+
+    dispatch(setPageFont.create({ pageId: A, font: "serif" }));
+    expect(props()?.font).toBe("serif");
+
+    dispatch(setPageFont.create({ pageId: A, font: "mono" }));
+    expect(props()?.font).toBe("mono");
+    expect(store.getState().history.undo).toHaveLength(2);
+  });
+
+  it("gives a database no font of its own", () => {
+    const { dispatch, props } = createApp();
+
+    dispatch(setPageFont.create({ pageId: DB, font: "serif" }));
+
+    expect(props(DB)?.font).toBeUndefined();
+  });
+});
+
+describe("page.toggleSmallText", () => {
+  it("turns small text on and off", () => {
+    const { dispatch, props } = createApp();
+
+    dispatch(togglePageSmallText.create({ pageId: A }));
+    expect(props()?.isSmallText).toBe(true);
+
+    dispatch(togglePageSmallText.create({ pageId: A }));
+    expect(props()?.isSmallText).toBe(false);
   });
 });

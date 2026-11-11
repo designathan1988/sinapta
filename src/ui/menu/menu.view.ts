@@ -13,7 +13,17 @@ export interface MenuItem {
   readonly icon?: IconName;
   readonly isDanger?: boolean;
   readonly isDisabled?: boolean;
+  // An option of a group ("radio") or one that turns on and off ("box").
+  readonly check?: "radio" | "box";
+  readonly isChecked?: boolean;
 }
+
+const ROLES = {
+  radio: "menuitemradio",
+  box: "menuitemcheckbox",
+} as const;
+
+const ITEMS = "[role^=menuitem]:not(:disabled)";
 
 export interface MenuOptions {
   readonly label: string;
@@ -23,9 +33,7 @@ export interface MenuOptions {
 }
 
 function moveFocus(menu: Element, key: string): boolean {
-  const items = [
-    ...menu.querySelectorAll<HTMLElement>("[role=menuitem]:not(:disabled)"),
-  ];
+  const items = [...menu.querySelectorAll<HTMLElement>(ITEMS)];
   const current = items.findIndex((item) => item === document.activeElement);
   const targets: Record<string, number> = {
     ArrowDown: (current + 1) % items.length,
@@ -40,18 +48,22 @@ function moveFocus(menu: Element, key: string): boolean {
 }
 
 function renderItem(item: MenuItem, index: number): TemplateResult {
+  const { check } = item;
+  const isChecked = item.isChecked === true;
   return html`<button
     type="button"
     class="menu__item"
-    role="menuitem"
+    role=${check === undefined ? "menuitem" : ROLES[check]}
     tabindex="-1"
     data-index=${index}
+    aria-checked=${check === undefined ? nothing : String(isChecked)}
     ?data-autofocus=${index === 0}
     ?data-danger=${item.isDanger === true}
     ?disabled=${item.isDisabled === true}
   >
     ${item.icon === undefined ? nothing : renderIcon(item.icon)}
-    <span>${item.label}</span>
+    <span class="menu__label">${item.label}</span>
+    ${isChecked ? renderIcon("check") : nothing}
   </button>`;
 }
 

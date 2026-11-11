@@ -9,7 +9,6 @@
     }
 
     &[data-level="1"] {
-      font-family: var(--font-family-display);
       font-size: var(--font-size-xxl);
     }
 

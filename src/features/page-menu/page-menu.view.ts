@@ -3,8 +3,6 @@ import { html, nothing, type TemplateResult } from "lit-html";
 import {
   createPage,
   duplicatePage,
-  PAGE_TYPE,
-  togglePageFullWidth,
   movePage,
   selectPage,
   selectPageCopySize,
@@ -25,6 +23,7 @@ import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { renderMenu, type MenuItem } from "../../ui/menu/index.ts";
+import { styleItems } from "./page-menu-style.view.ts";
 
 export const PAGE_MENU_OVERLAY = "page-menu";
 // Opened from this menu; rendered by the move-to feature.
@@ -107,22 +106,6 @@ function moveItems(
   return [...(index > 0 ? [up] : []), ...(index < count - 1 ? [down] : [])];
 }
 
-// Only pages change width: a database always fills it.
-function widthItems(page: PageBlock, dispatch: Dispatch): MenuItem[] {
-  if (page.type !== PAGE_TYPE) return [];
-  const label =
-    page.props.isFullWidth === true
-      ? COPY.pageMenu.fullWidthOff
-      : COPY.pageMenu.fullWidthOn;
-  return [
-    {
-      label,
-      icon: "sidebar",
-      onSelect: () => dispatch(togglePageFullWidth.create({ pageId: page.id })),
-    },
-  ];
-}
-
 // Actions that make something from the page: a duplicate, a file.
 function copyItems(
   state: AppState,
@@ -168,7 +151,7 @@ function menuItems(
       onSelect: () => dispatch(createPage.create({ parentId: pageId })),
     },
     ...moveItems(state, page, dispatch),
-    ...widthItems(page, dispatch),
+    ...styleItems(page, dispatch),
     ...copyItems(state, pageId, dispatch),
     {
       label: COPY.pageMenu.trash,
