@@ -309,3 +309,13 @@ passes `npm run verify`, and is one commit.
 - 10.4 Full-text search across page text in the command palette.
 - 10.5 Keyboard shortcut reference dialog.
 - 10.6 Final UI and accessibility audit, README and documents.
+
+## Version 2 roadmap: Notion parity
+
+**Status:** Planned on 2026-11-11. Asked for by the owner: every Notion
+feature one person can use offline, with Notion's layout, keys and
+interactions. The analysis, the audit of the architecture contract (findings
+C1 to C12) and decisions D1 to D15 are in
+`docs/superpowers/specs/2026-11-11-notion-parity-design.md`; the task plan
+is `docs/superpowers/plans/2026-11-11-notion-parity.md`, milestones 11 to 20,
+starting with the compliance fixes in milestone 11.
