@@ -90,6 +90,11 @@ export const viewSchema = v.object({
   // The calculation shown under each column, by property; the title
   // column's under "title".
   calculations: v.record(propertyIdSchema, calculationSchema),
+  // Columns whose text wraps onto more lines instead of being cut.
+  wrappedPropertyIds: v.array(propertyIdSchema),
+  // How many columns from the start stay in place while the table
+  // scrolls sideways.
+  frozenCount: v.pipe(v.number(), v.integer(), v.minValue(0)),
   // The date property a calendar places its rows by (version 3).
   datePropertyId: v.optional(propertyIdSchema),
 });

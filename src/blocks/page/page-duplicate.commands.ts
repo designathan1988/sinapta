@@ -99,14 +99,14 @@ function finish(block: Block, isRoot: boolean, ids: ViewCopies["ids"]): Block {
   return { ...block, props: { ...props, title } };
 }
 
-interface CopyPlan {
+export interface CopyPlan {
   readonly records: readonly Block[];
   readonly views: readonly View[];
 }
 
 // The copied blocks, in tree order with the root first, and their views;
 // undefined when the new ids do not cover the tree.
-function planCopy(
+export function planPageCopy(
   state: AppState,
   page: Block,
   command: PageCopySize & { readonly meta: CommandMeta },
@@ -136,7 +136,7 @@ export const duplicatePage = defineCommand<{ pageId: BlockId } & PageCopySize>({
   handle(state, command) {
     const page = selectPage(state, command.pageId);
     const plan =
-      page === undefined ? undefined : planCopy(state, page, command);
+      page === undefined ? undefined : planPageCopy(state, page, command);
     const root = plan?.records[0];
     if (page === undefined || plan === undefined || root === undefined)
       return {};

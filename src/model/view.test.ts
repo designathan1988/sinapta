@@ -13,6 +13,8 @@ const TABLE = {
   propertyWidths: {},
   hiddenPropertyIds: [],
   calculations: {},
+  wrappedPropertyIds: [],
+  frozenCount: 0,
 };
 
 const GROUP_BY = {
@@ -61,6 +63,15 @@ describe("viewSchema", () => {
       title: "count-all",
     });
     expect(v.safeParse(viewSchema, odd).success).toBe(false);
+  });
+
+  it("reads wrapped and frozen columns, and refuses a negative count", () => {
+    const view = { ...TABLE, wrappedPropertyIds: ["p-1"], frozenCount: 1 };
+
+    expect(v.parse(viewSchema, view)).toMatchObject({ frozenCount: 1 });
+    expect(v.safeParse(viewSchema, { ...TABLE, frozenCount: -1 }).success).toBe(
+      false,
+    );
   });
 
   it("reads a filter group with one group inside it", () => {

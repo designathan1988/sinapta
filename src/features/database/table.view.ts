@@ -17,7 +17,9 @@ import {
   selectTableEntries,
   type TableEntry,
 } from "./table-entries.selectors.ts";
+import { renderBulkBar } from "./table-bulk.view.ts";
 import { renderTableFooter } from "./table-footer.view.ts";
+import { renderRowGutter, startRowDrag } from "./table-gutter.view.ts";
 import { renderTableGroupEntry } from "./table-group.view.ts";
 import type { TableRow } from "./table-model.selectors.ts";
 import { setTableFirstRow } from "./table.commands.ts";
@@ -32,7 +34,14 @@ function renderRow(
   index: number,
   context: TableContext,
 ): TemplateResult {
-  return html`<tr class="database__row" aria-rowindex=${index + 2}>
+  const isTicked = context.state.ui.selectedRowIds.includes(row.id);
+  return html`<tr
+    class="database__row"
+    data-row-id=${row.id}
+    ?data-ticked=${isTicked}
+    aria-rowindex=${index + 2}
+  >
+    ${renderRowGutter(row, context)}
     ${context.model.columns.map((column) => renderCell(row, column, context))}
     <td class="database__cell" data-filler></td>
   </tr>`;
@@ -78,7 +87,7 @@ function onScroll(event: Event, context: TableContext): void {
 
 function renderBody(context: TableContext): TemplateResult {
   const { model, state } = context;
-  const span = model.columns.length + 1;
+  const span = model.columns.length + 2;
   const entries = selectTableEntries(model);
   const window = selectRowWindow(entries, state.ui.tableFirstRow);
   const on =
@@ -87,7 +96,10 @@ function renderBody(context: TableContext): TemplateResult {
       handler(event, context);
     };
   return html`<tbody
-    @pointerdown=${on(onBodyPointerDown)}
+    @pointerdown=${(event: PointerEvent) => {
+      onBodyPointerDown(event, context);
+      startRowDrag(event, context);
+    }}
     @click=${on(onBodyClick)}
     @keydown=${on(onBodyKeyDown)}
     @contextmenu=${(event: Event) => {
@@ -122,27 +134,29 @@ function renderColumns(context: TableContext): TemplateResult[] {
 // arrow keys can move between its cells.
 export function renderTable(context: TableContext): TemplateResult {
   const { model } = context;
-  return html`<div
-    class="database__scroll"
-    @scroll=${(event: Event) => {
-      onScroll(event, context);
-    }}
-  >
-    <table
-      class="database__table"
-      role="grid"
-      aria-label=${COPY.database.views}
-      aria-rowcount=${selectTableEntries(model).length + 1}
-      aria-colcount=${model.columns.length}
+  return html`${renderBulkBar(context)}
+    <div
+      class="database__scroll"
+      @scroll=${(event: Event) => {
+        onScroll(event, context);
+      }}
     >
-      <colgroup>
-        ${renderColumns(context)}
-        <col />
-      </colgroup>
-      <thead>
-        ${renderHeaderRow(context)}
-      </thead>
-      ${renderBody(context)} ${renderTableFooter(context)}
-    </table>
-  </div>`;
+      <table
+        class="database__table"
+        role="grid"
+        aria-label=${COPY.database.views}
+        aria-rowcount=${selectTableEntries(model).length + 1}
+        aria-colcount=${model.columns.length}
+      >
+        <colgroup>
+          <col class="database__gutter-column" />
+          ${renderColumns(context)}
+          <col />
+        </colgroup>
+        <thead>
+          ${renderHeaderRow(context)}
+        </thead>
+        ${renderBody(context)} ${renderTableFooter(context)}
+      </table>
+    </div>`;
 }

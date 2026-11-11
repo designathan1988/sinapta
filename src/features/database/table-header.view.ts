@@ -1,6 +1,7 @@
 // The header row of the table: sort buttons, column menus, resize handles
 // and the button that adds a property.
 import { html, nothing, type TemplateResult } from "lit-html";
+import { ref } from "lit-html/directives/ref.js";
 import { closeOverlay, openOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
@@ -10,6 +11,8 @@ import { propertyType } from "./property-registry.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import type { TableColumn } from "./table-model.selectors.ts";
 import { startColumnDrag } from "./table-column-drag.view.ts";
+import { setFrozenStart } from "./table-column-style.ts";
+import { renderGutterHeader } from "./table-gutter.view.ts";
 import {
   MAX_COLUMN_WIDTH,
   MIN_COLUMN_WIDTH,
@@ -174,6 +177,10 @@ function renderHeader(
     scope="col"
     data-property-id=${property.id}
     aria-sort=${sortDirection ?? "none"}
+    ?data-frozen=${column.frozenStart !== undefined}
+    ${ref((element) => {
+      setFrozenStart(element, column.frozenStart);
+    })}
   >
     <button
       type="button"
@@ -229,6 +236,7 @@ export function renderHeaderRow(context: TableContext): TemplateResult {
       startColumnDrag(event, context);
     }}
   >
+    ${renderGutterHeader(context)}
     ${context.model.columns.map((column) => renderHeader(column, context))}
     ${renderAddProperty(context)}
   </tr>`;

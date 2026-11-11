@@ -33,7 +33,10 @@ function mount() {
   draw();
   const cell = (row: number, column: number): HTMLElement => {
     const rows = container.querySelectorAll("tr.database__row");
-    const found = rows.item(row).querySelectorAll("td").item(column);
+    const found = rows
+      .item(row)
+      .querySelectorAll<HTMLElement>("td[data-cell]")
+      .item(column);
     return found;
   };
   const press = (target: Element, key: string): void => {

@@ -49,6 +49,8 @@ function createApp() {
     propertyWidths: {},
     hiddenPropertyIds: [],
     calculations: {},
+    wrappedPropertyIds: [],
+    frozenCount: 0,
   };
   const workspace = { ...base, views: { [VIEW]: view } };
   return createTestApp({ workspace, commands: pageDuplicateCommands });

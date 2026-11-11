@@ -7,6 +7,7 @@ import { renderIcon } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { selectCellContext } from "./cell-context.selectors.ts";
 import { propertyType } from "./property-registry.ts";
+import { setFrozenStart } from "./table-column-style.ts";
 import type {
   TableColumn,
   TableModel,
@@ -154,7 +155,10 @@ export function renderCell(
     data-type=${column.isTitle ? TITLE_KEY : column.property.type}
     data-overlay-anchor=${isAnchor ? "open" : nothing}
     ?data-active=${active}
+    ?data-wrapped=${column.isWrapped === true}
+    ?data-frozen=${column.frozenStart !== undefined}
     ${ref((element) => {
+      setFrozenStart(element, column.frozenStart);
       if (active && !isEditing) focusCell(element);
     })}
   >

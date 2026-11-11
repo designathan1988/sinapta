@@ -350,6 +350,10 @@
       "cell": {
         "$description": "The narrowest a simple table's column gets.",
         "$value": "{base.size.10}"
+      },
+      "gutter": {
+        "$description": "The space before a table's rows for the drag handle and the tick box.",
+        "$value": "{base.size.10}"
       }
     },
     "topBar": {

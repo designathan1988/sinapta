@@ -277,6 +277,7 @@
     --size-card-cover: var(--base-size-12);
     --size-cover-height: var(--base-size-18);
     --size-table-cell: var(--base-size-10);
+    --size-table-gutter: var(--base-size-10);
     --size-top-bar: var(--base-size-2x75);
     --radius-sm: var(--base-radius-1);
     --radius-md: var(--base-radius-2);

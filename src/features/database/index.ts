@@ -8,6 +8,8 @@ import { viewSearchCommands } from "./view-search.commands.ts";
 import { viewCommands } from "./view.commands.ts";
 import { groupCommands } from "./group.commands.ts";
 import { calculationCommands } from "./calculation.commands.ts";
+import { rowBulkCommands } from "./row-bulk.commands.ts";
+import { tableLayoutCommands } from "./table-layout.commands.ts";
 
 export { createDatabase } from "./database.commands.ts";
 export { groupByProperty } from "./group.commands.ts";
@@ -38,6 +40,8 @@ export const databaseCommands = [
   ...viewCommands,
   ...groupCommands,
   ...calculationCommands,
+  ...rowBulkCommands,
+  ...tableLayoutCommands,
   ...viewLayoutCommands,
   ...viewSearchCommands,
   ...calendarCommands,

@@ -61,6 +61,7 @@ export function renderTableFooter(context: TableContext): TemplateResult {
     }}
   >
     <tr class="database__calc-row">
+      <td class="database__gutter"></td>
       ${context.model.columns.map((column) =>
         renderCalculation(column, context),
       )}

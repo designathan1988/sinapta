@@ -6,6 +6,7 @@ import { renderMenu, type MenuItem } from "../../ui/menu/index.ts";
 import { addProperty, removeProperty } from "./database.commands.ts";
 import { PROPERTY_EDIT_OVERLAY } from "./property-edit.view.ts";
 import { PROPERTY_TYPES } from "./property-registry.ts";
+import { setFrozenCount, toggleWrapped } from "./table-layout.commands.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import type { TableColumn } from "./table-model.selectors.ts";
 import {
@@ -66,6 +67,34 @@ function sortItems(column: TableColumn, context: TableContext): MenuItem[] {
   ];
 }
 
+// Wrapping its text and freezing the columns up to it apply to every
+// column, the title included.
+function tableItems(column: TableColumn, context: TableContext): MenuItem[] {
+  const { model, dispatch } = context;
+  const viewId = model.view.id;
+  const propertyId = column.property.id;
+  const count = model.columns.indexOf(column) + 1;
+  const isFrozenHere = model.view.frozenCount === count;
+  return [
+    {
+      label:
+        column.isWrapped === true
+          ? COPY.database.unwrapText
+          : COPY.database.wrapText,
+      onSelect: () => dispatch(toggleWrapped.create({ viewId, propertyId })),
+    },
+    {
+      label: isFrozenHere
+        ? COPY.database.unfreezeColumns
+        : COPY.database.freezeColumns,
+      onSelect: () =>
+        dispatch(
+          setFrozenCount.create({ viewId, count: isFrozenHere ? 0 : count }),
+        ),
+    },
+  ];
+}
+
 // Moving, hiding and deleting apply to every column but the title.
 function layoutItems(column: TableColumn, context: TableContext): MenuItem[] {
   const { model, dispatch } = context;
@@ -117,7 +146,11 @@ export function renderColumnMenu(
   const layout = column.isTitle ? [] : layoutItems(column, context);
   return renderMenu({
     label: COPY.database.columnActions,
-    items: [...sortItems(column, context), ...layout],
+    items: [
+      ...sortItems(column, context),
+      ...tableItems(column, context),
+      ...layout,
+    ],
     onClose: () => context.dispatch(closeOverlay.create({})),
   });
 }

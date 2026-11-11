@@ -19,6 +19,7 @@ import {
   selectViewHolder,
   type ViewHolder,
 } from "./view-holder.selectors.ts";
+import { emptyView } from "./database.commands.ts";
 import { layoutDefaults } from "./view-layout.commands.ts";
 
 function updateView(
@@ -65,16 +66,7 @@ export const createView = defineCommand<CreateViewPayload>({
     if (holder === undefined || id === undefined) return {};
     const { database } = holder;
     const record: View = {
-      id,
-      databaseId: database.id,
-      name: command.name,
-      type: "table",
-      sorts: [],
-      filter: { conjunction: "and", items: [] },
-      propertyOrder: [],
-      propertyWidths: {},
-      hiddenPropertyIds: [],
-      calculations: {},
+      ...emptyView(id, database.id, command.name),
       ...layoutDefaults(database, {}, command.viewType ?? "table"),
     };
     return {

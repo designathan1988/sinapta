@@ -1,0 +1,89 @@
+@layer features {
+  /* Before every row: the drag handle and the tick box. */
+  .database__gutter-column {
+    inline-size: var(--size-table-gutter);
+  }
+
+  .database__gutter {
+    position: sticky;
+    inset-inline-start: 0;
+    z-index: var(--layer-sticky);
+    padding: var(--space-none);
+    background-color: var(--color-bg-app);
+    text-align: end;
+    white-space: nowrap;
+  }
+
+  thead .database__gutter {
+    inset-block-start: 0;
+    border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
+  }
+
+  .database__row-handle {
+    display: inline-flex;
+    color: var(--color-text-tertiary);
+    vertical-align: middle;
+    cursor: grab;
+  }
+
+  .database__row-check {
+    margin: var(--space-none) var(--space-inset-xs);
+    vertical-align: middle;
+    cursor: pointer;
+  }
+
+  /* The handle and the box show while their row is pointed at or has
+     focus, and stay once rows are ticked. */
+  .database__row:not(:hover, :focus-within, [data-ticked])
+    .database__gutter
+    > *,
+  .database__table:not(:has([data-ticked]), :has(thead:hover))
+    thead
+    .database__gutter
+    > * {
+    opacity: 0;
+  }
+
+  .database__row[data-ticked] > .database__cell {
+    background-color: var(--color-bg-selected);
+  }
+
+  .database__cell[data-wrapped] {
+    block-size: auto;
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+
+  /* Frozen columns stay after the gutter while the table scrolls. */
+  .database__table [data-frozen] {
+    position: sticky;
+    inset-inline-start: calc(
+      var(--size-table-gutter) + var(--database-frozen-start)
+    );
+    z-index: var(--layer-sticky);
+    background-color: var(--color-bg-app);
+  }
+
+  .database__group-row .database__group-toggle {
+    position: sticky;
+    inset-inline-start: var(--size-table-gutter);
+  }
+
+  /* Over the table while rows are ticked. */
+  .database__bulk {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    margin-block-end: var(--space-stack-xs);
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-raised);
+    box-shadow: var(--shadow-card);
+  }
+
+  .database__bulk-count {
+    color: var(--color-text-link);
+    font-weight: var(--font-weight-medium);
+  }
+}

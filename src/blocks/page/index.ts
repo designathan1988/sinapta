@@ -11,6 +11,7 @@ export {
 } from "./page-style.commands.ts";
 export {
   duplicatePage,
+  planPageCopy,
   pageDuplicateCommands,
   selectPageCopySize,
   type PageCopySize,

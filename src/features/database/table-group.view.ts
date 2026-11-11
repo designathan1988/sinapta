@@ -49,10 +49,12 @@ function renderAddRow(group: RowGroup, context: TableContext): TemplateResult {
   const [first, ...rest] = model.columns;
   if (Object.keys(model.view.calculations).length === 0 || !first) {
     return html`<tr class="database__group-add" data-group-add=${group.key}>
+      <td class="database__gutter"></td>
       <td colspan=${model.columns.length + 1}>${button}</td>
     </tr>`;
   }
   return html`<tr class="database__group-add" data-group-add=${group.key}>
+    <td class="database__gutter"></td>
     <td class="database__calc">
       ${button} ${renderResult(group, first, context)}
     </td>
@@ -72,7 +74,7 @@ export function renderTableGroupEntry(
 ): TemplateResult {
   const { group } = entry;
   if (entry.kind === "add") return renderAddRow(group, context);
-  const span = context.model.columns.length + 1;
+  const span = context.model.columns.length + 2;
   return html`<tr class="database__group-row" data-group-key=${group.key}>
     <th colspan=${span} scope="rowgroup">
       ${renderGroupHeader(group, context)}

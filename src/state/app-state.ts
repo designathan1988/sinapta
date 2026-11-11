@@ -64,6 +64,9 @@ export interface UiState {
   readonly activeCell: ActiveCell | null;
   // The first row of a long table that is scrolled into view.
   readonly tableFirstRow: number;
+  // Rows ticked in a table, in the order they were ticked: the last one
+  // is where a Shift+click range starts.
+  readonly selectedRowIds: readonly BlockId[];
   // The month calendar views show, as "2026-11"; null for the current one.
   readonly calendarMonth: string | null;
   // What has been typed into each view's search field.
@@ -161,6 +164,7 @@ export function createInitialUiState(): UiState {
     activeViewIds: {},
     activeCell: null,
     tableFirstRow: 0,
+    selectedRowIds: [],
     calendarMonth: null,
     viewSearches: {},
     sidebarWidth: SIDEBAR_WIDTH.initial,

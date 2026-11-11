@@ -46,6 +46,11 @@ export interface TableColumn {
   readonly isTitle: boolean;
   readonly width: number;
   readonly sortDirection: "ascending" | "descending" | undefined;
+  // True when the column's text wraps onto more lines.
+  readonly isWrapped?: boolean;
+  // For a frozen column, the width of the columns before it: where it
+  // stays while the table scrolls sideways.
+  readonly frozenStart?: number;
 }
 
 export interface TableModel {
@@ -156,7 +161,20 @@ function toColumn(view: View, property: PropertyDefinition): TableColumn {
     width: view.propertyWidths[property.id] ?? fallback,
     sortDirection: view.sorts.find((sort) => sort.propertyId === property.id)
       ?.direction,
+    isWrapped: view.wrappedPropertyIds.includes(property.id),
   };
+}
+
+// The first `frozenCount` columns stay in place, each after the ones
+// before it.
+function freeze(columns: TableColumn[], frozenCount: number): TableColumn[] {
+  let start = 0;
+  return columns.map((column, index) => {
+    if (index >= frozenCount) return column;
+    const frozen = { ...column, frozenStart: start };
+    start += column.width;
+    return frozen;
+  });
 }
 
 interface Cached {
@@ -200,7 +218,10 @@ export function selectTableModel(
     viewIds,
     database,
     view,
-    columns: [title, ...others].map((property) => toColumn(view, property)),
+    columns: freeze(
+      [title, ...others].map((property) => toColumn(view, property)),
+      view.frozenCount,
+    ),
     rows: sortedAndFiltered(data, { view, properties: all, today }),
     totalRowCount: data.length,
   };

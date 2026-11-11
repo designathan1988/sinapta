@@ -16,6 +16,7 @@ import { cellOf, columnOf, type CellRef } from "./table-cell-ref.ts";
 import { setActiveCell, setTableFirstRow } from "./table.commands.ts";
 import { selectCellNeighbor, type CellStep } from "./table.selectors.ts";
 import { selectEntryIndex } from "./table-entries.selectors.ts";
+import { onRowKey } from "./table-row-keys.view.ts";
 
 function activate(
   cell: CellRef,
@@ -171,6 +172,7 @@ export function onBodyKeyDown(
   if (cell === undefined) return;
   if (event.target instanceof HTMLInputElement)
     onEditorKey(event, event.target, context);
+  else if (onRowKey(event, cell, context)) event.preventDefault();
   else onCellKey(event, cell, context);
 }
 

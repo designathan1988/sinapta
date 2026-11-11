@@ -37,6 +37,8 @@ export function emptyView(
     propertyWidths: {},
     hiddenPropertyIds: [],
     calculations: {},
+    wrappedPropertyIds: [],
+    frozenCount: 0,
   };
 }
 
