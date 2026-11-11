@@ -85,6 +85,7 @@ owner listed here exists.
 | Caret reading and restoring in the DOM, selection sync | `src/ui/caret/` | 3 |
 | Tooltips for icon-only controls | `src/ui/tooltip/` | 7 |
 | Reading pasted HTML as rich text | `src/ui/rich-text/pasted-html.ts` | 7 |
+| Reading pasted Markdown as blocks and marks | `src/ui/rich-text/pasted-markdown.ts` | 8 |
 | Projecting `RichText` into an editable element | `src/ui/rich-text/` | 3 |
 | `beforeinput` to command translation | `src/features/editor/editor-input.view.ts` | 3 |
 | Keys inside text blocks | `src/features/editor/editor-keys.view.ts` | 3 |
@@ -93,6 +94,7 @@ owner listed here exists.
 | Block handle, block menus, block drag | `src/features/editor/editor-block-menu.view.ts` | 4 |
 | Selection of whole blocks: commands, keys and clipboard | `src/features/editor/editor-selection.commands.ts`, `editor-selection.view.ts` | 7 |
 | Paste and drop into a block | `src/features/editor/editor-paste.commands.ts`, `editor-paste.view.ts` | 7 |
+| Pasted Markdown becoming typed, nested blocks | `src/features/editor/editor-paste-blocks.commands.ts` | 8 |
 | Link field | `src/features/editor/editor-link.view.ts` | 4 |
 | Slash menu | `src/features/slash-menu/` | 4 |
 | Adding a block below another and duplicating a block | `src/features/editor/editor-insert.commands.ts` | 8 |

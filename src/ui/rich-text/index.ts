@@ -1,4 +1,11 @@
 export { parsePastedHtml } from "./pasted-html.ts";
+export {
+  hasMarkdownBlocks,
+  parseInlineMarkdown,
+  parseMarkdownBlocks,
+  type MarkdownBlock,
+  type MarkdownKind,
+} from "./pasted-markdown.ts";
 export { projectRichText } from "./rich-text-projection.ts";
 export {
   renderRichText,
