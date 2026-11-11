@@ -7,6 +7,7 @@ import {
   calloutPropsSchema,
   type CalloutBlock,
 } from "./callout.schema.ts";
+import { calloutCommands } from "./callout.commands.ts";
 import { renderCallout } from "./callout.view.ts";
 
 const DEFAULT_ICON = "💡";
@@ -17,8 +18,9 @@ export const calloutDefinition: BlockDefinition = {
   propsSchema: calloutPropsSchema,
   continuesAs: PARAGRAPH_TYPE,
   createProps: (text) => ({ text, icon: DEFAULT_ICON }),
-  render: (block) =>
+  commands: calloutCommands,
+  render: (block, dispatch, state) =>
     isBlockOfType<CalloutBlock>(block, CALLOUT_TYPE)
-      ? renderCallout(block)
+      ? renderCallout(block, dispatch, state)
       : undefined,
 };

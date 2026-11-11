@@ -2,16 +2,15 @@
   .numbered-list {
     display: flex;
     gap: var(--space-inline-sm);
-    counter-increment: numbered-list;
+  }
 
-    &::before {
-      content: counter(numbered-list) ".";
-      flex: none;
-      min-inline-size: var(--size-icon-sm);
-      color: var(--color-text-secondary);
-      font-variant-numeric: tabular-nums;
-      line-height: var(--font-line-height-body);
-      text-align: end;
-    }
+  .numbered-list__marker {
+    flex: none;
+    min-inline-size: var(--size-icon-sm);
+    color: var(--color-text-secondary);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--font-line-height-body);
+    text-align: end;
+    user-select: none;
   }
 }

@@ -3,8 +3,10 @@ import { buildWorkspace, toBlockId } from "../../model/index.ts";
 import { createTestApp } from "../../state/index.ts";
 import {
   imageCommands,
+  setImageAlign,
   setImageCaption,
   setImageSource,
+  setImageWidth,
 } from "./image.commands.ts";
 
 const IMAGE = toBlockId("img");
@@ -50,5 +52,44 @@ describe("image.setCaption", () => {
     dispatch(setImageCaption.create({ blockId: IMAGE, caption: "A cat" }));
 
     expect(props()).toMatchObject({ caption: "A cat" });
+  });
+});
+
+describe("image.setWidth", () => {
+  it.each([
+    [55, 55],
+    [4, 10],
+    [140, 100],
+    [33.4, 33],
+  ])("keeps a width of %d percent as %d", (width, kept) => {
+    const { dispatch, props } = createApp();
+    dispatch(setImageWidth.create({ blockId: IMAGE, width: 50 }));
+
+    dispatch(setImageWidth.create({ blockId: IMAGE, width }));
+
+    expect(props()?.width).toBe(kept);
+  });
+});
+
+describe("resizing an image step by step", () => {
+  it("is undone in one step", () => {
+    const { dispatch, props } = createApp();
+    for (const width of [95, 90, 85]) {
+      dispatch(setImageWidth.create({ blockId: IMAGE, width }));
+    }
+
+    dispatch({ type: "history.undo" });
+
+    expect(props()?.width).toBeUndefined();
+  });
+});
+
+describe("image.setAlign", () => {
+  it("aligns the image", () => {
+    const { dispatch, props } = createApp();
+
+    dispatch(setImageAlign.create({ blockId: IMAGE, align: "right" }));
+
+    expect(props()?.align).toBe("right");
   });
 });

@@ -1,15 +1,49 @@
 @layer blocks {
+  /* The block color, when it is a background, fills the callout; a text
+     color tints its text. Without one the callout is gray, as in Notion. */
   .callout {
     display: flex;
-    gap: var(--space-inline-md);
+    gap: var(--space-inline-sm);
     align-items: flex-start;
-    padding: var(--space-inset-md) var(--space-inset-lg);
+    padding: var(--space-inset-md) var(--space-inset-lg) var(--space-inset-md)
+      var(--space-inset-md);
     border-radius: var(--radius-md);
-    background-color: var(--color-chip-yellow-bg);
-    color: var(--color-chip-yellow-text);
+    background-color: var(--editor-block-bg, var(--color-chip-gray-bg));
+    color: var(--editor-block-text, var(--color-text-primary));
   }
 
   .callout__icon {
-    line-height: var(--font-line-height-body);
+    flex: none;
+    min-inline-size: var(--size-control-sm);
+    min-block-size: var(--size-control-sm);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    font-size: var(--font-size-md);
+    line-height: var(--font-line-height-tight);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    /* Without an icon the button stays, to add one, but shows only on
+       hover or focus. */
+    &[data-empty] {
+      min-inline-size: var(--size-icon-sm);
+      opacity: 0;
+    }
+
+    &[data-empty]:is(:hover, :focus-visible) {
+      opacity: 1;
+    }
+  }
+
+  .callout__picker:popover-open {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-sm);
+    padding: var(--space-inset-md);
   }
 }

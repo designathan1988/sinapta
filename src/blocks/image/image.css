@@ -1,15 +1,107 @@
 @layer blocks {
   .image {
+    --image-width: 100%;
+
     display: grid;
     gap: var(--space-stack-xs);
     margin: var(--space-none);
   }
 
+  /* The image takes its width from the block; the side it sits on comes
+     from its alignment. */
+  .image__frame {
+    position: relative;
+    inline-size: var(--image-width);
+    margin-inline: auto;
+  }
+
+  .image[data-align="left"] .image__frame {
+    margin-inline: var(--space-none) auto;
+  }
+
+  .image[data-align="right"] .image__frame {
+    margin-inline: auto var(--space-none);
+  }
+
   .image__picture {
     display: block;
-    max-inline-size: 100%;
+    inline-size: 100%;
     block-size: auto;
     border-radius: var(--radius-md);
+  }
+
+  /* Bars on both sides that resize the image; they show on hover or
+     while focused. */
+  .image__handle {
+    position: absolute;
+    inset-block: 0;
+    inline-size: var(--space-inline-sm);
+    border-radius: var(--radius-full);
+    background-color: var(--color-border-strong);
+    cursor: ew-resize;
+    opacity: 0;
+    touch-action: none;
+
+    &[data-side="start"] {
+      inset-inline-start: var(--space-inline-xs);
+    }
+
+    &[data-side="end"] {
+      inset-inline-end: var(--space-inline-xs);
+    }
+
+    &:focus-visible {
+      opacity: 1;
+      outline: var(--size-focus-width) solid var(--color-border-focus);
+      outline-offset: var(--size-focus-offset);
+    }
+  }
+
+  .image__toolbar {
+    position: absolute;
+    inset-block-start: var(--space-inset-xs);
+    inset-inline-end: var(--space-inset-sm);
+    display: flex;
+    gap: var(--space-inline-xs);
+    padding: var(--space-inset-xs);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-raised);
+    box-shadow: var(--shadow-card);
+    opacity: 0;
+  }
+
+  .image__frame:is(:hover, :focus-within) :is(.image__handle, .image__toolbar) {
+    opacity: 1;
+  }
+
+  @media (hover: none) {
+    .image__toolbar {
+      opacity: 1;
+    }
+  }
+
+  .image__tool {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: var(--size-control-sm);
+    min-block-size: var(--size-control-sm);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+      color: var(--color-text-primary);
+    }
+
+    &[aria-pressed="true"] {
+      background-color: var(--color-bg-active);
+      color: var(--color-text-primary);
+    }
   }
 
   .image__caption {
@@ -24,5 +116,25 @@
       outline: var(--size-focus-width) solid var(--color-border-focus);
       outline-offset: var(--size-focus-offset);
     }
+  }
+
+  /* The full screen view: a dialog as large as the screen allows, with
+     the whole image fitted inside it. */
+  .dialog:has(.image__full) {
+    inline-size: 100%;
+    block-size: 100%;
+
+    & .dialog__panel {
+      box-sizing: border-box;
+      block-size: 100%;
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+  }
+
+  .image__full {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: contain;
   }
 }

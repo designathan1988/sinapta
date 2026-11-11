@@ -1,12 +1,33 @@
 import "./image.css";
-import { html, type TemplateResult } from "lit-html";
+import { html, nothing, type TemplateResult } from "lit-html";
+import { ref } from "lit-html/directives/ref.js";
 import { safeImageSource } from "../../model/index.ts";
-import type { Dispatch } from "../../state/index.ts";
+import {
+  openOverlay,
+  type AppState,
+  type Dispatch,
+} from "../../state/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { renderIcon, type IconName } from "../../ui/icon/index.ts";
+import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { renderUrlField } from "../../ui/url-field/index.ts";
-import { setImageCaption, setImageSource } from "./image.commands.ts";
-import type { ImageBlock } from "./image.schema.ts";
+import {
+  setImageAlign,
+  setImageCaption,
+  setImageSource,
+} from "./image.commands.ts";
+import {
+  renderWidthHandles,
+  setImageWidthProperty,
+} from "./image-resize.view.ts";
+import {
+  IMAGE_VIEWER_OVERLAY,
+  renderImageViewer,
+} from "./image-viewer.view.ts";
+import { IMAGE_WIDTH, type ImageBlock } from "./image.schema.ts";
+
+export { IMAGE_VIEWER_OVERLAY };
 
 // Images chosen from a file are kept in the workspace, so their size is
 // capped to keep the stored and exported workspace small.
@@ -45,34 +66,101 @@ function renderEmpty(block: ImageBlock, dispatch: Dispatch): TemplateResult {
   });
 }
 
+const ALIGN_BUTTONS = [
+  ["left", "align-left", COPY.imageBlock.alignLeft],
+  ["center", "align-center", COPY.imageBlock.alignCenter],
+  ["right", "align-right", COPY.imageBlock.alignRight],
+] as const;
+
+interface Tool {
+  readonly label: string;
+  readonly icon: IconName;
+  readonly onClick: () => void;
+  readonly isPressed?: boolean;
+}
+
+function toolButton(tool: Tool): TemplateResult {
+  const { label, isPressed } = tool;
+  return html`<button
+    type="button"
+    class="image__tool"
+    aria-label=${label}
+    aria-pressed=${isPressed === undefined ? nothing : String(isPressed)}
+    title=${tooltipTitle(label)}
+    interestfor=${TOOLTIP_TARGET}
+    @click=${tool.onClick}
+  >
+    ${renderIcon(tool.icon)}
+  </button>`;
+}
+
+// Over the image while it is pointed at or focused: alignment and the
+// full screen view.
+function renderToolbar(block: ImageBlock, dispatch: Dispatch) {
+  const blockId = block.id;
+  const current = block.props.align ?? "center";
+  const align = ALIGN_BUTTONS.map(([value, icon, label]) =>
+    toolButton({
+      label,
+      icon,
+      onClick: () => dispatch(setImageAlign.create({ blockId, align: value })),
+      isPressed: value === current,
+    }),
+  );
+  const overlay = { kind: IMAGE_VIEWER_OVERLAY, anchorId: blockId };
+  const fullScreen = toolButton({
+    label: COPY.imageBlock.fullScreen,
+    icon: "expand",
+    onClick: () => dispatch(openOverlay.create({ overlay })),
+  });
+  return html`<div class="image__toolbar">${align}${fullScreen}</div>`;
+}
+
+function renderCaption(block: ImageBlock, dispatch: Dispatch) {
+  const onCaption = (event: Event): void => {
+    if (!(event.target instanceof HTMLInputElement)) return;
+    const caption = event.target.value;
+    dispatch(setImageCaption.create({ blockId: block.id, caption }));
+  };
+  return html`<figcaption>
+    <input
+      class="image__caption"
+      type="text"
+      aria-label=${COPY.blocks.imageCaption}
+      placeholder=${COPY.blocks.imageCaptionPlaceholder}
+      .value=${block.props.caption}
+      @change=${onCaption}
+    />
+  </figcaption>`;
+}
+
 export function renderImage(
   block: ImageBlock,
   dispatch: Dispatch,
+  state: AppState,
 ): TemplateResult {
   const { src, caption } = block.props;
   if (src === "") return renderEmpty(block, dispatch);
-  const onCaption = (event: Event): void => {
-    if (!(event.target instanceof HTMLInputElement)) return;
-    const value = event.target.value;
-    dispatch(setImageCaption.create({ blockId: block.id, caption: value }));
-  };
-  return html`<figure class="image">
-    <img
-      class="image__picture"
-      src=${src}
-      alt=${caption}
-      loading="lazy"
-      decoding="async"
-    />
-    <figcaption>
-      <input
-        class="image__caption"
-        type="text"
-        aria-label=${COPY.blocks.imageCaption}
-        placeholder=${COPY.blocks.imageCaptionPlaceholder}
-        .value=${caption}
-        @change=${onCaption}
+  const width = block.props.width ?? IMAGE_WIDTH.max;
+  const sized = ref((element) => {
+    setImageWidthProperty(element, width);
+  });
+  return html`<figure
+    class="image"
+    data-align=${block.props.align ?? "center"}
+    ${sized}
+  >
+    <div class="image__frame">
+      <img
+        class="image__picture"
+        src=${src}
+        alt=${caption}
+        loading="lazy"
+        decoding="async"
       />
-    </figcaption>
+      ${renderWidthHandles(block, dispatch)} ${renderToolbar(block, dispatch)}
+    </div>
+    ${renderCaption(block, dispatch)}
+    ${renderImageViewer(block, state, dispatch)}
   </figure>`;
 }

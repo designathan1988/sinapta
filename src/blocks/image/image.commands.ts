@@ -4,9 +4,11 @@ import {
   type BlockId,
   type Operation,
 } from "../../model/index.ts";
-import { defineCommand } from "../../state/index.ts";
+import { defineCommand, type AppState } from "../../state/index.ts";
 import {
   IMAGE_TYPE,
+  IMAGE_WIDTH,
+  type ImageAlign,
   type ImageBlock,
   type ImageProps,
 } from "./image.schema.ts";
@@ -54,4 +56,50 @@ export const setImageCaption = defineCommand<{
   },
 });
 
-export const imageCommands = [setImageSource, setImageCaption];
+function imageBlock(state: AppState, blockId: BlockId) {
+  const block = state.workspace.blocks[blockId];
+  return block !== undefined && isBlockOfType<ImageBlock>(block, IMAGE_TYPE)
+    ? block
+    : undefined;
+}
+
+// A width outside 10 to 100 percent is brought inside it.
+export const setImageWidth = defineCommand<{
+  blockId: BlockId;
+  width: number;
+}>({
+  type: "image.setWidth",
+  handle(state, command) {
+    const block = imageBlock(state, command.blockId);
+    if (block === undefined || !Number.isFinite(command.width)) return {};
+    const { min, max } = IMAGE_WIDTH;
+    const width = Math.min(max, Math.max(min, Math.round(command.width)));
+    if (width === (block.props.width ?? max)) return {};
+    // Steps taken one after another, as with the arrow keys, undo as one.
+    return {
+      operations: patchImage(block, { width }, command.meta.now),
+      mergeKey: `image.setWidth:${block.id}`,
+    };
+  },
+});
+
+export const setImageAlign = defineCommand<{
+  blockId: BlockId;
+  align: ImageAlign;
+}>({
+  type: "image.setAlign",
+  handle(state, command) {
+    const block = imageBlock(state, command.blockId);
+    const { align } = command;
+    if (block === undefined || align === (block.props.align ?? "center"))
+      return {};
+    return { operations: patchImage(block, { align }, command.meta.now) };
+  },
+});
+
+export const imageCommands = [
+  setImageSource,
+  setImageCaption,
+  setImageWidth,
+  setImageAlign,
+];

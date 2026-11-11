@@ -6,6 +6,7 @@ import {
   numberedListPropsSchema,
   type NumberedListBlock,
 } from "./numbered-list.schema.ts";
+import { selectListMarker } from "./numbered-list.selectors.ts";
 import { renderNumberedList } from "./numbered-list.view.ts";
 
 export const numberedListDefinition: BlockDefinition = {
@@ -14,8 +15,8 @@ export const numberedListDefinition: BlockDefinition = {
   propsSchema: numberedListPropsSchema,
   continuesAs: NUMBERED_LIST_TYPE,
   createProps: (text) => ({ text }),
-  render: (block) =>
+  render: (block, _dispatch, state) =>
     isBlockOfType<NumberedListBlock>(block, NUMBERED_LIST_TYPE)
-      ? renderNumberedList(block)
+      ? renderNumberedList(block, selectListMarker(state, block.id))
       : undefined,
 };

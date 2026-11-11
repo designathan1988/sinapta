@@ -19,8 +19,8 @@ export const imageDefinition: BlockDefinition = {
   continuesAs: PARAGRAPH_TYPE,
   createProps: () => ({ src: "", caption: "" }),
   commands: imageCommands,
-  render: (block, dispatch) =>
+  render: (block, dispatch, state) =>
     isBlockOfType<ImageBlock>(block, IMAGE_TYPE)
-      ? renderImage(block, dispatch)
+      ? renderImage(block, dispatch, state)
       : undefined,
 };

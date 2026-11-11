@@ -1,5 +1,18 @@
 // Text inside particular kinds of blocks.
 export const BLOCK_TEXT = {
+  imageBlock: {
+    width: "Image width",
+    widthValue: "percent of the page width",
+    alignLeft: "Align left",
+    alignCenter: "Align center",
+    alignRight: "Align right",
+    fullScreen: "View full screen",
+    fullScreenTitle: "Image",
+    close: "Close",
+  },
+  calloutBlock: {
+    icon: "Change the icon",
+  },
   codeBlock: {
     language: "Language",
     wrap: "Wrap",
