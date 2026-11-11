@@ -45,6 +45,7 @@ export const EDITOR_TEXT = {
   },
   blockNames: {
     paragraph: "Text",
+    page: "Page",
     heading: "Heading 1",
     heading2: "Heading 2",
     heading3: "Heading 3",

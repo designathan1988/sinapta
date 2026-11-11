@@ -26,7 +26,7 @@ import {
 } from "./editor-selection.view.ts";
 import {
   selectBlockOrder,
-  selectChildBlocks,
+  selectContentBlocks,
   selectSelectedBlocks,
 } from "./editor.selectors.ts";
 
@@ -38,7 +38,7 @@ interface BlockContext extends InputContext {
 function renderChildren(block: Block, context: BlockContext): unknown {
   // A closed toggle keeps its children but does not show them.
   const isOpen = blockDefinition(block.type)?.showsChildren?.(block) ?? true;
-  const children = isOpen ? selectChildBlocks(context.state, block.id) : [];
+  const children = isOpen ? selectContentBlocks(context.state, block.id) : [];
   if (children.length === 0) return nothing;
   return html`<div class="editor__children">
     ${renderList(children, context)}
@@ -130,7 +130,7 @@ export function renderBlocks(
   pageId: BlockId,
   context: InputContext,
 ): TemplateResult {
-  const blocks = selectChildBlocks(context.state, pageId);
+  const blocks = selectContentBlocks(context.state, pageId);
   const selected = new Set(
     selectSelectedBlocks(context.state).map((block) => block.id),
   );

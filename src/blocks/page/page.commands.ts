@@ -14,7 +14,11 @@ function siblingCount(state: AppState, parentId: BlockId | null): number {
 
 // Creates an empty page at the end of its parent (or of the top level),
 // opens it and reveals it in the tree.
-export const createPage = defineCommand<{ parentId: BlockId | null }>({
+export const createPage = defineCommand<{
+  parentId: BlockId | null;
+  // Where among the parent's blocks; at the end when left out.
+  index?: number;
+}>({
   type: "page.create",
   newBlockIds: 1,
   handle(state, command) {
@@ -37,7 +41,12 @@ export const createPage = defineCommand<{ parentId: BlockId | null }>({
         : ({ kind: "childIds", blockId: parentId } as const);
     const operations: Operation[] = [
       { type: "record.create", kind: "block", record },
-      { type: "list.insert", list, id, index: siblingCount(state, parentId) },
+      {
+        type: "list.insert",
+        list,
+        id,
+        index: command.index ?? siblingCount(state, parentId),
+      },
     ];
     const expanded = state.ui.expandedPageIds;
     const expandedPageIds =

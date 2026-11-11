@@ -13,6 +13,20 @@ export function selectChildBlocks(state: AppState, parentId: BlockId): Block[] {
   });
 }
 
+// What a page shows, in order: its blocks, and its subpages where they sit
+// among them as lines that open them. Trashed subpages are left out.
+export function selectContentBlocks(
+  state: AppState,
+  parentId: BlockId,
+): Block[] {
+  const parent = state.workspace.blocks[parentId];
+  return (parent?.childIds ?? []).flatMap((id) => {
+    const block = state.workspace.blocks[id];
+    if (block === undefined) return [];
+    return isPageLike(block) && block.props.isTrashed ? [] : [block];
+  });
+}
+
 // Every content block under a block, depth first: the order in which the
 // caret walks them.
 export function selectBlockOrder(state: AppState, rootId: BlockId): Block[] {

@@ -27,7 +27,18 @@ export interface ColorSlashItem {
   readonly color: BlockColor | null;
 }
 
-export type SlashItem = BlockSlashItem | ColorSlashItem;
+// A new subpage, below the block, opened at once.
+export interface PageSlashItem {
+  readonly label: string;
+  readonly createsPage: true;
+}
+
+export type SlashItem = BlockSlashItem | ColorSlashItem | PageSlashItem;
+
+const PAGE_ITEM: PageSlashItem = {
+  label: COPY.blockNames.page,
+  createsPage: true,
+};
 
 // Typed as /red, /red background or /default, as in Notion.
 function colorItems(): ColorSlashItem[] {
@@ -96,7 +107,8 @@ export function selectSlashItems(state: AppState, query: string): SlashItem[] {
     fold(item.label).includes(needle);
   const pages = pageItems(state).filter(matches).slice(0, PAGE_LINK_LIMIT);
   const colors = needle === "" ? [] : colorItems().filter(matches);
-  return [...blockItems().filter(matches), ...pages, ...colors];
+  const blocks = [PAGE_ITEM, ...blockItems()].filter(matches);
+  return [...blocks, ...pages, ...colors];
 }
 
 export interface OpenSlashMenu {

@@ -56,4 +56,15 @@ describe("slashMenuKeys", () => {
       "block.setColor",
     ]);
   });
+
+  it("creates a subpage below the block when Page is chosen", () => {
+    const sent = press("Enter", createState("/page", 5));
+
+    expect(sent.map((c) => c.type)).toEqual([
+      "ui.closeOverlay",
+      "text.replace",
+      "page.create",
+    ]);
+    expect(sent[2]).toMatchObject({ parentId: "page", index: 1 });
+  });
 });

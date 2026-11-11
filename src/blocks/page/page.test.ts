@@ -39,6 +39,22 @@ describe("page commands", () => {
     expect(state.ui.expandedPageIds).toEqual([A]);
   });
 
+  it("creates a page at a place among its parent's blocks", () => {
+    const workspace = buildWorkspace([
+      { id: "p", children: [{ id: "x" }, { id: "y" }] },
+    ]);
+    const { store, dispatch } = createTestApp({
+      workspace,
+      commands: pageCommands,
+    });
+
+    dispatch(createPage.create({ parentId: toBlockId("p"), index: 1 }));
+
+    expect(store.getState().workspace.blocks[toBlockId("p")]?.childIds).toEqual(
+      ["x", "new-1", "y"],
+    );
+  });
+
   it("renames a page", () => {
     const { store, dispatch } = createTestApp({ commands: pageCommands });
     dispatch(createPage.create({ parentId: null }));

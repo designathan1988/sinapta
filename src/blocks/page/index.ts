@@ -1,3 +1,4 @@
+export { renderPageRow } from "./page-row.view.ts";
 export { pageDefinition } from "./page.definition.ts";
 export {
   coverFor,

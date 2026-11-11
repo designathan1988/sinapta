@@ -7,6 +7,7 @@ import {
   type AppState,
   type Dispatch,
 } from "../../state/index.ts";
+import { createPage } from "../../blocks/page/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
@@ -19,27 +20,42 @@ import {
   type SlashItem,
 } from "./slash-menu.selectors.ts";
 
-// Removes the "/query" text and turns the block into the chosen item.
+// A new subpage goes right below the block the menu was opened in.
+function createSubpage(menu: OpenSlashMenu, context: ChooseContext): void {
+  const block = context.state.workspace.blocks[menu.blockId];
+  const parentId = block?.parentId ?? null;
+  const parent =
+    parentId === null ? undefined : context.state.workspace.blocks[parentId];
+  if (parent === undefined || block === undefined) return;
+  const index = parent.childIds.indexOf(block.id) + 1;
+  context.dispatch(createPage.create({ parentId: parent.id, index }));
+}
+
+interface ChooseContext {
+  readonly state: AppState;
+  readonly dispatch: Dispatch;
+}
+
+// Removes the "/query" text and does what the chosen item says: turns the
+// block into a type, colors it, or adds a subpage below it.
 function choose(
   menu: OpenSlashMenu,
   item: SlashItem,
-  dispatch: Dispatch,
+  context: ChooseContext,
 ): void {
+  const { dispatch } = context;
   const { blockId, start, end } = menu;
   dispatch(closeOverlay.create({}));
   dispatch(replaceText.create({ blockId, start, end, text: "" }));
-  if ("color" in item) {
+  if ("createsPage" in item) {
+    createSubpage(menu, context);
+  } else if ("color" in item) {
     dispatch(setBlockColor.create({ blockIds: [blockId], color: item.color }));
-    return;
+  } else {
+    const { blockType, extraProps } = item;
+    const extra = extraProps && { extraProps };
+    dispatch(convertBlock.create({ blockId, blockType, ...extra }));
   }
-  const { blockType, extraProps } = item;
-  dispatch(
-    convertBlock.create({
-      blockId,
-      blockType,
-      ...(extraProps && { extraProps }),
-    }),
-  );
 }
 
 function highlight(
@@ -61,11 +77,11 @@ function highlight(
 
 // Runs a key's action on the open menu; the keys apply only while one is.
 function onMenu(
-  action: (menu: OpenSlashMenu, dispatch: Dispatch) => void,
+  action: (menu: OpenSlashMenu, context: ChooseContext) => void,
 ): ScopedKeyHandler {
   return ({ state, dispatch }) => {
     const menu = selectOpenSlashMenu(state);
-    if (menu !== undefined) action(menu, dispatch);
+    if (menu !== undefined) action(menu, { state, dispatch });
   };
 }
 
@@ -74,15 +90,15 @@ function onMenu(
 export const slashMenuKeys: ScopedKeys = {
   isActive: (state) => selectOpenSlashMenu(state) !== undefined,
   keys: {
-    ArrowDown: onMenu((menu, dispatch) => {
+    ArrowDown: onMenu((menu, { dispatch }) => {
       highlight(menu, 1, dispatch);
     }),
-    ArrowUp: onMenu((menu, dispatch) => {
+    ArrowUp: onMenu((menu, { dispatch }) => {
       highlight(menu, -1, dispatch);
     }),
-    Enter: onMenu((menu, dispatch) => {
+    Enter: onMenu((menu, context) => {
       const item = menu.items[menu.activeIndex];
-      if (item !== undefined) choose(menu, item, dispatch);
+      if (item !== undefined) choose(menu, item, context);
     }),
     Escape: ({ dispatch }) => dispatch(closeOverlay.create({})),
   },
@@ -124,7 +140,7 @@ export function renderSlashMenu(
     const index =
       event.target.closest<HTMLElement>("[data-index]")?.dataset.index;
     const item = menu.items[Number(index ?? -1)];
-    if (item !== undefined) choose(menu, item, dispatch);
+    if (item !== undefined) choose(menu, item, { state, dispatch });
   };
   return html`<div
     class="slash-menu"

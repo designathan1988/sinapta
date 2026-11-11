@@ -17,7 +17,8 @@ describe("selectSlashItems", () => {
     expect(labels).toContain("Divider");
     expect(labels).toContain("Image");
     expect(labels).toContain("Table of contents");
-    expect(labels).toHaveLength(19);
+    expect(labels).toContain("Page");
+    expect(labels).toHaveLength(20);
   });
 
   it("filters by the query without regard to case", () => {

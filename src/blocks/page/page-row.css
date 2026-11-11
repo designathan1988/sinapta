@@ -1,0 +1,33 @@
+@layer blocks {
+  .page-row {
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    inline-size: 100%;
+    min-block-size: var(--size-row-height);
+    padding: var(--space-none) var(--space-inset-xs);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-primary);
+    text-align: start;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
+  .page-row__icon {
+    display: inline-grid;
+    place-items: center;
+    min-inline-size: var(--size-icon-md);
+  }
+
+  .page-row__title {
+    font-weight: var(--font-weight-medium);
+    text-decoration: underline;
+    text-decoration-color: var(--color-border-default);
+    text-underline-offset: var(--size-focus-offset);
+  }
+}
