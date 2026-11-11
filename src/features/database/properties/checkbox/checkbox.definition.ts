@@ -1,3 +1,5 @@
+import { html } from "lit-html";
+import { CHECKBOX_CLASS } from "../../../../ui/checkbox/index.ts";
 import { COPY } from "../../../../ui/copy.ts";
 import type { GroupKey, Grouping } from "../../grouping-definition.ts";
 import type {
@@ -44,6 +46,15 @@ export const checkboxProperty: PropertyType = {
   format: (value) => (readChecked(value) ? "true" : ""),
   compare: (a, b) => Number(readChecked(a)) - Number(readChecked(b)),
   filterOperators: [IS_CHECKED, IS_NOT_CHECKED],
-  renderCell: (value) => (readChecked(value) ? "☑" : "☐"),
+  // The same box as everywhere, drawn as a mark: the cell toggles it.
+  renderCell: (value) => {
+    const isChecked = readChecked(value);
+    return html`<span
+      class=${CHECKBOX_CLASS}
+      role="img"
+      aria-label=${isChecked ? COPY.database.checked : COPY.database.unchecked}
+      ?data-checked=${isChecked}
+    ></span>`;
+  },
   grouping: GROUPING,
 };

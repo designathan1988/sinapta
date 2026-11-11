@@ -1,5 +1,6 @@
 // The settings of a button property: its label, whether a press opens the
 // row, and the values a press sets: a checkbox, an option or today.
+import { CHECKBOX_CLASS } from "../../../../ui/checkbox/index.ts";
 import { renderConfigChoice } from "../config-choice.view.ts";
 import { html, type TemplateResult } from "lit-html";
 import {
@@ -115,7 +116,12 @@ function renderOpens(
     onChange({ ...config, actions });
   };
   return html`<label class="database__check">
-    <input type="checkbox" .checked=${opens} @change=${onToggle} />
+    <input
+      type="checkbox"
+      class=${CHECKBOX_CLASS}
+      .checked=${opens}
+      @change=${onToggle}
+    />
     ${TEXT.opensRow}
   </label>`;
 }

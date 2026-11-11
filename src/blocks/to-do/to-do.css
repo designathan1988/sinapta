@@ -10,12 +10,8 @@
     }
   }
 
+  /* The box itself is ui's checkbox; here it only sits on the first line. */
   .to-do__check {
-    flex: none;
-    inline-size: var(--size-icon-sm);
-    block-size: var(--size-icon-sm);
-    margin: var(--space-inset-xs) var(--space-none);
-    accent-color: var(--color-accent-default);
-    cursor: pointer;
+    margin-block: var(--space-inset-xs);
   }
 }

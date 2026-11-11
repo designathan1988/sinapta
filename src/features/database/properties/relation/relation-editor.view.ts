@@ -1,6 +1,7 @@
 // Choosing a row's related pages: one checkbox per row of the related
 // database. Changes stay inside the editor, so a form around it that
 // reads every field, as a row's page does, does not see them.
+import { CHECKBOX_CLASS } from "../../../../ui/checkbox/index.ts";
 import { html, type TemplateResult } from "lit-html";
 import { COPY } from "../../../../ui/copy.ts";
 import type { RelationChoice } from "./relation.selectors.ts";
@@ -37,6 +38,7 @@ export function renderRelationEditor(editor: RelationEditor): TemplateResult {
           <label class="database__check">
             <input
               type="checkbox"
+              class=${CHECKBOX_CLASS}
               value=${choice.id}
               .checked=${editor.selected.includes(choice.id)}
             />

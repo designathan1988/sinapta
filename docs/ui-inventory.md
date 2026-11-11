@@ -65,7 +65,7 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Row properties on a row page | `row-properties.view.ts`, `row-option.view.ts` | custom (options are a list; other values are fields, not the table's editors) | property rows; values open their editors |
 | Column menu | `column-menu.view.ts` | custom (Notion's panel; icons and items missing) | menu with icons: sort, filter, hide, wrap, freeze, insert, duplicate, delete |
 | Board column menu | `board-column-menu.view.ts` | menu | menu |
-| Row tick box | `table-gutter.view.ts` | native checkbox | Notion checkbox |
+| Row tick box | `table-gutter.view.ts` | Notion | Notion checkbox |
 | Group header | `group-header.view.ts` | custom | caret, chip, count; hover shows "+" and "…" |
 
 ### Property settings
@@ -85,7 +85,7 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | --- | --- | --- | --- |
 | Code language | `code.view.ts` | Notion | searchable language list |
 | Button block action | `button-config.view.ts` | Notion | option list |
-| To-do box | `to-do.view.ts` | native checkbox | Notion checkbox |
+| To-do box | `to-do.view.ts` | Notion | Notion checkbox |
 
 ### Menus already custom
 
@@ -117,8 +117,11 @@ against the reference on every run.
   a property's settings opened in the window's corner; options showed
   their value beside their label; menus kept fading in whenever their
   anchor moved.
-- While the browser pane is hidden, a screenshot can show the frame
-  before the last change: take two.
+- While the browser pane is hidden the page runs as a background page:
+  transitions and animations stay at their start, so a screenshot shows
+  a half-faded menu or an unticked box. Show the pane, or, for the
+  capture only, finish the running animations first
+  (`element.getAnimations({ subtree: true })`, then `finish()`).
 
 ## Open
 
@@ -128,6 +131,5 @@ against the reference on every run.
   right, duplicate.
 - The view settings' Sort panel: the view's sorts, added and removed.
 - A row page's values open the table's own editors.
-- Notion checkboxes for to-dos, rows and settings (`src/ui/checkbox/`).
 - Group headers show "+" and "…" on hover.
 - Light theme measurements of the menu reference.

@@ -2,6 +2,7 @@
 // the database's own order, a handle that drags the row. The header's box
 // ticks every row shown. Alt+Shift with Up or Down on a cell moves a row
 // from the keyboard, Shift+Space ticks it.
+import { CHECKBOX_CLASS } from "../../ui/checkbox/index.ts";
 import "./table-rows.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { COPY } from "../../ui/copy.ts";
@@ -49,7 +50,7 @@ export function renderRowGutter(
     }
     <input
       type="checkbox"
-      class="database__row-check"
+      class="database__row-check ${CHECKBOX_CLASS}"
       tabindex="-1"
       aria-label=${`${COPY.database.selectRow} ${title}`}
       .checked=${isTicked}
@@ -72,7 +73,7 @@ export function renderGutterHeader(context: TableContext): TemplateResult {
   return html`<th class="database__gutter" scope="col">
     <input
       type="checkbox"
-      class="database__row-check"
+      class="database__row-check ${CHECKBOX_CLASS}"
       aria-label=${COPY.database.selectAllRows}
       .checked=${isAll}
       .indeterminate=${ticked.length > 0 && !isAll}

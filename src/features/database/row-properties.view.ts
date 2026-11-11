@@ -1,5 +1,6 @@
 // The property values of a database row, shown on the row's own page so
 // they can be read and changed there as well as in the table.
+import { CHECKBOX_CLASS } from "../../ui/checkbox/index.ts";
 import "./row-properties.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import {
@@ -62,6 +63,7 @@ function renderToggle(
 ): TemplateResult {
   return html`<input
     type="checkbox"
+    class=${CHECKBOX_CLASS}
     .checked=${storedOf(row, property) === true}
   />`;
 }
@@ -86,6 +88,7 @@ function renderMultiSelect(
           html`<label class="database__check">
             <input
               type="checkbox"
+              class=${CHECKBOX_CLASS}
               value=${option.id}
               .checked=${chosen.includes(option.id)}
             />

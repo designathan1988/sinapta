@@ -1,3 +1,4 @@
+import { CHECKBOX_CLASS } from "../../ui/checkbox/index.ts";
 import "./to-do.css";
 import { html, type TemplateResult } from "lit-html";
 import type { Dispatch } from "../../state/index.ts";
@@ -13,7 +14,7 @@ export function renderToDo(
   const { isChecked, text } = block.props;
   return html`<div class="to-do" ?data-checked=${isChecked}>
     <input
-      class="to-do__check"
+      class="to-do__check ${CHECKBOX_CLASS}"
       type="checkbox"
       aria-label=${COPY.blocks.toDoCheck}
       .checked=${isChecked}

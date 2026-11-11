@@ -1,0 +1,60 @@
+@layer ui {
+  /* A tick box drawn as Notion draws it: a small rounded square with a
+     light border, filled with the accent and ticked white when checked.
+     The real checkbox stays, so it keeps its keyboard and its state. */
+  .checkbox {
+    display: inline-grid;
+    flex: none;
+    place-content: center;
+    inline-size: var(--size-icon-sm);
+    block-size: var(--size-icon-sm);
+    margin: var(--space-none);
+    border: var(--size-border-thin) solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    cursor: pointer;
+    appearance: none;
+
+    &::before {
+      content: "";
+      inline-size: calc(var(--size-icon-sm) * 0.6);
+      block-size: calc(var(--size-icon-sm) * 0.6);
+      background-color: var(--color-text-on-accent);
+      clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+      scale: 0;
+    }
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    &:checked,
+    &[data-checked] {
+      border-color: var(--color-accent-default);
+      background-color: var(--color-accent-default);
+
+      &::before {
+        scale: 1;
+      }
+    }
+
+    &:indeterminate {
+      border-color: var(--color-accent-default);
+      background-color: var(--color-accent-default);
+
+      &::before {
+        block-size: var(--size-border-thick);
+        clip-path: none;
+        scale: 1;
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: background-color var(--duration-hover) ease-in;
+
+      &::before {
+        transition: scale var(--duration-fast) var(--easing-standard);
+      }
+    }
+  }
+}

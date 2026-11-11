@@ -1,5 +1,6 @@
 // The settings of a relation: the database its values come from, and
 // whether that database shows the relation too.
+import { CHECKBOX_CLASS } from "../../../../ui/checkbox/index.ts";
 import { html, nothing, type TemplateResult } from "lit-html";
 import type { PropertyDefinition } from "../../../../blocks/database/index.ts";
 import {
@@ -60,6 +61,7 @@ function renderTwoWay(
   return html`<label class="database__check">
     <input
       type="checkbox"
+      class=${CHECKBOX_CLASS}
       data-field="two-way"
       .checked=${isTwoWay}
       @change=${(event: Event) => {
