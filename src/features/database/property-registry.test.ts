@@ -42,6 +42,7 @@ describe("the property registry", () => {
       "phone",
       "created-time",
       "edited-time",
+      "unique-id",
     ]);
   });
 

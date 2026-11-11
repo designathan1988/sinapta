@@ -18,6 +18,7 @@ import { phoneProperty } from "./properties/phone/index.ts";
 import { selectProperty } from "./properties/select/index.ts";
 import { statusProperty } from "./properties/status/index.ts";
 import { textProperty } from "./properties/text/index.ts";
+import { uniqueIdProperty } from "./properties/unique-id/index.ts";
 import { urlProperty } from "./properties/url/index.ts";
 
 export const PROPERTY_TYPES: readonly PropertyType[] = [
@@ -33,6 +34,7 @@ export const PROPERTY_TYPES: readonly PropertyType[] = [
   phoneProperty,
   createdTimeProperty,
   editedTimeProperty,
+  uniqueIdProperty,
 ];
 
 const BY_TYPE: ReadonlyMap<string, PropertyType> = new Map(

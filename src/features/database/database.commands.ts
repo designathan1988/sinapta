@@ -17,6 +17,7 @@ import {
 } from "../../model/index.ts";
 import { defineCommand } from "../../state/index.ts";
 import { propertyType } from "./property-registry.ts";
+import { numberExistingRows } from "./row-numbering.ts";
 
 export const DEFAULT_VIEW_NAME = "Table";
 
@@ -111,17 +112,20 @@ export const addProperty = defineCommand<AddPropertyPayload>({
     const [id, ...optionIds] = command.meta.propertyIds;
     if (database === undefined || id === undefined) return {};
     const starting = propertyType(command.propertyType).startingSettings;
-    const property = {
+    const numbered = numberExistingRows(state, database, {
       id,
       name: command.name,
       type: command.propertyType,
       ...starting?.create(optionIds),
-    };
+    });
     return {
-      operations: updateProperties(database, [
-        ...database.props.properties,
-        property,
-      ]),
+      operations: [
+        ...updateProperties(database, [
+          ...database.props.properties,
+          numbered.property,
+        ]),
+        ...numbered.operations,
+      ],
     };
   },
 });

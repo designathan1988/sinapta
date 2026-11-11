@@ -51,6 +51,7 @@ export const DATABASE_TEXT = {
     editProperty: "Edit property",
     propertySettings: "Property settings",
     propertyDescription: "Description",
+    idPrefix: "Prefix",
     optionName: "Option name",
     optionColor: "Option color",
     moveOptionUp: "Move option up",

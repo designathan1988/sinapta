@@ -12,6 +12,7 @@ import {
   type AppState,
   type UiState,
 } from "../../state/index.ts";
+import { numberNewRow } from "./row-numbering.ts";
 
 export interface AddRowPayload {
   readonly databaseId: BlockId;
@@ -40,12 +41,13 @@ export const addRow = defineCommand<AddRowPayload>({
     const id = command.meta.blockIds[0];
     if (database === undefined || id === undefined) return {};
     const { now } = command.meta;
+    const numbered = numberNewRow(database);
     const props = {
       title: [],
       icon: null,
       isFavorite: false,
       isTrashed: false,
-      values: { ...command.values },
+      values: { ...command.values, ...numbered.values },
     };
     const record: Block = {
       id,
@@ -65,6 +67,7 @@ export const addRow = defineCommand<AddRowPayload>({
           id,
           index: database.childIds.length,
         },
+        ...numbered.operations,
       ],
       ui: afterAdd(state, id, command.opensPage === true),
     };

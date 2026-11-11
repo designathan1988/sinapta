@@ -53,6 +53,20 @@ export interface InputKind {
   readonly mode?: string;
 }
 
+// Values a type gives rows by itself, such as a unique ID's numbers: one
+// for each row a database has when the property is added, and one for
+// each row added later. Each returns the property as it is afterwards.
+export interface RowNumbering {
+  readonly start: (
+    property: PropertyDefinition,
+    rowCount: number,
+  ) => { property: PropertyDefinition; values: readonly unknown[] };
+  readonly next: (property: PropertyDefinition) => {
+    property: PropertyDefinition;
+    value: unknown;
+  };
+}
+
 export interface PropertyType {
   readonly type: string;
   readonly label: string;
@@ -82,6 +96,7 @@ export interface PropertyType {
   readonly configSchema?: PropertyConfigSchema;
   readonly defaultConfig?: () => unknown;
   readonly startingSettings?: StartingSettings;
+  readonly numbering?: RowNumbering;
   // The settings shown in the property's menu.
   readonly renderConfigEditor?: (
     property: PropertyDefinition,
