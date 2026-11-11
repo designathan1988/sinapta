@@ -41,11 +41,11 @@ describe("selectBoardColumns", () => {
 
     expect(
       columns?.map((column) => [
-        column.optionId,
+        column.key,
         column.rows.map((row) => row.title),
       ]),
     ).toEqual([
-      [null, ["C", "D"]],
+      ["", ["C", "D"]],
       ["todo", ["A"]],
       ["done", ["B"]],
     ]);
@@ -68,7 +68,7 @@ describe("selectCardMove", () => {
     const columns = selectBoardColumns(model()) ?? [];
 
     expect(selectCardMove(columns, a, 1)).toBe("done");
-    expect(selectCardMove(columns, a, -1)).toBeNull();
+    expect(selectCardMove(columns, a, -1)).toBe("");
     expect(selectCardMove(columns, c, -1)).toBeUndefined();
   });
 });

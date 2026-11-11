@@ -1,5 +1,6 @@
 import { html, type TemplateResult } from "lit-html";
 import type { PropertyDefinition } from "../../../../blocks/database/index.ts";
+import type { GroupKey, Grouping } from "../../grouping-definition.ts";
 import {
   foldText,
   IS_EMPTY,
@@ -28,6 +29,25 @@ export function renderChip(
   >`;
 }
 
+// The groups of an option property: one per option, in its order.
+export function optionGroups(property: PropertyDefinition): GroupKey[] {
+  return (property.options ?? []).map((option) => ({
+    key: option.id,
+    label: option.name,
+    color: option.color,
+  }));
+}
+
+// A row moves into an option's group by taking the option, and into the
+// group of empty values by losing it.
+export const OPTION_GROUPING: Grouping = {
+  keysOf: (value, property) =>
+    optionGroups(property).filter((group) => group.key === value),
+  known: optionGroups,
+  keepsEmptyGroup: true,
+  valueFor: (key) => (key === "" ? undefined : key),
+};
+
 // Filters compare with the option's id, which the filter editor supplies.
 const IS: FilterOperator = {
   id: "is",
@@ -54,4 +74,5 @@ export const selectProperty: PropertyType = {
   compare: (a, b) => foldText(String(a)).localeCompare(foldText(String(b))),
   filterOperators: [IS, IS_NOT, IS_EMPTY, IS_NOT_EMPTY],
   renderCell: renderChip,
+  grouping: OPTION_GROUPING,
 };

@@ -155,3 +155,33 @@ describe("version 16", () => {
     });
   });
 });
+
+describe("version 17", () => {
+  it("turns a board's group property into its grouping, and drops it from other layouts", () => {
+    const views = {
+      b: { id: "b", type: "board", groupPropertyId: "p" },
+      t: { id: "t", type: "table", groupPropertyId: "p" },
+    };
+
+    expect(runMigrations({ schemaVersion: 16, views })).toEqual({
+      ok: true,
+      file: {
+        schemaVersion: SCHEMA_VERSION,
+        views: {
+          b: {
+            id: "b",
+            type: "board",
+            groupBy: {
+              propertyId: "p",
+              sort: "manual",
+              hideEmpty: false,
+              collapsed: [],
+              dateBy: "month",
+            },
+          },
+          t: { id: "t", type: "table" },
+        },
+      },
+    });
+  });
+});

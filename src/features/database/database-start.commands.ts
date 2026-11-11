@@ -10,6 +10,7 @@ import type { BlockId, PropertyId, View, ViewType } from "../../model/index.ts";
 import { defineCommand } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { emptyView } from "./database.commands.ts";
+import { groupByProperty } from "./group.commands.ts";
 
 const TEXT = COPY.database;
 
@@ -40,7 +41,7 @@ function startingProperties(viewType: ViewType, ids: readonly PropertyId[]) {
 
 function startingView(view: View, viewType: ViewType, id?: PropertyId): View {
   if (viewType === "board" && id !== undefined) {
-    return { ...view, type: viewType, groupPropertyId: id };
+    return { ...view, type: viewType, groupBy: groupByProperty(id) };
   }
   if (viewType === "calendar" && id !== undefined) {
     return { ...view, type: viewType, datePropertyId: id };

@@ -1,11 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { createDatabaseApp } from "./database-builder.ts";
 import { addRow } from "./row.commands.ts";
-import {
-  setViewDateProperty,
-  setViewGroupProperty,
-  setViewType,
-} from "./view-layout.commands.ts";
+import { setViewDateProperty, setViewType } from "./view-layout.commands.ts";
+import { setViewGroupBy } from "./group.commands.ts";
 import { createView } from "./view.commands.ts";
 
 function createApp() {
@@ -42,7 +39,7 @@ describe("view.setType", () => {
 
     expect(app.view()).toMatchObject({
       type: "board",
-      groupPropertyId: status,
+      groupBy: { propertyId: status },
     });
   });
 
@@ -60,21 +57,19 @@ describe("view.setType", () => {
   });
 });
 
-describe("view.setGroupProperty and view.setDateProperty", () => {
-  it("groups by another select property and refuses one of another type", () => {
+describe("view.setGroupBy and view.setDateProperty", () => {
+  it("groups by another property, and places rows by a date property only", () => {
     const app = createApp();
     const viewId = app.view().id;
     const [status, due, stage] = app.propertyIds;
     if (status === undefined || due === undefined || stage === undefined)
       throw new Error("missing property");
 
-    app.dispatch(setViewGroupProperty.create({ viewId, propertyId: stage }));
-    expect(app.view().groupPropertyId).toBe(stage);
-
-    app.dispatch(setViewGroupProperty.create({ viewId, propertyId: due }));
-    expect(app.view().groupPropertyId).toBe(stage);
+    app.dispatch(setViewGroupBy.create({ viewId, propertyId: stage }));
+    expect(app.view().groupBy?.propertyId).toBe(stage);
 
     app.dispatch(setViewDateProperty.create({ viewId, propertyId: due }));
+    app.dispatch(setViewDateProperty.create({ viewId, propertyId: stage }));
     expect(app.view().datePropertyId).toBe(due);
   });
 });
@@ -98,7 +93,7 @@ describe("view.create with a layout", () => {
         : app.store.getState().workspace.views[viewId];
     expect(view).toMatchObject({
       type: "board",
-      groupPropertyId: app.propertyIds[0],
+      groupBy: { propertyId: app.propertyIds[0] },
     });
   });
 });

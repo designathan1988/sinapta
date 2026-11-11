@@ -2,6 +2,7 @@
 import type { PropertyType } from "../../property-definition.ts";
 import { renderDateConfig } from "./date-config.view.ts";
 import { DATE_FILTERS } from "./date-filters.ts";
+import { DATE_GROUPING } from "./date-grouping.ts";
 import {
   formatDateValue,
   isDay,
@@ -47,6 +48,7 @@ export const dateProperty: PropertyType = {
   format: (value) => readDateValue(value)?.start ?? "",
   compare: compareDates,
   filterOperators: DATE_FILTERS,
+  grouping: DATE_GROUPING,
   renderCell(value, property) {
     const date = readDateValue(value);
     if (date === undefined) return "";

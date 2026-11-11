@@ -1,5 +1,5 @@
 // A list: one line per row, its title then the values of the view's
-// visible properties.
+// visible properties; a grouped list shows its lines group by group.
 import "./list.css";
 import { html, type TemplateResult } from "lit-html";
 import { repeat } from "lit-html/directives/repeat.js";
@@ -7,7 +7,9 @@ import { setActivePage } from "../../../../state/index.ts";
 import { renderButton } from "../../../../ui/button/index.ts";
 import { COPY } from "../../../../ui/copy.ts";
 import { selectCellContext } from "../../cell-context.selectors.ts";
+import { renderGroupSection } from "../../group-section.view.ts";
 import { propertyType } from "../../property-registry.ts";
+import { selectRowGroups } from "../../row-groups.selectors.ts";
 import { addRow } from "../../row.commands.ts";
 import type { TableContext } from "../../table-cell.view.ts";
 import type { TableRow } from "../../table-model.selectors.ts";
@@ -37,17 +39,33 @@ function renderLine(row: TableRow, context: TableContext): TemplateResult {
   </li>`;
 }
 
+function renderLines(
+  rows: readonly TableRow[],
+  context: TableContext,
+): TemplateResult {
+  return html`<ul class="list__rows">
+    ${repeat(
+      rows,
+      (row) => row.id,
+      (row) => renderLine(row, context),
+    )}
+  </ul>`;
+}
+
 export function renderList(context: TableContext): TemplateResult {
   const { model, dispatch } = context;
+  const grouped = selectRowGroups(model);
+  if (grouped !== undefined) {
+    const content = (rows: readonly TableRow[]) => renderLines(rows, context);
+    return html`<div class="list">
+      ${grouped.groups.map((group) =>
+        renderGroupSection({ grouped, group, content }, context),
+      )}
+    </div>`;
+  }
   const databaseId = model.database.id;
   return html`<div class="list">
-    <ul class="list__rows">
-      ${repeat(
-        model.rows,
-        (row) => row.id,
-        (row) => renderLine(row, context),
-      )}
-    </ul>
+    ${renderLines(model.rows, context)}
     ${renderButton({
       label: COPY.database.newCard,
       icon: "plus",

@@ -1,5 +1,6 @@
-// A board: one column per option of the group property. Cards move
-// between columns by drag, or by Alt with Left or Right.
+// A board: one column per group of the view's grouping. Cards move
+// between columns by drag, or by Alt with Left or Right, when the group
+// property lets rows move between its groups.
 import "./board.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { repeat } from "lit-html/directives/repeat.js";
@@ -28,15 +29,9 @@ interface BoardContext extends TableContext {
   readonly board: BoardModel;
 }
 
-function columnName(board: BoardModel, column: BoardColumn): string {
-  return (
-    column.option?.name ?? `${COPY.database.noValue} ${board.property.name}`
-  );
-}
-
 interface CardMove {
   readonly rowId: BlockId;
-  readonly optionId: string | null;
+  readonly key: string;
 }
 
 // Focus follows the card into its new column, so the keys keep moving it.
@@ -51,12 +46,12 @@ function focusCard(rowId: BlockId): void {
 
 function moveCard(context: BoardContext, move: CardMove): void {
   const { board, dispatch } = context;
-  const { rowId, optionId } = move;
-  const value = optionId ?? undefined;
+  const { rowId, key } = move;
+  const column = board.columns.find((item) => item.key === key);
+  if (board.valueFor === undefined || column === undefined) return;
+  const value = board.valueFor(key);
   dispatch(setRowValue.create({ rowId, propertyId: board.property.id, value }));
-  const column = board.columns.find((item) => item.optionId === optionId);
-  if (column !== undefined)
-    announce(`${COPY.database.cardMoved} ${columnName(board, column)}`);
+  announce(`${COPY.database.cardMoved} ${column.label}`);
   focusCard(rowId);
 }
 
@@ -73,8 +68,8 @@ function onCardKey(
   const offset = KEY_OFFSETS[event.key];
   if (!event.altKey || offset === undefined) return;
   event.preventDefault();
-  const optionId = selectCardMove(context.board.columns, rowId, offset);
-  if (optionId !== undefined) moveCard(context, { rowId, optionId });
+  const key = selectCardMove(context.board.columns, rowId, offset);
+  if (key !== undefined) moveCard(context, { rowId, key });
 }
 
 function startCardDrag(event: PointerEvent, context: BoardContext): void {
@@ -84,13 +79,10 @@ function startCardDrag(event: PointerEvent, context: BoardContext): void {
       const rowId = context.model.rows.find(
         (row) => row.id === source.dataset.rowId,
       )?.id;
-      const column = target.closest<HTMLElement>(".board__column");
-      if (rowId === undefined || column === null) return;
-      const optionId = column.dataset.optionId;
-      moveCard(context, {
-        rowId,
-        optionId: optionId === "" ? null : (optionId ?? null),
-      });
+      const key =
+        target.closest<HTMLElement>(".board__column")?.dataset.groupKey;
+      if (rowId === undefined || key === undefined) return;
+      moveCard(context, { rowId, key });
     },
   });
 }
@@ -131,20 +123,18 @@ function renderColumn(
   column: BoardColumn,
 ): TemplateResult {
   const { model, dispatch, board } = context;
-  const name = columnName(board, column);
-  const values =
-    column.optionId === null ? {} : { [board.property.id]: column.optionId };
+  const value = board.valueFor?.(column.key);
+  const values = value === undefined ? {} : { [board.property.id]: value };
   const databaseId = model.database.id;
+  const color = column.color ?? "gray";
   return html`<section
     class="board__column"
-    data-option-id=${column.optionId ?? ""}
-    data-color=${column.option?.color ?? "gray"}
-    aria-label=${name}
+    data-group-key=${column.key}
+    data-color=${color}
+    aria-label=${column.label}
   >
     <header class="board__header">
-      <span class="database__chip" data-color=${column.option?.color ?? "gray"}
-        >${name}</span
-      >
+      <span class="database__chip" data-color=${color}>${column.label}</span>
       <span class="board__count">${column.rows.length}</span>
     </header>
     ${renderCards(context, column)}

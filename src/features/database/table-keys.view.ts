@@ -15,6 +15,7 @@ import { CELL_POPOVERS, type TableContext } from "./table-cell.view.ts";
 import { cellOf, columnOf, type CellRef } from "./table-cell-ref.ts";
 import { setActiveCell, setTableFirstRow } from "./table.commands.ts";
 import { selectCellNeighbor, type CellStep } from "./table.selectors.ts";
+import { selectEntryIndex } from "./table-entries.selectors.ts";
 
 function activate(
   cell: CellRef,
@@ -128,7 +129,7 @@ function moveActive(
 ): void {
   const { model, dispatch, state } = context;
   const next = selectCellNeighbor(model, cell, step);
-  const index = model.rows.findIndex((row) => row.id === next.rowId);
+  const index = selectEntryIndex(model, next.rowId);
   // Bring the row into the rendered window before it takes focus.
   if (Math.abs(index - state.ui.tableFirstRow) > 20) {
     dispatch(setTableFirstRow.create({ firstRow: index - 5 }));

@@ -31,6 +31,17 @@ export const viewTypeSchema = v.picklist([
   "calendar",
 ]);
 
+// How a view groups its rows: by one property's values, the groups in the
+// property's own order or by name, and collapsed groups by their key.
+export const groupBySchema = v.object({
+  propertyId: propertyIdSchema,
+  sort: v.picklist(["manual", "ascending", "descending"]),
+  hideEmpty: v.boolean(),
+  collapsed: v.array(v.string()),
+  // The span of the groups of a date property.
+  dateBy: v.picklist(["day", "week", "month", "year"]),
+});
+
 export const viewSchema = v.object({
   id: viewIdSchema,
   databaseId: blockIdSchema,
@@ -48,7 +59,7 @@ export const viewSchema = v.object({
   propertyWidths: v.record(propertyIdSchema, v.number()),
   hiddenPropertyIds: v.array(propertyIdSchema),
   // The select property a board groups its cards by (version 3).
-  groupPropertyId: v.optional(propertyIdSchema),
+  groupBy: v.optional(groupBySchema),
   // The date property a calendar places its rows by (version 3).
   datePropertyId: v.optional(propertyIdSchema),
 });
@@ -58,5 +69,6 @@ export type FilterGroup = v.InferOutput<typeof filterGroupSchema>;
 export type InnerFilterGroup = v.InferOutput<typeof innerFilterGroupSchema>;
 export type FilterItem = FilterGroup["items"][number];
 export type Conjunction = FilterGroup["conjunction"];
+export type GroupBy = v.InferOutput<typeof groupBySchema>;
 export type View = v.InferOutput<typeof viewSchema>;
 export type ViewType = v.InferOutput<typeof viewTypeSchema>;

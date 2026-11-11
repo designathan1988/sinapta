@@ -1,43 +1,69 @@
 // A gallery: rows as cards in a grid, each with the first image on its
-// page as a cover.
+// page as a cover; a grouped gallery shows a grid for each group.
 import "./gallery.css";
-import { html, type TemplateResult } from "lit-html";
+import { html, nothing, type TemplateResult } from "lit-html";
 import { repeat } from "lit-html/directives/repeat.js";
 import { renderButton } from "../../../../ui/button/index.ts";
 import { COPY } from "../../../../ui/copy.ts";
+import { selectCellContext } from "../../cell-context.selectors.ts";
+import { renderGroupSection } from "../../group-section.view.ts";
+import { selectRowGroups } from "../../row-groups.selectors.ts";
 import { addRow } from "../../row.commands.ts";
 import type { TableContext } from "../../table-cell.view.ts";
-import { selectCellContext } from "../../cell-context.selectors.ts";
+import type { TableRow } from "../../table-model.selectors.ts";
 import { renderRowCard } from "../row-card/index.ts";
 import { selectRowCover } from "./gallery.selectors.ts";
 
-export function renderGallery(context: TableContext): TemplateResult {
+// The grid of cards; `adds` ends it with a card that adds a row.
+function renderCards(
+  rows: readonly TableRow[],
+  context: TableContext,
+  adds: boolean,
+): TemplateResult {
   const { model, state, dispatch } = context;
   const databaseId = model.database.id;
-  return html`<div class="gallery">
-    <ul class="gallery__cards">
-      ${repeat(
-        model.rows,
-        (row) => row.id,
-        (row) =>
-          html`<li>
-            ${renderRowCard({
-              row,
-              columns: model.columns,
-              dispatch,
-              cover: selectRowCover(state, row.id),
-              cell: selectCellContext(state),
+  return html`<ul class="gallery__cards">
+    ${repeat(
+      rows,
+      (row) => row.id,
+      (row) =>
+        html`<li>
+          ${renderRowCard({
+            row,
+            columns: model.columns,
+            dispatch,
+            cover: selectRowCover(state, row.id),
+            cell: selectCellContext(state),
+          })}
+        </li>`,
+    )}
+    ${
+      adds
+        ? html`<li>
+            ${renderButton({
+              label: COPY.database.newCard,
+              icon: "plus",
+              onClick: () =>
+                dispatch(addRow.create({ databaseId, opensPage: true })),
             })}
-          </li>`,
-      )}
-      <li>
-        ${renderButton({
-          label: COPY.database.newCard,
-          icon: "plus",
-          onClick: () =>
-            dispatch(addRow.create({ databaseId, opensPage: true })),
-        })}
-      </li>
-    </ul>
+          </li>`
+        : nothing
+    }
+  </ul>`;
+}
+
+export function renderGallery(context: TableContext): TemplateResult {
+  const grouped = selectRowGroups(context.model);
+  if (grouped === undefined) {
+    return html`<div class="gallery">
+      ${renderCards(context.model.rows, context, true)}
+    </div>`;
+  }
+  const content = (rows: readonly TableRow[]) =>
+    renderCards(rows, context, false);
+  return html`<div class="gallery">
+    ${grouped.groups.map((group) =>
+      renderGroupSection({ grouped, group, content }, context),
+    )}
   </div>`;
 }

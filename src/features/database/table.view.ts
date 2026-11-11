@@ -13,6 +13,11 @@ import {
   onBodyKeyDown,
   onBodyPointerDown,
 } from "./table-keys.view.ts";
+import {
+  selectTableEntries,
+  type TableEntry,
+} from "./table-entries.selectors.ts";
+import { renderTableGroupEntry } from "./table-group.view.ts";
 import type { TableRow } from "./table-model.selectors.ts";
 import { setTableFirstRow } from "./table.commands.ts";
 import { selectRowWindow } from "./table.selectors.ts";
@@ -30,6 +35,16 @@ function renderRow(
     ${context.model.columns.map((column) => renderCell(row, column, context))}
     <td class="database__cell" data-filler></td>
   </tr>`;
+}
+
+function renderEntry(
+  entry: TableEntry,
+  index: number,
+  context: TableContext,
+): TemplateResult {
+  return entry.kind === "row"
+    ? renderRow(entry.row, index, context)
+    : renderTableGroupEntry(entry, context);
 }
 
 // A row that stands in for rows that are not rendered.
@@ -63,7 +78,8 @@ function onScroll(event: Event, context: TableContext): void {
 function renderBody(context: TableContext): TemplateResult {
   const { model, state } = context;
   const span = model.columns.length + 1;
-  const window = selectRowWindow(model.rows, state.ui.tableFirstRow);
+  const entries = selectTableEntries(model);
+  const window = selectRowWindow(entries, state.ui.tableFirstRow);
   const on =
     <TEvent>(handler: (event: TEvent, context: TableContext) => void) =>
     (event: TEvent): void => {
@@ -82,8 +98,8 @@ function renderBody(context: TableContext): TemplateResult {
     ${renderSpacer(window.before, span)}
     ${repeat(
       window.rows,
-      (row) => row.id,
-      (row, index) => renderRow(row, window.start + index, context),
+      (entry) => entry.key,
+      (entry, index) => renderEntry(entry, window.start + index, context),
     )}
     ${renderSpacer(window.after, span)}
   </tbody>`;
@@ -115,7 +131,7 @@ export function renderTable(context: TableContext): TemplateResult {
       class="database__table"
       role="grid"
       aria-label=${COPY.database.views}
-      aria-rowcount=${model.rows.length + 1}
+      aria-rowcount=${selectTableEntries(model).length + 1}
       aria-colcount=${model.columns.length}
     >
       <colgroup>

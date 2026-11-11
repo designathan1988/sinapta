@@ -10,6 +10,7 @@ import type {
   ViewType,
 } from "../../model/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { groupByProperty } from "../database/index.ts";
 
 const TEXT = COPY.onboarding;
 const DAY_MS = 86_400_000;
@@ -45,7 +46,9 @@ function view(ids: TaskIds, index: number, type: ViewType): View[] {
     propertyWidths: {},
     hiddenPropertyIds: [],
   };
-  if (type === "board") return [{ ...record, groupPropertyId: status }];
+  if (type === "board") {
+    return [{ ...record, groupBy: groupByProperty(status) }];
+  }
   if (type === "calendar") return [{ ...record, datePropertyId: due }];
   return [record];
 }

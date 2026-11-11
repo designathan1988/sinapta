@@ -11,6 +11,7 @@ import {
   type AppState,
   type CommandEffect,
 } from "../../state/index.ts";
+import { groupByProperty } from "./group.commands.ts";
 
 // The types a board can group by, the one it prefers first.
 export const GROUP_PROPERTY_TYPES = ["status", "select"] as const;
@@ -35,20 +36,21 @@ function firstOfTypes(
 }
 
 // What a view of a layout starts with: a board needs a property to group
-// by and a calendar one to place rows by. Settings already made are kept.
+// by and a calendar one to place rows by. Settings already made are kept,
+// so a board made a table stays grouped, as its groups were its columns.
 export function layoutDefaults(
   database: DatabaseBlock,
-  view: Pick<View, "groupPropertyId" | "datePropertyId">,
+  view: Pick<View, "groupBy" | "datePropertyId">,
   viewType: ViewType,
 ): Partial<View> {
-  const group =
-    view.groupPropertyId ?? firstOfTypes(database, GROUP_PROPERTY_TYPES);
+  const group = firstOfTypes(database, GROUP_PROPERTY_TYPES);
   const date =
     view.datePropertyId ?? firstOfTypes(database, DATE_PROPERTY_TYPES);
+  const needsGroup = viewType === "board" && view.groupBy === undefined;
   return {
     type: viewType,
-    ...(viewType === "board" &&
-      group !== undefined && { groupPropertyId: group }),
+    ...(needsGroup &&
+      group !== undefined && { groupBy: groupByProperty(group) }),
     ...(viewType === "calendar" &&
       date !== undefined && { datePropertyId: date }),
   };
@@ -90,43 +92,21 @@ export const setViewType = defineCommand<{
   },
 });
 
-// Sets the property a layout uses, if it is of a type that layout needs.
-function setLayoutProperty(
-  key: "groupPropertyId" | "datePropertyId",
-  types: readonly string[],
-) {
-  return (
-    state: AppState,
-    command: { readonly viewId: ViewId; readonly propertyId: PropertyId },
-  ): CommandEffect => {
-    const found = viewWithDatabase(state, command.viewId);
-    const property = found?.database.props.properties.find(
-      (item) => item.id === command.propertyId,
-    );
-    if (found === undefined || property === undefined) return {};
-    if (!types.includes(property.type)) return {};
-    return patchView(found.view.id, { [key]: property.id });
-  };
-}
-
-export const setViewGroupProperty = defineCommand<{
-  viewId: ViewId;
-  propertyId: PropertyId;
-}>({
-  type: "view.setGroupProperty",
-  handle: setLayoutProperty("groupPropertyId", GROUP_PROPERTY_TYPES),
-});
-
+// Sets the date property a calendar places rows by.
 export const setViewDateProperty = defineCommand<{
   viewId: ViewId;
   propertyId: PropertyId;
 }>({
   type: "view.setDateProperty",
-  handle: setLayoutProperty("datePropertyId", DATE_PROPERTY_TYPES),
+  handle(state, command) {
+    const found = viewWithDatabase(state, command.viewId);
+    const property = found?.database.props.properties.find(
+      (item) => item.id === command.propertyId,
+    );
+    if (found === undefined || property === undefined) return {};
+    if (!DATE_PROPERTY_TYPES.some((type) => type === property.type)) return {};
+    return patchView(found.view.id, { datePropertyId: property.id });
+  },
 });
 
-export const viewLayoutCommands = [
-  setViewType,
-  setViewGroupProperty,
-  setViewDateProperty,
-];
+export const viewLayoutCommands = [setViewType, setViewDateProperty];

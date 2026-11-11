@@ -5,6 +5,7 @@ import type { ViewType } from "../../model/index.ts";
 import { closeOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderMenu, type MenuItem } from "../../ui/menu/index.ts";
+import { renderGroupSettings } from "./group-settings.view.ts";
 import { renderBoard } from "./layouts/board/index.ts";
 import { renderCalendar } from "./layouts/calendar/index.ts";
 import { renderGallery } from "./layouts/gallery/index.ts";
@@ -13,10 +14,8 @@ import type { TableContext } from "./table-cell.view.ts";
 import { renderTable } from "./table.view.ts";
 import {
   DATE_PROPERTY_TYPES,
-  GROUP_PROPERTY_TYPES,
   propertiesOfTypes,
   setViewDateProperty,
-  setViewGroupProperty,
   setViewType,
 } from "./view-layout.commands.ts";
 import { createView } from "./view.commands.ts";
@@ -107,25 +106,14 @@ function renderPropertyChoice(
   </label>`;
 }
 
+// A calendar places rows by a date property; the other layouts group.
 function renderLayoutProperty(context: TableContext) {
   const { model, dispatch } = context;
   const { view } = model;
   const viewId = view.id;
   const propertyOf = (id: string) =>
     model.database.props.properties.find((property) => property.id === id)?.id;
-  if (view.type === "board") {
-    return renderPropertyChoice(context, {
-      label: COPY.database.groupBy,
-      propertyTypes: GROUP_PROPERTY_TYPES,
-      current: view.groupPropertyId,
-      onChoose: (id) => {
-        const propertyId = propertyOf(id);
-        if (propertyId !== undefined)
-          dispatch(setViewGroupProperty.create({ viewId, propertyId }));
-      },
-    });
-  }
-  if (view.type !== "calendar") return nothing;
+  if (view.type !== "calendar") return renderGroupSettings(context);
   return renderPropertyChoice(context, {
     label: COPY.database.dateBy,
     propertyTypes: DATE_PROPERTY_TYPES,

@@ -15,6 +15,7 @@ import { addPropertyConfig } from "./0013-property-config.ts";
 import { addDateRanges } from "./0014-date-ranges.ts";
 import { addLinkedViews } from "./0015-linked-views.ts";
 import { addFilterGroups } from "./0016-filter-groups.ts";
+import { addGroupBy } from "./0017-group-by.ts";
 
 // A pure function from format version n to n + 1.
 export type Migration = (
@@ -39,6 +40,7 @@ export const MIGRATIONS: readonly Migration[] = [
   addDateRanges,
   addLinkedViews,
   addFilterGroups,
+  addGroupBy,
 ];
 
 export type MigrationResult =

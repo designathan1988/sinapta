@@ -1,0 +1,65 @@
+@layer features {
+  /* The header of a group: a quiet button with a turning caret. */
+  .database__group-toggle {
+    display: inline-flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    min-block-size: var(--size-control-md);
+    padding: var(--space-none) var(--space-inset-xs);
+    border: none;
+    border-radius: var(--radius-md);
+    background: none;
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    & > .icon {
+      color: var(--color-text-tertiary);
+      transition: rotate var(--duration-fast) var(--easing-standard);
+    }
+
+    &[aria-expanded="true"] > .icon {
+      rotate: 90deg;
+    }
+  }
+
+  .database__group-count {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-regular);
+  }
+
+  /* In a table, a group's header and its new-row button span the row. */
+  .database__group-row > th {
+    padding: var(--space-stack-md) var(--space-none) var(--space-stack-xs);
+    font-weight: inherit;
+    text-align: start;
+  }
+
+  .database__group-add > td {
+    padding: var(--space-none);
+    border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
+  }
+
+  /* In a list or a gallery, each group is a section. */
+  .database__group {
+    display: grid;
+    gap: var(--space-stack-xs);
+    margin-block-end: var(--space-stack-md);
+  }
+
+  .database__group-settings {
+    display: grid;
+    gap: var(--space-stack-xs);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .database__group-toggle > .icon {
+      transition: none;
+    }
+  }
+}

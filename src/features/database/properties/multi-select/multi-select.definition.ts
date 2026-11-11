@@ -5,7 +5,8 @@ import {
   type FilterOperator,
   type PropertyType,
 } from "../../property-definition.ts";
-import { optionName, renderChip } from "../select/index.ts";
+import type { Grouping } from "../../grouping-definition.ts";
+import { optionGroups, optionName, renderChip } from "../select/index.ts";
 
 // The stored value is a list of option ids; an empty list is an empty cell.
 function readOptions(stored: unknown): string[] | undefined {
@@ -28,6 +29,15 @@ const DOES_NOT_CONTAIN: FilterOperator = {
   test: (value, operand) => readOptions(value)?.includes(operand) !== true,
 };
 
+// A row with several options is in the group of each.
+const GROUPING: Grouping = {
+  keysOf: (value, property) => {
+    const ids = readOptions(value) ?? [];
+    return optionGroups(property).filter((group) => ids.includes(group.key));
+  },
+  known: optionGroups,
+};
+
 export const multiSelectProperty: PropertyType = {
   type: "multi-select",
   label: "Multi-select",
@@ -42,4 +52,5 @@ export const multiSelectProperty: PropertyType = {
   filterOperators: [CONTAINS, DOES_NOT_CONTAIN, IS_EMPTY, IS_NOT_EMPTY],
   renderCell: (value, property) =>
     html`${(readOptions(value) ?? []).map((id) => renderChip(id, property))}`,
+  grouping: GROUPING,
 };

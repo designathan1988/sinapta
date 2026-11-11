@@ -37,6 +37,7 @@ export {
   type Filter,
   type FilterGroup,
   type FilterItem,
+  type GroupBy,
   type InnerFilterGroup,
   type View,
   type ViewType,

@@ -9,6 +9,7 @@ import type { PageBlock } from "../../blocks/page/index.ts";
 import type { BlockId } from "../../model/index.ts";
 import type { AppState, Dispatch } from "../../state/index.ts";
 import type { IconName } from "../../ui/icon/index.ts";
+import type { Grouping } from "./grouping-definition.ts";
 
 // What a filter knows besides the value and the operand.
 export interface FilterContext {
@@ -148,6 +149,9 @@ export interface PropertyType {
     property: PropertyDefinition,
     context: ComputeContext,
   ) => unknown;
+  // How views group rows by this type's values; without it, by the
+  // value's text.
+  readonly grouping?: Grouping;
   // The settings shown in the property's menu.
   readonly renderConfigEditor?: (
     property: PropertyDefinition,

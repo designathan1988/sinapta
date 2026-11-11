@@ -1,3 +1,5 @@
+import { COPY } from "../../../../ui/copy.ts";
+import type { GroupKey, Grouping } from "../../grouping-definition.ts";
 import type {
   FilterOperator,
   PropertyType,
@@ -22,6 +24,16 @@ const IS_NOT_CHECKED: FilterOperator = {
   test: (value) => !readChecked(value),
 };
 
+const CHECKED: GroupKey = { key: "true", label: COPY.database.checked };
+const UNCHECKED: GroupKey = { key: "false", label: COPY.database.unchecked };
+
+// Every row is checked or not; moving it between the two sets the box.
+const GROUPING: Grouping = {
+  keysOf: (value) => [readChecked(value) ? CHECKED : UNCHECKED],
+  known: () => [CHECKED, UNCHECKED],
+  valueFor: (key) => (key === CHECKED.key ? true : undefined),
+};
+
 export const checkboxProperty: PropertyType = {
   type: "checkbox",
   label: "Checkbox",
@@ -33,4 +45,5 @@ export const checkboxProperty: PropertyType = {
   compare: (a, b) => Number(readChecked(a)) - Number(readChecked(b)),
   filterOperators: [IS_CHECKED, IS_NOT_CHECKED],
   renderCell: (value) => (readChecked(value) ? "☑" : "☐"),
+  grouping: GROUPING,
 };

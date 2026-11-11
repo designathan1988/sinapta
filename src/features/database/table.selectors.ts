@@ -2,6 +2,7 @@
 // where the arrow keys take the active cell.
 import type { PropertyId } from "../../model/index.ts";
 import type { ActiveCell } from "../../state/index.ts";
+import { selectVisibleRows } from "./row-groups.selectors.ts";
 import type { TableModel, TableRow } from "./table-model.selectors.ts";
 
 // Tables longer than this render only the rows near the viewport.
@@ -9,8 +10,8 @@ export const WINDOW_THRESHOLD = 200;
 export const WINDOW_SIZE = 60;
 const OVERSCAN = 15;
 
-export interface RowWindow {
-  readonly rows: readonly TableRow[];
+export interface RowWindow<TItem = TableRow> {
+  readonly rows: readonly TItem[];
   // Rows left out above and below, which spacers stand in for.
   readonly before: number;
   readonly after: number;
@@ -18,10 +19,10 @@ export interface RowWindow {
   readonly start: number;
 }
 
-export function selectRowWindow(
-  rows: readonly TableRow[],
+export function selectRowWindow<TItem>(
+  rows: readonly TItem[],
   firstRow: number,
-): RowWindow {
+): RowWindow<TItem> {
   if (rows.length <= WINDOW_THRESHOLD) {
     return { rows, before: 0, after: 0, start: 0 };
   }
@@ -47,20 +48,22 @@ const STEPS: Record<CellStep, readonly [row: number, column: number]> = {
   right: [0, 1],
 };
 
-// The cell one step from the active one; the same cell at an edge.
+// The cell one step from the active one, in the order the table shows
+// rows; the same cell at an edge.
 export function selectCellNeighbor(
   model: TableModel,
   cell: ActiveCell,
   step: CellStep,
 ): ActiveCell {
-  const rowIndex = model.rows.findIndex((row) => row.id === cell.rowId);
+  const rows = selectVisibleRows(model);
+  const rowIndex = rows.findIndex((row) => row.id === cell.rowId);
   const columnIndex = model.columns.findIndex((column) =>
     column.isTitle
       ? cell.propertyId === null
       : column.property.id === cell.propertyId,
   );
   const [rowStep, columnStep] = STEPS[step];
-  const row = model.rows[rowIndex + rowStep] ?? model.rows[rowIndex];
+  const row = rows[rowIndex + rowStep] ?? rows[rowIndex];
   const column =
     model.columns[columnIndex + columnStep] ?? model.columns[columnIndex];
   if (row === undefined || column === undefined) return cell;

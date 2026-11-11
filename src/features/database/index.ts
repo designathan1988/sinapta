@@ -6,8 +6,10 @@ import { calendarCommands } from "./layouts/calendar/calendar.commands.ts";
 import { viewLayoutCommands } from "./view-layout.commands.ts";
 import { viewSearchCommands } from "./view-search.commands.ts";
 import { viewCommands } from "./view.commands.ts";
+import { groupCommands } from "./group.commands.ts";
 
 export { createDatabase } from "./database.commands.ts";
+export { groupByProperty } from "./group.commands.ts";
 export { startDatabase } from "./database-start.commands.ts";
 export { renderDatabase } from "./database.view.ts";
 export { renderInlineDatabase } from "./database-inline.view.ts";
@@ -33,6 +35,7 @@ export const databaseCommands = [
   ...databaseStartCommands,
   ...rowCommands,
   ...viewCommands,
+  ...groupCommands,
   ...viewLayoutCommands,
   ...viewSearchCommands,
   ...calendarCommands,

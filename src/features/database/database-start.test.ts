@@ -47,7 +47,7 @@ describe("database.startFromPage", () => {
     const [status] = properties();
     expect(status).toMatchObject({ name: "Status", type: "select" });
     expect(status?.options).toHaveLength(3);
-    expect(views()[0]?.groupPropertyId).toBe(status?.id);
+    expect(views()[0]?.groupBy?.propertyId).toBe(status?.id);
   });
 
   it("gives a calendar a date property to place rows by", () => {

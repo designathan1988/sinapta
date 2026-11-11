@@ -69,6 +69,6 @@ describe("the status property", () => {
       setViewType.create({ viewId: app.view().id, viewType: "board" }),
     );
 
-    expect(app.view().groupPropertyId).toBe(app.propertyIds[1]);
+    expect(app.view().groupBy?.propertyId).toBe(app.propertyIds[1]);
   });
 });
