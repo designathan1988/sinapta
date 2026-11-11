@@ -1,5 +1,38 @@
 // Text inside particular kinds of blocks.
 export const BLOCK_TEXT = {
+  media: {
+    submit: "Embed",
+    invalid: "Enter an address that starts with https.",
+    caption: "Caption",
+    captionPlaceholder: "Add a caption",
+    download: "Download",
+    openPdf: "Open the PDF",
+    loading: "Loading",
+    file: {
+      name: "File",
+      label: "File address",
+      placeholder: "Paste a link to a file",
+      upload: "Choose a file",
+    },
+    pdf: {
+      name: "PDF",
+      label: "PDF address",
+      placeholder: "Paste a link to a PDF",
+      upload: "Choose a PDF",
+    },
+    video: {
+      name: "Video",
+      label: "Video address",
+      placeholder: "Paste a link to a video",
+      upload: "Choose a video",
+    },
+    audio: {
+      name: "Audio",
+      label: "Audio address",
+      placeholder: "Paste a link to an audio file",
+      upload: "Choose an audio file",
+    },
+  },
   breadcrumbBlock: {
     name: "Breadcrumb",
     label: "Path to this page",

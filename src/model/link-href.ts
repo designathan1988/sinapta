@@ -24,3 +24,9 @@ export function safeImageSource(source: string): string | undefined {
   if (url === null || !IMAGE_PROTOCOLS.has(url.protocol)) return undefined;
   return url.href;
 }
+
+// A secure web address, for files shown from the web: https only.
+export function safeWebAddress(source: string): string | undefined {
+  const url = URL.parse(source.trim());
+  return url?.protocol === "https:" ? url.href : undefined;
+}

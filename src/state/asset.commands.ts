@@ -5,10 +5,14 @@
 import type { AssetError, AssetId, BlockId } from "../model/index.ts";
 import { defineCommand } from "./command-registry.ts";
 
+// A block that shows a file by name, such as a file block, also keeps
+// the file's name and size.
 export const attachAsset = defineCommand<{
   blockId: BlockId;
   assetId: AssetId;
   url: string;
+  name?: string;
+  size?: number;
 }>({
   type: "asset.attach",
   handle(state, command) {
@@ -20,7 +24,13 @@ export const attachAsset = defineCommand<{
     };
     const block = state.workspace.blocks[command.blockId];
     if (block === undefined) return { persistence };
-    const props = { ...block.props, assetId };
+    const { name, size } = command;
+    const props = {
+      ...block.props,
+      assetId,
+      ...(name !== undefined && { name }),
+      ...(size !== undefined && { size }),
+    };
     return {
       operations: [
         {

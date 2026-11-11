@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fromBase64, saveAsset, toBase64 } from "./asset-store.ts";
+import { fromBase64, saveAsset, servedBlob, toBase64 } from "./asset-store.ts";
 import { createMemoryAdapter } from "./storage-adapter.ts";
 
 const file = new Blob(["pixels"], { type: "image/png" });
@@ -55,4 +55,22 @@ describe("base64", () => {
 
     expect([...back]).toEqual([...bytes]);
   });
+});
+
+describe("servedBlob", () => {
+  it.each(["image/png", "video/mp4", "audio/mpeg", "application/pdf"])(
+    "serves %s as it is",
+    (type) => {
+      expect(servedBlob(new Blob(["x"], { type })).type).toBe(type);
+    },
+  );
+
+  it.each(["text/html", "image/svg+xml", "application/xhtml+xml", ""])(
+    "serves %j as plain bytes, so it never runs",
+    (type) => {
+      expect(servedBlob(new Blob(["x"], { type })).type).toBe(
+        "application/octet-stream",
+      );
+    },
+  );
 });

@@ -2,6 +2,7 @@
 import type { PropsSchemas } from "../model/index.ts";
 import type { CommandDefinition, Tidier } from "../state/index.ts";
 import type { BlockDefinition } from "./block-definition.ts";
+import { audioDefinition } from "./audio/index.ts";
 import { bookmarkDefinition } from "./bookmark/index.ts";
 import { breadcrumbDefinition } from "./breadcrumb/index.ts";
 import { bulletedListDefinition } from "./bulleted-list/index.ts";
@@ -12,17 +13,20 @@ import { columnDefinition } from "./column/index.ts";
 import { databaseDefinition } from "./database/index.ts";
 import { dividerDefinition } from "./divider/index.ts";
 import { equationDefinition } from "./equation/index.ts";
+import { fileDefinition } from "./file/index.ts";
 import { headingDefinition } from "./heading/index.ts";
 import { imageDefinition } from "./image/index.ts";
 import { numberedListDefinition } from "./numbered-list/index.ts";
 import { pageLinkDefinition } from "./page-link/index.ts";
 import { pageDefinition } from "./page/index.ts";
 import { paragraphDefinition } from "./paragraph/index.ts";
+import { pdfDefinition } from "./pdf/index.ts";
 import { quoteDefinition } from "./quote/index.ts";
 import { simpleTableDefinition } from "./simple-table/index.ts";
 import { tableOfContentsDefinition } from "./table-of-contents/index.ts";
 import { toDoDefinition } from "./to-do/index.ts";
 import { toggleDefinition } from "./toggle/index.ts";
+import { videoDefinition } from "./video/index.ts";
 
 export const BLOCK_DEFINITIONS: readonly BlockDefinition[] = [
   pageDefinition,
@@ -39,6 +43,10 @@ export const BLOCK_DEFINITIONS: readonly BlockDefinition[] = [
   dividerDefinition,
   pageLinkDefinition,
   imageDefinition,
+  videoDefinition,
+  audioDefinition,
+  fileDefinition,
+  pdfDefinition,
   bookmarkDefinition,
   simpleTableDefinition,
   tableOfContentsDefinition,

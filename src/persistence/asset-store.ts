@@ -18,6 +18,22 @@ export interface AssetUpload {
   readonly limit?: number;
 }
 
+// Only passive media is served under its own type. Anything else, such as
+// HTML labelled as a PDF in an imported file, is served as plain bytes, so
+// a frame that shows a file never runs its content.
+const PASSIVE_TYPES =
+  /^(image\/(png|jpeg|gif|webp|avif|bmp)|video\/[\w.+-]+|audio\/[\w.+-]+|application\/pdf)$/;
+
+export function servedBlob(blob: Blob): Blob {
+  return PASSIVE_TYPES.test(blob.type)
+    ? blob
+    : new Blob([blob], { type: "application/octet-stream" });
+}
+
+export function assetObjectUrl(blob: Blob): string {
+  return URL.createObjectURL(servedBlob(blob));
+}
+
 function isQuotaError(error: unknown): boolean {
   return error instanceof DOMException && error.name === "QuotaExceededError";
 }
@@ -41,7 +57,7 @@ export async function saveAsset(
       error: isQuotaError(error) ? "quota-exceeded" : "unreadable",
     };
   }
-  return { ok: true, id, url: URL.createObjectURL(file) };
+  return { ok: true, id, url: assetObjectUrl(file) };
 }
 
 // The address each stored asset is shown from, by asset id.
@@ -50,7 +66,7 @@ export async function loadAssetUrls(
 ): Promise<Record<string, string>> {
   const assets = await adapter.loadAssets();
   return Object.fromEntries(
-    assets.map((asset) => [asset.id, URL.createObjectURL(asset.blob)]),
+    assets.map((asset) => [asset.id, assetObjectUrl(asset.blob)]),
   );
 }
 

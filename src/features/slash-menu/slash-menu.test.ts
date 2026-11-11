@@ -21,7 +21,10 @@ describe("selectSlashItems", () => {
     expect(labels).toContain("Table");
     expect(labels).toContain("Block equation");
     expect(labels).toContain("Breadcrumb");
-    expect(labels).toHaveLength(23);
+    expect(labels).toEqual(
+      expect.arrayContaining(["Video", "Audio", "File", "PDF"]),
+    );
+    expect(labels).toHaveLength(27);
   });
 
   it("filters by the query without regard to case", () => {

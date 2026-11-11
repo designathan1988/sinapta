@@ -62,6 +62,7 @@ owner listed here exists.
 | Addresses of pages and blocks (`#/page/<id>?block=<id>`) | `src/ui/address/` | 13 |
 | App shell layout | `src/app/shell.view.ts` | 1 |
 | Block type definitions | `src/blocks/block-registry.ts` plus one folder per type | 2 |
+| What file, PDF, video and audio blocks share: props, commands, empty field, caption | `src/blocks/media/` | 14 |
 | Pages: schema, commands, selectors, tree moves, trash | `src/blocks/page/` | 2 |
 | Sidebar tree and favorites | `src/features/sidebar/` | 2 |
 | Open page: title and icon | `src/features/editor/` | 2 |

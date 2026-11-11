@@ -20,7 +20,7 @@ import {
   type Dispatch,
   type ImportError,
 } from "../state/index.ts";
-import { toAssetFiles, toStoredAssets } from "./asset-store.ts";
+import { assetObjectUrl, toAssetFiles, toStoredAssets } from "./asset-store.ts";
 import { runMigrations } from "./migrations/run-migrations.ts";
 import type { StorageAdapter } from "./storage-adapter.ts";
 
@@ -158,7 +158,7 @@ async function keepAssets(
     return undefined;
   }
   return Object.fromEntries(
-    stored.map((asset) => [asset.id, URL.createObjectURL(asset.blob)]),
+    stored.map((asset) => [asset.id, assetObjectUrl(asset.blob)]),
   );
 }
 
