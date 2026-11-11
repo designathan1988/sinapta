@@ -25,6 +25,7 @@ export function renderGallery(context: TableContext): TemplateResult {
               columns: model.columns,
               dispatch,
               cover: selectRowCover(state, row.id),
+              cell: { assetUrls: state.persistence.assetUrls },
             })}
           </li>`,
       )}

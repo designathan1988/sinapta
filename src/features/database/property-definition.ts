@@ -45,7 +45,13 @@ export interface StartingSettings {
 
 // How a cell of this type is edited; "none" for values the app keeps.
 export type CellEditor =
-  "text" | "number" | "date" | "url" | "toggle" | "options" | "none";
+  "text" | "number" | "date" | "url" | "toggle" | "options" | "files" | "none";
+
+// What a cell may need besides its value, such as the addresses of the
+// files kept for the workspace.
+export interface CellContext {
+  readonly assetUrls: Readonly<Record<string, string>>;
+}
 
 // The `type` and `inputmode` of the field that edits a value as text.
 export interface InputKind {
@@ -89,6 +95,7 @@ export interface PropertyType {
   readonly renderCell: (
     value: unknown,
     property: PropertyDefinition,
+    cell?: CellContext,
   ) => TemplateResult | string;
   // The shape of this type's settings, such as a number's format, checked
   // when a workspace loads. A property without a config uses

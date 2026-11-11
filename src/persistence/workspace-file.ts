@@ -21,6 +21,7 @@ import {
   type ImportError,
 } from "../state/index.ts";
 import { assetObjectUrl, toAssetFiles, toStoredAssets } from "./asset-store.ts";
+import { heldAssetIds } from "./held-assets.ts";
 import { runMigrations } from "./migrations/run-migrations.ts";
 import type { StorageAdapter } from "./storage-adapter.ts";
 
@@ -115,16 +116,6 @@ export interface FileToolsOptions {
   readonly adapter?: Pick<StorageAdapter, "loadAssets" | "putAssets">;
   // Replaced in tests, where there is no document to download into.
   readonly save?: (text: string) => void;
-}
-
-// The assets the blocks of a workspace hold.
-function heldAssetIds(workspace: Workspace): Set<string> {
-  return new Set(
-    Object.values(workspace.blocks).flatMap((block) => {
-      const { assetId } = block.props;
-      return typeof assetId === "string" ? [assetId] : [];
-    }),
-  );
 }
 
 // Writes the workspace with the assets its blocks hold.

@@ -108,6 +108,7 @@ function renderCards(
         columns: model.columns,
         dispatch,
         omit: board.property.id,
+        cell: { assetUrls: context.state.persistence.assetUrls },
         description: COPY.database.moveCardHint,
         onKeyDown: (event) => {
           onCardKey(event, context, row.id);

@@ -17,7 +17,9 @@ function renderLine(row: TableRow, context: TableContext): TemplateResult {
     const type = propertyType(column.property.type);
     const value = type.read(row.values[column.property.id]);
     if (value === undefined || value === false) return [];
-    return [html`<span>${type.renderCell(value, column.property)}</span>`];
+    const { assetUrls } = context.state.persistence;
+    const shown = type.renderCell(value, column.property, { assetUrls });
+    return [html`<span>${shown}</span>`];
   });
   const title = row.title === "" ? COPY.sidebar.untitled : row.title;
   return html`<li>

@@ -14,6 +14,7 @@ import type {
 
 export const TITLE_KEY = "title";
 export const CELL_OPTIONS_OVERLAY = "cell-options";
+export const CELL_FILES_OVERLAY = "cell-files";
 
 export interface TableContext {
   readonly state: AppState;
@@ -91,12 +92,15 @@ function renderTitle(row: TableRow): TemplateResult {
 function renderValue(
   row: TableRow,
   column: TableColumn,
+  context: TableContext,
 ): TemplateResult | string {
   if (column.isTitle) return renderTitle(row);
   const type = propertyType(column.property.type);
+  const { assetUrls } = context.state.persistence;
   return type.renderCell(
     type.read(row.values[column.property.id]),
     column.property,
+    { assetUrls },
   );
 }
 
@@ -113,8 +117,7 @@ function editText(row: TableRow, column: TableColumn): string {
 function usesInput(column: TableColumn): boolean {
   const { editor } = propertyType(column.property.type);
   return (
-    column.isTitle ||
-    (editor !== "toggle" && editor !== "options" && editor !== "none")
+    column.isTitle || !["toggle", "options", "files", "none"].includes(editor)
   );
 }
 
@@ -143,6 +146,6 @@ export function renderCell(
       if (active && !isEditing) focusCell(element);
     })}
   >
-    ${isEditing ? renderEditor(editText(row, column), column) : renderValue(row, column)}
+    ${isEditing ? renderEditor(editText(row, column), column) : renderValue(row, column, context)}
   </td>`;
 }

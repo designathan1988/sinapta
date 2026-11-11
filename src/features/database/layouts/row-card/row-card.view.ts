@@ -5,6 +5,7 @@ import { html, nothing, type TemplateResult } from "lit-html";
 import type { PropertyId } from "../../../../model/index.ts";
 import { setActivePage, type Dispatch } from "../../../../state/index.ts";
 import { COPY } from "../../../../ui/copy.ts";
+import type { CellContext } from "../../property-definition.ts";
 import { propertyType } from "../../property-registry.ts";
 import type { TableColumn, TableRow } from "../../table-model.selectors.ts";
 
@@ -18,6 +19,8 @@ export interface RowCardOptions {
   readonly cover?: string | undefined;
   readonly onKeyDown?: (event: KeyboardEvent) => void;
   readonly description?: string;
+  // The addresses of kept files, for values that show them.
+  readonly cell?: CellContext;
 }
 
 function renderValues(options: RowCardOptions): TemplateResult[] {
@@ -29,7 +32,7 @@ function renderValues(options: RowCardOptions): TemplateResult[] {
     if (value === undefined || value === false) return [];
     return [
       html`<span class="row-card__value" title=${property.name}
-        >${type.renderCell(value, property)}</span
+        >${type.renderCell(value, property, options.cell)}</span
       >`,
     ];
   });

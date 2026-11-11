@@ -12,6 +12,7 @@ import { createdTimeProperty } from "./properties/created-time/index.ts";
 import { dateProperty } from "./properties/date/index.ts";
 import { editedTimeProperty } from "./properties/edited-time/index.ts";
 import { emailProperty } from "./properties/email/index.ts";
+import { filesProperty } from "./properties/files/index.ts";
 import { multiSelectProperty } from "./properties/multi-select/index.ts";
 import { numberProperty } from "./properties/number/index.ts";
 import { phoneProperty } from "./properties/phone/index.ts";
@@ -32,6 +33,7 @@ export const PROPERTY_TYPES: readonly PropertyType[] = [
   urlProperty,
   emailProperty,
   phoneProperty,
+  filesProperty,
   createdTimeProperty,
   editedTimeProperty,
   uniqueIdProperty,

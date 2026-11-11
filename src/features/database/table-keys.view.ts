@@ -10,7 +10,11 @@ import { COPY } from "../../ui/copy.ts";
 import { setRowValue } from "./row.commands.ts";
 import type { PropertyType } from "./property-definition.ts";
 import { propertyType } from "./property-registry.ts";
-import { CELL_OPTIONS_OVERLAY, type TableContext } from "./table-cell.view.ts";
+import {
+  CELL_FILES_OVERLAY,
+  CELL_OPTIONS_OVERLAY,
+  type TableContext,
+} from "./table-cell.view.ts";
 import { cellOf, columnOf, type CellRef } from "./table-cell-ref.ts";
 import { setActiveCell, setTableFirstRow } from "./table.commands.ts";
 import { selectCellNeighbor, type CellStep } from "./table.selectors.ts";
@@ -53,8 +57,9 @@ function startEditing(cell: CellRef, context: TableContext): void {
   if (editor === "none") return;
   if (editor === "toggle") {
     toggleCell(cell, context, type);
-  } else if (editor === "options") {
-    const overlay = { kind: CELL_OPTIONS_OVERLAY, anchorId: cell.key };
+  } else if (editor === "options" || editor === "files") {
+    const kind = editor === "files" ? CELL_FILES_OVERLAY : CELL_OPTIONS_OVERLAY;
+    const overlay = { kind, anchorId: cell.key };
     context.dispatch(openOverlay.create({ overlay }));
   } else {
     activate(cell, true, context);

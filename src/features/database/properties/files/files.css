@@ -1,0 +1,26 @@
+@layer features {
+  /* The files of a cell, side by side: thumbnails and names. */
+  .files {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: var(--space-inline-xs);
+    align-items: center;
+  }
+
+  .files__thumb {
+    block-size: var(--size-icon-md);
+    inline-size: auto;
+    max-inline-size: var(--size-control-md);
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+  }
+
+  .files__name {
+    padding: var(--space-none) var(--space-inset-xs);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-chip-gray-bg);
+    color: var(--color-chip-gray-text);
+    font-size: var(--font-size-sm);
+    white-space: nowrap;
+  }
+}

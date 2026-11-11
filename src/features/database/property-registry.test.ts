@@ -40,6 +40,7 @@ describe("the property registry", () => {
       "url",
       "email",
       "phone",
+      "files",
       "created-time",
       "edited-time",
       "unique-id",
