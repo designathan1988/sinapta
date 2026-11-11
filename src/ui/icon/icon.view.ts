@@ -20,6 +20,7 @@ export type BaseIconName =
   | "download"
   | "back"
   | "arrow-left"
+  | "arrow-right"
   | "check"
   | "page"
   | "database"
@@ -52,6 +53,7 @@ const PATHS: Record<BaseIconName, TemplateResult<2>> = {
   chevron: svg`<path d="M6 4l4 4-4 4" />`,
   back: svg`<path d="M10 4L6 8l4 4" />`,
   "arrow-left": svg`<path d="M13 8H3M7 4L3 8l4 4" />`,
+  "arrow-right": svg`<path d="M3 8h10M9 4l4 4-4 4" />`,
   check: svg`<path d="M3.5 8.5l3 3 6-7" />`,
   link: svg`<path d="M6.5 9.5a2.5 2.5 0 0 0 3.5 0l2.5-2.5A2.5 2.5 0 0 0 9 3.5l-.75.75" />
     <path d="M9.5 6.5a2.5 2.5 0 0 0-3.5 0L3.5 9A2.5 2.5 0 0 0 7 12.5l.75-.75" />`,

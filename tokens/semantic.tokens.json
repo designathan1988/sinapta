@@ -327,7 +327,8 @@
         "$value": "{base.size.14}"
       },
       "maxHeight": {
-        "$value": "{base.size.20}"
+        "$description": "The tallest a menu grows before it scrolls, near Notion's 70% of the window.",
+        "$value": "{base.size.30}"
       },
       "width": {
         "$value": "{base.size.18x125}"

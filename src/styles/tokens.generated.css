@@ -281,7 +281,7 @@
     --size-content-max: var(--base-size-45);
     --size-label-width: var(--base-size-12);
     --size-menu-min-width: var(--base-size-14);
-    --size-menu-max-height: var(--base-size-20);
+    --size-menu-max-height: var(--base-size-30);
     --size-menu-width: var(--base-size-18x125);
     --size-menu-row: var(--base-size-7);
     --size-dialog-width: var(--base-size-32);
