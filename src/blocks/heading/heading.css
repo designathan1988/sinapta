@@ -19,5 +19,39 @@
     &[data-level="3"] {
       font-size: var(--font-size-lg);
     }
+
+    &[data-level="4"] {
+      font-size: var(--font-size-md);
+    }
+  }
+
+  /* The arrow of a toggle heading turns when the heading opens. */
+  .heading__toggle {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    align-self: center;
+    min-inline-size: var(--size-target-min);
+    min-block-size: var(--size-target-min);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    &[aria-expanded="true"] .icon {
+      rotate: 90deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      & .icon {
+        transition: rotate var(--duration-fast) var(--easing-standard);
+      }
+    }
   }
 }

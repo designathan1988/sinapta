@@ -176,4 +176,17 @@ describe("runBlockKeyAction", () => {
       }),
     ]);
   });
+
+  it("opens or closes a toggle heading when it is activated", () => {
+    const heading = {
+      id: "a",
+      type: "heading",
+      props: { text: [], level: 1, isToggleable: true, isOpen: true },
+    };
+    const { store } = createApp([heading]);
+
+    expect(run(store.getState(), { kind: "activate" })).toEqual([
+      expect.objectContaining({ type: "heading.setOpen", isOpen: false }),
+    ]);
+  });
 });

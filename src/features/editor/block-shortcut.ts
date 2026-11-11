@@ -22,6 +22,7 @@ const SHORTCUTS: Readonly<Record<string, BlockShortcut>> = {
   "#": { blockType: HEADING_TYPE, extraProps: { level: 1 } },
   "##": { blockType: HEADING_TYPE, extraProps: { level: 2 } },
   "###": { blockType: HEADING_TYPE, extraProps: { level: 3 } },
+  "####": { blockType: HEADING_TYPE, extraProps: { level: 4 } },
   "-": { blockType: BULLETED_LIST_TYPE },
   "*": { blockType: BULLETED_LIST_TYPE },
   "+": { blockType: BULLETED_LIST_TYPE },

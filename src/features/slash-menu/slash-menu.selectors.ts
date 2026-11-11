@@ -52,6 +52,16 @@ const EXTRA_HEADINGS: readonly BlockSlashItem[] = [
     blockType: HEADING_TYPE,
     extraProps: { level: 3 },
   },
+  {
+    label: COPY.blockNames.heading4,
+    blockType: HEADING_TYPE,
+    extraProps: { level: 4 },
+  },
+  ...[1, 2, 3].map((level) => ({
+    label: `${COPY.blockNames.toggleHeading} ${String(level)}`,
+    blockType: HEADING_TYPE,
+    extraProps: { level, isToggleable: true, isOpen: true },
+  })),
 ];
 
 function blockItems(): BlockSlashItem[] {

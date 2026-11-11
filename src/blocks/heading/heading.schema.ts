@@ -6,7 +6,10 @@ export const HEADING_TYPE = "heading";
 
 export const headingPropsSchema = v.object({
   ...TEXT_BLOCK_ENTRIES,
-  level: v.picklist([1, 2, 3]),
+  level: v.picklist([1, 2, 3, 4]),
+  // A toggle heading shows or hides the blocks inside it (version 7).
+  isToggleable: v.optional(v.boolean()),
+  isOpen: v.optional(v.boolean()),
 });
 
 export type HeadingProps = v.InferOutput<typeof headingPropsSchema>;

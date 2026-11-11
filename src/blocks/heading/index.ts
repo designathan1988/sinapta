@@ -1,3 +1,4 @@
+export { headingCommands, setHeadingOpen } from "./heading.commands.ts";
 export { headingDefinition } from "./heading.definition.ts";
 export {
   HEADING_TYPE,

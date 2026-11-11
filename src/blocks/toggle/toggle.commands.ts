@@ -38,15 +38,19 @@ export const setToggleOpen = defineCommand<{
   },
 });
 
+// A toggle block, or a block that can be toggled, such as a toggle
+// heading.
+export function isTogglable(block: Block): boolean {
+  return block.type === TOGGLE_TYPE || block.props.isToggleable === true;
+}
+
 // The toggles of a page, nested ones included; a subpage keeps its own.
-function togglesIn(workspace: Workspace, parent: Block): ToggleBlock[] {
+function togglesIn(workspace: Workspace, parent: Block): Block[] {
   return parent.childIds.flatMap((id) => {
     const block = workspace.blocks[id];
     if (block === undefined || PAGE_LIKE_TYPES.includes(block.type)) return [];
     const inside = togglesIn(workspace, block);
-    return isBlockOfType<ToggleBlock>(block, TOGGLE_TYPE)
-      ? [block, ...inside]
-      : inside;
+    return isTogglable(block) ? [block, ...inside] : inside;
   });
 }
 

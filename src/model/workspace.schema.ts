@@ -4,7 +4,7 @@ import { blockIdSchema, type BlockId, type ViewId } from "./id.schema.ts";
 import type { RecordError, WorkspaceFileError } from "./parse-error.ts";
 import { viewSchema, type View } from "./view.schema.ts";
 
-export const SCHEMA_VERSION = 6;
+export const SCHEMA_VERSION = 7;
 
 export const settingsSchema = v.object({
   theme: v.picklist(["system", "light", "dark"]),

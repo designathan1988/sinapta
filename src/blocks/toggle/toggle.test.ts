@@ -60,4 +60,25 @@ describe("toggle.setAllOpen", () => {
 
     expect(isOpen("elsewhere")).toBe(false);
   });
+
+  it("opens toggle headings too", () => {
+    const heading: BlockSpec = {
+      id: "h",
+      type: "heading",
+      props: { text: [], level: 2, isToggleable: true, isOpen: false },
+    };
+    const workspace = buildWorkspace([{ id: "page", children: [heading] }]);
+    const { store, dispatch } = createTestApp({
+      workspace,
+      commands: toggleCommands,
+    });
+
+    dispatch(
+      setAllTogglesOpen.create({ pageId: toBlockId("page"), isOpen: true }),
+    );
+
+    expect(
+      store.getState().workspace.blocks[toBlockId("h")]?.props.isOpen,
+    ).toBe(true);
+  });
 });

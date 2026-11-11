@@ -7,6 +7,7 @@ import {
   headingPropsSchema,
   type HeadingBlock,
 } from "./heading.schema.ts";
+import { headingCommands } from "./heading.commands.ts";
 import { renderHeading } from "./heading.view.ts";
 
 export const headingDefinition: BlockDefinition = {
@@ -16,8 +17,14 @@ export const headingDefinition: BlockDefinition = {
   // Enter after a heading starts body text.
   continuesAs: PARAGRAPH_TYPE,
   createProps: (text) => ({ text, level: 1 }),
-  render: (block) =>
+  commands: headingCommands,
+  // A closed toggle heading keeps its blocks but does not show them.
+  showsChildren: (block) =>
+    !isBlockOfType<HeadingBlock>(block, HEADING_TYPE) ||
+    block.props.isToggleable !== true ||
+    block.props.isOpen !== false,
+  render: (block, dispatch) =>
     isBlockOfType<HeadingBlock>(block, HEADING_TYPE)
-      ? renderHeading(block)
+      ? renderHeading(block, dispatch)
       : undefined,
 };

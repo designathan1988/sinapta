@@ -150,6 +150,24 @@ describe("block.indent and block.outdent", () => {
     expect(outline()).toEqual(["paragraph:one", "  paragraph:two"]);
   });
 
+  it("nests a block inside a toggle heading", () => {
+    const heading = {
+      id: "a",
+      type: "heading",
+      props: {
+        text: [{ text: "Plan" }],
+        level: 2,
+        isToggleable: true,
+        isOpen: true,
+      },
+    };
+    const { dispatch, outline } = createApp([heading, text("b", "two")]);
+
+    dispatch(indentBlock.create({ blockId: B }));
+
+    expect(outline()).toEqual(["heading:Plan", "  paragraph:two"]);
+  });
+
   it("does not indent the first block", () => {
     const { dispatch, outline } = createApp([text("a", "one")]);
 

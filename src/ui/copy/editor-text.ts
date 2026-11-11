@@ -48,6 +48,8 @@ export const EDITOR_TEXT = {
     heading: "Heading 1",
     heading2: "Heading 2",
     heading3: "Heading 3",
+    heading4: "Heading 4",
+    toggleHeading: "Toggle heading",
     bulletedList: "Bulleted list",
     numberedList: "Numbered list",
     toDo: "To-do list",

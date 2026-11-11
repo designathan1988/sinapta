@@ -4,10 +4,11 @@
 // every toggle, Ctrl+Shift with a digit turns the block into another type
 // and Ctrl+Shift+H applies the last color used (design decision D14).
 import { isTextBlock, textOf } from "../../blocks/index.ts";
-import { HEADING_TYPE } from "../../blocks/heading/index.ts";
+import { HEADING_TYPE, setHeadingOpen } from "../../blocks/heading/index.ts";
 import { PAGE_LINK_TYPE } from "../../blocks/page-link/index.ts";
 import { TO_DO_TYPE, toggleToDo } from "../../blocks/to-do/index.ts";
 import {
+  isTogglable,
   setAllTogglesOpen,
   setToggleOpen,
   TOGGLE_TYPE,
@@ -15,6 +16,7 @@ import {
 import {
   countBlockTree,
   parseBlockId,
+  type Block,
   type BlockId,
   type BlockProps,
 } from "../../model/index.ts";
@@ -124,28 +126,39 @@ function selectAll(state: AppState, blockId: BlockId) {
   return selectBlockRange.create({ anchorId: first.id, focusId: last.id });
 }
 
+// Opening a toggle or toggle heading, or following a page link.
+function openOrFollow(block: Block) {
+  const blockId = block.id;
+  if (block.type === TOGGLE_TYPE) {
+    return setToggleOpen.create({
+      blockId,
+      isOpen: block.props.isOpen !== true,
+    });
+  }
+  if (block.type === HEADING_TYPE && block.props.isToggleable === true) {
+    return setHeadingOpen.create({
+      blockId,
+      isOpen: block.props.isOpen === false,
+    });
+  }
+  const linked = block.props.pageId;
+  const pageId = typeof linked === "string" ? parseBlockId(linked) : undefined;
+  if (block.type !== PAGE_LINK_TYPE || pageId === undefined) return undefined;
+  return setActivePage.create({ pageId });
+}
+
 function activate(state: AppState, blockId: BlockId) {
   const block = state.workspace.blocks[blockId];
-  if (block?.type === TO_DO_TYPE) return toggleToDo.create({ blockId });
-  if (block?.type === TOGGLE_TYPE) {
-    const isOpen = block.props.isOpen !== true;
-    return setToggleOpen.create({ blockId, isOpen });
-  }
-  const linked = block?.props.pageId;
-  const pageId = typeof linked === "string" ? parseBlockId(linked) : undefined;
-  if (block?.type === PAGE_LINK_TYPE && pageId !== undefined) {
-    return setActivePage.create({ pageId });
-  }
-  return undefined;
+  if (block === undefined) return undefined;
+  if (block.type === TO_DO_TYPE) return toggleToDo.create({ blockId });
+  return openOrFollow(block);
 }
 
 function toggleAll(state: AppState, blockId: BlockId) {
   const pageId = selectPageIdOf(state, blockId);
   if (pageId === undefined) return undefined;
-  const toggles = selectBlockOrder(state, pageId).filter(
-    (block) => block.type === TOGGLE_TYPE,
-  );
-  const isOpen = toggles.some((block) => block.props.isOpen !== true);
+  const toggles = selectBlockOrder(state, pageId).filter(isTogglable);
+  const isOpen = toggles.some((block) => block.props.isOpen === false);
   return setAllTogglesOpen.create({ pageId, isOpen });
 }
 

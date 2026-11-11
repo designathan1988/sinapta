@@ -76,7 +76,11 @@ describe("matchBlockShortcut", () => {
     expect(matchBlockShortcut("[x]")?.extraProps).toEqual({ isChecked: true });
   });
 
-  it.each(["", "####", "hello", "constructor"])(
+  it("makes #### a heading of level 4", () => {
+    expect(matchBlockShortcut("####")?.extraProps).toEqual({ level: 4 });
+  });
+
+  it.each(["", "#####", "hello", "constructor"])(
     "does not match %j",
     (prefix) => {
       expect(matchBlockShortcut(prefix)).toBeUndefined();

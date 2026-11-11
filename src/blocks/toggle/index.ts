@@ -1,4 +1,5 @@
 export {
+  isTogglable,
   setAllTogglesOpen,
   setToggleOpen,
   toggleCommands,

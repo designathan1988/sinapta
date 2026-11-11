@@ -17,7 +17,7 @@ describe("selectSlashItems", () => {
     expect(labels).toContain("Divider");
     expect(labels).toContain("Image");
     expect(labels).toContain("Table of contents");
-    expect(labels).toHaveLength(15);
+    expect(labels).toHaveLength(19);
   });
 
   it("filters by the query without regard to case", () => {
@@ -25,7 +25,15 @@ describe("selectSlashItems", () => {
       (item) => item.label,
     );
 
-    expect(labels).toEqual(["Heading 1", "Heading 2", "Heading 3"]);
+    expect(labels).toEqual([
+      "Heading 1",
+      "Heading 2",
+      "Heading 3",
+      "Heading 4",
+      "Toggle heading 1",
+      "Toggle heading 2",
+      "Toggle heading 3",
+    ]);
   });
 
   it("offers links to pages whose title matches", () => {

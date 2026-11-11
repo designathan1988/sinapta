@@ -5,6 +5,7 @@ import { addViewLayouts } from "./0003-view-layouts.ts";
 import { addPageCover } from "./0004-page-cover.ts";
 import { addPageStyle } from "./0005-page-style.ts";
 import { addBlockColor } from "./0006-block-color.ts";
+import { addHeadingToggle } from "./0007-heading-toggle.ts";
 
 // A pure function from format version n to n + 1.
 export type Migration = (
@@ -19,6 +20,7 @@ export const MIGRATIONS: readonly Migration[] = [
   addPageCover,
   addPageStyle,
   addBlockColor,
+  addHeadingToggle,
 ];
 
 export type MigrationResult =

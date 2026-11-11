@@ -160,6 +160,7 @@ export const WORKSPACE_TEXT = {
     toolbar: "Move to the formatting toolbar",
     newLine: "Line break in a block",
     heading: "Heading 1, 2 or 3",
+    heading4: "Heading 4",
     bullet: "Bulleted list",
     numbered: "Numbered list",
     toDo: "To-do",

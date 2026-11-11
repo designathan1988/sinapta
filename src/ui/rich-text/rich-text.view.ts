@@ -5,7 +5,7 @@ import { ref } from "lit-html/directives/ref.js";
 import type { RichText } from "../../model/index.ts";
 import { projectRichText } from "./rich-text-projection.ts";
 
-export type RichTextTag = "p" | "h2" | "h3" | "h4" | "div";
+export type RichTextTag = "p" | "h2" | "h3" | "h4" | "h5" | "div";
 
 export interface RichTextOptions {
   readonly text: RichText;
@@ -54,6 +54,14 @@ const TEMPLATES: Record<
       data-placeholder=${placeholder}
       ${project}
     ></h4>`,
+  h5: (placeholder, project) =>
+    html`<h5
+      class="rich-text"
+      contenteditable="true"
+      data-text
+      data-placeholder=${placeholder}
+      ${project}
+    ></h5>`,
   div: (placeholder, project) =>
     html`<div
       class="rich-text"

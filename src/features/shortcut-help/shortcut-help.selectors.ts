@@ -54,6 +54,7 @@ export const SHORTCUT_GROUPS: readonly ShortcutGroup[] = [
     entries: [
       entry(TEXT.slash, "/"),
       entry(TEXT.heading, "#", "Space"),
+      entry(TEXT.heading4, "####", "Space"),
       entry(TEXT.bullet, "-", "Space"),
       entry(TEXT.numbered, "1.", "Space"),
       entry(TEXT.toDo, "[]", "Space"),
