@@ -64,6 +64,11 @@ export {
 } from "./workspace-builder.ts";
 export { diffWorkspace } from "./workspace-diff.ts";
 export {
+  copyBlockTree,
+  countBlockTree,
+  type BlockTreeCopy,
+} from "./block-copy.ts";
+export {
   firstGrapheme,
   nextBoundary,
   previousBoundary,

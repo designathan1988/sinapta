@@ -3,7 +3,12 @@
 import { html, nothing, type TemplateResult } from "lit-html";
 import { BLOCK_DEFINITIONS } from "../../blocks/block-registry.ts";
 import { isTextBlock } from "../../blocks/text-block.ts";
-import { parseBlockId, type Block, type BlockId } from "../../model/index.ts";
+import {
+  countBlockTree,
+  parseBlockId,
+  type Block,
+  type BlockId,
+} from "../../model/index.ts";
 import {
   closeOverlay,
   openOverlay,
@@ -20,6 +25,7 @@ import { renderIcon } from "../../ui/icon/index.ts";
 import { renderMenu, type MenuItem } from "../../ui/menu/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { convertBlock } from "./editor-convert.commands.ts";
+import { duplicateBlock, insertBlockBelow } from "./editor-insert.commands.ts";
 import type { InputContext } from "./editor-input.view.ts";
 import {
   deleteBlock,
@@ -82,6 +88,25 @@ export function renderHandle(
   </button>`;
 }
 
+// The "+" beside a block: adds a block below it and opens the slash menu.
+export function renderAddButton(
+  block: Block,
+  context: InputContext,
+): TemplateResult {
+  return html`<button
+    type="button"
+    class="editor__handle"
+    tabindex="-1"
+    data-add
+    aria-label=${COPY.blockMenu.add}
+    title=${tooltipTitle(COPY.blockMenu.add)}
+    interestfor=${TOOLTIP_TARGET}
+    @click=${() => context.dispatch(insertBlockBelow.create({ blockId: block.id }))}
+  >
+    ${renderIcon("plus")}
+  </button>`;
+}
+
 // Dragging starts on a handle and drops on any block.
 export function startBlockDrag(
   event: PointerEvent,
@@ -111,11 +136,15 @@ export function startBlockDrag(
   });
 }
 
-function actionItems(
-  block: Block,
-  overlay: OpenOverlay,
-  dispatch: Dispatch,
-): MenuItem[] {
+interface ActionContext {
+  readonly overlay: OpenOverlay;
+  readonly dispatch: Dispatch;
+  // Blocks in the tree of the block, for a copy of it.
+  readonly blockCount: number;
+}
+
+function actionItems(block: Block, context: ActionContext): MenuItem[] {
+  const { overlay, dispatch, blockCount } = context;
   const blockId = block.id;
   const turnInto: MenuItem = {
     label: COPY.blockMenu.turnInto,
@@ -129,6 +158,11 @@ function actionItems(
   };
   return [
     ...(isTextBlock(block) ? [turnInto] : []),
+    {
+      label: COPY.blockMenu.duplicate,
+      icon: "duplicate",
+      onSelect: () => dispatch(duplicateBlock.create({ blockId, blockCount })),
+    },
     {
       label: COPY.blockMenu.moveUp,
       icon: "up",
@@ -182,7 +216,8 @@ export function renderBlockMenu(
     if (selection !== undefined) dispatch(setSelection.create({ selection }));
   };
   if (overlay.kind === BLOCK_MENU_OVERLAY) {
-    const items = actionItems(block, overlay, dispatch);
+    const blockCount = countBlockTree(state.workspace, block.id);
+    const items = actionItems(block, { overlay, dispatch, blockCount });
     return renderMenu({ label: COPY.blockMenu.open, items, onClose });
   }
   if (overlay.kind === TURN_INTO_OVERLAY) {

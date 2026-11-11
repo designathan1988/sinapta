@@ -6,7 +6,11 @@ import type { Block, BlockId } from "../../model/index.ts";
 import { setSelection } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { appendParagraph } from "./editor-structure.commands.ts";
-import { renderHandle, startBlockDrag } from "./editor-block-menu.view.ts";
+import {
+  renderAddButton,
+  renderHandle,
+  startBlockDrag,
+} from "./editor-block-menu.view.ts";
 import { caretAt } from "./editor.commands.ts";
 import {
   onBeforeInput,
@@ -51,8 +55,8 @@ function renderBlock(block: Block, context: BlockContext): TemplateResult {
     data-overlay-anchor=${isAnchor ? "open" : nothing}
     ?data-selected=${context.selected.has(block.id)}
   >
-    ${renderHandle(block, context)} ${content ?? nothing}
-    ${renderChildren(block, context)}
+    ${renderAddButton(block, context)} ${renderHandle(block, context)}
+    ${content ?? nothing} ${renderChildren(block, context)}
   </div>`;
 }
 

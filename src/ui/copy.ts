@@ -38,6 +38,8 @@ export const COPY = {
   slashMenu: { label: "Turn into" },
   blockMenu: {
     open: "Block actions",
+    add: "Add a block below",
+    duplicate: "Duplicate",
     turnInto: "Turn into",
     moveUp: "Move up",
     moveDown: "Move down",

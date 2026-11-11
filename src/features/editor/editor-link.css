@@ -1,0 +1,42 @@
+@layer features {
+  .editor__link:popover-open {
+    display: grid;
+    gap: var(--space-stack-sm);
+    padding: var(--space-inset-md);
+  }
+
+  .editor__link-field {
+    display: grid;
+    gap: var(--space-stack-xs);
+    color: var(--color-text-secondary);
+
+    & input {
+      min-inline-size: var(--size-menu-min-width);
+      min-block-size: var(--size-control-md);
+      padding: var(--space-none) var(--space-inset-sm);
+      border: var(--size-border-thin) solid var(--color-border-strong);
+      border-radius: var(--radius-sm);
+      background-color: var(--color-bg-app);
+    }
+
+    & input[aria-invalid="true"] {
+      border-color: var(--color-text-danger);
+    }
+  }
+
+  .editor__link-hint {
+    display: none;
+    color: var(--color-text-danger);
+    font-size: var(--font-size-xs);
+  }
+
+  .editor__link:has([aria-invalid="true"]) .editor__link-hint {
+    display: block;
+  }
+
+  .editor__link-actions {
+    display: flex;
+    gap: var(--space-inline-sm);
+    justify-content: flex-end;
+  }
+}

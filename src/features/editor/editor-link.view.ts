@@ -1,4 +1,5 @@
 // A small field to add, change or remove the link on selected text.
+import "./editor-link.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import { parseBlockId, safeHref } from "../../model/index.ts";

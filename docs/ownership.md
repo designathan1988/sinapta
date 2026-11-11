@@ -36,6 +36,7 @@ owner listed here exists.
 | Grapheme segmentation and offset conversion | `src/model/grapheme.ts` | 2 |
 | Link `href` scheme allow-list | `src/model/link-href.ts` | 3 |
 | Decoding imported JSON text into an unchecked value | `src/model/json-text.schema.ts` | 7 |
+| Copying a block with everything inside it, under new ids | `src/model/block-copy.ts` | 8 |
 
 ## Persistence
 
@@ -94,6 +95,7 @@ owner listed here exists.
 | Paste and drop into a block | `src/features/editor/editor-paste.commands.ts`, `editor-paste.view.ts` | 7 |
 | Link field | `src/features/editor/editor-link.view.ts` | 4 |
 | Slash menu | `src/features/slash-menu/` | 4 |
+| Adding a block below another and duplicating a block | `src/features/editor/editor-insert.commands.ts` | 8 |
 | Formatting toolbar and text color picker over selected text | `src/features/format-toolbar/` | 8 |
 | What a block type declares | `src/blocks/block-definition.ts` | 3 |
 | The shape shared by blocks that hold text | `src/blocks/text-block.ts` | 3 |
