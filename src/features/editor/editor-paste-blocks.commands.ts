@@ -1,6 +1,7 @@
 // Pasting Markdown: each pasted block becomes a block of its kind, nested
 // by its indent, in one undo step.
 import { CODE_TYPE, codeLanguageOf } from "../../blocks/code/index.ts";
+import { SYNCED_BLOCK_TYPE } from "../../blocks/synced-block/index.ts";
 import {
   blockDefinition,
   isTextBlock,
@@ -8,6 +9,7 @@ import {
   textOf,
 } from "../../blocks/index.ts";
 import {
+  parseBlockId,
   plainText,
   type Block,
   type BlockId,
@@ -25,24 +27,37 @@ export interface PasteBlocksPayload {
   readonly blocks: readonly PastedBlock[];
 }
 
-// Pasted kinds are named like the block types they become.
-function propsFor(block: PastedBlock): BlockProps {
-  const base = blockDefinition(block.kind)?.createProps(block.text) ?? {};
+// Props only some kinds carry: a code block's language, a reference's
+// original and a table's cells.
+function kindProps(block: PastedBlock): BlockProps {
+  const sourceId =
+    block.kind === SYNCED_BLOCK_TYPE && block.sourceId !== undefined
+      ? parseBlockId(block.sourceId)
+      : undefined;
   const language =
     block.kind === CODE_TYPE && block.language !== undefined
       ? codeLanguageOf(block.language)
       : undefined;
   return {
-    ...base,
-    ...(block.level !== undefined && { level: block.level }),
-    ...(block.isChecked !== undefined && { isChecked: block.isChecked }),
-    ...(block.src !== undefined && { src: block.src }),
     ...(language !== undefined && { language }),
+    ...(sourceId !== undefined && { sourceId }),
     ...(block.rows !== undefined && {
       rows: block.rows,
       hasHeaderRow: block.hasHeaderRow === true,
       hasHeaderColumn: false,
     }),
+  };
+}
+
+// Pasted kinds are named like the block types they become.
+function propsFor(block: PastedBlock): BlockProps {
+  const base = blockDefinition(block.kind)?.createProps(block.text) ?? {};
+  return {
+    ...base,
+    ...(block.level !== undefined && { level: block.level }),
+    ...(block.isChecked !== undefined && { isChecked: block.isChecked }),
+    ...(block.src !== undefined && { src: block.src }),
+    ...kindProps(block),
   };
 }
 

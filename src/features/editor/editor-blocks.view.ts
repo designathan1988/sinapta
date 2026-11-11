@@ -1,4 +1,4 @@
-import "./editor-columns.css";
+import "./editor-containers.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import { repeat } from "lit-html/directives/repeat.js";
@@ -38,8 +38,11 @@ interface BlockContext extends InputContext {
 
 function renderChildren(block: Block, context: BlockContext): unknown {
   // A closed toggle keeps its children but does not show them.
-  const isOpen = blockDefinition(block.type)?.showsChildren?.(block) ?? true;
-  const children = isOpen ? selectContentBlocks(context.state, block.id) : [];
+  const definition = blockDefinition(block.type);
+  const isOpen = definition?.showsChildren?.(block) ?? true;
+  // A synced block's reference shows its original's blocks in its place.
+  const holder = definition?.shownHolder?.(block, context.state) ?? block.id;
+  const children = isOpen ? selectContentBlocks(context.state, holder) : [];
   if (children.length === 0) return nothing;
   return html`<div class="editor__children">
     ${renderList(children, context)}

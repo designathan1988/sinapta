@@ -48,6 +48,23 @@ function paragraphAfter(
   ];
 }
 
+// A container, such as a synced block, keeps the text it was made from in
+// a paragraph inside it, before what it already holds.
+function paragraphInside(
+  block: Block,
+  spec: Omit<NewBlock, "type" | "parentId">,
+): Operation[] {
+  const record = createBlock({
+    ...spec,
+    type: PARAGRAPH_TYPE,
+    parentId: block.id,
+  });
+  return [
+    { type: "record.create", kind: "block", record },
+    { type: "list.insert", list: childList(block.id), id: spec.id, index: 0 },
+  ];
+}
+
 // Turns a text block into another type. A block that becomes one without
 // text, such as a divider, is followed by a new paragraph for the caret.
 export const convertBlock = defineCommand<ConvertBlockPayload>({
@@ -75,6 +92,13 @@ export const convertBlock = defineCommand<ConvertBlockPayload>({
     };
     if ("text" in props) {
       return { operations: [update], ui: withSelection(state, block.id, 0) };
+    }
+    if (definition.startsWithChild === true) {
+      const inside = paragraphInside(block, { id, now, text });
+      return {
+        operations: [update, ...inside],
+        ui: withSelection(state, id, 0),
+      };
     }
     return {
       operations: [update, ...paragraphAfter(state, block, { id, now })],

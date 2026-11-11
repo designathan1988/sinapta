@@ -2,6 +2,7 @@
 import type { TemplateResult } from "lit-html";
 import type {
   Block,
+  BlockId,
   BlockProps,
   PropsSchema,
   RichText,
@@ -33,6 +34,12 @@ export interface BlockDefinition {
   // Other blocks may be moved inside it, as into a column, though it has
   // no text of its own.
   readonly holdsBlocks?: boolean;
+  // The block whose children this block shows, when not its own, as a
+  // synced block's reference shows its original's.
+  readonly shownHolder?: (block: Block, state: AppState) => BlockId;
+  // Turned into from a text block, it starts with that text in a paragraph
+  // inside it rather than after it.
+  readonly startsWithChild?: boolean;
   // CSS custom properties set on the block's element, such as a column's
   // share of its row.
   readonly customProperties?: (

@@ -102,6 +102,24 @@ describe("block.pasteBlocks", () => {
     });
   });
 
+  it("pastes a synced block's reference that shows its original", () => {
+    const { store, dispatch } = createApp([text("a", "")]);
+
+    dispatch(
+      pasteBlocks.create({
+        blockId: A,
+        blocks: [
+          { kind: "synced-block", depth: 0, text: [], sourceId: "original" },
+        ],
+      }),
+    );
+
+    expect(store.getState().workspace.blocks[A]).toMatchObject({
+      type: "synced-block",
+      props: { sourceId: "original" },
+    });
+  });
+
   it("puts the caret at the end of the last pasted text", () => {
     const { store, dispatch } = createApp([text("a", "")]);
 

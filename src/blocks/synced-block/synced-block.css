@@ -1,0 +1,27 @@
+@layer blocks {
+  /* A synced block's frame is drawn by the editor around the block; this
+     is the label over its blocks. */
+  .synced-block {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    color: var(--color-chip-red-text);
+    font-size: var(--font-size-xs);
+    opacity: 0;
+
+    &[data-reference] {
+      color: var(--color-chip-orange-text);
+    }
+  }
+
+  .synced-block__source {
+    padding: var(--space-none);
+    border: none;
+    background-color: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}

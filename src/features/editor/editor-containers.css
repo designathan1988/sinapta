@@ -34,4 +34,23 @@
     box-shadow: inset calc(var(--size-border-thick) * -1) 0 0
       var(--color-accent-default);
   }
+
+  /* A synced block is framed, red for the original and orange for a
+     reference, while it is pointed at or holds the caret. */
+  .editor__block[data-type="synced-block"] {
+    border-radius: var(--radius-sm);
+    box-shadow: 0 0 0 var(--size-border-thin) transparent;
+
+    &:is(:hover, :focus-within) {
+      box-shadow: 0 0 0 var(--size-border-thick) var(--color-chip-red-bg);
+
+      & .synced-block {
+        opacity: 1;
+      }
+    }
+
+    &:has(> .synced-block[data-reference]):is(:hover, :focus-within) {
+      box-shadow: 0 0 0 var(--size-border-thick) var(--color-chip-orange-bg);
+    }
+  }
 }

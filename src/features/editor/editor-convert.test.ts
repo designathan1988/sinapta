@@ -87,3 +87,21 @@ describe("matchBlockShortcut", () => {
     },
   );
 });
+
+describe("turning text into a synced block", () => {
+  it("puts the text in a paragraph inside it, with the caret there", () => {
+    const { store, dispatch } = createApp([text("a", "Shared")]);
+
+    dispatch(convertBlock.create({ blockId: A, blockType: "synced-block" }));
+
+    const { blocks } = store.getState().workspace;
+    expect(blocks[A]).toMatchObject({ type: "synced-block", childIds: [NEW] });
+    expect(blocks[NEW]).toMatchObject({
+      type: "paragraph",
+      parentId: A,
+      props: { text: [{ text: "Shared" }] },
+    });
+    expect(store.getState().ui.selection).toMatchObject({ blockId: NEW });
+    expect(blocks[PAGE]?.childIds).toEqual([A]);
+  });
+});

@@ -1,5 +1,13 @@
 // Text inside particular kinds of blocks.
 export const BLOCK_TEXT = {
+  syncedBlock: {
+    name: "Synced block",
+    original: "Synced block: editing here changes every copy",
+    reference: "Synced from",
+    copy: "Copy and sync",
+    unsync: "Unsync",
+    copied: "Synced block copied. Paste it anywhere to show the same blocks.",
+  },
   embed: {
     name: "Embed",
     label: "Address to embed",

@@ -18,6 +18,8 @@ export interface PastedBlock {
   // A table's cells, every row as long as the longest.
   readonly rows?: readonly (readonly RichText[])[] | undefined;
   readonly hasHeaderRow?: boolean | undefined;
+  // The original of a pasted synced block reference.
+  readonly sourceId?: string | undefined;
 }
 
 const SKIPPED = new Set("HEAD NOSCRIPT SCRIPT STYLE TEMPLATE TITLE".split(" "));

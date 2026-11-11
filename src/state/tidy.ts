@@ -10,9 +10,12 @@ import {
   type Workspace,
 } from "../model/index.ts";
 
+// Reads the workspace after a command, the blocks the command changed,
+// and the workspace before it, for blocks the command removed.
 export type Tidier = (
   workspace: Workspace,
   changed: ReadonlySet<BlockId>,
+  before: Workspace,
 ) => Operation[];
 
 export type TidyResult =
@@ -31,7 +34,7 @@ export function applyTidily(
   const first = applyOperations(workspace, operations);
   if (!first.ok) return first;
   const tidying = tidiers.flatMap((tidy) =>
-    tidy(first.workspace, first.changed.blockIds),
+    tidy(first.workspace, first.changed.blockIds, workspace),
   );
   if (tidying.length === 0) return { ...first, applied: operations };
   const second = applyOperations(first.workspace, tidying);

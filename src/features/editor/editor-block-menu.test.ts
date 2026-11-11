@@ -59,6 +59,34 @@ describe("the block menu", () => {
     );
   });
 
+  it("copies a synced block as a reference to paste elsewhere", () => {
+    const { sent } = choose("Copy and sync", [
+      { id: "a", type: "synced-block", props: {} },
+    ]);
+
+    const copied = sent.find((command) => command.type === "ui.setClipboard");
+    expect(copied).toMatchObject({
+      clipboard: {
+        blocks: [{ kind: "synced-block", depth: 0, text: [], sourceId: "a" }],
+      },
+    });
+  });
+
+  it("unsyncs a reference", () => {
+    const { sent } = choose("Unsync", [
+      { id: "s", type: "synced-block", props: {}, children: [text("c", "x")] },
+      { id: "a", type: "synced-block", props: { sourceId: "s" } },
+    ]);
+
+    expect(sent).toContainEqual(
+      expect.objectContaining({
+        type: "syncedBlock.unsync",
+        blockId: "a",
+        blockCount: 1,
+      }),
+    );
+  });
+
   it("opens the dialog to move the block to another page", () => {
     const { sent } = choose("Move to");
 

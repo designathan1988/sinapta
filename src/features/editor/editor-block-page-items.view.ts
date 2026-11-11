@@ -16,6 +16,7 @@ import { COPY } from "../../ui/copy.ts";
 import type { MenuItem } from "../../ui/menu/index.ts";
 import { writeSystemClipboard } from "./editor-clipboard.view.ts";
 import { turnIntoPage } from "./editor-convert.commands.ts";
+import { syncedItems } from "./editor-synced-items.view.ts";
 import { selectPageIdOf } from "./editor.selectors.ts";
 
 // The move-to feature shows the dialog; the editor names the block.
@@ -55,6 +56,7 @@ export function pageItems(
   };
   return [
     ...turnIntoPageItem(block, state, dispatch),
+    ...syncedItems(block, state, dispatch),
     { label: COPY.blockMenu.copyLink, icon: "link", onSelect: copyLink },
     { label: COPY.blockMenu.moveTo, icon: "move", onSelect: moveTo },
     {

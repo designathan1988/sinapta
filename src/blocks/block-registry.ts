@@ -24,6 +24,7 @@ import { paragraphDefinition } from "./paragraph/index.ts";
 import { pdfDefinition } from "./pdf/index.ts";
 import { quoteDefinition } from "./quote/index.ts";
 import { simpleTableDefinition } from "./simple-table/index.ts";
+import { syncedBlockDefinition } from "./synced-block/index.ts";
 import { tableOfContentsDefinition } from "./table-of-contents/index.ts";
 import { toDoDefinition } from "./to-do/index.ts";
 import { toggleDefinition } from "./toggle/index.ts";
@@ -56,6 +57,7 @@ export const BLOCK_DEFINITIONS: readonly BlockDefinition[] = [
   breadcrumbDefinition,
   columnListDefinition,
   columnDefinition,
+  syncedBlockDefinition,
 ];
 
 const BY_TYPE: ReadonlyMap<string, BlockDefinition> = new Map(

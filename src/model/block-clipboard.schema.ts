@@ -16,6 +16,8 @@ const clipboardBlockSchema = v.object({
   language: v.optional(v.string()),
   rows: v.optional(v.array(v.array(richTextSchema))),
   hasHeaderRow: v.optional(v.boolean()),
+  // A synced block's original, for a pasted reference.
+  sourceId: v.optional(v.string()),
 });
 
 const blockClipboardSchema = v.pipe(

@@ -37,17 +37,21 @@ function depthOf(state: AppState, block: Block): number {
 
 // The props a copy keeps beside the text: a heading's level, a to-do's
 // check, an image's source and a code block's language.
-type Extras = Pick<ClipboardBlock, "level" | "isChecked" | "src" | "language">;
+type Extras = Pick<
+  ClipboardBlock,
+  "level" | "isChecked" | "src" | "language" | "sourceId"
+>;
 const LEVELS = [1, 2, 3, 4] as const;
 
 function extrasOf(props: Block["props"]): Extras {
-  const { isChecked, src, language } = props;
+  const { isChecked, src, language, sourceId } = props;
   const level = LEVELS.find((value) => value === props.level);
   return {
     ...(level !== undefined && { level }),
     ...(typeof isChecked === "boolean" && { isChecked }),
     ...(typeof src === "string" && { src }),
     ...(typeof language === "string" && { language }),
+    ...(typeof sourceId === "string" && { sourceId }),
   };
 }
 

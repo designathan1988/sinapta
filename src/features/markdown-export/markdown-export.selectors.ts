@@ -24,6 +24,10 @@ import {
 } from "../../blocks/page/index.ts";
 import { QUOTE_TYPE } from "../../blocks/quote/index.ts";
 import {
+  selectShownChildren,
+  SYNCED_BLOCK_TYPE,
+} from "../../blocks/synced-block/index.ts";
+import {
   SIMPLE_TABLE_TYPE,
   type SimpleTableBlock,
 } from "../../blocks/simple-table/index.ts";
@@ -161,17 +165,22 @@ function blockLines(state: AppState, block: Block, depth: number): string[] {
   return [...own, ...children];
 }
 
-// Column lists and columns only lay blocks out: their blocks are written
-// in their place, one column after another.
-const LAYOUT_TYPES: readonly string[] = [COLUMN_LIST_TYPE, COLUMN_TYPE];
+// Column lists, columns and synced blocks only hold blocks: their blocks
+// are written in their place, one column after another, and a synced
+// block's reference writes its original's.
+const LAYOUT_TYPES: readonly string[] = [
+  COLUMN_LIST_TYPE,
+  COLUMN_TYPE,
+  SYNCED_BLOCK_TYPE,
+];
 
 function contentOf(state: AppState, ids: readonly BlockId[]): Block[] {
   return ids.flatMap((id) => {
     const block = state.workspace.blocks[id];
     if (block === undefined) return [];
-    return LAYOUT_TYPES.includes(block.type)
-      ? contentOf(state, block.childIds)
-      : [block];
+    if (!LAYOUT_TYPES.includes(block.type)) return [block];
+    const shown = selectShownChildren(state, block.id).map((child) => child.id);
+    return contentOf(state, shown);
   });
 }
 
