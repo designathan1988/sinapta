@@ -45,6 +45,7 @@ function withNext(property: PropertyDefinition, next: number) {
 export const uniqueIdProperty: PropertyType = {
   type: "unique-id",
   label: "ID",
+  icon: "id",
   editor: "none",
   read: readId,
   parse: () => undefined,

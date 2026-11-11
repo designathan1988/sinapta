@@ -3,25 +3,25 @@
     "$type": "color",
     "bg": {
       "app": {
-        "$value": "{base.color.neutral.950}"
+        "$value": "{base.color.night.bg}"
       },
       "sidebar": {
-        "$value": "{base.color.neutral.1000}"
+        "$value": "{base.color.night.sidebar}"
       },
       "raised": {
-        "$value": "{base.color.neutral.900}"
+        "$value": "{base.color.night.raised}"
       },
       "hover": {
-        "$value": "{base.color.neutral.850}"
+        "$value": "{base.color.night.hover}"
       },
       "active": {
-        "$value": "{base.color.neutral.800}"
+        "$value": "{base.color.night.active}"
       },
       "selected": {
-        "$value": "{base.color.indigo.900}"
+        "$value": "{base.color.night.selected}"
       },
       "code": {
-        "$value": "{base.color.neutral.900}"
+        "$value": "{base.color.night.code}"
       },
       "scrim": {
         "$value": "{base.color.black.scrim}"
@@ -29,63 +29,66 @@
     },
     "text": {
       "primary": {
-        "$value": "{base.color.neutral.150}"
+        "$value": "{base.color.night.text}"
       },
       "secondary": {
-        "$value": "{base.color.neutral.350}"
+        "$value": "{base.color.night.textSecondary}"
       },
       "tertiary": {
-        "$value": "{base.color.neutral.400}"
+        "$value": "{base.color.night.textTertiary}"
       },
       "onAccent": {
-        "$value": "{base.color.neutral.1000}"
+        "$value": "{base.color.night.onAccent}"
       },
       "link": {
-        "$value": "{base.color.indigo.300}"
+        "$value": "{base.color.night.link}"
       },
       "danger": {
-        "$value": "{base.color.status.red.300}"
+        "$value": "{base.color.night.danger}"
       },
       "success": {
-        "$value": "{base.color.status.green.300}"
+        "$value": "{base.color.night.success}"
       },
       "warning": {
-        "$value": "{base.color.status.amber.300}"
+        "$value": "{base.color.night.warning}"
       }
     },
     "border": {
       "subtle": {
-        "$value": "{base.color.neutral.850}"
+        "$value": "{base.color.night.border}"
       },
       "default": {
-        "$value": "{base.color.neutral.800}"
+        "$value": "{base.color.night.borderDefault}"
       },
       "strong": {
-        "$value": "{base.color.neutral.500}"
+        "$value": "{base.color.night.borderStrong}"
       },
       "focus": {
-        "$value": "{base.color.indigo.300}"
+        "$value": "{base.color.night.focus}"
       }
     },
     "accent": {
       "default": {
-        "$value": "{base.color.indigo.300}"
+        "$value": "{base.color.night.accent}"
       },
       "hover": {
-        "$value": "{base.color.indigo.200}"
+        "$value": "{base.color.night.accentHover}"
       },
       "subtle": {
-        "$value": "{base.color.indigo.900}"
+        "$value": "{base.color.night.accentSubtle}"
       }
     },
     "status": {
       "dangerBg": {
-        "$value": "{base.color.status.red.shade}"
+        "$value": "{base.color.night.dangerBg}"
       }
     },
     "shadow": {
       "overlay": {
-        "$value": "{base.color.black.shadowStrong}"
+        "$value": "{base.color.night.shadow}"
+      },
+      "ring": {
+        "$value": "{base.color.night.shadowRing}"
       }
     },
     "chip": {

@@ -14,6 +14,7 @@ export const WORKSPACE_TEXT = {
   sidebar: {
     newPage: "New page",
     search: "Search",
+    searchShortcut: "Ctrl+K",
     private: "Private",
     untitled: "Untitled",
     addSubpage: "Add a page inside",

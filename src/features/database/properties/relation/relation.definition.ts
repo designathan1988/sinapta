@@ -37,6 +37,7 @@ function renderRelationCell(
 export const relationProperty: PropertyType = {
   type: RELATION_TYPE,
   label: "Relation",
+  icon: "relation",
   editor: "relation",
   read: readRelation,
   // Related pages are chosen in their own editor, never typed.

@@ -55,6 +55,7 @@ export const statusProperty: PropertyType = {
   ...selectProperty,
   type: "status",
   label: TEXT.statusName,
+  icon: "status",
   filterOperators: [...selectProperty.filterOperators, IN_GROUP],
   configSchema: statusConfigSchema,
   defaultConfig,

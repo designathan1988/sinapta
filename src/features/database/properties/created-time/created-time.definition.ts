@@ -53,6 +53,7 @@ export function timestampProperty(
   return {
     type,
     label,
+    icon: "clock",
     editor: "none",
     input: { type: "date" },
     computedFrom: field,

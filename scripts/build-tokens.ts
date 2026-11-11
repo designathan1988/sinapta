@@ -16,10 +16,14 @@ const SOURCES = {
 
 // A token file can be read while an editor is still writing it, so a file
 // that does not parse is an ordinary error, not a crash.
-async function readJson(path: string): Promise<unknown> {
-  const text = await readFile(new URL(path, ROOT), "utf8");
+// A token file's JSON, or undefined when the file cannot be read or is
+// not JSON: a file that an editor or git replaces is briefly missing, and
+// that must be reported, never thrown at a watcher.
+export async function readJson(path: string): Promise<unknown> {
   try {
-    const parsed: unknown = JSON.parse(text);
+    const parsed: unknown = JSON.parse(
+      await readFile(new URL(path, ROOT), "utf8"),
+    );
     return parsed;
   } catch {
     return undefined;
@@ -36,7 +40,7 @@ export async function buildTokens(): Promise<TokenCssResult> {
   if (unreadable.length > 0) {
     const errors = unreadable.map((path) => ({
       path,
-      message: "File is not valid JSON.",
+      message: "File cannot be read or is not valid JSON.",
     }));
     return { ok: false, errors };
   }

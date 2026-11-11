@@ -18,6 +18,7 @@ function readEmail(stored: unknown): string | undefined {
 export const emailProperty: PropertyType = {
   type: "email",
   label: "Email",
+  icon: "email",
   editor: "text",
   input: { type: "email", mode: "email" },
   read: readEmail,

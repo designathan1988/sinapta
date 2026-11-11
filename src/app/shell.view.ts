@@ -97,7 +97,12 @@ function renderSidebarPanel(
 ): TemplateResult {
   return html`<nav class="app__sidebar" aria-label=${COPY.shell.pagesLabel}>
     <header class="app__sidebar-header">
-      <span class="app__product">${PRODUCT_NAME}</span>
+      <span class="app__product">
+        <span class="app__badge" aria-hidden="true"
+          >${PRODUCT_NAME.slice(0, 1)}</span
+        >
+        ${PRODUCT_NAME}
+      </span>
       ${renderButton({
         label: COPY.sidebar.newPage,
         icon: "compose",

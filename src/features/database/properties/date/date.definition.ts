@@ -38,6 +38,7 @@ function compareDates(a: unknown, b: unknown): number {
 export const dateProperty: PropertyType = {
   type: "date",
   label: "Date",
+  icon: "calendar",
   editor: "date",
   input: { type: "date" },
   read: readDateValue,

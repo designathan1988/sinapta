@@ -5,6 +5,7 @@ import { closeOverlay, openOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
+import { propertyType } from "./property-registry.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import type { TableColumn } from "./table-model.selectors.ts";
 import { startColumnDrag } from "./table-column-drag.view.ts";
@@ -182,6 +183,7 @@ function renderHeader(
         cycleSort(event, column, context);
       }}
     >
+      ${renderIcon(column.isTitle ? "title" : propertyType(property.type).icon)}
       <span class="database__header-name">${property.name}</span>
       <span aria-hidden="true"
         >${sortDirection ? SORT_ARROWS[sortDirection] : ""}${sortRank(column, context)}</span

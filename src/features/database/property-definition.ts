@@ -8,6 +8,7 @@ import type {
 import type { PageBlock } from "../../blocks/page/index.ts";
 import type { BlockId } from "../../model/index.ts";
 import type { AppState, Dispatch } from "../../state/index.ts";
+import type { IconName } from "../../ui/icon/index.ts";
 
 // What a filter knows besides the value and the operand.
 export interface FilterContext {
@@ -98,6 +99,8 @@ export interface RowNumbering {
 export interface PropertyType {
   readonly type: string;
   readonly label: string;
+  // Shown before the property's name in headers and menus.
+  readonly icon: IconName;
   readonly editor: CellEditor;
   readonly input?: InputKind;
   // A value that is not stored but read from the row's own record.

@@ -31,6 +31,7 @@ const DOES_NOT_CONTAIN: FilterOperator = {
 export const multiSelectProperty: PropertyType = {
   type: "multi-select",
   label: "Multi-select",
+  icon: "multi-select",
   editor: "options",
   read: readOptions,
   parse: (text) => readOptions(text === "" ? [] : text.split(",")),

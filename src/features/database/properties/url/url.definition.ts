@@ -23,6 +23,7 @@ function parseUrl(text: string): string | undefined {
 export const urlProperty: PropertyType = {
   type: "url",
   label: "URL",
+  icon: "link",
   editor: "url",
   input: { mode: "url" },
   read: readUrl,

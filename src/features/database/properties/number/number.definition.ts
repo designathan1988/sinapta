@@ -41,6 +41,7 @@ function comparison(
 export const numberProperty: PropertyType = {
   type: "number",
   label: "Number",
+  icon: "number",
   editor: "number",
   input: { mode: "decimal" },
   read: readNumber,

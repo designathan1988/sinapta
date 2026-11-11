@@ -167,25 +167,25 @@
           "tint": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.92, 0.0055000000000000005, 85]
+              "components": [0.913, 0.0029, 84.6]
             }
           },
           "ink": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.36, 0.01, 85]
+              "components": [0.3098, 0.0076, 84.6]
             }
           },
           "shade": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.36, 0.006, 85]
+              "components": [0.4676, 0.0, 0]
             }
           },
           "glow": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.9, 0.006, 85]
+              "components": [0.931, 0.0, 0]
             }
           }
         },
@@ -193,25 +193,25 @@
           "tint": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.92, 0.027500000000000004, 60]
+              "components": [0.9162, 0.0174, 44.8]
             }
           },
           "ink": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.36, 0.05, 60]
+              "components": [0.3139, 0.0441, 45.5]
             }
           },
           "shade": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.36, 0.03, 60]
+              "components": [0.3925, 0.0581, 42.7]
             }
           },
           "glow": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.9, 0.03, 60]
+              "components": [0.9068, 0.0181, 48.5]
             }
           }
         },
@@ -219,25 +219,25 @@
           "tint": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.92, 0.05500000000000001, 55]
+              "components": [0.9182, 0.0419, 59.1]
             }
           },
           "ink": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.36, 0.1, 55]
+              "components": [0.3164, 0.0618, 57.7]
             }
           },
           "shade": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.36, 0.06, 55]
+              "components": [0.4754, 0.0977, 56.4]
             }
           },
           "glow": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.9, 0.06, 55]
+              "components": [0.9092, 0.0404, 63.7]
             }
           }
         },
@@ -245,25 +245,25 @@
           "tint": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.92, 0.05500000000000001, 95]
+              "components": [0.9476, 0.0504, 85.7]
             }
           },
           "ink": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.36, 0.1, 95]
+              "components": [0.3122, 0.0407, 60.9]
             }
           },
           "shade": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.36, 0.06, 95]
+              "components": [0.5277, 0.0882, 74.7]
             }
           },
           "glow": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.9, 0.06, 95]
+              "components": [0.9271, 0.0522, 85.1]
             }
           }
         },
@@ -271,25 +271,25 @@
           "tint": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.92, 0.044000000000000004, 150]
+              "components": [0.9278, 0.0307, 145.3]
             }
           },
           "ink": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.36, 0.08, 150]
+              "components": [0.3134, 0.0439, 159.0]
             }
           },
           "shade": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.36, 0.048, 150]
+              "components": [0.4232, 0.0673, 157.1]
             }
           },
           "glow": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.9, 0.048, 150]
+              "components": [0.9139, 0.037, 150.3]
             }
           }
         },
@@ -297,25 +297,25 @@
           "tint": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.92, 0.044000000000000004, 245]
+              "components": [0.9115, 0.0236, 231.9]
             }
           },
           "ink": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.36, 0.08, 245]
+              "components": [0.3098, 0.049, 242.6]
             }
           },
           "shade": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.36, 0.048, 245]
+              "components": [0.3873, 0.0755, 256.3]
             }
           },
           "glow": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.9, 0.048, 245]
+              "components": [0.9038, 0.031, 245.1]
             }
           }
         },
@@ -323,25 +323,25 @@
           "tint": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.92, 0.044000000000000004, 305]
+              "components": [0.9132, 0.024, 313.1]
             }
           },
           "ink": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.36, 0.08, 305]
+              "components": [0.3216, 0.0878, 310.3]
             }
           },
           "shade": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.36, 0.048, 305]
+              "components": [0.362, 0.0922, 304.9]
             }
           },
           "glow": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.9, 0.048, 305]
+              "components": [0.8952, 0.0381, 309.6]
             }
           }
         },
@@ -349,25 +349,25 @@
           "tint": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.92, 0.05500000000000001, 25]
+              "components": [0.9352, 0.0328, 29.4]
             }
           },
           "ink": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.36, 0.1, 25]
+              "components": [0.3227, 0.102, 26.3]
             }
           },
           "shade": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.36, 0.06, 25]
+              "components": [0.4043, 0.0807, 27.5]
             }
           },
           "glow": {
             "$value": {
               "colorSpace": "oklch",
-              "components": [0.9, 0.06, 25]
+              "components": [0.9066, 0.0354, 28.7]
             }
           }
         }
@@ -450,6 +450,316 @@
             "alpha": 0.5
           }
         }
+      },
+      "day": {
+        "$type": "color",
+        "bg": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [1.0, 0.0, 0]
+          }
+        },
+        "sidebar": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.9796, 0.0017, 67.8]
+          }
+        },
+        "raised": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [1.0, 0.0, 0]
+          }
+        },
+        "hover": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.9496, 0.0017, 67.8]
+          }
+        },
+        "active": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.9282, 0.0029, 84.6]
+          }
+        },
+        "selected": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.9425, 0.0231, 246.0]
+          }
+        },
+        "code": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.9669, 0.0013, 106.4]
+          }
+        },
+        "text": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.2928, 0.0018, 106.5]
+          }
+        },
+        "textSecondary": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.4812, 0.008, 97.5]
+          }
+        },
+        "textTertiary": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.5632, 0.0098, 84.6]
+          }
+        },
+        "onAccent": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [1.0, 0.0, 0]
+          }
+        },
+        "link": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.2928, 0.0018, 106.5]
+          }
+        },
+        "border": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.9403, 0.0029, 84.6]
+          }
+        },
+        "borderDefault": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.9127, 0.0042, 91.4]
+          }
+        },
+        "borderStrong": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.7825, 0.0043, 91.5]
+          }
+        },
+        "accent": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.6058, 0.1674, 252.7]
+          }
+        },
+        "accentHover": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.5654, 0.1676, 251.7]
+          }
+        },
+        "accentSubtle": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.9558, 0.0179, 245.4]
+          }
+        },
+        "focus": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.6058, 0.1674, 252.7]
+          }
+        },
+        "danger": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.6015, 0.1724, 25.8]
+          }
+        },
+        "dangerBg": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.9546, 0.0196, 13.6]
+          }
+        },
+        "success": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.5579, 0.0848, 158.4]
+          }
+        },
+        "warning": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.6198, 0.1204, 74.9]
+          }
+        },
+        "shadow": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.1684, 0.0, 0],
+            "alpha": 0.1
+          }
+        },
+        "shadowRing": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.1684, 0.0, 0],
+            "alpha": 0.06
+          }
+        }
+      },
+      "night": {
+        "$type": "color",
+        "bg": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.2134, 0.0, 0]
+          }
+        },
+        "sidebar": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.2435, 0.0, 0]
+          }
+        },
+        "raised": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.2645, 0.0, 0]
+          }
+        },
+        "hover": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.2928, 0.0018, 106.5]
+          }
+        },
+        "active": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.3368, 0.0, 0]
+          }
+        },
+        "selected": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.2944, 0.0428, 249.5]
+          }
+        },
+        "code": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.2435, 0.0, 0]
+          }
+        },
+        "text": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.9523, 0.0029, 84.6]
+          }
+        },
+        "textSecondary": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.7894, 0.006, 84.6]
+          }
+        },
+        "textTertiary": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.6411, 0.0082, 80.7]
+          }
+        },
+        "onAccent": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [1.0, 0.0, 0]
+          }
+        },
+        "link": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.9523, 0.0029, 84.6]
+          }
+        },
+        "border": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.285, 0.0, 0]
+          }
+        },
+        "borderDefault": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.3368, 0.0, 0]
+          }
+        },
+        "borderStrong": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.4676, 0.0, 0]
+          }
+        },
+        "accent": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.6058, 0.1674, 252.7]
+          }
+        },
+        "accentHover": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.664, 0.1008, 238.1]
+          }
+        },
+        "accentSubtle": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.3165, 0.0436, 246.9]
+          }
+        },
+        "focus": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.664, 0.1008, 238.1]
+          }
+        },
+        "danger": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.6526, 0.1605, 26.5]
+          }
+        },
+        "dangerBg": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.2927, 0.0355, 24.9]
+          }
+        },
+        "success": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.6796, 0.093, 179.8]
+          }
+        },
+        "warning": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.7679, 0.157, 86.5]
+          }
+        },
+        "shadow": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.1684, 0.0, 0],
+            "alpha": 0.4
+          }
+        },
+        "shadowRing": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.1684, 0.0, 0],
+            "alpha": 0.3
+          }
+        }
       }
     },
     "space": {
@@ -511,6 +821,12 @@
       "16": {
         "$value": {
           "value": 4,
+          "unit": "rem"
+        }
+      },
+      "24": {
+        "$value": {
+          "value": 6,
           "unit": "rem"
         }
       }
@@ -618,6 +934,30 @@
           "value": 10,
           "unit": "rem"
         }
+      },
+      "15": {
+        "$value": {
+          "value": 15,
+          "unit": "rem"
+        }
+      },
+      "16x875": {
+        "$value": {
+          "value": 16.875,
+          "unit": "rem"
+        }
+      },
+      "45": {
+        "$value": {
+          "value": 45,
+          "unit": "rem"
+        }
+      },
+      "2x75": {
+        "$value": {
+          "value": 2.75,
+          "unit": "rem"
+        }
       }
     },
     "radius": {
@@ -630,7 +970,7 @@
       },
       "2": {
         "$value": {
-          "value": 0.5,
+          "value": 0.375,
           "unit": "rem"
         }
       },
@@ -646,11 +986,17 @@
         "$type": "fontFamily",
         "sans": {
           "$value": [
-            "system-ui",
+            "ui-sans-serif",
+            "-apple-system",
+            "BlinkMacSystemFont",
+            "Segoe UI Variable Display",
             "Segoe UI",
-            "Roboto",
-            "Helvetica Neue",
-            "sans-serif"
+            "Helvetica",
+            "Apple Color Emoji",
+            "Arial",
+            "sans-serif",
+            "Segoe UI Emoji",
+            "Segoe UI Symbol"
           ]
         },
         "serif": {
@@ -694,25 +1040,25 @@
         },
         "4": {
           "$value": {
-            "value": 1.2,
+            "value": 1.25,
             "unit": "rem"
           }
         },
         "5": {
           "$value": {
-            "value": 1.44,
+            "value": 1.5,
             "unit": "rem"
           }
         },
         "6": {
           "$value": {
-            "value": 1.728,
+            "value": 1.875,
             "unit": "rem"
           }
         },
         "7": {
           "$value": {
-            "value": 2.488,
+            "value": 2.5,
             "unit": "rem"
           }
         },
@@ -747,7 +1093,7 @@
           "$value": 1.4
         },
         "relaxed": {
-          "$value": 1.6
+          "$value": 1.5
         }
       }
     },

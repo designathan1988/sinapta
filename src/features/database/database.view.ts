@@ -8,7 +8,7 @@ import {
   type Dispatch,
 } from "../../state/index.ts";
 import { renderButton } from "../../ui/button/index.ts";
-import { renderIcon } from "../../ui/icon/index.ts";
+import { renderIcon, type IconName } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { COPY, pluralize } from "../../ui/copy.ts";
 import { addRow } from "./row.commands.ts";
@@ -25,7 +25,7 @@ import {
   selectSearchedModel,
   selectViewSearch,
 } from "./view-search.selectors.ts";
-import { deleteView, setActiveView } from "./view.commands.ts";
+import { setActiveView } from "./view.commands.ts";
 
 function renderNewViewButton(context: TableContext): TemplateResult {
   const { state, dispatch } = context;
@@ -52,6 +52,14 @@ function renderNewViewButton(context: TableContext): TemplateResult {
   </button>`;
 }
 
+const VIEW_ICONS: Readonly<Record<string, IconName>> = {
+  table: "table",
+  board: "board",
+  gallery: "gallery",
+  list: "list",
+  calendar: "calendar",
+};
+
 function renderTabs(context: TableContext): TemplateResult {
   const { model, state, dispatch } = context;
   const databaseId = model.database.id;
@@ -64,7 +72,8 @@ function renderTabs(context: TableContext): TemplateResult {
       aria-pressed=${String(view.id === model.view.id)}
       @click=${() => dispatch(setActiveView.create({ databaseId, viewId }))}
     >
-      ${view.name}
+      ${renderIcon(VIEW_ICONS[view.type] ?? "table")}
+      <span>${view.name}</span>
     </button>`;
   });
   return html`<div
@@ -76,27 +85,41 @@ function renderTabs(context: TableContext): TemplateResult {
   </div>`;
 }
 
+interface PopoverButton {
+  readonly kind: string;
+  readonly label: string;
+  readonly icon: IconName;
+  readonly count?: number;
+}
+
+// A quiet icon button that opens one of the view's popovers; a count, such
+// as how many filters apply, shows beside the icon.
 function renderPopoverButton(
-  kind: string,
-  label: string,
+  button: PopoverButton,
   context: TableContext,
 ): TemplateResult {
-  const isOpen = context.state.ui.overlay?.kind === kind;
+  const isOpen = context.state.ui.overlay?.kind === button.kind;
   const toggle = (): void => {
     const next = isOpen
       ? closeOverlay.create({})
-      : openOverlay.create({ overlay: { kind } });
+      : openOverlay.create({ overlay: { kind: button.kind } });
     context.dispatch(next);
   };
+  const count = button.count ?? 0;
   return html`<button
     type="button"
-    class="button"
+    class="button database__tool"
     data-variant="quiet"
     data-overlay-anchor
+    aria-label=${button.label}
     aria-expanded=${String(isOpen)}
+    ?data-active=${count > 0}
+    title=${tooltipTitle(button.label)}
+    interestfor=${TOOLTIP_TARGET}
     @click=${toggle}
   >
-    ${label}
+    ${renderIcon(button.icon)}
+    ${count > 0 ? html`<span>${String(count)}</span>` : nothing}
   </button>`;
 }
 
@@ -107,41 +130,44 @@ function renderSearch(context: TableContext): TemplateResult {
     if (event.target instanceof HTMLInputElement)
       dispatch(setViewSearch.create({ viewId, query: event.target.value }));
   };
-  return html`<input
-    class="database__search"
-    type="search"
-    aria-label=${COPY.database.search}
-    placeholder=${COPY.database.searchPlaceholder}
-    .value=${selectViewSearch(state, model)}
-    @input=${onInput}
-  />`;
+  return html`<label class="database__search">
+    ${renderIcon("search")}
+    <input
+      type="search"
+      aria-label=${COPY.database.search}
+      placeholder=${COPY.database.searchPlaceholder}
+      .value=${selectViewSearch(state, model)}
+      @input=${onInput}
+    />
+  </label>`;
 }
 
 function renderToolbar(context: TableContext): TemplateResult {
   const { model, dispatch } = context;
-  const filterCount = model.view.filters.length;
-  const filterLabel =
-    filterCount === 0
-      ? COPY.database.filter
-      : `${COPY.database.filter} (${String(filterCount)})`;
-  const canDelete = model.database.props.viewIds.length > 1;
+  const filters = {
+    kind: FILTERS_OVERLAY,
+    label: COPY.database.filter,
+    icon: "filter",
+    count: model.view.filters.length,
+  } as const;
+  const settings = {
+    kind: PROPERTIES_OVERLAY,
+    label: COPY.database.viewSettings,
+    icon: "more",
+  } as const;
+  const addAndOpen = (): void => {
+    dispatch(addRow.create({ databaseId: model.database.id, opensPage: true }));
+  };
   return html`<div class="database__toolbar">
     ${renderTabs(context)}
     <span class="database__spacer"></span>
-    ${renderSearch(context)}
-    ${renderPopoverButton(FILTERS_OVERLAY, filterLabel, context)}
-    ${renderPopoverButton(PROPERTIES_OVERLAY, COPY.database.properties, context)}
-    ${
-      canDelete
-        ? renderButton({
-            label: COPY.database.deleteView,
-            icon: "trash",
-            isIconOnly: true,
-            onClick: () =>
-              dispatch(deleteView.create({ viewId: model.view.id })),
-          })
-        : nothing
-    }
+    ${renderPopoverButton(filters, context)} ${renderSearch(context)}
+    ${renderPopoverButton(settings, context)}
+    ${renderButton({
+      label: COPY.database.newItem,
+      variant: "primary",
+      onClick: addAndOpen,
+    })}
   </div>`;
 }
 
@@ -155,18 +181,18 @@ function renderFooter(context: TableContext): TemplateResult {
   const message =
     model.totalRowCount === 0 ? COPY.database.empty : COPY.database.noRows;
   const noun = pluralize(model.totalRowCount, COPY.database.rowCount);
+  const add = (): void => {
+    dispatch(
+      addRow.create({
+        databaseId: model.database.id,
+        opensPage: model.view.type !== "table",
+      }),
+    );
+  };
   return html`<div class="database__footer">
-    ${renderButton({
-      label: COPY.database.newRow,
-      icon: "plus",
-      onClick: () =>
-        dispatch(
-          addRow.create({
-            databaseId: model.database.id,
-            opensPage: model.view.type !== "table",
-          }),
-        ),
-    })}
+    <button type="button" class="database__add-row" @click=${add}>
+      ${renderIcon("plus")} <span>${COPY.database.newRow}</span>
+    </button>
     <span class="database__count" role="status"
       >${shown === 0 ? message : `${count} ${noun}`}</span
     >

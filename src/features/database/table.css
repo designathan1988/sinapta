@@ -11,11 +11,16 @@
     z-index: var(--layer-sticky);
     block-size: var(--size-row-height);
     padding: var(--space-none);
-    border-block-end: var(--size-border-thin) solid var(--color-border-default);
+    border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
+    border-inline-end: var(--size-border-thin) solid var(--color-border-subtle);
     background-color: var(--color-bg-app);
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-regular);
     text-align: start;
     white-space: nowrap;
+
+    &:last-child {
+      border-inline-end: none;
+    }
 
     &[data-add] {
       inline-size: var(--size-control-md);
@@ -37,7 +42,7 @@
 
   .database__sort {
     display: inline-flex;
-    gap: var(--space-inline-xs);
+    gap: var(--space-inline-sm);
     align-items: center;
     max-inline-size: calc(100% - var(--size-control-md));
     min-block-size: var(--size-row-height);
@@ -55,6 +60,11 @@
 
     &:focus-visible {
       outline-offset: calc(var(--size-focus-offset) * -1);
+    }
+
+    & .icon {
+      flex: none;
+      color: var(--color-text-tertiary);
     }
   }
 
@@ -85,6 +95,16 @@
     }
   }
 
+  /* A column's menu shows while its header is pointed at or in use. */
+  .database__header .database__column-menu {
+    opacity: 0;
+  }
+
+  .database__header:is(:hover, :focus-within) .database__column-menu,
+  .database__header .database__column-menu[aria-expanded="true"] {
+    opacity: 1;
+  }
+
   /* A hairline at the column's edge that is the handle to resize it. */
   .database__resizer {
     position: absolute;
@@ -105,6 +125,7 @@
     padding: var(--space-none) var(--space-inset-sm);
     overflow: hidden;
     border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
+    border-inline-end: var(--size-border-thin) solid var(--color-border-subtle);
     text-overflow: ellipsis;
     white-space: nowrap;
 
@@ -115,6 +136,10 @@
 
     &[data-type="title"] {
       font-weight: var(--font-weight-medium);
+    }
+
+    &:last-child {
+      border-inline-end: none;
     }
 
     &:focus-visible,
@@ -165,10 +190,11 @@
   .database__chip {
     display: inline-block;
     margin-inline-end: var(--space-inline-xs);
-    padding: var(--space-none) var(--space-inset-sm);
-    border-radius: var(--radius-full);
-    font-size: var(--font-size-xs);
-    line-height: var(--font-line-height-body);
+    padding: var(--space-none) var(--space-inset-xs);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    line-height: var(--font-line-height-ui);
+    white-space: nowrap;
   }
 
   .database__chip[data-color="gray"] {

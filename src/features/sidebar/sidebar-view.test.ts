@@ -38,10 +38,12 @@ describe("renderSidebar", () => {
     expect(icon?.querySelector("svg")).not.toBeNull();
   });
 
-  it("opens the command palette from the Search item", () => {
+  it("opens the command palette from the Search field", () => {
     const { host, commands } = rendered();
+    const search = host.querySelector<HTMLElement>(".sidebar__search");
 
-    button(host, "Search")?.click();
+    expect(search?.getAttribute("aria-keyshortcuts")).toBe("Control+K");
+    search?.click();
 
     expect(commands).toEqual([
       expect.objectContaining({
@@ -92,5 +94,15 @@ describe("renderSidebar", () => {
     expect(commands).toEqual([
       expect.objectContaining({ type: "ui.openHome" }),
     ]);
+  });
+
+  it("keeps settings and the trash at the foot of the sidebar", () => {
+    const footer = rendered().host.querySelector(".sidebar__footer");
+
+    expect(
+      [...(footer?.querySelectorAll("button") ?? [])].map((item) =>
+        item.textContent.trim(),
+      ),
+    ).toEqual(["Settings", "Trash"]);
   });
 });

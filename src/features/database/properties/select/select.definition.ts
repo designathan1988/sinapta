@@ -46,6 +46,7 @@ const IS_NOT: FilterOperator = {
 export const selectProperty: PropertyType = {
   type: "select",
   label: "Select",
+  icon: "select",
   editor: "options",
   read: readOption,
   parse: readOption,

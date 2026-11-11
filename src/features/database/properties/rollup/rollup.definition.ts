@@ -53,6 +53,7 @@ function compareResults(a: unknown, b: unknown): number {
 export const rollupProperty: PropertyType = {
   type: "rollup",
   label: "Rollup",
+  icon: "rollup",
   editor: "none",
   read: readRollupResult,
   parse: () => undefined,

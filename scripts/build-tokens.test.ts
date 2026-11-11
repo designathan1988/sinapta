@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { readJson } from "./build-tokens.ts";
 import { buildTokenCss, type TokenSources } from "./token-css.ts";
 
 const GRAY = { colorSpace: "oklch", components: [0.2, 0.01, 85] };
@@ -160,5 +161,13 @@ describe("buildTokenCss", () => {
       ok: false,
       errors: [{ path: "loose" }],
     });
+  });
+});
+
+describe("readJson", () => {
+  it("reads a file that is missing as unreadable instead of failing", async () => {
+    await expect(
+      readJson("tokens/missing.tokens.json"),
+    ).resolves.toBeUndefined();
   });
 });

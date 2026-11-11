@@ -16,6 +16,7 @@ function readPhone(stored: unknown): string | undefined {
 export const phoneProperty: PropertyType = {
   type: "phone",
   label: "Phone",
+  icon: "phone",
   editor: "text",
   input: { type: "tel", mode: "tel" },
   read: readPhone,

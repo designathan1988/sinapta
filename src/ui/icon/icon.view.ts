@@ -1,5 +1,6 @@
 import "./icon.css";
 import { html, svg, type TemplateResult } from "lit-html";
+import { DATA_PATHS, isDataIcon, type DataIconName } from "./data-icons.ts";
 
 export type IconName =
   | "sidebar"
@@ -28,11 +29,32 @@ export type IconName =
   | "align-left"
   | "align-center"
   | "align-right"
-  | "expand";
+  | "expand"
+  | "table"
+  | "board"
+  | "gallery"
+  | "list"
+  | "calendar"
+  | "filter"
+  | "sort"
+  | "title"
+  | "text"
+  | "number"
+  | "select"
+  | "multi-select"
+  | "status"
+  | "checkbox"
+  | "email"
+  | "phone"
+  | "file"
+  | "relation"
+  | "rollup"
+  | "clock"
+  | "id";
 
 // 16-unit outline icons, drawn with the current text color.
 // Fragments use the `svg` tag so that they are parsed as SVG, not HTML.
-const PATHS: Record<IconName, TemplateResult<2>> = {
+const PATHS: Record<Exclude<IconName, DataIconName>, TemplateResult<2>> = {
   sidebar: svg`<rect x="2" y="3" width="12" height="10" rx="1.5" />
     <path d="M6 3v10" />`,
   settings: svg`<circle cx="8" cy="8" r="2" />
@@ -85,7 +107,8 @@ export function renderIcon(name: IconName): TemplateResult {
     stroke-linecap="round"
     stroke-linejoin="round"
     aria-hidden="true"
+    data-icon=${name}
   >
-    ${PATHS[name]}
+    ${isDataIcon(name) ? DATA_PATHS[name] : PATHS[name]}
   </svg>`;
 }

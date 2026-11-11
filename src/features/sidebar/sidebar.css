@@ -1,23 +1,65 @@
 @layer features {
   .sidebar {
     display: flex;
+    flex: 1;
     flex-direction: column;
-    gap: var(--space-stack-sm);
+    gap: var(--space-stack-md);
     align-items: stretch;
+  }
+
+  /* Sidebar items are rows of Notion's height, not buttons. */
+  .sidebar__quick,
+  .sidebar__footer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xxs);
 
     & > .button {
       justify-content: flex-start;
+      gap: var(--space-inline-sm);
+      min-block-size: var(--size-row-height);
+      padding-inline: var(--space-inset-sm);
+      border-radius: var(--radius-md);
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-regular);
     }
   }
 
-  .sidebar__quick {
-    display: flex;
-    flex-direction: column;
+  .sidebar__footer {
+    margin-block-start: auto;
+  }
 
-    & > .button {
-      justify-content: flex-start;
-      color: var(--color-text-secondary);
+  /* The search field: a quiet box with its shortcut, as in Notion. */
+  .sidebar__search {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    min-block-size: var(--size-row-height);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-app);
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-sm);
+    text-align: start;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
     }
+
+    & kbd {
+      padding: var(--space-none) var(--space-inset-xs);
+      border: var(--size-border-thin) solid var(--color-border-default);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: var(--font-size-xs);
+    }
+  }
+
+  .sidebar__search-label {
+    flex: 1;
   }
 
   .sidebar__empty {
@@ -40,7 +82,7 @@
     min-block-size: var(--size-row-height);
     padding-inline: calc((var(--sidebar-level, 1) - 1) * var(--space-inset-lg))
       var(--space-inset-xs);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     color: var(--color-text-secondary);
     cursor: pointer;
 
@@ -50,7 +92,7 @@
     }
 
     &[aria-current="page"] {
-      background-color: var(--color-bg-active);
+      background-color: var(--color-bg-hover);
       color: var(--color-text-primary);
       font-weight: var(--font-weight-medium);
     }
@@ -118,6 +160,7 @@
   }
 
   .sidebar__heading {
+    margin: var(--space-none);
     padding: var(--space-inset-xs) var(--space-inset-sm);
     color: var(--color-text-tertiary);
     font-size: var(--font-size-xs);

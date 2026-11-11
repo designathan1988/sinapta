@@ -3,11 +3,19 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: var(--space-stack-sm);
     min-block-size: 0;
   }
 
-  .database__toolbar,
+  /* The views bar: tabs at the start, the view's tools at the end, over a
+     rule that runs the width of the page, as in Notion. */
+  .database__toolbar {
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    min-block-size: var(--size-control-md);
+    border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
+  }
+
   .database__tabs,
   .database__footer {
     display: flex;
@@ -20,14 +28,16 @@
   }
 
   .database__tab {
-    min-block-size: var(--size-control-sm);
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    min-block-size: var(--size-control-md);
     padding: var(--space-none) var(--space-inset-sm);
     border: none;
     border-block-end: var(--size-border-thick) solid transparent;
     background-color: transparent;
     color: var(--color-text-secondary);
     font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
     cursor: pointer;
 
     &:hover {
@@ -35,32 +45,96 @@
     }
 
     &[aria-pressed="true"] {
-      border-block-end-color: var(--color-accent-default);
+      border-block-end-color: var(--color-text-primary);
       color: var(--color-text-primary);
+      font-weight: var(--font-weight-medium);
     }
+  }
+
+  .database__tool[data-active] {
+    color: var(--color-accent-default);
   }
 
   /* The table scrolls inside this box, so its header can stay in view. */
   .database__scroll {
-    flex: 1;
+    flex: 0 1 auto;
     min-block-size: 0;
     overflow: auto;
-    border-block: var(--size-border-thin) solid var(--color-border-subtle);
   }
 
+  /* Search sits among the tools as an icon and widens while in use. */
   .database__search {
-    inline-size: var(--size-menu-min-width);
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
     min-block-size: var(--size-control-sm);
-    padding: var(--space-none) var(--space-inset-sm);
-    border: var(--size-border-thin) solid var(--color-border-default);
+    padding: var(--space-none) var(--space-inset-xs);
     border-radius: var(--radius-sm);
-    background-color: var(--color-bg-app);
-    color: var(--color-text-primary);
+    color: var(--color-text-secondary);
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    /* At rest only the icon shows; the field opens on focus or while it
+       holds a search. */
+    & input {
+      inline-size: 0;
+      padding: var(--space-none);
+      border: none;
+      background-color: transparent;
+      color: var(--color-text-primary);
+      font-size: var(--font-size-sm);
+      transition: inline-size var(--duration-fast) var(--easing-standard);
+    }
+
+    & input:focus,
+    & input:not(:placeholder-shown) {
+      inline-size: var(--size-menu-min-width);
+      outline: none;
+    }
+
+    &:focus-within {
+      background-color: var(--color-bg-hover);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      & input {
+        transition: none;
+      }
+    }
+  }
+
+  .database__footer {
+    justify-content: space-between;
+    border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
+  }
+
+  /* "New page" right under the last row. */
+  .database__add-row {
+    display: inline-flex;
+    flex: 1;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    min-block-size: var(--size-row-height);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: none;
+    background-color: transparent;
+    color: var(--color-text-tertiary);
     font-size: var(--font-size-sm);
+    text-align: start;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+      color: var(--color-text-secondary);
+    }
   }
 
   .database__count {
+    padding-inline: var(--space-inset-sm);
     color: var(--color-text-tertiary);
     font-size: var(--font-size-xs);
+    white-space: nowrap;
   }
 }

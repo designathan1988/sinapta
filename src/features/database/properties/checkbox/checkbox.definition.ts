@@ -25,6 +25,7 @@ const IS_NOT_CHECKED: FilterOperator = {
 export const checkboxProperty: PropertyType = {
   type: "checkbox",
   label: "Checkbox",
+  icon: "checkbox",
   editor: "toggle",
   read: readChecked,
   parse: (text) => (text === "true" ? true : undefined),

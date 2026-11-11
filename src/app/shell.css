@@ -38,6 +38,7 @@
     padding: var(--space-inset-sm);
     overflow: hidden auto;
     background-color: var(--color-bg-sidebar);
+    color: var(--color-text-secondary);
     font-size: var(--font-size-sm);
   }
 
@@ -49,9 +50,26 @@
     padding-inline-start: var(--space-inset-sm);
   }
 
+  /* The workspace's name beside its badge, as at the top of Notion's
+     sidebar. */
   .app__product {
-    font-family: var(--font-family-display);
-    font-size: var(--font-size-md);
+    display: inline-flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .app__badge {
+    display: inline-grid;
+    place-items: center;
+    inline-size: var(--size-icon-md);
+    block-size: var(--size-icon-md);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-text-primary);
+    color: var(--color-bg-app);
+    font-size: var(--font-size-xs);
     font-weight: var(--font-weight-strong);
   }
 
@@ -91,12 +109,16 @@
     }
   }
 
+  /* Notion's top bar: the page's place at the start, its actions at the
+     end, in one quiet line. */
   .app__top-bar {
     display: flex;
-    gap: var(--space-inline-sm);
+    gap: var(--space-inline-xs);
     align-items: center;
-    min-block-size: var(--size-control-md);
-    padding: var(--space-inset-sm) var(--space-inset-md);
+    min-block-size: var(--size-top-bar);
+    padding: var(--space-none) var(--space-inset-sm);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
   }
 
   .app__spacer {

@@ -16,6 +16,7 @@ function names(value: unknown): string {
 export const filesProperty: PropertyType = {
   type: "files",
   label: "Files & media",
+  icon: "file",
   editor: "files",
   read: readFiles,
   // Files are added in their own editor, never typed.

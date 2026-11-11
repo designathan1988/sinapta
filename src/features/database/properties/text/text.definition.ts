@@ -13,6 +13,7 @@ function readText(stored: unknown): string | undefined {
 export const textProperty: PropertyType = {
   type: "text",
   label: "Text",
+  icon: "text",
   editor: "text",
   read: readText,
   parse: (text) => readText(text.normalize("NFC")),
