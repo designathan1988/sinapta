@@ -110,6 +110,22 @@ function openMenuByKey(event: KeyboardEvent, context: Context): boolean {
   return true;
 }
 
+// A right click on a row opens the page's menu at the pointer.
+function onTreeContextMenu(event: MouseEvent, context: Context): void {
+  const pageId = pageIdOf(rowOf(event));
+  if (pageId === undefined) return;
+  event.preventDefault();
+  const anchorId = pageMenuAnchorId(TREE_PLACE, pageId);
+  const isPointer = event.clientX !== 0 || event.clientY !== 0;
+  const point = { x: event.clientX, y: event.clientY };
+  const overlay = { kind: PAGE_MENU_OVERLAY, anchorId };
+  context.dispatch(
+    openOverlay.create({
+      overlay: isPointer ? { ...overlay, point } : overlay,
+    }),
+  );
+}
+
 // Keyboard support of the ARIA tree pattern.
 function onTreeKeyDown(event: KeyboardEvent, context: Context): void {
   const { dispatch } = context;
@@ -166,6 +182,9 @@ export function renderTree(
     }}
     @keydown=${(event: KeyboardEvent) => {
       onTreeKeyDown(event, context);
+    }}
+    @contextmenu=${(event: MouseEvent) => {
+      onTreeContextMenu(event, context);
     }}
   >
     ${repeat(

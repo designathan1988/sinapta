@@ -219,7 +219,12 @@ export function renderBlockMenu(
   if (overlay.kind === BLOCK_MENU_OVERLAY) {
     const blockCount = countBlockTree(state.workspace, block.id);
     const items = actionItems(block, { overlay, dispatch, blockCount });
-    return renderMenu({ label: COPY.blockMenu.open, items, onClose });
+    return renderMenu({
+      label: COPY.blockMenu.open,
+      items,
+      onClose,
+      ...(overlay.point && { point: overlay.point }),
+    });
   }
   if (overlay.kind === TURN_INTO_OVERLAY) {
     const items = typeItems(block.id, overlay, dispatch);

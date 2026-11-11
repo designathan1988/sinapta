@@ -4,6 +4,7 @@ import { ref } from "lit-html/directives/ref.js";
 import { repeat } from "lit-html/directives/repeat.js";
 import { COPY } from "../../ui/copy.ts";
 import { renderCell, type TableContext } from "./table-cell.view.ts";
+import { onRowContextMenu } from "./table-context-menu.view.ts";
 import { renderHeaderRow, setColumnWidth } from "./table-header.view.ts";
 import {
   onBodyClick,
@@ -72,6 +73,9 @@ function renderBody(context: TableContext): TemplateResult {
     @pointerdown=${on(onBodyPointerDown)}
     @click=${on(onBodyClick)}
     @keydown=${on(onBodyKeyDown)}
+    @contextmenu=${(event: Event) => {
+      onRowContextMenu(event, context.dispatch);
+    }}
     @focusin=${on(onBodyFocusIn)}
     @focusout=${on(onBodyFocusOut)}
   >

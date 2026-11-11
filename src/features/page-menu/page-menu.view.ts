@@ -177,5 +177,6 @@ export function renderPageMenu(
     items: menuItems(state, page, dispatch),
     onClose: () => dispatch(closeOverlay.create({})),
     footer: wordCountLabel(state, page.id),
+    ...(overlay.point && { point: overlay.point }),
   });
 }

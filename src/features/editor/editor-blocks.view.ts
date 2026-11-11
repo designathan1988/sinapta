@@ -10,6 +10,7 @@ import {
   renderHandle,
   startBlockDrag,
 } from "./editor-block-menu.view.ts";
+import { onBlockContextMenu } from "./editor-context-menu.view.ts";
 import { caretAt } from "./editor.commands.ts";
 import {
   onBeforeInput,
@@ -145,6 +146,9 @@ export function renderBlocks(
       @beforeinput=${on(onBeforeInput)}
       @keydown=${on(onBlockKeyDown)}
       @pointerdown=${on(onPointerDown)}
+      @contextmenu=${(event: Event) => {
+        onBlockContextMenu(event, context.dispatch);
+      }}
       @compositionstart=${(event: Event) => {
         setComposing(event, true);
       }}

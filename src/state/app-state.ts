@@ -41,6 +41,8 @@ export interface OpenOverlay {
   readonly activeIndex?: number;
   // What has been typed into the overlay's search field.
   readonly query?: string;
+  // Where a menu opened by a right click shows, in viewport pixels.
+  readonly point?: { readonly x: number; readonly y: number };
 }
 
 export interface UiState {

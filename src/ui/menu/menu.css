@@ -56,4 +56,13 @@
     color: var(--color-text-tertiary);
     font-size: var(--font-size-xs);
   }
+
+  /* A menu opened by a right click shows where the pointer was. */
+  .menu[data-at-point][popover] {
+    position-area: none;
+    inset: auto;
+    inset-block-start: var(--menu-y);
+    inset-inline-start: var(--menu-x);
+    margin: var(--space-none);
+  }
 }

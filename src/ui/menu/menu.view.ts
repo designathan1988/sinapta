@@ -32,6 +32,18 @@ export interface MenuOptions {
   readonly onClose: () => void;
   // A short note under the items, such as a page's word count.
   readonly footer?: string;
+  // Where a menu opened by a right click shows; otherwise it sits by the
+  // control that opened it.
+  readonly point?: { readonly x: number; readonly y: number };
+}
+
+// The point is set through the CSSOM: it changes with every opening.
+function placeAt(point: MenuOptions["point"]) {
+  return (element: Element | undefined): void => {
+    if (!(element instanceof HTMLElement) || point === undefined) return;
+    element.style.setProperty("--menu-x", `${String(point.x)}px`);
+    element.style.setProperty("--menu-y", `${String(point.y)}px`);
+  };
 }
 
 function moveFocus(menu: Element, key: string): boolean {
@@ -96,6 +108,8 @@ export function renderMenu(options: MenuOptions): TemplateResult {
     popover="manual"
     data-overlay
     aria-label=${options.label}
+    ?data-at-point=${options.point !== undefined}
+    ${ref(placeAt(options.point))}
     ${ref(showPopoverWhenConnected)}
     @click=${onClick}
     @keydown=${onKeyDown}

@@ -55,4 +55,19 @@ describe("renderMenu", () => {
     expect(footer?.textContent).toBe("12 words");
     expect(footer?.getAttribute("role")).toBe("none");
   });
+
+  it("places a menu opened at a point at that point", () => {
+    const host = document.createElement("div");
+    const onClose = (): void => undefined;
+    const items = [{ label: "Duplicate", onSelect: noop }];
+    render(
+      renderMenu({ label: "Block", items, onClose, point: { x: 10, y: 20 } }),
+      host,
+    );
+
+    const menu = host.querySelector<HTMLElement>(".menu");
+    expect(menu?.hasAttribute("data-at-point")).toBe(true);
+    expect(menu?.style.getPropertyValue("--menu-x")).toBe("10px");
+    expect(menu?.style.getPropertyValue("--menu-y")).toBe("20px");
+  });
 });

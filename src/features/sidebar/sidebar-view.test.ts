@@ -58,4 +58,29 @@ describe("renderSidebar", () => {
 
     expect(headings).toContain("Private");
   });
+
+  it("opens a page's menu where its row is right-clicked", () => {
+    const { host, commands } = rendered();
+    const row = host.querySelector(".sidebar__row");
+
+    row?.dispatchEvent(
+      new MouseEvent("contextmenu", {
+        bubbles: true,
+        cancelable: true,
+        clientX: 30,
+        clientY: 40,
+      }),
+    );
+
+    expect(commands).toEqual([
+      expect.objectContaining({
+        type: "ui.openOverlay",
+        overlay: {
+          kind: "page-menu",
+          anchorId: "tree:page",
+          point: { x: 30, y: 40 },
+        },
+      }),
+    ]);
+  });
 });
