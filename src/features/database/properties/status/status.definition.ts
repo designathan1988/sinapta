@@ -32,10 +32,10 @@ const IN_GROUP: FilterOperator = {
   id: "in-group",
   label: TEXT.isInGroup,
   needsOperand: true,
-  test: (value, operand, property) => {
+  test: (value, operand, context) => {
     const optionId = selectProperty.read(value);
-    if (property === undefined || typeof optionId !== "string") return false;
-    return statusGroupOf(property, optionId) === operand;
+    if (context === undefined || typeof optionId !== "string") return false;
+    return statusGroupOf(context.property, optionId) === operand;
   },
   choices: () =>
     STATUS_GROUP_IDS.map((id) => ({ id, label: TEXT.statusGroups[id] })),

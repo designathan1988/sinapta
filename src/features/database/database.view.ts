@@ -179,8 +179,12 @@ export function renderDatabase(
   dispatch: Dispatch,
 ): TemplateResult | typeof nothing {
   const database = selectDatabase(state, state.ui.activePageId);
+  // Today in the reader's own time zone, for filters relative to it.
+  const today = new Date().toLocaleDateString("en-CA");
   const viewModel =
-    database === undefined ? undefined : selectTableModel(state, database.id);
+    database === undefined
+      ? undefined
+      : selectTableModel(state, database.id, today);
   if (viewModel === undefined) return nothing;
   const model = selectSearchedModel(state, viewModel);
   const context = { state, dispatch, model };

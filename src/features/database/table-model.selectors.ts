@@ -26,6 +26,7 @@ import {
   type View,
 } from "../../model/index.ts";
 import type { AppState } from "../../state/index.ts";
+import type { FilterContext } from "./property-definition.ts";
 import { propertyType } from "./property-registry.ts";
 import { selectRows } from "./row-values.selectors.ts";
 
@@ -82,16 +83,16 @@ function valueOf(row: TableRow, property: PropertyDefinition): unknown {
 // Every filter on one property must pass.
 function passes(
   value: unknown,
-  property: PropertyDefinition,
+  context: FilterContext,
   filters: readonly Filter[],
 ): boolean {
-  const { filterOperators } = propertyType(property.type);
+  const { filterOperators } = propertyType(context.property.type);
   return filters.every((filter) => {
     const operator = filterOperators.find(
       (item) => item.id === filter.operator,
     );
     const operand = typeof filter.value === "string" ? filter.value : "";
-    return operator === undefined || operator.test(value, operand, property);
+    return operator === undefined || operator.test(value, operand, context);
   });
 }
 
@@ -101,6 +102,7 @@ function isFilterList(value: unknown): value is readonly Filter[] {
 
 function columnDefs(
   properties: readonly PropertyDefinition[],
+  today: string,
 ): ColumnDef<Features, TableRow>[] {
   return properties.map((property) => ({
     id: property.id,
@@ -113,7 +115,7 @@ function columnDefs(
       ),
     filterFn: (row, columnId, filterValue: unknown) =>
       !isFilterList(filterValue) ||
-      passes(row.getValue(columnId), property, filterValue),
+      passes(row.getValue(columnId), { property, today }, filterValue),
   }));
 }
 
@@ -141,14 +143,17 @@ function engineState(view: View, properties: readonly PropertyDefinition[]) {
   return { sorting, columnFilters: filtered };
 }
 
-function sortedAndFiltered(
-  data: TableRow[],
-  view: View,
-  properties: readonly PropertyDefinition[],
-): TableRow[] {
+interface Query {
+  readonly view: View;
+  readonly properties: readonly PropertyDefinition[];
+  readonly today: string;
+}
+
+function sortedAndFiltered(data: TableRow[], query: Query): TableRow[] {
+  const { view, properties, today } = query;
   const table = constructTable({
     features,
-    columns: columnDefs(properties),
+    columns: columnDefs(properties, today),
     data,
     getRowId: (row) => row.id,
     state: engineState(view, properties),
@@ -201,16 +206,19 @@ export function selectActiveView(
 interface Cached {
   readonly blocks: AppState["workspace"]["blocks"];
   readonly view: View;
+  readonly today: string;
   readonly model: TableModel;
 }
 
 // The last model per database. A model depends only on the workspace's
-// blocks and the view, so the same inputs give the same model back.
+// blocks, the view and today, so the same inputs give it back.
 const cache = new Map<BlockId, Cached>();
 
+// `today` ("YYYY-MM-DD") serves filters such as "within the past week".
 export function selectTableModel(
   state: AppState,
   databaseId: BlockId,
+  today = "",
 ): TableModel | undefined {
   const database = selectDatabase(state, databaseId);
   const view =
@@ -220,7 +228,13 @@ export function selectTableModel(
     return undefined;
   const { blocks } = state.workspace;
   const cached = cache.get(databaseId);
-  if (cached?.blocks === blocks && cached.view === view) return cached.model;
+  if (
+    cached?.blocks === blocks &&
+    cached.view === view &&
+    cached.today === today
+  ) {
+    return cached.model;
+  }
   const all = [title, ...database.props.properties];
   const data = selectRows(state, database);
   const others = orderedProperties(view, database.props.properties);
@@ -228,9 +242,9 @@ export function selectTableModel(
     database,
     view,
     columns: [title, ...others].map((property) => toColumn(view, property)),
-    rows: sortedAndFiltered(data, view, all),
+    rows: sortedAndFiltered(data, { view, properties: all, today }),
     totalRowCount: data.length,
   };
-  cache.set(databaseId, { blocks, view, model });
+  cache.set(databaseId, { blocks, view, today, model });
   return model;
 }

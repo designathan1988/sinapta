@@ -84,7 +84,8 @@ function rows(ids: TaskIds, now: string): Block[] {
   return specs.flatMap((spec, index): Block[] => {
     const id = ids.rowIds[index];
     if (id === undefined) return [];
-    const values = { [status]: spec.option, [due]: dayAfter(now, spec.day) };
+    const start = dayAfter(now, spec.day);
+    const values = { [status]: spec.option, [due]: { start } };
     const props = {
       title: [{ text: spec.title }],
       icon: null,

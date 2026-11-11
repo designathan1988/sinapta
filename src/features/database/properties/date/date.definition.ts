@@ -1,65 +1,57 @@
+// A date property holds a day, or a range of days, with an optional time.
+import type { PropertyType } from "../../property-definition.ts";
+import { renderDateConfig } from "./date-config.view.ts";
+import { DATE_FILTERS } from "./date-filters.ts";
 import {
-  IS_EMPTY,
-  IS_NOT_EMPTY,
-  type FilterOperator,
-  type PropertyType,
-} from "../../property-definition.ts";
+  formatDateValue,
+  isDay,
+  readDateValue,
+  type DateValue,
+} from "./date-value.ts";
+import {
+  dateConfigSchema,
+  DEFAULT_DATE_CONFIG,
+  readDateConfig,
+} from "./date.schema.ts";
 
-const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
-
-// Dates are stored as calendar days, "2026-11-10", with no time or zone.
-function readDate(stored: unknown): string | undefined {
-  if (typeof stored !== "string" || !ISO_DATE.test(stored)) return undefined;
-  return Number.isNaN(Date.parse(stored)) ? undefined : stored;
-}
-
-function comparison(
-  id: string,
-  label: string,
-  test: (order: number) => boolean,
-): FilterOperator {
+// A typed day replaces the first day; the end and the time stay when they
+// still fit.
+function parseDate(text: string, previous?: unknown): DateValue | undefined {
+  const start = text.trim();
+  if (!isDay(start)) return undefined;
+  const old = readDateValue(previous);
+  const end = old?.end !== undefined && old.end >= start ? old.end : undefined;
   return {
-    id,
-    label,
-    needsOperand: true,
-    test(value, operand) {
-      const date = readDate(value);
-      const other = readDate(operand.trim());
-      return (
-        date !== undefined &&
-        other !== undefined &&
-        test(date.localeCompare(other))
-      );
-    },
+    start,
+    ...(end !== undefined && { end }),
+    ...(old?.time !== undefined && { time: old.time }),
   };
 }
 
-const formatter = new Intl.DateTimeFormat("en-US", {
-  dateStyle: "medium",
-  timeZone: "UTC",
-});
+function compareDates(a: unknown, b: unknown): number {
+  const first = readDateValue(a);
+  const second = readDateValue(b);
+  const starts = (first?.start ?? "").localeCompare(second?.start ?? "");
+  return starts || (first?.end ?? "").localeCompare(second?.end ?? "");
+}
 
 export const dateProperty: PropertyType = {
   type: "date",
   label: "Date",
   editor: "date",
   input: { type: "date" },
-  read: readDate,
-  parse: (text) => readDate(text.trim()),
-  format: (value) => readDate(value) ?? "",
-  // ISO dates sort correctly as text.
-  compare: (a, b) => String(a).localeCompare(String(b)),
-  filterOperators: [
-    comparison("is", "Is", (order) => order === 0),
-    comparison("before", "Is before", (order) => order < 0),
-    comparison("after", "Is after", (order) => order > 0),
-    IS_EMPTY,
-    IS_NOT_EMPTY,
-  ],
-  renderCell(value) {
-    const date = readDate(value);
-    return date === undefined
-      ? ""
-      : formatter.format(new Date(`${date}T00:00:00Z`));
+  read: readDateValue,
+  parse: parseDate,
+  // The first day, as the day field edits it and search finds it.
+  format: (value) => readDateValue(value)?.start ?? "",
+  compare: compareDates,
+  filterOperators: DATE_FILTERS,
+  renderCell(value, property) {
+    const date = readDateValue(value);
+    if (date === undefined) return "";
+    return formatDateValue(date, readDateConfig(property.config));
   },
+  configSchema: dateConfigSchema,
+  defaultConfig: () => DEFAULT_DATE_CONFIG,
+  renderConfigEditor: renderDateConfig,
 };

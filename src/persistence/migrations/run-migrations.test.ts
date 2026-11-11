@@ -80,7 +80,43 @@ describe("the migration list", () => {
 
     expect(runMigrations({ schemaVersion: 12, blocks })).toEqual({
       ok: true,
-      file: { schemaVersion: 13, blocks },
+      file: { schemaVersion: SCHEMA_VERSION, blocks },
+    });
+  });
+
+  it("turns a version 13 date into a date range that starts that day", () => {
+    const properties = [
+      { id: "due", name: "Due", type: "date" },
+      { id: "code", name: "Code", type: "text" },
+    ];
+    const row = (values: Record<string, unknown>) => ({
+      type: "page",
+      parentId: "db",
+      props: { values },
+    });
+    const blocks = {
+      db: { type: "database", props: { properties } },
+      r1: row({ due: "2026-11-10", code: "2026-01-01" }),
+      r2: row({ due: { start: "2026-11-12" } }),
+      r3: row({ due: "not a date" }),
+      loose: {
+        type: "page",
+        parentId: null,
+        props: { values: { due: "2026-11-10" } },
+      },
+    };
+
+    const result = runMigrations({ schemaVersion: 13, blocks });
+
+    expect(result).toEqual({
+      ok: true,
+      file: {
+        schemaVersion: SCHEMA_VERSION,
+        blocks: {
+          ...blocks,
+          r1: row({ due: { start: "2026-11-10" }, code: "2026-01-01" }),
+        },
+      },
     });
   });
 });

@@ -11,7 +11,10 @@ const page = (title: string, isTrashed = false) => ({
 });
 
 function row(id: string, due: string, isTrashed = false) {
-  return { id, props: { ...page(id, isTrashed), values: { due } } };
+  return {
+    id,
+    props: { ...page(id, isTrashed), values: { due: { start: due } } },
+  };
 }
 
 function createState(recent: string[]): AppState {

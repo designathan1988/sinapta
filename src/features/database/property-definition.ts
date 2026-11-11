@@ -6,6 +6,14 @@ import type {
   PropertyDefinition,
 } from "../../blocks/database/index.ts";
 
+// What a filter knows besides the value and the operand.
+export interface FilterContext {
+  readonly property: PropertyDefinition;
+  // Today as "YYYY-MM-DD", for filters relative to it; absent or empty
+  // when unknown, and then such filters match nothing.
+  readonly today?: string;
+}
+
 // One value a filter's operand may take, such as a status group.
 export interface OperandChoice {
   readonly id: string;
@@ -20,7 +28,7 @@ export interface FilterOperator {
   readonly test: (
     value: unknown,
     operand: string,
-    property?: PropertyDefinition,
+    context?: FilterContext,
   ) => boolean;
   // The operands to choose from, when not the property's options.
   readonly choices?: (property: PropertyDefinition) => readonly OperandChoice[];
@@ -55,8 +63,10 @@ export interface PropertyType {
   // The stored value in this type's form; undefined when the cell is
   // empty or holds something this type cannot use.
   readonly read: (stored: unknown) => unknown;
-  // Text typed into an editor as a value to store; undefined clears.
-  readonly parse: (text: string) => unknown;
+  // Text typed into an editor as a value to store; undefined clears. The
+  // value it replaces lets a type keep what the text does not hold, such
+  // as the end of a date range.
+  readonly parse: (text: string, previous?: unknown) => unknown;
   // The value as plain text, for editing and for search.
   readonly format: (value: unknown, property: PropertyDefinition) => string;
   // Ascending order of two values that `read` returned.

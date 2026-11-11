@@ -18,6 +18,7 @@ import {
   monthOf,
   selectCalendarEntries,
   selectMonthWeeks,
+  shiftDateValue,
   type CalendarEntries,
 } from "./calendar.selectors.ts";
 
@@ -62,13 +63,24 @@ function focusEntry(rowId: BlockId): void {
   });
 }
 
-function moveEntry(context: CalendarContext, rowId: BlockId, day: string) {
+interface Move {
+  readonly from: string;
+  readonly to: string;
+}
+
+// Moves a row's date by the days between the day it was shown on and the
+// day it goes to, so a range keeps its length.
+function moveEntry(context: CalendarContext, rowId: BlockId, move: Move) {
   const { dispatch, entries, month } = context;
   const propertyId = context.model.database.props.properties.find(
     (item) => item.id === entries.propertyId,
   )?.id;
-  if (propertyId === undefined) return;
-  dispatch(setRowValue.create({ rowId, propertyId, value: day }));
+  const row = context.model.rows.find((item) => item.id === rowId);
+  if (propertyId === undefined || row === undefined) return;
+  const stored = row.values[propertyId];
+  const value = shiftDateValue(stored, move.from, move.to);
+  const day = move.to;
+  dispatch(setRowValue.create({ rowId, propertyId, value }));
   if (monthOf(day) !== month)
     dispatch(setCalendarMonth.create({ month: monthOf(day) }));
   focusEntry(rowId);
@@ -83,7 +95,7 @@ function renderEntry(
     const days = KEY_DAYS[event.key];
     if (!event.altKey || days === undefined) return;
     event.preventDefault();
-    moveEntry(context, row.id, addDays(day, days));
+    moveEntry(context, row.id, { from: day, to: addDays(day, days) });
   };
   return html`<button
     type="button"
@@ -101,7 +113,7 @@ function renderDay(context: CalendarContext, day: string): TemplateResult {
   const { entries, model, dispatch } = context;
   const rows = entries.byDay.get(day) ?? [];
   const databaseId = model.database.id;
-  const values = { [entries.propertyId]: day };
+  const values = { [entries.propertyId]: { start: day } };
   return html`<td
     class="calendar__day"
     data-day=${day}
@@ -129,9 +141,10 @@ function startEntryDrag(event: PointerEvent, context: CalendarContext): void {
       const row = context.model.rows.find(
         (item) => item.id === source.dataset.rowId,
       );
-      const day = target.closest<HTMLElement>(".calendar__day")?.dataset.day;
-      if (row !== undefined && day !== undefined)
-        moveEntry(context, row.id, day);
+      const to = target.closest<HTMLElement>(".calendar__day")?.dataset.day;
+      const from = source.closest<HTMLElement>(".calendar__day")?.dataset.day;
+      if (row !== undefined && to !== undefined)
+        moveEntry(context, row.id, { from: from ?? to, to });
     },
   });
 }

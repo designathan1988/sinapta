@@ -74,7 +74,9 @@ function commit(input: HTMLInputElement, context: TableContext): boolean {
   const column = cell === undefined ? undefined : columnOf(cell, context);
   if (cell === undefined || column === undefined) return false;
   const text = input.value;
-  const value = propertyType(column.property.type).parse(text);
+  const previous = context.model.rows.find((row) => row.id === cell.rowId)
+    ?.values[column.property.id];
+  const value = propertyType(column.property.type).parse(text, previous);
   if (cell.propertyId !== null && value === undefined && text.trim() !== "") {
     input.setAttribute("aria-invalid", "true");
     announce(COPY.database.invalidValue);

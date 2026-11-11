@@ -10,6 +10,7 @@ import { viewCommands } from "./view.commands.ts";
 export { createDatabase } from "./database.commands.ts";
 export { startDatabase } from "./database-start.commands.ts";
 export { renderDatabase } from "./database.view.ts";
+export { readDateValue, type DateValue } from "./properties/date/index.ts";
 export { withPropertyConfigs } from "./property-registry.ts";
 export { renderRowProperties } from "./row-properties.view.ts";
 

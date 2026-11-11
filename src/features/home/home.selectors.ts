@@ -9,6 +9,7 @@ import {
 } from "../../blocks/page/index.ts";
 import type { BlockId } from "../../model/index.ts";
 import type { AppState } from "../../state/index.ts";
+import { readDateValue } from "../database/index.ts";
 
 const DAY_MS = 86_400_000;
 const UPCOMING_DAYS = 7;
@@ -44,8 +45,8 @@ function datesOfDatabase(state: AppState, databaseId: BlockId): UpcomingDate[] {
     const row = selectPage(state, rowId);
     if (row === undefined || row.props.isTrashed) return [];
     return dateProperties.flatMap((property) => {
-      const value = row.props.values?.[property.id];
-      if (typeof value !== "string") return [];
+      const value = readDateValue(row.props.values?.[property.id])?.start;
+      if (value === undefined) return [];
       const title = selectPageTitle(row);
       return [
         { pageId: row.id, title, date: value, propertyName: property.name },

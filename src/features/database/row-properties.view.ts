@@ -10,11 +10,13 @@ import { selectPage, type PageBlock } from "../../blocks/page/index.ts";
 import type { AppState, Dispatch } from "../../state/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { dateFromParts, renderDateRange } from "./properties/date/index.ts";
 import { setRowValue } from "./row.commands.ts";
 import { propertyType } from "./property-registry.ts";
 import { selectRowValues } from "./row-values.selectors.ts";
 
 const MULTI_SELECT = "multi-select";
+const DATE = "date";
 
 type Control = HTMLInputElement | HTMLSelectElement;
 
@@ -108,6 +110,9 @@ function renderProperty(
   property: PropertyDefinition,
 ): TemplateResult {
   if (property.type === MULTI_SELECT) return renderMultiSelect(row, property);
+  if (property.type === DATE) {
+    return renderDateRange(storedOf(row, property), property);
+  }
   const { editor } = propertyType(property.type);
   const controls: Partial<Record<string, typeof renderInput>> = {
     toggle: renderToggle,
@@ -127,9 +132,22 @@ function renderProperty(
 // Stands for text that does not fit the property type.
 const INVALID = Symbol("invalid");
 
+// The date a range's three fields hold together.
+function dateOf(group: HTMLElement): unknown {
+  const part = (name: string): string =>
+    group.querySelector<HTMLInputElement>(`[data-part="${name}"]`)?.value ?? "";
+  const result = dateFromParts({
+    start: part("start"),
+    end: part("end"),
+    time: part("time"),
+  });
+  return result.ok ? result.value : INVALID;
+}
+
 // The value a changed control asks for.
 function valueOf(control: Control, property: PropertyDefinition): unknown {
   const group = control.closest("fieldset");
+  if (group?.dataset.dateRange !== undefined) return dateOf(group);
   if (group !== null) {
     const checked = group.querySelectorAll<HTMLInputElement>("input:checked");
     const ids = [...checked].map((input) => input.value);

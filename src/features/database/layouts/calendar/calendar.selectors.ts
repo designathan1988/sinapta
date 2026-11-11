@@ -1,5 +1,6 @@
 // The days of a calendar month and the rows that fall on each. Days are
 // calendar dates, "2026-11-10", worked out in UTC so no time zone moves them.
+import { readDateValue, type DateValue } from "../../properties/date/index.ts";
 import type { TableModel, TableRow } from "../../table-model.selectors.ts";
 
 const DAY_MS = 86_400_000;
@@ -47,7 +48,38 @@ export interface CalendarEntries {
   readonly byDay: ReadonlyMap<string, readonly TableRow[]>;
 }
 
-const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+// The date moved by as many days as lie between two days, its range and
+// time kept; an empty date starts on the day it lands.
+export function shiftDateValue(
+  value: unknown,
+  from: string,
+  to: string,
+): DateValue {
+  const date = readDateValue(value);
+  if (date === undefined) return { start: to };
+  const days = Math.round((toTime(to) - toTime(from)) / DAY_MS);
+  return {
+    ...date,
+    start: addDays(date.start, days),
+    ...(date.end !== undefined && { end: addDays(date.end, days) }),
+  };
+}
+
+// A longer range shows on its first days only, so one row cannot fill
+// years of the calendar.
+const MAX_RANGE_DAYS = 366;
+
+// The days a date value covers, from its first to its last.
+function daysOf(value: unknown): string[] {
+  const date = readDateValue(value);
+  if (date === undefined) return [];
+  const days = [date.start];
+  const last = date.end ?? date.start;
+  while (days.length < MAX_RANGE_DAYS && (days.at(-1) ?? last) < last) {
+    days.push(addDays(days.at(-1) ?? last, 1));
+  }
+  return days;
+}
 
 export function selectCalendarEntries(
   model: TableModel,
@@ -61,9 +93,9 @@ export function selectCalendarEntries(
   if (property === undefined) return undefined;
   const byDay = new Map<string, TableRow[]>();
   for (const row of model.rows) {
-    const value = row.values[property.id];
-    if (typeof value !== "string" || !ISO_DATE.test(value)) continue;
-    byDay.set(value, [...(byDay.get(value) ?? []), row]);
+    for (const day of daysOf(row.values[property.id])) {
+      byDay.set(day, [...(byDay.get(day) ?? []), row]);
+    }
   }
   return { propertyId: property.id, byDay };
 }

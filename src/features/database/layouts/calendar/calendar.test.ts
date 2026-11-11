@@ -7,6 +7,7 @@ import {
   monthOf,
   selectCalendarEntries,
   selectMonthWeeks,
+  shiftDateValue,
   shiftMonth,
 } from "./calendar.selectors.ts";
 import { setCalendarMonth } from "./calendar.commands.ts";
@@ -35,9 +36,16 @@ describe("calendar dates", () => {
 
 describe("selectCalendarEntries", () => {
   it("groups the view's rows by the day of the date property", () => {
+    const day = (start: string) => ({ start });
     const app = createDatabaseApp(
       [{ name: "Due", type: "date" }],
-      [["A", "2026-11-10"], ["B", "2026-11-10"], ["C"], ["D", "2026-11-11"]],
+      [
+        ["A", day("2026-11-10")],
+        ["B", day("2026-11-10")],
+        ["C"],
+        ["D", day("2026-11-11")],
+        ["E", { start: "2026-11-11", end: "2026-11-13" }],
+      ],
     );
     app.dispatch(
       setViewType.create({ viewId: app.view().id, viewType: "calendar" }),
@@ -53,7 +61,29 @@ describe("selectCalendarEntries", () => {
     ]);
     expect(entries?.byDay.get("2026-11-11")?.map((row) => row.title)).toEqual([
       "D",
+      "E",
     ]);
+    expect(entries?.byDay.get("2026-11-13")?.map((row) => row.title)).toEqual([
+      "E",
+    ]);
+  });
+});
+
+describe("shiftDateValue", () => {
+  it("moves a range by whole days and keeps its time", () => {
+    const range = { start: "2026-11-11", end: "2026-11-13", time: "09:00" };
+
+    expect(shiftDateValue(range, "2026-11-12", "2026-11-15")).toEqual({
+      start: "2026-11-14",
+      end: "2026-11-16",
+      time: "09:00",
+    });
+  });
+
+  it("starts an empty date on the day it lands", () => {
+    expect(shiftDateValue(undefined, "2026-11-12", "2026-11-15")).toEqual({
+      start: "2026-11-15",
+    });
   });
 });
 

@@ -26,7 +26,7 @@ function createApp() {
         options: [{ id: "o-3", name: "A", color: "blue" }],
       },
     ],
-    [["One", undefined, "2026-11-10"]],
+    [["One", undefined, { start: "2026-11-10" }]],
   );
   return app;
 }

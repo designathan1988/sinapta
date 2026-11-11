@@ -42,16 +42,18 @@ describe("the status property", () => {
     const property = statusProperty();
     const [notStarted, , done] = property.options ?? [];
 
-    expect(inGroup().test(done?.id, "complete", property)).toBe(true);
-    expect(inGroup().test(notStarted?.id, "complete", property)).toBe(false);
-    expect(inGroup().test(undefined, "complete", property)).toBe(false);
+    expect(inGroup().test(done?.id, "complete", { property })).toBe(true);
+    expect(inGroup().test(notStarted?.id, "complete", { property })).toBe(
+      false,
+    );
+    expect(inGroup().test(undefined, "complete", { property })).toBe(false);
   });
 
   it("places an option outside every group in To-do", () => {
     const property = { ...statusProperty(), config: undefined };
     const first = property.options?.[0]?.id;
 
-    expect(inGroup().test(first, "to-do", property)).toBe(true);
+    expect(inGroup().test(first, "to-do", { property })).toBe(true);
   });
 
   it("is what a new board groups by, before a select property", () => {

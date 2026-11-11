@@ -12,6 +12,7 @@ import { addDisplayOptions } from "./0010-display-options.ts";
 import { addEquations } from "./0011-equations.ts";
 import { moveImagesToAssets } from "./0012-assets.ts";
 import { addPropertyConfig } from "./0013-property-config.ts";
+import { addDateRanges } from "./0014-date-ranges.ts";
 
 // A pure function from format version n to n + 1.
 export type Migration = (
@@ -33,6 +34,7 @@ export const MIGRATIONS: readonly Migration[] = [
   addEquations,
   moveImagesToAssets,
   addPropertyConfig,
+  addDateRanges,
 ];
 
 export type MigrationResult =
