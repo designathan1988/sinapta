@@ -3,6 +3,7 @@ import {
   openOverlay,
   REDO_COMMAND,
   toggleSidebar,
+  toggleTheme,
   UNDO_COMMAND,
   type Command,
 } from "../../state/index.ts";
@@ -67,6 +68,12 @@ export const SHORTCUTS: readonly Shortcut[] = [
     withModifier: true,
     withShift: false,
     command: openOverlay.create({ overlay: { kind: SETTINGS_OVERLAY_KIND } }),
+  },
+  {
+    key: "l",
+    withModifier: true,
+    withShift: true,
+    command: toggleTheme.create({}),
   },
   {
     // Ctrl and Shift with "/"; see `keyOf` for keyboards that report "?".

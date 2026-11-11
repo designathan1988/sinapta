@@ -144,6 +144,7 @@ export const WORKSPACE_TEXT = {
     search: "Search pages and commands",
     settings: "Open settings",
     sidebar: "Show or hide the sidebar",
+    theme: "Switch between light and dark",
     undo: "Undo",
     redo: "Redo",
     help: "Show these shortcuts",

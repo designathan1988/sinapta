@@ -23,6 +23,7 @@ import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { renderMenu, type MenuItem } from "../../ui/menu/index.ts";
+import { wordCountLabel } from "../page-info/index.ts";
 import { styleItems } from "./page-menu-style.view.ts";
 
 export const PAGE_MENU_OVERLAY = "page-menu";
@@ -175,5 +176,6 @@ export function renderPageMenu(
     label: COPY.pageMenu.open,
     items: menuItems(state, page, dispatch),
     onClose: () => dispatch(closeOverlay.create({})),
+    footer: wordCountLabel(state, page.id),
   });
 }

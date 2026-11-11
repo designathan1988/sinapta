@@ -47,4 +47,13 @@
   .menu__label {
     flex: 1;
   }
+
+  .menu__footer {
+    margin: var(--space-none);
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    border-block-start: var(--size-border-thin) solid
+      var(--color-border-default);
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+  }
 }

@@ -28,6 +28,7 @@ export const SHORTCUT_GROUPS: readonly ShortcutGroup[] = [
       entry(TEXT.search, "Mod", "K"),
       entry(TEXT.settings, "Mod", ","),
       entry(TEXT.sidebar, "Mod", "\\"),
+      entry(TEXT.theme, "Mod", "Shift", "L"),
       entry(TEXT.undo, "Mod", "Z"),
       entry(TEXT.redo, "Mod", "Shift", "Z"),
       entry(TEXT.redo, "Mod", "Y"),

@@ -43,7 +43,11 @@ export {
   toggleSidebar,
   uiCommands,
 } from "./ui.commands.ts";
-export { setTheme, settingsCommands } from "./settings.commands.ts";
+export {
+  setTheme,
+  settingsCommands,
+  toggleTheme,
+} from "./settings.commands.ts";
 export {
   finishImport,
   persistenceCommands,

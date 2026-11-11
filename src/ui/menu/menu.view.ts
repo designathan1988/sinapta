@@ -30,6 +30,8 @@ export interface MenuOptions {
   readonly items: readonly MenuItem[];
   // Called when the menu should close: after a choice, Escape or Tab.
   readonly onClose: () => void;
+  // A short note under the items, such as a page's word count.
+  readonly footer?: string;
 }
 
 function moveFocus(menu: Element, key: string): boolean {
@@ -99,5 +101,10 @@ export function renderMenu(options: MenuOptions): TemplateResult {
     @keydown=${onKeyDown}
   >
     ${options.items.map(renderItem)}
+    ${
+      options.footer === undefined
+        ? nothing
+        : html`<p class="menu__footer" role="none">${options.footer}</p>`
+    }
   </div>`;
 }

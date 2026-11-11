@@ -5,6 +5,7 @@ import {
   DATABASE_TEXT,
   EDITOR_TEXT,
   ONBOARDING_TEXT,
+  PAGE_TEXT,
   WORKSPACE_TEXT,
 } from "./copy/index.ts";
 
@@ -13,6 +14,7 @@ export const PRODUCT_NAME = "Pagecraft";
 export const COPY = {
   ...WORKSPACE_TEXT,
   ...EDITOR_TEXT,
+  ...PAGE_TEXT,
   database: DATABASE_TEXT.database,
   onboarding: ONBOARDING_TEXT.onboarding,
 } as const;

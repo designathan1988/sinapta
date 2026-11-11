@@ -41,4 +41,18 @@ describe("renderMenu", () => {
     const item = host.querySelector("[role=menuitem]");
     expect(item?.hasAttribute("aria-checked")).toBe(false);
   });
+
+  it("shows a note below the items that is not an item", () => {
+    const host = document.createElement("div");
+    const onClose = (): void => undefined;
+    const items = [{ label: "Duplicate", onSelect: noop }];
+    render(
+      renderMenu({ label: "Page", items, onClose, footer: "12 words" }),
+      host,
+    );
+
+    const footer = host.querySelector(".menu__footer");
+    expect(footer?.textContent).toBe("12 words");
+    expect(footer?.getAttribute("role")).toBe("none");
+  });
 });

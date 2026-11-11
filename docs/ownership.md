@@ -122,6 +122,7 @@ owner listed here exists.
 | Saving text as a file the browser downloads | `src/ui/download/` | 8 |
 | A web address field with an optional file choice | `src/ui/url-field/` | 8 |
 | Interface text (its parts by area in `src/ui/copy/`) | `src/ui/copy.ts` | 1 |
+| What the top bar says about the open page: last edit, favorite star, word count | `src/features/page-info/` | 12 |
 
 ## Styles and tokens
 

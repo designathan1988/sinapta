@@ -30,6 +30,7 @@ import {
 } from "../state/index.ts";
 import { renderBreadcrumbs } from "../features/breadcrumbs/index.ts";
 import { MOVE_TO_OVERLAY, renderMoveTo } from "../features/move-to/index.ts";
+import { renderPageInfo } from "../features/page-info/index.ts";
 import { renderPageMenuButton } from "../features/page-menu/index.ts";
 import {
   PAGE_MENU_OVERLAY,
@@ -154,7 +155,7 @@ function renderTopBar(state: AppState, dispatch: Dispatch): TemplateResult {
           : COPY.saveStatus[state.persistence.status]
       }</span
     >
-    ${renderActivePageMenu(state, dispatch)}
+    ${renderPageInfo(state, dispatch)} ${renderActivePageMenu(state, dispatch)}
     ${renderButton({
       label: COPY.shell.openSettings,
       icon: "settings",

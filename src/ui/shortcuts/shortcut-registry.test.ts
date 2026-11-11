@@ -41,6 +41,14 @@ describe("matchShortcut", () => {
     },
   );
 
+  it("switches between light and dark on Ctrl+Shift+L", () => {
+    const shortcut = matchShortcut(
+      stroke({ key: "L", ctrlKey: true, shiftKey: true }),
+    );
+
+    expect(shortcut?.command.type).toBe("settings.toggleTheme");
+  });
+
   it("ignores a key with no modifier", () => {
     expect(matchShortcut(stroke({}))).toBeUndefined();
   });

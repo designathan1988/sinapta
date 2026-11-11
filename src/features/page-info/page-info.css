@@ -1,0 +1,33 @@
+@layer features {
+  .page-info__edited {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+    white-space: nowrap;
+  }
+
+  .page-info__favorite {
+    display: inline-grid;
+    place-items: center;
+    min-inline-size: var(--size-control-sm);
+    min-block-size: var(--size-control-sm);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    /* A favorite's star is filled. */
+    &[aria-pressed="true"] {
+      color: var(--color-chip-yellow-text);
+    }
+
+    &[aria-pressed="true"] .icon {
+      fill: currentcolor;
+    }
+  }
+}
