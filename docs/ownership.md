@@ -102,7 +102,7 @@ owner listed here exists.
 | Pointer drag sessions and drop targets | `src/ui/drag/` | 2 |
 | Live-region announcements | `src/ui/announcer/` | 2 |
 | Icons | `src/ui/icon/` | 1 |
-| Interface text | `src/ui/copy.ts` | 1 |
+| Interface text (its parts by area in `src/ui/copy/`) | `src/ui/copy.ts` | 1 |
 
 ## Styles and tokens
 
