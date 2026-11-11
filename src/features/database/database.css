@@ -48,6 +48,17 @@
     border-block: var(--size-border-thin) solid var(--color-border-subtle);
   }
 
+  .database__search {
+    inline-size: var(--size-menu-min-width);
+    min-block-size: var(--size-control-sm);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-app);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+  }
+
   .database__count {
     color: var(--color-text-tertiary);
     font-size: var(--font-size-xs);

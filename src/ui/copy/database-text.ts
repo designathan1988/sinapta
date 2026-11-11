@@ -11,6 +11,8 @@ export const DATABASE_TEXT = {
     deleteView: "Delete view",
     views: "Views",
     filter: "Filter",
+    search: "Search rows",
+    searchPlaceholder: "Search",
     properties: "Properties",
     addProperty: "Add property",
     addFilter: "Add filter",

@@ -16,6 +16,7 @@ import { addRow, rowCommands, setRowValue } from "./row.commands.ts";
 import { tableCommands } from "./table.commands.ts";
 import { calendarCommands } from "./layouts/calendar/calendar.commands.ts";
 import { viewLayoutCommands } from "./view-layout.commands.ts";
+import { viewSearchCommands } from "./view-search.commands.ts";
 import { viewCommands } from "./view.commands.ts";
 import {
   pageCommands,
@@ -85,6 +86,7 @@ const DATABASE_TEST_COMMANDS = [
   ...rowCommands,
   ...viewCommands,
   ...viewLayoutCommands,
+  ...viewSearchCommands,
   ...calendarCommands,
   ...pageCommands,
   ...pageTrashCommands,

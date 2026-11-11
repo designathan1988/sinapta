@@ -57,6 +57,8 @@ export interface UiState {
   readonly tableFirstRow: number;
   // The month calendar views show, as "2026-11"; null for the current one.
   readonly calendarMonth: string | null;
+  // What has been typed into each view's search field.
+  readonly viewSearches: Readonly<Record<ViewId, string>>;
   // Sidebar width in rem.
   readonly sidebarWidth: number;
   readonly isSidebarCollapsed: boolean;
@@ -119,6 +121,7 @@ export function createInitialUiState(): UiState {
     activeCell: null,
     tableFirstRow: 0,
     calendarMonth: null,
+    viewSearches: {},
     sidebarWidth: SIDEBAR_WIDTH.initial,
     isSidebarCollapsed: false,
     overlay: null,

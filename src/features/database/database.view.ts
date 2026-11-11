@@ -20,6 +20,11 @@ import {
 import type { TableContext } from "./table-cell.view.ts";
 import { selectTableModel } from "./table-model.selectors.ts";
 import { NEW_VIEW_OVERLAY, renderLayout } from "./view-layout.view.ts";
+import { setViewSearch } from "./view-search.commands.ts";
+import {
+  selectSearchedModel,
+  selectViewSearch,
+} from "./view-search.selectors.ts";
 import { deleteView, setActiveView } from "./view.commands.ts";
 
 function renderNewViewButton(context: TableContext): TemplateResult {
@@ -95,6 +100,23 @@ function renderPopoverButton(
   </button>`;
 }
 
+function renderSearch(context: TableContext): TemplateResult {
+  const { state, model, dispatch } = context;
+  const viewId = model.view.id;
+  const onInput = (event: Event): void => {
+    if (event.target instanceof HTMLInputElement)
+      dispatch(setViewSearch.create({ viewId, query: event.target.value }));
+  };
+  return html`<input
+    class="database__search"
+    type="search"
+    aria-label=${COPY.database.search}
+    placeholder=${COPY.database.searchPlaceholder}
+    .value=${selectViewSearch(state, model)}
+    @input=${onInput}
+  />`;
+}
+
 function renderToolbar(context: TableContext): TemplateResult {
   const { model, dispatch } = context;
   const filterCount = model.view.filters.length;
@@ -106,6 +128,7 @@ function renderToolbar(context: TableContext): TemplateResult {
   return html`<div class="database__toolbar">
     ${renderTabs(context)}
     <span class="database__spacer"></span>
+    ${renderSearch(context)}
     ${renderPopoverButton(FILTERS_OVERLAY, filterLabel, context)}
     ${renderPopoverButton(PROPERTIES_OVERLAY, COPY.database.properties, context)}
     ${
@@ -156,9 +179,10 @@ export function renderDatabase(
   dispatch: Dispatch,
 ): TemplateResult | typeof nothing {
   const database = selectDatabase(state, state.ui.activePageId);
-  const model =
+  const viewModel =
     database === undefined ? undefined : selectTableModel(state, database.id);
-  if (model === undefined) return nothing;
+  if (viewModel === undefined) return nothing;
+  const model = selectSearchedModel(state, viewModel);
   const context = { state, dispatch, model };
   return html`<section class="database">
     ${renderToolbar(context)} ${renderLayout(context)} ${renderFooter(context)}

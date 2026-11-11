@@ -71,6 +71,7 @@ owner listed here exists.
 | A row's values as views read them, stored and kept by the app | `src/features/database/row-values.selectors.ts` | 9 |
 | Saved views of a database | `src/features/database/view.commands.ts` | 6 |
 | A view's layout and the properties it lays rows out by | `src/features/database/view-layout.commands.ts`, `view-layout.view.ts` | 9 |
+| Searching the rows of a view | `src/features/database/view-search.commands.ts`, `view-search.selectors.ts` | 9 |
 | Board, gallery, list and calendar layouts | `src/features/database/layouts/<layout>/` | 9 |
 | A row shown as a card | `src/features/database/layouts/row-card/` | 9 |
 | Table interface state (active cell, scroll window) | `src/features/database/table.commands.ts` | 5 |
