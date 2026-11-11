@@ -39,15 +39,24 @@ with no server and no account.
 | Appearance | Light and dark themes following the system setting, with a manual override |
 | Data | Autosave to the browser, export and import of the whole workspace as one JSON file; a first visit starts with a tour page and a sample database |
 
-### Out of scope for version 1
+### Out of scope
 
-Real-time collaboration, accounts and permissions, a server or sync,
-comments, uploads to a server, formulas, relations and rollups, mobile
-layouts below 768 px, offline install as a PWA.
+Real-time collaboration, sharing, permissions, guests, publishing to the
+web, notifications to other people or devices, sync, AI features,
+integrations and the public API, link previews that need a server,
+transcription, the people, created by, last edited by and verification
+properties, the map view and place property, and multiple workspaces.
 
 Version 1.1 widened the scope at the owner's request (2026-11-10): board,
 gallery, list and calendar views, and the other additions in the table
 above. `docs/plan.md` lists them as milestones 8 to 10.
+
+Version 2 widens it again (ADR-0011, 2026-11-11): every Notion feature one
+person can use offline, listed in section 4 of
+`docs/superpowers/specs/2026-11-11-notion-parity-design.md` and planned as
+milestones 11 to 20 in `docs/superpowers/plans/2026-11-11-notion-parity.md`.
+The table above describes what is built; that document lists what is
+coming.
 
 ### Quality targets
 
@@ -107,12 +116,17 @@ Views never write state; the store never knows about views.
 - A command is a plain serializable object:
   `{ type: "block.move", blockId, targetParentId, index }`. Command types
   are named `domain.action`.
-- A command handler is a pure function `(state, command) => Operation[]`.
-  Operations are the smallest record changes: `record.create`,
-  `record.update`, `record.delete`, `list.insert`, `list.remove`.
+- A command handler is a pure function
+  `(state, command) => CommandEffect`. The effect holds the operations of
+  the change, the smallest record changes: `record.create`,
+  `record.update`, `record.delete`, `list.insert`, `list.remove`. It may
+  instead hold a whole `workspace`, which only loading, importing and the
+  first-run seed do; that replacement is not recorded in history. Either
+  form may also carry the next `ui` and `persistence` slices and a merge
+  key that joins quick edits into one undo step.
 - The dispatcher groups a command's operations into one transaction and
-  applies it atomically. A transaction that fails validation changes
-  nothing.
+  applies it atomically. A transaction, or a replaced workspace, that fails
+  validation or breaks an invariant changes nothing.
 - Each workspace transaction stores its inverse, which is what undo applies.
   Commands that change only the `ui` slice or only `settings` are not
   recorded in history.
@@ -149,8 +163,11 @@ defect. `docs/ownership.md` holds the full, current table.
 - Imports point one way: `app` → `features` → `blocks` → `ui` → `state` →
   `model`. `persistence` imports `state` and `model` only. `model` imports
   nothing from the project.
-- Every folder under `features/` and `blocks/` exposes one `index.ts`. Other
-  folders import from that file only.
+- Every folder under `features/` and `blocks/`, and `src/blocks/` itself,
+  exposes one `index.ts`. Other folders import from that file only. A child
+  folder may import its parent's modules (a block type its
+  `block-definition.ts`, a database layout or property type its database
+  feature); a parent imports a child only through the child's `index.ts`.
 - `model` and `state` never touch the DOM or storage. Command handlers and
   operations are pure: the dispatcher creates ids and timestamps and passes
   them in.
@@ -505,8 +522,8 @@ abbreviations except `id`, `url`, `ui`, `css`, `html` and `json`.
 | --- | --- | --- |
 | Folders | kebab-case, singular for a concept, plural for a collection of peers | `slash-menu/`, `blocks/`, `features/` |
 | Files | kebab-case name plus a role suffix | `sidebar.view.ts`, `sidebar.commands.ts`, `sidebar.selectors.ts`, `sidebar.css`, `sidebar.test.ts` |
-| Role suffixes | Closed list: `.view`, `.commands`, `.selectors`, `.definition`, `.schema`, `.test` | `to-do.definition.ts` |
-| Folder entry | `index.ts`, re-exports only, no logic | `features/sidebar/index.ts` |
+| Role suffixes | Closed list: `.view`, `.commands`, `.selectors`, `.definition`, `.schema`, `.test`, used for those six roles only. Any other module is named for its concept with no suffix (`dispatch.ts`, `block-registry.ts`, `caret.ts`); test fixtures end in `-builder.ts` | `to-do.definition.ts` |
+| Folder entry | `index.ts`, re-exports only, no logic; a feature's `index.ts` may also gather its command lists into one `xCommands` array | `features/sidebar/index.ts` |
 | Types and interfaces | PascalCase nouns, no `I` or `T` prefix | `Block`, `View` |
 | Id types | Branded, suffix `Id` | `BlockId`, `ViewId` |
 | Functions | camelCase, verb first | `moveBlock`, `parseWorkspace` |

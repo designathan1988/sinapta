@@ -38,7 +38,8 @@ One command, step by step:
    `persistence`) and writes it with one `setState` call. A command whose
    effect is a whole workspace instead of operations (loading from storage,
    importing a file, the starting pages of a first visit) clears history,
-   since there is nothing before it to undo.
+   since there is nothing before it to undo. The invariants are checked on
+   that workspace too.
 6. Subscribers run: the root render re-renders from the new state; the
    repository compares the previous and next workspace, queues the changed
    record ids and saves them after 300 ms; the router writes the URL.
@@ -75,8 +76,14 @@ persistence ──────────────────────�
 | `model` | Types, schemas, operations, pure text and tree math | Import the project, touch DOM, storage, clock |
 | `state` | Store, dispatch, history, registries, cross-feature selectors | Touch DOM or storage, import upward |
 | `ui` | Shared primitives, overlay host, shortcuts, caret, drag, copy | Know any feature or block type |
-| `blocks` | One folder per block type: definition, view, styles | Import a feature |
+| `blocks` | One folder per block type: definition, view, styles; `src/blocks/index.ts` is the entry for other layers | Import a feature |
 | `features` | One folder per feature: views, commands, selectors | Import another feature except through its `index.ts` |
+
+Inside a layer, other folders are reached through their `index.ts`. A child
+folder may import its parent's modules: a block type imports
+`block-definition.ts`, a property type `property-definition.ts`, a database
+layout the database feature's selectors and views. A parent reaches a child
+only through the child's `index.ts` (ADR-0011).
 | `app` | Compose: register handlers, features, shortcuts; root render; router | Hold logic that belongs to a feature |
 | `persistence` | Load, save, migrate, export, import | Import anything but `state` and `model` |
 
