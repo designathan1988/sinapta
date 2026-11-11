@@ -103,6 +103,22 @@ describe("renderPropertyEdit", () => {
     expect(sent[1]).toMatchObject({ offset: 1 });
   });
 
+  it("stores the property's description", () => {
+    const { host, sent } = rendered();
+    const field = host.querySelector("textarea");
+    if (field === null) throw new Error("no description field");
+
+    field.value = "Where the work is";
+    field.dispatchEvent(new Event("change", { bubbles: true }));
+
+    expect(sent).toEqual([
+      expect.objectContaining({
+        type: "property.change",
+        description: "Where the work is",
+      }),
+    ]);
+  });
+
   it("shows a number property's format and stores a new one", () => {
     const { host, sent } = rendered({ name: "Price", type: "number" });
 

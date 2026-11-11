@@ -55,6 +55,30 @@ function renderConfig(
   );
 }
 
+function renderDescription(
+  property: PropertyDefinition,
+  context: TableContext,
+): TemplateResult {
+  const databaseId = context.model.database.id;
+  const propertyId = property.id;
+  const onChange = (event: Event): void => {
+    if (!(event.target instanceof HTMLTextAreaElement)) return;
+    const description = event.target.value;
+    context.dispatch(
+      changeProperty.create({ databaseId, propertyId, description }),
+    );
+  };
+  return html`<label class="database__view-name">
+    ${COPY.database.propertyDescription}
+    <textarea
+      class="database__field"
+      rows="2"
+      .value=${property.description ?? ""}
+      @change=${onChange}
+    ></textarea>
+  </label>`;
+}
+
 export function renderPropertyEdit(
   context: TableContext,
 ): TemplateResult | typeof nothing {
@@ -79,7 +103,8 @@ export function renderPropertyEdit(
       if (event.key === "Escape") close();
     }}
   >
-    ${renderNameField(property, context)} ${renderConfig(property, context)}
+    ${renderNameField(property, context)}
+    ${renderDescription(property, context)} ${renderConfig(property, context)}
     ${hasOptions ? renderOptionList(property, context) : nothing}
   </div>`;
 }

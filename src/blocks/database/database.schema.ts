@@ -20,6 +20,8 @@ export const propertyDefinitionSchema = v.object({
   name: v.string(),
   // A property type registered in the property registry.
   type: v.string(),
+  // What the property is for, shown as its column's hint.
+  description: v.optional(v.string()),
   // The choices of a select or multi-select property.
   options: v.optional(v.array(selectOptionSchema)),
   // The settings of its type, such as a number's format, in the shape its

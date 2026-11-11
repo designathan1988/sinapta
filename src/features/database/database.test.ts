@@ -86,6 +86,22 @@ describe("database commands", () => {
     expect(database().props.properties).toEqual([]);
   });
 
+  it("describes a property, and an empty description removes it", () => {
+    const { dispatch, database, propertyId } = withProperty("number");
+    const describe = (description: string) =>
+      dispatch(
+        changeProperty.create({ databaseId: DB, propertyId, description }),
+      );
+
+    describe("  Hours spent so far ");
+    expect(database().props.properties[0]?.description).toBe(
+      "Hours spent so far",
+    );
+    describe(" ");
+
+    expect(database().props.properties[0]).not.toHaveProperty("description");
+  });
+
   it("adds a row as a page inside the database and starts editing its title", () => {
     const { store, dispatch, database } = createApp();
 

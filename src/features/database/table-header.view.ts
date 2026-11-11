@@ -1,6 +1,6 @@
 // The header row of the table: sort buttons, column menus, resize handles
 // and the button that adds a property.
-import { html, type TemplateResult } from "lit-html";
+import { html, nothing, type TemplateResult } from "lit-html";
 import { closeOverlay, openOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
@@ -176,6 +176,8 @@ function renderHeader(
     <button
       type="button"
       class="database__sort"
+      title=${property.description ?? nothing}
+      aria-description=${property.description ?? nothing}
       @click=${(event: MouseEvent) => {
         cycleSort(event, column, context);
       }}

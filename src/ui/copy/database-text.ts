@@ -50,6 +50,7 @@ export const DATABASE_TEXT = {
     addOption: "Add an option",
     editProperty: "Edit property",
     propertySettings: "Property settings",
+    propertyDescription: "Description",
     optionName: "Option name",
     optionColor: "Option color",
     moveOptionUp: "Move option up",

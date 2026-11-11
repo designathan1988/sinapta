@@ -130,10 +130,22 @@ export interface ChangePropertyPayload {
   readonly databaseId: BlockId;
   readonly propertyId: PropertyId;
   readonly name?: string;
+  readonly description?: string;
   readonly options?: readonly SelectOption[];
 }
 
-// Renames a property or replaces the choices of a select property.
+// The property with a new description; an empty one removes it.
+function described(
+  property: PropertyDefinition,
+  description: string,
+): PropertyDefinition {
+  const { description: _old, ...rest } = property;
+  const text = description.trim().normalize("NFC");
+  return text === "" ? rest : { ...rest, description: text };
+}
+
+// Renames or describes a property, or replaces the choices of a select
+// property.
 export const changeProperty = defineCommand<ChangePropertyPayload>({
   type: "property.change",
   handle(state, command) {
@@ -141,11 +153,15 @@ export const changeProperty = defineCommand<ChangePropertyPayload>({
     if (database === undefined) return {};
     const properties = database.props.properties.map((property) => {
       if (property.id !== command.propertyId) return property;
-      return {
+      const changed = {
         ...property,
         ...(command.name !== undefined && { name: command.name }),
         ...(command.options !== undefined && { options: [...command.options] }),
       };
+      const { description } = command;
+      return description === undefined
+        ? changed
+        : described(changed, description);
     });
     return { operations: updateProperties(database, properties) };
   },
