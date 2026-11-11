@@ -1,6 +1,7 @@
 import "./editor.css";
 import { html, type nothing, type TemplateResult } from "lit-html";
 import { keyed } from "lit-html/directives/keyed.js";
+import { ref } from "lit-html/directives/ref.js";
 import {
   DATABASE_TYPE,
   renamePage,
@@ -10,12 +11,23 @@ import {
 } from "../../blocks/page/index.ts";
 import type { AppState, Dispatch } from "../../state/index.ts";
 import { COPY, PRODUCT_NAME } from "../../ui/copy.ts";
+import { whenConnected } from "../../ui/focus/index.ts";
 import { renderDatabase, renderRowProperties } from "../database/index.ts";
 import { continueWriting, renderBlocks } from "./editor-blocks.view.ts";
 import { renderBlockMenu } from "./editor-block-menu.view.ts";
 import { LINK_OVERLAY, renderLinkField } from "./editor-link.view.ts";
 import type { InputContext } from "./editor-input.view.ts";
 import { renderIconControl } from "./editor-icon.view.ts";
+
+// A page that opens without a title, such as one just created, takes the
+// caret in its title, so typing names it. The page element is keyed by page
+// id, so this runs once per opened page, not on every render.
+function focusUntitled(element: Element | undefined): void {
+  if (!(element instanceof HTMLInputElement)) return;
+  whenConnected(element, () => {
+    if (element.value === "") element.focus();
+  });
+}
 
 function renderTitle(page: PageBlock, context: InputContext): TemplateResult {
   const { dispatch } = context;
@@ -41,6 +53,7 @@ function renderTitle(page: PageBlock, context: InputContext): TemplateResult {
       .value=${selectPageTitle(page)}
       @input=${onInput}
       @keydown=${onKeyDown}
+      ${ref(focusUntitled)}
     />
   </h1>`;
 }

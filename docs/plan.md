@@ -263,3 +263,48 @@ against the specification.
 - Three minor notes: pure-logic tasks are labelled, the naming example is
   decision D22, and task 2.3 edits the title as plain single-span text so it
   does not need the milestone 3 rich text module.
+
+## Version 1.1 roadmap
+
+**Status:** Asked for by the owner on 2026-11-10: the app must be complete
+and functional end to end, not basic. Version 1 scope is done; this
+roadmap widens it with what a Notion-style workspace is expected to do.
+Everything keeps the version 1 architecture: one store, one dispatcher,
+one owner per concern, tokens only. Out-of-scope items that need a server
+(collaboration, accounts, sync, uploads to a server) stay out; images are
+shown from a URL.
+
+Each slice is test-first, ends in something visible in the running app,
+passes `npm run verify`, and is one commit.
+
+### Milestone 8: Writing
+
+- 8.1 A new or untitled page takes the caret in its title.
+- 8.2 Formatting toolbar over selected text: bold, italic, underline,
+  strikethrough, inline code, link, text color and highlight.
+- 8.3 Underline, strikethrough and colors in rich text (schema version 2
+  with its migration).
+- 8.4 A "+" beside each block inserts a block below and opens the slash
+  menu; duplicate a block from the block menu.
+- 8.5 Paste Markdown: headings, lists, to-dos, quotes, code fences and
+  inline marks become blocks.
+- 8.6 New blocks: image from a URL, web bookmark, table of contents.
+- 8.7 Export a page as Markdown.
+
+### Milestone 9: Database views
+
+- 9.1 Board view grouped by a select property; move cards by drag and by
+  keyboard; add a card to a group.
+- 9.2 Gallery view and list view.
+- 9.3 Calendar view by a date property.
+- 9.4 Property types: email, phone, created time, last edited time.
+- 9.5 Search rows in the open view.
+
+### Milestone 10: Workspace
+
+- 10.1 A first run opens a "Getting started" page and a sample database.
+- 10.2 Duplicate a page with everything inside it.
+- 10.3 Page cover from token gradients, and full width per page.
+- 10.4 Full-text search across page text in the command palette.
+- 10.5 Keyboard shortcut reference dialog.
+- 10.6 Final UI and accessibility audit, README and documents.
