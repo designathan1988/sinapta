@@ -162,6 +162,7 @@ export const DATABASE_TEXT = {
       board: "Board",
       timeline: "Timeline",
       chart: "Chart",
+      feed: "Feed",
       form: "Form",
       gallery: "Gallery",
       list: "List",

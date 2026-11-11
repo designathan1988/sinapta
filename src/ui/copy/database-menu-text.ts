@@ -45,6 +45,7 @@ export const DATABASE_MENU_TEXT = {
   formRequiredError: "This question is required.",
   formSubmit: "Submit",
   formSent: "Your response was sent.",
+  feedEmpty: "Nothing written yet.",
   noChartProperty: "Add a select or status property to chart the rows by.",
   chartKind: "Chart type",
   chartKinds: {

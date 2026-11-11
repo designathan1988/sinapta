@@ -21,6 +21,7 @@ export const LAYOUT_ICONS: Readonly<Record<ViewType, IconName>> = {
   timeline: "timeline",
   chart: "chart",
   form: "form",
+  feed: "feed",
 };
 
 function renderName(context: TableContext): TemplateResult {

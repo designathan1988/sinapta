@@ -7,6 +7,7 @@ import { COPY } from "../../ui/copy.ts";
 import { renderMenu, type MenuItem } from "../../ui/menu/index.ts";
 import { renderBoard } from "./layouts/board/index.ts";
 import { renderChart } from "./layouts/chart/index.ts";
+import { renderFeed } from "./layouts/feed/index.ts";
 import { renderForm } from "./layouts/form/index.ts";
 import { renderCalendar } from "./layouts/calendar/index.ts";
 import { renderGallery } from "./layouts/gallery/index.ts";
@@ -27,6 +28,7 @@ const RENDERERS: Record<ViewType, (context: TableContext) => TemplateResult> = {
   timeline: renderTimeline,
   chart: renderChart,
   form: renderForm,
+  feed: renderFeed,
 };
 
 export function renderLayout(context: TableContext): TemplateResult {
