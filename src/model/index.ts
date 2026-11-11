@@ -38,6 +38,7 @@ export {
   type CalculationKind,
   type CalendarOptions,
   type TimelineOptions,
+  type ChartOptions,
   type Conjunction,
   type Filter,
   type FilterGroup,

@@ -19,7 +19,7 @@
     padding: var(--space-none) var(--space-inset-xs);
     border-radius: var(--radius-sm);
     background-color: var(--color-chip-gray-bg);
-    color: var(--color-chip-gray-text);
+    color: var(--color-tone-gray);
     font-size: var(--font-size-sm);
     white-space: nowrap;
   }

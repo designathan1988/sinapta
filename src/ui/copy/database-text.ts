@@ -161,6 +161,7 @@ export const DATABASE_TEXT = {
       table: "Table",
       board: "Board",
       timeline: "Timeline",
+      chart: "Chart",
       gallery: "Gallery",
       list: "List",
       calendar: "Calendar",

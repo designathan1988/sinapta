@@ -5,12 +5,12 @@
     display: flex;
     gap: var(--space-inline-sm);
     align-items: center;
-    color: var(--color-chip-red-text);
+    color: var(--color-tone-red);
     font-size: var(--font-size-xs);
     opacity: 0;
 
     &[data-reference] {
-      color: var(--color-chip-orange-text);
+      color: var(--color-tone-orange);
     }
   }
 

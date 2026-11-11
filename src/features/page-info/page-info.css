@@ -23,7 +23,7 @@
 
     /* A favorite's star is filled. */
     &[aria-pressed="true"] {
-      color: var(--color-chip-yellow-text);
+      color: var(--color-tone-yellow);
     }
 
     &[aria-pressed="true"] .icon {

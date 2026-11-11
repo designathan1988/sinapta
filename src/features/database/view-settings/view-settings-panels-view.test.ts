@@ -114,3 +114,30 @@ describe("a timeline's layout settings", () => {
     ]);
   });
 });
+
+describe("a chart's layout settings", () => {
+  it("shows the chart's type and axes, each opening its choices", () => {
+    const { row } = rendered({ panel: "layout", chart: true });
+
+    expect(row("Chart type").querySelector(".menu__value")?.textContent).toBe(
+      "Vertical bar",
+    );
+    expect(row("X axis").querySelector(".menu__value")?.textContent).toBe(
+      "Due",
+    );
+    expect(row("Y axis").querySelector(".menu__value")?.textContent).toBe(
+      "Count",
+    );
+  });
+
+  it("chooses the chart's type", () => {
+    const { sent, row } = rendered({ panel: "chart-kind", chart: true });
+
+    row("Donut").click();
+
+    expect(sent[0]).toMatchObject({
+      type: "view.setChartOptions",
+      options: { kind: "donut" },
+    });
+  });
+});

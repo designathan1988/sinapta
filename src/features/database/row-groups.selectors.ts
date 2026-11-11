@@ -126,7 +126,14 @@ function placeByHand(
 }
 
 function groupRows(model: TableModel): GroupedRows | undefined {
-  const { groupBy } = model.view;
+  return groupRowsBy(model, model.view.groupBy);
+}
+
+// The rows grouped as a grouping says, such as a chart's by its axis.
+export function groupRowsBy(
+  model: TableModel,
+  groupBy: GroupBy | undefined,
+): GroupedRows | undefined {
   const property = model.database.props.properties.find(
     (item) => item.id === groupBy?.propertyId,
   );

@@ -8,7 +8,7 @@
   }
 
   .editor__block[data-color="gray"] {
-    --editor-block-text: var(--color-chip-gray-text);
+    --editor-block-text: var(--color-tone-gray);
   }
 
   .editor__block[data-color="gray-background"] {
@@ -16,7 +16,7 @@
   }
 
   .editor__block[data-color="brown"] {
-    --editor-block-text: var(--color-chip-brown-text);
+    --editor-block-text: var(--color-tone-brown);
   }
 
   .editor__block[data-color="brown-background"] {
@@ -24,7 +24,7 @@
   }
 
   .editor__block[data-color="orange"] {
-    --editor-block-text: var(--color-chip-orange-text);
+    --editor-block-text: var(--color-tone-orange);
   }
 
   .editor__block[data-color="orange-background"] {
@@ -32,7 +32,7 @@
   }
 
   .editor__block[data-color="yellow"] {
-    --editor-block-text: var(--color-chip-yellow-text);
+    --editor-block-text: var(--color-tone-yellow);
   }
 
   .editor__block[data-color="yellow-background"] {
@@ -40,7 +40,7 @@
   }
 
   .editor__block[data-color="green"] {
-    --editor-block-text: var(--color-chip-green-text);
+    --editor-block-text: var(--color-tone-green);
   }
 
   .editor__block[data-color="green-background"] {
@@ -48,7 +48,7 @@
   }
 
   .editor__block[data-color="blue"] {
-    --editor-block-text: var(--color-chip-blue-text);
+    --editor-block-text: var(--color-tone-blue);
   }
 
   .editor__block[data-color="blue-background"] {
@@ -56,11 +56,11 @@
   }
 
   .editor__block[data-color="purple"] {
-    --editor-block-text: var(--color-chip-purple-text);
+    --editor-block-text: var(--color-tone-purple);
   }
 
   .editor__block[data-color="pink"] {
-    --editor-block-text: var(--color-chip-pink-text);
+    --editor-block-text: var(--color-tone-pink);
   }
 
   .editor__block[data-color="purple-background"] {
@@ -72,7 +72,7 @@
   }
 
   .editor__block[data-color="red"] {
-    --editor-block-text: var(--color-chip-red-text);
+    --editor-block-text: var(--color-tone-red);
   }
 
   .editor__block[data-color="red-background"] {

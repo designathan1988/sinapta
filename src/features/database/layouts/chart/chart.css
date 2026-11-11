@@ -1,0 +1,190 @@
+@layer features {
+  /* Notion's chart: columns rising from a baseline, bars reaching across,
+     a line or a donut; each group in its option's color, the accent
+     when it has none. Marks are sized by --share, from 0 to 1. */
+  .chart {
+    --chart-color: var(--color-accent-default);
+
+    display: grid;
+    gap: var(--space-stack-sm);
+    margin: var(--space-none);
+    padding: var(--space-inset-md) var(--space-none);
+  }
+
+  .chart [data-color="default"] {
+    --chart-color: var(--color-text-secondary);
+  }
+
+  .chart [data-color="gray"] {
+    --chart-color: var(--color-tone-gray);
+  }
+
+  .chart [data-color="brown"] {
+    --chart-color: var(--color-tone-brown);
+  }
+
+  .chart [data-color="orange"] {
+    --chart-color: var(--color-tone-orange);
+  }
+
+  .chart [data-color="yellow"] {
+    --chart-color: var(--color-tone-yellow);
+  }
+
+  .chart [data-color="green"] {
+    --chart-color: var(--color-tone-green);
+  }
+
+  .chart [data-color="blue"] {
+    --chart-color: var(--color-tone-blue);
+  }
+
+  .chart [data-color="purple"] {
+    --chart-color: var(--color-tone-purple);
+  }
+
+  .chart [data-color="pink"] {
+    --chart-color: var(--color-tone-pink);
+  }
+
+  .chart [data-color="red"] {
+    --chart-color: var(--color-tone-red);
+  }
+
+  .chart__blocks {
+    display: grid;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    gap: var(--space-inline-sm);
+    align-items: end;
+    block-size: var(--size-chart-height);
+  }
+
+  .chart__item {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: var(--space-stack-xxs);
+    block-size: 100%;
+    text-align: center;
+  }
+
+  .chart__track {
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .chart__mark {
+    inline-size: 100%;
+    block-size: calc(var(--share) * 100%);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    background-color: var(--chart-color);
+  }
+
+  .chart__value,
+  .chart__label {
+    overflow: hidden;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Bars: one row each, the label first, the bar reaching across. */
+  .chart[data-kind="bar"] {
+    & .chart__blocks {
+      grid-auto-flow: row;
+      block-size: auto;
+    }
+
+    & .chart__item {
+      grid-template-columns: var(--size-label-width) minmax(0, 1fr) auto;
+      grid-template-rows: none;
+      align-items: center;
+      text-align: start;
+    }
+
+    & .chart__label {
+      grid-row: 1;
+      grid-column: 1;
+    }
+
+    & .chart__track {
+      grid-row: 1;
+      grid-column: 2;
+      block-size: var(--size-icon-md);
+    }
+
+    & .chart__mark {
+      inline-size: calc(var(--share) * 100%);
+      block-size: 100%;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+  }
+
+  .chart__plot {
+    block-size: var(--size-chart-height);
+  }
+
+  .chart__svg {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    overflow: visible;
+  }
+
+  .chart__line {
+    fill: none;
+    stroke: var(--chart-color);
+    stroke-width: var(--size-border-thick);
+    vector-effect: non-scaling-stroke;
+  }
+
+  .chart__labels {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .chart__donut {
+    display: flex;
+    gap: var(--space-inline-lg);
+    align-items: center;
+
+    & .chart__svg {
+      flex: none;
+      inline-size: var(--size-chart-donut);
+      block-size: var(--size-chart-donut);
+    }
+  }
+
+  .chart__slice {
+    fill: none;
+    stroke: var(--chart-color);
+    stroke-width: 6;
+  }
+
+  .chart__legend {
+    display: grid;
+    gap: var(--space-stack-xs);
+    margin: var(--space-none);
+    padding: var(--space-none);
+    list-style: none;
+  }
+
+  .chart__legend-item {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    font-size: var(--font-size-sm);
+  }
+
+  .chart__swatch {
+    inline-size: var(--size-icon-sm);
+    block-size: var(--size-icon-sm);
+    border-radius: var(--radius-sm);
+    background-color: var(--chart-color);
+  }
+
+  .chart__empty {
+    color: var(--color-text-secondary);
+  }
+}

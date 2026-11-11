@@ -202,6 +202,36 @@
       "punctuation": {
         "$value": "{base.color.neutral.650}"
       }
+    },
+    "tone": {
+      "gray": {
+        "$value": "{base.color.tone.gray.day}"
+      },
+      "brown": {
+        "$value": "{base.color.tone.brown.day}"
+      },
+      "orange": {
+        "$value": "{base.color.tone.orange.day}"
+      },
+      "yellow": {
+        "$value": "{base.color.tone.yellow.day}"
+      },
+      "green": {
+        "$value": "{base.color.tone.green.day}"
+      },
+      "blue": {
+        "$value": "{base.color.tone.blue.day}"
+      },
+      "purple": {
+        "$value": "{base.color.tone.purple.day}"
+      },
+      "pink": {
+        "$value": "{base.color.tone.pink.day}"
+      },
+      "red": {
+        "$value": "{base.color.tone.red.day}"
+      },
+      "$description": "Notion's text colors: text, block text, color swatches and charts."
     }
   },
   "space": {
@@ -453,6 +483,16 @@
       "table": {
         "$description": "The table of titles beside a timeline.",
         "$value": "{base.size.14}"
+      }
+    },
+    "chart": {
+      "height": {
+        "$description": "How tall a chart's columns and line may rise.",
+        "$value": "{base.size.16}"
+      },
+      "donut": {
+        "$description": "A donut chart's width.",
+        "$value": "{base.size.12}"
       }
     }
   },

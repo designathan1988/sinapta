@@ -19,6 +19,7 @@ export const LAYOUT_ICONS: Readonly<Record<ViewType, IconName>> = {
   list: "list",
   calendar: "calendar",
   timeline: "timeline",
+  chart: "chart",
 };
 
 function renderName(context: TableContext): TemplateResult {

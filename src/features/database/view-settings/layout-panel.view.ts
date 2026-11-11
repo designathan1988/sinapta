@@ -1,5 +1,6 @@
 // The layout panel: a tile per layout, the chosen one ringed in blue,
 // then the chosen layout's own settings.
+import { chartItems } from "./chart-panels.ts";
 import { setTimelineOptions } from "../timeline-options.commands.ts";
 import type { CalendarOptions } from "../../../model/index.ts";
 import { setCalendarOptions } from "../calendar-options.commands.ts";
@@ -111,6 +112,7 @@ function layoutItems(context: TableContext): MenuEntry[] {
     return cardItems(context);
   }
   if (view.type === "timeline") return timelineItems(context);
+  if (view.type === "chart") return chartItems(context);
   if (view.type !== "calendar") return [];
   const date = database.props.properties.find(
     (property) => property.id === view.datePropertyId,

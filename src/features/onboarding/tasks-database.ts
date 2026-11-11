@@ -53,6 +53,7 @@ function view(ids: TaskIds, index: number, type: ViewType): View[] {
     colorColumns: true,
     calendar: { mode: "month", showWeekends: true, weekStartsOn: 0 },
     timeline: { zoom: "month", showTable: true },
+    chart: { kind: "column", aggregate: "count" },
   };
   if (type === "board") {
     return [{ ...record, groupBy: groupByProperty(status) }];

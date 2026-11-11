@@ -6,6 +6,7 @@ import { closeOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderMenu, type MenuItem } from "../../ui/menu/index.ts";
 import { renderBoard } from "./layouts/board/index.ts";
+import { renderChart } from "./layouts/chart/index.ts";
 import { renderCalendar } from "./layouts/calendar/index.ts";
 import { renderGallery } from "./layouts/gallery/index.ts";
 import { renderList } from "./layouts/list/index.ts";
@@ -23,6 +24,7 @@ const RENDERERS: Record<ViewType, (context: TableContext) => TemplateResult> = {
   list: renderList,
   calendar: renderCalendar,
   timeline: renderTimeline,
+  chart: renderChart,
 };
 
 export function renderLayout(context: TableContext): TemplateResult {

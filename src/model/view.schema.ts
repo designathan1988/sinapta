@@ -31,6 +31,7 @@ export const viewTypeSchema = v.picklist([
   "calendar",
   "list",
   "gallery",
+  "chart",
 ]);
 
 export const VIEW_TYPES = viewTypeSchema.options;
@@ -94,6 +95,16 @@ export const timelineOptionsSchema = v.object({
   showTable: v.boolean(),
 });
 
+// What a chart shows (version 24): its kind, the property whose values
+// make its groups, and what each group measures — its rows, or a number
+// property summed, averaged or at its least or most.
+export const chartOptionsSchema = v.object({
+  kind: v.picklist(["column", "bar", "line", "donut"]),
+  groupByPropertyId: v.optional(propertyIdSchema),
+  aggregate: v.picklist(["count", "sum", "average", "min", "max"]),
+  valuePropertyId: v.optional(propertyIdSchema),
+});
+
 export const viewSchema = v.object({
   id: viewIdSchema,
   databaseId: blockIdSchema,
@@ -129,6 +140,7 @@ export const viewSchema = v.object({
   datePropertyId: v.optional(propertyIdSchema),
   calendar: calendarOptionsSchema,
   timeline: timelineOptionsSchema,
+  chart: chartOptionsSchema,
 });
 
 export type Filter = v.InferOutput<typeof filterSchema>;
@@ -142,3 +154,4 @@ export type View = v.InferOutput<typeof viewSchema>;
 export type ViewType = v.InferOutput<typeof viewTypeSchema>;
 export type CalendarOptions = v.InferOutput<typeof calendarOptionsSchema>;
 export type TimelineOptions = v.InferOutput<typeof timelineOptionsSchema>;
+export type ChartOptions = v.InferOutput<typeof chartOptionsSchema>;

@@ -17,6 +17,7 @@ export interface Setup {
   readonly sorted?: boolean;
   readonly calendar?: boolean;
   readonly timeline?: boolean;
+  readonly chart?: boolean;
 }
 
 type App = ReturnType<typeof createDatabaseApp>;
@@ -28,6 +29,7 @@ function arrange(app: App, setup: Setup, due: PropertyId): void {
     setup.board === true && ("board" as const),
     setup.calendar === true && ("calendar" as const),
     setup.timeline === true && ("timeline" as const),
+    setup.chart === true && ("chart" as const),
   ];
   const layout = layouts.find((item) => item !== false);
   if (layout !== undefined) {

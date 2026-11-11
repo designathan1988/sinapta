@@ -22,6 +22,7 @@ import { repairStaleRecords } from "./0020-repair-stale-records.ts";
 import { addBoardCards } from "./0021-board-cards.ts";
 import { addCalendarOptions } from "./0022-calendar-options.ts";
 import { addTimeline } from "./0023-timeline.ts";
+import { addChart } from "./0024-chart.ts";
 
 // A pure function from format version n to n + 1.
 export type Migration = (
@@ -53,6 +54,7 @@ export const MIGRATIONS: readonly Migration[] = [
   addBoardCards,
   addCalendarOptions,
   addTimeline,
+  addChart,
 ];
 
 export type MigrationResult =

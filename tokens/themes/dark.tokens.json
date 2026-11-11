@@ -201,6 +201,35 @@
       "punctuation": {
         "$value": "{base.color.neutral.350}"
       }
+    },
+    "tone": {
+      "gray": {
+        "$value": "{base.color.tone.gray.night}"
+      },
+      "brown": {
+        "$value": "{base.color.tone.brown.night}"
+      },
+      "orange": {
+        "$value": "{base.color.tone.orange.night}"
+      },
+      "yellow": {
+        "$value": "{base.color.tone.yellow.night}"
+      },
+      "green": {
+        "$value": "{base.color.tone.green.night}"
+      },
+      "blue": {
+        "$value": "{base.color.tone.blue.night}"
+      },
+      "purple": {
+        "$value": "{base.color.tone.purple.night}"
+      },
+      "pink": {
+        "$value": "{base.color.tone.pink.night}"
+      },
+      "red": {
+        "$value": "{base.color.tone.red.night}"
+      }
     }
   }
 }

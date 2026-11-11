@@ -18,6 +18,7 @@ import {
   groupSortPanel,
   propertiesPanel,
 } from "./choice-panels.ts";
+import { chartKindPanel, chartXPanel, chartYPanel } from "./chart-panels.ts";
 import { groupPanel } from "./group-panel.ts";
 import { layoutPanel } from "./layout-panel.view.ts";
 import { rootPanel } from "./root-panel.view.ts";
@@ -42,6 +43,9 @@ const PANELS: Readonly<
   "calendar-date": calendarDatePanel,
   "calendar-mode": calendarModePanel,
   "timeline-date": timelineDatePanel,
+  "chart-kind": chartKindPanel,
+  "chart-x": chartXPanel,
+  "chart-y": chartYPanel,
 };
 
 export function renderViewSettings(context: TableContext): TemplateResult {
