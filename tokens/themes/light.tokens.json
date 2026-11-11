@@ -153,6 +153,26 @@
           "$value": "{base.color.chip.red.ink}"
         }
       }
+    },
+    "code": {
+      "keyword": {
+        "$value": "{base.color.chip.purple.ink}"
+      },
+      "string": {
+        "$value": "{base.color.chip.green.ink}"
+      },
+      "number": {
+        "$value": "{base.color.chip.orange.ink}"
+      },
+      "comment": {
+        "$value": "{base.color.neutral.600}"
+      },
+      "function": {
+        "$value": "{base.color.chip.blue.ink}"
+      },
+      "punctuation": {
+        "$value": "{base.color.neutral.650}"
+      }
     }
   }
 }

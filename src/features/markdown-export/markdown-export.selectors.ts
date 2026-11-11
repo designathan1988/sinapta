@@ -81,10 +81,14 @@ const PREFIXES: Readonly<Record<string, (block: Block) => string>> = {
 // Blocks that are not one line of text.
 const WRITERS: Readonly<Record<string, (block: Block) => string[]>> = {
   [DIVIDER_TYPE]: () => ["---"],
-  [CODE_TYPE]: (block) =>
-    isTextBlock(block)
-      ? ["```", ...plainText(block.props.text).split("\n"), "```"]
-      : [],
+  [CODE_TYPE]: (block) => {
+    if (!isTextBlock(block)) return [];
+    const { language } = block.props;
+    const fence =
+      typeof language === "string" && language !== "plain" ? language : "";
+    const lines = plainText(block.props.text).split("\n");
+    return [`\`\`\`${fence}`, ...lines, "```"];
+  },
   [IMAGE_TYPE]: (block) =>
     isBlockOfType<ImageBlock>(block, IMAGE_TYPE)
       ? [`![${block.props.caption}](${block.props.src})`]

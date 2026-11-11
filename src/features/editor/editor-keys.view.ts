@@ -142,11 +142,23 @@ function menuKeys(event: KeyboardEvent, context: InputContext): boolean {
   );
 }
 
+// Keys are left alone while the browser composes text, and in controls
+// inside a block, such as a code block's language, even while the
+// document's selection is still in some text.
+const CONTROL = "input, textarea, select, button";
+
+function isLeftAlone(event: KeyboardEvent): boolean {
+  const { target } = event;
+  const isInControl =
+    target instanceof Element && target.closest(CONTROL) !== null;
+  return event.isComposing || isInControl;
+}
+
 export function onBlockKeyDown(
   event: KeyboardEvent,
   context: InputContext,
 ): void {
-  if (event.isComposing) return;
+  if (isLeftAlone(event)) return;
   if (context.state.ui.blockSelection !== null) {
     onSelectionKeyDown(event, context);
     return;

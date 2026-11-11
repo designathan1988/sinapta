@@ -7,6 +7,7 @@ import { addPageStyle } from "./0005-page-style.ts";
 import { addBlockColor } from "./0006-block-color.ts";
 import { addHeadingToggle } from "./0007-heading-toggle.ts";
 import { addMentions } from "./0008-mentions.ts";
+import { addCodeOptions } from "./0009-code-options.ts";
 
 // A pure function from format version n to n + 1.
 export type Migration = (
@@ -23,6 +24,7 @@ export const MIGRATIONS: readonly Migration[] = [
   addBlockColor,
   addHeadingToggle,
   addMentions,
+  addCodeOptions,
 ];
 
 export type MigrationResult =

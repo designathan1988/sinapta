@@ -25,6 +25,8 @@ export interface MarkdownBlock {
   readonly text: RichText;
   readonly level?: number;
   readonly isChecked?: boolean;
+  // The word after a code fence's opening marks, such as "ts".
+  readonly language?: string;
 }
 
 interface InlineRule {
@@ -167,10 +169,12 @@ export function parseMarkdownBlocks(markdown: string): MarkdownBlock[] {
     const line = lines[index] ?? "";
     if (FENCE.test(line)) {
       const [code, next] = readFence(lines, index + 1);
+      const language = line.trim().slice(3).trim();
       blocks.push({
         kind: "code",
         depth: 0,
         text: code === "" ? [] : [{ text: code }],
+        ...(language !== "" && { language }),
       });
       index = next;
       continue;

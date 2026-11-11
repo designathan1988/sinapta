@@ -1,0 +1,30 @@
+// Text inside particular kinds of blocks.
+export const BLOCK_TEXT = {
+  codeBlock: {
+    language: "Language",
+    wrap: "Wrap",
+    wrapLabel: "Wrap long lines",
+    copy: "Copy",
+    copyLabel: "Copy the code",
+    copied: "Code copied.",
+    caption: "Caption",
+    captionPlaceholder: "Add a caption",
+    languages: {
+      plain: "Plain text",
+      javascript: "JavaScript",
+      typescript: "TypeScript",
+      json: "JSON",
+      html: "HTML",
+      css: "CSS",
+      python: "Python",
+      java: "Java",
+      c: "C",
+      csharp: "C#",
+      go: "Go",
+      rust: "Rust",
+      sql: "SQL",
+      shell: "Shell",
+      markdown: "Markdown",
+    },
+  },
+} as const;

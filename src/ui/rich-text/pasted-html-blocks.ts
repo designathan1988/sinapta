@@ -14,6 +14,7 @@ export interface PastedBlock {
   readonly level?: number | undefined;
   readonly isChecked?: boolean | undefined;
   readonly src?: string | undefined;
+  readonly language?: string | undefined;
 }
 
 const SKIPPED = new Set("HEAD NOSCRIPT SCRIPT STYLE TEMPLATE TITLE".split(" "));

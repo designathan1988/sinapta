@@ -58,6 +58,25 @@ describe("block.pasteBlocks", () => {
     ).toBe(true);
   });
 
+  it("keeps the language of a fenced code block it knows", () => {
+    const { store, dispatch } = createApp([text("a", "")]);
+
+    dispatch(
+      pasteBlocks.create({
+        blockId: A,
+        blocks: parseMarkdownBlocks("```py\nx = 1\n```\n```cobol\ny\n```"),
+      }),
+    );
+
+    const codes = Object.values(store.getState().workspace.blocks).filter(
+      (block) => block.type === "code",
+    );
+    expect(codes.map((block) => block.props.language)).toEqual([
+      "python",
+      undefined,
+    ]);
+  });
+
   it("puts the caret at the end of the last pasted text", () => {
     const { store, dispatch } = createApp([text("a", "")]);
 

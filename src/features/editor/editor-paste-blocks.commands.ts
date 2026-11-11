@@ -1,5 +1,6 @@
 // Pasting Markdown: each pasted block becomes a block of its kind, nested
 // by its indent, in one undo step.
+import { CODE_TYPE, codeLanguageOf } from "../../blocks/code/index.ts";
 import {
   blockDefinition,
   isTextBlock,
@@ -27,11 +28,16 @@ export interface PasteBlocksPayload {
 // Pasted kinds are named like the block types they become.
 function propsFor(block: PastedBlock): BlockProps {
   const base = blockDefinition(block.kind)?.createProps(block.text) ?? {};
+  const language =
+    block.kind === CODE_TYPE && block.language !== undefined
+      ? codeLanguageOf(block.language)
+      : undefined;
   return {
     ...base,
     ...(block.level !== undefined && { level: block.level }),
     ...(block.isChecked !== undefined && { isChecked: block.isChecked }),
     ...(block.src !== undefined && { src: block.src }),
+    ...(language !== undefined && { language }),
   };
 }
 

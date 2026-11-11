@@ -2,6 +2,7 @@
 // The text is kept in parts by area in src/ui/copy/; this file is the one
 // place the rest of the app reads it from.
 import {
+  BLOCK_TEXT,
   DATABASE_TEXT,
   EDITOR_TEXT,
   ONBOARDING_TEXT,
@@ -15,6 +16,7 @@ export const COPY = {
   ...WORKSPACE_TEXT,
   ...EDITOR_TEXT,
   ...PAGE_TEXT,
+  ...BLOCK_TEXT,
   database: DATABASE_TEXT.database,
   onboarding: ONBOARDING_TEXT.onboarding,
 } as const;

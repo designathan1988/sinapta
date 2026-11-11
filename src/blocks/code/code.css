@@ -1,10 +1,85 @@
 @layer blocks {
   .code {
     display: flex;
-    padding: var(--space-inset-md) var(--space-inset-lg);
-    overflow-x: auto;
+    flex-direction: column;
+    gap: var(--space-stack-xxs);
+  }
+
+  .code__frame {
+    display: flex;
+    flex-direction: column;
     border-radius: var(--radius-md);
     background-color: var(--color-bg-code);
+  }
+
+  /* The language stays in view; the buttons show on hover or focus. */
+  .code__bar {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-inset-xs) var(--space-inset-sm) var(--space-none);
+    font-size: var(--font-size-xs);
+  }
+
+  .code__language {
+    padding: var(--space-none) var(--space-inset-xs);
+    border: var(--size-border-thin) solid transparent;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
+  .code__actions {
+    display: flex;
+    gap: var(--space-inline-xs);
+    opacity: 0;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: opacity var(--duration-fast) var(--easing-standard);
+    }
+
+    @media (hover: none) {
+      opacity: 1;
+    }
+  }
+
+  .code:is(:hover, :focus-within) .code__actions {
+    opacity: 1;
+  }
+
+  .code__action {
+    padding: var(--space-none) var(--space-inset-xs);
+    border: var(--size-border-thin) solid transparent;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+      color: var(--color-text-primary);
+    }
+
+    &[aria-pressed="true"] {
+      background-color: var(--color-bg-active);
+      color: var(--color-text-primary);
+    }
+  }
+
+  .code__body {
+    display: flex;
+    padding: var(--space-inset-sm) var(--space-inset-lg) var(--space-inset-md);
+    overflow-x: auto;
     font-family: var(--font-family-mono);
     font-size: var(--font-size-sm);
 
@@ -13,5 +88,49 @@
       white-space: pre;
       tab-size: 2;
     }
+  }
+
+  .code[data-wrapped] .rich-text {
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+  }
+
+  .code__caption {
+    inline-size: 100%;
+    padding: var(--space-none);
+    border: none;
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+
+    &:focus-visible {
+      outline: var(--size-focus-width) solid var(--color-border-focus);
+      outline-offset: var(--size-focus-offset);
+    }
+  }
+
+  /* Token colors, painted over the text without changing it (D5). */
+  .code__body ::highlight(code-keyword) {
+    color: var(--color-code-keyword);
+  }
+
+  .code__body ::highlight(code-string) {
+    color: var(--color-code-string);
+  }
+
+  .code__body ::highlight(code-number) {
+    color: var(--color-code-number);
+  }
+
+  .code__body ::highlight(code-comment) {
+    color: var(--color-code-comment);
+  }
+
+  .code__body ::highlight(code-function) {
+    color: var(--color-code-function);
+  }
+
+  .code__body ::highlight(code-punctuation) {
+    color: var(--color-code-punctuation);
   }
 }

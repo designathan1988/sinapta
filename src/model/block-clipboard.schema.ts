@@ -13,6 +13,7 @@ const clipboardBlockSchema = v.object({
   level: v.optional(v.picklist([1, 2, 3, 4])),
   isChecked: v.optional(v.boolean()),
   src: v.optional(v.string()),
+  language: v.optional(v.string()),
 });
 
 const blockClipboardSchema = v.pipe(

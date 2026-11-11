@@ -57,7 +57,10 @@ describe("selectPageMarkdown", () => {
           textBlock("t", "to-do", { text: "Done", isChecked: true }),
           textBlock("q", "quote", { text: "Said" }),
           { id: "d", type: "divider", props: {} },
-          textBlock("c", "code", { text: "let a;\nlet b;" }),
+          textBlock("c", "code", {
+            text: "let a;\nlet b;",
+            language: "javascript",
+          }),
           {
             id: "i",
             type: "image",
@@ -84,7 +87,7 @@ describe("selectPageMarkdown", () => {
         "",
         "---",
         "",
-        "```",
+        "```javascript",
         "let a;",
         "let b;",
         "```",

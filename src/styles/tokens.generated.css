@@ -167,6 +167,12 @@
     --color-chip-purple-text: light-dark(var(--base-color-chip-purple-ink), var(--base-color-chip-purple-glow));
     --color-chip-red-bg: light-dark(var(--base-color-chip-red-tint), var(--base-color-chip-red-shade));
     --color-chip-red-text: light-dark(var(--base-color-chip-red-ink), var(--base-color-chip-red-glow));
+    --color-code-keyword: light-dark(var(--base-color-chip-purple-ink), var(--base-color-chip-purple-glow));
+    --color-code-string: light-dark(var(--base-color-chip-green-ink), var(--base-color-chip-green-glow));
+    --color-code-number: light-dark(var(--base-color-chip-orange-ink), var(--base-color-chip-orange-glow));
+    --color-code-comment: light-dark(var(--base-color-neutral-600), var(--base-color-neutral-400));
+    --color-code-function: light-dark(var(--base-color-chip-blue-ink), var(--base-color-chip-blue-glow));
+    --color-code-punctuation: light-dark(var(--base-color-neutral-650), var(--base-color-neutral-350));
     --space-none: var(--base-space-0);
     --space-inline-xs: var(--base-space-1);
     --space-inline-sm: var(--base-space-2);

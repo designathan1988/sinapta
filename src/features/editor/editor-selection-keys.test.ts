@@ -8,7 +8,7 @@ import {
 import type { AppState, Command, Dispatch } from "../../state/index.ts";
 import { createApp, text } from "./editor-builder.ts";
 import { selectBlockRange } from "./editor-selection.commands.ts";
-import { onSelectionCopy } from "./editor-clipboard.view.ts";
+import { copyBlocksByKey, onSelectionCopy } from "./editor-clipboard.view.ts";
 import { onSelectionKeyDown } from "./editor-selection.view.ts";
 
 function selectedState(): AppState {
@@ -91,6 +91,28 @@ describe("Ctrl+C on selected blocks", () => {
         },
       }),
     ]);
+  });
+
+  it("keeps a code block's language", () => {
+    const { store, dispatch } = createApp([
+      { id: "c", type: "code", props: { text: [], language: "rust" } },
+    ]);
+    const c = toBlockId("c");
+    dispatch(selectBlockRange.create({ anchorId: c, focusId: c }));
+    const sent: Command[] = [];
+    const event = new KeyboardEvent("keydown", { key: "c", ctrlKey: true });
+
+    copyBlocksByKey(event, {
+      state: store.getState(),
+      dispatch: (command) => {
+        sent.push(command);
+        return { ok: true };
+      },
+    });
+
+    expect(sent[0]).toMatchObject({
+      clipboard: { blocks: [{ kind: "code", language: "rust" }] },
+    });
   });
 
   it("also deletes them with Ctrl+X", () => {

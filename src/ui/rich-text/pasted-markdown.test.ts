@@ -73,7 +73,12 @@ describe("parseMarkdownBlocks", () => {
     );
 
     expect(blocks).toEqual([
-      { kind: "code", depth: 0, text: [{ text: "const a = 1;\n\nlet b;" }] },
+      {
+        kind: "code",
+        depth: 0,
+        text: [{ text: "const a = 1;\n\nlet b;" }],
+        language: "ts",
+      },
       { kind: "paragraph", depth: 0, text: [{ text: "after" }] },
     ]);
   });
