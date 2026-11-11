@@ -1,0 +1,27 @@
+@layer features {
+  .formula__input {
+    min-block-size: var(--size-control-md);
+    padding-block: var(--space-inset-xs);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-sm);
+    resize: vertical;
+
+    &[aria-invalid="true"] {
+      border-color: var(--color-text-danger);
+    }
+  }
+
+  .formula__error {
+    margin: var(--space-none);
+    color: var(--color-text-danger);
+    font-size: var(--font-size-sm);
+  }
+
+  .formula__hint {
+    margin: var(--space-none);
+    color: var(--color-text-tertiary);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+    overflow-wrap: anywhere;
+  }
+}

@@ -236,7 +236,7 @@ export function selectTableModel(
     return cached.model;
   }
   const all = [title, ...database.props.properties];
-  const data = selectRows(state, database);
+  const data = selectRows({ state, today }, database);
   const others = orderedProperties(view, database.props.properties);
   const model: TableModel = {
     database,

@@ -17,6 +17,7 @@ import { multiSelectProperty } from "./properties/multi-select/index.ts";
 import { numberProperty } from "./properties/number/index.ts";
 import { phoneProperty } from "./properties/phone/index.ts";
 import { relationProperty } from "./properties/relation/index.ts";
+import { formulaProperty } from "./properties/formula/index.ts";
 import { rollupProperty } from "./properties/rollup/index.ts";
 import { selectProperty } from "./properties/select/index.ts";
 import { statusProperty } from "./properties/status/index.ts";
@@ -38,6 +39,7 @@ export const PROPERTY_TYPES: readonly PropertyType[] = [
   filesProperty,
   relationProperty,
   rollupProperty,
+  formulaProperty,
   createdTimeProperty,
   editedTimeProperty,
   uniqueIdProperty,

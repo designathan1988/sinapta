@@ -13,6 +13,11 @@ export function firstGrapheme(text: string): string {
   return "";
 }
 
+// How many user-perceived characters the text holds.
+export function graphemeCount(text: string): number {
+  return Array.from(segmenter.segment(text)).length;
+}
+
 function clamp(text: string, offset: number): number {
   return Math.max(0, Math.min(offset, text.length));
 }

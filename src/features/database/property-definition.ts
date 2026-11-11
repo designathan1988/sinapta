@@ -68,6 +68,13 @@ export interface CellContext {
   readonly titleOf?: (pageId: string) => string | undefined;
 }
 
+// What a computed value may read: the workspace, and today as
+// "YYYY-MM-DD" (empty when unknown) for formulas such as today().
+export interface ComputeContext {
+  readonly state: AppState;
+  readonly today: string;
+}
+
 // What a type's settings may need besides the property: the database it
 // belongs to, the workspace and the way to change it.
 export interface ConfigContext {
@@ -138,7 +145,7 @@ export interface PropertyType {
   readonly compute?: (
     row: PageBlock,
     property: PropertyDefinition,
-    state: AppState,
+    context: ComputeContext,
   ) => unknown;
   // The settings shown in the property's menu.
   readonly renderConfigEditor?: (

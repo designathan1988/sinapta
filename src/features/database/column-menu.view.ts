@@ -126,6 +126,7 @@ export function renderTypeMenu(context: TableContext): TemplateResult {
   const databaseId = context.model.database.id;
   const items = PROPERTY_TYPES.map((type) => ({
     label: type.label,
+    icon: type.icon,
     onSelect: () =>
       context.dispatch(
         addProperty.create({

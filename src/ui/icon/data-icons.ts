@@ -39,6 +39,7 @@ export const DATA_PATHS = {
     <path d="M5.5 10.5l5-5M6.5 5.5h4v4" />`,
   rollup: svg`<path d="M2.5 4h6M2.5 8h4M2.5 12h4" />
     <circle cx="11" cy="10" r="2.5" /><path d="M13 12l1.5 1.5" />`,
+  formula: svg`<path d="M12.5 3.5h-8l4 4.5-4 4.5h8" />`,
   clock: svg`<circle cx="8" cy="8" r="5.5" /><path d="M8 5v3.5l2 1.5" />`,
   id: svg`<rect x="2" y="3.5" width="12" height="9" rx="1.5" />
     <path d="M5 6.5v3M7.5 6.5v3h1.5a1.5 1.5 0 0 0 0-3z" />`,

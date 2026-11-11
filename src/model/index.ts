@@ -80,6 +80,7 @@ export {
 } from "./block-copy.ts";
 export {
   firstGrapheme,
+  graphemeCount,
   nextBoundary,
   previousBoundary,
   snapToBoundary,

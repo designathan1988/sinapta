@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   firstGrapheme,
+  graphemeCount,
   nextBoundary,
   previousBoundary,
   snapToBoundary,
@@ -70,5 +71,12 @@ describe("snapToBoundary", () => {
 
   it("clamps a negative offset to the start", () => {
     expect(snapToBoundary("abc", -4)).toBe(0);
+  });
+});
+
+describe("graphemeCount", () => {
+  it("counts what a reader sees as one character once", () => {
+    expect(graphemeCount(`a${FAMILY}${ACCENTED}`)).toBe(3);
+    expect(graphemeCount("")).toBe(0);
   });
 });

@@ -9,7 +9,7 @@ import {
   selectPageTitle,
   type PageBlock,
 } from "../../blocks/page/index.ts";
-import type { AppState } from "../../state/index.ts";
+import type { ComputeContext } from "./property-definition.ts";
 import { propertyType } from "./property-registry.ts";
 import type { TableRow } from "./table-model.selectors.ts";
 
@@ -32,7 +32,7 @@ export function selectRowValues(
 // A row's cell values with those worked out from the workspace, such as
 // rollups, beside the stored ones.
 export function selectAllRowValues(
-  state: AppState,
+  context: ComputeContext,
   page: PageBlock,
   properties: readonly PropertyDefinition[],
 ): Readonly<Record<string, unknown>> {
@@ -41,7 +41,7 @@ export function selectAllRowValues(
     const compute = propertyType(property.type).compute;
     return compute === undefined
       ? []
-      : [[property.id, compute(page, property, state)] as const];
+      : [[property.id, compute(page, property, context)] as const];
   });
   return computed.length === 0
     ? values
@@ -49,14 +49,14 @@ export function selectAllRowValues(
 }
 
 export function selectRows(
-  state: AppState,
+  context: ComputeContext,
   database: DatabaseBlock,
 ): TableRow[] {
   const { properties } = database.props;
   return database.childIds.flatMap((id) => {
-    const page = selectPage(state, id);
+    const page = selectPage(context.state, id);
     if (page === undefined || page.props.isTrashed) return [];
-    const values = selectAllRowValues(state, page, properties);
+    const values = selectAllRowValues(context, page, properties);
     return [{ id, title: selectPageTitle(page), values }];
   });
 }

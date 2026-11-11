@@ -70,5 +70,5 @@ export const rollupProperty: PropertyType = {
   renderCell: written,
   configSchema: rollupConfigSchema,
   renderConfigEditor: renderRollupConfig,
-  compute: (row, property, state) => selectRollup(state, row.id, property),
+  compute: (row, property, { state }) => selectRollup(state, row.id, property),
 };

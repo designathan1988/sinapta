@@ -66,6 +66,8 @@ export const DATABASE_TEXT = {
     relatedPages: "Related pages",
     noRelated: "Choose a related database in the property's settings.",
     searchPages: "Search pages",
+    formula: "Formula",
+    formulaHint: "Read other properties with",
     rollupRelation: "Relation",
     rollupProperty: "Property",
     rollupFunction: "Calculate",
