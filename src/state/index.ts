@@ -75,3 +75,10 @@ export {
 } from "./workspace.commands.ts";
 export { addTestBlock, createTestApp, type TestApp } from "./state-builder.ts";
 export { type Tidier } from "./tidy.ts";
+export {
+  addAssetUrls,
+  assetCommands,
+  attachAsset,
+  failAsset,
+} from "./asset.commands.ts";
+export { selectAssetUrl } from "./asset.selectors.ts";

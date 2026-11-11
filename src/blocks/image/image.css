@@ -104,6 +104,12 @@
     }
   }
 
+  .image__error {
+    margin: var(--space-none);
+    color: var(--color-text-danger);
+    font-size: var(--font-size-sm);
+  }
+
   .image__caption {
     inline-size: 100%;
     padding: var(--space-none);

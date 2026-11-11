@@ -105,6 +105,12 @@ export const EDITOR_TEXT = {
     imageInvalid:
       "Enter an image address that starts with http or https, or choose an image file.",
     imageTooLarge: "Choose an image smaller than 5 MB.",
+    assetErrors: {
+      "too-large": "Choose a file smaller than 50 MB.",
+      "quota-exceeded":
+        "There is no room left to keep this file. Free some space on this device, then try again.",
+      unreadable: "This file could not be read. Try another one.",
+    },
     imageCaption: "Caption",
     imageCaptionPlaceholder: "Add a caption",
     bookmarkLabel: "Web address",

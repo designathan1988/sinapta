@@ -140,3 +140,14 @@ export {
   type TexError,
   type TexResult,
 } from "./tex/index.ts";
+export {
+  assetFileSchema,
+  assetIdSchema,
+  MAX_ASSET_BYTES,
+  parseAssetFiles,
+  parseAssetId,
+  type AssetError,
+  type AssetFile,
+  type AssetId,
+  type AssetSaveResult,
+} from "./asset.schema.ts";

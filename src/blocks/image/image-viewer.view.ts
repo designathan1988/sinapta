@@ -8,6 +8,7 @@ import {
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderDialog } from "../../ui/dialog/index.ts";
+import { imageAddress } from "./image-address.ts";
 import type { ImageBlock } from "./image.schema.ts";
 
 export const IMAGE_VIEWER_OVERLAY = "image-viewer";
@@ -21,7 +22,8 @@ export function renderImageViewer(
   const isOpen =
     overlay?.kind === IMAGE_VIEWER_OVERLAY && overlay.anchorId === block.id;
   if (!isOpen) return nothing;
-  const { src, caption } = block.props;
+  const { caption } = block.props;
+  const src = imageAddress(block, state);
   return renderDialog({
     title: caption === "" ? COPY.imageBlock.fullScreenTitle : caption,
     closeLabel: COPY.imageBlock.close,

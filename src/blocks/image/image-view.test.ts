@@ -1,7 +1,9 @@
 // @vitest-environment happy-dom
 import { render } from "lit-html";
 import { describe, expect, it } from "vitest";
-import { toBlockId } from "../../model/index.ts";
+import { parseAssetId, toBlockId } from "../../model/index.ts";
+import { installAssetSaver } from "../../ui/asset/index.ts";
+import { COPY } from "../../ui/copy.ts";
 import {
   createInitialState,
   type AppState,
@@ -21,7 +23,10 @@ const block: ImageBlock = {
   updatedAt: "",
 };
 
-function rendered(state: AppState = createInitialState()) {
+function rendered(
+  state: AppState = createInitialState(),
+  shown: ImageBlock = block,
+) {
   const sent: Command[] = [];
   const dispatch: Dispatch = (command) => {
     sent.push(command);
@@ -29,7 +34,7 @@ function rendered(state: AppState = createInitialState()) {
   };
   const host = document.createElement("div");
   document.body.replaceChildren(host);
-  render(renderImage(block, dispatch, state), host);
+  render(renderImage(shown, dispatch, state), host);
   const button = (label: string) =>
     host.querySelector<HTMLElement>(`button[aria-label="${label}"]`);
   return { host, sent, button };
@@ -95,5 +100,67 @@ describe("renderImage", () => {
     expect(sent).toEqual([
       expect.objectContaining({ type: "ui.closeOverlay" }),
     ]);
+  });
+});
+
+describe("an image from a file", () => {
+  const empty: ImageBlock = { ...block, props: { src: "", caption: "" } };
+
+  it("keeps the chosen file as an asset of the block", async () => {
+    const id = parseAssetId("cat");
+    if (id === undefined) throw new Error("setup failed");
+    installAssetSaver(() => Promise.resolve({ ok: true, id, url: "blob:cat" }));
+    const { host, sent } = rendered(createInitialState(), empty);
+    const input = host.querySelector<HTMLInputElement>("input[type=file]");
+    if (input === null) throw new Error("no file field");
+    const file = new File(["png"], "cat.png", { type: "image/png" });
+    Object.defineProperty(input, "files", { value: [file] });
+
+    input.dispatchEvent(new Event("change"));
+    await Promise.resolve();
+
+    expect(sent).toEqual([
+      expect.objectContaining({
+        type: "asset.attach",
+        blockId: "img",
+        assetId: "cat",
+        url: "blob:cat",
+      }),
+    ]);
+  });
+
+  it("says why the file could not be kept", () => {
+    const initial = createInitialState();
+    const assetError = { blockId: block.id, error: "quota-exceeded" as const };
+    const state = {
+      ...initial,
+      persistence: { ...initial.persistence, assetError },
+    };
+
+    const { host } = rendered(state, empty);
+
+    expect(host.textContent).toContain(
+      COPY.blocks.assetErrors["quota-exceeded"],
+    );
+  });
+
+  it("shows a stored asset from its address", () => {
+    const initial = createInitialState();
+    const state = {
+      ...initial,
+      persistence: { ...initial.persistence, assetUrls: { cat: "blob:cat" } },
+    };
+    const assetId = parseAssetId("cat");
+    if (assetId === undefined) throw new Error("setup failed");
+    const stored: ImageBlock = {
+      ...block,
+      props: { src: "", caption: "", assetId },
+    };
+
+    const { host } = rendered(state, stored);
+
+    expect(host.querySelector(".image__picture")?.getAttribute("src")).toBe(
+      "blob:cat",
+    );
   });
 });

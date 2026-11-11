@@ -45,8 +45,11 @@ const CONTENT_SECURITY_POLICY = [
   "default-src 'self'",
   "script-src 'self'",
   "style-src 'self'",
-  // Image blocks show pictures from web addresses.
+  // Image blocks show pictures from web addresses, and files kept in the
+  // asset store from blob addresses; media and frames will too.
   "img-src 'self' data: blob: https:",
+  "media-src 'self' blob: https:",
+  "frame-src blob:",
   "object-src 'none'",
   "base-uri 'none'",
 ].join("; ");

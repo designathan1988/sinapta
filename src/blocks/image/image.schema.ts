@@ -1,5 +1,9 @@
 import * as v from "valibot";
-import { safeImageSource, type TypedBlock } from "../../model/index.ts";
+import {
+  assetIdSchema,
+  safeImageSource,
+  type TypedBlock,
+} from "../../model/index.ts";
 
 export const IMAGE_TYPE = "image";
 
@@ -28,6 +32,8 @@ export const imagePropsSchema = v.object({
     ),
   ),
   align: v.optional(v.picklist(IMAGE_ALIGNS)),
+  // A file kept in the asset store (version 12); shown instead of src.
+  assetId: v.optional(assetIdSchema),
 });
 
 export type ImageProps = v.InferOutput<typeof imagePropsSchema>;

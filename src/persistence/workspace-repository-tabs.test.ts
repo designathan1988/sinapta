@@ -33,6 +33,8 @@ function sharedStorage(initial: StoredData) {
       storage.saves += 1;
       return Promise.resolve();
     },
+    loadAssets: () => Promise.resolve([]),
+    putAssets: () => Promise.resolve(),
   };
   return { storage, adapter };
 }

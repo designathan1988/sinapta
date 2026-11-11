@@ -2,6 +2,7 @@
 // startup and then saves what each transaction changed.
 import {
   diffWorkspace,
+  parseAssetFiles,
   parseWorkspaceFile,
   SCHEMA_VERSION,
   type BlockId,
@@ -20,6 +21,7 @@ import {
   type Dispatch,
   type UiState,
 } from "../state/index.ts";
+import { toStoredAssets } from "./asset-store.ts";
 import { runMigrations } from "./migrations/run-migrations.ts";
 import type { StorageAdapter, StorageChanges } from "./storage-adapter.ts";
 import { SOLE_TAB, type TabCoordination } from "./tab-lock.ts";
@@ -81,7 +83,9 @@ function toStorageChanges(pending: Pending, state: AppState): StorageChanges {
   };
 }
 
-type LoadResult = "loaded" | "empty" | "unreadable";
+// "moved" when a migration moved files out of the stored records into the
+// asset store: the records are then written back once, as they are now.
+type LoadResult = "loaded" | "moved" | "empty" | "unreadable";
 
 // "unreadable" when stored data exists but cannot be used. A reload keeps
 // the interface state the tab already has.
@@ -95,6 +99,9 @@ async function load(
   if (!migrated.ok) return "unreadable";
   const parsed = parseWorkspaceFile(migrated.file, options.propsSchemas);
   if (!parsed.ok) return "unreadable";
+  const assets = parseAssetFiles(migrated.file.assets);
+  if (assets.length > 0)
+    await options.adapter.putAssets(toStoredAssets(assets));
   // A tree the dispatcher refuses, such as a child its parent does not
   // list, is as unusable as a file that does not parse.
   const result = options.dispatch(
@@ -104,7 +111,8 @@ async function load(
       skippedCount: parsed.skipped.length,
     }),
   );
-  return result.ok ? "loaded" : "unreadable";
+  if (!result.ok) return "unreadable";
+  return assets.length > 0 ? "moved" : "loaded";
 }
 
 // Asks the browser not to evict the workspace under storage pressure. It
@@ -114,9 +122,24 @@ function requestPersistentStorage(): void {
   navigator.storage.persist().catch(() => false);
 }
 
-function watch(options: RepositoryOptions, tabs: TabCoordination): void {
+// Every record, for a workspace that must be written back whole.
+function everything(state: AppState): Pending {
+  const { blocks, views } = state.workspace;
+  return {
+    blockIds: new Set(Object.values(blocks).map((block) => block.id)),
+    viewIds: new Set(Object.values(views).map((view) => view.id)),
+    hasMetaChange: true,
+    hasUiChange: false,
+  };
+}
+
+function watch(
+  options: RepositoryOptions,
+  tabs: TabCoordination,
+  isRewrite = false,
+): void {
   const { store, dispatch, adapter } = options;
-  let pending = createPending();
+  let pending = isRewrite ? everything(store.getState()) : createPending();
   let timer: ReturnType<typeof setTimeout> | undefined;
   let hasSaved = false;
 
@@ -138,6 +161,7 @@ function watch(options: RepositoryOptions, tabs: TabCoordination): void {
     }
   }
 
+  if (isRewrite) timer = setTimeout(() => void flush(), SAVE_DEBOUNCE_MS);
   store.subscribe((state, previous) => {
     addChanges(pending, diffWorkspace(previous.workspace, state.workspace));
     pending.hasUiChange ||=
@@ -193,6 +217,6 @@ export async function startRepository(
     followWriter(options, tabs);
     return { isFirstRun: false };
   }
-  watch(options, tabs);
+  watch(options, tabs, result === "moved");
   return { isFirstRun: result === "empty" };
 }

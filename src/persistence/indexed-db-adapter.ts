@@ -4,27 +4,34 @@ import type { Block, View } from "../model/index.ts";
 import type {
   StorageAdapter,
   StorageChanges,
+  StoredAsset,
   StoredData,
 } from "./storage-adapter.ts";
 
 // Storage identity: changing this name would hide existing data.
 const DATABASE_NAME = "pagecraft";
 // Changes only when the object stores change, not with the record format.
-const DATABASE_VERSION = 1;
+// Version 2 adds the asset store.
+const DATABASE_VERSION = 2;
 const STORES = ["blocks", "views", "meta"] as const;
 
 interface PagecraftDatabase extends DBSchema {
   blocks: { key: string; value: Block };
   views: { key: string; value: View };
   meta: { key: string; value: unknown };
+  assets: { key: string; value: StoredAsset };
 }
 
 function open(): Promise<IDBPDatabase<PagecraftDatabase>> {
   return openDB<PagecraftDatabase>(DATABASE_NAME, DATABASE_VERSION, {
-    upgrade(database) {
-      database.createObjectStore("blocks", { keyPath: "id" });
-      database.createObjectStore("views", { keyPath: "id" });
-      database.createObjectStore("meta");
+    upgrade(database, oldVersion) {
+      if (oldVersion < 1) {
+        database.createObjectStore("blocks", { keyPath: "id" });
+        database.createObjectStore("views", { keyPath: "id" });
+        database.createObjectStore("meta");
+      }
+      if (oldVersion < 2)
+        database.createObjectStore("assets", { keyPath: "id" });
     },
   });
 }
@@ -78,6 +85,22 @@ async function save(changes: StorageChanges): Promise<void> {
   database.close();
 }
 
+async function loadAssets(): Promise<StoredAsset[]> {
+  const database = await open();
+  const assets = await database.getAll("assets");
+  database.close();
+  return assets;
+}
+
+async function putAssets(assets: readonly StoredAsset[]): Promise<void> {
+  const database = await open();
+  const transaction = database.transaction("assets", "readwrite");
+  const store = transaction.objectStore("assets");
+  for (const asset of assets) void store.put(asset);
+  await transaction.done;
+  database.close();
+}
+
 export function createIndexedDbAdapter(): StorageAdapter {
-  return { load, save };
+  return { load, save, loadAssets, putAssets };
 }

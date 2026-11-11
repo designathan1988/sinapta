@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buildWorkspace,
+  parseAssetId,
   SCHEMA_VERSION,
   TEST_PROPS_SCHEMAS,
   toBlockId,
@@ -14,6 +15,7 @@ import {
   uiCommands,
   workspaceCommands,
 } from "../state/index.ts";
+import { toAssetFiles, toStoredAssets } from "./asset-store.ts";
 import {
   readWorkspaceFile,
   serializeWorkspace,
@@ -49,7 +51,12 @@ describe("serializeWorkspace and readWorkspaceFile", () => {
       TEST_PROPS_SCHEMAS,
     );
 
-    expect(result).toEqual({ ok: true, workspace: WORKSPACE, skipped: [] });
+    expect(result).toEqual({
+      ok: true,
+      workspace: WORKSPACE,
+      skipped: [],
+      assets: [],
+    });
   });
 
   it("gives the same file whatever order the records are held in", () => {
@@ -161,5 +168,80 @@ describe("file tools", () => {
       pendingImport: null,
       importError: "not-a-workspace",
     });
+  });
+});
+
+describe("assets in a workspace file", () => {
+  it("round-trips the bytes of a file through export and import", async () => {
+    const bytes = new Uint8Array([137, 80, 78, 71, 0, 255]);
+    const id = parseAssetId("cat");
+    if (id === undefined) throw new Error("setup failed");
+    const [asset] = await toAssetFiles([
+      {
+        id,
+        type: "image/png",
+        name: "cat.png",
+        size: bytes.length,
+        blob: new Blob([bytes], { type: "image/png" }),
+      },
+    ]);
+    if (asset === undefined) throw new Error("setup failed");
+
+    const result = readWorkspaceFile(
+      serializeWorkspace(WORKSPACE, [asset]),
+      TEST_PROPS_SCHEMAS,
+    );
+
+    if (!result.ok) throw new Error(result.error);
+    const [stored] = toStoredAssets(result.assets);
+    const back = new Uint8Array((await stored?.blob.arrayBuffer()) ?? []);
+    expect([...back]).toEqual([...bytes]);
+    expect(stored).toMatchObject({ id: "cat", type: "image/png", size: 6 });
+  });
+
+  it("moves an image kept as a data address into an asset", () => {
+    const file = {
+      schemaVersion: 11,
+      rootIds: ["page"],
+      blocks: {
+        page: {
+          id: "page",
+          type: "page",
+          parentId: null,
+          childIds: ["img"],
+          props: { title: [] },
+          createdAt: "",
+          updatedAt: "",
+        },
+        img: {
+          id: "img",
+          type: "image",
+          parentId: "page",
+          childIds: [],
+          props: { src: "data:image/png;base64,AAEC", caption: "" },
+          createdAt: "",
+          updatedAt: "",
+        },
+      },
+      views: {},
+      settings: { theme: "system" },
+    };
+
+    // Any props will do for an image here, as for a page.
+    const anyProps = TEST_PROPS_SCHEMAS.get("page");
+    if (anyProps === undefined) throw new Error("setup failed");
+    const schemas = new Map([...TEST_PROPS_SCHEMAS, ["image", anyProps]]);
+
+    const result = readWorkspaceFile(JSON.stringify(file), schemas);
+
+    if (!result.ok) throw new Error(result.error);
+    expect(result.workspace.blocks[toBlockId("img")]?.props).toEqual({
+      src: "",
+      caption: "",
+      assetId: "img",
+    });
+    expect(result.assets).toEqual([
+      { id: "img", type: "image/png", name: "image", size: 3, data: "AAEC" },
+    ]);
   });
 });

@@ -1,6 +1,6 @@
 // The contract between the repository and a storage backend, plus an
 // in-memory backend for tests.
-import type { Block, BlockId, View, ViewId } from "../model/index.ts";
+import type { AssetId, Block, BlockId, View, ViewId } from "../model/index.ts";
 import type { PersistedUi } from "../state/index.ts";
 
 // Workspace-file-shaped JSON as it was stored. Nothing here is trusted until
@@ -26,26 +26,47 @@ export interface StorageChanges {
   readonly ui?: PersistedUi;
 }
 
+// A file kept in the asset store, beside the workspace.
+export interface StoredAsset {
+  readonly id: AssetId;
+  readonly type: string;
+  readonly name: string;
+  readonly size: number;
+  readonly blob: Blob;
+}
+
 export interface StorageAdapter {
   // Resolves to null when nothing has been saved yet.
   load(): Promise<StoredData | null>;
   // Writes every change or none.
   save(changes: StorageChanges): Promise<void>;
+  loadAssets(): Promise<StoredAsset[]>;
+  // Writes every asset or none; rejects as the browser does when storage
+  // is full.
+  putAssets(assets: readonly StoredAsset[]): Promise<void>;
 }
 
 export interface MemoryAdapter extends StorageAdapter {
   readonly saves: StorageChanges[];
+  readonly assets: Map<string, StoredAsset>;
 }
 
 export function createMemoryAdapter(
   stored: StoredData | null = null,
 ): MemoryAdapter {
   const saves: StorageChanges[] = [];
+  const assets = new Map<string, StoredAsset>();
   return {
     saves,
+    assets,
     load: () => Promise.resolve(stored),
     save(changes) {
       saves.push(changes);
+      return Promise.resolve();
+    },
+    loadAssets: () => Promise.resolve([...assets.values()]),
+    putAssets(list) {
+      for (const asset of list) assets.set(asset.id, asset);
       return Promise.resolve();
     },
   };

@@ -25,9 +25,12 @@ import { mentionMenuKeys } from "../features/mention-menu/index.ts";
 import { slashMenuKeys } from "../features/slash-menu/index.ts";
 import {
   createAppStore,
+  type AppStore,
+  type Dispatch,
   createCommandRegistry,
   createDispatcher,
   createInitialState,
+  assetCommands,
   persistenceCommands,
   selectTheme,
   settingsCommands,
@@ -37,9 +40,12 @@ import {
 import {
   createIndexedDbAdapter,
   createTabCoordination,
+  startAssetStore,
   startFileTools,
   startRepository,
+  type RepositoryStart,
 } from "../persistence/index.ts";
+import { installAssetSaver } from "../ui/asset/index.ts";
 import { installSelectionSync, restoreSelection } from "../ui/caret/index.ts";
 import { installOverlayDismiss } from "../ui/overlay/index.ts";
 import { installScopedKeys, matchShortcut } from "../ui/shortcuts/index.ts";
@@ -52,6 +58,7 @@ const COMMANDS = [
   ...uiCommands,
   ...settingsCommands,
   ...persistenceCommands,
+  ...assetCommands,
   ...workspaceCommands,
   ...pageCommands,
   ...pageTrashCommands,
@@ -72,6 +79,31 @@ const SCOPED_KEYS = [
   formatToolbarKeys,
 ];
 
+// Loads the stored workspace, then keeps saving it, and keeps the files
+// people add beside it.
+async function startPersistence(
+  store: AppStore,
+  dispatch: Dispatch,
+): Promise<RepositoryStart> {
+  const adapter = createIndexedDbAdapter();
+  startFileTools({
+    store,
+    dispatch,
+    adapter,
+    propsSchemas: BLOCK_PROPS_SCHEMAS,
+  });
+  const { isFirstRun } = await startRepository({
+    store,
+    dispatch,
+    adapter,
+    propsSchemas: BLOCK_PROPS_SCHEMAS,
+    tabs: createTabCoordination(),
+  });
+  // Files people add to blocks are kept beside the workspace.
+  installAssetSaver(startAssetStore({ adapter, dispatch }));
+  return { isFirstRun };
+}
+
 export async function startApp(container: HTMLElement): Promise<void> {
   const store = createAppStore(createInitialState());
   const dispatch = createDispatcher({
@@ -87,14 +119,7 @@ export async function startApp(container: HTMLElement): Promise<void> {
   };
   // Nothing is rendered until stored data is in the store, so the first
   // paint already has the saved theme and layout.
-  startFileTools({ store, dispatch, propsSchemas: BLOCK_PROPS_SCHEMAS });
-  const { isFirstRun } = await startRepository({
-    store,
-    dispatch,
-    adapter: createIndexedDbAdapter(),
-    propsSchemas: BLOCK_PROPS_SCHEMAS,
-    tabs: createTabCoordination(),
-  });
+  const { isFirstRun } = await startPersistence(store, dispatch);
   // A first visit opens a short tour; it is saved like any other change.
   if (isFirstRun) dispatch(seedGettingStarted.create({}));
   startRouter(store, dispatch);

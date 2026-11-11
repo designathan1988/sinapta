@@ -49,6 +49,8 @@ owner listed here exists.
 | One writer tab per browser profile (Web Locks) and save messages between tabs (BroadcastChannel) | `src/persistence/tab-lock.ts` | 11 |
 | Migrations | `src/persistence/migrations/run-migrations.ts` plus one file per format change | 1 |
 | JSON export and import, and carrying out export and import requests | `src/persistence/workspace-file.ts` | 7 |
+| Keeping files beside the workspace: asset ids, blobs, base64 | `src/persistence/asset-store.ts` | 14 |
+| Handing files people add to the asset store | `src/ui/asset/` | 14 |
 
 ## Interface
 

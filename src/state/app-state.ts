@@ -1,6 +1,7 @@
 // The shape of the single application state and its initial value.
 import {
   createEmptyWorkspace,
+  type AssetError,
   type BlockId,
   type Operation,
   type ClipboardBlock,
@@ -122,6 +123,14 @@ export interface PersistenceState {
   // True while another tab holds the workspace for writing; this tab shows
   // it and follows its saves, but changes nothing.
   readonly isReadOnly: boolean;
+  // Why the last file a person added could not be kept, and for which
+  // block.
+  readonly assetError: {
+    readonly blockId: BlockId;
+    readonly error: AssetError;
+  } | null;
+  // The addresses stored assets are shown from, by asset id.
+  readonly assetUrls: Readonly<Record<string, string>>;
 }
 
 export interface AppState {
@@ -173,6 +182,8 @@ export function createInitialState(): AppState {
       pendingImport: null,
       importError: null,
       isReadOnly: false,
+      assetError: null,
+      assetUrls: {},
     },
   };
 }
