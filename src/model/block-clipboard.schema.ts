@@ -14,6 +14,8 @@ const clipboardBlockSchema = v.object({
   isChecked: v.optional(v.boolean()),
   src: v.optional(v.string()),
   language: v.optional(v.string()),
+  rows: v.optional(v.array(v.array(richTextSchema))),
+  hasHeaderRow: v.optional(v.boolean()),
 });
 
 const blockClipboardSchema = v.pipe(

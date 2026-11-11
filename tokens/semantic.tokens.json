@@ -333,6 +333,12 @@
       "height": {
         "$value": "{base.size.18}"
       }
+    },
+    "table": {
+      "cell": {
+        "$description": "The narrowest a simple table's column gets.",
+        "$value": "{base.size.10}"
+      }
     }
   },
   "radius": {

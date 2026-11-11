@@ -4,7 +4,12 @@
 import { isPageLike } from "../../blocks/page/index.ts";
 import { isTextBlock, textOf } from "../../blocks/index.ts";
 import {
+  SIMPLE_TABLE_TYPE,
+  type SimpleTableBlock,
+} from "../../blocks/simple-table/index.ts";
+import {
   BLOCK_CLIPBOARD_TYPE,
+  isBlockOfType,
   serializeBlockClipboard,
   type Block,
   type ClipboardBlock,
@@ -46,10 +51,19 @@ function extrasOf(props: Block["props"]): Extras {
   };
 }
 
+// A table keeps its cells and whether its first row is a header.
+function tableExtras(block: Block) {
+  if (!isBlockOfType<SimpleTableBlock>(block, SIMPLE_TABLE_TYPE)) return {};
+  const { rows, hasHeaderRow } = block.props;
+  return { rows: rows.map((row) => [...row]), hasHeaderRow };
+}
+
 function clipboardBlock(block: Block, depth: number): ClipboardBlock[] {
   const text = isTextBlock(block) ? block.props.text : [];
-  const extras = extrasOf(block.props);
-  if (!isTextBlock(block) && extras.src === undefined) return [];
+  const extras = { ...extrasOf(block.props), ...tableExtras(block) };
+  const hasContent =
+    isTextBlock(block) || extras.src !== undefined || "rows" in extras;
+  if (!hasContent) return [];
   return [{ kind: block.type, depth, text, ...extras }];
 }
 

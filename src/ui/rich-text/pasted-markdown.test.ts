@@ -96,4 +96,34 @@ describe("hasMarkdownBlocks", () => {
   it("is false for plain lines", () => {
     expect(hasMarkdownBlocks("one\ntwo")).toBe(false);
   });
+
+  it("is true for a pipe table", () => {
+    expect(hasMarkdownBlocks("| a | b |\n| --- | --- |")).toBe(true);
+  });
+});
+
+describe("pipe tables", () => {
+  it("become a table block with a header row and inline marks", () => {
+    const blocks = parseMarkdownBlocks(
+      "| a | b |\n| :-- | --: |\n| **c** | d\\|e |\nafter",
+    );
+
+    expect(blocks).toEqual([
+      {
+        kind: "simple-table",
+        depth: 0,
+        text: [],
+        hasHeaderRow: true,
+        rows: [
+          [[{ text: "a" }], [{ text: "b" }]],
+          [[{ text: "c", marks: ["bold"] }], [{ text: "d|e" }]],
+        ],
+      },
+      { kind: "paragraph", depth: 0, text: [{ text: "after" }] },
+    ]);
+  });
+
+  it("leave a line of pipes without a rule under it as text", () => {
+    expect(parseMarkdownBlocks("| a | b |")[0]?.kind).toBe("paragraph");
+  });
 });

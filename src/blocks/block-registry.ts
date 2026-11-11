@@ -15,6 +15,7 @@ import { pageLinkDefinition } from "./page-link/index.ts";
 import { pageDefinition } from "./page/index.ts";
 import { paragraphDefinition } from "./paragraph/index.ts";
 import { quoteDefinition } from "./quote/index.ts";
+import { simpleTableDefinition } from "./simple-table/index.ts";
 import { tableOfContentsDefinition } from "./table-of-contents/index.ts";
 import { toDoDefinition } from "./to-do/index.ts";
 import { toggleDefinition } from "./toggle/index.ts";
@@ -35,6 +36,7 @@ export const BLOCK_DEFINITIONS: readonly BlockDefinition[] = [
   pageLinkDefinition,
   imageDefinition,
   bookmarkDefinition,
+  simpleTableDefinition,
   tableOfContentsDefinition,
 ];
 

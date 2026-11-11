@@ -1,5 +1,5 @@
 // Reads pasted HTML as blocks: headings, paragraphs, nested lists and
-// to-dos, quotes, code, dividers, images and table rows. Like the line
+// to-dos, quotes, code, dividers, images and tables. Like the line
 // reader, it parses into a document that never runs or loads anything and
 // takes only text, marks, links and image addresses from it.
 import { safeImageSource, type RichText } from "../../model/index.ts";
@@ -15,6 +15,9 @@ export interface PastedBlock {
   readonly isChecked?: boolean | undefined;
   readonly src?: string | undefined;
   readonly language?: string | undefined;
+  // A table's cells, every row as long as the longest.
+  readonly rows?: readonly (readonly RichText[])[] | undefined;
+  readonly hasHeaderRow?: boolean | undefined;
 }
 
 const SKIPPED = new Set("HEAD NOSCRIPT SCRIPT STYLE TEMPLATE TITLE".split(" "));
@@ -62,11 +65,23 @@ function listBlocks(list: Element, depth: number): PastedBlock[] {
   );
 }
 
+// A table becomes one table block. Rows shorter than the longest get
+// empty cells; a first row of header cells is the table's header row.
 function tableBlocks(table: Element): PastedBlock[] {
-  return [...table.querySelectorAll("tr")].map((row) => {
-    const cells = [...row.children].map((cell) => cell.textContent.trim());
-    return block("paragraph", [{ text: cells.join(" | ") }]);
-  });
+  const rows = [...table.querySelectorAll("tr")].map((row) =>
+    [...row.children].map((cell) => richTextOf([...cell.childNodes])),
+  );
+  const width = Math.max(0, ...rows.map((row) => row.length));
+  if (rows.length === 0 || width === 0) return [];
+  const padded = rows.map((row) => [
+    ...row,
+    ...Array.from({ length: width - row.length }, (): RichText => []),
+  ]);
+  const first = table.querySelector("tr");
+  const hasHeaderRow =
+    first !== null &&
+    [...first.children].every((cell) => cell.tagName === "TH");
+  return [{ ...block("simple-table", []), rows: padded, hasHeaderRow }];
 }
 
 function imageBlock(image: Element): PastedBlock[] {

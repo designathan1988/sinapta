@@ -77,6 +77,31 @@ describe("block.pasteBlocks", () => {
     ]);
   });
 
+  it("makes a pasted table a table block with its cells", () => {
+    const { store, dispatch } = createApp([text("a", "")]);
+    const rows = [[[{ text: "x" }], [{ text: "y" }]]];
+
+    dispatch(
+      pasteBlocks.create({
+        blockId: A,
+        blocks: [
+          {
+            kind: "simple-table",
+            depth: 0,
+            text: [],
+            rows,
+            hasHeaderRow: true,
+          },
+        ],
+      }),
+    );
+
+    expect(store.getState().workspace.blocks[A]).toMatchObject({
+      type: "simple-table",
+      props: { rows, hasHeaderRow: true, hasHeaderColumn: false },
+    });
+  });
+
   it("puts the caret at the end of the last pasted text", () => {
     const { store, dispatch } = createApp([text("a", "")]);
 

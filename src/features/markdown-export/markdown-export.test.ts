@@ -130,3 +130,30 @@ describe("plain paragraphs", () => {
     );
   });
 });
+
+describe("simple tables", () => {
+  it("are written as pipe tables, with pipes in cells escaped", () => {
+    const rows = [
+      [[{ text: "Name" }], [{ text: "Note" }]],
+      [[{ text: "a|b" }], []],
+    ];
+    const workspace = buildWorkspace([
+      {
+        id: "page",
+        props: { title: [] },
+        children: [
+          {
+            id: "t",
+            type: "simple-table",
+            props: { rows, hasHeaderRow: true, hasHeaderColumn: false },
+          },
+        ],
+      },
+    ]);
+    const state = { ...createInitialState(), workspace };
+
+    expect(selectPageMarkdown(state, toBlockId("page"))).toContain(
+      ["| Name | Note |", "| --- | --- |", "| a\\|b |  |"].join("\n"),
+    );
+  });
+});

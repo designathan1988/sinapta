@@ -115,6 +115,32 @@ describe("Ctrl+C on selected blocks", () => {
     });
   });
 
+  it("keeps a table's cells", () => {
+    const rows = [[[{ text: "x" }]]];
+    const props = { rows, hasHeaderRow: true, hasHeaderColumn: false };
+    const { store, dispatch } = createApp([
+      { id: "t", type: "simple-table", props },
+    ]);
+    const t = toBlockId("t");
+    dispatch(selectBlockRange.create({ anchorId: t, focusId: t }));
+    const sent: Command[] = [];
+    const event = new KeyboardEvent("keydown", { key: "c", ctrlKey: true });
+
+    copyBlocksByKey(event, {
+      state: store.getState(),
+      dispatch: (command) => {
+        sent.push(command);
+        return { ok: true };
+      },
+    });
+
+    expect(sent[0]).toMatchObject({
+      clipboard: {
+        blocks: [{ kind: "simple-table", rows, hasHeaderRow: true }],
+      },
+    });
+  });
+
   it("also deletes them with Ctrl+X", () => {
     const types = press({ key: "x", ctrlKey: true }).map((c) => c.type);
 

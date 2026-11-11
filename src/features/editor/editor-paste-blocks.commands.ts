@@ -38,6 +38,11 @@ function propsFor(block: PastedBlock): BlockProps {
     ...(block.isChecked !== undefined && { isChecked: block.isChecked }),
     ...(block.src !== undefined && { src: block.src }),
     ...(language !== undefined && { language }),
+    ...(block.rows !== undefined && {
+      rows: block.rows,
+      hasHeaderRow: block.hasHeaderRow === true,
+      hasHeaderColumn: false,
+    }),
   };
 }
 

@@ -64,10 +64,19 @@ describe("parsePastedHtmlBlocks", () => {
     expect(blocks[3]?.src).toBe("https://example.com/a.png");
   });
 
-  it("reads a table as one line per row", () => {
-    expect(kinds("<table><tr><td>a</td><td>b</td></tr></table>")).toEqual([
-      ["paragraph", 0, "a | b"],
-    ]);
+  it("reads a table as a table block, every row as long as the longest", () => {
+    const [table] = parsePastedHtmlBlocks(
+      "<table><tr><th>a</th><th>b</th></tr><tr><td><b>c</b></td></tr></table>",
+    );
+
+    expect(table).toMatchObject({
+      kind: "simple-table",
+      hasHeaderRow: true,
+      rows: [
+        [[{ text: "a" }], [{ text: "b" }]],
+        [[{ text: "c", marks: ["bold"] }], []],
+      ],
+    });
   });
 
   it("leaves out scripts and styles", () => {

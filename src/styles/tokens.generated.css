@@ -86,6 +86,7 @@
     --base-size-6: 1.5rem;
     --base-size-7: 1.75rem;
     --base-size-8: 2rem;
+    --base-size-10: 10rem;
     --base-size-12: 12rem;
     --base-size-14: 14rem;
     --base-size-16: 16rem;
@@ -213,6 +214,7 @@
     --size-board-column: var(--base-size-18);
     --size-card-cover: var(--base-size-12);
     --size-cover-height: var(--base-size-18);
+    --size-table-cell: var(--base-size-10);
     --radius-sm: var(--base-radius-1);
     --radius-md: var(--base-radius-2);
     --radius-full: var(--base-radius-pill);

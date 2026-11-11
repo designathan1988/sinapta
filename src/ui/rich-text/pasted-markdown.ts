@@ -7,6 +7,11 @@ import {
   type RichText,
   type TextSpan,
 } from "../../model/index.ts";
+import {
+  hasPipeTable,
+  isPipeTableAt,
+  readPipeTable,
+} from "./pasted-markdown-table.ts";
 
 export type MarkdownKind =
   | "paragraph"
@@ -16,7 +21,8 @@ export type MarkdownKind =
   | "to-do"
   | "quote"
   | "divider"
-  | "code";
+  | "code"
+  | "simple-table";
 
 export interface MarkdownBlock {
   readonly kind: MarkdownKind;
@@ -27,6 +33,9 @@ export interface MarkdownBlock {
   readonly isChecked?: boolean;
   // The word after a code fence's opening marks, such as "ts".
   readonly language?: string;
+  // A pipe table's cells; its first row is its header.
+  readonly rows?: readonly (readonly RichText[])[];
+  readonly hasHeaderRow?: boolean;
 }
 
 interface InlineRule {
@@ -161,24 +170,56 @@ function readFence(lines: readonly string[], from: number): [string, number] {
   return [body.join("\n"), index + 1];
 }
 
+type Read = readonly [MarkdownBlock, number];
+
+// A code block from its fence to the closing fence.
+function fencedBlock(lines: readonly string[], index: number): Read {
+  const line = lines[index] ?? "";
+  const [code, next] = readFence(lines, index + 1);
+  const language = line.trim().slice(3).trim();
+  const block: MarkdownBlock = {
+    kind: "code",
+    depth: 0,
+    text: code === "" ? [] : [{ text: code }],
+    ...(language !== "" && { language }),
+  };
+  return [block, next];
+}
+
+function tableBlock(lines: readonly string[], index: number): Read {
+  const { cells, next } = readPipeTable(lines, index);
+  const rows = cells.map((row) => row.map(parseInlineMarkdown));
+  const block: MarkdownBlock = {
+    kind: "simple-table",
+    depth: 0,
+    text: [],
+    hasHeaderRow: true,
+    rows,
+  };
+  return [block, next];
+}
+
+// A block that spans lines starting at the index, if one does.
+function spanningBlock(
+  lines: readonly string[],
+  index: number,
+): Read | undefined {
+  if (FENCE.test(lines[index] ?? "")) return fencedBlock(lines, index);
+  return isPipeTableAt(lines, index) ? tableBlock(lines, index) : undefined;
+}
+
 export function parseMarkdownBlocks(markdown: string): MarkdownBlock[] {
   const lines = markdown.replace(/\r\n?/g, "\n").split("\n");
   const blocks: MarkdownBlock[] = [];
   let index = 0;
   while (index < lines.length) {
-    const line = lines[index] ?? "";
-    if (FENCE.test(line)) {
-      const [code, next] = readFence(lines, index + 1);
-      const language = line.trim().slice(3).trim();
-      blocks.push({
-        kind: "code",
-        depth: 0,
-        text: code === "" ? [] : [{ text: code }],
-        ...(language !== "" && { language }),
-      });
-      index = next;
+    const read = spanningBlock(lines, index);
+    if (read !== undefined) {
+      blocks.push(read[0]);
+      index = read[1];
       continue;
     }
+    const line = lines[index] ?? "";
     if (line.trim() !== "") blocks.push(blockOf(line));
     index += 1;
   }
@@ -188,11 +229,11 @@ export function parseMarkdownBlocks(markdown: string): MarkdownBlock[] {
 // True when the text uses a Markdown block marker on any line, so it is
 // read as blocks rather than as lines of text.
 export function hasMarkdownBlocks(text: string): boolean {
-  return text
-    .split(/\r\n?|\n/)
-    .some(
-      (line) =>
-        FENCE.test(line) ||
-        LINE_RULES.some((rule) => rule.pattern.test(line.trim())),
-    );
+  const lines = text.split(/\r\n?|\n/);
+  const hasMarker = lines.some(
+    (line) =>
+      FENCE.test(line) ||
+      LINE_RULES.some((rule) => rule.pattern.test(line.trim())),
+  );
+  return hasMarker || hasPipeTable(lines);
 }

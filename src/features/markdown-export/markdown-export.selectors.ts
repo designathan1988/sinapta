@@ -17,6 +17,10 @@ import {
   selectPageTitle,
 } from "../../blocks/page/index.ts";
 import { QUOTE_TYPE } from "../../blocks/quote/index.ts";
+import {
+  SIMPLE_TABLE_TYPE,
+  type SimpleTableBlock,
+} from "../../blocks/simple-table/index.ts";
 import { TO_DO_TYPE, type ToDoBlock } from "../../blocks/to-do/index.ts";
 import { isTextBlock } from "../../blocks/index.ts";
 import { TOGGLE_TYPE } from "../../blocks/toggle/index.ts";
@@ -97,7 +101,26 @@ const WRITERS: Readonly<Record<string, (block: Block) => string[]>> = {
     isBlockOfType<BookmarkBlock>(block, BOOKMARK_TYPE)
       ? [`[${block.props.url}](${block.props.url})`]
       : [],
+  [SIMPLE_TABLE_TYPE]: (block) =>
+    isBlockOfType<SimpleTableBlock>(block, SIMPLE_TABLE_TYPE)
+      ? pipeTable(block.props.rows)
+      : [],
 };
+
+// A table as Markdown: its first row is the header Markdown requires.
+// Pipes inside cells are escaped and line breaks become <br>.
+function pipeTable(rows: readonly (readonly RichText[])[]): string[] {
+  const line = (cells: readonly RichText[]): string => {
+    const texts = cells.map((cell) =>
+      richTextToMarkdown(cell).replace(/\|/g, "\\|").replace(/\n/g, "<br>"),
+    );
+    return `| ${texts.join(" | ")} |`;
+  };
+  const [header, ...body] = rows;
+  if (header === undefined) return [];
+  const rule = `| ${header.map(() => "---").join(" | ")} |`;
+  return [line(header), rule, ...body.map(line)];
+}
 
 // Text that starts like a heading, list item or quote would be read as
 // one; a backslash keeps it plain text.

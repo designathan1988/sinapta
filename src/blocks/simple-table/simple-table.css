@@ -1,0 +1,91 @@
+@layer blocks {
+  .simple-table {
+    position: relative;
+    padding-block-end: var(--space-stack-md);
+    padding-inline-end: var(--space-inline-lg);
+  }
+
+  .simple-table__scroll {
+    overflow-x: auto;
+  }
+
+  .simple-table__grid {
+    border-collapse: collapse;
+    font-size: var(--font-size-md);
+
+    & :is(td, th) {
+      min-inline-size: var(--size-table-cell);
+      padding: var(--space-none);
+      border: var(--size-border-thin) solid var(--color-border-default);
+      vertical-align: top;
+    }
+
+    & th {
+      background-color: var(--color-bg-hover);
+      font-weight: var(--font-weight-medium);
+      text-align: start;
+    }
+  }
+
+  /* Each cell grows with its text where the browser can size fields to
+     their content. */
+  .simple-table__cell {
+    display: block;
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-block-size: var(--size-row-height);
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    border: none;
+    background-color: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: var(--font-line-height-body);
+    resize: none;
+    field-sizing: content;
+
+    &:focus-visible {
+      outline: var(--size-focus-width) solid var(--color-border-focus);
+      outline-offset: calc(var(--size-focus-width) * -1);
+    }
+  }
+
+  /* The buttons that add a row below and a column to the right show
+     while the table is pointed at or focused. */
+  .simple-table__add {
+    position: absolute;
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-hover);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    opacity: 0;
+
+    &[data-axis="row"] {
+      inset-block-end: var(--space-none);
+      inset-inline: var(--space-none) var(--space-inline-lg);
+      block-size: var(--space-stack-md);
+    }
+
+    &[data-axis="column"] {
+      inset-block: var(--space-none) var(--space-stack-md);
+      inset-inline-end: var(--space-none);
+      inline-size: var(--space-inline-md);
+    }
+
+    &:hover {
+      background-color: var(--color-bg-active);
+      color: var(--color-text-primary);
+    }
+
+    &:focus-visible {
+      opacity: 1;
+    }
+  }
+
+  .simple-table:is(:hover, :focus-within) .simple-table__add {
+    opacity: 1;
+  }
+}

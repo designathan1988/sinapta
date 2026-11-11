@@ -1,5 +1,22 @@
 // Text inside particular kinds of blocks.
 export const BLOCK_TEXT = {
+  simpleTable: {
+    name: "Table",
+    label: "Table",
+    row: "Row",
+    column: "column",
+    menu: "Cell actions",
+    addRow: "Add a row",
+    addColumn: "Add a column",
+    insertRowAbove: "Insert row above",
+    insertRowBelow: "Insert row below",
+    insertColumnLeft: "Insert column left",
+    insertColumnRight: "Insert column right",
+    deleteRow: "Delete row",
+    deleteColumn: "Delete column",
+    headerRow: "Header row",
+    headerColumn: "Header column",
+  },
   imageBlock: {
     width: "Image width",
     widthValue: "percent of the page width",

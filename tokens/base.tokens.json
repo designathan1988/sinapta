@@ -612,6 +612,12 @@
           "value": 18,
           "unit": "rem"
         }
+      },
+      "10": {
+        "$value": {
+          "value": 10,
+          "unit": "rem"
+        }
       }
     },
     "radius": {

@@ -17,6 +17,24 @@ function setup() {
 }
 
 describe("onBlockContextMenu", () => {
+  it("leaves a right click that the block handled itself", () => {
+    const { text, commands, dispatch } = setup();
+    const event = new MouseEvent("contextmenu", {
+      bubbles: true,
+      cancelable: true,
+      clientX: 5,
+    });
+    // A table cell opens its own menu first.
+    text?.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      onBlockContextMenu(e, dispatch);
+    });
+
+    text?.dispatchEvent(event);
+
+    expect(commands).toEqual([]);
+  });
+
   it("opens the block's menu at the pointer on a right click", () => {
     const { text, commands, dispatch } = setup();
     const event = new MouseEvent("contextmenu", {

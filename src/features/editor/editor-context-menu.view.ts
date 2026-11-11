@@ -7,11 +7,13 @@ const BLOCK = ".editor__block";
 
 // A right click on a block opens its menu at the pointer. Shift+F10 and
 // the menu key fire the same event with no pointer; the menu then sits by
-// the block's handle.
+// the block's handle. A block with a menu of its own, such as a table's
+// cell menu, has already taken the event.
 export function onBlockContextMenu(event: Event, dispatch: Dispatch): void {
   if (!(event instanceof MouseEvent) || !(event.target instanceof Element)) {
     return;
   }
+  if (event.defaultPrevented) return;
   const block = event.target.closest<HTMLElement>(BLOCK);
   const blockId = parseBlockId(block?.dataset.blockId ?? "");
   if (blockId === undefined) return;
