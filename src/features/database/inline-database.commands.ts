@@ -46,7 +46,7 @@ interface Place {
 
 // Where the database goes: after the block, or in its place when the
 // block is an empty line.
-function placeFor(state: AppState, blockId: BlockId): Place | undefined {
+export function placeFor(state: AppState, blockId: BlockId): Place | undefined {
   const block = state.workspace.blocks[blockId];
   const parentId = block?.parentId ?? null;
   const parent =

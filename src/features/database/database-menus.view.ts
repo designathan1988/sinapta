@@ -56,7 +56,6 @@ export function renderTableOverlay(
   const overlay = context.state.ui.overlay;
   const kind = overlay?.kind ?? "";
   const isOther =
-    DATABASE_OVERLAYS.has(kind) &&
-    overlay?.anchorId !== context.model.database.id;
+    DATABASE_OVERLAYS.has(kind) && overlay?.anchorId !== context.model.holderId;
   return isOther ? nothing : (OVERLAYS[kind]?.(context) ?? nothing);
 }

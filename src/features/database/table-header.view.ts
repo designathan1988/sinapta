@@ -197,7 +197,7 @@ function renderHeader(
 function renderAddProperty(context: TableContext): TemplateResult {
   const overlay = {
     kind: PROPERTY_TYPES_OVERLAY,
-    anchorId: context.model.database.id,
+    anchorId: context.model.holderId,
   };
   const isOpen = isOpenFor(context.state, overlay);
   const toggle = (): void => {

@@ -1,6 +1,5 @@
 import "./database.css";
 import { html, nothing, type TemplateResult } from "lit-html";
-import { selectDatabase } from "../../blocks/database/index.ts";
 import type { BlockId } from "../../model/index.ts";
 import {
   closeOverlay,
@@ -11,13 +10,14 @@ import {
 import { renderButton } from "../../ui/button/index.ts";
 import { renderIcon, type IconName } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
-import { COPY, pluralize } from "../../ui/copy.ts";
+import { COPY } from "../../ui/copy.ts";
 import { addRow } from "./row.commands.ts";
 import {
   FILTERS_OVERLAY,
   PROPERTIES_OVERLAY,
   renderTableOverlay,
 } from "./database-menus.view.ts";
+import { LISTED_LAYOUTS, renderFooter } from "./database-footer.view.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import { isOpenFor } from "./database-overlay.ts";
 import { selectTableModel } from "./table-model.selectors.ts";
@@ -33,7 +33,7 @@ function renderNewViewButton(context: TableContext): TemplateResult {
   const { state, dispatch } = context;
   const overlay = {
     kind: NEW_VIEW_OVERLAY,
-    anchorId: context.model.database.id,
+    anchorId: context.model.holderId,
   };
   const isMenuOpen = isOpenFor(state, overlay);
   const toggleMenu = (): void => {
@@ -67,8 +67,8 @@ const VIEW_ICONS: Readonly<Record<string, IconName>> = {
 
 function renderTabs(context: TableContext): TemplateResult {
   const { model, state, dispatch } = context;
-  const databaseId = model.database.id;
-  const tabs = model.database.props.viewIds.flatMap((viewId) => {
+  const databaseId = model.holderId;
+  const tabs = model.viewIds.flatMap((viewId) => {
     const view = state.workspace.views[viewId];
     if (view === undefined) return [];
     return html`<button
@@ -103,7 +103,7 @@ function renderPopoverButton(
   button: PopoverButton,
   context: TableContext,
 ): TemplateResult {
-  const overlay = { kind: button.kind, anchorId: context.model.database.id };
+  const overlay = { kind: button.kind, anchorId: context.model.holderId };
   const isOpen = isOpenFor(context.state, overlay);
   const toggle = (): void => {
     const next = isOpen
@@ -177,59 +177,31 @@ function renderToolbar(context: TableContext): TemplateResult {
   </div>`;
 }
 
-function renderFooter(context: TableContext): TemplateResult {
-  const { model, dispatch } = context;
-  const shown = model.rows.length;
-  const count =
-    shown === model.totalRowCount
-      ? String(shown)
-      : `${String(shown)} / ${String(model.totalRowCount)}`;
-  const message =
-    model.totalRowCount === 0 ? COPY.database.empty : COPY.database.noRows;
-  const noun = pluralize(model.totalRowCount, COPY.database.rowCount);
-  const add = (): void => {
-    dispatch(
-      addRow.create({
-        databaseId: model.database.id,
-        opensPage: model.view.type !== "table",
-      }),
-    );
-  };
-  return html`<div class="database__footer">
-    <button type="button" class="database__add-row" @click=${add}>
-      ${renderIcon("plus")} <span>${COPY.database.newRow}</span>
-    </button>
-    <span class="database__count" role="status"
-      >${shown === 0 ? message : `${count} ${noun}`}</span
-    >
-  </div>`;
-}
-
-// Layouts that list rows one under another end with "New page" and a
-// count; boards, galleries and calendars add rows where they sit.
-const LISTED_LAYOUTS: ReadonlySet<string> = new Set(["table", "list"]);
-
 // A database page: its views as tabs, the view's tools and its table.
 // A database's views as tabs, the view's tools and its rows; a header
 // such as an inline database's title goes above them.
 export function renderDatabaseSection(
   state: AppState,
   dispatch: Dispatch,
-  options: { databaseId: BlockId | null; header?: TemplateResult },
+  // The database, or the linked view, whose views are shown; a page's
+  // body holds the inline ones.
+  options: {
+    holderId: BlockId | null;
+    header?: TemplateResult;
+    isInline?: boolean;
+  },
 ): TemplateResult | typeof nothing {
-  const database = selectDatabase(state, options.databaseId);
   // Today in the reader's own time zone, for filters relative to it.
   const today = new Date().toLocaleDateString("en-CA");
+  const { holderId } = options;
   const viewModel =
-    database === undefined
-      ? undefined
-      : selectTableModel(state, database.id, today);
+    holderId === null ? undefined : selectTableModel(state, holderId, today);
   if (viewModel === undefined) return nothing;
   const model = selectSearchedModel(state, viewModel);
   const context = { state, dispatch, model };
   return html`<section
     class="database"
-    ?data-inline=${database?.props.isInline === true}
+    ?data-inline=${options.isInline === true}
   >
     ${options.header ?? nothing} ${renderToolbar(context)}
     ${renderLayout(context)}
@@ -244,6 +216,6 @@ export function renderDatabase(
   dispatch: Dispatch,
 ): TemplateResult | typeof nothing {
   return renderDatabaseSection(state, dispatch, {
-    databaseId: state.ui.activePageId,
+    holderId: state.ui.activePageId,
   });
 }

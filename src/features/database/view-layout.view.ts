@@ -45,7 +45,8 @@ export function renderLayout(context: TableContext): TemplateResult {
 
 export function renderNewViewMenu(context: TableContext): TemplateResult {
   const { model, dispatch } = context;
-  const databaseId = model.database.id;
+  // A new view goes to the database or the linked view showing it.
+  const databaseId = model.holderId;
   const items = LAYOUTS.map((viewType): MenuItem => ({
     label: COPY.database.layouts[viewType],
     onSelect: () => {

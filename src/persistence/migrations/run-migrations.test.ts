@@ -120,3 +120,14 @@ describe("the migration list", () => {
     });
   });
 });
+
+describe("version 15", () => {
+  it("reads a version 14 file unchanged: linked views and inline databases are new", () => {
+    const blocks = { db: { type: "database", props: { viewIds: ["v"] } } };
+
+    expect(runMigrations({ schemaVersion: 14, blocks })).toEqual({
+      ok: true,
+      file: { schemaVersion: SCHEMA_VERSION, blocks },
+    });
+  });
+});

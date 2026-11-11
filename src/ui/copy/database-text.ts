@@ -20,6 +20,8 @@ export const DATABASE_TEXT = {
     openAsPage: "Open as page",
     notFound: "Database not found",
     inlineDatabase: "Database",
+    linkedView: "Linked view of database",
+    linkedChoose: "Show a view of",
     viewSettings: "View settings",
     newView: "New view",
     viewName: "View",

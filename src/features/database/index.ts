@@ -11,6 +11,8 @@ export { createDatabase } from "./database.commands.ts";
 export { startDatabase } from "./database-start.commands.ts";
 export { renderDatabase } from "./database.view.ts";
 export { renderInlineDatabase } from "./database-inline.view.ts";
+export { renderLinkedView } from "./linked-view.view.ts";
+export { createLinkedView } from "./linked-view.commands.ts";
 export { createInlineDatabase } from "./inline-database.commands.ts";
 export { readDateValue, type DateValue } from "./properties/date/index.ts";
 export { withPropertyConfigs } from "./property-registry.ts";
@@ -18,6 +20,7 @@ export { renderRowProperties } from "./row-properties.view.ts";
 
 import { optionCommands } from "./option.commands.ts";
 import { createInlineDatabase } from "./inline-database.commands.ts";
+import { linkedViewCommands } from "./linked-view.commands.ts";
 import { buttonPropertyCommands } from "./properties/button/index.ts";
 import {
   relationCommands,
@@ -36,6 +39,7 @@ export const databaseCommands = [
   ...tableCommands,
   ...optionCommands,
   createInlineDatabase,
+  ...linkedViewCommands,
   ...relationCommands,
   ...buttonPropertyCommands,
 ];

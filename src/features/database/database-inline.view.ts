@@ -55,5 +55,9 @@ export function renderInlineDatabase(
   if (header === nothing) {
     return html`<p class="database__missing">${COPY.database.notFound}</p>`;
   }
-  return renderDatabaseSection(state, dispatch, { databaseId, header });
+  return renderDatabaseSection(state, dispatch, {
+    holderId: databaseId,
+    header,
+    isInline: true,
+  });
 }

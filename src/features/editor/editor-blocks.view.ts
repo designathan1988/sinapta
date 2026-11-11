@@ -7,7 +7,8 @@ import { isBlockColor, type Block, type BlockId } from "../../model/index.ts";
 import { setSelection } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { DATABASE_TYPE } from "../../blocks/page/index.ts";
-import { renderInlineDatabase } from "../database/index.ts";
+import { LINKED_VIEW_TYPE } from "../../blocks/linked-view/index.ts";
+import { renderInlineDatabase, renderLinkedView } from "../database/index.ts";
 import { appendParagraph } from "./editor-structure.commands.ts";
 import { renderAddButton, renderHandle } from "./editor-block-menu.view.ts";
 import { startBlockDrag } from "./editor-block-drag.view.ts";
@@ -70,6 +71,9 @@ function renderContent(block: Block, context: BlockContext): unknown {
   const { state, dispatch } = context;
   if (block.type === DATABASE_TYPE && block.props.isInline === true) {
     return renderInlineDatabase(state, dispatch, block.id);
+  }
+  if (block.type === LINKED_VIEW_TYPE) {
+    return renderLinkedView(state, dispatch, block.id);
   }
   return blockDefinition(block.type)?.render?.(block, dispatch, state);
 }

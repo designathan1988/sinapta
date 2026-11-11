@@ -1,9 +1,9 @@
 // Commands on the saved views of a database. Everything a view remembers
 // lives in its View record and changes only here.
-import { selectDatabase } from "../../blocks/database/index.ts";
 import type {
   BlockId,
   Filter,
+  Operation,
   PropertyId,
   View,
   ViewId,
@@ -14,6 +14,11 @@ import {
   type AppState,
   type CommandEffect,
 } from "../../state/index.ts";
+import {
+  selectHolderOfView,
+  selectViewHolder,
+  type ViewHolder,
+} from "./view-holder.selectors.ts";
 import { layoutDefaults } from "./view-layout.commands.ts";
 
 function updateView(
@@ -28,19 +33,37 @@ function updateView(
 }
 
 export interface CreateViewPayload {
+  // The database, or the linked view, that gets the view.
   readonly databaseId: BlockId;
   readonly name: string;
   // A table unless given.
   readonly viewType?: ViewType;
 }
 
+// The holder, a database or a linked view, with a new list of views.
+function withViewIds(
+  state: AppState,
+  holder: ViewHolder,
+  viewIds: readonly ViewId[],
+): Operation {
+  const block = state.workspace.blocks[holder.holderId];
+  const props = { ...block?.props, viewIds: [...viewIds] };
+  return {
+    type: "record.update",
+    kind: "block",
+    id: holder.holderId,
+    patch: { props },
+  };
+}
+
 export const createView = defineCommand<CreateViewPayload>({
   type: "view.create",
   newIds: { views: 1 },
   handle(state, command) {
-    const database = selectDatabase(state, command.databaseId);
+    const holder = selectViewHolder(state, command.databaseId);
     const id = command.meta.viewIds[0];
-    if (database === undefined || id === undefined) return {};
+    if (holder === undefined || id === undefined) return {};
+    const { database } = holder;
     const record: View = {
       id,
       databaseId: database.id,
@@ -53,23 +76,14 @@ export const createView = defineCommand<CreateViewPayload>({
       hiddenPropertyIds: [],
       ...layoutDefaults(database, {}, command.viewType ?? "table"),
     };
-    const props = {
-      ...database.props,
-      viewIds: [...database.props.viewIds, id],
-    };
     return {
       operations: [
         { type: "record.create", kind: "view", record },
-        {
-          type: "record.update",
-          kind: "block",
-          id: database.id,
-          patch: { props },
-        },
+        withViewIds(state, holder, [...holder.viewIds, id]),
       ],
       ui: {
         ...state.ui,
-        activeViewIds: { ...state.ui.activeViewIds, [database.id]: id },
+        activeViewIds: { ...state.ui.activeViewIds, [holder.holderId]: id },
       },
     };
   },
@@ -86,21 +100,16 @@ export const deleteView = defineCommand<{ viewId: ViewId }>({
   type: "view.delete",
   handle(state, command) {
     const view = state.workspace.views[command.viewId];
-    const database =
-      view === undefined ? undefined : selectDatabase(state, view.databaseId);
-    if (view === undefined || database === undefined) return {};
-    const viewIds = database.props.viewIds.filter((id) => id !== view.id);
+    const holder =
+      view === undefined ? undefined : selectHolderOfView(state, view);
+    if (view === undefined || holder === undefined) return {};
+    const viewIds = holder.viewIds.filter((id) => id !== view.id);
     if (viewIds.length === 0) return {};
-    const props = { ...database.props, viewIds };
-    const { [database.id]: _active, ...activeViewIds } = state.ui.activeViewIds;
+    const { [holder.holderId]: _active, ...activeViewIds } =
+      state.ui.activeViewIds;
     return {
       operations: [
-        {
-          type: "record.update",
-          kind: "block",
-          id: database.id,
-          patch: { props },
-        },
+        withViewIds(state, holder, viewIds),
         { type: "record.delete", kind: "view", id: view.id },
       ],
       ui: { ...state.ui, activeViewIds },

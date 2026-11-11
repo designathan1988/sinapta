@@ -12,10 +12,9 @@ import {
   type ColumnDef,
 } from "@tanstack/table-core";
 import { storeReactivityBindings } from "@tanstack/table-core/store-reactivity-bindings";
-import {
-  selectDatabase,
-  type DatabaseBlock,
-  type PropertyDefinition,
+import type {
+  DatabaseBlock,
+  PropertyDefinition,
 } from "../../blocks/database/index.ts";
 
 import {
@@ -24,10 +23,12 @@ import {
   type Filter,
   type PropertyId,
   type View,
+  type ViewId,
 } from "../../model/index.ts";
 import type { AppState } from "../../state/index.ts";
 import type { FilterContext } from "./property-definition.ts";
 import { propertyType } from "./property-registry.ts";
+import { selectActiveView, selectViewHolder } from "./view-holder.selectors.ts";
 import { selectRows } from "./row-values.selectors.ts";
 
 // The title column is every row's page title. It behaves as a text
@@ -50,6 +51,9 @@ export interface TableColumn {
 }
 
 export interface TableModel {
+  // The database, or the linked view, whose views these are.
+  readonly holderId: BlockId;
+  readonly viewIds: readonly ViewId[];
   readonly database: DatabaseBlock;
   readonly view: View;
   // Visible columns in order; the title column is always first.
@@ -190,19 +194,6 @@ function toColumn(view: View, property: PropertyDefinition): TableColumn {
   };
 }
 
-// The view of a database that is shown: the one chosen, or its first.
-export function selectActiveView(
-  state: AppState,
-  database: DatabaseBlock,
-): View | undefined {
-  const chosen = state.ui.activeViewIds[database.id];
-  const viewId =
-    chosen !== undefined && database.props.viewIds.includes(chosen)
-      ? chosen
-      : database.props.viewIds[0];
-  return viewId === undefined ? undefined : state.workspace.views[viewId];
-}
-
 interface Cached {
   readonly blocks: AppState["workspace"]["blocks"];
   readonly view: View;
@@ -217,17 +208,18 @@ const cache = new Map<BlockId, Cached>();
 // `today` ("YYYY-MM-DD") serves filters such as "within the past week".
 export function selectTableModel(
   state: AppState,
-  databaseId: BlockId,
+  holderId: BlockId,
   today = "",
 ): TableModel | undefined {
-  const database = selectDatabase(state, databaseId);
+  const holder = selectViewHolder(state, holderId);
   const view =
-    database === undefined ? undefined : selectActiveView(state, database);
+    holder === undefined ? undefined : selectActiveView(state, holder);
   const title = titleProperty();
-  if (database === undefined || view === undefined || title === undefined)
+  if (holder === undefined || view === undefined || title === undefined)
     return undefined;
+  const { database, viewIds } = holder;
   const { blocks } = state.workspace;
-  const cached = cache.get(databaseId);
+  const cached = cache.get(holderId);
   if (
     cached?.blocks === blocks &&
     cached.view === view &&
@@ -239,12 +231,14 @@ export function selectTableModel(
   const data = selectRows({ state, today }, database);
   const others = orderedProperties(view, database.props.properties);
   const model: TableModel = {
+    holderId,
+    viewIds,
     database,
     view,
     columns: [title, ...others].map((property) => toColumn(view, property)),
     rows: sortedAndFiltered(data, { view, properties: all, today }),
     totalRowCount: data.length,
   };
-  cache.set(databaseId, { blocks, view, today, model });
+  cache.set(holderId, { blocks, view, today, model });
   return model;
 }
