@@ -16,17 +16,15 @@ import type {
   DatabaseBlock,
   PropertyDefinition,
 } from "../../blocks/database/index.ts";
-
 import {
   parsePropertyId,
   type BlockId,
-  type Filter,
   type PropertyId,
   type View,
   type ViewId,
 } from "../../model/index.ts";
 import type { AppState } from "../../state/index.ts";
-import type { FilterContext } from "./property-definition.ts";
+import { cellValue, matchesGroup } from "./filter-match.ts";
 import { propertyType } from "./property-registry.ts";
 import { selectActiveView, selectViewHolder } from "./view-holder.selectors.ts";
 import { selectRows } from "./row-values.selectors.ts";
@@ -78,48 +76,18 @@ export function titleProperty(): PropertyDefinition | undefined {
   return { id: TITLE_PROPERTY_ID, name: "Name", type: "text" };
 }
 
-function valueOf(row: TableRow, property: PropertyDefinition): unknown {
-  const stored =
-    property.id === TITLE_PROPERTY_ID ? row.title : row.values[property.id];
-  return propertyType(property.type).read(stored);
-}
-
-// Every filter on one property must pass.
-function passes(
-  value: unknown,
-  context: FilterContext,
-  filters: readonly Filter[],
-): boolean {
-  const { filterOperators } = propertyType(context.property.type);
-  return filters.every((filter) => {
-    const operator = filterOperators.find(
-      (item) => item.id === filter.operator,
-    );
-    const operand = typeof filter.value === "string" ? filter.value : "";
-    return operator === undefined || operator.test(value, operand, context);
-  });
-}
-
-function isFilterList(value: unknown): value is readonly Filter[] {
-  return Array.isArray(value);
-}
-
 function columnDefs(
   properties: readonly PropertyDefinition[],
-  today: string,
 ): ColumnDef<Features, TableRow>[] {
   return properties.map((property) => ({
     id: property.id,
-    accessorFn: (row: TableRow) => valueOf(row, property),
+    accessorFn: (row: TableRow) => cellValue(row, property, TITLE_PROPERTY_ID),
     sortUndefined: "last" as const,
     sortFn: (a, b, columnId) =>
       propertyType(property.type).compare(
         a.getValue(columnId),
         b.getValue(columnId),
       ),
-    filterFn: (row, columnId, filterValue: unknown) =>
-      !isFilterList(filterValue) ||
-      passes(row.getValue(columnId), { property, today }, filterValue),
   }));
 }
 
@@ -130,7 +98,8 @@ function known(
   return properties.some((property) => property.id === id);
 }
 
-// The engine's sort and filter settings, built from the View record.
+// The engine's sort settings, built from the View record. Filters are
+// worked out before, since their groups may join conditions with or.
 function engineState(view: View, properties: readonly PropertyDefinition[]) {
   const sorting = view.sorts
     .filter((sort) => known(properties, sort.propertyId))
@@ -138,13 +107,7 @@ function engineState(view: View, properties: readonly PropertyDefinition[]) {
       id: sort.propertyId,
       desc: sort.direction === "descending",
     }));
-  const filtered = properties
-    .map((property) => ({
-      id: property.id,
-      value: view.filters.filter((filter) => filter.propertyId === property.id),
-    }))
-    .filter((entry) => entry.value.length > 0);
-  return { sorting, columnFilters: filtered };
+  return { sorting };
 }
 
 interface Query {
@@ -155,10 +118,12 @@ interface Query {
 
 function sortedAndFiltered(data: TableRow[], query: Query): TableRow[] {
   const { view, properties, today } = query;
+  const context = { properties, titleId: TITLE_PROPERTY_ID, today };
+  const shown = data.filter((row) => matchesGroup(row, view.filter, context));
   const table = constructTable({
     features,
-    columns: columnDefs(properties, today),
-    data,
+    columns: columnDefs(properties),
+    data: shown,
     getRowId: (row) => row.id,
     state: engineState(view, properties),
   });

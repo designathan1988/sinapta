@@ -20,6 +20,7 @@ import {
 import { LISTED_LAYOUTS, renderFooter } from "./database-footer.view.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import { isOpenFor } from "./database-overlay.ts";
+import { filterCount } from "./filter-match.ts";
 import { selectTableModel } from "./table-model.selectors.ts";
 import { NEW_VIEW_OVERLAY, renderLayout } from "./view-layout.view.ts";
 import { setViewSearch } from "./view-search.commands.ts";
@@ -154,7 +155,7 @@ function renderToolbar(context: TableContext): TemplateResult {
     kind: FILTERS_OVERLAY,
     label: COPY.database.filter,
     icon: "filter",
-    count: model.view.filters.length,
+    count: filterCount(model.view.filter),
   } as const;
   const settings = {
     kind: PROPERTIES_OVERLAY,

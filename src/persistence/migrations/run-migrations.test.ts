@@ -131,3 +131,27 @@ describe("version 15", () => {
     });
   });
 });
+
+describe("version 16", () => {
+  it("reads a version 15 view's filters as an and group of them", () => {
+    const filters = [
+      { propertyId: "a", operator: "is", value: "x" },
+      { propertyId: "b", operator: "is-empty", value: "" },
+    ];
+    const views = { v: { id: "v", filters, sorts: [] } };
+
+    expect(runMigrations({ schemaVersion: 15, views })).toEqual({
+      ok: true,
+      file: {
+        schemaVersion: SCHEMA_VERSION,
+        views: {
+          v: {
+            id: "v",
+            sorts: [],
+            filter: { conjunction: "and", items: filters },
+          },
+        },
+      },
+    });
+  });
+});

@@ -16,6 +16,41 @@
     align-items: center;
   }
 
+  /* "Where", or the join of a group's conditions, before each item. */
+  .database__filter-lead {
+    flex: none;
+    inline-size: var(--size-label-width);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+  }
+
+  .database__filter-group {
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: start;
+
+    & > .database__filter-lead:not(select) {
+      padding-block-start: var(--space-inset-xs);
+    }
+  }
+
+  .database__filter-box {
+    display: grid;
+    flex: 1;
+    gap: var(--space-stack-xs);
+    justify-items: start;
+    padding: var(--space-inset-sm);
+    border: var(--size-border-thin) solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-hover);
+  }
+
+  .database__filter-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-inline-xs);
+  }
+
   .database__field {
     min-inline-size: 0;
     min-block-size: var(--size-control-md);

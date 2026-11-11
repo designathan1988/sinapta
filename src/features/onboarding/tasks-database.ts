@@ -40,7 +40,7 @@ function view(ids: TaskIds, index: number, type: ViewType): View[] {
     name: COPY.database.layouts[type],
     type,
     sorts: [],
-    filters: [],
+    filter: { conjunction: "and", items: [] },
     propertyOrder: [],
     propertyWidths: {},
     hiddenPropertyIds: [],

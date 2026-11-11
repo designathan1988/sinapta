@@ -32,7 +32,7 @@ export function emptyView(
     name,
     type: "table",
     sorts: [],
-    filters: [],
+    filter: { conjunction: "and", items: [] },
     propertyOrder: [],
     propertyWidths: {},
     hiddenPropertyIds: [],

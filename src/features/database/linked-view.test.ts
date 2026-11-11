@@ -9,7 +9,7 @@ import {
   setLinkedViewSource,
 } from "./linked-view.commands.ts";
 import { selectTableModel } from "./table-model.selectors.ts";
-import { createView, deleteView, setViewFilters } from "./view.commands.ts";
+import { createView, deleteView, setViewFilter } from "./view.commands.ts";
 
 const SOURCE = toBlockId("db");
 const LINKED = toBlockId("new-1");
@@ -57,7 +57,7 @@ function createApp() {
   const workspace = { ...blocks, views: { [sourceView.id]: sourceView } };
   const app = createTestApp({
     workspace,
-    commands: [...linkedViewCommands, createView, deleteView, setViewFilters],
+    commands: [...linkedViewCommands, createView, deleteView, setViewFilter],
   });
   app.dispatch(createLinkedView.create({ blockId: toBlockId("a") }));
   app.dispatch(
@@ -94,9 +94,9 @@ describe("linked views", () => {
     };
 
     dispatch(
-      setViewFilters.create({
+      setViewFilter.create({
         viewId: viewId(String(linkedViews()[0])),
-        filters: [filter],
+        filter: { conjunction: "and", items: [filter] },
       }),
     );
 

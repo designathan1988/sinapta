@@ -2,7 +2,7 @@
 // lives in its View record and changes only here.
 import type {
   BlockId,
-  Filter,
+  FilterGroup,
   Operation,
   PropertyId,
   View,
@@ -70,7 +70,7 @@ export const createView = defineCommand<CreateViewPayload>({
       name: command.name,
       type: "table",
       sorts: [],
-      filters: [],
+      filter: { conjunction: "and", items: [] },
       propertyOrder: [],
       propertyWidths: {},
       hiddenPropertyIds: [],
@@ -155,13 +155,14 @@ export const sortByProperty = defineCommand<SortByPayload>({
   },
 });
 
-export const setViewFilters = defineCommand<{
+// Replaces the view's whole filter: its conditions and groups.
+export const setViewFilter = defineCommand<{
   viewId: ViewId;
-  filters: readonly Filter[];
+  filter: FilterGroup;
 }>({
-  type: "view.setFilters",
+  type: "view.setFilter",
   handle: (state, command) =>
-    updateView(state, command.viewId, { filters: [...command.filters] }),
+    updateView(state, command.viewId, { filter: command.filter }),
 });
 
 export const MIN_COLUMN_WIDTH = 80;
@@ -239,7 +240,7 @@ export const viewCommands = [
   deleteView,
   setViewSorts,
   sortByProperty,
-  setViewFilters,
+  setViewFilter,
   resizeProperty,
   setPropertyOrder,
   togglePropertyHidden,

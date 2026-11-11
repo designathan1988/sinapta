@@ -44,7 +44,7 @@ function createApp() {
     name: "Table",
     type: "table",
     sorts: [],
-    filters: [],
+    filter: { conjunction: "and", items: [] },
     propertyOrder: [],
     propertyWidths: {},
     hiddenPropertyIds: [],

@@ -1,184 +1,169 @@
-// The filters of a view: one row per condition, each a property, an
-// operator and, when the operator needs one, a value to compare with.
-import { html, nothing, type TemplateResult } from "lit-html";
+// The filter of a view: conditions joined with and or or, and groups of
+// conditions with a join of their own, one level deep. Every control
+// finds what it changes by the path on it or on its row.
+import { html, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
-import type { PropertyDefinition } from "../../blocks/database/index.ts";
-import type { Filter } from "../../model/index.ts";
+import type {
+  Conjunction,
+  FilterGroup,
+  FilterItem,
+  InnerFilterGroup,
+} from "../../model/index.ts";
 import { closeOverlay } from "../../state/index.ts";
 import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
-import type { FilterOperator, OperandChoice } from "./property-definition.ts";
-import { propertyType } from "./property-registry.ts";
+import {
+  addFilter,
+  addGroup,
+  removeAt,
+  setConjunction,
+  updateAt,
+  type FilterPath,
+} from "./filter-edit.ts";
+import { changedFilter, newFilter } from "./filter-fields.ts";
+import { isFilterGroup } from "./filter-match.ts";
+import { renderFilterRow } from "./filter-row.view.ts";
 import type { TableContext } from "./table-cell.view.ts";
-import { titleProperty } from "./table-model.selectors.ts";
-import { setViewFilters } from "./view.commands.ts";
+import { setViewFilter } from "./view.commands.ts";
 
-function filterProperties(context: TableContext): PropertyDefinition[] {
-  const title = titleProperty();
-  const properties = context.model.database.props.properties;
-  return title === undefined ? properties : [title, ...properties];
-}
+const CONJUNCTIONS: readonly Conjunction[] = ["and", "or"];
 
-function firstOperator(property: PropertyDefinition | undefined): string {
-  return propertyType(property?.type ?? "text").filterOperators[0]?.id ?? "";
-}
+const CONJUNCTION_LABELS: Readonly<Record<Conjunction, string>> = {
+  and: COPY.database.conjunctionAnd,
+  or: COPY.database.conjunctionOr,
+};
 
-interface Change {
-  readonly field: string;
-  readonly value: string;
-}
-
-// What a change to one control of a filter row turns the filter into.
-function changed(
-  filter: Filter,
-  change: Change,
-  context: TableContext,
-): Filter {
-  const { field, value } = change;
-  if (field === "operator") return { ...filter, operator: value };
-  if (field === "value") return { ...filter, value };
-  const property = filterProperties(context).find((item) => item.id === value);
-  if (property === undefined) return filter;
-  // Another property has other operators and other values.
-  return {
-    propertyId: property.id,
-    operator: firstOperator(property),
-    value: "",
-  };
-}
-
-function setFilters(context: TableContext, filters: readonly Filter[]): void {
+function setFilter(context: TableContext, filter: FilterGroup): void {
   const viewId = context.model.view.id;
-  context.dispatch(setViewFilters.create({ viewId, filters }));
+  context.dispatch(setViewFilter.create({ viewId, filter }));
 }
 
-// One listener for every control: each names its row and its field.
+function parsePath(text: string | undefined): FilterPath | undefined {
+  if (text === undefined) return undefined;
+  return text === "" ? [] : text.split(".").map(Number);
+}
+
 function onChange(event: Event, context: TableContext): void {
   const control = event.target;
   const isControl =
     control instanceof HTMLSelectElement || control instanceof HTMLInputElement;
   if (!isControl) return;
-  const row = control.closest<HTMLElement>("[data-index]");
-  const index = Number(row?.dataset.index ?? -1);
-  const change = { field: control.dataset.field ?? "", value: control.value };
-  const filters = context.model.view.filters.map((filter, position) =>
-    position === index ? changed(filter, change, context) : filter,
-  );
-  setFilters(context, filters);
+  const holder = control.closest<HTMLElement>("[data-path]");
+  const path = parsePath(holder?.dataset.path);
+  if (path === undefined) return;
+  const field = control.dataset.field ?? "";
+  const { value } = control;
+  const filter = context.model.view.filter;
+  const next =
+    field === "conjunction"
+      ? setConjunction(filter, path, value === "or" ? "or" : "and")
+      : updateAt(filter, path, (item) =>
+          changedFilter(item, { field, value }, context),
+        );
+  setFilter(context, next);
 }
 
-function renderSelect(
-  field: string,
-  label: string,
-  options: TemplateResult[],
+// Before each item: "Where" first, then the group's join. The second
+// item's join is the one to change; the later ones repeat it.
+function renderLead(
+  position: number,
+  conjunction: Conjunction,
+  groupPath: FilterPath,
 ): TemplateResult {
+  if (position !== 1) {
+    const text =
+      position === 0
+        ? COPY.database.filterWhere
+        : CONJUNCTION_LABELS[conjunction];
+    return html`<span class="database__filter-lead">${text}</span>`;
+  }
   return html`<select
-    class="database__field"
-    data-field=${field}
-    aria-label=${label}
+    class="database__field database__filter-lead"
+    data-field="conjunction"
+    data-path=${groupPath.join(".")}
+    aria-label=${COPY.database.filterConjunction}
   >
-    ${options}
+    ${CONJUNCTIONS.map(
+      (item) =>
+        html`<option value=${item} ?selected=${item === conjunction}>
+          ${CONJUNCTION_LABELS[item]}
+        </option>`,
+    )}
   </select>`;
 }
 
-function option(
-  value: string,
-  label: string,
-  isSelected: boolean,
-): TemplateResult {
-  return html`<option value=${value} ?selected=${isSelected}>${label}</option>`;
+interface GroupProps {
+  readonly group: InnerFilterGroup;
+  readonly index: number;
+  readonly lead: TemplateResult;
 }
 
-// What a filter's operand is chosen from: the operator's own choices, such
-// as a status group, or else the property's options.
-function operandChoices(
-  property: PropertyDefinition | undefined,
-  operator: FilterOperator | undefined,
-): readonly OperandChoice[] | undefined {
-  if (property === undefined) return undefined;
-  if (operator?.choices !== undefined) return operator.choices(property);
-  return property.options?.map((item) => ({ id: item.id, label: item.name }));
+function renderGroup(props: GroupProps, context: TableContext): TemplateResult {
+  const { group, index, lead } = props;
+  const top = context.model.view.filter;
+  const rows = group.items.map((filter, at) =>
+    renderFilterRow(
+      {
+        filter,
+        path: [index, at],
+        lead: renderLead(at, group.conjunction, [index]),
+        onRemove: () => {
+          setFilter(context, removeAt(top, [index, at]));
+        },
+      },
+      context,
+    ),
+  );
+  const add = (): void => {
+    const filter = newFilter(context);
+    if (filter !== undefined)
+      setFilter(context, addFilter(top, [index], filter));
+  };
+  return html`<li class="database__filter-group">
+    ${lead}
+    <div
+      class="database__filter-box"
+      role="group"
+      aria-label=${COPY.database.filterGroup}
+    >
+      <ul class="database__filters">
+        ${rows}
+      </ul>
+      ${renderButton({ label: COPY.database.addFilter, icon: "plus", onClick: add })}
+    </div>
+  </li>`;
 }
 
-// The value a filter compares with: one of the options for a select
-// property, free text or a date for the others.
-function renderOperand(
-  filter: Filter,
-  property: PropertyDefinition | undefined,
-  operator: FilterOperator | undefined,
-): TemplateResult {
-  const current = typeof filter.value === "string" ? filter.value : "";
-  const choices = operandChoices(property, operator);
-  if (choices !== undefined) {
-    const options = choices.map((item) =>
-      option(item.id, item.label, item.id === current),
-    );
-    return renderSelect("value", COPY.database.filterValue, [
-      option("", "", current === ""),
-      ...options,
-    ]);
-  }
-  return html`<input
-    class="database__field"
-    type=${property?.type === "date" ? "date" : "text"}
-    data-field="value"
-    aria-label=${COPY.database.filterValue}
-    .value=${current}
-  />`;
-}
-
-function renderFilterRow(
-  filter: Filter,
+function renderItem(
+  item: FilterItem,
   index: number,
   context: TableContext,
 ): TemplateResult {
-  const properties = filterProperties(context);
-  const property = properties.find((item) => item.id === filter.propertyId);
-  const operators = propertyType(property?.type ?? "text").filterOperators;
-  const operator = operators.find((item) => item.id === filter.operator);
-  const remove = (): void => {
-    setFilters(
-      context,
-      context.model.view.filters.filter((_, position) => position !== index),
-    );
+  const top = context.model.view.filter;
+  const lead = renderLead(index, top.conjunction, []);
+  if (isFilterGroup(item)) {
+    return renderGroup({ group: item, index, lead }, context);
+  }
+  const onRemove = (): void => {
+    setFilter(context, removeAt(top, [index]));
   };
-  return html`<li class="database__filter" data-index=${index}>
-    ${renderSelect(
-      "property",
-      COPY.database.filterProperty,
-      properties.map((item) =>
-        option(item.id, item.name, item.id === property?.id),
-      ),
-    )}
-    ${renderSelect(
-      "operator",
-      COPY.database.filterOperator,
-      operators.map((item) =>
-        option(item.id, item.label, item.id === operator?.id),
-      ),
-    )}
-    ${operator?.needsOperand === true ? renderOperand(filter, property, operator) : nothing}
-    ${renderButton({
-      label: COPY.database.removeFilter,
-      icon: "close",
-      isIconOnly: true,
-      onClick: remove,
-    })}
-  </li>`;
+  return renderFilterRow(
+    { filter: item, path: [index], lead, onRemove },
+    context,
+  );
 }
 
 export function renderFilters(context: TableContext): TemplateResult {
   const { model, dispatch } = context;
-  const add = (): void => {
-    const first = filterProperties(context)[0];
-    if (first === undefined) return;
-    const filter = {
-      propertyId: first.id,
-      operator: firstOperator(first),
-      value: "",
-    };
-    setFilters(context, [...model.view.filters, filter]);
+  const top = model.view.filter;
+  const add = (isGroup: boolean) => (): void => {
+    const filter = newFilter(context);
+    if (filter === undefined) return;
+    setFilter(
+      context,
+      isGroup ? addGroup(top, filter) : addFilter(top, [], filter),
+    );
   };
   return html`<div
     class="database__popover"
@@ -193,8 +178,11 @@ export function renderFilters(context: TableContext): TemplateResult {
     }}
   >
     <ul class="database__filters">
-      ${model.view.filters.map((filter, index) => renderFilterRow(filter, index, context))}
+      ${top.items.map((item, index) => renderItem(item, index, context))}
     </ul>
-    ${renderButton({ label: COPY.database.addFilter, icon: "plus", onClick: add })}
+    <div class="database__filter-actions">
+      ${renderButton({ label: COPY.database.addFilter, icon: "plus", onClick: add(false) })}
+      ${renderButton({ label: COPY.database.addFilterGroup, icon: "plus", onClick: add(true) })}
+    </div>
   </div>`;
 }

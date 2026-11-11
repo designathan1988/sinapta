@@ -9,7 +9,7 @@ import {
 import {
   resizeProperty,
   setPropertyOrder,
-  setViewFilters,
+  setViewFilter,
   setViewSorts,
   togglePropertyHidden,
 } from "./view.commands.ts";
@@ -107,15 +107,34 @@ describe("selectTableModel", () => {
     const app = createApp();
     const [points, stage] = app.propertyIds;
     if (points === undefined || stage === undefined) throw new Error("setup");
-    const filters = [
+    const items = [
       { propertyId: stage, operator: "is", value: "todo" },
       { propertyId: points, operator: "greater-than", value: "4" },
     ];
+    const filter = { conjunction: "and" as const, items };
 
-    app.dispatch(setViewFilters.create({ viewId: app.view().id, filters }));
+    app.dispatch(setViewFilter.create({ viewId: app.view().id, filter }));
 
     expect(titles(app)).toEqual(["build app"]);
     expect(model(app).totalRowCount).toBe(4);
+  });
+
+  it("keeps rows that pass either filter of an or group, and its inner group", () => {
+    const app = createApp();
+    const [points, stage] = app.propertyIds;
+    if (points === undefined || stage === undefined) throw new Error("setup");
+    const isTodo = { propertyId: stage, operator: "is", value: "todo" };
+    const big = { propertyId: points, operator: "greater-than", value: "4" };
+    const small = { propertyId: points, operator: "less-than", value: "2" };
+    const filter = {
+      conjunction: "or" as const,
+      items: [big, { conjunction: "and" as const, items: [isTodo, small] }],
+    };
+
+    app.dispatch(setViewFilter.create({ viewId: app.view().id, filter }));
+
+    // Audit is to do, but has no points to be under 2.
+    expect(titles(app)).toEqual(["build app", "Ship"]);
   });
 
   it("orders, hides and sizes columns from the view record", () => {

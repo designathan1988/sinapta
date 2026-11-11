@@ -33,7 +33,11 @@ export {
 } from "./block.schema.ts";
 export {
   viewTypeSchema,
+  type Conjunction,
   type Filter,
+  type FilterGroup,
+  type FilterItem,
+  type InnerFilterGroup,
   type View,
   type ViewType,
 } from "./view.schema.ts";
