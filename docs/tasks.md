@@ -630,7 +630,7 @@ Checks after milestone 12: 709 tests pass; `npm run verify` about
 
 | Task | Status | Tests |
 | --- | --- | --- |
-| 13.1 Every Notion block prefix | done | `block-shortcut.test.ts`, `editor-convert.test.ts` |
+| 13.1 Every Notion block prefix | done | `editor-convert.test.ts` |
 | 13.2 Inline Markdown while typing | done | `inline-markdown.test.ts`, `editor-input.test.ts` |
 | 13.3 Block keyboard parity | done | `editor-block-keys.test.ts`, `editor-selection-keys.test.ts` |
 | 13.4 Block color (format version 6) | done | `editor-color.test.ts`, `editor-color-menu.test.ts` |
