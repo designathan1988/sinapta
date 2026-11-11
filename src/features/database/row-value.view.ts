@@ -10,7 +10,7 @@ import { renderChip } from "../../ui/chip/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import type { MenuItem } from "../../ui/menu/index.ts";
 import { renderSelect, type SelectMenu } from "../../ui/select/index.ts";
-import { renderDateRange } from "./properties/date/index.ts";
+import { dateMenu } from "./date-menu.ts";
 import { propertyType } from "./property-registry.ts";
 import {
   renderRowButton,
@@ -111,25 +111,17 @@ function renderDate(
     value === undefined
       ? renderEmpty()
       : html`${propertyType(property.type).renderCell(value, property)}`;
-  const clear: MenuItem = {
-    label: TEXT.clearDate,
-    icon: "trash",
-    onSelect: () => {
-      const change = {
-        rowId: row.id,
-        propertyId: property.id,
-        value: undefined,
-      };
+  const menu = dateMenu({
+    stored: value,
+    label: property.name,
+    overlay: page.state.ui.overlay,
+    dispatch: page.dispatch,
+    onChange: (next) => {
+      const change = { rowId: row.id, propertyId: property.id, value: next };
       page.dispatch(setRowValue.create(change));
     },
-  };
-  return renderOpener(
-    { row, property, page },
-    {
-      display: shown,
-      menu: { lead: renderDateRange(value, property), items: [clear] },
-    },
-  );
+  });
+  return renderOpener({ row, property, page }, { display: shown, menu });
 }
 
 function renderText(

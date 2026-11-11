@@ -1,5 +1,4 @@
 export { dateProperty } from "./date.definition.ts";
-export { renderDateRange } from "./date-range.view.ts";
 export {
   dateFromParts,
   formatDateValue,

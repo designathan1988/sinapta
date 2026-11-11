@@ -103,7 +103,8 @@ owner listed here exists.
 | Overlay dismissal, anchoring and focus return; how deep a control sits among open submenus | `src/ui/overlay/` | 1 |
 | Menu primitive: every menu and option list (panel, header, name, search, rows, sections, switch rows, submenus beside a row) | `src/ui/menu/` | 2 |
 | Select: a control showing a choice that opens its option list, in place of every browser `<select>` | `src/ui/select/` | 16 |
-| Chips: option labels on their color | `src/ui/chip/` | 16 |
+| Chips: option labels on their color, and color swatches | `src/ui/chip/` | 16 |
+| Date picker: Notion's calendar, its month and its End date, Include time and Clear rows | `src/ui/date-picker/` | 16 |
 | Switches: the look of an on and off setting | `src/ui/switch/` | 16 |
 | Dialog primitive | `src/ui/dialog/` | 1 |
 | Button primitive | `src/ui/button/` | 1 |

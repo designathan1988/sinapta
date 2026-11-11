@@ -11,7 +11,6 @@ import type { AppState, Dispatch } from "../../state/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
-import { dateFromParts } from "./properties/date/index.ts";
 import { setRowValue } from "./row.commands.ts";
 import type { RowPage } from "./row-files.view.ts";
 import { propertyType } from "./property-registry.ts";
@@ -43,22 +42,8 @@ type Control = HTMLInputElement | HTMLSelectElement;
 // Stands for text that does not fit the property type.
 const INVALID = Symbol("invalid");
 
-// The date a range's three fields hold together.
-function dateOf(group: HTMLElement): unknown {
-  const part = (name: string): string =>
-    group.querySelector<HTMLInputElement>(`[data-part="${name}"]`)?.value ?? "";
-  const result = dateFromParts({
-    start: part("start"),
-    end: part("end"),
-    time: part("time"),
-  });
-  return result.ok ? result.value : INVALID;
-}
-
-// The value a changed control asks for: a date reads its three fields.
+// The value a changed control asks for.
 function valueOf(control: Control, property: PropertyDefinition): unknown {
-  const group = control.closest("fieldset");
-  if (group?.dataset.dateRange !== undefined) return dateOf(group);
   if (control instanceof HTMLInputElement && control.type === "checkbox")
     return control.checked ? true : undefined;
   const value = propertyType(property.type).parse(control.value);

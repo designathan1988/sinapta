@@ -1,6 +1,7 @@
 // Chooses which of the table's menus and popovers is open.
 import "./database-menus.css";
 import { nothing, type TemplateResult } from "lit-html";
+import { renderCellDate } from "./cell-date.view.ts";
 import { renderCellFiles } from "./cell-files.view.ts";
 import { renderCellRelation } from "./cell-relation.view.ts";
 import { renderCellOptions } from "./cell-options.view.ts";
@@ -11,6 +12,7 @@ import {
   CELL_FILES_OVERLAY,
   CELL_OPTIONS_OVERLAY,
   CELL_RELATION_OVERLAY,
+  CELL_DATE_OVERLAY,
   type TableContext,
 } from "./table-cell.view.ts";
 import { COLUMN_MENU_OVERLAY } from "./database-overlay.ts";
@@ -38,6 +40,7 @@ const OVERLAYS: Record<string, Render> = {
   [CELL_OPTIONS_OVERLAY]: renderCellOptions,
   [CELL_FILES_OVERLAY]: renderCellFiles,
   [CELL_RELATION_OVERLAY]: renderCellRelation,
+  [CELL_DATE_OVERLAY]: renderCellDate,
   [FILTERS_OVERLAY]: renderFilters,
   [BULK_EDIT_OVERLAY]: renderBulkEdit,
   [BOARD_COLUMN_OVERLAY]: renderBoardColumnMenu,

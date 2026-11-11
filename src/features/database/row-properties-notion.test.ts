@@ -89,20 +89,20 @@ describe("a row's properties, as Notion's row page shows them", () => {
     expect(property("Twice").textContent).toContain("8");
   });
 
-  it("shows a date as text that opens its fields", () => {
+  it("shows a date as text that opens its calendar", () => {
     const closed = mount();
     const open = mount("Due");
 
-    expect(
-      closed.property("Due").querySelector("[data-part=start]"),
-    ).toBeNull();
+    expect(closed.property("Due").querySelector(".date-picker")).toBeNull();
     expect(
       closed.property("Due").querySelector(".select")?.textContent,
     ).toContain("2026");
     expect(
-      open.property("Due").querySelector<HTMLInputElement>("[data-part=start]")
-        ?.value,
-    ).toBe("2026-11-10");
+      open
+        .property("Due")
+        .querySelector('[data-day="2026-11-10"]')
+        ?.getAttribute("aria-pressed"),
+    ).toBe("true");
   });
 
   it("shows tags as chips that open their options, each one ticked or not", () => {

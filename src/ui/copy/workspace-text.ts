@@ -46,6 +46,17 @@ export const WORKSPACE_TEXT = {
     notMoved: "The page cannot move further that way.",
   },
   menu: { back: "Back", close: "Close", noMatches: "No matches" },
+  // Notion's date picker.
+  datePicker: {
+    weekdays: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+    today: "Today",
+    previousMonth: "Previous month",
+    nextMonth: "Next month",
+    endDate: "End date",
+    includeTime: "Include time",
+    time: "Time",
+    clear: "Clear",
+  },
   breadcrumbs: { label: "Breadcrumb" },
   favorites: { heading: "Favorites" },
   trash: {

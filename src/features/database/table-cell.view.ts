@@ -18,12 +18,14 @@ export const TITLE_KEY = "title";
 export const CELL_OPTIONS_OVERLAY = "cell-options";
 export const CELL_FILES_OVERLAY = "cell-files";
 export const CELL_RELATION_OVERLAY = "cell-relation";
+export const CELL_DATE_OVERLAY = "cell-date";
 
 // The popover that edits a cell, for types not edited as text.
 export const CELL_POPOVERS: Readonly<Record<string, string>> = {
   options: CELL_OPTIONS_OVERLAY,
   files: CELL_FILES_OVERLAY,
   relation: CELL_RELATION_OVERLAY,
+  date: CELL_DATE_OVERLAY,
 };
 
 export interface TableContext {

@@ -64,13 +64,15 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Calculation | `table-footer.view.ts` | Notion | "Calculate" with a chevron opening the grouped menu of calculations |
 | Set property on ticked rows | `table-bulk.view.ts` | custom (a list, not a button per property) | a button per property in the bar |
 | Linked view source | `linked-view.view.ts` | Notion | searchable list of databases |
-| Row properties on a row page | `row-properties.view.ts`, `row-value.view.ts` | Notion (dates edit in fields, not a calendar) | 34 px rows: the type's icon and name in a 160 px column, then the value drawn as its cell; options, tags and dates open their editors |
+| Row properties on a row page | `row-properties.view.ts`, `row-value.view.ts` | Notion | 34 px rows: the type's icon and name in a 160 px column, then the value drawn as its cell; options, tags and dates open their editors |
 | Column menu | `column-menu.view.ts` | Notion | name with its type's icon in a box; Edit property ›, Change type ›, Filter, Sort ›, Group, Calculate ›, Freeze, Hide, Wrap, Insert left and right, Duplicate, Delete; submenus open on hover beside the row |
 | Change type | `property-edit-menu.ts` | Notion | list of types with icons, the current one checked; values carry over |
 | Calculate | `column-menu-items.ts` | Notion | None, then Count ›, Percent ›, More options › |
 | Board column menu | `board-column-menu.view.ts` | menu | menu |
 | Row tick box | `table-gutter.view.ts` | Notion | Notion checkbox |
 | Group header | `group-header.view.ts`, `group-menu.view.ts` | Notion | caret, chip, count; hover shows "…" (the group's menu) and "+" (a new row in the group) |
+
+| Date cell and date value | `ui/date-picker/`, `date-menu.ts`, `cell-date.view.ts` | Notion (no Date format & timezone or Remind rows) | the chosen days in fields, the month with Today and arrows, six weeks of days, End date and Include time switches, Clear |
 
 ### Property settings
 
@@ -146,6 +148,6 @@ against the reference on every run.
 
 - Option colors: Notion's Default color.
 - Sorts: reorder by dragging the grip (Move up and down by keyboard).
-- Dates: Notion's calendar, with End date and Include time switches, in the table and on a row page.
+- Date picker: Date format & timezone, and Remind rows; typing a date into its field.
 - The group menu: rename, color and delete for a group named by an option.
 - Light theme measurements of the menu reference.

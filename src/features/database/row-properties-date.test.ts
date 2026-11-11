@@ -27,64 +27,77 @@ function mount(value?: unknown) {
     render(renderRowProperties({ ...state, ui }, app.dispatch), container);
   };
   show();
-  const part = (name: string) => {
-    const input = container.querySelector(`[data-part="${name}"]`);
-    if (!(input instanceof HTMLInputElement)) throw new Error(`no ${name}`);
-    return input;
+  const day = (date: string) => {
+    const found = container.querySelector<HTMLElement>(`[data-day="${date}"]`);
+    if (found === null) throw new Error(`no ${date}`);
+    return found;
   };
-  const change = (name: string, value: string) => {
-    const input = part(name);
-    input.value = value;
-    input.dispatchEvent(new Event("change", { bubbles: true }));
+  const row = (label: string) => {
+    const found = [
+      ...container.querySelectorAll<HTMLElement>(".menu [data-index]"),
+    ].find((item) => item.textContent.trim() === label);
+    if (found === undefined) throw new Error(`no ${label}`);
+    return found;
+  };
+  const press = (element: HTMLElement) => {
+    element.click();
     show();
   };
   const due = () => {
     const values = selectPage(app.store.getState(), rowId)?.props.values;
     return values?.[app.propertyIds[0] ?? ""];
   };
-  return { part, change, due };
+  return { container, day, row, press, due, show };
 }
 
 describe("a date on the row's page", () => {
-  it("shows the first day, the last day and the time", () => {
-    const { part } = mount({
+  it("marks the first day, the last day and shows the time", () => {
+    const { container, day } = mount({
       start: "2026-11-10",
       end: "2026-11-12",
       time: "09:30",
     });
 
-    expect(part("start").value).toBe("2026-11-10");
-    expect(part("end").value).toBe("2026-11-12");
-    expect(part("time").value).toBe("09:30");
+    expect(day("2026-11-10").getAttribute("aria-pressed")).toBe("true");
+    expect(day("2026-11-12").getAttribute("aria-pressed")).toBe("true");
+    expect(day("2026-11-11").hasAttribute("data-in-range")).toBe(true);
+    expect(
+      container.querySelector<HTMLInputElement>("input[type=time]")?.value,
+    ).toBe("09:30");
   });
 
   it("stores a range and a time", () => {
-    const { change, due } = mount();
+    const { row, day, press, due } = mount({ start: "2026-11-10" });
 
-    change("start", "2026-11-10");
-    change("end", "2026-11-14");
-    change("time", "18:00");
+    press(row("End date"));
+    press(day("2026-11-14"));
+    press(row("Include time"));
 
     expect(due()).toEqual({
       start: "2026-11-10",
       end: "2026-11-14",
-      time: "18:00",
+      time: "09:00",
     });
   });
 
-  it("refuses an end before the start and keeps the stored date", () => {
-    const { change, due, part } = mount({ start: "2026-11-10" });
+  it("changes the time from its field", () => {
+    const { container, due, show } = mount({
+      start: "2026-11-10",
+      time: "09:00",
+    });
+    const time = container.querySelector<HTMLInputElement>("input[type=time]");
 
-    change("end", "2026-11-01");
+    if (time !== null) time.value = "18:00";
+    time?.dispatchEvent(new Event("change", { bubbles: true }));
+    show();
 
-    expect(due()).toEqual({ start: "2026-11-10" });
-    expect(part("end").getAttribute("aria-invalid")).toBe("");
+    expect(due()).toEqual({ start: "2026-11-10", time: "18:00" });
   });
 
-  it("clears the date when the first day is emptied", () => {
-    const { change, due } = mount({ start: "2026-11-10", time: "08:00" });
+  it("clears the date", () => {
+    const { row, press, due } = mount({ start: "2026-11-10" });
 
-    change("start", "");
+    press(row("Clear"));
 
     expect(due()).toBeUndefined();
   });
