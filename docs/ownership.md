@@ -30,7 +30,7 @@ owner listed here exists.
 | Id generation and parsing | `src/model/id.ts` | 1 |
 | What changed between two workspaces | `src/model/workspace-diff.ts` | 1 |
 | Test workspaces | `src/model/workspace-builder.ts` | 1 |
-| Rich text editing math (splice, split, merge, marks, links) | `src/model/rich-text.ts` | 3 |
+| Rich text editing math (splice, split, merge, marks, links, colors) | `src/model/rich-text.ts` | 3 |
 | Finding the edit between two texts | `src/model/text-diff.ts` | 3 |
 | Moving a block within the tree | `src/model/block-tree.ts` | 4 |
 | Grapheme segmentation and offset conversion | `src/model/grapheme.ts` | 2 |
@@ -94,6 +94,7 @@ owner listed here exists.
 | Paste and drop into a block | `src/features/editor/editor-paste.commands.ts`, `editor-paste.view.ts` | 7 |
 | Link field | `src/features/editor/editor-link.view.ts` | 4 |
 | Slash menu | `src/features/slash-menu/` | 4 |
+| Formatting toolbar and text color picker over selected text | `src/features/format-toolbar/` | 8 |
 | What a block type declares | `src/blocks/block-definition.ts` | 3 |
 | The shape shared by blocks that hold text | `src/blocks/text-block.ts` | 3 |
 | Pointer drag sessions and drop targets | `src/ui/drag/` | 2 |

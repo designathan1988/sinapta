@@ -7,6 +7,11 @@ import {
 } from "../features/command-palette/index.ts";
 import { renderEditor, renderEditorOverlay } from "../features/editor/index.ts";
 import {
+  renderFormatToolbar,
+  renderTonePicker,
+  TONE_OVERLAY,
+} from "../features/format-toolbar/index.ts";
+import {
   renderSlashMenu,
   SLASH_MENU_OVERLAY,
 } from "../features/slash-menu/index.ts";
@@ -166,6 +171,7 @@ function renderOverlay(
   if (kind === MOVE_TO_OVERLAY) return renderMoveTo(state, dispatch);
   if (kind === SLASH_MENU_OVERLAY) return renderSlashMenu(state, dispatch);
   if (kind === PAGE_MENU_OVERLAY) return renderPageMenu(state, dispatch);
+  if (kind === TONE_OVERLAY) return renderTonePicker(state, dispatch);
   return renderEditorOverlay(state, dispatch);
 }
 
@@ -186,7 +192,7 @@ export function renderShell(
     <main class="app__main" id="main" tabindex="-1">
       ${renderTopBar(state, dispatch)}
       <div class="app__page">${renderEditor(state, dispatch)}</div>
-      ${renderOverlay(state, dispatch)}
+      ${renderFormatToolbar(state, dispatch)} ${renderOverlay(state, dispatch)}
     </main>
   </div>`;
 }
