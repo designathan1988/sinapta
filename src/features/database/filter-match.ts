@@ -1,7 +1,7 @@
 // Whether a row passes a view's filter: an and group passes when all its
 // conditions and groups pass, an or group when any does; an empty group
-// passes every row. A condition on a property that is gone, or with an
-// operator its type does not know, passes too.
+// passes every row. A condition on a property that is gone, with an
+// operator its type does not know, or without its value yet, passes too.
 import type { PropertyDefinition } from "../../blocks/database/index.ts";
 import type {
   Filter,
@@ -48,6 +48,8 @@ function matchesFilter(
   );
   if (operator === undefined) return true;
   const operand = typeof filter.value === "string" ? filter.value : "";
+  // A condition still waiting for its value keeps every row, as in Notion.
+  if (operator.needsOperand && operand.trim() === "") return true;
   const value = cellValue(row, property, context.titleId);
   return operator.test(value, operand, { property, today: context.today });
 }

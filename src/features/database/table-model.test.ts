@@ -137,6 +137,18 @@ describe("selectTableModel", () => {
     expect(titles(app)).toEqual(["build app", "Ship"]);
   });
 
+  it("ignores a condition whose value is not chosen yet, as Notion does", () => {
+    const app = createApp();
+    const [, stage] = app.propertyIds;
+    if (stage === undefined) throw new Error("setup");
+    const unfinished = { propertyId: stage, operator: "is", value: "" };
+    const filter = { conjunction: "and" as const, items: [unfinished] };
+
+    app.dispatch(setViewFilter.create({ viewId: app.view().id, filter }));
+
+    expect(titles(app)).toHaveLength(model(app).totalRowCount);
+  });
+
   it("orders, hides and sizes columns from the view record", () => {
     const app = createApp();
     const [points, stage] = app.propertyIds;
