@@ -176,6 +176,24 @@ describe("workspace repository", () => {
     expect(store.getState().workspace.rootIds).toEqual([]);
   });
 
+  it("says whether this is the first run: nothing was stored before", async () => {
+    const app = createTestApp({ commands: COMMANDS });
+    const options = { ...app, propsSchemas: TEST_PROPS_SCHEMAS };
+
+    const empty = await startRepository({
+      ...options,
+      adapter: createMemoryAdapter(),
+    });
+    const stored = await startRepository({
+      ...createTestApp({ commands: COMMANDS }),
+      propsSchemas: TEST_PROPS_SCHEMAS,
+      adapter: createMemoryAdapter(storedPage("a")),
+    });
+
+    expect(empty).toEqual({ isFirstRun: true });
+    expect(stored).toEqual({ isFirstRun: false });
+  });
+
   it("reports a failed status when storage cannot be read", async () => {
     const adapter = createMemoryAdapter();
     vi.spyOn(adapter, "load").mockRejectedValue(new Error("blocked"));

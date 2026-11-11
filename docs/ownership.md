@@ -81,6 +81,7 @@ owner listed here exists.
 | Table menus and popovers | `src/features/database/*-menu.view.ts`, `view-*.view.ts`, `cell-options.view.ts` | 6 |
 | The database block type | `src/blocks/database/` | 5 |
 | Command palette and search | `src/features/command-palette/` | 7 |
+| The pages a first visit starts with | `src/features/onboarding/` | 10 |
 | The keyboard shortcut reference | `src/features/shortcut-help/` | 10 |
 | Finding pages by the text of their blocks | `src/features/command-palette/command-palette-text.selectors.ts` | 10 |
 | Focusing and showing elements once they are in the page | `src/ui/focus/` | 5 |

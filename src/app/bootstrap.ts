@@ -14,6 +14,10 @@ import {
 } from "../blocks/page/index.ts";
 import { databaseCommands } from "../features/database/index.ts";
 import { editorCommands } from "../features/editor/index.ts";
+import {
+  onboardingCommands,
+  seedGettingStarted,
+} from "../features/onboarding/index.ts";
 import { installSlashMenuKeys } from "../features/slash-menu/index.ts";
 import type { Theme } from "../model/index.ts";
 import {
@@ -52,6 +56,7 @@ const COMMANDS = [
   ...BLOCK_COMMANDS,
   ...editorCommands,
   ...databaseCommands,
+  ...onboardingCommands,
 ];
 
 // A manual theme is an attribute on the root element; "system" removes it.
@@ -78,12 +83,14 @@ export async function startApp(container: HTMLElement): Promise<void> {
   // Nothing is rendered until stored data is in the store, so the first
   // paint already has the saved theme and layout.
   startFileTools({ store, dispatch, propsSchemas: BLOCK_PROPS_SCHEMAS });
-  await startRepository({
+  const { isFirstRun } = await startRepository({
     store,
     dispatch,
     adapter: createIndexedDbAdapter(),
     propsSchemas: BLOCK_PROPS_SCHEMAS,
   });
+  // A first visit opens a short tour; it is saved like any other change.
+  if (isFirstRun) dispatch(seedGettingStarted.create({}));
   startRouter(store, dispatch);
   installOverlayDismiss(store, dispatch);
   installSelectionSync(store, dispatch);

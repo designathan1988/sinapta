@@ -76,14 +76,16 @@ function toStorageChanges(pending: Pending, state: AppState): StorageChanges {
   };
 }
 
-// Resolves to false when stored data exists but cannot be used.
-async function load(options: RepositoryOptions): Promise<boolean> {
+type LoadResult = "loaded" | "empty" | "unreadable";
+
+// "unreadable" when stored data exists but cannot be used.
+async function load(options: RepositoryOptions): Promise<LoadResult> {
   const stored = await options.adapter.load();
-  if (stored === null) return true;
+  if (stored === null) return "empty";
   const migrated = runMigrations(stored.file);
-  if (!migrated.ok) return false;
+  if (!migrated.ok) return "unreadable";
   const parsed = parseWorkspaceFile(migrated.file, options.propsSchemas);
-  if (!parsed.ok) return false;
+  if (!parsed.ok) return "unreadable";
   options.dispatch(
     loadWorkspace.create({
       workspace: parsed.workspace,
@@ -91,7 +93,7 @@ async function load(options: RepositoryOptions): Promise<boolean> {
       skippedCount: parsed.skipped.length,
     }),
   );
-  return true;
+  return "loaded";
 }
 
 function watch(options: RepositoryOptions): void {
@@ -128,14 +130,24 @@ function toPersistedUiKey(state: AppState): string {
   return JSON.stringify(toPersistedUi(state.ui));
 }
 
-// Loads stored data into the store, then starts saving changes. Changes
+// Loads stored data into the store, then starts saving changes, and says
+// whether storage was empty. Changes
 // made by the load itself are not written back. When stored data cannot be
 // read, nothing is saved in this session, so that the data is not
 // overwritten by an empty workspace.
+export interface RepositoryStart {
+  // Nothing was stored before: the caller may give the person a start.
+  readonly isFirstRun: boolean;
+}
+
 export async function startRepository(
   options: RepositoryOptions,
-): Promise<void> {
-  const isLoaded = await load(options).catch(() => false);
-  if (isLoaded) watch(options);
-  else options.dispatch(setSaveStatus.create({ status: "failed" }));
+): Promise<RepositoryStart> {
+  const result = await load(options).catch(() => "unreadable" as const);
+  if (result === "unreadable") {
+    options.dispatch(setSaveStatus.create({ status: "failed" }));
+    return { isFirstRun: false };
+  }
+  watch(options);
+  return { isFirstRun: result === "empty" };
 }
