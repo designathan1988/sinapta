@@ -1,0 +1,2 @@
+# Prettier formats with LF line endings; keep them on every checkout.
+* text=auto eol=lf
