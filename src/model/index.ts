@@ -102,6 +102,12 @@ export {
   isBlockColor,
   type BlockColor,
 } from "./block-color.schema.ts";
+export {
+  BLOCK_CLIPBOARD_TYPE,
+  parseBlockClipboard,
+  serializeBlockClipboard,
+  type ClipboardBlock,
+} from "./block-clipboard.schema.ts";
 export { safeHref, safeImageSource } from "./link-href.ts";
 export {
   insertMention,

@@ -12,3 +12,7 @@ export {
   type RichTextOptions,
   type RichTextTag,
 } from "./rich-text.view.ts";
+export {
+  parsePastedHtmlBlocks,
+  type PastedBlock,
+} from "./pasted-html-blocks.ts";

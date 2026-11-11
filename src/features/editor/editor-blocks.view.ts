@@ -10,6 +10,7 @@ import {
   renderHandle,
   startBlockDrag,
 } from "./editor-block-menu.view.ts";
+import { onSelectionCopy } from "./editor-clipboard.view.ts";
 import { onBlockContextMenu } from "./editor-context-menu.view.ts";
 import { onMentionClick } from "./editor-mention.view.ts";
 import { renderStartList } from "./editor-start.view.ts";
@@ -21,7 +22,6 @@ import {
 } from "./editor-input.view.ts";
 import { onBlockKeyDown } from "./editor-keys.view.ts";
 import {
-  onSelectionCopy,
   onSelectionLeave,
   startPointerSelection,
 } from "./editor-selection.view.ts";

@@ -14,23 +14,25 @@ import {
   type Operation,
 } from "../../model/index.ts";
 import { defineCommand, type AppState } from "../../state/index.ts";
-import type { MarkdownBlock } from "../../ui/rich-text/index.ts";
+import type { PastedBlock } from "../../ui/rich-text/index.ts";
 import { childList, indexIn, withSelection } from "./editor-operations.ts";
 
 export interface PasteBlocksPayload {
   // The block the caret is in. An empty one becomes the first pasted
   // block; otherwise the pasted blocks follow it.
   readonly blockId: BlockId;
-  readonly blocks: readonly MarkdownBlock[];
+  readonly blocks: readonly PastedBlock[];
 }
 
-// Markdown kinds are named like the block types they become.
-function propsFor(block: MarkdownBlock): BlockProps {
+// Pasted kinds are named like the block types they become.
+function propsFor(block: PastedBlock): BlockProps {
   const base = blockDefinition(block.kind)?.createProps(block.text) ?? {};
-  if (block.level !== undefined) return { ...base, level: block.level };
-  if (block.isChecked !== undefined)
-    return { ...base, isChecked: block.isChecked };
-  return base;
+  return {
+    ...base,
+    ...(block.level !== undefined && { level: block.level }),
+    ...(block.isChecked !== undefined && { isChecked: block.isChecked }),
+    ...(block.src !== undefined && { src: block.src }),
+  };
 }
 
 // Where the next block goes: the last block placed at each depth, and the
@@ -44,7 +46,7 @@ interface Placement {
 
 function placeBlock(
   placement: Placement,
-  block: MarkdownBlock,
+  block: PastedBlock,
   record: Omit<Block, "parentId">,
 ): Operation[] {
   const { target, path, childCounts } = placement;
@@ -62,7 +64,7 @@ function placeBlock(
   ];
 }
 
-function replaceTarget(target: TextBlock, block: MarkdownBlock, now: string) {
+function replaceTarget(target: TextBlock, block: PastedBlock, now: string) {
   const patch = { type: block.kind, props: propsFor(block), updatedAt: now };
   const update: Operation = {
     type: "record.update",

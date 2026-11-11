@@ -1,9 +1,14 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import { toBlockId } from "../../model/index.ts";
+import {
+  BLOCK_CLIPBOARD_TYPE,
+  parseBlockClipboard,
+  toBlockId,
+} from "../../model/index.ts";
 import type { AppState, Command, Dispatch } from "../../state/index.ts";
 import { createApp, text } from "./editor-builder.ts";
 import { selectBlockRange } from "./editor-selection.commands.ts";
+import { onSelectionCopy } from "./editor-clipboard.view.ts";
 import { onSelectionKeyDown } from "./editor-selection.view.ts";
 
 function selectedState(): AppState {
@@ -44,5 +49,53 @@ describe("keys on selected blocks", () => {
       "block.duplicate",
       "block.duplicate",
     ]);
+  });
+});
+
+describe("copying selected blocks", () => {
+  it("puts their kinds and nesting on the clipboard", () => {
+    const state = selectedState();
+    const clipboardData = new DataTransfer();
+    const event = new ClipboardEvent("copy", {
+      clipboardData,
+      cancelable: true,
+    });
+    const dispatch: Dispatch = () => ({ ok: true });
+
+    onSelectionCopy(event, { state, dispatch });
+
+    const copied = parseBlockClipboard(
+      clipboardData.getData(BLOCK_CLIPBOARD_TYPE),
+    );
+    expect(copied?.map((block) => [block.kind, block.depth])).toEqual([
+      ["paragraph", 0],
+      ["paragraph", 0],
+    ]);
+    expect(clipboardData.getData("text/plain")).toBe("one\ntwo");
+  });
+});
+
+describe("Ctrl+C on selected blocks", () => {
+  it("keeps the copied blocks and their text for a paste", () => {
+    const sent = press({ key: "c", ctrlKey: true });
+
+    expect(sent).toEqual([
+      expect.objectContaining({
+        type: "ui.setClipboard",
+        clipboard: {
+          text: "one\ntwo",
+          blocks: [
+            { kind: "paragraph", depth: 0, text: [{ text: "one" }] },
+            { kind: "paragraph", depth: 0, text: [{ text: "two" }] },
+          ],
+        },
+      }),
+    ]);
+  });
+
+  it("also deletes them with Ctrl+X", () => {
+    const types = press({ key: "x", ctrlKey: true }).map((c) => c.type);
+
+    expect(types).toEqual(["ui.setClipboard", "block.deleteSelected"]);
   });
 });

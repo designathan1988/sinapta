@@ -121,3 +121,21 @@ export function parsePastedHtml(html: string): RichText[] {
   walk(body, { marks: [], href: undefined, isPreformatted: false }, lines);
   return lines.map(trimLine).filter((line) => plainText(line) !== "");
 }
+
+// The inline content of some nodes as one rich text, its lines joined by
+// line breaks.
+export function richTextOf(nodes: readonly Node[]): RichText {
+  const lines: TextSpan[][] = [[]];
+  const style = { marks: [], href: undefined, isPreformatted: false };
+  for (const node of nodes) walk(node, style, lines);
+  const kept = lines.map(trimLine).filter((line) => plainText(line) !== "");
+  const breakLine: RichText = [{ text: "\n" }];
+  return kept.reduce<RichText>(
+    (text, line, index) =>
+      concatRichText(
+        index === 0 ? text : concatRichText(text, breakLine),
+        line,
+      ),
+    [],
+  );
+}

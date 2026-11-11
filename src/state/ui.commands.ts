@@ -2,6 +2,7 @@
 import type { BlockId } from "../model/index.ts";
 import {
   RECENT_PAGES_MAX,
+  type CopiedBlocks,
   SIDEBAR_WIDTH,
   type OpenOverlay,
   type TextSelection,
@@ -115,7 +116,16 @@ export const setSelection = defineCommand<{ selection: TextSelection | null }>({
   },
 });
 
+// Keeps blocks copied with Ctrl+C for the next paste.
+export const setClipboard = defineCommand<{ clipboard: CopiedBlocks | null }>({
+  type: "ui.setClipboard",
+  handle: (state, command) => ({
+    ui: { ...state.ui, clipboard: command.clipboard },
+  }),
+});
+
 export const uiCommands = [
+  setClipboard,
   setSelection,
   setSidebarWidth,
   toggleSidebar,

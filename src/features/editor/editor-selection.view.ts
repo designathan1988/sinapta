@@ -19,6 +19,7 @@ import {
   outdentSelectedBlocks,
   selectBlockRange,
 } from "./editor-selection.commands.ts";
+import { copyBlocksByKey } from "./editor-clipboard.view.ts";
 import { duplicateBlock } from "./editor-insert.commands.ts";
 import { selectSelectedBlocks } from "./editor.selectors.ts";
 
@@ -98,6 +99,11 @@ function otherAction(event: KeyboardEvent, context: InputContext) {
       duplicateSelected(context);
     };
   }
+  if (hasMod && ["c", "x"].includes(event.key.toLowerCase())) {
+    return () => {
+      copyBlocksByKey(event, context);
+    };
+  }
   if (event.key === "Tab") {
     const command = event.shiftKey
       ? outdentSelectedBlocks
@@ -123,20 +129,6 @@ export function onSelectionKeyDown(
   if (action === undefined) return;
   event.preventDefault();
   action();
-}
-
-// Copying selected blocks copies their text, one line per block. Cutting
-// also deletes them.
-export function onSelectionCopy(
-  event: ClipboardEvent,
-  context: InputContext,
-): void {
-  const blocks = selectSelectedBlocks(context.state);
-  if (blocks.length === 0 || event.clipboardData === null) return;
-  const lines = blocks.filter(isTextBlock).map(textOf);
-  event.clipboardData.setData("text/plain", lines.join("\n"));
-  event.preventDefault();
-  if (event.type === "cut") context.dispatch(deleteSelectedBlocks.create({}));
 }
 
 // Focus that leaves the blocks, or a press inside them, ends the selection.

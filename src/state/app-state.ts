@@ -3,6 +3,7 @@ import {
   createEmptyWorkspace,
   type BlockId,
   type Operation,
+  type ClipboardBlock,
   type PropertyId,
   type Tone,
   type ViewId,
@@ -72,6 +73,14 @@ export interface UiState {
   readonly overlay: OpenOverlay | null;
   // The text color or highlight used last, for Ctrl+Shift+H.
   readonly lastTone: LastTone | null;
+  // Blocks copied with Ctrl+C, and the text put on the system clipboard
+  // for them: a paste of that text rebuilds the blocks.
+  readonly clipboard: CopiedBlocks | null;
+}
+
+export interface CopiedBlocks {
+  readonly text: string;
+  readonly blocks: readonly ClipboardBlock[];
 }
 
 export interface LastTone {
@@ -148,6 +157,7 @@ export function createInitialUiState(): UiState {
     isSidebarCollapsed: false,
     overlay: null,
     lastTone: null,
+    clipboard: null,
   };
 }
 
