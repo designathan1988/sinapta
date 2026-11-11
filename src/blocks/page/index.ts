@@ -1,5 +1,11 @@
 export { pageDefinition } from "./page.definition.ts";
 export {
+  coverFor,
+  pageCoverCommands,
+  setPageCover,
+  togglePageFullWidth,
+} from "./page-cover.commands.ts";
+export {
   duplicatePage,
   pageDuplicateCommands,
   selectPageCopySize,
@@ -27,7 +33,9 @@ export {
   trashPage,
 } from "./page-trash.commands.ts";
 export {
+  COVER_PRESETS,
   DATABASE_TYPE,
+  isCover,
   PAGE_LIKE_TYPES,
   PAGE_TYPE,
   pagePropsSchema,

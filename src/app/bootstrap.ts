@@ -7,6 +7,7 @@ import {
 } from "../blocks/block-registry.ts";
 import {
   pageCommands,
+  pageCoverCommands,
   pageDuplicateCommands,
   pageMoveCommands,
   pageTrashCommands,
@@ -47,6 +48,7 @@ const COMMANDS = [
   ...pageTrashCommands,
   ...pageMoveCommands,
   ...pageDuplicateCommands,
+  ...pageCoverCommands,
   ...BLOCK_COMMANDS,
   ...editorCommands,
   ...databaseCommands,

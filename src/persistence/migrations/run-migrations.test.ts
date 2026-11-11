@@ -69,7 +69,7 @@ describe("the migration list", () => {
 
     expect(runMigrations(file)).toEqual({
       ok: true,
-      file: { schemaVersion: 3, rootIds: ["a"], views: {} },
+      file: { schemaVersion: 4, rootIds: ["a"], views: {} },
     });
   });
 });
