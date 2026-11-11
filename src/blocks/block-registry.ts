@@ -4,6 +4,7 @@ import type { CommandDefinition, Tidier } from "../state/index.ts";
 import type { BlockDefinition } from "./block-definition.ts";
 import { audioDefinition } from "./audio/index.ts";
 import { bookmarkDefinition } from "./bookmark/index.ts";
+import { buttonDefinition } from "./button/index.ts";
 import { breadcrumbDefinition } from "./breadcrumb/index.ts";
 import { bulletedListDefinition } from "./bulleted-list/index.ts";
 import { calloutDefinition } from "./callout/index.ts";
@@ -58,6 +59,7 @@ export const BLOCK_DEFINITIONS: readonly BlockDefinition[] = [
   columnListDefinition,
   columnDefinition,
   syncedBlockDefinition,
+  buttonDefinition,
 ];
 
 const BY_TYPE: ReadonlyMap<string, BlockDefinition> = new Map(

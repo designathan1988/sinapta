@@ -26,7 +26,8 @@ describe("selectSlashItems", () => {
     );
     expect(labels).toContain("Embed");
     expect(labels).toContain("Synced block");
-    expect(labels).toHaveLength(29);
+    expect(labels).toContain("Button");
+    expect(labels).toHaveLength(30);
   });
 
   it("filters by the query without regard to case", () => {

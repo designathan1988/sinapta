@@ -97,6 +97,16 @@ export const BLOCK_TEXT = {
   calloutBlock: {
     icon: "Change the icon",
   },
+  buttonBlock: {
+    name: "Button",
+    untitledLabel: "New button",
+    settings: "Button settings",
+    label: "Label",
+    insert: "Insert these blocks below, one per line in Markdown",
+    openPage: "Then open page",
+    addRow: "Add a row to database",
+    none: "None",
+  },
   codeBlock: {
     language: "Language",
     wrap: "Wrap",

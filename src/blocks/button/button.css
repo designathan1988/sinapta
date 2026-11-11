@@ -1,0 +1,72 @@
+@layer blocks {
+  /* A small gray button, as in Notion, with its settings beside it shown
+     on hover or focus. */
+  .button-block {
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+  }
+
+  .button-block__press,
+  .button-block__settings {
+    min-block-size: var(--size-control-sm);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: var(--size-border-thin) solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-app);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
+  .button-block__settings {
+    border-color: transparent;
+    color: var(--color-text-secondary);
+    opacity: 0;
+
+    &[aria-expanded="true"],
+    &:focus-visible {
+      opacity: 1;
+    }
+  }
+
+  .button-block:hover .button-block__settings {
+    opacity: 1;
+  }
+
+  .button-block__config:popover-open {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-sm);
+    min-inline-size: var(--size-menu-min-width);
+    padding: var(--space-inset-md);
+  }
+
+  .button-block__field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xs);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+
+    & :is(input, textarea, select) {
+      min-block-size: var(--size-control-md);
+      padding: var(--space-inset-xs) var(--space-inset-sm);
+      border: var(--size-border-thin) solid var(--color-border-strong);
+      border-radius: var(--radius-sm);
+      background-color: var(--color-bg-app);
+      color: var(--color-text-primary);
+      font-size: var(--font-size-sm);
+    }
+
+    & textarea {
+      resize: vertical;
+      font-family: var(--font-family-mono);
+    }
+  }
+}
