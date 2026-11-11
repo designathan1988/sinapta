@@ -63,20 +63,6 @@ export const DATABASE_TEXT = {
     options: "Options",
     addOption: "Add an option",
     editProperty: "Edit property",
-    changeType: "Change type",
-    // Notion's groups of a column's calculations.
-    calculationGroups: {
-      count: "Count",
-      percent: "Percent",
-      more: "More options",
-    },
-    sort: "Sort",
-    insertLeft: "Insert left",
-    insertRight: "Insert right",
-    duplicateProperty: "Duplicate property",
-    newPropertyName: "Property",
-    // A copy of a property is named after it, as in Notion.
-    copyName: (name: string) => `${name} (1)`,
     propertySettings: "Property settings",
     propertyDescription: "Description",
     idPrefix: "Prefix",

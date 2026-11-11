@@ -49,6 +49,7 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Control | File | Now | Notion |
 | --- | --- | --- | --- |
 | View settings | `view-settings/` | Notion | menu with rows: name, Layout, Property visibility, Filter, Sort, Group, then the view's actions; each row opens a panel |
+| Sorts | `view-settings/sort-panel.view.ts` | Notion | with none, New sort: a searchable list of properties; with some, a row per sort (grip, property, direction, remove), Add sort, Delete sort |
 | Layout choice | `view-settings/layout-panel.view.ts` | Notion | tiles in the Layout panel, then the layout's options |
 | Group by | `view-settings/group-panel.ts` | Notion | searchable option list with property icons, check on the chosen one |
 | Group sort, date step | `view-settings/choice-panels.ts` | Notion | rows with value and chevron, each opening an option list |
@@ -136,7 +137,7 @@ against the reference on every run.
 ## Open
 
 - Option colors: Notion's Default color.
-- The view settings' Sort panel: the view's sorts, added and removed.
+- Sorts: reorder by dragging the grip (Move up and down by keyboard).
 - A row page's values open the table's own editors.
 - Group headers show "+" and "…" on hover.
 - Light theme measurements of the menu reference.

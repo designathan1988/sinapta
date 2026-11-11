@@ -3,6 +3,7 @@
 // place the rest of the app reads it from.
 import {
   BLOCK_TEXT,
+  DATABASE_MENU_TEXT,
   DATABASE_TEXT,
   EDITOR_TEXT,
   ONBOARDING_TEXT,
@@ -17,7 +18,7 @@ export const COPY = {
   ...EDITOR_TEXT,
   ...PAGE_TEXT,
   ...BLOCK_TEXT,
-  database: DATABASE_TEXT.database,
+  database: { ...DATABASE_TEXT.database, ...DATABASE_MENU_TEXT },
   onboarding: ONBOARDING_TEXT.onboarding,
 } as const;
 

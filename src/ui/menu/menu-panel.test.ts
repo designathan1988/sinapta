@@ -117,6 +117,30 @@ describe("menu panels", () => {
     expect(chosen).toHaveBeenCalledOnce();
   });
 
+  it("focuses the search field of a panel that comes in, once", async () => {
+    const { host } = rendered([{ label: "Group", onSelect: noop }]);
+    const items = [{ label: "Due date", onSelect: noop }];
+    const search = { placeholder: "Search", query: "", onQuery: noop };
+    const show = () => {
+      render(
+        renderMenu({ label: "Settings", items, onClose: noop, search }),
+        host,
+      );
+    };
+    const input = () =>
+      host.querySelector<HTMLInputElement>(".menu__search input");
+
+    // The field is focused once lit has put it in the document.
+    show();
+    await Promise.resolve();
+    expect(document.activeElement).toBe(input());
+    input()?.blur();
+    show();
+    await Promise.resolve();
+
+    expect(document.activeElement).not.toBe(input());
+  });
+
   it("lists options to choose one from, the chosen one checked", () => {
     const { host } = rendered(
       [

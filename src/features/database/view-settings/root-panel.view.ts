@@ -84,10 +84,18 @@ function settingRows(context: TableContext): MenuEntry[] {
     icon: "group" as const,
     value: grouped?.name ?? COPY.database.noGrouping,
   };
+  // With no sort, the Sort row goes straight to choosing one, as Notion's.
+  const sortCount = view.sorts.length;
+  const sort = {
+    label: COPY.database.sort,
+    icon: "sort" as const,
+    ...(sortCount > 0 && { value: String(sortCount) }),
+  };
   return [
     panelRow(context, layout, "layout"),
     panelRow(context, visibility, "properties"),
     filterRow(context),
+    panelRow(context, sort, sortCount > 0 ? "sort" : "sort-add"),
     // A calendar places rows by date and does not group them.
     ...(view.type === "calendar" ? [] : [panelRow(context, group, "group")]),
   ];

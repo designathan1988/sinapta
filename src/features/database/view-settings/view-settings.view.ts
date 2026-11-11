@@ -19,6 +19,7 @@ import {
 import { groupPanel } from "./group-panel.ts";
 import { layoutPanel } from "./layout-panel.view.ts";
 import { rootPanel } from "./root-panel.view.ts";
+import { sortAddPanel, sortPanel } from "./sort-panel.view.ts";
 import { goTo, type SettingsPanel } from "./settings-panel.ts";
 
 export const VIEW_SETTINGS_OVERLAY = "view-settings";
@@ -28,6 +29,8 @@ const PANELS: Readonly<
 > = {
   layout: layoutPanel,
   properties: propertiesPanel,
+  sort: sortPanel,
+  "sort-add": sortAddPanel,
   group: groupPanel,
   "group-by": groupByPanel,
   "group-sort": groupSortPanel,

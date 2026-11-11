@@ -7,6 +7,7 @@ import "./menu-field.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import { COPY } from "../copy.ts";
+import { focusOnce } from "../focus/index.ts";
 import { renderIcon } from "../icon/index.ts";
 import {
   focusOverlayAnchor,
@@ -107,6 +108,7 @@ function renderSearch(search: MenuSearch | undefined) {
       placeholder=${search.placeholder}
       autocomplete="off"
       data-autofocus
+      ${ref(focusOnce)}
       .value=${search.query}
       @input=${(event: Event) => {
         if (event.target instanceof HTMLInputElement)

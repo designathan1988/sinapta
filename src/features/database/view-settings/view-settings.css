@@ -37,4 +37,43 @@
       font-weight: var(--font-weight-medium);
     }
   }
+
+  /* The view's sorts, one row each: the grip, the property, the
+     direction and Remove, as Notion's. */
+  .view-settings__sorts {
+    display: grid;
+    gap: var(--space-stack-xxs);
+    margin: var(--space-none) var(--space-inset-xs) var(--space-stack-xs);
+  }
+
+  .view-settings__sort {
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    min-block-size: var(--size-menu-row);
+
+    & > .icon {
+      flex: none;
+      color: var(--color-text-tertiary);
+    }
+  }
+
+  .view-settings__remove {
+    display: grid;
+    flex: none;
+    place-items: center;
+    inline-size: var(--size-icon-md);
+    block-size: var(--size-icon-md);
+    margin-inline-start: auto;
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--color-text-tertiary);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
 }
