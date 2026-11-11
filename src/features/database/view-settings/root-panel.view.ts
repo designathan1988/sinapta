@@ -1,5 +1,6 @@
 // The first panel of the view settings: the view's name, then a row per
 // setting with its current value, and the view's own actions.
+import { exportViewAsCsv } from "../csv-file.view.ts";
 import type { TemplateResult } from "lit-html";
 import type { ViewType } from "../../../model/index.ts";
 import { openOverlay } from "../../../state/index.ts";
@@ -37,12 +38,21 @@ function renderName(context: TableContext): TemplateResult {
   });
 }
 
-// A database keeps at least one view, so the last one cannot be deleted.
+// Exporting the view as CSV; deleting it, while the database keeps
+// another, since it keeps at least one.
 function viewActions(context: TableContext): MenuEntry[] {
   const { model, dispatch } = context;
-  if (model.viewIds.length < 2) return [];
+  const exportItem: MenuEntry = {
+    label: COPY.database.exportCsv,
+    icon: "download",
+    onSelect: () => {
+      exportViewAsCsv(model);
+    },
+  };
+  if (model.viewIds.length < 2) return [{ kind: "divider" }, exportItem];
   return [
     { kind: "divider" },
+    exportItem,
     {
       label: COPY.database.deleteView,
       icon: "trash",

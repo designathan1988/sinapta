@@ -14,7 +14,7 @@ import {
   PALETTE_OVERLAY_KIND,
   SETTINGS_OVERLAY_KIND,
 } from "../../ui/shortcuts/index.ts";
-import { createDatabase } from "../database/index.ts";
+import { createDatabase, importCsvFile } from "../database/index.ts";
 import { TRASH_OVERLAY } from "../trash/index.ts";
 import { renderFavorites } from "./sidebar-favorites.view.ts";
 import { renderTree } from "./sidebar-tree.view.ts";
@@ -30,12 +30,34 @@ function renderFooter(dispatch: Dispatch): TemplateResult {
       icon: "settings",
       onClick: open(SETTINGS_OVERLAY_KIND),
     })}
+    ${renderImport(dispatch)}
     ${renderButton({
       label: COPY.trash.open,
       icon: "trash",
       onClick: open(TRASH_OVERLAY),
     })}
   </div>`;
+}
+
+// Import, as in Notion's sidebar: a CSV file becomes a new database.
+function renderImport(dispatch: Dispatch): TemplateResult {
+  const onChange = (event: Event): void => {
+    const input = event.target;
+    if (!(input instanceof HTMLInputElement)) return;
+    const file = input.files?.[0];
+    input.value = "";
+    if (file !== undefined) void importCsvFile(file, dispatch);
+  };
+  return html`<label class="button sidebar__import" data-variant="quiet">
+    ${renderIcon("download")}
+    <span>${COPY.database.importCsv}</span>
+    <input
+      class="visually-hidden"
+      type="file"
+      accept=".csv,text/csv"
+      @change=${onChange}
+    />
+  </label>`;
 }
 
 // A field-like button that opens the command palette, with its shortcut.

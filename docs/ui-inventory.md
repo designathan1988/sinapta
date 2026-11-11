@@ -78,6 +78,8 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Open pages in | `view-settings/choice-panels.ts` | Notion | row in the Layout panel opening Side peek, Center peek, Full page |
 | New and its templates | `database.view.ts`, `templates-menu.view.ts` | Notion (default for the whole database, not per view) | split blue button; the arrow lists "Templates for …", each template with "…" (Set as default, Edit, Duplicate, Delete), Empty page, New template; Default marks the one new rows start from |
 | Template note | `template-banner.view.ts` | Notion | a strip over a template's page: "You're editing a template in …" |
+| Import CSV | `features/sidebar/sidebar.view.ts`, `csv-file.view.ts` | Notion (CSV only) | Import in the sidebar's foot; a CSV becomes a database named as the file, its columns typed |
+| Export as CSV | `view-settings/root-panel.view.ts` | Notion (the view only, no Markdown pages) | the view's columns and rows as a UTF-8 CSV file |
 | Date cell and date value | `ui/date-picker/`, `date-menu.ts`, `cell-date.view.ts` | Notion (no Date format & timezone or Remind rows) | the chosen days in fields, the month with Today and arrows, six weeks of days, End date and Include time switches, Clear |
 
 ### Property settings

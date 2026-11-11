@@ -166,3 +166,4 @@ export {
   type AssetId,
   type AssetSaveResult,
 } from "./asset.schema.ts";
+export { parseCsv, writeCsv } from "./csv.ts";
