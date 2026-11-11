@@ -10,6 +10,7 @@ import {
   type PageBlock,
 } from "../../blocks/page/index.ts";
 import { parseBlockId, type BlockId } from "../../model/index.ts";
+import { exportPageAsMarkdown } from "../markdown-export/index.ts";
 import {
   closeOverlay,
   openOverlay,
@@ -122,6 +123,13 @@ function menuItems(
       onSelect: () => dispatch(createPage.create({ parentId: pageId })),
     },
     ...moveItems(state, page, dispatch),
+    {
+      label: COPY.pageMenu.exportMarkdown,
+      icon: "download",
+      onSelect: () => {
+        exportPageAsMarkdown(state, pageId);
+      },
+    },
     {
       label: COPY.pageMenu.trash,
       icon: "trash",

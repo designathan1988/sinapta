@@ -98,12 +98,14 @@ owner listed here exists.
 | Link field | `src/features/editor/editor-link.view.ts` | 4 |
 | Slash menu | `src/features/slash-menu/` | 4 |
 | Adding a block below another and duplicating a block | `src/features/editor/editor-insert.commands.ts` | 8 |
+| Writing a page as Markdown and saving it | `src/features/markdown-export/` | 8 |
 | Formatting toolbar and text color picker over selected text | `src/features/format-toolbar/` | 8 |
 | What a block type declares | `src/blocks/block-definition.ts` | 3 |
 | The shape shared by blocks that hold text | `src/blocks/text-block.ts` | 3 |
 | Pointer drag sessions and drop targets | `src/ui/drag/` | 2 |
 | Live-region announcements | `src/ui/announcer/` | 2 |
 | Icons | `src/ui/icon/` | 1 |
+| Saving text as a file the browser downloads | `src/ui/download/` | 8 |
 | A web address field with an optional file choice | `src/ui/url-field/` | 8 |
 | Interface text (its parts by area in `src/ui/copy/`) | `src/ui/copy.ts` | 1 |
 

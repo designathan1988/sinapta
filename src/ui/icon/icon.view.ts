@@ -14,7 +14,8 @@ export type IconName =
   | "down"
   | "restore"
   | "grip"
-  | "duplicate";
+  | "duplicate"
+  | "download";
 
 // 16-unit outline icons, drawn with the current text color.
 // Fragments use the `svg` tag so that they are parsed as SVG, not HTML.
@@ -38,6 +39,7 @@ const PATHS: Record<IconName, TemplateResult<2>> = {
   grip: svg`<path
     d="M6 3.5h.01M10 3.5h.01M6 8h.01M10 8h.01M6 12.5h.01M10 12.5h.01"
   />`,
+  download: svg`<path d="M8 2.5v8M4.5 7L8 10.5 11.5 7M3 13.5h10" />`,
   restore: svg`<path d="M3 8a5 5 0 1 0 1.6-3.7M3 3v3h3" />`,
   duplicate: svg`<rect x="5.5" y="5.5" width="8" height="8" rx="1.5" />
     <path d="M10.5 3.5V3A1.5 1.5 0 0 0 9 1.5H4A1.5 1.5 0 0 0 2.5 3v5A1.5 1.5 0 0 0 4 9.5h.5" />`,
