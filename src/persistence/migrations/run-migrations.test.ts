@@ -63,4 +63,13 @@ describe("the migration list", () => {
   it("reaches the app's schema version", () => {
     expect(isMigrationListComplete()).toBe(true);
   });
+
+  it("reads a version 1 file as version 2 without changing its data", () => {
+    const file = { schemaVersion: 1, rootIds: ["a"], views: {} };
+
+    expect(runMigrations(file)).toEqual({
+      ok: true,
+      file: { schemaVersion: 2, rootIds: ["a"], views: {} },
+    });
+  });
 });

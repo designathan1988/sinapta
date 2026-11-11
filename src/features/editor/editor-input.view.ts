@@ -176,6 +176,8 @@ const HANDLERS: Record<string, Handler> = {
   deleteContent: remove(-1),
   formatBold: format("bold"),
   formatItalic: format("italic"),
+  formatUnderline: format("underline"),
+  formatStrikeThrough: format("strikethrough"),
   historyUndo: history(UNDO_COMMAND),
   historyRedo: history(REDO_COMMAND),
 };

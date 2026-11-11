@@ -22,7 +22,7 @@ Three tiers. CSS uses the semantic tier only.
 | `color.text` | `primary`, `secondary`, `tertiary`, `onAccent`, `link`, `danger`, `success`, `warning` | Text and icons |
 | `color.border` | `subtle`, `default`, `strong`, `focus` | Hairlines, control borders, focus ring |
 | `color.accent` | `default`, `hover`, `subtle` | Primary action, active item |
-| `color.chip.<hue>` | `bg`, `text` for eight hues | Select options and callouts |
+| `color.chip.<hue>` | `bg`, `text` for eight hues | Select options, callouts, and text color (`text`) and highlight (`bg`) in rich text |
 | `space.inline` | `xs`, `sm`, `md`, `lg` | Gaps along a row |
 | `space.stack` | `xxs` to `xxl` | Gaps between stacked items |
 | `space.inset` | `xs` to `xl`, `page` | Padding inside a container |

@@ -6,7 +6,8 @@ import { editorStructureCommands } from "./editor-structure.commands.ts";
 import { editorCommands as textCommands } from "./editor.commands.ts";
 
 export { convertBlock } from "./editor-convert.commands.ts";
-export { replaceText } from "./editor.commands.ts";
+export { replaceText, setTextTone, toggleTextMark } from "./editor.commands.ts";
+export { openLinkField } from "./editor-link.view.ts";
 export { renderEditor, renderEditorOverlay } from "./editor.view.ts";
 
 // Every command of the editor, registered in one line at startup.

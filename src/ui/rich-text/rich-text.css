@@ -33,5 +33,74 @@
     & strong {
       font-weight: var(--font-weight-bold);
     }
+
+    & [data-highlight] {
+      border-radius: var(--radius-sm);
+      box-decoration-break: clone;
+    }
+
+    & [data-color="gray"] {
+      color: var(--color-chip-gray-text);
+    }
+
+    & [data-highlight="gray"] {
+      background-color: var(--color-chip-gray-bg);
+    }
+
+    & [data-color="brown"] {
+      color: var(--color-chip-brown-text);
+    }
+
+    & [data-highlight="brown"] {
+      background-color: var(--color-chip-brown-bg);
+    }
+
+    & [data-color="orange"] {
+      color: var(--color-chip-orange-text);
+    }
+
+    & [data-highlight="orange"] {
+      background-color: var(--color-chip-orange-bg);
+    }
+
+    & [data-color="yellow"] {
+      color: var(--color-chip-yellow-text);
+    }
+
+    & [data-highlight="yellow"] {
+      background-color: var(--color-chip-yellow-bg);
+    }
+
+    & [data-color="green"] {
+      color: var(--color-chip-green-text);
+    }
+
+    & [data-highlight="green"] {
+      background-color: var(--color-chip-green-bg);
+    }
+
+    & [data-color="blue"] {
+      color: var(--color-chip-blue-text);
+    }
+
+    & [data-highlight="blue"] {
+      background-color: var(--color-chip-blue-bg);
+    }
+
+    & [data-color="purple"] {
+      color: var(--color-chip-purple-text);
+    }
+
+    & [data-highlight="purple"] {
+      background-color: var(--color-chip-purple-bg);
+    }
+
+    & [data-color="red"] {
+      color: var(--color-chip-red-text);
+    }
+
+    & [data-highlight="red"] {
+      background-color: var(--color-chip-red-bg);
+    }
   }
 }

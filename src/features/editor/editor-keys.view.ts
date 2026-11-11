@@ -1,10 +1,11 @@
 // Keys inside text blocks that are not text input: indenting, moving
-// between blocks, and the inline code shortcut.
+// between blocks, and the inline code and strikethrough shortcuts.
 import {
   isTextBlock,
   textOf,
   type TextBlock,
 } from "../../blocks/text-block.ts";
+import type { Mark } from "../../model/index.ts";
 import { setSelection } from "../../state/index.ts";
 import { readSelection, textElementOf } from "../../ui/caret/index.ts";
 import { openBlockMenu } from "./editor-block-menu.view.ts";
@@ -102,19 +103,27 @@ function indent(event: KeyboardEvent, context: InputContext): boolean {
   return true;
 }
 
-// Bold and italic arrive as input events; inline code has no input type.
-function inlineCode(event: KeyboardEvent, context: InputContext): boolean {
+// Bold, italic and underline arrive as input events. Inline code and
+// strikethrough have no key the browser maps to an input type.
+function keyMark(event: KeyboardEvent): Mark | undefined {
+  if (!(event.ctrlKey || event.metaKey) || event.altKey) return undefined;
+  const key = event.key.toLowerCase();
+  if (key === "e" && !event.shiftKey) return "code";
+  if (key === "s" && event.shiftKey) return "strikethrough";
+  return undefined;
+}
+
+function inlineMark(event: KeyboardEvent, context: InputContext): boolean {
   const selection = readSelection();
-  const hasModifier = event.ctrlKey || event.metaKey;
-  if (!hasModifier || event.key.toLowerCase() !== "e" || selection === null)
-    return false;
+  const mark = keyMark(event);
+  if (mark === undefined || selection === null) return false;
   const { blockId, anchorOffset, focusOffset } = selection;
   context.dispatch(
     toggleTextMark.create({
       blockId,
       start: anchorOffset,
       end: focusOffset,
-      mark: "code",
+      mark,
     }),
   );
   return true;
@@ -147,7 +156,7 @@ export function onBlockKeyDown(
   const isHandled =
     startBlockSelection(event, context) ||
     indent(event, context) ||
-    inlineCode(event, context) ||
+    inlineMark(event, context) ||
     menuKeys(event, context) ||
     moveBetweenBlocks(event, context);
   if (isHandled) event.preventDefault();

@@ -8,9 +8,11 @@ import {
   type TextSpan,
 } from "../../model/index.ts";
 
-// Innermost first, so bold wraps italic wraps code.
+// Innermost first, so bold wraps italic wraps the rest.
 const MARK_TAGS = [
   ["code", "code"],
+  ["strikethrough", "s"],
+  ["underline", "u"],
   ["italic", "em"],
   ["bold", "strong"],
 ] as const;
@@ -21,11 +23,22 @@ function wrap(node: Node, tag: string): HTMLElement {
   return element;
 }
 
+// Color and highlight are one element around the marks, styled by their
+// data attributes from the tone tokens.
+function toned(node: Node, span: TextSpan): Node {
+  if (span.color === undefined && span.highlight === undefined) return node;
+  const element = wrap(node, "span");
+  if (span.color !== undefined) element.dataset.color = span.color;
+  if (span.highlight !== undefined) element.dataset.highlight = span.highlight;
+  return element;
+}
+
 function spanNode(span: TextSpan): Node {
   let node: Node = document.createTextNode(span.text);
   for (const [mark, tag] of MARK_TAGS) {
     if (span.marks?.includes(mark) === true) node = wrap(node, tag);
   }
+  node = toned(node, span);
   const href = span.href === undefined ? undefined : safeHref(span.href);
   if (href === undefined) return node;
   const link = wrap(node, "a");

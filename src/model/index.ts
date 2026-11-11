@@ -17,8 +17,10 @@ export {
 export {
   richTextSchema,
   textSpanSchema,
+  toneSchema,
   type RichText,
   type TextSpan,
+  type Tone,
 } from "./rich-text.schema.ts";
 export {
   isBlockOfType,
@@ -74,11 +76,13 @@ export {
   insertText,
   plainText,
   setLink,
+  setTone,
   splitRichText,
   toggleMark,
   type LinkRange,
   type Mark,
   type MarkRange,
+  type ToneRange,
 } from "./rich-text.ts";
 export { safeHref } from "./link-href.ts";
 export { diffText, type TextEdit } from "./text-diff.ts";

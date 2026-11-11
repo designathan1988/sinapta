@@ -25,6 +25,11 @@ const TAG_MARKS: Record<string, Mark> = {
   KBD: "code",
   SAMP: "code",
   TT: "code",
+  U: "underline",
+  INS: "underline",
+  S: "strikethrough",
+  STRIKE: "strikethrough",
+  DEL: "strikethrough",
 };
 const BOLD_FROM = 600;
 

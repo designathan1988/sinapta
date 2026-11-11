@@ -1,11 +1,18 @@
 // Pure editing math on RichText. Offsets are UTF-16 indices into the plain
 // text and are expected to sit on grapheme boundaries (see grapheme.ts).
-import type { RichText, TextSpan } from "./rich-text.schema.ts";
+import type { RichText, TextSpan, Tone } from "./rich-text.schema.ts";
 
 export type Mark = NonNullable<TextSpan["marks"]>[number];
 
-// Marks are stored in this order so that equal sets compare equal.
-const MARK_ORDER: readonly Mark[] = ["bold", "italic", "code"];
+// Marks are stored in this order so that equal sets compare equal. Marks
+// added in later versions go at the end, so older text keeps its form.
+const MARK_ORDER: readonly Mark[] = [
+  "bold",
+  "italic",
+  "code",
+  "underline",
+  "strikethrough",
+];
 
 export function plainText(rich: RichText): string {
   return rich.map((span) => span.text).join("");
@@ -16,6 +23,8 @@ function hasSameStyle(a: TextSpan, b: TextSpan): boolean {
   const marksB = b.marks ?? [];
   return (
     a.href === b.href &&
+    a.color === b.color &&
+    a.highlight === b.highlight &&
     marksA.length === marksB.length &&
     marksA.every((mark) => marksB.includes(mark))
   );
@@ -27,8 +36,8 @@ function withText(span: TextSpan, text: string): TextSpan {
 
 function withMarks(span: TextSpan, marks: readonly Mark[]): TextSpan {
   const ordered = MARK_ORDER.filter((mark) => marks.includes(mark));
-  const plain: TextSpan = { text: span.text };
-  if (span.href !== undefined) plain.href = span.href;
+  const plain: TextSpan = { ...span };
+  delete plain.marks;
   return ordered.length === 0 ? plain : { ...plain, marks: ordered };
 }
 
@@ -104,8 +113,8 @@ export function setLink(rich: RichText, range: LinkRange): RichText {
   const [before, rest] = splitRichText(rich, Math.min(start, end));
   const [middle, after] = splitRichText(rest, Math.abs(end - start));
   const changed = middle.map((span) => {
-    const plain: TextSpan = { text: span.text };
-    if (span.marks !== undefined) plain.marks = span.marks;
+    const plain: TextSpan = { ...span };
+    delete plain.href;
     return href === undefined ? plain : { ...plain, href };
   });
   return normalize([...before, ...changed, ...after]);
@@ -130,4 +139,33 @@ export function toggleMark(rich: RichText, range: MarkRange): RichText {
     return withMarks(span, isMarked ? others : [...others, mark]);
   });
   return normalize([...before, ...changed, ...after]);
+}
+
+export interface ToneRange {
+  readonly start: number;
+  readonly end: number;
+  readonly key: "color" | "highlight";
+  // The tone to apply, or undefined to remove it.
+  readonly tone: Tone | undefined;
+}
+
+// Sets the text color or the highlight of a range, keeping everything else.
+export function setTone(rich: RichText, range: ToneRange): RichText {
+  const { start, end, key, tone } = range;
+  if (start === end) return rich;
+  const [before, rest] = splitRichText(rich, Math.min(start, end));
+  const [middle, after] = splitRichText(rest, Math.abs(end - start));
+  const changed = middle.map((span) => withTone(span, key, tone));
+  return normalize([...before, ...changed, ...after]);
+}
+
+function withTone(
+  span: TextSpan,
+  key: ToneRange["key"],
+  tone: Tone | undefined,
+): TextSpan {
+  const plain: TextSpan = { ...span };
+  if (key === "color") delete plain.color;
+  else delete plain.highlight;
+  return tone === undefined ? plain : { ...plain, [key]: tone };
 }

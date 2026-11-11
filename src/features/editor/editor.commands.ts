@@ -6,6 +6,7 @@ import {
   plainText,
   safeHref,
   setLink,
+  setTone,
   snapToBoundary,
   snapToBoundaryAfter,
   toggleMark,
@@ -13,6 +14,7 @@ import {
   type Mark,
   type Operation,
   type RichText,
+  type Tone,
 } from "../../model/index.ts";
 import {
   defineCommand,
@@ -125,4 +127,36 @@ export const setTextLink = defineCommand<SetLinkPayload>({
   },
 });
 
-export const editorCommands = [replaceText, toggleTextMark, setTextLink];
+export interface SetTonePayload {
+  readonly blockId: BlockId;
+  readonly start: number;
+  readonly end: number;
+  readonly key: "color" | "highlight";
+  // A tone name, or null to remove the color or highlight.
+  readonly tone: Tone | null;
+}
+
+export const setTextTone = defineCommand<SetTonePayload>({
+  type: "text.setTone",
+  handle(state, command) {
+    const block = state.workspace.blocks[command.blockId];
+    if (!isTextBlock(block)) return {};
+    const tone = command.tone ?? undefined;
+    const text = setTone(block.props.text, { ...command, tone });
+    if (text === block.props.text) return {};
+    return {
+      operations: setText(state, {
+        blockId: block.id,
+        text,
+        now: command.meta.now,
+      }),
+    };
+  },
+});
+
+export const editorCommands = [
+  replaceText,
+  toggleTextMark,
+  setTextLink,
+  setTextTone,
+];

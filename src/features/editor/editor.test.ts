@@ -1,7 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { toBlockId } from "../../model/index.ts";
 import { createApp, text } from "./editor-builder.ts";
-import { replaceText, setTextLink, toggleTextMark } from "./editor.commands.ts";
+import {
+  replaceText,
+  setTextLink,
+  setTextTone,
+  toggleTextMark,
+} from "./editor.commands.ts";
+import { UNDO_COMMAND } from "../../state/index.ts";
 
 const A = toBlockId("a");
 const FAMILY = "👨‍👩‍👧";
@@ -112,5 +118,38 @@ describe("text.setLink", () => {
     );
 
     expect(store.getState().workspace).toBe(before);
+  });
+});
+
+describe("text.setTone", () => {
+  it("highlights a range and undoes it in one step", () => {
+    const { store, dispatch } = createApp([text("a", "Hello")]);
+    const textOfA = () => store.getState().workspace.blocks[A]?.props.text;
+
+    dispatch(
+      setTextTone.create({
+        blockId: A,
+        start: 0,
+        end: 5,
+        key: "highlight",
+        tone: "yellow",
+      }),
+    );
+    expect(textOfA()).toEqual([{ text: "Hello", highlight: "yellow" }]);
+
+    dispatch({ type: UNDO_COMMAND });
+    expect(textOfA()).toEqual([{ text: "Hello" }]);
+  });
+
+  it("removes a color", () => {
+    const { store, dispatch } = createApp([text("a", "Hello")]);
+    const color = { blockId: A, start: 0, end: 5, key: "color" } as const;
+
+    dispatch(setTextTone.create({ ...color, tone: "red" }));
+    dispatch(setTextTone.create({ ...color, tone: null }));
+
+    expect(store.getState().workspace.blocks[A]?.props.text).toEqual([
+      { text: "Hello" },
+    ]);
   });
 });
