@@ -75,8 +75,11 @@ export const setActivePage = defineCommand<{ pageId: BlockId | null }>({
 // Shows Home in place of the open page; opening a page leaves it.
 export const openHome = defineCommand<NoPayload>({
   type: "ui.openHome",
-  handle: (state) =>
-    state.ui.isHomeOpen ? {} : { ui: { ...state.ui, isHomeOpen: true } },
+  handle(state) {
+    const { ui } = state;
+    if (ui.isHomeOpen && ui.activePageId === null) return {};
+    return { ui: { ...ui, isHomeOpen: true, activePageId: null } };
+  },
 });
 
 export const togglePageExpanded = defineCommand<{ pageId: BlockId }>({

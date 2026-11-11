@@ -4,6 +4,7 @@ import { buildWorkspace, toBlockId } from "../model/index.ts";
 import { createTestApp } from "./state-builder.ts";
 import { restoreUi, toPersistedUi } from "./ui.schema.ts";
 import { loadWorkspace } from "./workspace.commands.ts";
+import { selectIsHomeShown } from "./app-state.selectors.ts";
 import {
   closeOverlay,
   openHome,
@@ -155,5 +156,16 @@ describe("recent pages and home", () => {
     dispatch(setActivePage.create({ pageId }));
 
     expect(store.getState().ui.recentPageIds).toEqual(["p0"]);
+  });
+
+  it("hides Home as soon as any command opens a page", () => {
+    const { store, dispatch } = appWithPages(1);
+    dispatch(openHome.create({}));
+    expect(selectIsHomeShown(store.getState())).toBe(true);
+    expect(store.getState().ui.activePageId).toBeNull();
+
+    const ui = { ...store.getState().ui, activePageId: toBlockId("p0") };
+
+    expect(selectIsHomeShown({ ...store.getState(), ui })).toBe(false);
   });
 });

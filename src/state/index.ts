@@ -60,6 +60,7 @@ export {
 export {
   selectCanRedo,
   selectCanUndo,
+  selectIsHomeShown,
   selectTheme,
 } from "./app-state.selectors.ts";
 export { restoreUi, toPersistedUi, type PersistedUi } from "./ui.schema.ts";

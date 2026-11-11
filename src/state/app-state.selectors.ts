@@ -12,3 +12,9 @@ export function selectCanRedo(state: AppState): boolean {
 export function selectTheme(state: AppState): Theme {
   return state.workspace.settings.theme;
 }
+
+// Home shows while it is open and no page has been opened since: any
+// command that opens a page, a new one included, replaces it.
+export function selectIsHomeShown(state: AppState): boolean {
+  return state.ui.isHomeOpen && state.ui.activePageId === null;
+}

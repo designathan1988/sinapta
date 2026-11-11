@@ -23,6 +23,7 @@ import {
 } from "../features/settings/index.ts";
 import {
   openOverlay,
+  selectIsHomeShown,
   setSidebarWidth,
   SIDEBAR_WIDTH,
   toggleSidebar,
@@ -155,7 +156,7 @@ function renderTopBar(state: AppState, dispatch: Dispatch): TemplateResult {
   return html`<header class="app__top-bar">
     ${state.ui.isSidebarCollapsed ? showSidebar : nothing}
     ${
-      state.ui.isHomeOpen
+      selectIsHomeShown(state)
         ? html`<span class="app__place">${COPY.home.title}</span>`
         : renderBreadcrumbs(state, dispatch)
     }
@@ -168,7 +169,7 @@ function renderTopBar(state: AppState, dispatch: Dispatch): TemplateResult {
       }</span
     >
     ${
-      state.ui.isHomeOpen
+      selectIsHomeShown(state)
         ? nothing
         : [
             renderPageInfo(state, dispatch),
@@ -220,7 +221,7 @@ export function renderShell(
       ${renderTopBar(state, dispatch)}
       <div class="app__page">
         ${
-          state.ui.isHomeOpen
+          selectIsHomeShown(state)
             ? renderHome(state, dispatch)
             : renderEditor(state, dispatch)
         }

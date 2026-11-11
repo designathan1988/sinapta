@@ -27,7 +27,8 @@ export function hashForPage(pageId: BlockId | null): string {
 }
 
 export function hashForUi(ui: UiState): string {
-  return ui.isHomeOpen ? HOME_HASH : hashForPage(ui.activePageId);
+  const isHome = ui.isHomeOpen && ui.activePageId === null;
+  return isHome ? HOME_HASH : hashForPage(ui.activePageId);
 }
 
 export function startRouter(store: AppStore, dispatch: Dispatch): void {
