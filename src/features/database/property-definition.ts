@@ -5,6 +5,7 @@ import type {
   PropertyConfigSchema,
   PropertyDefinition,
 } from "../../blocks/database/index.ts";
+import type { PageBlock } from "../../blocks/page/index.ts";
 import type { BlockId } from "../../model/index.ts";
 import type { AppState, Dispatch } from "../../state/index.ts";
 
@@ -129,6 +130,13 @@ export interface PropertyType {
   readonly defaultConfig?: () => unknown;
   readonly startingSettings?: StartingSettings;
   readonly numbering?: RowNumbering;
+  // A value worked out from the workspace, never stored, such as a
+  // rollup's.
+  readonly compute?: (
+    row: PageBlock,
+    property: PropertyDefinition,
+    state: AppState,
+  ) => unknown;
   // The settings shown in the property's menu.
   readonly renderConfigEditor?: (
     property: PropertyDefinition,

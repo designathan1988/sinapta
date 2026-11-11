@@ -29,6 +29,25 @@ export function selectRowValues(
     : { ...stored, ...Object.fromEntries(computed) };
 }
 
+// A row's cell values with those worked out from the workspace, such as
+// rollups, beside the stored ones.
+export function selectAllRowValues(
+  state: AppState,
+  page: PageBlock,
+  properties: readonly PropertyDefinition[],
+): Readonly<Record<string, unknown>> {
+  const values = selectRowValues(page, properties);
+  const computed = properties.flatMap((property) => {
+    const compute = propertyType(property.type).compute;
+    return compute === undefined
+      ? []
+      : [[property.id, compute(page, property, state)] as const];
+  });
+  return computed.length === 0
+    ? values
+    : { ...values, ...Object.fromEntries(computed) };
+}
+
 export function selectRows(
   state: AppState,
   database: DatabaseBlock,
@@ -37,7 +56,7 @@ export function selectRows(
   return database.childIds.flatMap((id) => {
     const page = selectPage(state, id);
     if (page === undefined || page.props.isTrashed) return [];
-    const values = selectRowValues(page, properties);
+    const values = selectAllRowValues(state, page, properties);
     return [{ id, title: selectPageTitle(page), values }];
   });
 }
