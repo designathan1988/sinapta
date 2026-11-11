@@ -678,3 +678,27 @@ their type is passive (14.6).
 
 Checks after milestone 14: 1120 tests pass; `npm run verify` green; each
 block checked in the running app.
+
+### Milestone 15: Database properties
+
+| Task | Status | Tests |
+| --- | --- | --- |
+| 15.1 Property config contract (format version 13) | done | `property-registry.test.ts`, `workspace.test.ts`, `run-migrations.test.ts` |
+| 15.2 Status property | done | `status.test.ts` |
+| 15.3 Options, number formats, date ranges (format version 14), descriptions | done | `option.test.ts`, `property-edit-view.test.ts`, `number.test.ts`, `number-config-view.test.ts`, `date.test.ts`, `row-properties-date.test.ts`, `calendar.test.ts`, `database.test.ts` |
+| 15.4 Files and media, unique ID | done | `files.test.ts`, `files-editor-view.test.ts`, `row-properties-files.test.ts`, `held-assets.test.ts`, `unique-id.test.ts` |
+| 15.5 Relation | done | `relation.test.ts`, `relation-editor-view.test.ts` |
+| 15.6 Rollup | done | `rollup.test.ts` |
+| 15.7 Formula | done | `formula.test.ts`, `formula-property.test.ts`, `grapheme.test.ts` |
+| 15.8 Button property | done | `button-property.test.ts` |
+
+Interface pass after the owner's review: tokens carry Notion's measured
+light and dark palettes, type scale, radii, shadows and sizes; the
+sidebar, the database view bar and table, the board, the slash menu and
+the page rhythm follow Notion; a help button opens the shortcuts. Found
+on the way: a token file briefly missing (git or an editor replacing it)
+stopped the dev server and the test watcher; the token build now
+reports it instead.
+
+Checks after milestone 15: 1265 tests pass; `npm run verify` green; each
+surface compared with Notion in the running app, light and dark.
