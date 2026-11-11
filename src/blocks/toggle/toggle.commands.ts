@@ -1,4 +1,11 @@
-import { isBlockOfType, type BlockId } from "../../model/index.ts";
+import {
+  isBlockOfType,
+  type Block,
+  type BlockId,
+  type Operation,
+  type Workspace,
+} from "../../model/index.ts";
+import { PAGE_LIKE_TYPES } from "../page/index.ts";
 import { defineCommand } from "../../state/index.ts";
 import { TOGGLE_TYPE, type ToggleBlock } from "./toggle.schema.ts";
 
@@ -31,4 +38,37 @@ export const setToggleOpen = defineCommand<{
   },
 });
 
-export const toggleCommands = [setToggleOpen];
+// The toggles of a page, nested ones included; a subpage keeps its own.
+function togglesIn(workspace: Workspace, parent: Block): ToggleBlock[] {
+  return parent.childIds.flatMap((id) => {
+    const block = workspace.blocks[id];
+    if (block === undefined || PAGE_LIKE_TYPES.includes(block.type)) return [];
+    const inside = togglesIn(workspace, block);
+    return isBlockOfType<ToggleBlock>(block, TOGGLE_TYPE)
+      ? [block, ...inside]
+      : inside;
+  });
+}
+
+// Opens or closes every toggle of a page at once (Ctrl+Alt+T).
+export const setAllTogglesOpen = defineCommand<{
+  pageId: BlockId;
+  isOpen: boolean;
+}>({
+  type: "toggle.setAllOpen",
+  handle(state, command) {
+    const page = state.workspace.blocks[command.pageId];
+    if (page === undefined) return {};
+    const operations = togglesIn(state.workspace, page)
+      .filter((block) => block.props.isOpen !== command.isOpen)
+      .map((block): Operation => ({
+        type: "record.update",
+        kind: "block",
+        id: block.id,
+        patch: { props: { ...block.props, isOpen: command.isOpen } },
+      }));
+    return { operations };
+  },
+});
+
+export const toggleCommands = [setToggleOpen, setAllTogglesOpen];

@@ -8,6 +8,7 @@ export {
   type HistoryEntry,
   type HistoryState,
   type ImportError,
+  type LastTone,
   type OpenOverlay,
   type PersistenceState,
   type SaveStatus,

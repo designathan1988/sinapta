@@ -68,8 +68,15 @@ export const SHORTCUT_GROUPS: readonly ShortcutGroup[] = [
     title: TEXT.blocks,
     entries: [
       entry(TEXT.indent, "Tab"),
+      entry(TEXT.selectBlock, "Esc"),
+      entry(TEXT.selectPage, "Mod", "A"),
       entry(TEXT.selectBlocks, "Shift", "↑↓"),
-      entry(TEXT.moveBlocks, "Alt", "↑↓"),
+      entry(TEXT.moveBlocks, "Mod", "Shift", "↑↓"),
+      entry(TEXT.duplicate, "Mod", "D"),
+      entry(TEXT.activate, "Mod", "Enter"),
+      entry(TEXT.allToggles, "Mod", "Alt", "T"),
+      entry(TEXT.turnInto, "Mod", "Shift", "0–8"),
+      entry(TEXT.lastColor, "Mod", "Shift", "H"),
     ],
   },
   {

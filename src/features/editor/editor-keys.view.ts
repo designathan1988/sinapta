@@ -4,6 +4,7 @@ import { isTextBlock, textOf, type TextBlock } from "../../blocks/index.ts";
 import type { Mark } from "../../model/index.ts";
 import { setSelection } from "../../state/index.ts";
 import { readSelection, textElementOf } from "../../ui/caret/index.ts";
+import { onBlockKeys } from "./editor-block-keys.view.ts";
 import { openBlockMenu } from "./editor-block-menu.view.ts";
 import { openLinkField } from "./editor-link.view.ts";
 import {
@@ -150,6 +151,7 @@ export function onBlockKeyDown(
     return;
   }
   const isHandled =
+    onBlockKeys(event, context) ||
     startBlockSelection(event, context) ||
     indent(event, context) ||
     inlineMark(event, context) ||

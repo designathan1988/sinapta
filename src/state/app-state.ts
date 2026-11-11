@@ -4,6 +4,7 @@ import {
   type BlockId,
   type Operation,
   type PropertyId,
+  type Tone,
   type ViewId,
   type Workspace,
 } from "../model/index.ts";
@@ -69,6 +70,14 @@ export interface UiState {
   readonly sidebarWidth: number;
   readonly isSidebarCollapsed: boolean;
   readonly overlay: OpenOverlay | null;
+  // The text color or highlight used last, for Ctrl+Shift+H.
+  readonly lastTone: LastTone | null;
+}
+
+export interface LastTone {
+  readonly key: "color" | "highlight";
+  // Null when the last choice removed the color or highlight.
+  readonly tone: Tone | null;
 }
 
 export interface HistoryEntry {
@@ -138,6 +147,7 @@ export function createInitialUiState(): UiState {
     sidebarWidth: SIDEBAR_WIDTH.initial,
     isSidebarCollapsed: false,
     overlay: null,
+    lastTone: null,
   };
 }
 

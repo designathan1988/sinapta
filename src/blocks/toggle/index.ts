@@ -1,4 +1,8 @@
-export { setToggleOpen, toggleCommands } from "./toggle.commands.ts";
+export {
+  setAllTogglesOpen,
+  setToggleOpen,
+  toggleCommands,
+} from "./toggle.commands.ts";
 export { toggleDefinition } from "./toggle.definition.ts";
 export {
   TOGGLE_TYPE,

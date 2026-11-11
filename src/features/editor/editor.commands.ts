@@ -169,12 +169,14 @@ export const setTextTone = defineCommand<SetTonePayload>({
     const tone = command.tone ?? undefined;
     const text = setTone(block.props.text, { ...command, tone });
     if (text === block.props.text) return {};
+    const lastTone = { key: command.key, tone: command.tone };
     return {
       operations: setText(state, {
         blockId: block.id,
         text,
         now: command.meta.now,
       }),
+      ui: { ...state.ui, lastTone },
     };
   },
 });

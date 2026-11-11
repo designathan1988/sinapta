@@ -2,7 +2,11 @@
 // selected the container of the blocks has focus, not a block's text.
 import { isTextBlock, textOf } from "../../blocks/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
-import { parseBlockId, type BlockId } from "../../model/index.ts";
+import {
+  countBlockTree,
+  parseBlockId,
+  type BlockId,
+} from "../../model/index.ts";
 import { readSelection } from "../../ui/caret/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import type { InputContext } from "./editor-input.view.ts";
@@ -15,6 +19,7 @@ import {
   outdentSelectedBlocks,
   selectBlockRange,
 } from "./editor-selection.commands.ts";
+import { duplicateBlock } from "./editor-insert.commands.ts";
 import { selectSelectedBlocks } from "./editor.selectors.ts";
 
 const DIRECTIONS: Record<string, -1 | 1> = { ArrowUp: -1, ArrowDown: 1 };
@@ -56,31 +61,68 @@ export function startBlockSelection(
   return true;
 }
 
+// Arrows with Shift grow or shrink the selection; with Alt, or Ctrl and
+// Shift, they move the selected blocks.
+function arrowAction(event: KeyboardEvent, context: InputContext) {
+  const direction = DIRECTIONS[event.key];
+  if (direction === undefined) return undefined;
+  const hasMod = event.ctrlKey || event.metaKey;
+  if (event.altKey || (hasMod && event.shiftKey)) {
+    return () =>
+      context.dispatch(moveSelectedBlocksBy.create({ offset: direction }));
+  }
+  return event.shiftKey
+    ? () => {
+        extend(event, context, direction);
+      }
+    : undefined;
+}
+
+// Each selected block whose parent is not selected too, with everything
+// inside it, is copied below itself.
+function duplicateSelected(context: InputContext): void {
+  const blocks = selectSelectedBlocks(context.state);
+  const ids = new Set(blocks.map((block) => block.id));
+  for (const block of blocks) {
+    if (block.parentId !== null && ids.has(block.parentId)) continue;
+    const blockCount = countBlockTree(context.state.workspace, block.id);
+    context.dispatch(duplicateBlock.create({ blockId: block.id, blockCount }));
+  }
+}
+
+function otherAction(event: KeyboardEvent, context: InputContext) {
+  const { dispatch } = context;
+  const hasMod = event.ctrlKey || event.metaKey;
+  if (hasMod && event.key.toLowerCase() === "d") {
+    return () => {
+      duplicateSelected(context);
+    };
+  }
+  if (event.key === "Tab") {
+    const command = event.shiftKey
+      ? outdentSelectedBlocks
+      : indentSelectedBlocks;
+    return () => dispatch(command.create({}));
+  }
+  if (DELETING.includes(event.key)) {
+    return () => dispatch(deleteSelectedBlocks.create({}));
+  }
+  if (CLEARING.includes(event.key)) {
+    return () => dispatch(clearBlockSelection.create({ toCaret: true }));
+  }
+  return undefined;
+}
+
 // Keys while blocks are selected. Keys that mean nothing here, such as
 // the copy shortcut, are left to the browser.
 export function onSelectionKeyDown(
   event: KeyboardEvent,
   context: InputContext,
 ): void {
-  const { dispatch } = context;
-  const direction = DIRECTIONS[event.key];
-  if (event.shiftKey && direction !== undefined) {
-    extend(event, context, direction);
-  } else if (event.altKey && direction !== undefined) {
-    dispatch(moveSelectedBlocksBy.create({ offset: direction }));
-  } else if (event.key === "Tab") {
-    const command = event.shiftKey
-      ? outdentSelectedBlocks
-      : indentSelectedBlocks;
-    dispatch(command.create({}));
-  } else if (DELETING.includes(event.key)) {
-    dispatch(deleteSelectedBlocks.create({}));
-  } else if (CLEARING.includes(event.key)) {
-    dispatch(clearBlockSelection.create({ toCaret: true }));
-  } else {
-    return;
-  }
+  const action = arrowAction(event, context) ?? otherAction(event, context);
+  if (action === undefined) return;
   event.preventDefault();
+  action();
 }
 
 // Copying selected blocks copies their text, one line per block. Cutting
