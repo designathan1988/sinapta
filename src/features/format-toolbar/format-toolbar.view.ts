@@ -11,7 +11,6 @@ import {
   type Dispatch,
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
-import { whenConnected } from "../../ui/focus/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { openLinkField, toggleTextMark } from "../editor/index.ts";
 import {
@@ -36,11 +35,12 @@ function keepSelection(event: Event): void {
   event.preventDefault();
 }
 
-// Places the toolbar above the selected text. The browser's selection is
-// read after the render, while it still covers the range in the block.
+// Places the toolbar above the selected text. It runs after the render has
+// finished and the caret is restored, so measuring the selection reads no
+// layout during the render.
 function placeToolbar(element: Element | undefined): void {
   if (!(element instanceof HTMLElement)) return;
-  whenConnected(element, () => {
+  queueMicrotask(() => {
     if (!element.isConnected) return;
     if (!element.matches(":popover-open")) element.showPopover();
     const selection = document.getSelection();
