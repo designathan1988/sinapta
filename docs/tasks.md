@@ -625,3 +625,32 @@ saved over stored data. Both fixed test-first in 11.6.
 
 Checks after milestone 12: 709 tests pass; `npm run verify` about
 10 seconds; every surface checked in the running app in both themes.
+
+### Milestone 13: Editor parity
+
+| Task | Status | Tests |
+| --- | --- | --- |
+| 13.1 Every Notion block prefix | done | `block-shortcut.test.ts`, `editor-convert.test.ts` |
+| 13.2 Inline Markdown while typing | done | `inline-markdown.test.ts`, `editor-input.test.ts` |
+| 13.3 Block keyboard parity | done | `editor-block-keys.test.ts`, `editor-selection-keys.test.ts` |
+| 13.4 Block color (format version 6) | done | `editor-color.test.ts`, `editor-color-menu.test.ts` |
+| 13.5 Heading 4 and toggle headings (format version 7) | done | `heading.test.ts`, `editor-block-keys.test.ts` |
+| 13.6 Subpages inside the page | done | `editor-subpages.test.ts`, `page-row.test.ts` |
+| 13.7 Mentions and page links (format version 8) | done | `mention.test.ts`, `editor-mention.test.ts`, `mention-menu.test.ts` |
+| 13.8 Emoji | done | `emoji-search.test.ts`, `emoji-menu.test.ts` |
+| 13.9 Structured copy and rich paste | done | `block-clipboard.test.ts`, `pasted-html-blocks.test.ts`, `editor-paste-view.test.ts`, `editor-selection-keys.test.ts` |
+| 13.10 Moving blocks between pages | done | `editor-move-page.test.ts`, `editor-block-drag.test.ts`, `editor-block-menu.test.ts`, `move-to.test.ts`, `page-address.test.ts`, `router.test.ts` |
+| 13.11 Code block parity (format version 9) | done | `code-tokenize.test.ts`, `code-highlight.test.ts`, `code.test.ts`, `code-view.test.ts` |
+| 13.12 Callout, image and list details (format version 10) | done | `numbered-list.test.ts`, `image.test.ts`, `image-view.test.ts`, `callout.test.ts` |
+
+Found on the way: keys pressed in a control inside a block (the code
+block's language list, the image's width slider) acted on the block that
+last held the caret; Ctrl+D duplicated it. Fixed test-first in 13.11.
+Chrome sends no copy event while whole blocks are selected, so Ctrl+C and
+Ctrl+X on selected blocks keep them in the store for the next paste
+(13.9).
+
+Checks after milestone 13: 933 tests pass; `npm run verify` green; each
+task checked in the running app. The browser pane's synthetic Ctrl+C and
+Ctrl+V fire no native clipboard events, so clipboard paths are covered by
+unit tests only.
