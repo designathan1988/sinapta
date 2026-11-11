@@ -2,6 +2,7 @@
 // also offers, over the column's values, written as a rollup writes them.
 import type { PropertyDefinition } from "../../blocks/database/index.ts";
 import type { CalculationKind } from "../../model/index.ts";
+import { COPY } from "../../ui/copy.ts";
 import { cellValue } from "./filter-match.ts";
 import { applyRollup, writeRollupResult } from "./properties/rollup/index.ts";
 import { propertyType } from "./property-registry.ts";
@@ -72,4 +73,50 @@ export function calculate(
   const result = writeRollupResult(applyRollup(kind, cells));
   known.set(key, result);
   return result;
+}
+
+export const NO_CALCULATION = "none";
+
+// The choices of a column's calculation: "None" first, then the
+// calculations that fit its property, each with its name.
+export function calculationChoices(
+  property: PropertyDefinition,
+): { readonly value: string; readonly label: string }[] {
+  const labels = COPY.database.rollupFunctions;
+  return [
+    { value: NO_CALCULATION, label: COPY.database.noGrouping },
+    ...calculationsFor(property).map((item) => ({
+      value: item,
+      label: labels[item],
+    })),
+  ];
+}
+
+export interface CalculationGroups {
+  readonly count: readonly CalculationKind[];
+  readonly percent: readonly CalculationKind[];
+  readonly more: readonly CalculationKind[];
+}
+
+function isPercent(kind: CalculationKind): boolean {
+  return kind.startsWith("percent-");
+}
+
+function isCount(kind: CalculationKind): boolean {
+  return (
+    kind.startsWith("count-") || kind === "checked" || kind === "unchecked"
+  );
+}
+
+// The calculations of a column as Notion groups them: counts, percents,
+// and the rest, such as sums and dates, under "More options".
+export function calculationGroups(
+  property: PropertyDefinition,
+): CalculationGroups {
+  const kinds = calculationsFor(property);
+  return {
+    count: kinds.filter(isCount),
+    percent: kinds.filter(isPercent),
+    more: kinds.filter((kind) => !isCount(kind) && !isPercent(kind)),
+  };
 }

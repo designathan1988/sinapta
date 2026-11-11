@@ -17,6 +17,7 @@ import {
 import { renderChip } from "../chip/index.ts";
 import { renderIcon, type IconName } from "../icon/index.ts";
 import { renderMenu, type MenuItem } from "../menu/index.ts";
+import { childDepthOf, childIndexOf } from "../overlay/index.ts";
 
 export const SELECT_OVERLAY = "select";
 
@@ -41,8 +42,9 @@ export interface SelectProps {
   // Gives the list a search field with this placeholder.
   readonly searchPlaceholder?: string;
   // "field" is boxed, for forms; "quiet" is text with a chevron, for
-  // rows such as a filter's.
-  readonly variant?: "field" | "quiet";
+  // rows such as a filter's; "row" is a menu row, its label then its
+  // value, whose list opens beside the menu as Notion's settings do.
+  readonly variant?: "field" | "quiet" | "row";
 }
 
 export interface SelectContext {
@@ -53,29 +55,45 @@ export interface SelectContext {
 interface OpenState {
   readonly isOpen: boolean;
   readonly isChild: boolean;
+  // Where its list is among the overlay's open lists, when it is one.
+  readonly index: number;
   readonly query: string;
 }
 
 function openState(id: string, overlay: OpenOverlay | null): OpenState {
-  if (overlay?.child?.anchorId === id) {
-    return { isOpen: true, isChild: true, query: overlay.child.query ?? "" };
+  const index = childIndexOf(overlay, id);
+  if (overlay === null)
+    return { isOpen: false, isChild: false, index, query: "" };
+  if (index !== -1) {
+    const query = overlay.children?.[index]?.query ?? "";
+    return { isOpen: true, isChild: true, index, query };
   }
-  if (overlay?.kind === SELECT_OVERLAY && overlay.anchorId === id) {
-    return { isOpen: true, isChild: false, query: overlay.query ?? "" };
-  }
-  const isChild = overlay !== null && overlay.kind !== SELECT_OVERLAY;
-  return { isOpen: false, isChild, query: "" };
+  const isOwn = overlay.kind === SELECT_OVERLAY;
+  const isOpen = isOwn && overlay.anchorId === id;
+  const query = isOpen ? (overlay.query ?? "") : "";
+  return { isOpen, isChild: !isOwn, index, query };
 }
 
-function toggle(props: SelectProps, context: SelectContext): void {
+function closeList(state: OpenState, dispatch: Dispatch): void {
+  dispatch(
+    state.isChild
+      ? closeChildOverlay.create({ depth: state.index })
+      : closeOverlay.create({}),
+  );
+}
+
+// Inside an overlay the list opens beside the lists the control sits in.
+function toggle(
+  props: SelectProps,
+  context: SelectContext,
+  control: Element,
+): void {
   const { dispatch, overlay } = context;
   const state = openState(props.id, overlay);
-  if (state.isOpen) {
-    dispatch(
-      state.isChild ? closeChildOverlay.create({}) : closeOverlay.create({}),
-    );
-  } else if (state.isChild) {
-    dispatch(openChildOverlay.create({ anchorId: props.id }));
+  if (state.isOpen) closeList(state, dispatch);
+  else if (state.isChild) {
+    const depth = childDepthOf(control);
+    dispatch(openChildOverlay.create({ anchorId: props.id, depth }));
   } else {
     const next = { kind: SELECT_OVERLAY, anchorId: props.id };
     dispatch(openOverlay.create({ overlay: next }));
@@ -103,6 +121,7 @@ function renderList(
     label: props.label,
     role: "listbox",
     isChild: state.isChild,
+    ...(props.variant === "row" && { placement: "beside" as const }),
     items,
     ...(placeholder !== undefined && {
       search: {
@@ -111,10 +130,9 @@ function renderList(
         onQuery: (query) => dispatch(setOverlayQuery.create({ query })),
       },
     }),
-    onClose: () =>
-      dispatch(
-        state.isChild ? closeChildOverlay.create({}) : closeOverlay.create({}),
-      ),
+    onClose: () => {
+      closeList(state, dispatch);
+    },
   });
 }
 
@@ -145,10 +163,16 @@ export function renderSelect(
       aria-haspopup="listbox"
       aria-expanded=${String(state.isOpen)}
       aria-label=${props.label}
-      @click=${() => {
-        toggle(props, context);
+      @click=${(event: Event) => {
+        if (event.currentTarget instanceof Element)
+          toggle(props, context, event.currentTarget);
       }}
     >
+      ${
+        props.variant === "row"
+          ? html`<span class="select__label">${props.label}</span>`
+          : nothing
+      }
       ${renderCurrent(props)} ${renderIcon("chevron")}
     </button>
     ${state.isOpen ? renderList(props, context, state) : nothing}`;

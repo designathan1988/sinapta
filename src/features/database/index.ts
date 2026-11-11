@@ -26,6 +26,8 @@ export { withPropertyConfigs } from "./property-registry.ts";
 export { renderRowProperties } from "./row-properties.view.ts";
 
 import { optionCommands } from "./option.commands.ts";
+import { propertyCopyCommands } from "./property-copy.commands.ts";
+import { propertyTypeCommands } from "./property-type.commands.ts";
 import { createInlineDatabase } from "./inline-database.commands.ts";
 import { linkedViewCommands } from "./linked-view.commands.ts";
 import { buttonPropertyCommands } from "./properties/button/index.ts";
@@ -51,6 +53,8 @@ export const databaseCommands = [
   ...calendarCommands,
   ...tableCommands,
   ...optionCommands,
+  ...propertyTypeCommands,
+  ...propertyCopyCommands,
   createInlineDatabase,
   ...linkedViewCommands,
   ...relationCommands,

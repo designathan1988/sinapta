@@ -1,3 +1,4 @@
+export { childDepthOf, childIndexOf } from "./overlay-child.ts";
 export {
   focusOverlayAnchor,
   installOverlayDismiss,

@@ -1,11 +1,11 @@
 // What a menu holds: items to choose, labels over groups of items, and
 // lines between groups; and which items a search leaves.
+import type { TemplateResult } from "lit-html";
 import type { IconName } from "../icon/index.ts";
 
-export interface MenuItem {
+interface ItemLook {
   readonly kind?: "item";
   readonly label: string;
-  readonly onSelect: () => void;
   readonly icon?: IconName;
   readonly isDanger?: boolean;
   readonly isDisabled?: boolean;
@@ -28,6 +28,36 @@ export interface MenuItem {
   readonly keepsOpen?: boolean;
 }
 
+// What a submenu shows: a menu of its own beside the row, without the
+// header and footer of a panel.
+export interface SubmenuContent {
+  readonly label: string;
+  readonly items: readonly MenuEntry[];
+  readonly lead?: TemplateResult;
+  readonly searchPlaceholder?: string;
+  readonly role?: "menu" | "listbox";
+}
+
+// A menu the row opens beside its own, as Notion's "Change type".
+export interface Submenu {
+  // Names the submenu among the overlay's open lists.
+  readonly id: string;
+  // Built only while the submenu is open.
+  readonly menu: () => SubmenuContent;
+}
+
+export interface ActionItem extends ItemLook {
+  readonly onSelect: () => void;
+  readonly submenu?: undefined;
+}
+
+export interface SubmenuItem extends ItemLook {
+  readonly submenu: Submenu;
+  readonly onSelect?: undefined;
+}
+
+export type MenuItem = ActionItem | SubmenuItem;
+
 export interface MenuSection {
   readonly kind: "section";
   readonly label: string;
@@ -43,12 +73,13 @@ export function isMenuItem(entry: MenuEntry): entry is MenuItem {
   return entry.kind === undefined || entry.kind === "item";
 }
 
-// Switches, rows that show another panel, and items that say so leave
-// the menu open.
+// Switches, rows that show another panel or a submenu, and items that
+// say so leave the menu open.
 export function keepsMenuOpen(item: MenuItem): boolean {
   return (
     item.check === "switch" ||
     item.opensPanel === true ||
+    item.submenu !== undefined ||
     item.keepsOpen === true
   );
 }

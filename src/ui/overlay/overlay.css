@@ -1,13 +1,10 @@
 @layer ui {
-  /* The control that opened the overlay is the anchor of the overlay; the
-     control that opened a list inside the overlay anchors that list. */
+  /* The control that opened the overlay is the anchor of the overlay. A
+     list or submenu inside it is shown with its control as the source,
+     which the browser makes its anchor. */
   [data-overlay-anchor][aria-expanded="true"],
   [data-overlay-anchor="open"] {
     anchor-name: --overlay-anchor;
-  }
-
-  [data-overlay-child-anchor][aria-expanded="true"] {
-    anchor-name: --overlay-child-anchor;
   }
 
   /* Every menu and popover is the same panel, measured on Notion's: no
@@ -51,7 +48,17 @@
     }
 
     [data-overlay][data-child][popover] {
-      position-anchor: --overlay-child-anchor;
+      position-anchor: auto;
+    }
+
+    /* A submenu sits beside its row, centered on it and over the menu's
+       edge by the menu's padding, as Notion's; it turns to the other
+       side where there is no room, and moves up or down to fit. */
+    [data-overlay][data-placement="beside"][popover] {
+      margin: var(--space-none);
+      position-area: inline-end span-all;
+      align-self: anchor-center;
+      position-try-fallbacks: flip-inline;
     }
   }
 }

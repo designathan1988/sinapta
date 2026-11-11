@@ -18,7 +18,7 @@ owner listed here exists.
 | Command handler registration and lookup | `src/state/command-registry.ts` | 1 |
 | Undo and redo | `src/state/history.ts` | 1 |
 | `ui` slice commands that belong to no feature (sidebar, overlay, selection) | `src/state/ui.commands.ts` | 1 |
-| Inside the open overlay: its panel, the list open in it, its search | `src/state/ui-overlay.commands.ts` | 16 |
+| Inside the open overlay: its panel, the lists and submenus open in it (outermost first), its search | `src/state/ui-overlay.commands.ts` | 16 |
 | Settings commands (theme) | `src/state/settings.commands.ts` | 1 |
 | Save status, export and import request commands | `src/state/persistence.commands.ts` | 1 |
 | Cross-feature selectors over `AppState` | `src/state/app-state.selectors.ts` | 1 |
@@ -73,6 +73,9 @@ owner listed here exists.
 | Move-to dialog | `src/features/move-to/` | 2 |
 | Settings dialog | `src/features/settings/` | 1 |
 | Property type definitions | `src/features/database/property-registry.ts` plus one folder per type | 5 |
+| Changing a property's type and carrying its values over | `src/features/database/property-type.commands.ts`, `property-convert.ts`, `property-type.selectors.ts` | 16 |
+| New columns beside a column: duplicate, insert left and right | `src/features/database/property-copy.commands.ts` | 16 |
+| A column's menu and its submenus (Edit property, Change type, Sort, Calculate) | `src/features/database/column-menu.view.ts`, `column-menu-items.ts`, `column-place-items.ts`, `property-edit-menu.ts` | 16 |
 | What a property type declares | `src/features/database/property-definition.ts` | 5 |
 | Database columns | `src/features/database/database.commands.ts` | 5 |
 | Database rows: adding and setting values | `src/features/database/row.commands.ts` | 5 |
@@ -96,8 +99,8 @@ owner listed here exists.
 | Table row models (sort, filter, order through the table engine) | `src/features/database/table-model.selectors.ts` | 5 |
 | Keyboard shortcuts | `src/ui/shortcuts/shortcut-registry.ts` | 1 |
 | Keys that apply only while one part is active (slash menu, Alt+F10), and the one capture listener for them | `src/ui/shortcuts/scoped-keys.ts` | 11 |
-| Overlay dismissal, anchoring and focus return | `src/ui/overlay/` | 1 |
-| Menu primitive: every menu and option list (panel, header, search, rows, sections, switch rows) | `src/ui/menu/` | 2 |
+| Overlay dismissal, anchoring and focus return; how deep a control sits among open submenus | `src/ui/overlay/` | 1 |
+| Menu primitive: every menu and option list (panel, header, name, search, rows, sections, switch rows, submenus beside a row) | `src/ui/menu/` | 2 |
 | Select: a control showing a choice that opens its option list, in place of every browser `<select>` | `src/ui/select/` | 16 |
 | Chips: option labels on their color | `src/ui/chip/` | 16 |
 | Switches: the look of an on and off setting | `src/ui/switch/` | 16 |

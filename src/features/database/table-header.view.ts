@@ -6,11 +6,7 @@ import { closeOverlay, openOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
-import {
-  COLUMN_MENU_OVERLAY,
-  isOpenFor,
-  PROPERTY_EDIT_OVERLAY,
-} from "./database-overlay.ts";
+import { COLUMN_MENU_OVERLAY, isOpenFor } from "./database-overlay.ts";
 import { propertyType } from "./property-registry.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import type { TableColumn } from "./table-model.selectors.ts";
@@ -146,12 +142,10 @@ function renderMenuButton(
 ): TemplateResult {
   const { overlay } = context.state.ui;
   const anchorId = column.property.id;
-  // The column's menu, and the property's settings opened from it, both
-  // sit by this button.
+  // The column's menu, with its property's settings in submenus, sits by
+  // this button.
   const isOpen =
-    overlay?.anchorId === anchorId &&
-    (overlay.kind === COLUMN_MENU_OVERLAY ||
-      overlay.kind === PROPERTY_EDIT_OVERLAY);
+    overlay?.anchorId === anchorId && overlay.kind === COLUMN_MENU_OVERLAY;
   const toggle = (): void => {
     const next = { kind: COLUMN_MENU_OVERLAY, anchorId };
     context.dispatch(

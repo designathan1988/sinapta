@@ -7,23 +7,9 @@ import { CALCULATION_KINDS } from "../../model/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderSelect } from "../../ui/select/index.ts";
 import { setCalculation } from "./calculation.commands.ts";
-import { calculate, calculationsFor } from "./calculations.selectors.ts";
+import { calculate, calculationChoices } from "./calculations.selectors.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import type { TableColumn } from "./table-model.selectors.ts";
-
-const NONE = "none";
-
-// "None" first, then the calculations that fit the column.
-function calculationOptions(column: TableColumn) {
-  const labels = COPY.database.rollupFunctions;
-  return [
-    { value: NONE, label: COPY.database.noGrouping },
-    ...calculationsFor(column.property).map((item) => ({
-      value: item,
-      label: labels[item],
-    })),
-  ];
-}
 
 function renderCalculation(
   column: TableColumn,
@@ -50,7 +36,7 @@ function renderCalculation(
         id: `calculate-${model.view.id}-${property.id}`,
         label: `${COPY.database.calculate} ${property.name}`,
         value: kind,
-        options: calculationOptions(column),
+        options: calculationChoices(column.property),
         placeholder: COPY.database.calculate,
         variant: "quiet",
         onChoose: choose,

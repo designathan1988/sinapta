@@ -1,6 +1,7 @@
-// One choice in a property's settings: its label, then a select that
-// opens Notion's option list, the current option checked. Every type's
-// settings use it, so they look and behave alike.
+// One choice in a property's settings, as a row of Notion's "Edit
+// property": its label, its value and a chevron, opening the option list
+// beside it with the current option checked. Every type's settings use
+// it, so they look and behave alike.
 import { html, type TemplateResult } from "lit-html";
 import { renderSelect, type SelectOption } from "../../../ui/select/index.ts";
 import type { ConfigContext } from "../property-definition.ts";
@@ -22,8 +23,7 @@ export function renderConfigChoice(
   context: ConfigContext,
 ): TemplateResult {
   const { placeholder, searchPlaceholder } = choice;
-  return html`<div class="database__view-name" data-field=${choice.id}>
-    <span>${choice.label}</span>
+  return html`<div class="database__config-choice" data-field=${choice.id}>
     ${renderSelect(
       {
         id: choice.id,
@@ -31,6 +31,7 @@ export function renderConfigChoice(
         value: choice.value,
         options: choice.options,
         onChoose: choice.onChoose,
+        variant: "row",
         ...(placeholder !== undefined && { placeholder }),
         ...(searchPlaceholder !== undefined && { searchPlaceholder }),
       },

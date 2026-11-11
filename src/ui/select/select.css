@@ -59,6 +59,14 @@
     }
   }
 
+  .select__label {
+    flex: 1;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .select__value {
     flex: 1;
     min-inline-size: 0;
@@ -68,6 +76,34 @@
 
     &[data-placeholder] {
       color: var(--color-text-tertiary);
+    }
+  }
+
+  /* A row of a menu, as Notion's settings rows: the full width, the
+     label first, the value muted at the end, a chevron that points
+     to the list beside it. */
+  .select[data-variant="row"] {
+    display: flex;
+    inline-size: 100%;
+    padding-inline: var(--space-inset-xs);
+    background-color: transparent;
+    box-shadow: none;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: var(--color-bg-hover);
+    }
+
+    & > .select__value {
+      flex: none;
+      max-inline-size: 50%;
+      color: var(--color-text-secondary);
+      text-align: end;
+    }
+
+    & > [data-icon="chevron"],
+    &[aria-expanded="true"] > [data-icon="chevron"] {
+      rotate: none;
     }
   }
 }

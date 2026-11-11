@@ -26,7 +26,7 @@ function rendered(child?: string) {
   const overlay = {
     kind: FILTERS_OVERLAY,
     anchorId: app.databaseId,
-    ...(child !== undefined && { child: { anchorId: child } }),
+    ...(child !== undefined && { children: [{ anchorId: child }] }),
   };
   const state = { ...filtered, ui: { ...filtered.ui, overlay } };
   const sent: Command[] = [];

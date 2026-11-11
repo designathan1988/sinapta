@@ -3,6 +3,11 @@
 import "./overlay.css";
 import { whenConnected } from "../focus/index.ts";
 import {
+  childDepthOf,
+  OPEN_CHILD_ANCHOR,
+  popoverSourceOf,
+} from "./overlay-child.ts";
+import {
   closeChildOverlay,
   closeOverlay,
   type AppStore,
@@ -16,14 +21,16 @@ const INSIDE = [
   "dialog",
 ].join(", ");
 
-// The list open inside the overlay, and the control that opened it.
-const CHILD = [
-  "[data-overlay][data-child]",
-  "[data-overlay-child-anchor][aria-expanded='true']",
-].join(", ");
-
 function isWithin(target: EventTarget | null, selector: string): boolean {
   return target instanceof Element && target.closest(selector) !== null;
+}
+
+// How many of the open lists and submenus a press keeps: those it is in,
+// and the one of the control it is on.
+function keptChildren(target: EventTarget | null): number {
+  if (!(target instanceof Element)) return 0;
+  const onAnchor = isWithin(target, OPEN_CHILD_ANCHOR) ? 1 : 0;
+  return childDepthOf(target) + onAnchor;
 }
 
 export function installOverlayDismiss(
@@ -34,32 +41,47 @@ export function installOverlayDismiss(
     const { overlay } = store.getState().ui;
     if (overlay === null) return;
     const { target } = event;
-    // A press elsewhere in the overlay closes only the list open in it.
-    if (overlay.child !== undefined && !isWithin(target, CHILD)) {
-      dispatch(closeChildOverlay.create({}));
+    // A press elsewhere in the overlay closes the lists it is outside of.
+    const depth = keptChildren(target);
+    if (depth < (overlay.children?.length ?? 0)) {
+      dispatch(closeChildOverlay.create({ depth }));
     }
     if (!isWithin(target, INSIDE)) dispatch(closeOverlay.create({}));
   });
 }
 
-// Puts focus back on the control that opened the overlay, or the list
-// open inside it.
-export function focusOverlayAnchor(): void {
-  const child = document.querySelector<HTMLElement>(
-    "[data-overlay-child-anchor][aria-expanded='true']",
-  );
+// Puts focus back on the control that opened the innermost open list, or
+// on the one that opened the overlay when all of it closes.
+export function focusOverlayAnchor(closing = { isWhole: false }): void {
+  const child = closing.isWhole
+    ? undefined
+    : [...document.querySelectorAll<HTMLElement>(OPEN_CHILD_ANCHOR)].at(-1);
   const anchor = document.querySelector<HTMLElement>(
     "[data-overlay-anchor][aria-expanded='true']",
   );
   (child ?? anchor)?.focus();
 }
 
-// Shows a popover element once it is in the document.
+// A submenu opened under the pointer leaves focus where it is, as
+// Notion's do; opened from the keyboard, it takes focus.
+function takesFocus(element: Element, source: Element | undefined): boolean {
+  const isSubmenu = element.matches("[data-placement='beside']");
+  return !isSubmenu || source?.matches(":hover") !== true;
+}
+
+// Shows a popover element once it is in the document, and focuses its
+// first field or row. A popover already open is left as it is: lit calls
+// a ref again whenever another element shares its callback, as nested
+// menus do, and a second focus would pull it away from where it is.
 export function showPopoverWhenConnected(element: Element | undefined): void {
   if (!(element instanceof HTMLElement)) return;
   whenConnected(element, () => {
-    if (!element.isConnected) return;
-    if (!element.matches(":popover-open")) element.showPopover();
-    element.querySelector<HTMLElement>("[data-autofocus]")?.focus();
+    if (!element.isConnected || element.matches(":popover-open")) return;
+    // A list follows its control, and so is placed by it.
+    const source = popoverSourceOf(element);
+    element.showPopover(source === undefined ? undefined : { source });
+    if (takesFocus(element, source)) {
+      element.querySelector<HTMLElement>("[data-autofocus]")?.focus();
+    }
   });
 }

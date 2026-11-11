@@ -1,12 +1,12 @@
 // The options of a select, multi-select or status property, as Notion
-// lists them in the property's menu: each a chip whose row opens its own
-// panel, with its name, its place, Delete and its color; and a field that
-// adds one.
+// lists them in "Edit property": each a chip whose row opens its own
+// submenu, with its name, its place, Delete and its color; and a field
+// that adds one.
 import { html, type TemplateResult } from "lit-html";
 import type { PropertyDefinition } from "../../blocks/database/index.ts";
-import { openOverlayPanel } from "../../state/index.ts";
+import { closeChildOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
-import type { MenuEntry } from "../../ui/menu/index.ts";
+import type { MenuEntry, SubmenuContent } from "../../ui/menu/index.ts";
 import {
   deleteOption,
   moveOption,
@@ -19,14 +19,9 @@ import { addOption, OPTION_COLORS } from "./table.commands.ts";
 
 const TEXT = COPY.database;
 
-// The panel of one option is the overlay's panel "option:<its id>".
-const OPTION_PANEL = "option:";
-
-export function optionOfPanel(panel: string | undefined): string | undefined {
-  return panel?.startsWith(OPTION_PANEL) === true
-    ? panel.slice(OPTION_PANEL.length)
-    : undefined;
-}
+// An option's submenu opens from "Edit property", the column menu's
+// first submenu, so it is the second one open.
+const OPTION_DEPTH = 1;
 
 function colorLabel(color: string): string {
   const tones: Readonly<Record<string, string>> = COPY.tones;
@@ -69,22 +64,15 @@ export function optionEntries(
     { kind: "section", label: TEXT.options },
     ...options.map((option): MenuEntry => ({
       label: option.name,
-      // Notion's grip; its panel's Move up and down move it by keyboard.
+      // Notion's grip; its submenu's Move up and down move it by keyboard.
       icon: "grip",
       color: option.color,
-      opensPanel: true,
-      onSelect: () =>
-        context.dispatch(
-          openOverlayPanel.create({ panel: `${OPTION_PANEL}${option.id}` }),
-        ),
+      submenu: {
+        id: `${property.id}:option:${option.id}`,
+        menu: () => optionMenu(property, option.id, context),
+      },
     })),
   ];
-}
-
-export interface OptionPanel {
-  readonly title: string;
-  readonly lead: TemplateResult;
-  readonly items: readonly MenuEntry[];
 }
 
 function renderName(
@@ -108,8 +96,8 @@ function renderName(
   </label>`;
 }
 
-// Moving an option is the keyboard's way to drag it; Delete goes back to
-// the property's panel.
+// Moving an option is the keyboard's way to drag it; Delete closes its
+// submenu and leaves the property's.
 function placeItems(target: OptionTarget, context: TableContext): MenuEntry[] {
   const { dispatch } = context;
   const move = (offset: number) => (): void => {
@@ -135,19 +123,19 @@ function placeItems(target: OptionTarget, context: TableContext): MenuEntry[] {
       keepsOpen: true,
       onSelect: () => {
         dispatch(deleteOption.create(target));
-        dispatch(openOverlayPanel.create({ panel: null }));
+        dispatch(closeChildOverlay.create({ depth: OPTION_DEPTH }));
       },
     },
   ];
 }
 
-export function optionPanel(
+function optionMenu(
   property: PropertyDefinition,
   optionId: string,
   context: TableContext,
-): OptionPanel | undefined {
+): SubmenuContent {
   const option = property.options?.find((item) => item.id === optionId);
-  if (option === undefined) return undefined;
+  if (option === undefined) return { label: TEXT.options, items: [] };
   const databaseId = context.model.database.id;
   const target = { databaseId, propertyId: property.id, optionId };
   const colors = OPTION_COLORS.map((color): MenuEntry => ({
@@ -160,7 +148,7 @@ export function optionPanel(
       context.dispatch(recolorOption.create({ ...target, color })),
   }));
   return {
-    title: option.name,
+    label: option.name,
     lead: renderName(target, option.name, context),
     items: [
       ...placeItems(target, context),

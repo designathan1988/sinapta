@@ -1,11 +1,11 @@
 // The first panel of the view settings: the view's name, then a row per
 // setting with its current value, and the view's own actions.
-import { html, type TemplateResult } from "lit-html";
+import type { TemplateResult } from "lit-html";
 import type { ViewType } from "../../../model/index.ts";
 import { openOverlay } from "../../../state/index.ts";
 import { COPY } from "../../../ui/copy.ts";
-import { renderIcon, type IconName } from "../../../ui/icon/index.ts";
-import type { MenuEntry } from "../../../ui/menu/index.ts";
+import type { IconName } from "../../../ui/icon/index.ts";
+import { renderMenuName, type MenuEntry } from "../../../ui/menu/index.ts";
 import { filterCount } from "../filter-match.ts";
 import type { TableContext } from "../table-cell.view.ts";
 import { FILTERS_OVERLAY } from "../view-filters.view.ts";
@@ -22,22 +22,15 @@ export const LAYOUT_ICONS: Readonly<Record<ViewType, IconName>> = {
 
 function renderName(context: TableContext): TemplateResult {
   const { model, dispatch } = context;
-  // An empty name would leave a tab with nothing to press.
-  const rename = (event: Event): void => {
-    if (!(event.target instanceof HTMLInputElement)) return;
-    const name = event.target.value.trim();
-    if (name === "") event.target.value = model.view.name;
-    else dispatch(renameView.create({ viewId: model.view.id, name }));
-  };
-  return html`<label class="menu__field view-settings__name">
-    ${renderIcon(LAYOUT_ICONS[model.view.type])}
-    <input
-      type="text"
-      aria-label=${COPY.database.viewNameLabel}
-      .value=${model.view.name}
-      @change=${rename}
-    />
-  </label>`;
+  // An empty name, which would leave a tab with nothing to press, puts
+  // the old one back.
+  return renderMenuName({
+    icon: LAYOUT_ICONS[model.view.type],
+    label: COPY.database.viewNameLabel,
+    value: model.view.name,
+    onRename: (name) =>
+      dispatch(renameView.create({ viewId: model.view.id, name })),
+  });
 }
 
 // A database keeps at least one view, so the last one cannot be deleted.

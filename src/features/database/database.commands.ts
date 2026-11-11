@@ -88,7 +88,7 @@ export const createDatabase = defineCommand<{ parentId: BlockId | null }>({
   },
 });
 
-function updateProperties(
+export function updateProperties(
   database: DatabaseBlock,
   properties: readonly PropertyDefinition[],
 ): Operation[] {

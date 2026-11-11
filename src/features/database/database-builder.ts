@@ -13,6 +13,8 @@ import {
   databaseCommands,
 } from "./database.commands.ts";
 import { optionCommands } from "./option.commands.ts";
+import { propertyCopyCommands } from "./property-copy.commands.ts";
+import { propertyTypeCommands } from "./property-type.commands.ts";
 import { buttonPropertyCommands } from "./properties/button/index.ts";
 import {
   relationCommands,
@@ -110,6 +112,8 @@ const DATABASE_TEST_COMMANDS = [
   ...pageTrashCommands,
   ...tableCommands,
   ...optionCommands,
+  ...propertyTypeCommands,
+  ...propertyCopyCommands,
   ...relationCommands,
   ...buttonPropertyCommands,
 ];

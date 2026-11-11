@@ -78,9 +78,7 @@ describe("the view settings", () => {
 
   it("renames the view from its name field", () => {
     const { host, sent, viewId } = rendered();
-    const field = host.querySelector<HTMLInputElement>(
-      ".view-settings__name input",
-    );
+    const field = host.querySelector<HTMLInputElement>(".menu__name input");
 
     if (field) field.value = "Mine";
     field?.dispatchEvent(new Event("change", { bubbles: true }));

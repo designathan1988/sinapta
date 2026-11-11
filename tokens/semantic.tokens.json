@@ -333,6 +333,10 @@
       "width": {
         "$value": "{base.size.18x125}"
       },
+      "narrow": {
+        "$description": "A submenu that is a short list, as Notion's Sort or Calculate: 200 px.",
+        "$value": "{base.size.12x5}"
+      },
       "row": {
         "$description": "A menu row, as tall as Notion's.",
         "$value": "{base.size.7}"

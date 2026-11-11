@@ -12,6 +12,7 @@ const OPTIONS = [
 function rendered(
   overlay: OpenOverlay | null,
   props: Partial<SelectProps> = {},
+  isInSubmenu = false,
 ) {
   const sent: Command[] = [];
   const dispatch = (command: Command) => {
@@ -20,7 +21,11 @@ function rendered(
   };
   const onChoose = vi.fn();
   const host = document.createElement("div");
-  document.body.replaceChildren(host);
+  // A select in a submenu sits inside that submenu's panel.
+  const submenu = document.createElement("div");
+  Object.assign(submenu.dataset, { overlay: "", child: "" });
+  submenu.append(host);
+  document.body.replaceChildren(isInSubmenu ? submenu : host);
   render(
     renderSelect(
       {
@@ -68,11 +73,51 @@ describe("renderSelect", () => {
     ]);
   });
 
+  it("opens its list beside the submenu it sits in, keeping that one", () => {
+    const overlay = {
+      kind: "column-menu",
+      anchorId: "p1",
+      children: [{ anchorId: "edit" }],
+    };
+    const closed = rendered(overlay, {}, true);
+    closed.trigger?.click();
+    const open = rendered(
+      { ...overlay, children: [{ anchorId: "edit" }, { anchorId: "join" }] },
+      {},
+      true,
+    );
+
+    expect(closed.sent).toEqual([
+      expect.objectContaining({
+        type: "ui.openChildOverlay",
+        anchorId: "join",
+        depth: 1,
+      }),
+    ]);
+    expect(open.trigger?.getAttribute("aria-expanded")).toBe("true");
+    expect(open.host.querySelectorAll("[role=option]")).toHaveLength(2);
+  });
+
+  it("shows as a menu row, its label then its value, its list beside it", () => {
+    const overlay = {
+      kind: "column-menu",
+      anchorId: "p1",
+      children: [{ anchorId: "edit" }, { anchorId: "join" }],
+    };
+    const { host, trigger } = rendered(overlay, { variant: "row" }, true);
+
+    expect(trigger?.querySelector(".select__label")?.textContent).toBe("Join");
+    expect(trigger?.querySelector(".select__value")?.textContent).toBe("And");
+    expect(host.querySelector(".menu")?.getAttribute("data-placement")).toBe(
+      "beside",
+    );
+  });
+
   it("lists the options with the chosen one checked, and chooses one", () => {
     const { host, onChoose, sent } = rendered({
       kind: "filters",
       anchorId: "db",
-      child: { anchorId: "join" },
+      children: [{ anchorId: "join" }],
     });
     const options = [...host.querySelectorAll<HTMLElement>("[role=option]")];
 

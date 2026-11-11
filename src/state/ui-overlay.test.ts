@@ -36,10 +36,52 @@ describe("an overlay's panels and child list", () => {
 
     app.dispatch(openChildOverlay.create({ anchorId: "sort" }));
     app.dispatch(setOverlayQuery.create({ query: "na" }));
-    expect(app.overlay()?.child).toEqual({ anchorId: "sort", query: "na" });
+    expect(app.overlay()?.children).toEqual([
+      { anchorId: "sort", query: "na" },
+    ]);
 
     app.dispatch(closeChildOverlay.create({}));
     expect(app.overlay()).toEqual({ kind: "settings", anchorId: "db" });
+  });
+
+  it("opens a submenu inside a submenu, keeping the ones it sits in", () => {
+    const app = withOverlay();
+
+    app.dispatch(openChildOverlay.create({ anchorId: "edit" }));
+    app.dispatch(openChildOverlay.create({ anchorId: "format", depth: 1 }));
+    expect(app.overlay()?.children).toEqual([
+      { anchorId: "edit" },
+      { anchorId: "format" },
+    ]);
+
+    app.dispatch(openChildOverlay.create({ anchorId: "type", depth: 0 }));
+    expect(app.overlay()?.children).toEqual([{ anchorId: "type" }]);
+  });
+
+  it("closes the submenus from a depth on, the innermost by default", () => {
+    const app = withOverlay();
+    app.dispatch(openChildOverlay.create({ anchorId: "edit" }));
+    app.dispatch(openChildOverlay.create({ anchorId: "format", depth: 1 }));
+
+    app.dispatch(closeChildOverlay.create({}));
+    expect(app.overlay()?.children).toEqual([{ anchorId: "edit" }]);
+
+    app.dispatch(openChildOverlay.create({ anchorId: "format", depth: 1 }));
+    app.dispatch(closeChildOverlay.create({ depth: 0 }));
+    expect(app.overlay()).toEqual({ kind: "settings", anchorId: "db" });
+  });
+
+  it("searches the innermost submenu", () => {
+    const app = withOverlay();
+    app.dispatch(openChildOverlay.create({ anchorId: "edit" }));
+    app.dispatch(openChildOverlay.create({ anchorId: "format", depth: 1 }));
+
+    app.dispatch(setOverlayQuery.create({ query: "eu" }));
+
+    expect(app.overlay()?.children).toEqual([
+      { anchorId: "edit" },
+      { anchorId: "format", query: "eu" },
+    ]);
   });
 
   it("searches the overlay itself when no list is open in it", () => {

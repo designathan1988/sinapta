@@ -6,10 +6,6 @@ import { renderCellRelation } from "./cell-relation.view.ts";
 import { renderCellOptions } from "./cell-options.view.ts";
 import { renderColumnMenu, renderTypeMenu } from "./column-menu.view.ts";
 import {
-  PROPERTY_EDIT_OVERLAY,
-  renderPropertyEdit,
-} from "./property-edit.view.ts";
-import {
   CELL_FILES_OVERLAY,
   CELL_OPTIONS_OVERLAY,
   CELL_RELATION_OVERLAY,
@@ -45,7 +41,6 @@ const OVERLAYS: Record<string, Render> = {
   [BOARD_COLUMN_OVERLAY]: renderBoardColumnMenu,
   [VIEW_SETTINGS_OVERLAY]: renderViewSettings,
   [NEW_VIEW_OVERLAY]: renderNewViewMenu,
-  [PROPERTY_EDIT_OVERLAY]: renderPropertyEdit,
 };
 
 // Overlays of a whole database, opened from its toolbar or header; they

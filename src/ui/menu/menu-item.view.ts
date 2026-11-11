@@ -22,7 +22,9 @@ function renderEnd(item: MenuItem): TemplateResult | typeof nothing {
   const isChecked = item.isChecked === true;
   if (item.endIcon !== undefined) return renderIcon(item.endIcon);
   if (item.check === "switch") return renderSwitchMark(isChecked);
-  if (item.opensPanel === true) return renderIcon("chevron");
+  if (item.opensPanel === true || item.submenu !== undefined) {
+    return renderIcon("chevron");
+  }
   return isChecked ? renderIcon("check") : nothing;
 }
 
@@ -44,6 +46,8 @@ export interface EntryPlace {
   readonly isListbox: boolean;
   // The item that takes focus when the menu opens.
   readonly isFirst: boolean;
+  // Whether the item's submenu is open beside the menu.
+  readonly isExpanded?: boolean;
 }
 
 export function renderEntry(
@@ -68,6 +72,9 @@ export function renderEntry(
     data-index=${place.index}
     aria-checked=${role.startsWith("menuitem") && entry.check !== undefined ? isChecked : nothing}
     aria-selected=${role === "option" ? isChecked : nothing}
+    aria-haspopup=${entry.submenu === undefined ? nothing : "menu"}
+    aria-expanded=${entry.submenu === undefined ? nothing : String(place.isExpanded === true)}
+    ?data-overlay-child-anchor=${entry.submenu !== undefined}
     ?data-autofocus=${place.isFirst}
     ?data-danger=${entry.isDanger === true}
     ?disabled=${entry.isDisabled === true}

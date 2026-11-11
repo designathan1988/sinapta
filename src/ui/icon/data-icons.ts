@@ -52,6 +52,14 @@ export const DATA_PATHS = {
   clock: svg`<circle cx="8" cy="8" r="5.5" /><path d="M8 5v3.5l2 1.5" />`,
   id: svg`<rect x="2" y="3.5" width="12" height="9" rx="1.5" />
     <path d="M5 6.5v3M7.5 6.5v3h1.5a1.5 1.5 0 0 0 0-3z" />`,
+  // The column menu's own: settings as sliders, a type swapped by two
+  // arrows, a calculation as a sigma, and columns put in beside a bar.
+  sliders: svg`<path d="M2.5 4.5h3M8.5 4.5h5M2.5 11.5h7M12.5 11.5h1" />
+    <circle cx="7" cy="4.5" r="1.5" /><circle cx="11" cy="11.5" r="1.5" />`,
+  swap: svg`<path d="M2.5 5.5h10M10 3l2.5 2.5L10 8M13.5 10.5h-10M6 8l-2.5 2.5L6 13" />`,
+  sigma: svg`<path d="M12 3.5H4l4 4.5-4 4.5h8" />`,
+  "insert-left": svg`<path d="M13.5 2.5v11M10.5 8h-8M5 5.5L2.5 8 5 10.5" />`,
+  "insert-right": svg`<path d="M2.5 2.5v11M5.5 8h8M11 5.5l2.5 2.5-2.5 2.5" />`,
 } satisfies Record<string, TemplateResult<2>>;
 
 export type DataIconName = keyof typeof DATA_PATHS;

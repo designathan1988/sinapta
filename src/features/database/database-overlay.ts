@@ -2,10 +2,9 @@
 // database it belongs to both match.
 import type { AppState } from "../../state/index.ts";
 
-// A column's menu, and the settings of its property opened from it; both
-// sit by the column's menu button.
+// A column's menu, by the column's menu button; its property's settings
+// open in submenus of it.
 export const COLUMN_MENU_OVERLAY = "column-menu";
-export const PROPERTY_EDIT_OVERLAY = "property-edit";
 
 export interface DatabaseOverlay {
   readonly kind: string;

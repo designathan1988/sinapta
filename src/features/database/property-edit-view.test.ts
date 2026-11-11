@@ -3,10 +3,8 @@ import { render } from "lit-html";
 import { describe, expect, it } from "vitest";
 import type { Command, Dispatch } from "../../state/index.ts";
 import { createDatabaseApp, type PropertySpec } from "./database-builder.ts";
-import {
-  PROPERTY_EDIT_OVERLAY,
-  renderPropertyEdit,
-} from "./property-edit.view.ts";
+import { renderColumnMenu } from "./column-menu.view.ts";
+import { COLUMN_MENU_OVERLAY } from "./database-overlay.ts";
 import { selectTableModel } from "./table-model.selectors.ts";
 
 const STAGE: PropertySpec = {
@@ -18,22 +16,20 @@ const STAGE: PropertySpec = {
   ],
 };
 
-function rendered(spec: PropertySpec = STAGE, child?: string, panel?: string) {
+// The column menu with its "Edit property" submenu open, and inside it
+// the submenus or lists named, "{id}" standing for the property's id.
+function rendered(spec: PropertySpec = STAGE, ...opened: string[]) {
   const app = createDatabaseApp([spec], []);
   const initial = app.store.getState();
   const anchorId = app.propertyIds[0] ?? "";
+  const children = ["{id}:edit", ...opened].map((child) => ({
+    anchorId: child.replace("{id}", anchorId),
+  }));
   const state = {
     ...initial,
     ui: {
       ...initial.ui,
-      overlay: {
-        kind: PROPERTY_EDIT_OVERLAY,
-        anchorId,
-        ...(panel !== undefined && { panel }),
-        ...(child !== undefined && {
-          child: { anchorId: child.replace("{id}", anchorId) },
-        }),
-      },
+      overlay: { kind: COLUMN_MENU_OVERLAY, anchorId, children },
     },
   };
   const model = selectTableModel(state, app.databaseId);
@@ -45,7 +41,9 @@ function rendered(spec: PropertySpec = STAGE, child?: string, panel?: string) {
   };
   const host = document.createElement("div");
   document.body.replaceChildren(host);
-  render(renderPropertyEdit({ state, dispatch, model }), host);
+  render(renderColumnMenu({ state, dispatch, model }), host);
+  // The innermost submenu open.
+  const inner = () => [...host.querySelectorAll(".menu")].at(-1);
   const option = (id: string) => {
     const item = host.querySelector(`[data-option-id="${id}"]`);
     if (item === null) throw new Error(`no option ${id}`);
@@ -68,7 +66,7 @@ function rendered(spec: PropertySpec = STAGE, child?: string, panel?: string) {
     if (found === undefined) throw new Error(`no ${label} row`);
     return found;
   };
-  return { host, sent, option, pick, row };
+  return { host, sent, option, pick, row, inner, anchorId };
 }
 
 function change(field: Element | null, value: string): void {
@@ -81,9 +79,9 @@ function change(field: Element | null, value: string): void {
   field.dispatchEvent(new Event("change", { bubbles: true }));
 }
 
-describe("renderPropertyEdit", () => {
-  it("lists the options as chips, each opening its own panel", () => {
-    const { host, sent, row } = rendered();
+describe("the Edit property submenu", () => {
+  it("lists the options as chips, each opening its own submenu", () => {
+    const { host, sent, row, anchorId } = rendered();
 
     row("Done").click();
 
@@ -92,16 +90,17 @@ describe("renderPropertyEdit", () => {
     ).not.toBeNull();
     expect(sent).toEqual([
       expect.objectContaining({
-        type: "ui.openOverlayPanel",
-        panel: "option:o2",
+        type: "ui.openChildOverlay",
+        anchorId: `${anchorId}:option:o2`,
+        depth: 1,
       }),
     ]);
   });
 
-  it("renames an option from its panel", () => {
-    const { host, sent } = rendered(STAGE, undefined, "option:o2");
+  it("renames an option from its submenu", () => {
+    const { sent, inner } = rendered(STAGE, "{id}:option:o2");
 
-    change(host.querySelector(".menu__field input"), "Shipped");
+    change(inner()?.querySelector(".menu__field input") ?? null, "Shipped");
 
     expect(sent).toEqual([
       expect.objectContaining({
@@ -113,7 +112,7 @@ describe("renderPropertyEdit", () => {
   });
 
   it("recolors an option from its colors, the current one checked", () => {
-    const { sent, row } = rendered(STAGE, undefined, "option:o1");
+    const { sent, row } = rendered(STAGE, "{id}:option:o1");
 
     row("Red").click();
 
@@ -123,8 +122,8 @@ describe("renderPropertyEdit", () => {
     ]);
   });
 
-  it("moves and deletes an option from its panel", () => {
-    const { sent, row } = rendered(STAGE, undefined, "option:o1");
+  it("moves and deletes an option, which closes its submenu", () => {
+    const { sent, row } = rendered(STAGE, "{id}:option:o1");
 
     row("Move option down").click();
     row("Delete option").click();
@@ -132,9 +131,10 @@ describe("renderPropertyEdit", () => {
     expect(sent.map((command) => command.type)).toEqual([
       "option.move",
       "option.delete",
-      "ui.openOverlayPanel",
+      "ui.closeChildOverlay",
     ]);
     expect(sent[0]).toMatchObject({ offset: 1 });
+    expect(sent[2]).toMatchObject({ depth: 1 });
   });
 
   it("stores the property's description", () => {

@@ -59,11 +59,13 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Property visibility | `view-settings/choice-panels.ts` | Notion | list with type icons and an eye toggle per property |
 | Filter conjunction | `view-filters.view.ts` | Notion | small select: "And" or "Or" |
 | Filter property, condition, value | `filter-row.view.ts` | Notion | select buttons opening option lists; options of a select property as chips |
-| Calculation | `table-footer.view.ts` | Notion | "Calculate" with a chevron opening a menu of calculations |
+| Calculation | `table-footer.view.ts` | custom (one flat list, not Notion's groups) | "Calculate" with a chevron opening the grouped menu of calculations |
 | Set property on ticked rows | `table-bulk.view.ts` | custom (a list, not a button per property) | a button per property in the bar |
 | Linked view source | `linked-view.view.ts` | Notion | searchable list of databases |
 | Row properties on a row page | `row-properties.view.ts`, `row-option.view.ts` | custom (options are a list; other values are fields, not the table's editors) | property rows; values open their editors |
-| Column menu | `column-menu.view.ts` | Notion (Insert left and right, Duplicate missing) | menu with icons: sort, filter, hide, wrap, freeze, insert, duplicate, delete |
+| Column menu | `column-menu.view.ts` | Notion | name with its type's icon in a box; Edit property ›, Change type ›, Filter, Sort ›, Group, Calculate ›, Freeze, Hide, Wrap, Insert left and right, Duplicate, Delete; submenus open on hover beside the row |
+| Change type | `property-edit-menu.ts` | Notion | list of types with icons, the current one checked; values carry over |
+| Calculate | `column-menu-items.ts` | Notion | None, then Count ›, Percent ›, More options › |
 | Board column menu | `board-column-menu.view.ts` | menu | menu |
 | Row tick box | `table-gutter.view.ts` | Notion | Notion checkbox |
 | Group header | `group-header.view.ts` | custom | caret, chip, count; hover shows "+" and "…" |
@@ -72,12 +74,12 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 
 | Control | File | Now | Notion |
 | --- | --- | --- | --- |
-| Number format | `number-config.view.ts` | custom (a list in a form, not a menu row) | row with value opening an option list |
-| Date and time formats | `date-config.view.ts` | custom (a list in a form, not a menu row) | rows with values opening option lists |
+| Number format | `number-config.view.ts` | Notion | row with value opening an option list beside it |
+| Date and time formats | `date-config.view.ts` | Notion | rows with values opening option lists beside them |
 | Relation database | `relation-config.view.ts` | Notion | searchable list of databases |
-| Rollup relation, property, calculation | `rollup-config.view.ts` | custom (a list in a form, not a menu row) | rows with values opening option lists |
+| Rollup relation, property, calculation | `rollup-config.view.ts` | Notion | rows with values opening option lists beside them |
 | Button property action | `button-property-config.view.ts` | custom (a list in a form) | option list |
-| Options and their colors | `option-list.view.ts` | Notion (colors as chips) | color menu with swatches and a check |
+| Options and their colors | `option-list.view.ts` | custom (colors as chips, not swatches) | each option a row with a grip and its chip, opening its submenu: name, Delete, colors as swatches with a check |
 
 ### Blocks
 
@@ -108,6 +110,14 @@ against the reference on every run.
 
 2026-11-11, review server, 820 × 640, dark theme.
 
+- Column menu: opened every submenu by click and by hover (Edit
+  property, its date and time format lists, Change type, Sort,
+  Calculate); duplicated a column, inserted one left, renamed it,
+  changed it to Select, added two options and opened one's submenu.
+- Found and fixed: a choice in a nested list sent focus to the menu's
+  name (a shared ref callback ran again); a tall submenu covered its
+  menu (now centered on its row and moved to fit, as Notion's).
+
 - Opened and photographed: the view settings and every panel (Layout,
   Group, Sort, Property visibility); the filter popover with its
   property, condition, value and join lists; the footer's calculation
@@ -125,9 +135,8 @@ against the reference on every run.
 
 ## Open
 
-- Property settings: a Type row that changes the type, and each type
-  setting as a row with its value instead of a labeled list; Duplicate.
-- Column menu: Insert left and right, Duplicate property.
+- Calculation in the footer: the same grouped menu as the column's.
+- Option colors as Notion's swatches, with Default and Pink.
 - The view settings' Sort panel: the view's sorts, added and removed.
 - A row page's values open the table's own editors.
 - Group headers show "+" and "…" on hover.

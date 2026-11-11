@@ -49,13 +49,15 @@ export interface OpenOverlay {
   // The panel shown of an overlay that moves between panels, such as a
   // view's settings; absent for its first panel.
   readonly panel?: string;
-  // An option list opened from inside the overlay, such as a select in a
-  // popover: it closes alone, and the overlay stays.
-  readonly child?: OverlayChild;
+  // The lists and submenus opened from inside the overlay, outermost
+  // first, such as a select in a popover or a column menu's "Edit
+  // property": each closes alone with the ones opened from it, and the
+  // overlay stays.
+  readonly children?: readonly OverlayChild[];
 }
 
 export interface OverlayChild {
-  // The control the list belongs to.
+  // The control the list or submenu belongs to.
   readonly anchorId: string;
   readonly query?: string;
 }
