@@ -1,5 +1,11 @@
 export { pageDefinition } from "./page.definition.ts";
 export {
+  duplicatePage,
+  pageDuplicateCommands,
+  selectPageCopySize,
+  type PageCopySize,
+} from "./page-duplicate.commands.ts";
+export {
   createPage,
   pageCommands,
   renamePage,

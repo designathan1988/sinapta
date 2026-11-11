@@ -24,6 +24,8 @@ export const WORKSPACE_TEXT = {
     moveDown: "Move down",
     addSubpage: "Add a page inside",
     trash: "Move to trash",
+    duplicate: "Duplicate",
+    copySuffix: "(copy)",
     exportMarkdown: "Export as Markdown",
     exportedMarkdown: "The page was saved as a Markdown file.",
   },

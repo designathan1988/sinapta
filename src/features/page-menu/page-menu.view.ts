@@ -2,8 +2,10 @@ import "./page-menu.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import {
   createPage,
+  duplicatePage,
   movePage,
   selectPage,
+  selectPageCopySize,
   selectPagePosition,
   togglePageFavorite,
   trashPage,
@@ -103,6 +105,31 @@ function moveItems(
   return [...(index > 0 ? [up] : []), ...(index < count - 1 ? [down] : [])];
 }
 
+// Actions that make something from the page: a duplicate, a file.
+function copyItems(
+  state: AppState,
+  pageId: BlockId,
+  dispatch: Dispatch,
+): MenuItem[] {
+  return [
+    {
+      label: COPY.pageMenu.duplicate,
+      icon: "duplicate",
+      onSelect: () => {
+        const size = selectPageCopySize(state, pageId);
+        dispatch(duplicatePage.create({ pageId, ...size }));
+      },
+    },
+    {
+      label: COPY.pageMenu.exportMarkdown,
+      icon: "download",
+      onSelect: () => {
+        exportPageAsMarkdown(state, pageId);
+      },
+    },
+  ];
+}
+
 function menuItems(
   state: AppState,
   page: PageBlock,
@@ -123,13 +150,7 @@ function menuItems(
       onSelect: () => dispatch(createPage.create({ parentId: pageId })),
     },
     ...moveItems(state, page, dispatch),
-    {
-      label: COPY.pageMenu.exportMarkdown,
-      icon: "download",
-      onSelect: () => {
-        exportPageAsMarkdown(state, pageId);
-      },
-    },
+    ...copyItems(state, pageId, dispatch),
     {
       label: COPY.pageMenu.trash,
       icon: "trash",
