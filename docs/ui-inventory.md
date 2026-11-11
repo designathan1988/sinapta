@@ -48,22 +48,22 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 
 | Control | File | Now | Notion |
 | --- | --- | --- | --- |
-| View settings | `view-properties.view.ts`, `view-layout.view.ts` | custom form | menu with rows: name, Layout, Property visibility, Filter, Sort, Group, then the view's actions; each row opens a panel |
-| Layout choice | `view-layout.view.ts` | native | tiles in the Layout panel, then the layout's options |
-| Group by | `group-settings.view.ts` | native | searchable option list with property icons, check on the chosen one |
-| Group sort, date step | `group-settings.view.ts` | native | rows with value and chevron, each opening an option list |
-| Hide empty groups | `group-settings.view.ts` | native checkbox | switch row |
-| Card preview, card size | `card-settings.view.ts` | native | rows with value and chevron in the Layout panel |
-| Color columns | `card-settings.view.ts` | native checkbox | switch row |
-| Calendar date property | `view-layout.view.ts` | native | row with value and chevron |
-| Property visibility | `view-properties.view.ts` | native checkboxes | list with type icons and an eye toggle per property |
-| Filter conjunction | `view-filters.view.ts` | native | small select: "And" or "Or" |
-| Filter property, condition, value | `filter-row.view.ts` | native | select buttons opening option lists; options of a select property as chips |
-| Calculation | `table-footer.view.ts` | native | "Calculate" with a chevron opening a menu of calculations |
-| Set property on ticked rows | `table-bulk.view.ts` | native | a button per property in the bar |
-| Linked view source | `linked-view.view.ts` | native | searchable list of databases |
-| Row properties on a row page | `row-properties.view.ts` | native | property rows; values open their editors |
-| Column menu | `column-menu.view.ts` | menu | menu with icons: sort, filter, hide, wrap, freeze, insert, duplicate, delete |
+| View settings | `view-settings/` | Notion | menu with rows: name, Layout, Property visibility, Filter, Sort, Group, then the view's actions; each row opens a panel |
+| Layout choice | `view-settings/layout-panel.view.ts` | Notion | tiles in the Layout panel, then the layout's options |
+| Group by | `view-settings/group-panel.ts` | Notion | searchable option list with property icons, check on the chosen one |
+| Group sort, date step | `view-settings/choice-panels.ts` | Notion | rows with value and chevron, each opening an option list |
+| Hide empty groups | `view-settings/group-panel.ts` | Notion | switch row |
+| Card preview, card size | `view-settings/layout-panel.view.ts` | Notion | rows with value and chevron in the Layout panel |
+| Color columns | `view-settings/layout-panel.view.ts` | Notion | switch row |
+| Calendar date property | `view-settings/choice-panels.ts` | Notion | row with value and chevron |
+| Property visibility | `view-settings/choice-panels.ts` | Notion | list with type icons and an eye toggle per property |
+| Filter conjunction | `view-filters.view.ts` | Notion | small select: "And" or "Or" |
+| Filter property, condition, value | `filter-row.view.ts` | Notion | select buttons opening option lists; options of a select property as chips |
+| Calculation | `table-footer.view.ts` | Notion | "Calculate" with a chevron opening a menu of calculations |
+| Set property on ticked rows | `table-bulk.view.ts` | custom (a list, not a button per property) | a button per property in the bar |
+| Linked view source | `linked-view.view.ts` | Notion | searchable list of databases |
+| Row properties on a row page | `row-properties.view.ts`, `row-option.view.ts` | custom (options are a list; other values are fields, not the table's editors) | property rows; values open their editors |
+| Column menu | `column-menu.view.ts` | custom (Notion's panel; icons and items missing) | menu with icons: sort, filter, hide, wrap, freeze, insert, duplicate, delete |
 | Board column menu | `board-column-menu.view.ts` | menu | menu |
 | Row tick box | `table-gutter.view.ts` | native checkbox | Notion checkbox |
 | Group header | `group-header.view.ts` | custom | caret, chip, count; hover shows "+" and "…" |
@@ -72,19 +72,19 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 
 | Control | File | Now | Notion |
 | --- | --- | --- | --- |
-| Number format | `number-config.view.ts` | native | row with value opening an option list |
-| Date and time formats | `date-config.view.ts` | native | rows with values opening option lists |
-| Relation database | `relation-config.view.ts` | native | searchable list of databases |
-| Rollup relation, property, calculation | `rollup-config.view.ts` | native | rows with values opening option lists |
-| Button property action | `button-property-config.view.ts` | native | option list |
-| Option color | `option-list.view.ts` | native | color menu with swatches and a check |
+| Number format | `number-config.view.ts` | custom (a list in a form, not a menu row) | row with value opening an option list |
+| Date and time formats | `date-config.view.ts` | custom (a list in a form, not a menu row) | rows with values opening option lists |
+| Relation database | `relation-config.view.ts` | Notion | searchable list of databases |
+| Rollup relation, property, calculation | `rollup-config.view.ts` | custom (a list in a form, not a menu row) | rows with values opening option lists |
+| Button property action | `button-property-config.view.ts` | custom (a list in a form) | option list |
+| Option color | `option-list.view.ts` | custom (chips, not swatches) | color menu with swatches and a check |
 
 ### Blocks
 
 | Control | File | Now | Notion |
 | --- | --- | --- | --- |
-| Code language | `code.view.ts` | native | searchable language list |
-| Button block action | `button-config.view.ts` | native | option list |
+| Code language | `code.view.ts` | Notion | searchable language list |
+| Button block action | `button-config.view.ts` | Notion | option list |
 | To-do box | `to-do.view.ts` | native checkbox | Notion checkbox |
 
 ### Menus already custom
@@ -103,3 +103,31 @@ against the reference on every run.
 - `src/ui/checkbox/`: the tick box of to-dos, rows and settings.
 - `src/ui/overlay/`: which overlay is open, its position and light
   dismiss. One overlay at a time, kept in `ui.overlay`.
+
+## Last run
+
+2026-11-11, review server, 820 × 640, dark theme.
+
+- Opened and photographed: the view settings and every panel (Layout,
+  Group, Sort, Property visibility); the filter popover with its
+  property, condition, value and join lists; the footer's calculation
+  list; a date property's settings and its format list; the column
+  menu.
+- Found and fixed: a condition without its value filtered out every row;
+  a property's settings opened in the window's corner; options showed
+  their value beside their label; menus kept fading in whenever their
+  anchor moved.
+- While the browser pane is hidden, a screenshot can show the frame
+  before the last change: take two.
+
+## Open
+
+- Property settings as Notion's menu: name and type rows, each setting a
+  row with its value opening a list; Duplicate and Delete at the end.
+- Column menu with Notion's icons and items: filter, insert left and
+  right, duplicate.
+- The view settings' Sort panel: the view's sorts, added and removed.
+- A row page's values open the table's own editors.
+- Notion checkboxes for to-dos, rows and settings (`src/ui/checkbox/`).
+- Group headers show "+" and "…" on hover.
+- Light theme measurements of the menu reference.
