@@ -1,0 +1,20 @@
+@layer features {
+  .gallery {
+    flex: 1;
+    min-block-size: 0;
+    padding-block: var(--space-stack-sm);
+    overflow: auto;
+  }
+
+  .gallery__cards {
+    display: grid;
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(min(100%, var(--size-sidebar-default)), 1fr)
+    );
+    gap: var(--space-inline-md);
+    margin: var(--space-none);
+    padding: var(--space-none);
+    list-style: none;
+  }
+}

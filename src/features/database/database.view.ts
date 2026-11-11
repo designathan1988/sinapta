@@ -8,8 +8,10 @@ import {
   type Dispatch,
 } from "../../state/index.ts";
 import { renderButton } from "../../ui/button/index.ts";
+import { renderIcon } from "../../ui/icon/index.ts";
+import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { COPY, pluralize } from "../../ui/copy.ts";
-import { addRow } from "./database.commands.ts";
+import { addRow } from "./row.commands.ts";
 import {
   FILTERS_OVERLAY,
   PROPERTIES_OVERLAY,
@@ -17,8 +19,33 @@ import {
 } from "./database-menus.view.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import { selectTableModel } from "./table-model.selectors.ts";
-import { renderTable } from "./table.view.ts";
-import { createView, deleteView, setActiveView } from "./view.commands.ts";
+import { NEW_VIEW_OVERLAY, renderLayout } from "./view-layout.view.ts";
+import { deleteView, setActiveView } from "./view.commands.ts";
+
+function renderNewViewButton(context: TableContext): TemplateResult {
+  const { state, dispatch } = context;
+  const isMenuOpen = state.ui.overlay?.kind === NEW_VIEW_OVERLAY;
+  const toggleMenu = (): void => {
+    const overlay = { kind: NEW_VIEW_OVERLAY };
+    dispatch(
+      isMenuOpen ? closeOverlay.create({}) : openOverlay.create({ overlay }),
+    );
+  };
+  return html`<button
+    type="button"
+    class="button"
+    data-variant="quiet"
+    data-overlay-anchor
+    aria-haspopup="menu"
+    aria-expanded=${String(isMenuOpen)}
+    aria-label=${COPY.database.newView}
+    title=${tooltipTitle(COPY.database.newView)}
+    interestfor=${TOOLTIP_TARGET}
+    @click=${toggleMenu}
+  >
+    ${renderIcon("plus")}
+  </button>`;
+}
 
 function renderTabs(context: TableContext): TemplateResult {
   const { model, state, dispatch } = context;
@@ -35,20 +62,12 @@ function renderTabs(context: TableContext): TemplateResult {
       ${view.name}
     </button>`;
   });
-  const count = model.database.props.viewIds.length;
-  const name = `${COPY.database.viewName} ${String(count + 1)}`;
   return html`<div
     class="database__tabs"
     role="group"
     aria-label=${COPY.database.views}
   >
-    ${tabs}
-    ${renderButton({
-      label: COPY.database.newView,
-      icon: "plus",
-      isIconOnly: true,
-      onClick: () => dispatch(createView.create({ databaseId, name })),
-    })}
+    ${tabs} ${renderNewViewButton(context)}
   </div>`;
 }
 
@@ -117,7 +136,13 @@ function renderFooter(context: TableContext): TemplateResult {
     ${renderButton({
       label: COPY.database.newRow,
       icon: "plus",
-      onClick: () => dispatch(addRow.create({ databaseId: model.database.id })),
+      onClick: () =>
+        dispatch(
+          addRow.create({
+            databaseId: model.database.id,
+            opensPage: model.view.type !== "table",
+          }),
+        ),
     })}
     <span class="database__count" role="status"
       >${shown === 0 ? message : `${count} ${noun}`}</span
@@ -136,7 +161,7 @@ export function renderDatabase(
   if (model === undefined) return nothing;
   const context = { state, dispatch, model };
   return html`<section class="database">
-    ${renderToolbar(context)} ${renderTable(context)} ${renderFooter(context)}
+    ${renderToolbar(context)} ${renderLayout(context)} ${renderFooter(context)}
     ${renderTableOverlay(context)}
   </section>`;
 }

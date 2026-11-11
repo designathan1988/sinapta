@@ -89,6 +89,7 @@
     --base-size-12: 12rem;
     --base-size-14: 14rem;
     --base-size-16: 16rem;
+    --base-size-18: 18rem;
     --base-size-20: 20rem;
     --base-size-30: 30rem;
     --base-size-32: 32rem;
@@ -201,11 +202,14 @@
     --size-menu-max-height: var(--base-size-20);
     --size-dialog-width: var(--base-size-32);
     --size-dialog-wide: var(--base-size-36);
+    --size-board-column: var(--base-size-18);
+    --size-card-cover: var(--base-size-12);
     --radius-sm: var(--base-radius-1);
     --radius-md: var(--base-radius-2);
     --radius-full: var(--base-radius-pill);
     --shadow-overlay: 0px 4px 16px 0px var(--color-shadow-overlay);
     --shadow-dialog: 0px 12px 40px 0px var(--color-shadow-overlay);
+    --shadow-card: 0px 1px 2px 0px var(--color-shadow-overlay);
     --font-family-text: var(--base-font-family-sans);
     --font-family-display: var(--base-font-family-serif);
     --font-family-mono: var(--base-font-family-mono);

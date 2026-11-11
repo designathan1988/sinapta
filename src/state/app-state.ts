@@ -55,6 +55,8 @@ export interface UiState {
   readonly activeCell: ActiveCell | null;
   // The first row of a long table that is scrolled into view.
   readonly tableFirstRow: number;
+  // The month calendar views show, as "2026-11"; null for the current one.
+  readonly calendarMonth: string | null;
   // Sidebar width in rem.
   readonly sidebarWidth: number;
   readonly isSidebarCollapsed: boolean;
@@ -116,6 +118,7 @@ export function createInitialUiState(): UiState {
     activeViewIds: {},
     activeCell: null,
     tableFirstRow: 0,
+    calendarMonth: null,
     sidebarWidth: SIDEBAR_WIDTH.initial,
     isSidebarCollapsed: false,
     overlay: null,

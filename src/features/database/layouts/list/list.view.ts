@@ -1,0 +1,54 @@
+// A list: one line per row, its title then the values of the view's
+// visible properties.
+import "./list.css";
+import { html, type TemplateResult } from "lit-html";
+import { repeat } from "lit-html/directives/repeat.js";
+import { setActivePage } from "../../../../state/index.ts";
+import { renderButton } from "../../../../ui/button/index.ts";
+import { COPY } from "../../../../ui/copy.ts";
+import { propertyType } from "../../property-registry.ts";
+import { addRow } from "../../row.commands.ts";
+import type { TableContext } from "../../table-cell.view.ts";
+import type { TableRow } from "../../table-model.selectors.ts";
+
+function renderLine(row: TableRow, context: TableContext): TemplateResult {
+  const values = context.model.columns.flatMap((column) => {
+    if (column.isTitle) return [];
+    const type = propertyType(column.property.type);
+    const value = type.read(row.values[column.property.id]);
+    if (value === undefined || value === false) return [];
+    return [html`<span>${type.renderCell(value, column.property)}</span>`];
+  });
+  const title = row.title === "" ? COPY.sidebar.untitled : row.title;
+  return html`<li>
+    <button
+      type="button"
+      class="list__row"
+      @click=${() => context.dispatch(setActivePage.create({ pageId: row.id }))}
+    >
+      <span class="list__title" ?data-untitled=${row.title === ""}
+        >${title}</span
+      >
+      <span class="list__values">${values}</span>
+    </button>
+  </li>`;
+}
+
+export function renderList(context: TableContext): TemplateResult {
+  const { model, dispatch } = context;
+  const databaseId = model.database.id;
+  return html`<div class="list">
+    <ul class="list__rows">
+      ${repeat(
+        model.rows,
+        (row) => row.id,
+        (row) => renderLine(row, context),
+      )}
+    </ul>
+    ${renderButton({
+      label: COPY.database.newCard,
+      icon: "plus",
+      onClick: () => dispatch(addRow.create({ databaseId, opensPage: true })),
+    })}
+  </div>`;
+}

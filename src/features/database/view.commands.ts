@@ -7,12 +7,14 @@ import type {
   PropertyId,
   View,
   ViewId,
+  ViewType,
 } from "../../model/index.ts";
 import {
   defineCommand,
   type AppState,
   type CommandEffect,
 } from "../../state/index.ts";
+import { layoutDefaults } from "./view-layout.commands.ts";
 
 function updateView(
   state: AppState,
@@ -25,7 +27,14 @@ function updateView(
   };
 }
 
-export const createView = defineCommand<{ databaseId: BlockId; name: string }>({
+export interface CreateViewPayload {
+  readonly databaseId: BlockId;
+  readonly name: string;
+  // A table unless given.
+  readonly viewType?: ViewType;
+}
+
+export const createView = defineCommand<CreateViewPayload>({
   type: "view.create",
   newIds: { views: 1 },
   handle(state, command) {
@@ -42,6 +51,7 @@ export const createView = defineCommand<{ databaseId: BlockId; name: string }>({
       propertyOrder: [],
       propertyWidths: {},
       hiddenPropertyIds: [],
+      ...layoutDefaults(database, {}, command.viewType ?? "table"),
     };
     const props = {
       ...database.props,

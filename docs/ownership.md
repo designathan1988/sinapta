@@ -66,8 +66,12 @@ owner listed here exists.
 | Settings dialog | `src/features/settings/` | 1 |
 | Property type definitions | `src/features/database/property-registry.ts` plus one folder per type | 5 |
 | What a property type declares | `src/features/database/property-definition.ts` | 5 |
-| Database columns and rows | `src/features/database/database.commands.ts` | 5 |
+| Database columns | `src/features/database/database.commands.ts` | 5 |
+| Database rows: adding and setting values | `src/features/database/row.commands.ts` | 5 |
 | Saved views of a database | `src/features/database/view.commands.ts` | 6 |
+| A view's layout and the properties it lays rows out by | `src/features/database/view-layout.commands.ts`, `view-layout.view.ts` | 9 |
+| Board, gallery, list and calendar layouts | `src/features/database/layouts/<layout>/` | 9 |
+| A row shown as a card | `src/features/database/layouts/row-card/` | 9 |
 | Table interface state (active cell, scroll window) | `src/features/database/table.commands.ts` | 5 |
 | Row window, cell navigation and column drop order | `src/features/database/table.selectors.ts` | 5 |
 | Property values on a row's page | `src/features/database/row-properties.view.ts` | 7 |

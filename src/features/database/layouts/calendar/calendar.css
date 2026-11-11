@@ -1,0 +1,104 @@
+@layer features {
+  .calendar {
+    display: grid;
+    flex: 1;
+    gap: var(--space-stack-sm);
+    align-content: start;
+    min-block-size: 0;
+    overflow: auto;
+  }
+
+  .calendar__header {
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+  }
+
+  .calendar__month {
+    flex: 1;
+    margin: var(--space-none);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .calendar__grid {
+    inline-size: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: var(--font-size-sm);
+
+    & th {
+      padding: var(--space-inset-xs);
+      color: var(--color-text-secondary);
+      font-weight: var(--font-weight-medium);
+      text-align: start;
+    }
+  }
+
+  .calendar__day {
+    position: relative;
+    block-size: calc(var(--size-control-md) * 3);
+    padding: var(--space-inset-xs);
+    border: var(--size-border-thin) solid var(--color-border-subtle);
+    vertical-align: top;
+
+    &[data-other-month] {
+      background-color: var(--color-bg-sidebar);
+      color: var(--color-text-tertiary);
+    }
+
+    &[data-drop] {
+      background-color: var(--color-bg-selected);
+    }
+  }
+
+  .calendar__date {
+    display: block;
+    margin-block-end: var(--space-stack-xs);
+    font-size: var(--font-size-xs);
+  }
+
+  .calendar__day[data-today] .calendar__date {
+    color: var(--color-accent-default);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .calendar__entry {
+    display: block;
+    inline-size: 100%;
+    margin-block-end: var(--space-stack-xs);
+    padding: var(--space-none) var(--space-inset-xs);
+    overflow: hidden;
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-raised);
+    color: var(--color-text-primary);
+    text-align: start;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    &[data-dragging] {
+      opacity: 0.5;
+    }
+  }
+
+  .calendar__add {
+    position: absolute;
+    inset-block-start: var(--space-inset-xs);
+    inset-inline-end: var(--space-inset-xs);
+    opacity: 0;
+  }
+
+  .calendar__day:is(:hover, :focus-within) .calendar__add {
+    opacity: 1;
+  }
+
+  .calendar__empty {
+    color: var(--color-text-tertiary);
+  }
+}

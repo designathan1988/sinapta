@@ -298,6 +298,16 @@
       "wide": {
         "$value": "{base.size.36}"
       }
+    },
+    "board": {
+      "column": {
+        "$value": "{base.size.18}"
+      }
+    },
+    "card": {
+      "cover": {
+        "$value": "{base.size.12}"
+      }
     }
   },
   "radius": {
@@ -351,6 +361,29 @@
           },
           "blur": {
             "value": 40,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        }
+      ]
+    },
+    "card": {
+      "$value": [
+        {
+          "color": "{color.shadow.overlay}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 2,
             "unit": "px"
           },
           "spread": {

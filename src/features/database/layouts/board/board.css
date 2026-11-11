@@ -1,0 +1,47 @@
+@layer features {
+  .board {
+    display: flex;
+    flex: 1;
+    gap: var(--space-inline-md);
+    align-items: stretch;
+    min-block-size: 0;
+    padding-block: var(--space-stack-sm);
+    overflow: auto;
+  }
+
+  .board__column {
+    display: grid;
+    flex: none;
+    gap: var(--space-stack-sm);
+    align-content: start;
+    inline-size: var(--size-board-column);
+    padding: var(--space-inset-xs);
+    border-radius: var(--radius-md);
+
+    &[data-drop] {
+      background-color: var(--color-bg-selected);
+    }
+  }
+
+  .board__header {
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    font-size: var(--font-size-sm);
+  }
+
+  .board__count,
+  .board__more,
+  .board__empty {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+  }
+
+  .board__cards {
+    display: grid;
+    gap: var(--space-stack-xs);
+    margin: var(--space-none);
+    padding: var(--space-none);
+    list-style: none;
+  }
+}

@@ -9,6 +9,7 @@ import {
   PROPERTY_TYPES_OVERLAY,
 } from "./table-header.view.ts";
 import { renderFilters } from "./view-filters.view.ts";
+import { NEW_VIEW_OVERLAY, renderNewViewMenu } from "./view-layout.view.ts";
 import { renderProperties } from "./view-properties.view.ts";
 
 export const FILTERS_OVERLAY = "filters";
@@ -22,6 +23,7 @@ const OVERLAYS: Record<string, Render> = {
   [CELL_OPTIONS_OVERLAY]: renderCellOptions,
   [FILTERS_OVERLAY]: renderFilters,
   [PROPERTIES_OVERLAY]: renderProperties,
+  [NEW_VIEW_OVERLAY]: renderNewViewMenu,
 };
 
 export function renderTableOverlay(

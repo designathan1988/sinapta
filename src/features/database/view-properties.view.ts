@@ -9,6 +9,7 @@ import { COPY } from "../../ui/copy.ts";
 import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
 import { changeProperty, removeProperty } from "./database.commands.ts";
 import type { TableContext } from "./table-cell.view.ts";
+import { renderLayoutSettings } from "./view-layout.view.ts";
 import { renameView, togglePropertyHidden } from "./view.commands.ts";
 
 function renderProperty(
@@ -78,6 +79,7 @@ export function renderProperties(context: TableContext): TemplateResult {
         @change=${renameCurrent}
       />
     </label>
+    ${renderLayoutSettings(context)}
     <ul class="database__filters">
       ${model.database.props.properties.map((property) => renderProperty(property, context))}
     </ul>

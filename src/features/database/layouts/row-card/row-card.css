@@ -1,0 +1,56 @@
+@layer features {
+  .row-card {
+    display: grid;
+    gap: var(--space-stack-xs);
+    align-content: start;
+    inline-size: 100%;
+    padding: var(--space-inset-sm);
+    overflow: hidden;
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-raised);
+    box-shadow: var(--shadow-card);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    text-align: start;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    &[data-dragging] {
+      opacity: 0.5;
+    }
+  }
+
+  .row-card__cover {
+    display: block;
+    inline-size: calc(100% + var(--space-inset-sm) * 2);
+    max-inline-size: none;
+    block-size: var(--size-card-cover);
+    margin: calc(var(--space-inset-sm) * -1) calc(var(--space-inset-sm) * -1)
+      var(--space-none);
+    object-fit: cover;
+  }
+
+  .row-card__title {
+    font-weight: var(--font-weight-medium);
+    overflow-wrap: anywhere;
+
+    &[data-untitled] {
+      color: var(--color-text-tertiary);
+    }
+  }
+
+  .row-card__values {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-inline-xs);
+    color: var(--color-text-secondary);
+
+    &:empty {
+      display: none;
+    }
+  }
+}
