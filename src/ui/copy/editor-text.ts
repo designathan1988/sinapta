@@ -26,6 +26,12 @@ export const EDITOR_TEXT = {
     moveDown: "Move down",
     delete: "Delete",
     moved: "Block moved.",
+    copied: "Block copied.",
+    moveTo: "Move to",
+    movedToPage: "Moved to the page.",
+    turnIntoPage: "Turn into page",
+    copyLink: "Copy link to block",
+    linkCopied: "Link copied.",
   },
   formatToolbar: {
     label: "Text formatting",

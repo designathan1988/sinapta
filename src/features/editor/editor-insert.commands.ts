@@ -4,9 +4,11 @@ import { PARAGRAPH_TYPE } from "../../blocks/paragraph/index.ts";
 import {
   copyBlockTree,
   type BlockId,
+  type Drop,
   type Operation,
 } from "../../model/index.ts";
-import { defineCommand } from "../../state/index.ts";
+import { defineCommand, type AppState } from "../../state/index.ts";
+import { canHold } from "./editor-move.commands.ts";
 import {
   childList,
   createBlock,
@@ -83,4 +85,55 @@ export const duplicateBlock = defineCommand<DuplicatePayload>({
   },
 });
 
-export const editorInsertCommands = [insertBlockBelow, duplicateBlock];
+// Where a copy dropped on a block goes. The original stays where it is,
+// so it counts among the copy's siblings. A block that cannot hold others
+// takes the copy after itself.
+function copyPlace(state: AppState, drop: Drop) {
+  const target = state.workspace.blocks[drop.targetId];
+  if (target?.parentId == null) return undefined;
+  if (drop.position === "inside" && canHold(state, target.id)) {
+    return { parentId: target.id, index: target.childIds.length };
+  }
+  if (!canHold(state, target.parentId)) return undefined;
+  const after = drop.position === "before" ? 0 : 1;
+  return { parentId: target.parentId, index: indexIn(state, target) + after };
+}
+
+// Alt with a drag drops a copy of the block, and everything inside it,
+// where the block would have moved to.
+export const copyBlockTo = defineCommand<DuplicatePayload & Drop>({
+  type: "block.copyTo",
+  newIds: (payload) => ({ blocks: payload.blockCount }),
+  handle(state, command) {
+    const place = copyPlace(state, command);
+    const copies = copyBlockTree(state.workspace, {
+      rootId: command.blockId,
+      ids: command.meta.blockIds,
+      now: command.meta.now,
+    });
+    const [root, ...inside] = copies ?? [];
+    if (place === undefined || root === undefined) return {};
+    if (copies?.length !== command.blockCount) return {};
+    const records = [{ ...root, parentId: place.parentId }, ...inside];
+    const operations: Operation[] = [
+      ...records.map((record): Operation => ({
+        type: "record.create",
+        kind: "block",
+        record,
+      })),
+      {
+        type: "list.insert",
+        list: childList(place.parentId),
+        id: root.id,
+        index: place.index,
+      },
+    ];
+    return { operations };
+  },
+});
+
+export const editorInsertCommands = [
+  insertBlockBelow,
+  duplicateBlock,
+  copyBlockTo,
+];

@@ -162,4 +162,23 @@
   .editor__empty {
     color: var(--color-text-secondary);
   }
+
+  /* A block opened from a link to it is highlighted for a moment. */
+  .editor__block[data-flash] {
+    border-radius: var(--radius-sm);
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: editor-flash var(--duration-flash) var(--easing-standard);
+    }
+  }
+
+  @keyframes editor-flash {
+    from {
+      background-color: var(--color-accent-subtle);
+    }
+
+    to {
+      background-color: transparent;
+    }
+  }
 }

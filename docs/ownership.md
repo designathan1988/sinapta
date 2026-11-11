@@ -56,6 +56,7 @@ owner listed here exists.
 | Composition root, the one root render | `src/app/bootstrap.ts` | 1 |
 | Applying the theme to the document | `src/app/theme.ts` | 10 |
 | URL and active page | `src/app/router.ts` | 2 |
+| Addresses of pages and blocks (`#/page/<id>?block=<id>`) | `src/ui/address/` | 13 |
 | App shell layout | `src/app/shell.view.ts` | 1 |
 | Block type definitions | `src/blocks/block-registry.ts` plus one folder per type | 2 |
 | Pages: schema, commands, selectors, tree moves, trash | `src/blocks/page/` | 2 |

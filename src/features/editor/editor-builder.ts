@@ -28,8 +28,12 @@ export function text(id: string, value: string, type = "paragraph"): BlockSpec {
   };
 }
 
-export function createApp(blocks: BlockSpec[]) {
-  const workspace = buildWorkspace([{ id: "page", children: blocks }]);
+// The page "page" holds the blocks; other top-level pages may follow.
+export function createApp(blocks: BlockSpec[], otherPages: BlockSpec[] = []) {
+  const workspace = buildWorkspace([
+    { id: "page", children: blocks },
+    ...otherPages,
+  ]);
   const commands = [
     ...editorCommands,
     ...editorStructureCommands,

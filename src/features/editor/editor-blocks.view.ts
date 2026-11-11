@@ -5,11 +5,8 @@ import { isBlockColor, type Block, type BlockId } from "../../model/index.ts";
 import { setSelection } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { appendParagraph } from "./editor-structure.commands.ts";
-import {
-  renderAddButton,
-  renderHandle,
-  startBlockDrag,
-} from "./editor-block-menu.view.ts";
+import { renderAddButton, renderHandle } from "./editor-block-menu.view.ts";
+import { startBlockDrag } from "./editor-block-drag.view.ts";
 import { onSelectionCopy } from "./editor-clipboard.view.ts";
 import { onBlockContextMenu } from "./editor-context-menu.view.ts";
 import { onMentionClick } from "./editor-mention.view.ts";

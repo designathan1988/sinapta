@@ -1,5 +1,6 @@
 // Turning one kind of block into another.
-import { blockDefinition, isTextBlock } from "../../blocks/index.ts";
+import { blockDefinition, isTextBlock, textOf } from "../../blocks/index.ts";
+import { PAGE_TYPE } from "../../blocks/page/index.ts";
 import { PARAGRAPH_TYPE } from "../../blocks/paragraph/index.ts";
 import {
   isBlockColor,
@@ -82,4 +83,47 @@ export const convertBlock = defineCommand<ConvertBlockPayload>({
   },
 });
 
-export const editorConvertCommands = [convertBlock];
+// Turns a text block that sits directly on a page into a page in the same
+// place: its text becomes the title and the blocks inside it the content.
+// The block keeps its id, so links to it lead to the page.
+export const turnIntoPage = defineCommand<{ blockId: BlockId }>({
+  type: "block.turnIntoPage",
+  handle(state, command) {
+    const block = state.workspace.blocks[command.blockId];
+    const parentId = block?.parentId ?? null;
+    const parent =
+      parentId === null ? undefined : state.workspace.blocks[parentId];
+    if (!isTextBlock(block) || parent?.type !== PAGE_TYPE) return {};
+    const title = textOf(block);
+    const props = {
+      title: title === "" ? [] : [{ text: title }],
+      icon: null,
+      isFavorite: false,
+      isTrashed: false,
+    };
+    const update: Operation = {
+      type: "record.update",
+      kind: "block",
+      id: block.id,
+      patch: { type: PAGE_TYPE, props, updatedAt: command.meta.now },
+    };
+    const ui = { ...state.ui, selection: null, overlay: null };
+    return { operations: [update], ui };
+  },
+});
+
+// The command that turns a block into another type, a page among them.
+export function turnIntoCommand(
+  blockId: BlockId,
+  target: { readonly blockType: string; readonly extraProps?: BlockProps },
+) {
+  const { blockType, extraProps } = target;
+  if (blockType === PAGE_TYPE) return turnIntoPage.create({ blockId });
+  return convertBlock.create({
+    blockId,
+    blockType,
+    ...(extraProps && { extraProps }),
+  });
+}
+
+export const editorConvertCommands = [convertBlock, turnIntoPage];

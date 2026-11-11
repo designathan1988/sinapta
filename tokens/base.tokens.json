@@ -770,6 +770,12 @@
           "value": 500,
           "unit": "ms"
         }
+      },
+      "4": {
+        "$value": {
+          "value": 1200,
+          "unit": "ms"
+        }
       }
     },
     "easing": {

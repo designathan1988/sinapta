@@ -122,6 +122,7 @@
     --base-duration-1: 120ms;
     --base-duration-2: 200ms;
     --base-duration-3: 500ms;
+    --base-duration-4: 1200ms;
     --base-easing-standard: cubic-bezier(0.2, 0, 0, 1);
     --base-layer-1: 1;
     --base-layer-2: 2;
@@ -234,6 +235,7 @@
     --duration-fast: var(--base-duration-1);
     --duration-medium: var(--base-duration-2);
     --duration-hint-delay: var(--base-duration-3);
+    --duration-flash: var(--base-duration-4);
     --easing-standard: var(--base-easing-standard);
     --layer-sticky: var(--base-layer-1);
     --layer-drag-preview: var(--base-layer-2);

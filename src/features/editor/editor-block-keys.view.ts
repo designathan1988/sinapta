@@ -6,6 +6,7 @@
 import { isTextBlock, textOf } from "../../blocks/index.ts";
 import { HEADING_TYPE, setHeadingOpen } from "../../blocks/heading/index.ts";
 import { PAGE_LINK_TYPE } from "../../blocks/page-link/index.ts";
+import { PAGE_TYPE } from "../../blocks/page/index.ts";
 import { TO_DO_TYPE, toggleToDo } from "../../blocks/to-do/index.ts";
 import {
   isTogglable,
@@ -23,7 +24,7 @@ import {
 import { setActivePage, type AppState } from "../../state/index.ts";
 import { readSelection } from "../../ui/caret/index.ts";
 import type { KeyStroke } from "../../ui/shortcuts/index.ts";
-import { convertBlock } from "./editor-convert.commands.ts";
+import { turnIntoCommand } from "./editor-convert.commands.ts";
 import type { InputContext } from "./editor-input.view.ts";
 import { duplicateBlock } from "./editor-insert.commands.ts";
 import { moveBlockBy } from "./editor-move.commands.ts";
@@ -75,6 +76,7 @@ const TURN_INTO: Readonly<Record<string, BlockKeyAction>> = {
   Digit6: turnInto("numbered-list"),
   Digit7: turnInto(TOGGLE_TYPE),
   Digit8: turnInto("code"),
+  Digit9: turnInto(PAGE_TYPE),
 };
 
 const WITH_MOD: Readonly<Record<string, BlockKeyAction>> = {
@@ -190,11 +192,7 @@ export function runBlockKeyAction(
     "last-color": () => lastColor(state, target),
     "turn-into": () =>
       action.kind === "turn-into"
-        ? convertBlock.create({
-            blockId,
-            blockType: action.blockType,
-            ...(action.extraProps && { extraProps: action.extraProps }),
-          })
+        ? turnIntoCommand(blockId, action)
         : undefined,
   };
   const command = commands[action.kind]();

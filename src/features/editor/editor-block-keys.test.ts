@@ -67,6 +67,11 @@ describe("blockKeyAction", () => {
       stroke({ key: "*", code: "Digit8", ...ctrlShift }),
       { kind: "turn-into", blockType: "code" },
     ],
+    [
+      "Ctrl+Shift+9",
+      stroke({ key: "(", code: "Digit9", ...ctrlShift }),
+      { kind: "turn-into", blockType: "page" },
+    ],
   ])("maps %s", (_, keyStroke, action) => {
     expect(blockKeyAction(keyStroke)).toEqual(action);
   });
@@ -98,6 +103,15 @@ function run(
 }
 
 describe("runBlockKeyAction", () => {
+  it("turns the block into a page of its own", () => {
+    const { store } = createApp([text("a", "Plan")]);
+    const action = { kind: "turn-into", blockType: "page" } as const;
+
+    expect(run(store.getState(), action)).toEqual([
+      expect.objectContaining({ type: "block.turnIntoPage", blockId: "a" }),
+    ]);
+  });
+
   it("duplicates the block with everything inside it", () => {
     const { store } = createApp([text("a", "one"), text("b", "two")]);
 

@@ -80,7 +80,7 @@ function copyKey(event: KeyboardEvent): "c" | "x" | undefined {
   return key === "c" || key === "x" ? key : undefined;
 }
 
-function writeSystemClipboard(text: string): void {
+export function writeSystemClipboard(text: string): void {
   if (typeof navigator === "undefined" || !("clipboard" in navigator)) return;
   navigator.clipboard.writeText(text).catch(() => undefined);
 }

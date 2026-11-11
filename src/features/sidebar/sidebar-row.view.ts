@@ -53,6 +53,7 @@ export function renderRow(row: TreeRow, context: Context): TemplateResult {
     role="treeitem"
     tabindex=${row.isTabStop ? "0" : "-1"}
     data-page-id=${row.id}
+    data-page-drop=${row.isDatabase ? nothing : row.id}
     aria-label=${title}
     aria-level=${row.level}
     aria-current=${row.isActive ? "page" : nothing}

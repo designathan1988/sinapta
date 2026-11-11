@@ -17,26 +17,19 @@ import {
   type OpenOverlay,
   type TextSelection,
 } from "../../state/index.ts";
-import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
-import { startPointerDrag } from "../../ui/drag/index.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { renderMenu, type MenuItem } from "../../ui/menu/index.ts";
 import { colorMenuItem } from "./editor-color-menu.view.ts";
+import { pageItems } from "./editor-block-page-items.view.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { convertBlock } from "./editor-convert.commands.ts";
 import { duplicateBlock, insertBlockBelow } from "./editor-insert.commands.ts";
 import type { InputContext } from "./editor-input.view.ts";
-import {
-  deleteBlock,
-  moveBlock,
-  moveBlockBy,
-  selectBlockDrop,
-} from "./editor-move.commands.ts";
+import { deleteBlock, moveBlockBy } from "./editor-move.commands.ts";
 
 export const BLOCK_MENU_OVERLAY = "block-menu";
 const TURN_INTO_OVERLAY = "turn-into";
-const BLOCK = ".editor__block";
 
 // Opened from the keyboard, the menu remembers where the caret was so
 // that closing it puts the caret back.
@@ -107,45 +100,16 @@ export function renderAddButton(
   </button>`;
 }
 
-// Dragging starts on a handle and drops on any block.
-export function startBlockDrag(
-  event: PointerEvent,
-  context: InputContext,
-): void {
-  const handle =
-    event.target instanceof Element
-      ? event.target.closest("[data-handle]")
-      : null;
-  if (handle === null) return;
-  const idOf = (element: Element): BlockId | undefined =>
-    parseBlockId(element.closest<HTMLElement>(BLOCK)?.dataset.blockId ?? "");
-  startPointerDrag(event, {
-    itemSelector: BLOCK,
-    onDrop(source, target, position) {
-      const blockId = idOf(source);
-      const targetId = idOf(target);
-      if (blockId === undefined || targetId === undefined) return;
-      const move = selectBlockDrop(context.state, blockId, {
-        targetId,
-        position,
-      });
-      if (move === undefined) return;
-      context.dispatch(moveBlock.create(move));
-      announce(COPY.blockMenu.moved);
-    },
-  });
-}
-
 interface ActionContext {
   readonly overlay: OpenOverlay;
+  readonly state: AppState;
   readonly dispatch: Dispatch;
-  // Blocks in the tree of the block, for a copy of it.
-  readonly blockCount: number;
 }
 
-function actionItems(block: Block, context: ActionContext): MenuItem[] {
-  const { overlay, dispatch, blockCount } = context;
-  const blockId = block.id;
+// A text block can turn into another type and take a color.
+function textItems(block: Block, context: ActionContext): MenuItem[] {
+  const { overlay, dispatch } = context;
+  if (!isTextBlock(block)) return [];
   const turnInto: MenuItem = {
     label: COPY.blockMenu.turnInto,
     icon: "chevron",
@@ -156,13 +120,22 @@ function actionItems(block: Block, context: ActionContext): MenuItem[] {
         }),
       ),
   };
+  return [turnInto, colorMenuItem(overlay, dispatch)];
+}
+
+function actionItems(block: Block, context: ActionContext): MenuItem[] {
+  const { state, dispatch } = context;
+  const blockId = block.id;
+  // Blocks in the tree of the block, for a copy of it.
+  const blockCount = countBlockTree(state.workspace, blockId);
   return [
-    ...(isTextBlock(block) ? [turnInto, colorMenuItem(overlay, dispatch)] : []),
+    ...textItems(block, context),
     {
       label: COPY.blockMenu.duplicate,
       icon: "duplicate",
       onSelect: () => dispatch(duplicateBlock.create({ blockId, blockCount })),
     },
+    ...pageItems(block, state, dispatch),
     {
       label: COPY.blockMenu.moveUp,
       icon: "up",
@@ -218,8 +191,7 @@ export function renderBlockMenu(
     if (selection !== undefined) dispatch(setSelection.create({ selection }));
   };
   if (overlay.kind === BLOCK_MENU_OVERLAY) {
-    const blockCount = countBlockTree(state.workspace, block.id);
-    const items = actionItems(block, { overlay, dispatch, blockCount });
+    const items = actionItems(block, { overlay, state, dispatch });
     return renderMenu({
       label: COPY.blockMenu.open,
       items,

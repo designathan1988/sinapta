@@ -22,7 +22,9 @@ export type IconName =
   | "database"
   | "search"
   | "home"
-  | "compose";
+  | "compose"
+  | "link"
+  | "move";
 
 // 16-unit outline icons, drawn with the current text color.
 // Fragments use the `svg` tag so that they are parsed as SVG, not HTML.
@@ -38,6 +40,9 @@ const PATHS: Record<IconName, TemplateResult<2>> = {
   chevron: svg`<path d="M6 4l4 4-4 4" />`,
   back: svg`<path d="M10 4L6 8l4 4" />`,
   check: svg`<path d="M3.5 8.5l3 3 6-7" />`,
+  link: svg`<path d="M6.5 9.5a2.5 2.5 0 0 0 3.5 0l2.5-2.5A2.5 2.5 0 0 0 9 3.5l-.75.75" />
+    <path d="M9.5 6.5a2.5 2.5 0 0 0-3.5 0L3.5 9A2.5 2.5 0 0 0 7 12.5l.75-.75" />`,
+  move: svg`<path d="M2 8h9M8 5l3 3-3 3" /><path d="M13.5 2.5v11" />`,
   page: svg`<path d="M4 1.5h5.5l3 3v10H4z" /><path d="M9.5 1.5v3h3M6 8h4.5M6 10.5h4.5" />`,
   database: svg`<rect x="2" y="2.5" width="12" height="11" rx="1.5" />
     <path d="M2 6.5h12M2 10h12M6.5 6.5v7" />`,

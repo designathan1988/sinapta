@@ -480,6 +480,10 @@
     },
     "hintDelay": {
       "$value": "{base.duration.3}"
+    },
+    "flash": {
+      "$description": "How long a block linked to stays highlighted.",
+      "$value": "{base.duration.4}"
     }
   },
   "easing": {

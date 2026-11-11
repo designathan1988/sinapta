@@ -3,6 +3,7 @@ import { PAGE_TYPE } from "../../blocks/page/index.ts";
 import { isTextBlock, textOf } from "../../blocks/index.ts";
 import {
   dropMove,
+  isSelfOrInside,
   listOf,
   planMove,
   siblingIds,
@@ -16,7 +17,8 @@ import { defineCommand, type AppState } from "../../state/index.ts";
 import { caretAt } from "./editor.commands.ts";
 import { selectNeighborTextBlock } from "./editor.selectors.ts";
 
-function canHold(state: AppState, parentId: BlockId | null): boolean {
+// Pages and text blocks hold other blocks.
+export function canHold(state: AppState, parentId: BlockId | null): boolean {
   const parent =
     parentId === null ? undefined : state.workspace.blocks[parentId];
   return (
@@ -48,6 +50,69 @@ export function selectBlockDrop(
     drop.position === "inside" && !canNest ? "after" : drop.position;
   return dropMove(state.workspace, blockId, { ...drop, position });
 }
+
+// The blocks that move with their own parent: content blocks outside the
+// page, not inside another moved block, in the order given.
+function movedTops(
+  state: AppState,
+  blockIds: readonly BlockId[],
+  pageId: BlockId,
+): Block[] {
+  const { workspace } = state;
+  const ids = new Set(blockIds);
+  const isInsideMoved = (block: Block): boolean =>
+    block.parentId !== null &&
+    blockIds.some(
+      (id) => id !== block.id && isSelfOrInside(workspace, block.parentId, id),
+    );
+  return [...ids].flatMap((id) => {
+    const block = workspace.blocks[id];
+    if (block === undefined || block.type === PAGE_TYPE) return [];
+    if (isSelfOrInside(workspace, pageId, id) || isInsideMoved(block))
+      return [];
+    return [block];
+  });
+}
+
+// Moves blocks, with everything inside them, to the end of a page. All
+// blocks leave their places before any is added, so their order holds.
+export const moveBlocksToPage = defineCommand<{
+  blockIds: readonly BlockId[];
+  pageId: BlockId;
+}>({
+  type: "block.moveToPage",
+  handle(state, command) {
+    const { pageId } = command;
+    const page = state.workspace.blocks[pageId];
+    if (page?.type !== PAGE_TYPE) return {};
+    const blocks = movedTops(state, command.blockIds, pageId);
+    if (blocks.length === 0) return {};
+    const moved = new Set(blocks.map((block) => block.id));
+    const end = page.childIds.filter((id) => !moved.has(id)).length;
+    const list = listOf(pageId);
+    const operations: Operation[] = [
+      ...blocks.map((block): Operation => ({
+        type: "list.remove",
+        list: listOf(block.parentId),
+        id: block.id,
+      })),
+      ...blocks.map((block, index): Operation => ({
+        type: "list.insert",
+        list,
+        id: block.id,
+        index: end + index,
+      })),
+      ...blocks.map((block): Operation => ({
+        type: "record.update",
+        kind: "block",
+        id: block.id,
+        patch: { parentId: pageId },
+      })),
+    ];
+    const ui = { ...state.ui, selection: null, blockSelection: null };
+    return { operations, ui };
+  },
+});
 
 // Moves a block one place up (-1) or down (1) among its siblings.
 export const moveBlockBy = defineCommand<{ blockId: BlockId; offset: -1 | 1 }>({
@@ -109,4 +174,9 @@ export const deleteBlock = defineCommand<{ blockId: BlockId }>({
   },
 });
 
-export const editorMoveCommands = [moveBlock, moveBlockBy, deleteBlock];
+export const editorMoveCommands = [
+  moveBlock,
+  moveBlockBy,
+  moveBlocksToPage,
+  deleteBlock,
+];

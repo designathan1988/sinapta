@@ -12,6 +12,8 @@ import { editorCommands as textCommands } from "./editor.commands.ts";
 export { setBlockColor } from "./editor-color.commands.ts";
 export { insertMentionAt } from "./editor-mention.commands.ts";
 export { convertBlock } from "./editor-convert.commands.ts";
+export { moveBlocksToPage } from "./editor-move.commands.ts";
+export { selectPageIdOf } from "./editor.selectors.ts";
 export { replaceText, setTextTone, toggleTextMark } from "./editor.commands.ts";
 export { openLinkField } from "./editor-link.view.ts";
 export { renderEditor, renderEditorOverlay } from "./editor.view.ts";
