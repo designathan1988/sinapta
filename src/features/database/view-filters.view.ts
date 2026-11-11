@@ -13,6 +13,7 @@ import { closeOverlay } from "../../state/index.ts";
 import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
+import { renderSelect } from "../../ui/select/index.ts";
 import {
   addFilter,
   addGroup,
@@ -23,7 +24,7 @@ import {
 } from "./filter-edit.ts";
 import { changedFilter, newFilter } from "./filter-fields.ts";
 import { isFilterGroup } from "./filter-match.ts";
-import { renderFilterRow } from "./filter-row.view.ts";
+import { renderFilterRow, type FieldChange } from "./filter-row.view.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import { setViewFilter } from "./view.commands.ts";
 
@@ -46,33 +47,37 @@ function parsePath(text: string | undefined): FilterPath | undefined {
   return text === "" ? [] : text.split(".").map(Number);
 }
 
-function onChange(event: Event, context: TableContext): void {
+function changeAt(
+  context: TableContext,
+  path: FilterPath,
+  change: FieldChange,
+): void {
+  const filter = updateAt(context.model.view.filter, path, (item) =>
+    changedFilter(item, change, context),
+  );
+  setFilter(context, filter);
+}
+
+// Typed values are fields; their row names the condition by its path.
+function onInput(event: Event, context: TableContext): void {
   const control = event.target;
-  const isControl =
-    control instanceof HTMLSelectElement || control instanceof HTMLInputElement;
-  if (!isControl) return;
+  if (!(control instanceof HTMLInputElement)) return;
   const holder = control.closest<HTMLElement>("[data-path]");
   const path = parsePath(holder?.dataset.path);
   if (path === undefined) return;
-  const field = control.dataset.field ?? "";
-  const { value } = control;
-  const filter = context.model.view.filter;
-  const next =
-    field === "conjunction"
-      ? setConjunction(filter, path, value === "or" ? "or" : "and")
-      : updateAt(filter, path, (item) =>
-          changedFilter(item, { field, value }, context),
-        );
-  setFilter(context, next);
+  changeAt(context, path, { field: "value", value: control.value });
+}
+
+interface Lead {
+  readonly position: number;
+  readonly conjunction: Conjunction;
+  readonly groupPath: FilterPath;
 }
 
 // Before each item: "Where" first, then the group's join. The second
 // item's join is the one to change; the later ones repeat it.
-function renderLead(
-  position: number,
-  conjunction: Conjunction,
-  groupPath: FilterPath,
-): TemplateResult {
+function renderLead(lead: Lead, context: TableContext): TemplateResult {
+  const { position, conjunction, groupPath } = lead;
   if (position !== 1) {
     const text =
       position === 0
@@ -80,19 +85,27 @@ function renderLead(
         : CONJUNCTION_LABELS[conjunction];
     return html`<span class="database__filter-lead">${text}</span>`;
   }
-  return html`<select
-    class="database__field database__filter-lead"
-    data-field="conjunction"
-    data-path=${groupPath.join(".")}
-    aria-label=${COPY.database.filterConjunction}
-  >
-    ${CONJUNCTIONS.map(
-      (item) =>
-        html`<option value=${item} ?selected=${item === conjunction}>
-          ${CONJUNCTION_LABELS[item]}
-        </option>`,
+  const choose = (value: string): void => {
+    const join = value === "or" ? "or" : "and";
+    const filter = context.model.view.filter;
+    setFilter(context, setConjunction(filter, groupPath, join));
+  };
+  return html`<span class="database__filter-lead">
+    ${renderSelect(
+      {
+        id: `filter-join-${groupPath.join(".")}`,
+        label: COPY.database.filterConjunction,
+        value: conjunction,
+        options: CONJUNCTIONS.map((item) => ({
+          value: item,
+          label: CONJUNCTION_LABELS[item],
+        })),
+        variant: "quiet",
+        onChoose: choose,
+      },
+      { overlay: context.state.ui.overlay, dispatch: context.dispatch },
     )}
-  </select>`;
+  </span>`;
 }
 
 interface GroupProps {
@@ -101,22 +114,38 @@ interface GroupProps {
   readonly lead: TemplateResult;
 }
 
-function renderGroup(props: GroupProps, context: TableContext): TemplateResult {
-  const { group, index, lead } = props;
+// The conditions of a group, each joined by the group's conjunction.
+function renderGroupRows(
+  group: InnerFilterGroup,
+  index: number,
+  context: TableContext,
+): TemplateResult[] {
   const top = context.model.view.filter;
-  const rows = group.items.map((filter, at) =>
+  return group.items.map((filter, at) =>
     renderFilterRow(
       {
         filter,
         path: [index, at],
-        lead: renderLead(at, group.conjunction, [index]),
+        lead: renderLead(
+          { position: at, conjunction: group.conjunction, groupPath: [index] },
+          context,
+        ),
         onRemove: () => {
           setFilter(context, removeAt(top, [index, at]));
+        },
+        onChange: (change) => {
+          changeAt(context, [index, at], change);
         },
       },
       context,
     ),
   );
+}
+
+function renderGroup(props: GroupProps, context: TableContext): TemplateResult {
+  const { group, index, lead } = props;
+  const top = context.model.view.filter;
+  const rows = renderGroupRows(group, index, context);
   const add = (): void => {
     const filter = newFilter(context);
     if (filter !== undefined)
@@ -143,15 +172,21 @@ function renderItem(
   context: TableContext,
 ): TemplateResult {
   const top = context.model.view.filter;
-  const lead = renderLead(index, top.conjunction, []);
+  const lead = renderLead(
+    { position: index, conjunction: top.conjunction, groupPath: [] },
+    context,
+  );
   if (isFilterGroup(item)) {
     return renderGroup({ group: item, index, lead }, context);
   }
   const onRemove = (): void => {
     setFilter(context, removeAt(top, [index]));
   };
+  const onChange = (change: FieldChange): void => {
+    changeAt(context, [index], change);
+  };
   return renderFilterRow(
-    { filter: item, path: [index], lead, onRemove },
+    { filter: item, path: [index], lead, onRemove, onChange },
     context,
   );
 }
@@ -173,7 +208,7 @@ export function renderFilters(context: TableContext): TemplateResult {
     data-overlay
     ${ref(showPopoverWhenConnected)}
     @change=${(event: Event) => {
-      onChange(event, context);
+      onInput(event, context);
     }}
     @keydown=${(event: KeyboardEvent) => {
       if (event.key === "Escape") dispatch(closeOverlay.create({}));

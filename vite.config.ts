@@ -84,6 +84,7 @@ export default defineConfig({
   },
   test: {
     include: ["src/**/*.test.ts", "scripts/**/*.test.ts"],
+    setupFiles: ["src/dom-test-setup.ts"],
     environment: "node",
     pool: "threads",
     isolate: false,

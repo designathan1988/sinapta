@@ -8,6 +8,7 @@ import {
   type Command,
   type Dispatch,
 } from "../../state/index.ts";
+import { SELECT_OVERLAY } from "../../ui/select/index.ts";
 import { renderLinkedView } from "./linked-view.view.ts";
 
 const DATABASE = {
@@ -23,7 +24,11 @@ const DATABASE = {
   },
 };
 
-function rendered(linked: Record<string, unknown>, withDatabase = true) {
+function rendered(
+  linked: Record<string, unknown>,
+  withDatabase = true,
+  isListOpen = false,
+) {
   const workspace = buildWorkspace([
     {
       id: "page",
@@ -31,7 +36,15 @@ function rendered(linked: Record<string, unknown>, withDatabase = true) {
     },
     ...(withDatabase ? [DATABASE] : []),
   ]);
-  const state: AppState = { ...createInitialState(), workspace };
+  const initial = createInitialState();
+  const overlay = isListOpen
+    ? { kind: SELECT_OVERLAY, anchorId: "linked-link" }
+    : null;
+  const state: AppState = {
+    ...initial,
+    workspace,
+    ui: { ...initial.ui, overlay },
+  };
   const sent: Command[] = [];
   const dispatch: Dispatch = (command) => {
     sent.push(command);
@@ -45,14 +58,15 @@ function rendered(linked: Record<string, unknown>, withDatabase = true) {
 
 describe("renderLinkedView", () => {
   it("asks which database to show, and shows it", () => {
-    const { host, sent } = rendered({ viewIds: [] });
-    const select = host.querySelector("select");
-    if (select === null) throw new Error("no choice");
+    const { host, sent } = rendered({ viewIds: [] }, true, true);
+    const tasks = [...host.querySelectorAll<HTMLElement>("[role=option]")].find(
+      (option) => option.textContent.trim() === "Tasks",
+    );
 
-    select.value = "db";
-    select.dispatchEvent(new Event("change", { bubbles: true }));
+    tasks?.click();
 
     expect(sent).toEqual([
+      expect.objectContaining({ type: "ui.closeOverlay" }),
       expect.objectContaining({
         type: "linkedView.setSource",
         blockId: "link",

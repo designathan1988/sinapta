@@ -14,8 +14,8 @@ export const codeDefinition: BlockDefinition = {
   isMultiline: true,
   createProps: (text) => ({ text }),
   commands: codeCommands,
-  render: (block, dispatch) =>
+  render: (block, dispatch, state) =>
     isBlockOfType<CodeBlock>(block, CODE_TYPE)
-      ? renderCode(block, dispatch)
+      ? renderCode(block, dispatch, state)
       : undefined,
 };

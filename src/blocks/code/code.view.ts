@@ -2,11 +2,12 @@ import "./code.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import { plainText } from "../../model/index.ts";
-import type { Dispatch } from "../../state/index.ts";
+import type { AppState, Dispatch, OpenOverlay } from "../../state/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { afterRender } from "../../ui/focus/index.ts";
 import { renderRichText } from "../../ui/rich-text/index.ts";
+import { renderSelect } from "../../ui/select/index.ts";
 import {
   setCodeCaption,
   setCodeLanguage,
@@ -21,26 +22,34 @@ function languageOf(value: string) {
   return CODE_LANGUAGES.find((language) => language === value);
 }
 
-function renderLanguage(block: CodeBlock, dispatch: Dispatch) {
-  const current = block.props.language ?? "plain";
-  const onChange = (event: Event): void => {
-    if (!(event.target instanceof HTMLSelectElement)) return;
-    const language = languageOf(event.target.value);
-    if (language === undefined) return;
-    dispatch(setCodeLanguage.create({ blockId: block.id, language }));
-  };
-  return html`<select
-    class="code__language"
-    aria-label=${TEXT.language}
-    @change=${onChange}
-  >
-    ${CODE_LANGUAGES.map(
-      (language) =>
-        html`<option value=${language} ?selected=${language === current}>
-          ${TEXT.languages[language]}
-        </option>`,
-    )}
-  </select>`;
+interface Coding {
+  readonly dispatch: Dispatch;
+  readonly overlay: OpenOverlay | null;
+}
+
+// The language, chosen from a searchable list, as in Notion.
+function renderLanguage(block: CodeBlock, coding: Coding): TemplateResult {
+  return renderSelect(
+    {
+      id: `code-${block.id}`,
+      label: TEXT.language,
+      value: block.props.language ?? "plain",
+      options: CODE_LANGUAGES.map((language) => ({
+        value: language,
+        label: TEXT.languages[language],
+      })),
+      searchPlaceholder: TEXT.language,
+      variant: "quiet",
+      onChoose: (value) => {
+        const language = languageOf(value);
+        if (language === undefined) return;
+        coding.dispatch(
+          setCodeLanguage.create({ blockId: block.id, language }),
+        );
+      },
+    },
+    coding,
+  );
 }
 
 function copyCode(block: CodeBlock): void {
@@ -56,12 +65,13 @@ function copyCode(block: CodeBlock): void {
 
 // Shown over the code: its language, and buttons to wrap, copy and add a
 // caption.
-function renderBar(block: CodeBlock, dispatch: Dispatch): TemplateResult {
+function renderBar(block: CodeBlock, coding: Coding): TemplateResult {
+  const { dispatch } = coding;
   const blockId = block.id;
   const isWrapped = block.props.isWrapped === true;
   const hasCaption = block.props.caption !== undefined;
   return html`<div class="code__bar">
-    ${renderLanguage(block, dispatch)}
+    ${renderLanguage(block, coding)}
     <span class="code__actions">
       <button
         type="button"
@@ -117,6 +127,7 @@ function renderCaption(block: CodeBlock, dispatch: Dispatch) {
 export function renderCode(
   block: CodeBlock,
   dispatch: Dispatch,
+  state: AppState,
 ): TemplateResult {
   const { text, language = "plain", isWrapped = false } = block.props;
   // Painting waits for the text to be in the document.
@@ -128,7 +139,7 @@ export function renderCode(
   });
   return html`<div class="code" ?data-wrapped=${isWrapped}>
     <div class="code__frame">
-      ${renderBar(block, dispatch)}
+      ${renderBar(block, { dispatch, overlay: state.ui.overlay })}
       <div class="code__body" spellcheck="false" ${paint}>
         ${renderRichText({ text, tag: "div", placeholder: COPY.blocks.code })}
       </div>

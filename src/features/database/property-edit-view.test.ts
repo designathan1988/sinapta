@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { render } from "lit-html";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import type { Command, Dispatch } from "../../state/index.ts";
 import { createDatabaseApp, type PropertySpec } from "./database-builder.ts";
 import {
@@ -8,18 +8,6 @@ import {
   renderPropertyEdit,
 } from "./property-edit.view.ts";
 import { selectTableModel } from "./table-model.selectors.ts";
-
-// happy-dom has no Popover API; the panel only needs to be shown.
-beforeAll(() => {
-  Object.defineProperty(HTMLElement.prototype, "showPopover", {
-    value: () => undefined,
-    configurable: true,
-  });
-});
-
-afterAll(() => {
-  Reflect.deleteProperty(HTMLElement.prototype, "showPopover");
-});
 
 const STAGE: PropertySpec = {
   name: "Stage",
@@ -30,13 +18,22 @@ const STAGE: PropertySpec = {
   ],
 };
 
-function rendered(spec: PropertySpec = STAGE) {
+function rendered(spec: PropertySpec = STAGE, child?: string) {
   const app = createDatabaseApp([spec], []);
   const initial = app.store.getState();
   const anchorId = app.propertyIds[0] ?? "";
   const state = {
     ...initial,
-    ui: { ...initial.ui, overlay: { kind: PROPERTY_EDIT_OVERLAY, anchorId } },
+    ui: {
+      ...initial.ui,
+      overlay: {
+        kind: PROPERTY_EDIT_OVERLAY,
+        anchorId,
+        ...(child !== undefined && {
+          child: { anchorId: child.replace("{id}", anchorId) },
+        }),
+      },
+    },
   };
   const model = selectTableModel(state, app.databaseId);
   if (model === undefined) throw new Error("no table");
@@ -53,7 +50,14 @@ function rendered(spec: PropertySpec = STAGE) {
     if (item === null) throw new Error(`no option ${id}`);
     return item;
   };
-  return { host, sent, option };
+  const pick = (label: string) => {
+    const found = [...host.querySelectorAll<HTMLElement>("[role=option]")].find(
+      (item) => item.textContent.trim() === label,
+    );
+    if (found === undefined) throw new Error(`no ${label} option`);
+    found.click();
+  };
+  return { host, sent, option, pick };
 }
 
 function change(field: Element | null, value: string): void {
@@ -82,16 +86,22 @@ describe("renderPropertyEdit", () => {
   });
 
   it("recolors an option from its color list", () => {
-    const { sent, option } = rendered();
+    const { sent, pick } = rendered(STAGE, "color-{id}-o1");
 
-    change(option("o1").querySelector("select"), "red");
+    pick("Red");
 
-    expect(sent[0]).toMatchObject({ type: "option.recolor", color: "red" });
+    expect(sent).toEqual([
+      expect.objectContaining({ type: "ui.closeChildOverlay" }),
+      expect.objectContaining({ type: "option.recolor", color: "red" }),
+    ]);
   });
 
   it("moves and deletes an option with its buttons", () => {
     const { sent, option } = rendered();
-    const buttons = option("o1").querySelectorAll("button");
+    // The option's color is a select; the others are its buttons.
+    const buttons = option("o1").querySelectorAll<HTMLButtonElement>(
+      "button:not(.select)",
+    );
 
     for (const button of buttons) button.click();
 
@@ -120,11 +130,14 @@ describe("renderPropertyEdit", () => {
   });
 
   it("shows a number property's format and stores a new one", () => {
-    const { host, sent } = rendered({ name: "Price", type: "number" });
+    const { sent, pick } = rendered(
+      { name: "Price", type: "number" },
+      "{id}-format",
+    );
 
-    change(host.querySelector('[data-field="format"]'), "comma");
+    pick("Number with commas");
 
-    expect(sent).toEqual([
+    expect(sent.slice(1)).toEqual([
       expect.objectContaining({
         type: "property.setConfig",
         config: { format: "comma", display: "number" },

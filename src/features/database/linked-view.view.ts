@@ -16,6 +16,7 @@ import {
 } from "../../state/index.ts";
 import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { renderSelect } from "../../ui/select/index.ts";
 import { renderDatabaseSection } from "./database.view.ts";
 import { setLinkedViewSource } from "./linked-view.commands.ts";
 import {
@@ -36,25 +37,34 @@ function renderChoice(
       isPageLike(block) &&
       !selectIsInTrash(state, block),
   );
-  const onPick = (event: Event): void => {
-    if (!(event.target instanceof HTMLSelectElement)) return;
-    const databaseId = parseBlockId(event.target.value);
+  const choose = (value: string): void => {
+    const databaseId = parseBlockId(value);
     if (databaseId !== undefined) {
       dispatch(setLinkedViewSource.create({ blockId, databaseId }));
     }
   };
-  return html`<label class="database__linked-choice">
-    ${TEXT.linkedChoose}
-    <select class="database__field" @change=${onPick}>
-      <option value="" selected disabled>${TEXT.chooseDatabase}</option>
-      ${databases.map((block) => {
-        const title = isPageLike(block) ? selectPageTitle(block) : "";
-        return html`<option value=${block.id}>
-          ${title === "" ? TEXT.untitled : title}
-        </option>`;
-      })}
-    </select>
-  </label>`;
+  return html`<div class="database__linked-choice">
+    <span>${TEXT.linkedChoose}</span>
+    ${renderSelect(
+      {
+        id: `linked-${blockId}`,
+        label: TEXT.linkedChoose,
+        value: undefined,
+        placeholder: TEXT.chooseDatabase,
+        searchPlaceholder: TEXT.chooseDatabase,
+        options: databases.map((block) => {
+          const title = isPageLike(block) ? selectPageTitle(block) : "";
+          return {
+            value: block.id,
+            label: title === "" ? TEXT.untitled : title,
+            icon: "database" as const,
+          };
+        }),
+        onChoose: choose,
+      },
+      { overlay: state.ui.overlay, dispatch },
+    )}
+  </div>`;
 }
 
 export function renderLinkedView(

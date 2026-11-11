@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { render } from "lit-html";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import type { Command, Dispatch } from "../../state/index.ts";
 import { createDatabaseApp } from "./database-builder.ts";
 import { FILTERS_OVERLAY } from "./database-menus.view.ts";
@@ -8,19 +8,7 @@ import { renderDatabase } from "./database.view.ts";
 import { TITLE_PROPERTY_ID } from "./table-model.selectors.ts";
 import { setViewFilter } from "./view.commands.ts";
 
-// happy-dom has no Popover API; the panel only needs to be shown.
-beforeAll(() => {
-  Object.defineProperty(HTMLElement.prototype, "showPopover", {
-    value: () => undefined,
-    configurable: true,
-  });
-});
-
-afterAll(() => {
-  Reflect.deleteProperty(HTMLElement.prototype, "showPopover");
-});
-
-function rendered() {
+function rendered(child?: string) {
   const app = createDatabaseApp([{ name: "Notes", type: "text" }], [["A"]]);
   const [notes] = app.propertyIds;
   if (notes === undefined) throw new Error("no property");
@@ -35,7 +23,11 @@ function rendered() {
     }),
   );
   const filtered = app.store.getState();
-  const overlay = { kind: FILTERS_OVERLAY, anchorId: app.databaseId };
+  const overlay = {
+    kind: FILTERS_OVERLAY,
+    anchorId: app.databaseId,
+    ...(child !== undefined && { child: { anchorId: child } }),
+  };
   const state = { ...filtered, ui: { ...filtered.ui, overlay } };
   const sent: Command[] = [];
   const dispatch: Dispatch = (command) => {
@@ -92,15 +84,27 @@ describe("the filter editor", () => {
     ]);
   });
 
-  it("joins the top conditions with or", () => {
-    const { host, sent } = rendered();
+  it("opens the join's list inside the popover and joins with or", () => {
+    const closed = rendered();
+    closed.host
+      .querySelector<HTMLElement>('[aria-label="Join conditions with"]')
+      ?.click();
+    const open = rendered("filter-join-");
+    const or = [
+      ...open.host.querySelectorAll<HTMLElement>("[role=option]"),
+    ].find((option) => option.textContent.trim() === "Or");
 
-    change(
-      host.querySelector('[data-path=""][data-field="conjunction"]'),
-      "or",
-    );
+    or?.click();
 
-    expect(sent[0]).toMatchObject({ filter: { conjunction: "or" } });
+    expect(closed.sent).toEqual([
+      expect.objectContaining({
+        type: "ui.openChildOverlay",
+        anchorId: "filter-join-",
+      }),
+    ]);
+    expect(open.sent).toHaveLength(2);
+    expect(open.sent[0]).toMatchObject({ type: "ui.closeChildOverlay" });
+    expect(open.sent[1]).toMatchObject({ filter: { conjunction: "or" } });
   });
 
   it("changes the value of a condition inside a group", () => {

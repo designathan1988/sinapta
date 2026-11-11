@@ -16,7 +16,7 @@ import {
 } from "../../state/index.ts";
 import { renderChip } from "../chip/index.ts";
 import { renderIcon, type IconName } from "../icon/index.ts";
-import { renderMenu } from "../menu/index.ts";
+import { renderMenu, type MenuItem } from "../menu/index.ts";
 
 export const SELECT_OVERLAY = "select";
 
@@ -88,12 +88,14 @@ function renderList(
   state: OpenState,
 ): TemplateResult {
   const { dispatch } = context;
-  const items = props.options.map((option) => ({
-    ...option,
-    check: "radio" as const,
-    isChecked: option.value === props.value,
+  // An option's value is what is chosen, never shown: the row shows its
+  // label, icon, chip and description.
+  const items = props.options.map(({ value, ...shown }): MenuItem => ({
+    ...shown,
+    check: "radio",
+    isChecked: value === props.value,
     onSelect: () => {
-      props.onChoose(option.value);
+      props.onChoose(value);
     },
   }));
   const placeholder = props.searchPlaceholder;

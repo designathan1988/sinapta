@@ -6,9 +6,10 @@ import type {
   PropertyDefinition,
   SelectOption,
 } from "../../blocks/database/index.ts";
-import type { Dispatch } from "../../state/index.ts";
+import type { Dispatch, OpenOverlay } from "../../state/index.ts";
 import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { renderSelect } from "../../ui/select/index.ts";
 import {
   deleteOption,
   moveOption,
@@ -30,26 +31,29 @@ interface OptionRow {
   readonly option: SelectOption;
   readonly target: OptionTarget;
   readonly dispatch: Dispatch;
+  readonly overlay: OpenOverlay | null;
 }
 
+// The option's color, chosen from the colors drawn as chips.
 function renderColorSelect(row: OptionRow): TemplateResult {
-  const { option, target, dispatch } = row;
-  const onColor = (event: Event): void => {
-    if (!(event.target instanceof HTMLSelectElement)) return;
-    dispatch(recolorOption.create({ ...target, color: event.target.value }));
-  };
-  return html`<select
-    class="database__field"
-    aria-label=${TEXT.optionColor}
-    @change=${onColor}
-  >
-    ${OPTION_COLORS.map(
-      (color) =>
-        html`<option value=${color} ?selected=${color === option.color}>
-          ${colorLabel(color)}
-        </option>`,
-    )}
-  </select>`;
+  const { option, target, dispatch, overlay } = row;
+  return renderSelect(
+    {
+      id: `color-${target.propertyId}-${target.optionId}`,
+      label: TEXT.optionColor,
+      value: option.color,
+      options: OPTION_COLORS.map((color) => ({
+        value: color,
+        label: colorLabel(color),
+        color,
+      })),
+      variant: "quiet",
+      onChoose: (color) => {
+        dispatch(recolorOption.create({ ...target, color }));
+      },
+    },
+    { overlay, dispatch },
+  );
 }
 
 function renderOptionButtons(row: OptionRow): TemplateResult {
@@ -88,7 +92,12 @@ function renderOption(
     propertyId: property.id,
     optionId: option.id,
   };
-  const row = { option, target, dispatch: context.dispatch };
+  const row = {
+    option,
+    target,
+    dispatch: context.dispatch,
+    overlay: context.state.ui.overlay,
+  };
   const onName = (event: Event): void => {
     if (!(event.target instanceof HTMLInputElement)) return;
     const name = event.target.value;

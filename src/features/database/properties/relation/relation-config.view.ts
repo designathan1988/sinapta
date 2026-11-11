@@ -12,6 +12,7 @@ import { parseBlockId } from "../../../../model/index.ts";
 import type { AppState } from "../../../../state/index.ts";
 import { COPY } from "../../../../ui/copy.ts";
 import type { ConfigContext } from "../../property-definition.ts";
+import { renderConfigChoice } from "../config-choice.view.ts";
 import { setRelationTarget } from "./relation.commands.ts";
 import { readRelationConfig } from "./relation.schema.ts";
 
@@ -30,30 +31,25 @@ type Choose = (target: string, isTwoWay: boolean) => void;
 
 function renderDatabaseChoice(
   context: ConfigContext,
-  current: string,
+  current: { readonly propertyId: string; readonly target: string },
   onPick: (target: string) => void,
 ): TemplateResult {
-  return html`<label class="database__view-name">
-    ${TEXT.relationDatabase}
-    <select
-      class="database__field"
-      data-field="database"
-      @change=${(event: Event) => {
-        if (event.target instanceof HTMLSelectElement)
-          onPick(event.target.value);
-      }}
-    >
-      <option value="" ?selected=${current === ""} disabled>
-        ${TEXT.chooseDatabase}
-      </option>
-      ${databases(context.state).map(
-        (item) =>
-          html`<option value=${item.id} ?selected=${item.id === current}>
-            ${item.title}
-          </option>`,
-      )}
-    </select>
-  </label>`;
+  return renderConfigChoice(
+    {
+      id: `${current.propertyId}-database`,
+      label: TEXT.relationDatabase,
+      value: current.target === "" ? undefined : current.target,
+      placeholder: TEXT.chooseDatabase,
+      searchPlaceholder: TEXT.chooseDatabase,
+      options: databases(context.state).map((item) => ({
+        value: item.id,
+        label: item.title,
+        icon: "database" as const,
+      })),
+      onChoose: onPick,
+    },
+    context,
+  );
 }
 
 function renderTwoWay(
@@ -92,7 +88,8 @@ export function renderRelationConfig(
   };
   const current = config?.databaseId ?? "";
   const isTwoWay = config?.isTwoWay ?? true;
-  const database = renderDatabaseChoice(context, current, (target) => {
+  const place = { propertyId: property.id, target: current };
+  const database = renderDatabaseChoice(context, place, (target) => {
     choose(target, isTwoWay);
   });
   return html`${database}

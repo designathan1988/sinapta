@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { render } from "lit-html";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import type {
   Command,
   Dispatch,
@@ -15,18 +15,6 @@ import {
   boardColumnAnchor,
   BOARD_COLUMN_OVERLAY,
 } from "./board-column-menu.view.ts";
-
-// happy-dom has no Popover API; the menu only needs to be shown.
-beforeAll(() => {
-  Object.defineProperty(HTMLElement.prototype, "showPopover", {
-    value: () => undefined,
-    configurable: true,
-  });
-});
-
-afterAll(() => {
-  Reflect.deleteProperty(HTMLElement.prototype, "showPopover");
-});
 
 const STAGE = {
   name: "Stage",

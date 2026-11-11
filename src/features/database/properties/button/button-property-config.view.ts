@@ -1,5 +1,6 @@
 // The settings of a button property: its label, whether a press opens the
 // row, and the values a press sets: a checkbox, an option or today.
+import { renderConfigChoice } from "../config-choice.view.ts";
 import { html, type TemplateResult } from "lit-html";
 import {
   selectDatabase,
@@ -60,16 +61,22 @@ function withValues(
   };
 }
 
+interface Editing {
+  // The button property whose settings these are.
+  readonly ownerId: string;
+  readonly config: ButtonPropertyConfig;
+  readonly onChange: (config: unknown) => void;
+  readonly context: ConfigContext;
+}
+
 function renderValueField(
   property: PropertyDefinition,
-  config: ButtonPropertyConfig,
-  onChange: (config: unknown) => void,
+  editing: Editing,
 ): TemplateResult {
+  const { config, onChange } = editing;
   const choices = choicesFor(property);
   const values = valuesOf(config);
-  const onPick = (event: Event): void => {
-    if (!(event.target instanceof HTMLSelectElement)) return;
-    const picked = event.target.value;
+  const onPick = (picked: string): void => {
     const choice = choices.find((each) => each[0] === picked);
     const { [property.id]: _old, ...rest } = values;
     onChange(
@@ -79,21 +86,19 @@ function renderValueField(
       ),
     );
   };
-  const current = currentChoice(values[property.id], choices);
-  return html`<label class="database__view-name">
-    ${TEXT.setValue} ${property.name}
-    <select class="database__field" @change=${onPick}>
-      <option value=${LEAVE} ?selected=${current === LEAVE}>
-        ${TEXT.leaveAsIs}
-      </option>
-      ${choices.map(
-        ([value, label]) =>
-          html`<option value=${value} ?selected=${value === current}>
-            ${label}
-          </option>`,
-      )}
-    </select>
-  </label>`;
+  return renderConfigChoice(
+    {
+      id: `${editing.ownerId}-set-${property.id}`,
+      label: `${TEXT.setValue} ${property.name}`,
+      value: currentChoice(values[property.id], choices),
+      options: [
+        { value: LEAVE, label: TEXT.leaveAsIs },
+        ...choices.map(([value, label]) => ({ value, label })),
+      ],
+      onChoose: onPick,
+    },
+    editing.context,
+  );
 }
 
 function renderOpens(
@@ -138,6 +143,13 @@ export function renderButtonPropertyConfig(
         @change=${onLabel}
       />
     </label>
-    ${others.map((item) => renderValueField(item, config, onChange))}
+    ${others.map((item) =>
+      renderValueField(item, {
+        ownerId: property.id,
+        config,
+        onChange,
+        context,
+      }),
+    )}
     ${renderOpens(config, onChange)}`;
 }

@@ -9,6 +9,7 @@ import {
   type Dispatch,
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { renderSelect } from "../../ui/select/index.ts";
 import {
   focusOverlayAnchor,
   showPopoverWhenConnected,
@@ -50,25 +51,41 @@ function choices(state: AppState, types: readonly string[]): Choice[] {
   });
 }
 
-function renderSelect(select: Select, onPick: (id: string) => void) {
-  const onChange = (event: Event): void => {
-    if (event.target instanceof HTMLSelectElement) onPick(event.target.value);
-  };
+interface Page {
+  readonly state: AppState;
+  readonly dispatch: Dispatch;
+  readonly blockId: string;
+}
+
+const NONE = "none";
+
+// A page or a database, chosen from a searchable list, or none.
+function renderPick(
+  select: Select & { readonly field: string },
+  onPick: (id: string) => void,
+  page: Page,
+): TemplateResult {
   const { label, options, selected } = select;
-  return html`<label class="button-block__field">
-    ${label}
-    <select @change=${onChange}>
-      <option value="" ?selected=${selected === ""}>
-        ${COPY.buttonBlock.none}
-      </option>
-      ${options.map(
-        (option) =>
-          html`<option value=${option.id} ?selected=${option.id === selected}>
-            ${option.title}
-          </option>`,
-      )}
-    </select>
-  </label>`;
+  return html`<div class="button-block__field">
+    <span>${label}</span>
+    ${renderSelect(
+      {
+        id: `button-${page.blockId}-${select.field}`,
+        label,
+        value: selected === "" ? NONE : selected,
+        searchPlaceholder: label,
+        options: [
+          { value: NONE, label: COPY.buttonBlock.none },
+          ...options.map((option) => ({
+            value: option.id,
+            label: option.title,
+          })),
+        ],
+        onChoose: onPick,
+      },
+      { overlay: page.state.ui.overlay, dispatch: page.dispatch },
+    )}
+  </div>`;
 }
 
 function insertField(actions: readonly ButtonAction[], dispatchSet: Setter) {
@@ -89,15 +106,13 @@ function insertField(actions: readonly ButtonAction[], dispatchSet: Setter) {
 
 type Setter = (kind: ButtonAction["kind"], action?: ButtonAction) => void;
 
-function pageFields(
-  state: AppState,
-  actions: readonly ButtonAction[],
-  set: Setter,
-) {
+function pageFields(page: Page, actions: readonly ButtonAction[], set: Setter) {
+  const { state } = page;
   const open = actions.find((action) => action.kind === "open-page");
   const row = actions.find((action) => action.kind === "add-row");
-  const openPage = renderSelect(
+  const openPage = renderPick(
     {
+      field: "open",
       label: COPY.buttonBlock.openPage,
       options: choices(state, PAGE_LIKE_TYPES),
       selected: open?.kind === "open-page" ? open.pageId : "",
@@ -109,9 +124,11 @@ function pageFields(
         pageId === undefined ? undefined : { kind: "open-page", pageId },
       );
     },
+    page,
   );
-  const addRow = renderSelect(
+  const addRow = renderPick(
     {
+      field: "row",
       label: COPY.buttonBlock.addRow,
       options: choices(state, [DATABASE_TYPE]),
       selected: row?.kind === "add-row" ? row.databaseId : "",
@@ -124,6 +141,7 @@ function pageFields(
           : { kind: "add-row", databaseId, values: {} };
       set("add-row", action);
     },
+    page,
   );
   return html`${openPage}${addRow}`;
 }
@@ -161,6 +179,7 @@ export function renderButtonConfig(
       ${COPY.buttonBlock.label}
       <input type="text" data-autofocus .value=${label} @change=${onLabel} />
     </label>
-    ${insertField(actions, set)} ${pageFields(state, actions, set)}
+    ${insertField(actions, set)}
+    ${pageFields({ state, dispatch, blockId }, actions, set)}
   </div>`;
 }

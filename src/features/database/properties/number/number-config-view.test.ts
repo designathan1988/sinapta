@@ -1,67 +1,84 @@
 // @vitest-environment happy-dom
 import { render } from "lit-html";
 import { describe, expect, it } from "vitest";
+import { createInitialState } from "../../../../state/index.ts";
+import { SELECT_OVERLAY } from "../../../../ui/select/index.ts";
+import { toBlockId } from "../../../../model/index.ts";
 import { toPropertyId } from "../../database-builder.ts";
 import { renderNumberConfig } from "./number-config.view.ts";
 
-function rendered(config?: unknown) {
+function rendered(config?: unknown, open?: string) {
   const property = {
     id: toPropertyId("p"),
     name: "Price",
     type: "number",
     config,
   };
+  const initial = createInitialState();
+  const overlay =
+    open === undefined ? null : { kind: SELECT_OVERLAY, anchorId: `p-${open}` };
+  const state = { ...initial, ui: { ...initial.ui, overlay } };
+  const context = {
+    databaseId: toBlockId("db"),
+    state,
+    dispatch: () => ({ ok: true }) as const,
+  };
   const changes: unknown[] = [];
   const host = document.createElement("div");
+  document.body.replaceChildren(host);
   render(
-    renderNumberConfig(property, (next) => changes.push(next)),
+    renderNumberConfig(property, (next) => changes.push(next), context),
     host,
   );
-  const field = (name: string) => {
-    const found = host.querySelector(`[data-field="${name}"]`);
-    if (!(
-      found instanceof HTMLSelectElement || found instanceof HTMLInputElement
-    )) {
-      throw new Error(`no ${name} field`);
-    }
-    return found;
+  const pick = (label: string) => {
+    const option = [
+      ...host.querySelectorAll<HTMLElement>("[role=option]"),
+    ].find((item) => item.textContent.trim() === label);
+    if (option === undefined) throw new Error(`no ${label} option`);
+    option.click();
   };
-  return { host, changes, field };
-}
-
-function change(field: HTMLSelectElement | HTMLInputElement, value: string) {
-  field.value = value;
-  field.dispatchEvent(new Event("change", { bubbles: true }));
+  return { host, changes, pick };
 }
 
 describe("renderNumberConfig", () => {
-  it("sets the format", () => {
-    const { changes, field } = rendered();
+  it("sets the format from its list", () => {
+    const { changes, pick } = rendered(undefined, "format");
 
-    change(field("format"), "percent");
+    pick("Percent");
 
     expect(changes).toEqual([{ format: "percent", display: "number" }]);
   });
 
-  it("offers currencies only for the currency format", () => {
-    expect(rendered().host.querySelector('[data-field="currency"]')).toBeNull();
-    const { changes, field } = rendered({
-      format: "currency",
-      display: "number",
-    });
+  it("offers currencies only for the currency format, searchable", () => {
+    expect(
+      rendered().host.querySelector('[data-field="p-currency"]'),
+    ).toBeNull();
+    const { host, changes, pick } = rendered(
+      { format: "currency", display: "number" },
+      "currency",
+    );
 
-    change(field("currency"), "BRL");
+    pick("BRL");
 
+    expect(host.querySelector(".menu__search")).not.toBeNull();
     expect(changes).toEqual([
       { format: "currency", display: "number", currency: "BRL" },
     ]);
   });
 
   it("sets what a full bar stands for", () => {
-    const { changes, field } = rendered({ format: "number", display: "bar" });
+    const { host, changes } = rendered({ format: "number", display: "bar" });
+    const field = host.querySelector<HTMLInputElement>(
+      '[data-field="divideBy"]',
+    );
+    const type = (value: string) => {
+      if (field === null) throw new Error("no divisor field");
+      field.value = value;
+      field.dispatchEvent(new Event("change", { bubbles: true }));
+    };
 
-    change(field("divideBy"), "250");
-    change(field("divideBy"), "-3");
+    type("250");
+    type("-3");
 
     expect(changes).toEqual([
       { format: "number", display: "bar", divideBy: 250 },

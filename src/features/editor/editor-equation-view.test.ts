@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { render } from "lit-html";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import type { Command, Dispatch } from "../../state/index.ts";
 import { createApp, text } from "./editor-builder.ts";
 import { INLINE_EQUATION_OVERLAY } from "./editor-equation.commands.ts";
@@ -8,18 +8,6 @@ import {
   equationKey,
   renderInlineEquationEditor,
 } from "./editor-equation.view.ts";
-
-// happy-dom has no Popover API; the editor only needs to be shown.
-beforeAll(() => {
-  Object.defineProperty(HTMLElement.prototype, "showPopover", {
-    value: () => undefined,
-    configurable: true,
-  });
-});
-
-afterAll(() => {
-  Reflect.deleteProperty(HTMLElement.prototype, "showPopover");
-});
 
 function recorder() {
   const sent: Command[] = [];

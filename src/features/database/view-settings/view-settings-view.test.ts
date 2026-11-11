@@ -1,23 +1,12 @@
 // @vitest-environment happy-dom
 import { render } from "lit-html";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import type { Command, Dispatch, OpenOverlay } from "../../../state/index.ts";
 import { createDatabaseApp } from "../database-builder.ts";
 import { renderDatabase } from "../database.view.ts";
 import { setViewGroupBy } from "../group.commands.ts";
 import { setViewType } from "../view-layout.commands.ts";
 import { VIEW_SETTINGS_OVERLAY } from "./index.ts";
-
-beforeAll(() => {
-  Object.defineProperty(HTMLElement.prototype, "showPopover", {
-    value: () => undefined,
-    configurable: true,
-  });
-});
-
-afterAll(() => {
-  Reflect.deleteProperty(HTMLElement.prototype, "showPopover");
-});
 
 interface Setup {
   readonly panel?: string;

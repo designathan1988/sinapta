@@ -4,6 +4,7 @@ import { html, nothing, type TemplateResult } from "lit-html";
 import { openOverlay } from "../../state/index.ts";
 import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { renderSelect } from "../../ui/select/index.ts";
 import { propertyType } from "./property-registry.ts";
 import {
   deleteRows,
@@ -24,29 +25,32 @@ const EDITABLE = new Set([
   "options",
 ]);
 
+// A list of the properties that can take one value for every ticked row;
+// choosing one opens the editor of that value.
 function renderEditChoice(context: TableContext): TemplateResult {
-  const properties = context.model.database.props.properties.filter(
-    (property) => EDITABLE.has(propertyType(property.type).editor),
+  const { model, state, dispatch } = context;
+  const properties = model.database.props.properties.filter((property) =>
+    EDITABLE.has(propertyType(property.type).editor),
   );
-  const onChange = (event: Event): void => {
-    const select = event.target;
-    if (!(select instanceof HTMLSelectElement) || select.value === "") return;
-    const overlay = { kind: BULK_EDIT_OVERLAY, anchorId: select.value };
-    select.value = "";
-    context.dispatch(openOverlay.create({ overlay }));
-  };
-  return html`<select
-    class="database__field"
-    data-overlay-anchor
-    aria-label=${COPY.database.setProperty}
-    @change=${onChange}
-  >
-    <option value="" selected>${COPY.database.setProperty}</option>
-    ${properties.map(
-      (property) =>
-        html`<option value=${property.id}>${property.name}</option>`,
-    )}
-  </select>`;
+  return renderSelect(
+    {
+      id: `bulk-${model.view.id}`,
+      label: COPY.database.setProperty,
+      value: undefined,
+      placeholder: COPY.database.setProperty,
+      options: properties.map((property) => ({
+        value: property.id,
+        label: property.name,
+        icon: propertyType(property.type).icon,
+      })),
+      variant: "quiet",
+      onChoose: (anchorId) => {
+        const overlay = { kind: BULK_EDIT_OVERLAY, anchorId };
+        dispatch(openOverlay.create({ overlay }));
+      },
+    },
+    { overlay: state.ui.overlay, dispatch },
+  );
 }
 
 export function renderBulkBar(

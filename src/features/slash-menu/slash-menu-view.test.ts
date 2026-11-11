@@ -1,20 +1,8 @@
 // @vitest-environment happy-dom
 import { render } from "lit-html";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { createState } from "./slash-menu-builder.ts";
 import { renderSlashMenu } from "./slash-menu.view.ts";
-
-// happy-dom has no Popover API; the menu only needs to be shown.
-beforeAll(() => {
-  Object.defineProperty(HTMLElement.prototype, "showPopover", {
-    value: () => undefined,
-    configurable: true,
-  });
-});
-
-afterAll(() => {
-  Reflect.deleteProperty(HTMLElement.prototype, "showPopover");
-});
 
 function rendered(text: string) {
   const host = document.createElement("div");

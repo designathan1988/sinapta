@@ -206,6 +206,7 @@ export const DATABASE_TEXT = {
     removeGrouping: "Remove grouping",
     calendarBy: "Show calendar by",
     searchProperty: "Search for a property",
+    emptyValue: "Empty",
     noGrouping: "None",
     groupSort: "Sort groups",
     groupSorts: {

@@ -6,8 +6,9 @@ import { setCalculation } from "./calculation.commands.ts";
 import { createDatabaseApp } from "./database-builder.ts";
 import { renderDatabase } from "./database.view.ts";
 import { setViewGroupBy } from "./group.commands.ts";
+import { SELECT_OVERLAY } from "../../ui/select/index.ts";
 
-function rendered(isGrouped = false) {
+function rendered(isGrouped = false, isOpen = false) {
   const app = createDatabaseApp(
     [
       { name: "Points", type: "number" },
@@ -43,14 +44,17 @@ function rendered(isGrouped = false) {
   const host = document.createElement("div");
   document.body.replaceChildren(host);
   const built = app.store.getState();
-  const state = { ...built, ui: { ...built.ui, activeCell: null } };
+  const overlay = isOpen
+    ? { kind: SELECT_OVERLAY, anchorId: `calculate-${viewId}-${points}` }
+    : null;
+  const state = { ...built, ui: { ...built.ui, activeCell: null, overlay } };
   render(renderDatabase(state, dispatch), host);
   const footer = (propertyId: string) => {
-    const select = host.querySelector(
-      `tfoot select[data-property-id="${propertyId}"]`,
+    const cell = host.querySelector(
+      `tfoot td[data-property-id="${propertyId}"]`,
     );
-    if (!(select instanceof HTMLSelectElement)) throw new Error("no footer");
-    return select;
+    if (cell === null) throw new Error("no footer");
+    return cell;
   };
   return { host, sent, footer, points };
 }
@@ -59,30 +63,37 @@ describe("the table's footer", () => {
   it("shows the column's calculation and its result", () => {
     const { footer, points } = rendered();
 
-    const select = footer(points);
+    const cell = footer(points);
 
-    // happy-dom does not select an option whose attribute is set later.
-    const chosen = select.querySelector("option[selected]");
-    expect(chosen?.textContent.trim()).toBe("Sum");
-    expect(select.closest("td")?.textContent).toContain("13");
+    expect(cell.querySelector(".select")?.textContent).toContain("Sum");
+    expect(cell.querySelector(".database__calc-value")?.textContent).toBe("13");
   });
 
-  it("chooses another calculation, or none", () => {
-    const { footer, sent, points } = rendered();
-    const select = footer(points);
+  it("opens the calculations that fit, and chooses another or none", () => {
+    const closed = rendered();
+    closed.footer(closed.points).querySelector<HTMLElement>(".select")?.click();
+    const open = rendered(false, true);
+    const options = [
+      ...open.host.querySelectorAll<HTMLElement>("[role=option]"),
+    ];
+    const pick = (label: string) =>
+      options.find((option) => option.textContent.trim() === label)?.click();
 
-    select.value = "average";
-    select.dispatchEvent(new Event("change", { bubbles: true }));
-    select.value = "";
-    select.dispatchEvent(new Event("change", { bubbles: true }));
+    pick("Average");
+    pick("None");
 
-    expect(sent).toEqual([
-      expect.objectContaining({
-        type: "view.setCalculation",
-        propertyId: points,
-        kind: "average",
-      }),
-      expect.objectContaining({ propertyId: points, kind: null }),
+    expect(closed.sent).toHaveLength(1);
+    expect(closed.sent[0]).toMatchObject({
+      type: "ui.openOverlay",
+      overlay: { kind: SELECT_OVERLAY },
+    });
+    expect(options[0]?.textContent.trim()).toBe("None");
+    const changes = open.sent.filter(
+      (command) => command.type === "view.setCalculation",
+    );
+    expect(changes).toEqual([
+      expect.objectContaining({ propertyId: open.points, kind: "average" }),
+      expect.objectContaining({ propertyId: open.points, kind: null }),
     ]);
   });
 

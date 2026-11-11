@@ -7,6 +7,7 @@ import {
 } from "../../../../blocks/database/index.ts";
 import { COPY } from "../../../../ui/copy.ts";
 import type { ConfigContext } from "../../property-definition.ts";
+import { renderConfigChoice } from "../config-choice.view.ts";
 import { readRelationConfig } from "../relation/index.ts";
 import {
   readRollupConfig,
@@ -22,32 +23,29 @@ interface Choice {
   readonly options: readonly (readonly [value: string, label: string])[];
 }
 
-function renderChoice(
-  choice: Choice,
-  config: RollupConfig,
-  onChange: (config: unknown) => void,
-): TemplateResult {
+interface Editing {
+  readonly property: PropertyDefinition;
+  readonly config: RollupConfig;
+  readonly onChange: (config: unknown) => void;
+  readonly context: ConfigContext;
+}
+
+function renderChoice(choice: Choice, editing: Editing): TemplateResult {
+  const { config, onChange } = editing;
   const current = config[choice.field];
-  const onPick = (event: Event): void => {
-    if (!(event.target instanceof HTMLSelectElement)) return;
-    onChange({ ...config, [choice.field]: event.target.value });
-  };
-  return html`<label class="database__view-name">
-    ${choice.label}
-    <select
-      class="database__field"
-      data-field=${choice.field}
-      @change=${onPick}
-    >
-      <option value="" ?selected=${current === ""} disabled></option>
-      ${choice.options.map(
-        ([value, label]) =>
-          html`<option value=${value} ?selected=${value === current}>
-            ${label}
-          </option>`,
-      )}
-    </select>
-  </label>`;
+  return renderConfigChoice(
+    {
+      id: `${editing.property.id}-${choice.field}`,
+      label: choice.label,
+      value: current === "" ? undefined : current,
+      placeholder: choice.label,
+      options: choice.options.map(([value, label]) => ({ value, label })),
+      onChoose: (value) => {
+        onChange({ ...config, [choice.field]: value });
+      },
+    },
+    editing.context,
+  );
 }
 
 // The properties a rollup can read: the title and the related
@@ -101,5 +99,6 @@ export function renderRollupConfig(
       ),
     },
   ];
-  return html`${choices.map((choice) => renderChoice(choice, config, onChange))}`;
+  const editing = { property, config, onChange, context };
+  return html`${choices.map((choice) => renderChoice(choice, editing))}`;
 }

@@ -1,21 +1,9 @@
 // @vitest-environment happy-dom
 import { render } from "lit-html";
-import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { renderMenu, type MenuEntry, type MenuOptions } from "./index.ts";
 
 const noop = (): void => undefined;
-
-// happy-dom has no Popover API; the menu only needs to be shown.
-beforeAll(() => {
-  Object.defineProperty(HTMLElement.prototype, "showPopover", {
-    value: () => undefined,
-    configurable: true,
-  });
-});
-
-afterAll(() => {
-  Reflect.deleteProperty(HTMLElement.prototype, "showPopover");
-});
 
 function rendered(
   entries: readonly MenuEntry[],

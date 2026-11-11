@@ -19,6 +19,7 @@ import {
   type RowPage,
 } from "./row-files.view.ts";
 import { propertyType } from "./property-registry.ts";
+import { renderOptionChoice } from "./row-option.view.ts";
 import { selectRowValues } from "./row-values.selectors.ts";
 
 const MULTI_SELECT = "multi-select";
@@ -65,22 +66,6 @@ function renderToggle(
   />`;
 }
 
-function renderSelect(
-  row: PageBlock,
-  property: PropertyDefinition,
-): TemplateResult {
-  const chosen = storedOf(row, property);
-  return html`<select class="database__field">
-    <option value="" ?selected=${chosen === undefined}></option>
-    ${(property.options ?? []).map(
-      (option) =>
-        html`<option value=${option.id} ?selected=${option.id === chosen}>
-          ${option.name}
-        </option>`,
-    )}
-  </select>`;
-}
-
 // A multi-select is a group of checkboxes, one per option.
 function renderMultiSelect(
   row: PageBlock,
@@ -124,9 +109,17 @@ function renderProperty(
   if (editor === "files") return renderRowFiles(row, property, page);
   if (editor === "relation") return renderRowRelation(row, property, page);
   if (editor === "button") return renderRowButton(row, property, page);
+  if (editor === "options") {
+    return html`<div
+      class="database__row-property"
+      data-property-id=${property.id}
+    >
+      <span class="database__row-name">${property.name}</span>
+      ${renderOptionChoice(row, property, page)}
+    </div>`;
+  }
   const controls: Partial<Record<string, typeof renderInput>> = {
     toggle: renderToggle,
-    options: renderSelect,
     none: renderReadOnly,
   };
   const control = (controls[editor] ?? renderInput)(row, property);

@@ -1,19 +1,8 @@
 // @vitest-environment happy-dom
 import { render } from "lit-html";
-import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { Command, OpenOverlay } from "../../state/index.ts";
 import { renderSelect, SELECT_OVERLAY, type SelectProps } from "./index.ts";
-
-beforeAll(() => {
-  Object.defineProperty(HTMLElement.prototype, "showPopover", {
-    value: () => undefined,
-    configurable: true,
-  });
-});
-
-afterAll(() => {
-  Reflect.deleteProperty(HTMLElement.prototype, "showPopover");
-});
 
 const OPTIONS = [
   { value: "and", label: "And" },
@@ -93,6 +82,10 @@ describe("renderSelect", () => {
       options.map((option) => option.getAttribute("aria-selected")),
     ).toEqual(["true", "false"]);
     expect(host.querySelector(".menu")?.hasAttribute("data-child")).toBe(true);
+    expect(options.map((option) => option.textContent.trim())).toEqual([
+      "And",
+      "Or",
+    ]);
     expect(sent).toEqual([
       expect.objectContaining({ type: "ui.closeChildOverlay" }),
     ]);

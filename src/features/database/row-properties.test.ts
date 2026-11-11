@@ -4,11 +4,12 @@ import { describe, expect, it } from "vitest";
 import { selectPage } from "../../blocks/page/index.ts";
 import { type Command } from "../../state/index.ts";
 import { createDatabaseApp } from "./database-builder.ts";
+import { SELECT_OVERLAY } from "../../ui/select/index.ts";
 import { setRowValue } from "./row.commands.ts";
 import { renderRowProperties } from "./row-properties.view.ts";
 
 // Renders the properties of the first row as its page shows them.
-function mount() {
+function mount(isListOpen = false) {
   const app = createDatabaseApp(
     [
       { name: "Points", type: "number" },
@@ -26,9 +27,13 @@ function mount() {
   const commands: Command[] = [];
   const container = document.createElement("div");
   document.body.replaceChildren(container);
+  const stage = app.propertyIds[2] ?? "";
+  const overlay = isListOpen
+    ? { kind: SELECT_OVERLAY, anchorId: `row-${rowId}-${stage}` }
+    : null;
   const state = {
     ...app.store.getState(),
-    ui: { ...app.store.getState().ui, activePageId: rowId },
+    ui: { ...app.store.getState().ui, activePageId: rowId, overlay },
   };
   const dispatch = (command: Command) => {
     commands.push(command);
@@ -83,10 +88,13 @@ describe("renderRowProperties", () => {
   });
 
   it("stores a checked box and a chosen option", () => {
-    const { container, change, values, propertyIds } = mount();
+    const { container, change, values, propertyIds } = mount(true);
+    const option = [
+      ...container.querySelectorAll<HTMLElement>("[role=option]"),
+    ].find((item) => item.textContent.trim() === "To do");
 
     change(container.querySelector("input[type=checkbox]"), "true");
-    change(container.querySelector("select"), "todo");
+    option?.click();
 
     expect(values()).toMatchObject({
       [propertyIds[1] ?? ""]: true,

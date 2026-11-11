@@ -2,11 +2,16 @@
 import { render } from "lit-html";
 import { describe, expect, it, vi } from "vitest";
 import { toBlockId } from "../../model/index.ts";
-import type { Command, Dispatch } from "../../state/index.ts";
+import {
+  createInitialState,
+  type Command,
+  type Dispatch,
+} from "../../state/index.ts";
+import { SELECT_OVERLAY } from "../../ui/select/index.ts";
 import type { CodeBlock } from "./code.schema.ts";
 import { renderCode } from "./code.view.ts";
 
-function rendered(props: Partial<CodeBlock["props"]> = {}) {
+function rendered(props: Partial<CodeBlock["props"]> = {}, isListOpen = false) {
   const block: CodeBlock = {
     id: toBlockId("code"),
     type: "code",
@@ -21,8 +26,14 @@ function rendered(props: Partial<CodeBlock["props"]> = {}) {
     sent.push(command);
     return { ok: true };
   };
+  const initial = createInitialState();
+  const overlay = isListOpen
+    ? { kind: SELECT_OVERLAY, anchorId: "code-code" }
+    : null;
+  const state = { ...initial, ui: { ...initial.ui, overlay } };
   const host = document.createElement("div");
-  render(renderCode(block, dispatch), host);
+  document.body.replaceChildren(host);
+  render(renderCode(block, dispatch, state), host);
   const button = (label: string) =>
     [...host.querySelectorAll("button")].find(
       (element) => element.textContent.trim() === label,
@@ -32,14 +43,16 @@ function rendered(props: Partial<CodeBlock["props"]> = {}) {
 
 describe("renderCode", () => {
   it("sets the language chosen in the list", () => {
-    const { host, sent } = rendered();
-    const select = host.querySelector("select");
-    if (select === null) throw new Error("no language list");
+    const { host, sent } = rendered({}, true);
+    const rust = [...host.querySelectorAll<HTMLElement>("[role=option]")].find(
+      (option) => option.textContent.trim() === "Rust",
+    );
 
-    select.value = "rust";
-    select.dispatchEvent(new Event("change"));
+    rust?.click();
 
+    expect(host.querySelector(".menu__search")).not.toBeNull();
     expect(sent).toEqual([
+      expect.objectContaining({ type: "ui.closeOverlay" }),
       expect.objectContaining({ type: "code.setLanguage", language: "rust" }),
     ]);
   });

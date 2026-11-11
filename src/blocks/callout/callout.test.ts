@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { render } from "lit-html";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { buildWorkspace, toBlockId } from "../../model/index.ts";
 import {
   createInitialState,
@@ -23,18 +23,6 @@ const block: CalloutBlock = {
   createdAt: "",
   updatedAt: "",
 };
-
-// happy-dom has no Popover API; the picker only needs to be shown.
-beforeAll(() => {
-  Object.defineProperty(HTMLElement.prototype, "showPopover", {
-    value: () => undefined,
-    configurable: true,
-  });
-});
-
-afterAll(() => {
-  Reflect.deleteProperty(HTMLElement.prototype, "showPopover");
-});
 
 function rendered(state: AppState = createInitialState()) {
   const sent: Command[] = [];

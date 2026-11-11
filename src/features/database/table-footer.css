@@ -9,28 +9,16 @@
     white-space: nowrap;
   }
 
-  .database__calc-kind {
-    padding: var(--space-none) var(--space-inset-xs);
-    border: none;
-    border-radius: var(--radius-sm);
-    background: none;
-    color: inherit;
+  .database__calc .select {
+    min-block-size: var(--size-control-sm);
     font-size: inherit;
-    cursor: pointer;
-    appearance: none;
-
-    &:hover {
-      background-color: var(--color-bg-hover);
-    }
   }
 
   /* "Calculate" shows while the footer is pointed at or has focus. */
-  .database__calc:not([data-set]) .database__calc-kind {
+  .database__calc-row:not(:hover, :focus-within)
+    .database__calc:not([data-set])
+    .select:not([aria-expanded="true"]) {
     opacity: 0;
-  }
-
-  .database__calc-row:is(:hover, :focus-within) .database__calc-kind {
-    opacity: 1;
   }
 
   .database__calc-label {

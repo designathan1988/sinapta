@@ -3,6 +3,8 @@
 import { html, nothing, type TemplateResult } from "lit-html";
 import type { PropertyDefinition } from "../../../../blocks/database/index.ts";
 import { COPY } from "../../../../ui/copy.ts";
+import type { ConfigContext } from "../../property-definition.ts";
+import { renderConfigChoice } from "../config-choice.view.ts";
 import { currencyChoices } from "./number-format.ts";
 import {
   NUMBER_DISPLAYS,
@@ -19,29 +21,26 @@ interface Field {
   readonly choices: readonly (readonly [value: string, label: string])[];
   readonly current: string;
   readonly onPick: (value: string) => void;
+  readonly isSearchable?: boolean;
 }
 
-function renderChoice(field: Field): TemplateResult {
-  const onChange = (event: Event): void => {
-    if (event.target instanceof HTMLSelectElement) {
-      field.onPick(event.target.value);
-    }
-  };
-  return html`<label class="database__view-name">
-    ${field.label}
-    <select
-      class="database__field"
-      data-field=${field.name}
-      @change=${onChange}
-    >
-      ${field.choices.map(
-        ([value, label]) =>
-          html`<option value=${value} ?selected=${value === field.current}>
-            ${label}
-          </option>`,
-      )}
-    </select>
-  </label>`;
+interface Editing {
+  readonly property: PropertyDefinition;
+  readonly context: ConfigContext;
+}
+
+function renderChoice(field: Field, editing: Editing): TemplateResult {
+  return renderConfigChoice(
+    {
+      id: `${editing.property.id}-${field.name}`,
+      label: field.label,
+      value: field.current,
+      options: field.choices.map(([value, label]) => ({ value, label })),
+      onChoose: field.onPick,
+      ...(field.isSearchable === true && { searchPlaceholder: field.label }),
+    },
+    editing.context,
+  );
 }
 
 function renderDivisor(
@@ -78,48 +77,81 @@ function isOneOf<T extends string>(
 function renderCurrency(
   config: NumberConfig,
   onChange: (config: NumberConfig) => void,
+  editing: Editing,
 ): TemplateResult {
-  return renderChoice({
-    name: "currency",
-    label: TEXT.currency,
-    choices: currencyChoices().map((code) => [code, code]),
-    current: config.currency ?? "USD",
-    onPick: (value) => {
-      onChange({ ...config, currency: value });
+  return renderChoice(
+    {
+      name: "currency",
+      label: TEXT.currency,
+      choices: currencyChoices().map((code) => [code, code]),
+      current: config.currency ?? "USD",
+      isSearchable: true,
+      onPick: (value) => {
+        onChange({ ...config, currency: value });
+      },
     },
-  });
+    editing,
+  );
+}
+
+function renderFormat(
+  config: NumberConfig,
+  onChange: (config: NumberConfig) => void,
+  editing: Editing,
+): TemplateResult {
+  return renderChoice(
+    {
+      name: "format",
+      label: TEXT.numberFormat,
+      choices: NUMBER_FORMATS.map((value) => [
+        value,
+        TEXT.numberFormats[value],
+      ]),
+      current: config.format,
+      onPick: (value) => {
+        if (isOneOf(NUMBER_FORMATS, value))
+          onChange({ ...config, format: value });
+      },
+    },
+    editing,
+  );
+}
+
+function renderDisplay(
+  config: NumberConfig,
+  onChange: (config: NumberConfig) => void,
+  editing: Editing,
+): TemplateResult {
+  return renderChoice(
+    {
+      name: "display",
+      label: TEXT.showAs,
+      choices: NUMBER_DISPLAYS.map((value) => [
+        value,
+        TEXT.numberDisplays[value],
+      ]),
+      current: config.display,
+      onPick: (value) => {
+        if (isOneOf(NUMBER_DISPLAYS, value))
+          onChange({ ...config, display: value });
+      },
+    },
+    editing,
+  );
 }
 
 export function renderNumberConfig(
   property: PropertyDefinition,
   onChange: (config: unknown) => void,
+  context: ConfigContext,
 ): TemplateResult {
   const config = readNumberConfig(property.config);
-  const format = renderChoice({
-    name: "format",
-    label: TEXT.numberFormat,
-    choices: NUMBER_FORMATS.map((value) => [value, TEXT.numberFormats[value]]),
-    current: config.format,
-    onPick: (value) => {
-      if (isOneOf(NUMBER_FORMATS, value))
-        onChange({ ...config, format: value });
-    },
-  });
-  const display = renderChoice({
-    name: "display",
-    label: TEXT.showAs,
-    choices: NUMBER_DISPLAYS.map((value) => [
-      value,
-      TEXT.numberDisplays[value],
-    ]),
-    current: config.display,
-    onPick: (value) => {
-      if (isOneOf(NUMBER_DISPLAYS, value))
-        onChange({ ...config, display: value });
-    },
-  });
+  const editing = { property, context };
   const currency =
-    config.format === "currency" ? renderCurrency(config, onChange) : nothing;
-  return html`${format} ${currency} ${display}
+    config.format === "currency"
+      ? renderCurrency(config, onChange, editing)
+      : nothing;
+  return html`${renderFormat(config, onChange, editing)} ${currency}
+  ${renderDisplay(config, onChange, editing)}
   ${config.display === "number" ? nothing : renderDivisor(config, onChange)}`;
 }

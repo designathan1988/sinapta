@@ -151,7 +151,9 @@ function onMenuKey(event: KeyboardEvent, choosing: Choosing): void {
   else if (event.key === "Enter" && isSearch) {
     choose(firstItem(choosing.items), choosing);
   } else if (!moveFocus(menu, event.key)) return;
+  // A list open inside another overlay keeps its keys to itself.
   event.preventDefault();
+  event.stopPropagation();
 }
 
 function renderRows(entries: readonly MenuEntry[], options: MenuOptions) {
@@ -178,9 +180,11 @@ export function renderMenu(options: MenuOptions): TemplateResult {
   const choosing = { items, close };
   const onClick = (event: Event): void => {
     if (!(event.target instanceof Element)) return;
-    const index =
-      event.target.closest<HTMLElement>("[data-index]")?.dataset.index;
-    choose(items[Number(index ?? -1)], choosing);
+    const row = event.target.closest<HTMLElement>("[data-index]");
+    // A press inside a list open in this menu belongs to that list.
+    if (row?.closest(".menu") !== event.currentTarget) return;
+    event.stopPropagation();
+    choose(items[Number(row.dataset.index ?? -1)], choosing);
   };
   return html`<div
     class="menu"
