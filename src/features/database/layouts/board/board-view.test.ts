@@ -8,7 +8,6 @@ import type {
 } from "../../../../state/index.ts";
 import { setCardOptions } from "../../card.commands.ts";
 import { createDatabaseApp } from "../../database-builder.ts";
-import { PROPERTIES_OVERLAY } from "../../database-menus.view.ts";
 import { renderDatabase } from "../../database.view.ts";
 import { toggleGroupHidden } from "../../group.commands.ts";
 import { setViewType } from "../../view-layout.commands.ts";
@@ -41,7 +40,6 @@ const STAGE = {
 interface Setup {
   readonly hidden?: string;
   readonly menuFor?: string;
-  readonly settings?: boolean;
 }
 
 function rendered(setup: Setup = {}) {
@@ -63,14 +61,12 @@ function rendered(setup: Setup = {}) {
   }
   const built = app.store.getState();
   const overlay: OpenOverlay | null =
-    setup.settings === true
-      ? { kind: PROPERTIES_OVERLAY, anchorId: app.databaseId }
-      : setup.menuFor === undefined
-        ? null
-        : {
-            kind: BOARD_COLUMN_OVERLAY,
-            anchorId: boardColumnAnchor(app.databaseId, setup.menuFor),
-          };
+    setup.menuFor === undefined
+      ? null
+      : {
+          kind: BOARD_COLUMN_OVERLAY,
+          anchorId: boardColumnAnchor(app.databaseId, setup.menuFor),
+        };
   const state = { ...built, ui: { ...built.ui, overlay, activeCell: null } };
   const sent: Command[] = [];
   const dispatch: Dispatch = (command) => {
@@ -167,34 +163,5 @@ describe("a board", () => {
 
     expect(board?.getAttribute("data-size")).toBe("small");
     expect(board?.hasAttribute("data-colored")).toBe(true);
-  });
-
-  it("changes its cards' size, picture and column colors in the view settings", () => {
-    const { host, sent } = rendered({ settings: true });
-    const field = (name: string) => {
-      const found = host.querySelector(`[data-field="${name}"]`);
-      if (
-        !(found instanceof HTMLSelectElement) &&
-        !(found instanceof HTMLInputElement)
-      )
-        throw new Error(`no ${name}`);
-      return found;
-    };
-    const change = (name: string, value: string) => {
-      const control = field(name);
-      if (control instanceof HTMLInputElement) control.checked = value === "on";
-      else control.value = value;
-      control.dispatchEvent(new Event("change", { bubbles: true }));
-    };
-
-    change("cardSize", "large");
-    change("cardPreview", "content");
-    change("colorColumns", "off");
-
-    expect(sent.map((command) => command)).toEqual([
-      expect.objectContaining({ options: { cardSize: "large" } }),
-      expect.objectContaining({ options: { cardPreview: "content" } }),
-      expect.objectContaining({ options: { colorColumns: false } }),
-    ]);
   });
 });

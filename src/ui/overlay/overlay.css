@@ -21,16 +21,19 @@
     color: var(--color-text-primary);
     font-size: var(--font-size-sm);
 
-    /* It fades in and slides a little towards its place. */
+    /* It fades in and slides a little towards its place, once each time
+       it opens: a transition would start over whenever its anchor moves. */
     @media (prefers-reduced-motion: no-preference) {
-      transition:
-        opacity var(--duration-fast) var(--easing-standard),
-        translate var(--duration-fast) var(--easing-standard);
-
-      @starting-style {
-        opacity: 0;
-        translate: 0 calc(var(--space-stack-xxs) * -2);
+      &:popover-open {
+        animation: overlay-in var(--duration-fast) var(--easing-standard);
       }
+    }
+  }
+
+  @keyframes overlay-in {
+    from {
+      opacity: 0;
+      translate: 0 calc(var(--space-stack-xxs) * -2);
     }
   }
 

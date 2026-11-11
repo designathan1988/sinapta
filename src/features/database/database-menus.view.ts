@@ -19,17 +19,20 @@ import {
   COLUMN_MENU_OVERLAY,
   PROPERTY_TYPES_OVERLAY,
 } from "./table-header.view.ts";
-import { renderFilters } from "./view-filters.view.ts";
+import { FILTERS_OVERLAY, renderFilters } from "./view-filters.view.ts";
+import {
+  renderViewSettings,
+  VIEW_SETTINGS_OVERLAY,
+} from "./view-settings/index.ts";
 import {
   BOARD_COLUMN_OVERLAY,
   renderBoardColumnMenu,
 } from "./layouts/board/index.ts";
 import { BULK_EDIT_OVERLAY, renderBulkEdit } from "./table-bulk-edit.view.ts";
 import { NEW_VIEW_OVERLAY, renderNewViewMenu } from "./view-layout.view.ts";
-import { renderProperties } from "./view-properties.view.ts";
 
-export const FILTERS_OVERLAY = "filters";
-export const PROPERTIES_OVERLAY = "properties";
+export { FILTERS_OVERLAY } from "./view-filters.view.ts";
+export { VIEW_SETTINGS_OVERLAY } from "./view-settings/index.ts";
 
 type Render = (context: TableContext) => TemplateResult | typeof nothing;
 
@@ -42,7 +45,7 @@ const OVERLAYS: Record<string, Render> = {
   [FILTERS_OVERLAY]: renderFilters,
   [BULK_EDIT_OVERLAY]: renderBulkEdit,
   [BOARD_COLUMN_OVERLAY]: renderBoardColumnMenu,
-  [PROPERTIES_OVERLAY]: renderProperties,
+  [VIEW_SETTINGS_OVERLAY]: renderViewSettings,
   [NEW_VIEW_OVERLAY]: renderNewViewMenu,
   [PROPERTY_EDIT_OVERLAY]: renderPropertyEdit,
 };
@@ -53,7 +56,7 @@ const OVERLAYS: Record<string, Render> = {
 const DATABASE_OVERLAYS: ReadonlySet<string> = new Set([
   PROPERTY_TYPES_OVERLAY,
   FILTERS_OVERLAY,
-  PROPERTIES_OVERLAY,
+  VIEW_SETTINGS_OVERLAY,
   NEW_VIEW_OVERLAY,
 ]);
 

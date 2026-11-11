@@ -14,7 +14,7 @@ import { COPY } from "../../ui/copy.ts";
 import { addRow } from "./row.commands.ts";
 import {
   FILTERS_OVERLAY,
-  PROPERTIES_OVERLAY,
+  VIEW_SETTINGS_OVERLAY,
   renderTableOverlay,
 } from "./database-menus.view.ts";
 import { LISTED_LAYOUTS, renderFooter } from "./database-footer.view.ts";
@@ -158,7 +158,7 @@ function renderToolbar(context: TableContext): TemplateResult {
     count: filterCount(model.view.filter),
   } as const;
   const settings = {
-    kind: PROPERTIES_OVERLAY,
+    kind: VIEW_SETTINGS_OVERLAY,
     label: COPY.database.viewSettings,
     icon: "more",
   } as const;

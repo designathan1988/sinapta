@@ -21,6 +21,11 @@ export interface MenuItem {
   readonly description?: string;
   // Shows the label as a chip of this option color.
   readonly color?: string;
+  // An icon at the end of the row, such as an eye that shows the state.
+  readonly endIcon?: IconName;
+  // Leaves the menu open after the choice, as when a choice goes back to
+  // the panel it came from.
+  readonly keepsOpen?: boolean;
 }
 
 export interface MenuSection {
@@ -38,9 +43,14 @@ export function isMenuItem(entry: MenuEntry): entry is MenuItem {
   return entry.kind === undefined || entry.kind === "item";
 }
 
-// Switches and rows that show another panel leave the menu open.
+// Switches, rows that show another panel, and items that say so leave
+// the menu open.
 export function keepsMenuOpen(item: MenuItem): boolean {
-  return item.check === "switch" || item.opensPanel === true;
+  return (
+    item.check === "switch" ||
+    item.opensPanel === true ||
+    item.keepsOpen === true
+  );
 }
 
 function fold(text: string): string {

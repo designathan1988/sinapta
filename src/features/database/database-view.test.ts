@@ -58,7 +58,7 @@ describe("renderDatabase", () => {
       "ui.openOverlay",
       "ui.openOverlay",
     ]);
-    expect(sent[1]).toMatchObject({ overlay: { kind: "properties" } });
+    expect(sent[1]).toMatchObject({ overlay: { kind: "view-settings" } });
   });
 
   it("marks each column and each view with its type's icon", () => {

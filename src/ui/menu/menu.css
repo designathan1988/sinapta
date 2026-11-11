@@ -67,6 +67,15 @@
     }
   }
 
+  /* When some rows have icons, the others keep an icon's room, so every
+     label starts at the same place. */
+  .menu:has(.menu__item > .icon:first-child)
+    .menu__item:not(:has(> .icon:first-child))::before {
+    content: "";
+    flex: none;
+    inline-size: var(--size-icon-md);
+  }
+
   .menu__text {
     display: grid;
     flex: 1;
@@ -134,6 +143,14 @@
     white-space: nowrap;
   }
 
+  /* A first panel's title is a quiet label, as Notion's "View settings". */
+  .menu__header:not(:has(.menu__back)) .menu__title {
+    padding-inline-start: var(--space-inset-xs);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+  }
+
   .menu__back,
   .menu__close {
     display: inline-flex;
@@ -159,8 +176,10 @@
     background-color: var(--color-bg-hover);
   }
 
-  /* A search field above the rows, ringed in blue while it has focus. */
-  .menu__search {
+  /* A search or text field above the rows, ringed in blue while it has
+     focus. */
+  .menu__search,
+  .menu__field {
     display: flex;
     flex: none;
     align-items: center;

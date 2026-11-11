@@ -91,7 +91,7 @@ function renderHeader(
             aria-label=${COPY.menu.back}
             @click=${onBack}
           >
-            ${renderIcon("back")}
+            ${renderIcon("arrow-left")}
           </button>`
     }
     <span class="menu__title">${options.title}</span>
@@ -157,8 +157,12 @@ function onMenuKey(event: KeyboardEvent, choosing: Choosing): void {
 function renderRows(entries: readonly MenuEntry[], options: MenuOptions) {
   const isListbox = options.role === "listbox";
   const first = options.search === undefined ? firstItem(entries) : undefined;
+  // An empty search result says so; a panel without rows shows none.
+  const isSearching = (options.search?.query.trim() ?? "") !== "";
   if (entries.length === 0) {
-    return html`<p class="menu__empty">${COPY.menu.noMatches}</p>`;
+    return isSearching
+      ? html`<p class="menu__empty">${COPY.menu.noMatches}</p>`
+      : nothing;
   }
   return entries.map((entry, index) =>
     renderEntry(entry, { index, isListbox, isFirst: entry === first }),

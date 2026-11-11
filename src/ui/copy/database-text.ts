@@ -201,6 +201,11 @@ export const DATABASE_TEXT = {
       content: "Page content",
     },
     colorColumns: "Color columns",
+    propertyVisibility: "Property visibility",
+    sortRow: "Sort",
+    removeGrouping: "Remove grouping",
+    calendarBy: "Show calendar by",
+    searchProperty: "Search for a property",
     noGrouping: "None",
     groupSort: "Sort groups",
     groupSorts: {

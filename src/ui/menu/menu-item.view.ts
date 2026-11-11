@@ -20,6 +20,7 @@ function roleOf(item: MenuItem, isListbox: boolean): string {
 
 function renderEnd(item: MenuItem): TemplateResult | typeof nothing {
   const isChecked = item.isChecked === true;
+  if (item.endIcon !== undefined) return renderIcon(item.endIcon);
   if (item.check === "switch") return renderSwitchMark(isChecked);
   if (item.opensPanel === true) return renderIcon("chevron");
   return isChecked ? renderIcon("check") : nothing;

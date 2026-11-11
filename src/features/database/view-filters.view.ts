@@ -27,6 +27,8 @@ import { renderFilterRow } from "./filter-row.view.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import { setViewFilter } from "./view.commands.ts";
 
+export const FILTERS_OVERLAY = "filters";
+
 const CONJUNCTIONS: readonly Conjunction[] = ["and", "or"];
 
 const CONJUNCTION_LABELS: Readonly<Record<Conjunction, string>> = {

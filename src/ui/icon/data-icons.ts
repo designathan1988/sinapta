@@ -3,6 +3,15 @@
 import { svg, type TemplateResult } from "lit-html";
 
 export const DATA_PATHS = {
+  eye: svg`<path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z" />
+    <circle cx="8" cy="8" r="2" />`,
+  "eye-off": svg`<path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z" />
+    <path d="M2.5 2.5l11 11" />`,
+  group: svg`<rect x="2.5" y="2.5" width="3" height="3" rx=".5" />
+    <rect x="2.5" y="10.5" width="3" height="3" rx=".5" />
+    <path d="M8 4h5.5M8 12h5.5" />`,
+  wrap: svg`<path d="M2 4h12M2 8h9a2.5 2.5 0 0 1 0 5H8M2 12h3M9.5 11.5 8 13l1.5 1.5" />`,
+  freeze: svg`<path d="M6 2h4l-.5 4 2 2.5h-7l2-2.5zM8 8.5V14" />`,
   table: svg`<rect x="2" y="2.5" width="12" height="11" rx="1.5" />
     <path d="M2 6.5h12M2 10h12M6 6.5v7" />`,
   board: svg`<rect x="2" y="2.5" width="3.5" height="11" rx="1" />
