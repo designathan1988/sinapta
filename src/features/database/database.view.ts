@@ -8,7 +8,7 @@ import {
   type Dispatch,
 } from "../../state/index.ts";
 import { renderButton } from "../../ui/button/index.ts";
-import { COPY } from "../../ui/copy.ts";
+import { COPY, pluralize } from "../../ui/copy.ts";
 import { addRow } from "./database.commands.ts";
 import {
   FILTERS_OVERLAY,
@@ -112,6 +112,7 @@ function renderFooter(context: TableContext): TemplateResult {
       : `${String(shown)} / ${String(model.totalRowCount)}`;
   const message =
     model.totalRowCount === 0 ? COPY.database.empty : COPY.database.noRows;
+  const noun = pluralize(model.totalRowCount, COPY.database.rowCount);
   return html`<div class="database__footer">
     ${renderButton({
       label: COPY.database.newRow,
@@ -119,7 +120,7 @@ function renderFooter(context: TableContext): TemplateResult {
       onClick: () => dispatch(addRow.create({ databaseId: model.database.id })),
     })}
     <span class="database__count" role="status"
-      >${shown === 0 ? message : `${count} ${COPY.database.rowCount}`}</span
+      >${shown === 0 ? message : `${count} ${noun}`}</span
     >
   </div>`;
 }
