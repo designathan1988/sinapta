@@ -1,0 +1,44 @@
+@layer features {
+  /* A number shown as a bar or a ring beside its text. */
+  .number {
+    display: inline-flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    inline-size: 100%;
+  }
+
+  .number__bar {
+    flex: 1;
+    min-inline-size: var(--size-icon-md);
+    block-size: var(--space-inline-xs);
+  }
+
+  .number__ring {
+    flex: none;
+    inline-size: var(--size-icon-sm);
+    block-size: var(--size-icon-sm);
+    transform: rotate(-90deg);
+  }
+
+  .number__track {
+    fill: var(--color-border-subtle);
+  }
+
+  .number__fill {
+    fill: var(--color-accent-default);
+  }
+
+  .number__ring .number__track,
+  .number__ring .number__fill {
+    fill: none;
+    stroke-width: 4;
+  }
+
+  .number__ring .number__track {
+    stroke: var(--color-border-subtle);
+  }
+
+  .number__ring .number__fill {
+    stroke: var(--color-accent-default);
+  }
+}

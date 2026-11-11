@@ -169,9 +169,30 @@ export const removeProperty = defineCommand<{
   },
 });
 
+// Replaces a property's config, such as a number's format. The settings
+// panel builds the config in the shape the property's type declares.
+export const setPropertyConfig = defineCommand<{
+  databaseId: BlockId;
+  propertyId: PropertyId;
+  config: unknown;
+}>({
+  type: "property.setConfig",
+  handle(state, command) {
+    const database = selectDatabase(state, command.databaseId);
+    if (database === undefined) return {};
+    const properties = database.props.properties.map((property) =>
+      property.id === command.propertyId
+        ? { ...property, config: command.config }
+        : property,
+    );
+    return { operations: updateProperties(database, properties) };
+  },
+});
+
 export const databaseCommands = [
   createDatabase,
   addProperty,
   changeProperty,
+  setPropertyConfig,
   removeProperty,
 ];

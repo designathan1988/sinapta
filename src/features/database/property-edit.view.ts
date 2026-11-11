@@ -9,7 +9,7 @@ import {
   focusOverlayAnchor,
   showPopoverWhenConnected,
 } from "../../ui/overlay/index.ts";
-import { changeProperty } from "./database.commands.ts";
+import { changeProperty, setPropertyConfig } from "./database.commands.ts";
 import { renderOptionList } from "./option-list.view.ts";
 import { propertyType } from "./property-registry.ts";
 import type { TableContext } from "./table-cell.view.ts";
@@ -39,6 +39,22 @@ function renderNameField(
   </label>`;
 }
 
+// The settings of the property's own type, such as a number's format.
+function renderConfig(
+  property: PropertyDefinition,
+  context: TableContext,
+): TemplateResult | typeof nothing {
+  const editor = propertyType(property.type).renderConfigEditor;
+  if (editor === undefined) return nothing;
+  const databaseId = context.model.database.id;
+  const propertyId = property.id;
+  return editor(property, (config) =>
+    context.dispatch(
+      setPropertyConfig.create({ databaseId, propertyId, config }),
+    ),
+  );
+}
+
 export function renderPropertyEdit(
   context: TableContext,
 ): TemplateResult | typeof nothing {
@@ -63,7 +79,7 @@ export function renderPropertyEdit(
       if (event.key === "Escape") close();
     }}
   >
-    ${renderNameField(property, context)}
+    ${renderNameField(property, context)} ${renderConfig(property, context)}
     ${hasOptions ? renderOptionList(property, context) : nothing}
   </div>`;
 }

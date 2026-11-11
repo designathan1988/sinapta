@@ -2,7 +2,7 @@
 import { render } from "lit-html";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { Command, Dispatch } from "../../state/index.ts";
-import { createDatabaseApp } from "./database-builder.ts";
+import { createDatabaseApp, type PropertySpec } from "./database-builder.ts";
 import {
   PROPERTY_EDIT_OVERLAY,
   renderPropertyEdit,
@@ -21,20 +21,17 @@ afterAll(() => {
   Reflect.deleteProperty(HTMLElement.prototype, "showPopover");
 });
 
-function rendered() {
-  const app = createDatabaseApp(
-    [
-      {
-        name: "Stage",
-        type: "select",
-        options: [
-          { id: "o1", name: "Todo", color: "gray" },
-          { id: "o2", name: "Done", color: "green" },
-        ],
-      },
-    ],
-    [],
-  );
+const STAGE: PropertySpec = {
+  name: "Stage",
+  type: "select",
+  options: [
+    { id: "o1", name: "Todo", color: "gray" },
+    { id: "o2", name: "Done", color: "green" },
+  ],
+};
+
+function rendered(spec: PropertySpec = STAGE) {
+  const app = createDatabaseApp([spec], []);
   const initial = app.store.getState();
   const anchorId = app.propertyIds[0] ?? "";
   const state = {
@@ -104,5 +101,18 @@ describe("renderPropertyEdit", () => {
       "option.delete",
     ]);
     expect(sent[1]).toMatchObject({ offset: 1 });
+  });
+
+  it("shows a number property's format and stores a new one", () => {
+    const { host, sent } = rendered({ name: "Price", type: "number" });
+
+    change(host.querySelector('[data-field="format"]'), "comma");
+
+    expect(sent).toEqual([
+      expect.objectContaining({
+        type: "property.setConfig",
+        config: { format: "comma", display: "number" },
+      }),
+    ]);
   });
 });

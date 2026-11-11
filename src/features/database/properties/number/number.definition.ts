@@ -4,6 +4,9 @@ import {
   type FilterOperator,
   type PropertyType,
 } from "../../property-definition.ts";
+import { renderNumberCell } from "./number-cell.view.ts";
+import { renderNumberConfig } from "./number-config.view.ts";
+import { DEFAULT_NUMBER_CONFIG, numberConfigSchema } from "./number.schema.ts";
 
 function readNumber(stored: unknown): number | undefined {
   return typeof stored === "number" && Number.isFinite(stored)
@@ -35,8 +38,6 @@ function comparison(
   };
 }
 
-const formatter = new Intl.NumberFormat("en-US", { maximumFractionDigits: 6 });
-
 export const numberProperty: PropertyType = {
   type: "number",
   label: "Number",
@@ -53,8 +54,11 @@ export const numberProperty: PropertyType = {
     IS_EMPTY,
     IS_NOT_EMPTY,
   ],
-  renderCell(value) {
+  renderCell(value, property) {
     const number = readNumber(value);
-    return number === undefined ? "" : formatter.format(number);
+    return number === undefined ? "" : renderNumberCell(number, property);
   },
+  configSchema: numberConfigSchema,
+  defaultConfig: () => DEFAULT_NUMBER_CONFIG,
+  renderConfigEditor: renderNumberConfig,
 };
