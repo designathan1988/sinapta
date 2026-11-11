@@ -1,6 +1,7 @@
 // Brings a stored or imported workspace file up to the current format.
 import { SCHEMA_VERSION, type WorkspaceFileError } from "../../model/index.ts";
 import { addTextStyles } from "./0002-text-styles.ts";
+import { addViewLayouts } from "./0003-view-layouts.ts";
 
 // A pure function from format version n to n + 1.
 export type Migration = (
@@ -9,7 +10,7 @@ export type Migration = (
 
 // MIGRATIONS[0] turns version 1 into version 2, and so on. Each format
 // change adds one file here, `0002-<what-changed>.ts`.
-export const MIGRATIONS: readonly Migration[] = [addTextStyles];
+export const MIGRATIONS: readonly Migration[] = [addTextStyles, addViewLayouts];
 
 export type MigrationResult =
   | { readonly ok: true; readonly file: Record<string, unknown> }

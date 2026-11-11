@@ -28,7 +28,12 @@ export {
   type BlockProps,
   type TypedBlock,
 } from "./block.schema.ts";
-export { type Filter, type View } from "./view.schema.ts";
+export {
+  viewTypeSchema,
+  type Filter,
+  type View,
+  type ViewType,
+} from "./view.schema.ts";
 export {
   SCHEMA_VERSION,
   parseWorkspaceFile,

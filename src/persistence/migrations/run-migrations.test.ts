@@ -64,12 +64,12 @@ describe("the migration list", () => {
     expect(isMigrationListComplete()).toBe(true);
   });
 
-  it("reads a version 1 file as version 2 without changing its data", () => {
+  it("reads a version 1 file as the current version without changing its data", () => {
     const file = { schemaVersion: 1, rootIds: ["a"], views: {} };
 
     expect(runMigrations(file)).toEqual({
       ok: true,
-      file: { schemaVersion: 2, rootIds: ["a"], views: {} },
+      file: { schemaVersion: 3, rootIds: ["a"], views: {} },
     });
   });
 });

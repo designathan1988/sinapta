@@ -63,7 +63,7 @@ describe("serializeWorkspace and readWorkspaceFile", () => {
   it("writes the current schema version", () => {
     const file: unknown = JSON.parse(serializeWorkspace(WORKSPACE));
 
-    expect(file).toMatchObject({ schemaVersion: 2, rootIds: ["a", "b"] });
+    expect(file).toMatchObject({ schemaVersion: 3, rootIds: ["a", "b"] });
   });
 
   it.each([
