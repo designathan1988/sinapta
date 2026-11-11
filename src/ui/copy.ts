@@ -147,7 +147,7 @@ export const COPY = {
     continueWriting: "Click here, or press Enter in the title, to write",
     noPage: "Select a page, or create one, to start writing.",
     blocksSelected:
-      "Blocks selected. Shift with Up or Down changes the selection, Delete removes the blocks, Escape returns to the text.",
+      "Blocks selected. Shift with Up or Down changes the selection, Tab indents, Alt with Up or Down moves, Delete removes the blocks, Escape returns to the text.",
   },
   saveStatus: {
     idle: "",

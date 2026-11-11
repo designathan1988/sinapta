@@ -1,11 +1,19 @@
 // Selecting whole blocks together, and what is done to such a selection.
 import { isTextBlock, textOf } from "../../blocks/text-block.ts";
-import type { BlockId } from "../../model/index.ts";
-import { defineCommand, type NoPayload } from "../../state/index.ts";
+import { isPageLike } from "../../blocks/page/index.ts";
+import type { Block, BlockId } from "../../model/index.ts";
+import {
+  defineCommand,
+  type AppState,
+  type BlockSelection,
+  type NoPayload,
+} from "../../state/index.ts";
 import { deleteOperations } from "./editor-move.commands.ts";
+import { indexIn, moveOperations } from "./editor-operations.ts";
 import { caretAt } from "./editor.commands.ts";
 import {
   selectBlockOrder,
+  selectChildBlocks,
   selectPageIdOf,
   selectSelectedBlocks,
 } from "./editor.selectors.ts";
@@ -75,8 +83,97 @@ export const deleteSelectedBlocks = defineCommand<NoPayload>({
   },
 });
 
+// Selects every block between two blocks, both included.
+export const selectBlockRange = defineCommand<BlockSelection>({
+  type: "ui.selectBlockRange",
+  handle(state, command) {
+    const { anchorId, focusId } = command;
+    const { blocks } = state.workspace;
+    if (blocks[anchorId] === undefined || blocks[focusId] === undefined)
+      return {};
+    const blockSelection = { anchorId, focusId };
+    return { ui: { ...state.ui, selection: null, blockSelection } };
+  },
+});
+
+// The selected blocks that move as a group: those at the top of the
+// selection that share the first one's parent. Blocks inside a selected
+// block move with it.
+function selectedSiblings(state: AppState): Block[] {
+  const selected = selectSelectedBlocks(state);
+  const ids = new Set(selected.map((block) => block.id));
+  const roots = selected.filter(
+    (block) => block.parentId === null || !ids.has(block.parentId),
+  );
+  return roots.filter((block) => block.parentId === roots[0]?.parentId);
+}
+
+// Tab: the selected blocks become the last children of the block above.
+export const indentSelectedBlocks = defineCommand<NoPayload>({
+  type: "block.indentSelected",
+  handle(state) {
+    const group = selectedSiblings(state);
+    const [first] = group;
+    if (first?.parentId == null) return {};
+    const siblings = selectChildBlocks(state, first.parentId);
+    const above = siblings[siblings.indexOf(first) - 1];
+    if (!isTextBlock(above)) return {};
+    const start = above.childIds.length;
+    return {
+      operations: group.flatMap((block, position) =>
+        moveOperations(block, above.id, start + position),
+      ),
+    };
+  },
+});
+
+// Shift+Tab: the selected blocks move out, to just after their parent.
+export const outdentSelectedBlocks = defineCommand<NoPayload>({
+  type: "block.outdentSelected",
+  handle(state) {
+    const group = selectedSiblings(state);
+    const parentId = group[0]?.parentId ?? null;
+    const parent =
+      parentId === null ? undefined : state.workspace.blocks[parentId];
+    if (!isTextBlock(parent) || parent.parentId === null) return {};
+    const target = parent.parentId;
+    const start = indexIn(state, parent) + 1;
+    return {
+      operations: group.flatMap((block, position) =>
+        moveOperations(block, target, start + position),
+      ),
+    };
+  },
+});
+
+// Moves the selected blocks one place up (-1) or down (1) among their
+// siblings, by taking the block on that side to their other side.
+export const moveSelectedBlocksBy = defineCommand<{ offset: -1 | 1 }>({
+  type: "block.moveSelectedBy",
+  handle(state, command) {
+    const group = selectedSiblings(state);
+    const first = group[0];
+    const last = group.at(-1);
+    if (first?.parentId == null || last === undefined) return {};
+    const parent = state.workspace.blocks[first.parentId];
+    const from = indexIn(state, first);
+    const to = indexIn(state, last);
+    const stepped = command.offset === -1 ? from - 1 : to + 1;
+    const neighborId = parent?.childIds[stepped];
+    const neighbor =
+      neighborId === undefined ? undefined : state.workspace.blocks[neighborId];
+    if (neighbor === undefined || isPageLike(neighbor)) return {};
+    const index = command.offset === -1 ? to : from;
+    return { operations: moveOperations(neighbor, first.parentId, index) };
+  },
+});
+
 export const editorSelectionCommands = [
   extendBlockSelection,
   clearBlockSelection,
   deleteSelectedBlocks,
+  selectBlockRange,
+  indentSelectedBlocks,
+  outdentSelectedBlocks,
+  moveSelectedBlocksBy,
 ];

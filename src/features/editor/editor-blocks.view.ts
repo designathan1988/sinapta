@@ -14,7 +14,11 @@ import {
   type InputContext,
 } from "./editor-input.view.ts";
 import { onBlockKeyDown } from "./editor-keys.view.ts";
-import { onSelectionCopy, onSelectionLeave } from "./editor-selection.view.ts";
+import {
+  onSelectionCopy,
+  onSelectionLeave,
+  startPointerSelection,
+} from "./editor-selection.view.ts";
 import {
   selectBlockOrder,
   selectChildBlocks,
@@ -99,6 +103,7 @@ function renderContinue(
 
 function onPointerDown(event: PointerEvent, context: InputContext): void {
   onSelectionLeave(event, context);
+  startPointerSelection(event, context);
   startBlockDrag(event, context);
 }
 

@@ -403,8 +403,8 @@ Known and not fixed:
 
 - Icon-only buttons relied on the native `title` tooltip, which does not
   show on keyboard focus. Fixed later: see "Completion pass" at the end.
-- Each keystroke in the page title is its own undo step. Coalescing comes
-  with text editing in milestone 3.
+- Each keystroke in the page title was its own undo step. Fixed with text
+  editing in milestone 3: `page.rename` merges into one step per pause.
 - Back and forward work through the URL; motion between pages came later:
   see "Completion pass" at the end.
 
@@ -485,6 +485,8 @@ between the specification and the code.
 | One block per pasted line | done | `src/features/editor/editor-paste.test.ts` |
 | Paste keeps bold, italic, code and links (specification 5.3; the code pasted plain text only) | done | `src/ui/rich-text/pasted-html.test.ts`, `editor-paste.test.ts` |
 | Select whole blocks with Shift and Up or Down; delete, copy and cut them (task 4.4) | done | `editor-selection.test.ts` |
+| Select whole blocks with the pointer: drag from one block into another, or Shift and a press in another block | done | `editor-selection.test.ts`; the gestures checked in the running app |
+| Indent (Tab), outdent (Shift+Tab) and move (Alt with Up or Down) several selected blocks at once | done | `editor-selection.test.ts` |
 | Motion when a page or a menu opens; none with reduced motion (task 7.5) | done | Opacity sampled in the running app: 0, 0.73, 0.98, 1 over 270 ms; constant 1 with reduced motion |
 
 Decisions taken in this pass:
@@ -504,7 +506,7 @@ Decisions taken in this pass:
 
 Checks after the pass:
 
-- 476 tests pass; type check and lint are clean.
+- 481 tests pass; type check and lint are clean.
 - axe: no violations in the audited states of the shell, the editor and the
   database, in both themes.
 - Export, import into an empty profile and export again still give the same
@@ -516,8 +518,9 @@ Checks after the pass:
 - 5,000-row table: load 680 ms, sort 38 ms, scroll 29 ms, cell commit
   36 ms, filter 87 ms.
 
-Not done:
+Nothing in this file is left not done.
 
-- Partial text selection across blocks. A selection that crosses a block
-  boundary is a selection of whole blocks, as the specification says.
-- Indenting or moving several selected blocks at once.
+Out of scope by decision, not a task: selecting part of the text of two
+blocks at once. The specification (section 5.3) and decision 0006 make a
+selection that crosses a block boundary a selection of whole blocks, and
+that is what the keyboard and the pointer now do.

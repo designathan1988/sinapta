@@ -34,8 +34,9 @@ press Enter in its title and start typing.
 - **Text.** Bold (Ctrl+B), italic (Ctrl+I), inline code (Ctrl+E) and links
   (Ctrl+K on selected text). Tab and Shift+Tab indent and outdent. Pasted
   text keeps these marks, and each pasted line becomes a block. Shift with
-  Up or Down past the end of a block selects whole blocks, to delete, copy
-  or cut.
+  Up or Down past the end of a block, or a drag from one block into
+  another, selects whole blocks: delete, copy, cut, indent (Tab) or move
+  them (Alt and Up or Down).
 - **Databases.** A page whose rows are pages, with seven property types:
   text, number, select, multi-select, date, checkbox and URL. Edit cells in
   place with Enter, move with the arrow keys. A row opens as a page that

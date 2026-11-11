@@ -2,6 +2,7 @@
 // selected the container of the blocks has focus, not a block's text.
 import { isTextBlock, textOf } from "../../blocks/text-block.ts";
 import { announce } from "../../ui/announcer/index.ts";
+import { parseBlockId, type BlockId } from "../../model/index.ts";
 import { readSelection } from "../../ui/caret/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import type { InputContext } from "./editor-input.view.ts";
@@ -9,6 +10,10 @@ import {
   clearBlockSelection,
   deleteSelectedBlocks,
   extendBlockSelection,
+  indentSelectedBlocks,
+  moveSelectedBlocksBy,
+  outdentSelectedBlocks,
+  selectBlockRange,
 } from "./editor-selection.commands.ts";
 import { selectSelectedBlocks } from "./editor.selectors.ts";
 
@@ -52,7 +57,7 @@ export function startBlockSelection(
 }
 
 // Keys while blocks are selected. Keys that mean nothing here, such as
-// Tab and the copy shortcut, are left to the browser.
+// the copy shortcut, are left to the browser.
 export function onSelectionKeyDown(
   event: KeyboardEvent,
   context: InputContext,
@@ -61,6 +66,13 @@ export function onSelectionKeyDown(
   const direction = DIRECTIONS[event.key];
   if (event.shiftKey && direction !== undefined) {
     extend(event, context, direction);
+  } else if (event.altKey && direction !== undefined) {
+    dispatch(moveSelectedBlocksBy.create({ offset: direction }));
+  } else if (event.key === "Tab") {
+    const command = event.shiftKey
+      ? outdentSelectedBlocks
+      : indentSelectedBlocks;
+    dispatch(command.create({}));
   } else if (DELETING.includes(event.key)) {
     dispatch(deleteSelectedBlocks.create({}));
   } else if (CLEARING.includes(event.key)) {
@@ -94,4 +106,58 @@ export function onSelectionLeave(
   const next = event instanceof FocusEvent ? event.relatedTarget : null;
   if (next !== null && next === event.currentTarget) return;
   context.dispatch(clearBlockSelection.create({ toCaret: false }));
+}
+
+const BLOCK = ".editor__block";
+const NOT_TEXT = "[data-handle], button, input, a";
+
+function blockAt(target: EventTarget | null): BlockId | undefined {
+  const block =
+    target instanceof Element ? target.closest<HTMLElement>(BLOCK) : null;
+  return parseBlockId(block?.dataset.blockId ?? "");
+}
+
+function selectRange(
+  container: HTMLElement,
+  range: { anchorId: BlockId; focusId: BlockId },
+  context: InputContext,
+): void {
+  context.dispatch(selectBlockRange.create(range));
+  document.getSelection()?.removeAllRanges();
+  container.focus({ preventScroll: true });
+}
+
+// A press in one block dragged into another selects whole blocks, and so
+// does a press with Shift in a block other than the caret's. Inside one
+// block the browser selects text as usual.
+export function startPointerSelection(
+  event: PointerEvent,
+  context: InputContext,
+): void {
+  const container = event.currentTarget;
+  const pressed = blockAt(event.target);
+  const isText =
+    event.target instanceof Element && event.target.closest(NOT_TEXT) === null;
+  if (!(container instanceof HTMLElement) || pressed === undefined) return;
+  if (!isText || event.button !== 0) return;
+  const anchorId = event.shiftKey ? readSelection()?.blockId : pressed;
+  if (anchorId === undefined) return;
+  if (anchorId !== pressed) {
+    event.preventDefault();
+    selectRange(container, { anchorId, focusId: pressed }, context);
+  }
+  const drag = new AbortController();
+  let focusId = pressed;
+  const onMove = (move: PointerEvent): void => {
+    const over = blockAt(document.elementFromPoint(move.clientX, move.clientY));
+    if (over === undefined || over === focusId) return;
+    focusId = over;
+    selectRange(container, { anchorId, focusId }, context);
+  };
+  const end = (): void => {
+    drag.abort();
+  };
+  container.addEventListener("pointermove", onMove, { signal: drag.signal });
+  document.addEventListener("pointerup", end, { signal: drag.signal });
+  document.addEventListener("pointercancel", end, { signal: drag.signal });
 }

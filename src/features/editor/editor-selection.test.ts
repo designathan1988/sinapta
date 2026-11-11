@@ -6,6 +6,10 @@ import {
   clearBlockSelection,
   deleteSelectedBlocks,
   extendBlockSelection,
+  indentSelectedBlocks,
+  moveSelectedBlocksBy,
+  outdentSelectedBlocks,
+  selectBlockRange,
 } from "./editor-selection.commands.ts";
 import { selectSelectedBlocks } from "./editor.selectors.ts";
 
@@ -100,5 +104,83 @@ describe("block selection", () => {
       "paragraph:three",
       "paragraph:four",
     ]);
+  });
+
+  it("selects every block between two blocks", () => {
+    const { dispatch, selected } = createPage();
+
+    dispatch(
+      selectBlockRange.create({
+        anchorId: toBlockId("d"),
+        focusId: toBlockId("b1"),
+      }),
+    );
+
+    expect(selected()).toEqual(["b1", "c", "d"]);
+  });
+
+  it("indents the selected blocks under the block above, in order", () => {
+    const { dispatch, outline } = createPage();
+    const range = { anchorId: toBlockId("c"), focusId: toBlockId("d") };
+    dispatch(selectBlockRange.create(range));
+
+    dispatch(indentSelectedBlocks.create({}));
+
+    expect(outline()).toEqual([
+      "paragraph:one",
+      "paragraph:two",
+      "  paragraph:inside",
+      "  paragraph:three",
+      "  paragraph:four",
+    ]);
+  });
+
+  it("outdents them again, to just after their parent", () => {
+    const { dispatch, outline, selected } = createPage();
+    const range = { anchorId: toBlockId("c"), focusId: toBlockId("d") };
+    dispatch(selectBlockRange.create(range));
+    dispatch(indentSelectedBlocks.create({}));
+
+    dispatch(outdentSelectedBlocks.create({}));
+
+    expect(outline()).toEqual([
+      "paragraph:one",
+      "paragraph:two",
+      "  paragraph:inside",
+      "paragraph:three",
+      "paragraph:four",
+    ]);
+    expect(selected()).toEqual(["c", "d"]);
+  });
+
+  it("moves the selected blocks up and down among their siblings", () => {
+    const { dispatch, outline } = createPage();
+    const range = { anchorId: toBlockId("c"), focusId: toBlockId("d") };
+    dispatch(selectBlockRange.create(range));
+
+    dispatch(moveSelectedBlocksBy.create({ offset: -1 }));
+    const movedUp = outline();
+    dispatch(moveSelectedBlocksBy.create({ offset: -1 }));
+    dispatch(moveSelectedBlocksBy.create({ offset: 1 }));
+
+    expect(movedUp).toEqual([
+      "paragraph:one",
+      "paragraph:three",
+      "paragraph:four",
+      "paragraph:two",
+      "  paragraph:inside",
+    ]);
+    expect(outline()).toEqual(movedUp);
+  });
+
+  it("does not move past the first place", () => {
+    const { dispatch, outline } = createPage();
+    const range = { anchorId: toBlockId("a"), focusId: toBlockId("a") };
+    dispatch(selectBlockRange.create(range));
+    const before = outline();
+
+    dispatch(moveSelectedBlocksBy.create({ offset: -1 }));
+
+    expect(outline()).toEqual(before);
   });
 });
