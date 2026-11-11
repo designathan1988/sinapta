@@ -3,6 +3,10 @@ import "./database-menus.css";
 import { nothing, type TemplateResult } from "lit-html";
 import { renderCellOptions } from "./cell-options.view.ts";
 import { renderColumnMenu, renderTypeMenu } from "./column-menu.view.ts";
+import {
+  PROPERTY_EDIT_OVERLAY,
+  renderPropertyEdit,
+} from "./property-edit.view.ts";
 import { CELL_OPTIONS_OVERLAY, type TableContext } from "./table-cell.view.ts";
 import {
   COLUMN_MENU_OVERLAY,
@@ -24,6 +28,7 @@ const OVERLAYS: Record<string, Render> = {
   [FILTERS_OVERLAY]: renderFilters,
   [PROPERTIES_OVERLAY]: renderProperties,
   [NEW_VIEW_OVERLAY]: renderNewViewMenu,
+  [PROPERTY_EDIT_OVERLAY]: renderPropertyEdit,
 };
 
 export function renderTableOverlay(

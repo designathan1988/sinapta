@@ -12,6 +12,7 @@ import {
   createDatabase,
   databaseCommands,
 } from "./database.commands.ts";
+import { optionCommands } from "./option.commands.ts";
 import { addRow, rowCommands, setRowValue } from "./row.commands.ts";
 import { tableCommands } from "./table.commands.ts";
 import { calendarCommands } from "./layouts/calendar/calendar.commands.ts";
@@ -91,6 +92,7 @@ const DATABASE_TEST_COMMANDS = [
   ...pageCommands,
   ...pageTrashCommands,
   ...tableCommands,
+  ...optionCommands,
 ];
 
 export function createDatabaseApp(

@@ -33,7 +33,8 @@ export const setTableFirstRow = defineCommand<{ firstRow: number }>({
   },
 });
 
-const OPTION_COLORS = [
+// The chip colors an option can take, in the order new options take them.
+export const OPTION_COLORS = [
   "blue",
   "green",
   "yellow",

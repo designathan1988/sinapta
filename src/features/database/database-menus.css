@@ -34,6 +34,20 @@
     font-size: var(--font-size-sm);
   }
 
+  .database__options {
+    display: grid;
+    gap: var(--space-stack-xs);
+    margin: var(--space-none);
+    padding: var(--space-none);
+    border: none;
+
+    & legend {
+      margin-block-end: var(--space-stack-xs);
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-sm);
+    }
+  }
+
   .database__check {
     display: inline-flex;
     gap: var(--space-inline-xs);

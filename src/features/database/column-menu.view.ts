@@ -1,9 +1,10 @@
 // The menu of one column and the menu of property types to add.
 import { nothing, type TemplateResult } from "lit-html";
-import { closeOverlay } from "../../state/index.ts";
+import { closeOverlay, openOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderMenu, type MenuItem } from "../../ui/menu/index.ts";
 import { addProperty, removeProperty } from "./database.commands.ts";
+import { PROPERTY_EDIT_OVERLAY } from "./property-edit.view.ts";
 import { PROPERTY_TYPES } from "./property-registry.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import type { TableColumn } from "./table-model.selectors.ts";
@@ -71,7 +72,13 @@ function layoutItems(column: TableColumn, context: TableContext): MenuItem[] {
   const viewId = model.view.id;
   const propertyId = column.property.id;
   const databaseId = model.database.id;
+  const overlay = { kind: PROPERTY_EDIT_OVERLAY, anchorId: propertyId };
   return [
+    {
+      label: COPY.database.editProperty,
+      icon: "settings",
+      onSelect: () => dispatch(openOverlay.create({ overlay })),
+    },
     {
       label: COPY.database.moveLeft,
       onSelect() {
