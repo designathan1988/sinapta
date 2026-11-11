@@ -1,5 +1,9 @@
 // Text inside particular kinds of blocks.
 export const BLOCK_TEXT = {
+  breadcrumbBlock: {
+    name: "Breadcrumb",
+    label: "Path to this page",
+  },
   equation: {
     blockName: "Block equation",
     edit: "Edit the equation",

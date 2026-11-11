@@ -1,0 +1,38 @@
+@layer blocks {
+  .breadcrumb__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: var(--space-none);
+    padding: var(--space-none);
+    list-style: none;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+  }
+
+  .breadcrumb__item:not(:last-child)::after {
+    content: "/";
+    margin-inline: var(--space-inline-xs);
+    color: var(--color-text-tertiary);
+  }
+
+  .breadcrumb__link {
+    padding: var(--space-none) var(--space-inset-xs);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+      color: var(--color-text-primary);
+    }
+
+    &[aria-current="page"] {
+      color: var(--color-text-primary);
+    }
+  }
+}

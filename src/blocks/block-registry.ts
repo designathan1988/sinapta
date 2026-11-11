@@ -3,6 +3,7 @@ import type { PropsSchemas } from "../model/index.ts";
 import type { CommandDefinition, Tidier } from "../state/index.ts";
 import type { BlockDefinition } from "./block-definition.ts";
 import { bookmarkDefinition } from "./bookmark/index.ts";
+import { breadcrumbDefinition } from "./breadcrumb/index.ts";
 import { bulletedListDefinition } from "./bulleted-list/index.ts";
 import { calloutDefinition } from "./callout/index.ts";
 import { codeDefinition } from "./code/index.ts";
@@ -42,6 +43,7 @@ export const BLOCK_DEFINITIONS: readonly BlockDefinition[] = [
   simpleTableDefinition,
   tableOfContentsDefinition,
   equationDefinition,
+  breadcrumbDefinition,
   columnListDefinition,
   columnDefinition,
 ];

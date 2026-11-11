@@ -20,7 +20,8 @@ describe("selectSlashItems", () => {
     expect(labels).toContain("Page");
     expect(labels).toContain("Table");
     expect(labels).toContain("Block equation");
-    expect(labels).toHaveLength(22);
+    expect(labels).toContain("Breadcrumb");
+    expect(labels).toHaveLength(23);
   });
 
   it("filters by the query without regard to case", () => {
