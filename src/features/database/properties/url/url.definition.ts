@@ -24,6 +24,7 @@ export const urlProperty: PropertyType = {
   type: "url",
   label: "URL",
   editor: "url",
+  input: { mode: "url" },
   read: readUrl,
   parse: parseUrl,
   format: (value) => readUrl(value) ?? "",

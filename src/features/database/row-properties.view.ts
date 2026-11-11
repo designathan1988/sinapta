@@ -12,16 +12,26 @@ import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { setRowValue } from "./row.commands.ts";
 import { propertyType } from "./property-registry.ts";
+import { selectRowValues } from "./row-values.selectors.ts";
 
-const INPUT_TYPES: Record<string, string> = { date: "date" };
-const INPUT_MODES: Record<string, string> = { number: "decimal", url: "url" };
 const MULTI_SELECT = "multi-select";
 
 type Control = HTMLInputElement | HTMLSelectElement;
 
 function storedOf(row: PageBlock, property: PropertyDefinition): unknown {
   const type = propertyType(property.type);
-  return type.read(row.props.values?.[property.id]);
+  return type.read(selectRowValues(row, [property])[property.id]);
+}
+
+// Values the app keeps, such as when the row was created, are only shown.
+function renderReadOnly(
+  row: PageBlock,
+  property: PropertyDefinition,
+): TemplateResult {
+  const type = propertyType(property.type);
+  return html`<output class="database__row-value"
+    >${type.renderCell(storedOf(row, property), property)}</output
+  >`;
 }
 
 function renderInput(
@@ -31,8 +41,8 @@ function renderInput(
   const type = propertyType(property.type);
   return html`<input
     class="database__field"
-    type=${INPUT_TYPES[type.editor] ?? "text"}
-    inputmode=${INPUT_MODES[type.editor] ?? nothing}
+    type=${type.input?.type ?? "text"}
+    inputmode=${type.input?.mode ?? nothing}
     .value=${type.format(storedOf(row, property), property)}
   />`;
 }
@@ -99,12 +109,12 @@ function renderProperty(
 ): TemplateResult {
   if (property.type === MULTI_SELECT) return renderMultiSelect(row, property);
   const { editor } = propertyType(property.type);
-  const control =
-    editor === "toggle"
-      ? renderToggle(row, property)
-      : editor === "options"
-        ? renderSelect(row, property)
-        : renderInput(row, property);
+  const controls: Partial<Record<string, typeof renderInput>> = {
+    toggle: renderToggle,
+    options: renderSelect,
+    none: renderReadOnly,
+  };
+  const control = (controls[editor] ?? renderInput)(row, property);
   return html`<label
     class="database__row-property"
     data-property-id=${property.id}

@@ -2,9 +2,13 @@
 // properties/ and one line here.
 import type { PropertyType } from "./property-definition.ts";
 import { checkboxProperty } from "./properties/checkbox/index.ts";
+import { createdTimeProperty } from "./properties/created-time/index.ts";
 import { dateProperty } from "./properties/date/index.ts";
+import { editedTimeProperty } from "./properties/edited-time/index.ts";
+import { emailProperty } from "./properties/email/index.ts";
 import { multiSelectProperty } from "./properties/multi-select/index.ts";
 import { numberProperty } from "./properties/number/index.ts";
+import { phoneProperty } from "./properties/phone/index.ts";
 import { selectProperty } from "./properties/select/index.ts";
 import { textProperty } from "./properties/text/index.ts";
 import { urlProperty } from "./properties/url/index.ts";
@@ -17,6 +21,10 @@ export const PROPERTY_TYPES: readonly PropertyType[] = [
   dateProperty,
   checkboxProperty,
   urlProperty,
+  emailProperty,
+  phoneProperty,
+  createdTimeProperty,
+  editedTimeProperty,
 ];
 
 const BY_TYPE: ReadonlyMap<string, PropertyType> = new Map(

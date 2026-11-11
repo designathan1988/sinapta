@@ -11,14 +11,23 @@ export interface FilterOperator {
   readonly test: (value: unknown, operand: string) => boolean;
 }
 
-// How a cell of this type is edited.
+// How a cell of this type is edited; "none" for values the app keeps.
 export type CellEditor =
-  "text" | "number" | "date" | "url" | "toggle" | "options";
+  "text" | "number" | "date" | "url" | "toggle" | "options" | "none";
+
+// The `type` and `inputmode` of the field that edits a value as text.
+export interface InputKind {
+  readonly type?: string;
+  readonly mode?: string;
+}
 
 export interface PropertyType {
   readonly type: string;
   readonly label: string;
   readonly editor: CellEditor;
+  readonly input?: InputKind;
+  // A value that is not stored but read from the row's own record.
+  readonly computedFrom?: "createdAt" | "updatedAt";
   // The stored value in this type's form; undefined when the cell is
   // empty or holds something this type cannot use.
   readonly read: (stored: unknown) => unknown;

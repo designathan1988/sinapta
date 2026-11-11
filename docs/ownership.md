@@ -68,6 +68,7 @@ owner listed here exists.
 | What a property type declares | `src/features/database/property-definition.ts` | 5 |
 | Database columns | `src/features/database/database.commands.ts` | 5 |
 | Database rows: adding and setting values | `src/features/database/row.commands.ts` | 5 |
+| A row's values as views read them, stored and kept by the app | `src/features/database/row-values.selectors.ts` | 9 |
 | Saved views of a database | `src/features/database/view.commands.ts` | 6 |
 | A view's layout and the properties it lays rows out by | `src/features/database/view-layout.commands.ts`, `view-layout.view.ts` | 9 |
 | Board, gallery, list and calendar layouts | `src/features/database/layouts/<layout>/` | 9 |

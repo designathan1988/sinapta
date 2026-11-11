@@ -59,15 +59,12 @@ function focusEditor(element: Element | undefined): void {
   });
 }
 
-const INPUT_TYPES: Record<string, string> = { date: "date" };
-const INPUT_MODES: Record<string, string> = { number: "decimal", url: "url" };
-
 function renderEditor(value: string, column: TableColumn): TemplateResult {
-  const { editor } = propertyType(column.property.type);
+  const { input } = propertyType(column.property.type);
   return html`<input
     class="database__input"
-    type=${INPUT_TYPES[editor] ?? "text"}
-    inputmode=${INPUT_MODES[editor] ?? nothing}
+    type=${input?.type ?? "text"}
+    inputmode=${input?.mode ?? nothing}
     aria-label=${column.property.name}
     .value=${value}
     ${ref(focusEditor)}
@@ -115,7 +112,10 @@ function editText(row: TableRow, column: TableColumn): string {
 
 function usesInput(column: TableColumn): boolean {
   const { editor } = propertyType(column.property.type);
-  return column.isTitle || (editor !== "toggle" && editor !== "options");
+  return (
+    column.isTitle ||
+    (editor !== "toggle" && editor !== "options" && editor !== "none")
+  );
 }
 
 export function renderCell(

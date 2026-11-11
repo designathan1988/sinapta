@@ -17,7 +17,7 @@ import {
   type DatabaseBlock,
   type PropertyDefinition,
 } from "../../blocks/database/index.ts";
-import { selectPage, selectPageTitle } from "../../blocks/page/index.ts";
+
 import {
   parsePropertyId,
   type BlockId,
@@ -27,6 +27,7 @@ import {
 } from "../../model/index.ts";
 import type { AppState } from "../../state/index.ts";
 import { propertyType } from "./property-registry.ts";
+import { selectRows } from "./row-values.selectors.ts";
 
 // The title column is every row's page title. It behaves as a text
 // property with this reserved id.
@@ -114,16 +115,6 @@ function columnDefs(
       !isFilterList(filterValue) ||
       passes(row.getValue(columnId), property, filterValue),
   }));
-}
-
-function selectRows(state: AppState, database: DatabaseBlock): TableRow[] {
-  return database.childIds.flatMap((id) => {
-    const page = selectPage(state, id);
-    if (page === undefined || page.props.isTrashed) return [];
-    return [
-      { id, title: selectPageTitle(page), values: page.props.values ?? {} },
-    ];
-  });
 }
 
 function known(

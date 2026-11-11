@@ -43,6 +43,7 @@ export const dateProperty: PropertyType = {
   type: "date",
   label: "Date",
   editor: "date",
+  input: { type: "date" },
   read: readDate,
   parse: (text) => readDate(text.trim()),
   format: (value) => readDate(value) ?? "",

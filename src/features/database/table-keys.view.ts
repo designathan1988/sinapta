@@ -8,6 +8,7 @@ import {
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { setRowValue } from "./row.commands.ts";
+import type { PropertyType } from "./property-definition.ts";
 import { propertyType } from "./property-registry.ts";
 import { CELL_OPTIONS_OVERLAY, type TableContext } from "./table-cell.view.ts";
 import { cellOf, columnOf, type CellRef } from "./table-cell-ref.ts";
@@ -25,28 +26,38 @@ function activate(
   );
 }
 
+// A checkbox cell is not opened: Enter turns it on or off.
+function toggleCell(
+  cell: CellRef,
+  context: TableContext,
+  type: PropertyType,
+): void {
+  if (cell.propertyId === null) return;
+  const row = context.model.rows.find((item) => item.id === cell.rowId);
+  const isChecked = type.read(row?.values[cell.propertyId]) === true;
+  context.dispatch(
+    setRowValue.create({
+      rowId: cell.rowId,
+      propertyId: cell.propertyId,
+      value: isChecked ? undefined : true,
+    }),
+  );
+}
+
 // Enter on a cell: edit it in the way its type is edited.
 function startEditing(cell: CellRef, context: TableContext): void {
   const column = columnOf(cell, context);
   if (column === undefined) return;
-  const { dispatch, model } = context;
-  const { editor, read } = propertyType(column.property.type);
-  if (column.isTitle || (editor !== "toggle" && editor !== "options")) {
-    activate(cell, true, context);
-  } else if (editor === "toggle" && cell.propertyId !== null) {
-    const row = model.rows.find((item) => item.id === cell.rowId);
-    const isChecked = read(row?.values[cell.propertyId]) === true;
-    const value = isChecked ? undefined : true;
-    dispatch(
-      setRowValue.create({
-        rowId: cell.rowId,
-        propertyId: cell.propertyId,
-        value,
-      }),
-    );
-  } else {
+  const type = propertyType(column.property.type);
+  const editor = column.isTitle ? "text" : type.editor;
+  if (editor === "none") return;
+  if (editor === "toggle") {
+    toggleCell(cell, context, type);
+  } else if (editor === "options") {
     const overlay = { kind: CELL_OPTIONS_OVERLAY, anchorId: cell.key };
-    dispatch(openOverlay.create({ overlay }));
+    context.dispatch(openOverlay.create({ overlay }));
+  } else {
+    activate(cell, true, context);
   }
 }
 

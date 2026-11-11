@@ -21,7 +21,7 @@ function operator(type: string, id: string) {
 }
 
 describe("the property registry", () => {
-  it("holds the seven property types of version 1", () => {
+  it("holds the seven property types of version 1 and four more", () => {
     expect(PROPERTY_TYPES.map((item) => item.type)).toEqual([
       "text",
       "number",
@@ -30,6 +30,10 @@ describe("the property registry", () => {
       "date",
       "checkbox",
       "url",
+      "email",
+      "phone",
+      "created-time",
+      "edited-time",
     ]);
   });
 

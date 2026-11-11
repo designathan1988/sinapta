@@ -41,6 +41,7 @@ export const numberProperty: PropertyType = {
   type: "number",
   label: "Number",
   editor: "number",
+  input: { mode: "decimal" },
   read: readNumber,
   parse: parseNumber,
   format: (value) => (readNumber(value) === undefined ? "" : String(value)),
