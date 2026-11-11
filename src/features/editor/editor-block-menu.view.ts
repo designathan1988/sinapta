@@ -193,9 +193,11 @@ function typeItems(
     dispatch(convertBlock.create({ blockId, blockType }));
     if (selection !== undefined) dispatch(setSelection.create({ selection }));
   };
+  // Only types that keep the text are offered: turning text into a
+  // divider or an image would lose it.
   return BLOCK_DEFINITIONS.flatMap((definition): MenuItem[] => {
-    if (definition.label === undefined || definition.type === "divider")
-      return [];
+    const keepsText = Array.isArray(definition.createProps([]).text);
+    if (definition.label === undefined || !keepsText) return [];
     return [{ label: definition.label, onSelect: convert(definition.type) }];
   });
 }

@@ -34,7 +34,7 @@ owner listed here exists.
 | Finding the edit between two texts | `src/model/text-diff.ts` | 3 |
 | Moving a block within the tree | `src/model/block-tree.ts` | 4 |
 | Grapheme segmentation and offset conversion | `src/model/grapheme.ts` | 2 |
-| Link `href` scheme allow-list | `src/model/link-href.ts` | 3 |
+| Link `href` and image address allow-list | `src/model/link-href.ts` | 3 |
 | Decoding imported JSON text into an unchecked value | `src/model/json-text.schema.ts` | 7 |
 | Copying a block with everything inside it, under new ids | `src/model/block-copy.ts` | 8 |
 
@@ -104,6 +104,7 @@ owner listed here exists.
 | Pointer drag sessions and drop targets | `src/ui/drag/` | 2 |
 | Live-region announcements | `src/ui/announcer/` | 2 |
 | Icons | `src/ui/icon/` | 1 |
+| A web address field with an optional file choice | `src/ui/url-field/` | 8 |
 | Interface text (its parts by area in `src/ui/copy/`) | `src/ui/copy.ts` | 1 |
 
 ## Styles and tokens

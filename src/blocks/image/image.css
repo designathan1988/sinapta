@@ -1,0 +1,28 @@
+@layer blocks {
+  .image {
+    display: grid;
+    gap: var(--space-stack-xs);
+    margin: var(--space-none);
+  }
+
+  .image__picture {
+    display: block;
+    max-inline-size: 100%;
+    block-size: auto;
+    border-radius: var(--radius-md);
+  }
+
+  .image__caption {
+    inline-size: 100%;
+    padding: var(--space-none);
+    border: none;
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+
+    &:focus-visible {
+      outline: var(--size-focus-width) solid var(--color-border-focus);
+      outline-offset: var(--size-focus-offset);
+    }
+  }
+}

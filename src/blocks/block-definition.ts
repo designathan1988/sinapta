@@ -6,7 +6,7 @@ import type {
   PropsSchema,
   RichText,
 } from "../model/index.ts";
-import type { AppState, Dispatch } from "../state/index.ts";
+import type { AppState, CommandDefinition, Dispatch } from "../state/index.ts";
 
 export interface BlockDefinition {
   readonly type: string;
@@ -21,6 +21,8 @@ export interface BlockDefinition {
   readonly showsChildren?: (block: Block) => boolean;
   // Props of a new block of this type that holds the given text.
   readonly createProps: (text: RichText) => BlockProps;
+  // Commands that only this block type uses, registered with all others.
+  readonly commands?: readonly CommandDefinition<never>[];
   // The block's own content, without its children. Undefined for a block
   // of another type.
   readonly render?: (

@@ -41,7 +41,9 @@ describe("selectSlashItems", () => {
     expect(labels).toContain("Text");
     expect(labels).toContain("Heading 3");
     expect(labels).toContain("Divider");
-    expect(labels).toHaveLength(12);
+    expect(labels).toContain("Image");
+    expect(labels).toContain("Table of contents");
+    expect(labels).toHaveLength(15);
   });
 
   it("filters by the query without regard to case", () => {

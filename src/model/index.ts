@@ -89,7 +89,7 @@ export {
   type MarkRange,
   type ToneRange,
 } from "./rich-text.ts";
-export { safeHref } from "./link-href.ts";
+export { safeHref, safeImageSource } from "./link-href.ts";
 export { diffText, type TextEdit } from "./text-diff.ts";
 export {
   dropMove,

@@ -1,14 +1,15 @@
 // The composition root: creates the one store, registers every command and
 // owns the single root render.
 import { render } from "lit-html";
-import { BLOCK_PROPS_SCHEMAS } from "../blocks/block-registry.ts";
+import {
+  BLOCK_COMMANDS,
+  BLOCK_PROPS_SCHEMAS,
+} from "../blocks/block-registry.ts";
 import {
   pageCommands,
   pageMoveCommands,
   pageTrashCommands,
 } from "../blocks/page/index.ts";
-import { toDoCommands } from "../blocks/to-do/index.ts";
-import { toggleCommands } from "../blocks/toggle/index.ts";
 import { databaseCommands } from "../features/database/index.ts";
 import { editorCommands } from "../features/editor/index.ts";
 import { installSlashMenuKeys } from "../features/slash-menu/index.ts";
@@ -44,8 +45,7 @@ const COMMANDS = [
   ...pageCommands,
   ...pageTrashCommands,
   ...pageMoveCommands,
-  ...toDoCommands,
-  ...toggleCommands,
+  ...BLOCK_COMMANDS,
   ...editorCommands,
   ...databaseCommands,
 ];

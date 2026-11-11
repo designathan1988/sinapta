@@ -1,0 +1,37 @@
+@layer blocks {
+  .table-of-contents__list {
+    display: grid;
+    gap: var(--space-stack-xs);
+    margin: var(--space-none);
+    padding: var(--space-none);
+    list-style: none;
+  }
+
+  .table-of-contents__entry[data-level="2"] {
+    padding-inline-start: var(--space-inset-lg);
+  }
+
+  .table-of-contents__entry[data-level="3"] {
+    padding-inline-start: var(--space-inset-xl);
+  }
+
+  .table-of-contents__link {
+    padding: var(--space-none);
+    border: none;
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    text-align: start;
+    text-decoration: underline;
+    text-decoration-color: var(--color-border-default);
+    text-underline-offset: var(--size-focus-offset);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-text-primary);
+    }
+  }
+
+  .table-of-contents__empty {
+    color: var(--color-text-tertiary);
+  }
+}

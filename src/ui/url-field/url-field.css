@@ -1,0 +1,47 @@
+@layer ui {
+  .url-field {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    padding: var(--space-inset-md);
+    border: var(--size-border-thin) dashed var(--color-border-strong);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-sidebar);
+  }
+
+  .url-field__input {
+    flex: 1;
+    min-inline-size: var(--size-menu-min-width);
+    min-block-size: var(--size-control-md);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: var(--size-border-thin) solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-app);
+    color: var(--color-text-primary);
+
+    &[aria-invalid="true"] {
+      border-color: var(--color-text-danger);
+    }
+  }
+
+  .url-field__file {
+    cursor: pointer;
+
+    &:focus-within {
+      outline: var(--size-focus-width) solid var(--color-border-focus);
+      outline-offset: var(--size-focus-offset);
+    }
+  }
+
+  .url-field__hint {
+    display: none;
+    flex-basis: 100%;
+    color: var(--color-text-danger);
+    font-size: var(--font-size-xs);
+  }
+
+  .url-field:has([aria-invalid="true"]) .url-field__hint {
+    display: block;
+  }
+}

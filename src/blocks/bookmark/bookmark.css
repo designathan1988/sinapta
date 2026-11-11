@@ -1,0 +1,27 @@
+@layer blocks {
+  .bookmark {
+    display: grid;
+    gap: var(--space-stack-xs);
+    padding: var(--space-inset-md);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-md);
+    color: var(--color-text-primary);
+    text-decoration: none;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
+  .bookmark__host {
+    font-weight: var(--font-weight-medium);
+  }
+
+  .bookmark__url {
+    overflow: hidden;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

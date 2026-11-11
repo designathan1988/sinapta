@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { safeHref } from "./link-href.ts";
+import { safeHref, safeImageSource } from "./link-href.ts";
 
 describe("safeHref", () => {
   it.each([
@@ -22,5 +22,29 @@ describe("safeHref", () => {
     "",
   ])("refuses %j", (href) => {
     expect(safeHref(href)).toBeUndefined();
+  });
+});
+
+describe("safeImageSource", () => {
+  it.each([
+    ["https://example.com/a.png", "https://example.com/a.png"],
+    [
+      "data:image/png;base64,iVBORw0KGgo=",
+      "data:image/png;base64,iVBORw0KGgo=",
+    ],
+    ["data:image/webp;base64,UklGRg==", "data:image/webp;base64,UklGRg=="],
+  ])("allows %j", (source, expected) => {
+    expect(safeImageSource(source)).toBe(expected);
+  });
+
+  it.each([
+    "javascript:alert(1)",
+    "data:text/html,<script>alert(1)</script>",
+    "data:image/svg+xml,<svg onload=alert(1)>",
+    "mailto:someone@example.com",
+    "file:///c/a.png",
+    "",
+  ])("refuses %j", (source) => {
+    expect(safeImageSource(source)).toBeUndefined();
   });
 });
