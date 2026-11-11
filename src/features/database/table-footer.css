@@ -1,0 +1,50 @@
+@layer features {
+  /* Under each column: what the view works out, quiet until set. */
+  .database__calc {
+    block-size: var(--size-row-height);
+    padding: var(--space-none) var(--space-inset-xs);
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+    text-align: end;
+    white-space: nowrap;
+  }
+
+  .database__calc-kind {
+    padding: var(--space-none) var(--space-inset-xs);
+    border: none;
+    border-radius: var(--radius-sm);
+    background: none;
+    color: inherit;
+    font-size: inherit;
+    cursor: pointer;
+    appearance: none;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
+  /* "Calculate" shows while the footer is pointed at or has focus. */
+  .database__calc:not([data-set]) .database__calc-kind {
+    opacity: 0;
+  }
+
+  .database__calc-row:is(:hover, :focus-within) .database__calc-kind {
+    opacity: 1;
+  }
+
+  .database__calc-label {
+    margin-inline-end: var(--space-inline-xs);
+  }
+
+  .database__calc-value {
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* A group's add row starts with its button, at the start. */
+  .database__group-add > .database__calc:first-child {
+    text-align: start;
+  }
+}

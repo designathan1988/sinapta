@@ -12,6 +12,7 @@ const TABLE = {
   propertyOrder: [],
   propertyWidths: {},
   hiddenPropertyIds: [],
+  calculations: {},
 };
 
 const GROUP_BY = {
@@ -46,6 +47,20 @@ describe("viewSchema", () => {
 
     expect(v.safeParse(viewSchema, bySort).success).toBe(false);
     expect(v.safeParse(viewSchema, byStep).success).toBe(false);
+  });
+
+  it("reads a calculation per property and refuses one it does not know", () => {
+    const summed = {
+      ...TABLE,
+      calculations: { "p-1": "sum", title: "count-all" },
+    };
+    const odd = { ...TABLE, calculations: { "p-1": "show-original" } };
+
+    expect(v.parse(viewSchema, summed).calculations).toEqual({
+      "p-1": "sum",
+      title: "count-all",
+    });
+    expect(v.safeParse(viewSchema, odd).success).toBe(false);
   });
 
   it("reads a filter group with one group inside it", () => {

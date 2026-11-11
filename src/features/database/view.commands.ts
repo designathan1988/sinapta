@@ -74,6 +74,7 @@ export const createView = defineCommand<CreateViewPayload>({
       propertyOrder: [],
       propertyWidths: {},
       hiddenPropertyIds: [],
+      calculations: {},
       ...layoutDefaults(database, {}, command.viewType ?? "table"),
     };
     return {

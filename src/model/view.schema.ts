@@ -42,6 +42,33 @@ export const groupBySchema = v.object({
   dateBy: v.picklist(["day", "week", "month", "year"]),
 });
 
+// What a column's footer works out from the rows a view shows. A rollup
+// works out the same from related rows, and more.
+export const CALCULATION_KINDS = [
+  "count-all",
+  "count-values",
+  "count-unique",
+  "count-empty",
+  "count-not-empty",
+  "percent-empty",
+  "percent-not-empty",
+  "sum",
+  "average",
+  "median",
+  "min",
+  "max",
+  "range",
+  "earliest-date",
+  "latest-date",
+  "date-range",
+  "checked",
+  "unchecked",
+  "percent-checked",
+  "percent-unchecked",
+] as const;
+
+export const calculationSchema = v.picklist(CALCULATION_KINDS);
+
 export const viewSchema = v.object({
   id: viewIdSchema,
   databaseId: blockIdSchema,
@@ -60,6 +87,9 @@ export const viewSchema = v.object({
   hiddenPropertyIds: v.array(propertyIdSchema),
   // The select property a board groups its cards by (version 3).
   groupBy: v.optional(groupBySchema),
+  // The calculation shown under each column, by property; the title
+  // column's under "title".
+  calculations: v.record(propertyIdSchema, calculationSchema),
   // The date property a calendar places its rows by (version 3).
   datePropertyId: v.optional(propertyIdSchema),
 });
@@ -70,5 +100,6 @@ export type InnerFilterGroup = v.InferOutput<typeof innerFilterGroupSchema>;
 export type FilterItem = FilterGroup["items"][number];
 export type Conjunction = FilterGroup["conjunction"];
 export type GroupBy = v.InferOutput<typeof groupBySchema>;
+export type CalculationKind = v.InferOutput<typeof calculationSchema>;
 export type View = v.InferOutput<typeof viewSchema>;
 export type ViewType = v.InferOutput<typeof viewTypeSchema>;

@@ -32,7 +32,9 @@ export {
   type TypedBlock,
 } from "./block.schema.ts";
 export {
+  CALCULATION_KINDS,
   viewTypeSchema,
+  type CalculationKind,
   type Conjunction,
   type Filter,
   type FilterGroup,

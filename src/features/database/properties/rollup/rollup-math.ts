@@ -1,6 +1,10 @@
 // What a rollup works out from the values of the related rows: counts,
 // percents, sums and other numbers, dates, or the values themselves.
-import { readDateValue, type DateValue } from "../date/index.ts";
+import {
+  formatDateValue,
+  readDateValue,
+  type DateValue,
+} from "../date/index.ts";
 import type { RollupFunction } from "./rollup.schema.ts";
 
 // One related row's value, read by its property's type (undefined when
@@ -156,4 +160,34 @@ export function applyRollup(
   if (NUMBER_FUNCTIONS.has(fn)) return numbers(fn, cells);
   if (DATE_FUNCTIONS.has(fn)) return dates(fn, cells);
   return counts(fn, cells);
+}
+
+const NUMBER = new Intl.NumberFormat("en-US", {
+  maximumFractionDigits: 2,
+  useGrouping: false,
+});
+const PERCENT = new Intl.NumberFormat("en-US", {
+  style: "percent",
+  maximumFractionDigits: 1,
+});
+
+// A worked-out value as text: numbers to two places, percents to one.
+export function writeRollupResult(value: unknown): string {
+  const result = readRollupResult(value);
+  switch (result?.kind) {
+    case undefined:
+      return "";
+    case "number":
+      return NUMBER.format(result.value);
+    case "percent":
+      return PERCENT.format(result.value);
+    case "date":
+      return formatDateValue(result.value);
+    case "list":
+      return result.value.join(", ");
+    default: {
+      const unknown: never = result;
+      return unknown;
+    }
+  }
 }

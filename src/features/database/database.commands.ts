@@ -36,6 +36,7 @@ export function emptyView(
     propertyOrder: [],
     propertyWidths: {},
     hiddenPropertyIds: [],
+    calculations: {},
   };
 }
 

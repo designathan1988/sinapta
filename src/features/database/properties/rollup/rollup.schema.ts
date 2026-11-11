@@ -1,30 +1,14 @@
 // A rollup property's config: the relation it follows, the property of
 // the related rows it reads and what it works out from them.
 import * as v from "valibot";
+import { CALCULATION_KINDS } from "../../../../model/index.ts";
 
+// A rollup shows the related values themselves, or works out any of the
+// calculations a column's footer can.
 export const ROLLUP_FUNCTIONS = [
   "show-original",
   "show-unique",
-  "count-all",
-  "count-values",
-  "count-unique",
-  "count-empty",
-  "count-not-empty",
-  "percent-empty",
-  "percent-not-empty",
-  "sum",
-  "average",
-  "median",
-  "min",
-  "max",
-  "range",
-  "earliest-date",
-  "latest-date",
-  "date-range",
-  "checked",
-  "unchecked",
-  "percent-checked",
-  "percent-unchecked",
+  ...CALCULATION_KINDS,
 ] as const;
 
 export const rollupConfigSchema = v.object({

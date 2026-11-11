@@ -17,6 +17,7 @@ import {
   selectTableEntries,
   type TableEntry,
 } from "./table-entries.selectors.ts";
+import { renderTableFooter } from "./table-footer.view.ts";
 import { renderTableGroupEntry } from "./table-group.view.ts";
 import type { TableRow } from "./table-model.selectors.ts";
 import { setTableFirstRow } from "./table.commands.ts";
@@ -141,7 +142,7 @@ export function renderTable(context: TableContext): TemplateResult {
       <thead>
         ${renderHeaderRow(context)}
       </thead>
-      ${renderBody(context)}
+      ${renderBody(context)} ${renderTableFooter(context)}
     </table>
   </div>`;
 }

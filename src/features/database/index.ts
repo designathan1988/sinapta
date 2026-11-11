@@ -7,6 +7,7 @@ import { viewLayoutCommands } from "./view-layout.commands.ts";
 import { viewSearchCommands } from "./view-search.commands.ts";
 import { viewCommands } from "./view.commands.ts";
 import { groupCommands } from "./group.commands.ts";
+import { calculationCommands } from "./calculation.commands.ts";
 
 export { createDatabase } from "./database.commands.ts";
 export { groupByProperty } from "./group.commands.ts";
@@ -36,6 +37,7 @@ export const databaseCommands = [
   ...rowCommands,
   ...viewCommands,
   ...groupCommands,
+  ...calculationCommands,
   ...viewLayoutCommands,
   ...viewSearchCommands,
   ...calendarCommands,

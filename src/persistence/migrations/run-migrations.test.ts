@@ -149,6 +149,7 @@ describe("version 16", () => {
             id: "v",
             sorts: [],
             filter: { conjunction: "and", items: filters },
+            calculations: {},
           },
         },
       },
@@ -178,9 +179,24 @@ describe("version 17", () => {
               collapsed: [],
               dateBy: "month",
             },
+            calculations: {},
           },
-          t: { id: "t", type: "table" },
+          t: { id: "t", type: "table", calculations: {} },
         },
+      },
+    });
+  });
+});
+
+describe("version 18", () => {
+  it("gives every view an empty set of calculations", () => {
+    const views = { v: { id: "v", type: "table" } };
+
+    expect(runMigrations({ schemaVersion: 17, views })).toEqual({
+      ok: true,
+      file: {
+        schemaVersion: SCHEMA_VERSION,
+        views: { v: { id: "v", type: "table", calculations: {} } },
       },
     });
   });

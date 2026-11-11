@@ -16,6 +16,7 @@ import { addDateRanges } from "./0014-date-ranges.ts";
 import { addLinkedViews } from "./0015-linked-views.ts";
 import { addFilterGroups } from "./0016-filter-groups.ts";
 import { addGroupBy } from "./0017-group-by.ts";
+import { addCalculations } from "./0018-calculations.ts";
 
 // A pure function from format version n to n + 1.
 export type Migration = (
@@ -41,6 +42,7 @@ export const MIGRATIONS: readonly Migration[] = [
   addLinkedViews,
   addFilterGroups,
   addGroupBy,
+  addCalculations,
 ];
 
 export type MigrationResult =

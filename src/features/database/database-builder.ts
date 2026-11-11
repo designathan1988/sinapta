@@ -25,6 +25,7 @@ import { viewLayoutCommands } from "./view-layout.commands.ts";
 import { viewSearchCommands } from "./view-search.commands.ts";
 import { viewCommands } from "./view.commands.ts";
 import { groupCommands } from "./group.commands.ts";
+import { calculationCommands } from "./calculation.commands.ts";
 import {
   pageCommands,
   pageTrashCommands,
@@ -93,6 +94,7 @@ const DATABASE_TEST_COMMANDS = [
   ...rowCommands,
   ...viewCommands,
   ...groupCommands,
+  ...calculationCommands,
   ...viewLayoutCommands,
   ...viewSearchCommands,
   ...calendarCommands,

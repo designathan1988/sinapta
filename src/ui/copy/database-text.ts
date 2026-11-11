@@ -173,6 +173,7 @@ export const DATABASE_TEXT = {
       "A calendar places rows by a date property. Add one to this database, then choose it here.",
     noValue: "No",
     group: "Group",
+    calculate: "Calculate",
     noGrouping: "None",
     groupSort: "Sort groups",
     groupSorts: {

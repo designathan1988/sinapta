@@ -45,6 +45,7 @@ function view(ids: TaskIds, index: number, type: ViewType): View[] {
     propertyOrder: [],
     propertyWidths: {},
     hiddenPropertyIds: [],
+    calculations: {},
   };
   if (type === "board") {
     return [{ ...record, groupBy: groupByProperty(status) }];
