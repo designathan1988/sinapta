@@ -33,6 +33,7 @@ export type BaseIconName =
   | "align-center"
   | "align-right"
   | "expand"
+  | "lock"
   | "help";
 
 export type IconName = BaseIconName | DataIconName | BlockIconName;
@@ -47,6 +48,8 @@ const PATHS: Record<BaseIconName, TemplateResult<2>> = {
       d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.4 3.4l1.4 1.4M11.2 11.2l1.4 1.4M3.4 12.6l1.4-1.4M11.2 4.8l1.4-1.4"
     />`,
   close: svg`<path d="M4 4l8 8M12 4l-8 8" />`,
+  lock: svg`<rect x="3.5" y="7" width="9" height="6.5" rx="1.5" />
+    <path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" />`,
   help: svg`<circle cx="8" cy="8" r="6" />
     <path d="M6.25 6.25a1.75 1.75 0 1 1 2.5 1.6c-.5.25-.75.6-.75 1.15M8 11.25h.01" />`,
   plus: svg`<path d="M8 3v10M3 8h10" />`,

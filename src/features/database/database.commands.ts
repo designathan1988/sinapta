@@ -47,6 +47,7 @@ export function emptyView(
     chart: { kind: "column", aggregate: "count" },
     form: { requiredPropertyIds: [], description: "" },
     openMode: "side",
+    isLocked: false,
   };
 }
 

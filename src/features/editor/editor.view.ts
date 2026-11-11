@@ -65,6 +65,7 @@ function renderTitle(page: PageBlock, context: InputContext): TemplateResult {
       rows="1"
       aria-label=${COPY.editor.titleLabel}
       placeholder=${COPY.sidebar.untitled}
+      ?readonly=${page.props.isLocked === true}
       .value=${selectPageTitle(page)}
       @input=${onInput}
       @keydown=${onKeyDown}
@@ -108,6 +109,7 @@ export function renderEditor(
       ?data-full-width=${page.props.isFullWidth === true}
       data-font=${page.props.font ?? "default"}
       ?data-small-text=${page.props.isSmallText === true}
+      ?data-locked=${page.props.isLocked === true}
     >
       ${renderTemplateBanner(state, page.id)}
       ${isPage ? renderCover(state, page, dispatch) : nothing}

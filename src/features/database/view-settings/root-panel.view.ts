@@ -10,6 +10,7 @@ import { renderMenuName, type MenuEntry } from "../../../ui/menu/index.ts";
 import { filterCount } from "../filter-match.ts";
 import type { TableContext } from "../table-cell.view.ts";
 import { FILTERS_OVERLAY } from "../view-filters.view.ts";
+import { setViewLocked } from "../view-lock.commands.ts";
 import { deleteView, renameView } from "../view.commands.ts";
 import { panelRow, type SettingsPanel } from "./settings-panel.ts";
 
@@ -49,9 +50,23 @@ function viewActions(context: TableContext): MenuEntry[] {
       exportViewAsCsv(model);
     },
   };
-  if (model.viewIds.length < 2) return [{ kind: "divider" }, exportItem];
+  const isLocked = model.view.isLocked;
+  const lockItem: MenuEntry = {
+    label: COPY.database.lockView,
+    icon: "lock",
+    check: "switch",
+    isChecked: isLocked,
+    onSelect: () =>
+      dispatch(
+        setViewLocked.create({ viewId: model.view.id, isLocked: !isLocked }),
+      ),
+  };
+  if (model.viewIds.length < 2) {
+    return [{ kind: "divider" }, lockItem, exportItem];
+  }
   return [
     { kind: "divider" },
+    lockItem,
     exportItem,
     {
       label: COPY.database.deleteView,

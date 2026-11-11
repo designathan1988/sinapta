@@ -194,4 +194,17 @@
     font-family: var(--font-family-mono);
     font-size: var(--font-size-sm);
   }
+
+  /* A locked page reads as text: no caret, no handles to move blocks,
+     no controls to add an icon or a cover. */
+  .editor[data-locked] {
+    & .editor__handle,
+    & .editor__page-actions {
+      display: none;
+    }
+
+    & [data-text] {
+      caret-color: transparent;
+    }
+  }
 }

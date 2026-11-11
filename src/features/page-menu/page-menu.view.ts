@@ -7,6 +7,8 @@ import {
   selectPage,
   selectPageCopySize,
   selectPagePosition,
+  DATABASE_TYPE,
+  setPageLocked,
   togglePageFavorite,
   trashPage,
   type PageBlock,
@@ -132,6 +134,24 @@ function copyItems(
   ];
 }
 
+// Notion's lock switch: a page's text and blocks, or a database's
+// properties and views, stay as they are while it is on.
+function lockItem(page: PageBlock, dispatch: Dispatch): MenuItem {
+  const isLocked = page.props.isLocked === true;
+  const pageId = page.id;
+  return {
+    label:
+      page.type === DATABASE_TYPE
+        ? COPY.pageMenu.lockDatabase
+        : COPY.pageMenu.lockPage,
+    icon: "lock",
+    check: "switch",
+    isChecked: isLocked,
+    onSelect: () =>
+      dispatch(setPageLocked.create({ pageId, isLocked: !isLocked })),
+  };
+}
+
 function menuItems(
   state: AppState,
   page: PageBlock,
@@ -153,6 +173,7 @@ function menuItems(
     },
     ...moveItems(state, page, dispatch),
     ...styleItems(page, dispatch),
+    lockItem(page, dispatch),
     ...copyItems(state, pageId, dispatch),
     {
       label: COPY.pageMenu.trash,

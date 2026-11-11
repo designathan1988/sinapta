@@ -26,6 +26,7 @@ export const DATABASE_MENU_TEXT = {
   openPagesIn: "Open pages in",
   csvColumn: (index: number) => `Column ${String(index)}`,
   exportCsv: "Export as CSV",
+  lockView: "Lock view",
   exportedCsv: "Exported the view as CSV.",
   importCsv: "Import CSV",
   importedCsv: "Imported the CSV file as a database.",

@@ -36,6 +36,14 @@ export const WORKSPACE_TEXT = {
     fullWidth: "Full width",
     exportMarkdown: "Export as Markdown",
     exportedMarkdown: "The page was saved as a Markdown file.",
+    lockPage: "Lock page",
+    lockDatabase: "Lock database",
+  },
+  // A locked page or view, as Notion's.
+  lock: {
+    locked: "Locked",
+    unlock: "Unlock",
+    refused: "This is locked. Unlock it to make changes.",
   },
   moveTo: {
     action: "Move to",

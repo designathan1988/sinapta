@@ -50,6 +50,9 @@ export const pagePropsSchema = v.object({
   // The typeface of the page's text, and a smaller text size (version 5).
   font: v.optional(pageFontSchema),
   isSmallText: v.optional(v.boolean()),
+  // Locked: its text, blocks and settings stay as they are; a locked
+  // database keeps its properties and views, its rows free.
+  isLocked: v.optional(v.boolean()),
 });
 
 export type PageProps = v.InferOutput<typeof pagePropsSchema>;

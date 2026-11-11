@@ -76,6 +76,7 @@ export {
 } from "./workspace.commands.ts";
 export { addTestBlock, createTestApp, type TestApp } from "./state-builder.ts";
 export { type Tidier } from "./tidy.ts";
+export { type Guard } from "./guard.ts";
 export {
   addAssetUrls,
   assetCommands,

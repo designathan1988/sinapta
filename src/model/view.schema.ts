@@ -154,6 +154,9 @@ export const viewSchema = v.object({
   // Where the view opens a row (version 26): beside the database, over it,
   // or as its own page.
   openMode: v.picklist(["side", "center", "full"]),
+  // Locked (version 28): its filters, sorts, grouping and layout stay as
+  // they are.
+  isLocked: v.boolean(),
 });
 
 export type Filter = v.InferOutput<typeof filterSchema>;

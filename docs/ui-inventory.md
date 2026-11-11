@@ -80,6 +80,8 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Template note | `template-banner.view.ts` | Notion | a strip over a template's page: "You're editing a template in …" |
 | Import CSV | `features/sidebar/sidebar.view.ts`, `csv-file.view.ts` | Notion (CSV only) | Import in the sidebar's foot; a CSV becomes a database named as the file, its columns typed |
 | Export as CSV | `view-settings/root-panel.view.ts` | Notion (the view only, no Markdown pages) | the view's columns and rows as a UTF-8 CSV file |
+| Lock page, Lock database | `features/page-menu/page-menu.view.ts` | Notion | a switch in the page's menu; a locked page shows "Locked" in the top bar, which unlocks it; typing does nothing and says why |
+| Lock view | `view-settings/root-panel.view.ts` | Notion | a switch in the view settings; filters, sorts and layout stay as they are |
 | Date cell and date value | `ui/date-picker/`, `date-menu.ts`, `cell-date.view.ts` | Notion (no Date format & timezone or Remind rows) | the chosen days in fields, the month with Today and arrows, six weeks of days, End date and Include time switches, Clear |
 
 ### Property settings

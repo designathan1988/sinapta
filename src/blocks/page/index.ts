@@ -37,6 +37,7 @@ export {
   restorePage,
   trashPage,
 } from "./page-trash.commands.ts";
+export { lockGuard, pageLockCommands, setPageLocked } from "./page-lock.ts";
 export {
   COVER_PRESETS,
   DATABASE_TYPE,

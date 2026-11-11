@@ -7,7 +7,9 @@ import {
   BLOCK_TIDIERS,
 } from "../blocks/index.ts";
 import {
+  lockGuard,
   pageCommands,
+  pageLockCommands,
   pageStyleCommands,
   pageDuplicateCommands,
   pageMoveCommands,
@@ -52,6 +54,8 @@ import {
 } from "../persistence/index.ts";
 import { installAssetSaver } from "../ui/asset/index.ts";
 import { installSelectionSync, restoreSelection } from "../ui/caret/index.ts";
+import { announce } from "../ui/announcer/index.ts";
+import { COPY } from "../ui/copy.ts";
 import { installOverlayDismiss } from "../ui/overlay/index.ts";
 import { installScopedKeys, matchShortcut } from "../ui/shortcuts/index.ts";
 import { installTooltip } from "../ui/tooltip/index.ts";
@@ -70,6 +74,7 @@ const COMMANDS = [
   ...pageMoveCommands,
   ...pageDuplicateCommands,
   ...pageStyleCommands,
+  ...pageLockCommands,
   ...BLOCK_COMMANDS,
   ...editorCommands,
   ...databaseCommands,
@@ -111,13 +116,27 @@ async function startPersistence(
   return { isFirstRun };
 }
 
-export async function startApp(container: HTMLElement): Promise<void> {
-  const store = createAppStore(createInitialState());
-  const dispatch = createDispatcher({
+// The one dispatcher, with every command, tidier and guard. A change a
+// lock refuses says so, as Notion's locked pages do.
+function createAppDispatch(store: AppStore): Dispatch {
+  const dispatchCommand = createDispatcher({
     store,
     registry: createCommandRegistry(COMMANDS),
     tidiers: [...BLOCK_TIDIERS, ...DATABASE_TIDIERS],
+    guards: [lockGuard],
   });
+  return (command) => {
+    const result = dispatchCommand(command);
+    if (!result.ok && result.error.kind === "locked") {
+      announce(COPY.lock.refused);
+    }
+    return result;
+  };
+}
+
+export async function startApp(container: HTMLElement): Promise<void> {
+  const store = createAppStore(createInitialState());
+  const dispatch = createAppDispatch(store);
   const renderRoot = (): void => {
     const state = store.getState();
     applyTheme(selectTheme(state));

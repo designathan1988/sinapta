@@ -38,10 +38,13 @@ import { formOptionCommands } from "./form-options.commands.ts";
 import { rowOpenCommands } from "./row-open.commands.ts";
 import { templateCommands } from "./template.commands.ts";
 import { csvImportCommands } from "./csv-import.commands.ts";
+import { viewLockCommands } from "./view-lock.commands.ts";
 import { formCommands } from "./layouts/form/form.commands.ts";
 import { boardCardCommands } from "./layouts/board/board-card.commands.ts";
 import {
+  lockGuard,
   pageCommands,
+  pageLockCommands,
   pageTrashCommands,
   renamePage,
 } from "../../blocks/page/index.ts";
@@ -119,12 +122,14 @@ const DATABASE_TEST_COMMANDS = [
   ...rowOpenCommands,
   ...templateCommands,
   ...csvImportCommands,
+  ...viewLockCommands,
   ...formCommands,
   ...boardCardCommands,
   ...viewLayoutCommands,
   ...viewSearchCommands,
   ...calendarCommands,
   ...pageCommands,
+  ...pageLockCommands,
   ...pageTrashCommands,
   ...tableCommands,
   ...optionCommands,
@@ -141,6 +146,7 @@ export function createDatabaseApp(
   const base = createTestApp({
     commands: DATABASE_TEST_COMMANDS,
     tidiers: [relationTidier],
+    guards: [lockGuard],
   });
   const { store } = base;
   base.dispatch(createDatabase.create({ parentId: null }));

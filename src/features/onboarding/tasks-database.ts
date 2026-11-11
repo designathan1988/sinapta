@@ -56,6 +56,7 @@ function view(ids: TaskIds, index: number, type: ViewType): View[] {
     chart: { kind: "column", aggregate: "count" },
     form: { requiredPropertyIds: [], description: "" },
     openMode: "side",
+    isLocked: false,
   };
   if (type === "board") {
     return [{ ...record, groupBy: groupByProperty(status) }];

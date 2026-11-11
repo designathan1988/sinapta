@@ -23,6 +23,7 @@ const TABLE = {
   chart: { kind: "column", aggregate: "count" },
   form: { requiredPropertyIds: [], description: "" },
   openMode: "side",
+  isLocked: false,
 };
 
 const GROUP_BY = {

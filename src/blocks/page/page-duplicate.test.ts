@@ -65,6 +65,7 @@ function createApp() {
     chart: { kind: "column", aggregate: "count" },
     form: { requiredPropertyIds: [], description: "" },
     openMode: "side",
+    isLocked: false,
   };
   const workspace = { ...base, views: { [VIEW]: view } };
   return createTestApp({ workspace, commands: pageDuplicateCommands });

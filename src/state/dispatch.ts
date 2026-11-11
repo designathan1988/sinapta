@@ -1,4 +1,5 @@
 // The only write path to the store: dispatch(command).
+import { isGuarded, type Guard } from "./guard.ts";
 import {
   createBlockId,
   createPropertyId,
@@ -34,7 +35,9 @@ export type DispatchError =
       readonly violation: InvariantViolation;
     }
   // Another tab holds the workspace for writing.
-  | { readonly kind: "read-only" };
+  | { readonly kind: "read-only" }
+  // A guard, such as a page's lock, refused the change.
+  | { readonly kind: "locked" };
 
 export type DispatchResult =
   { readonly ok: true } | { readonly ok: false; readonly error: DispatchError };
@@ -49,6 +52,8 @@ export interface DispatcherOptions {
   readonly createId?: typeof createBlockId;
   // Rules that tidy the workspace after every command; see tidy.ts.
   readonly tidiers?: readonly Tidier[];
+  // Rules that refuse a change; see guard.ts.
+  readonly guards?: readonly Guard[];
 }
 
 type Next = { readonly state: AppState } | { readonly error: DispatchError };
@@ -124,6 +129,7 @@ interface Sources {
   readonly now: () => string;
   readonly createId: typeof createBlockId;
   readonly tidiers: readonly Tidier[];
+  readonly guards: readonly Guard[];
 }
 
 function createMeta(sources: Sources, ids: NewIds): CommandMeta {
@@ -166,6 +172,9 @@ function nextState(state: AppState, command: Command, sources: Sources): Next {
   if (isRefusedWhileReadOnly(state, command, effect)) {
     return { error: { kind: "read-only" } };
   }
+  if (isGuarded(sources.guards, state.workspace, effect.operations ?? [])) {
+    return { error: { kind: "locked" } };
+  }
   return applyEffect(state, effect, {
     now: meta.now,
     tidiers: sources.tidiers,
@@ -179,6 +188,7 @@ export function createDispatcher(options: DispatcherOptions): Dispatch {
     now: options.now ?? (() => new Date().toISOString()),
     createId: options.createId ?? createBlockId,
     tidiers: options.tidiers ?? [],
+    guards: options.guards ?? [],
   };
   let isNotifying = false;
 
