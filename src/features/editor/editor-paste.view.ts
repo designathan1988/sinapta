@@ -1,7 +1,7 @@
 // Turns what is pasted or dropped into a block into a command. Pasted HTML
 // is read for its text and marks only, and pasted Markdown for its blocks
 // and marks; see src/ui/rich-text/.
-import { blockDefinition } from "../../blocks/block-registry.ts";
+import { blockDefinition } from "../../blocks/index.ts";
 import type { BlockId, RichText } from "../../model/index.ts";
 import {
   hasMarkdownBlocks,

@@ -18,7 +18,7 @@ import {
 } from "../../blocks/page/index.ts";
 import { QUOTE_TYPE } from "../../blocks/quote/index.ts";
 import { TO_DO_TYPE, type ToDoBlock } from "../../blocks/to-do/index.ts";
-import { isTextBlock } from "../../blocks/text-block.ts";
+import { isTextBlock } from "../../blocks/index.ts";
 import { TOGGLE_TYPE } from "../../blocks/toggle/index.ts";
 import {
   isBlockOfType,

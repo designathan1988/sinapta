@@ -1,11 +1,11 @@
 // Pasting Markdown: each pasted block becomes a block of its kind, nested
 // by its indent, in one undo step.
-import { blockDefinition } from "../../blocks/block-registry.ts";
 import {
+  blockDefinition,
   isTextBlock,
-  textOf,
   type TextBlock,
-} from "../../blocks/text-block.ts";
+  textOf,
+} from "../../blocks/index.ts";
 import {
   plainText,
   type Block,

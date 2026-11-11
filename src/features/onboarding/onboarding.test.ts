@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BLOCK_PROPS_SCHEMAS } from "../../blocks/block-registry.ts";
+import { BLOCK_PROPS_SCHEMAS } from "../../blocks/index.ts";
 import { selectPageTitle, selectPage } from "../../blocks/page/index.ts";
 import { parseWorkspaceFile } from "../../model/index.ts";
 import { createTestApp } from "../../state/index.ts";

@@ -1,8 +1,7 @@
 // The handle beside each block and the menus it opens: block actions and
 // the list of types to turn the block into.
 import { html, nothing, type TemplateResult } from "lit-html";
-import { BLOCK_DEFINITIONS } from "../../blocks/block-registry.ts";
-import { isTextBlock } from "../../blocks/text-block.ts";
+import { BLOCK_DEFINITIONS, isTextBlock } from "../../blocks/index.ts";
 import {
   countBlockTree,
   parseBlockId,

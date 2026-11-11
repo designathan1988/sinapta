@@ -1,7 +1,6 @@
 // Turning one kind of block into another.
-import { blockDefinition } from "../../blocks/block-registry.ts";
+import { blockDefinition, isTextBlock } from "../../blocks/index.ts";
 import { PARAGRAPH_TYPE } from "../../blocks/paragraph/index.ts";
-import { isTextBlock } from "../../blocks/text-block.ts";
 import {
   splitRichText,
   type Block,

@@ -1,6 +1,6 @@
 // Pages found by the text of their blocks, for the palette's search. Each
 // result shows the words around the first match on the page.
-import { isTextBlock, textOf } from "../../blocks/text-block.ts";
+import { isTextBlock, textOf } from "../../blocks/index.ts";
 import {
   isPageLike,
   selectPageTitle,

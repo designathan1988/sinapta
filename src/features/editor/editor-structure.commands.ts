@@ -1,11 +1,11 @@
 // Commands that change which blocks exist and where they sit.
-import { blockDefinition } from "../../blocks/block-registry.ts";
-import { PARAGRAPH_TYPE } from "../../blocks/paragraph/index.ts";
 import {
+  blockDefinition,
   isTextBlock,
-  textOf,
   type TextBlock,
-} from "../../blocks/text-block.ts";
+  textOf,
+} from "../../blocks/index.ts";
+import { PARAGRAPH_TYPE } from "../../blocks/paragraph/index.ts";
 import {
   concatRichText,
   snapToBoundary,

@@ -6,9 +6,8 @@ import { convertBlock } from "./editor-convert.commands.ts";
 import { pasteInto } from "./editor-paste.view.ts";
 import { mergeBlockBackward, splitBlock } from "./editor-structure.commands.ts";
 import { selectNeighborTextBlock } from "./editor.selectors.ts";
-import { blockDefinition } from "../../blocks/block-registry.ts";
+import { blockDefinition, isTextBlock, textOf } from "../../blocks/index.ts";
 import { PARAGRAPH_TYPE } from "../../blocks/paragraph/index.ts";
-import { isTextBlock, textOf } from "../../blocks/text-block.ts";
 import { diffText, type BlockId, type Mark } from "../../model/index.ts";
 import {
   openOverlay,

@@ -36,12 +36,20 @@ const SIBLING_DEEP_IMPORT = {
   message: "Import a sibling through its index.ts only.",
 };
 
+// The modules at the root of src/blocks/ are reached through its index.ts
+// from every other layer (ADR-0011).
+const BLOCKS_ROOT_IMPORT = {
+  regex: "^(\\.\\./)+blocks/(?!index\\.ts$)[^/]+$",
+  message: "Import blocks through src/blocks/index.ts.",
+};
+
 function layerPatterns(layer) {
   const allowed = LAYERS[layer];
   const forbidden = ALL_LAYERS.filter(
     (name) => name !== layer && !allowed.includes(name),
   );
   const patterns = [DEEP_IMPORT];
+  if (layer !== "blocks") patterns.push(BLOCKS_ROOT_IMPORT);
   if (layer === "features" || layer === "blocks") {
     patterns.push(SIBLING_DEEP_IMPORT);
   }

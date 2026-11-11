@@ -1,7 +1,6 @@
 import { html, nothing, type TemplateResult } from "lit-html";
 import { repeat } from "lit-html/directives/repeat.js";
-import { blockDefinition } from "../../blocks/block-registry.ts";
-import { isTextBlock, textOf } from "../../blocks/text-block.ts";
+import { blockDefinition, isTextBlock, textOf } from "../../blocks/index.ts";
 import type { Block, BlockId } from "../../model/index.ts";
 import { setSelection } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";

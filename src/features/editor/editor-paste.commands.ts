@@ -1,12 +1,12 @@
 // Pasting into a block. The first pasted line joins the block's text;
 // every other line becomes a block of its own.
-import { blockDefinition } from "../../blocks/block-registry.ts";
-import { PARAGRAPH_TYPE } from "../../blocks/paragraph/index.ts";
 import {
+  blockDefinition,
   isTextBlock,
-  textOf,
   type TextBlock,
-} from "../../blocks/text-block.ts";
+  textOf,
+} from "../../blocks/index.ts";
+import { PARAGRAPH_TYPE } from "../../blocks/paragraph/index.ts";
 import {
   concatRichText,
   deleteRange,

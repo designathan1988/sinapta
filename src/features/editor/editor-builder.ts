@@ -1,5 +1,5 @@
 // Builds a page of blocks for the editor's tests.
-import { isTextBlock, textOf } from "../../blocks/text-block.ts";
+import { isTextBlock, textOf } from "../../blocks/index.ts";
 import {
   buildWorkspace,
   toBlockId,

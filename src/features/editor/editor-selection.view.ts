@@ -1,6 +1,6 @@
 // Keys and clipboard for a selection of whole blocks. While blocks are
 // selected the container of the blocks has focus, not a block's text.
-import { isTextBlock, textOf } from "../../blocks/text-block.ts";
+import { isTextBlock, textOf } from "../../blocks/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { parseBlockId, type BlockId } from "../../model/index.ts";
 import { readSelection } from "../../ui/caret/index.ts";

@@ -1,6 +1,6 @@
 // Moving and deleting whole blocks.
 import { PAGE_TYPE } from "../../blocks/page/index.ts";
-import { isTextBlock, textOf } from "../../blocks/text-block.ts";
+import { isTextBlock, textOf } from "../../blocks/index.ts";
 import {
   dropMove,
   listOf,

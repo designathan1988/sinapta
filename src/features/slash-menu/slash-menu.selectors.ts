@@ -1,7 +1,6 @@
-import { BLOCK_DEFINITIONS } from "../../blocks/block-registry.ts";
+import { BLOCK_DEFINITIONS, isTextBlock, textOf } from "../../blocks/index.ts";
 import { HEADING_TYPE } from "../../blocks/heading/index.ts";
 import { PAGE_LINK_TYPE } from "../../blocks/page-link/index.ts";
-import { isTextBlock, textOf } from "../../blocks/text-block.ts";
 import type { BlockId, BlockProps } from "../../model/index.ts";
 import type { AppState } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";

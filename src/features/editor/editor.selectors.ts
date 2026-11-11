@@ -1,5 +1,5 @@
 import { isPageLike } from "../../blocks/page/index.ts";
-import { isTextBlock, type TextBlock } from "../../blocks/text-block.ts";
+import { isTextBlock, type TextBlock } from "../../blocks/index.ts";
 import type { Block, BlockId } from "../../model/index.ts";
 import type { AppState } from "../../state/index.ts";
 

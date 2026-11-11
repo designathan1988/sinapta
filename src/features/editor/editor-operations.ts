@@ -1,6 +1,5 @@
 // Builders of the operations the editor's commands share.
-import { blockDefinition } from "../../blocks/block-registry.ts";
-import type { TextBlock } from "../../blocks/text-block.ts";
+import { blockDefinition, type TextBlock } from "../../blocks/index.ts";
 import type {
   Block,
   BlockId,

@@ -1,7 +1,7 @@
 // What the formatting toolbar works on: the selected text of one block and
 // the style that text already has. Both are derived from the store.
 import { CODE_TYPE } from "../../blocks/code/index.ts";
-import { isTextBlock } from "../../blocks/text-block.ts";
+import { isTextBlock } from "../../blocks/index.ts";
 import {
   splitRichText,
   type BlockId,

@@ -1,5 +1,5 @@
 // Commands that change the text inside one block.
-import { isTextBlock } from "../../blocks/text-block.ts";
+import { isTextBlock } from "../../blocks/index.ts";
 import {
   deleteRange,
   insertText,

@@ -1,10 +1,7 @@
 // The composition root: creates the one store, registers every command and
 // owns the single root render.
 import { render } from "lit-html";
-import {
-  BLOCK_COMMANDS,
-  BLOCK_PROPS_SCHEMAS,
-} from "../blocks/block-registry.ts";
+import { BLOCK_COMMANDS, BLOCK_PROPS_SCHEMAS } from "../blocks/index.ts";
 import {
   pageCommands,
   pageCoverCommands,

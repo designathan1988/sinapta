@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { selectDatabase } from "../../blocks/database/index.ts";
 import { selectPage } from "../../blocks/page/index.ts";
 import { parseWorkspaceFile, toBlockId } from "../../model/index.ts";
-import { BLOCK_PROPS_SCHEMAS } from "../../blocks/block-registry.ts";
+import { BLOCK_PROPS_SCHEMAS } from "../../blocks/index.ts";
 import { createTestApp } from "../../state/index.ts";
 import {
   addProperty,

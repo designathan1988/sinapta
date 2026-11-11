@@ -1,5 +1,5 @@
 // Selecting whole blocks together, and what is done to such a selection.
-import { isTextBlock, textOf } from "../../blocks/text-block.ts";
+import { isTextBlock, textOf } from "../../blocks/index.ts";
 import { isPageLike } from "../../blocks/page/index.ts";
 import type { Block, BlockId } from "../../model/index.ts";
 import {

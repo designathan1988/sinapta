@@ -1,10 +1,6 @@
 // Keys inside text blocks that are not text input: indenting, moving
 // between blocks, and the inline code and strikethrough shortcuts.
-import {
-  isTextBlock,
-  textOf,
-  type TextBlock,
-} from "../../blocks/text-block.ts";
+import { isTextBlock, textOf, type TextBlock } from "../../blocks/index.ts";
 import type { Mark } from "../../model/index.ts";
 import { setSelection } from "../../state/index.ts";
 import { readSelection, textElementOf } from "../../ui/caret/index.ts";
