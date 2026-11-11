@@ -11,6 +11,8 @@ export interface TreeRow {
   readonly id: BlockId;
   readonly title: string;
   readonly icon: string | null;
+  // A database shows a table glyph when it has no icon.
+  readonly isDatabase: boolean;
   // 1 for a top-level page.
   readonly level: number;
   readonly hasChildren: boolean;
@@ -40,6 +42,7 @@ function addRows(state: AppState, walk: Walk, rows: TreeRow[]): void {
       id,
       title: selectPageTitle(page),
       icon: page.props.icon,
+      isDatabase: page.type === DATABASE_TYPE,
       level: walk.level,
       hasChildren: childPageIds.length > 0,
       isExpanded,

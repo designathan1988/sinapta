@@ -13,6 +13,8 @@ export const WORKSPACE_TEXT = {
   },
   sidebar: {
     newPage: "New page",
+    search: "Search",
+    private: "Private",
     untitled: "Untitled",
     addSubpage: "Add a page inside",
     expandPage: "Expand",

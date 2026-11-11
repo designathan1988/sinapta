@@ -32,6 +32,14 @@ function setLevel(row: Element | undefined, level: number): void {
   }
 }
 
+// The page's emoji, or a page or table glyph when it has none.
+function renderRowIcon(row: TreeRow): TemplateResult {
+  const glyph = renderIcon(row.isDatabase ? "database" : "page");
+  return html`<span class="sidebar__icon" aria-hidden="true"
+    >${row.icon ?? glyph}</span
+  >`;
+}
+
 export interface Context {
   readonly state: AppState;
   readonly dispatch: Dispatch;
@@ -66,7 +74,7 @@ export function renderRow(row: TreeRow, context: Context): TemplateResult {
     >
       ${renderIcon("chevron")}
     </button>
-    <span class="sidebar__icon" aria-hidden="true">${row.icon ?? ""}</span>
+    ${renderRowIcon(row)}
     <span class="sidebar__title">${title}</span>
     ${renderPageMenuButton({
       place: TREE_PLACE,

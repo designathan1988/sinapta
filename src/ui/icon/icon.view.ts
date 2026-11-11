@@ -17,7 +17,12 @@ export type IconName =
   | "duplicate"
   | "download"
   | "back"
-  | "check";
+  | "check"
+  | "page"
+  | "database"
+  | "search"
+  | "home"
+  | "compose";
 
 // 16-unit outline icons, drawn with the current text color.
 // Fragments use the `svg` tag so that they are parsed as SVG, not HTML.
@@ -33,6 +38,13 @@ const PATHS: Record<IconName, TemplateResult<2>> = {
   chevron: svg`<path d="M6 4l4 4-4 4" />`,
   back: svg`<path d="M10 4L6 8l4 4" />`,
   check: svg`<path d="M3.5 8.5l3 3 6-7" />`,
+  page: svg`<path d="M4 1.5h5.5l3 3v10H4z" /><path d="M9.5 1.5v3h3M6 8h4.5M6 10.5h4.5" />`,
+  database: svg`<rect x="2" y="2.5" width="12" height="11" rx="1.5" />
+    <path d="M2 6.5h12M2 10h12M6.5 6.5v7" />`,
+  search: svg`<circle cx="7" cy="7" r="4.5" /><path d="M10.5 10.5l3.5 3.5" />`,
+  home: svg`<path d="M2.5 7.5L8 3l5.5 4.5M4 6.5v7h8v-7" />`,
+  compose: svg`<path d="M7.5 2.5h-4a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-4" />
+    <path d="M11.5 2l2.5 2.5L8.5 10H6V7.5z" />`,
   more: svg`<path d="M3.5 8h.01M8 8h.01M12.5 8h.01" />`,
   star: svg`<path
     d="M8 2.2l1.8 3.7 4 .6-2.9 2.8.7 4L8 11.4l-3.6 1.9.7-4L2.2 6.5l4-.6z"

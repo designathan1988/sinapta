@@ -8,6 +8,10 @@ import {
 } from "../../state/index.ts";
 import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import {
+  PALETTE_OVERLAY_KIND,
+  SETTINGS_OVERLAY_KIND,
+} from "../../ui/shortcuts/index.ts";
 import { createDatabase } from "../database/index.ts";
 import { TRASH_OVERLAY } from "../trash/index.ts";
 import { renderFavorites } from "./sidebar-favorites.view.ts";
@@ -33,19 +37,45 @@ function renderFooter(dispatch: Dispatch): TemplateResult {
   })}`;
 }
 
-// The sidebar panel: favorites, the page tree and its actions.
-export function renderSidebar(
-  state: AppState,
-  dispatch: Dispatch,
-): TemplateResult {
+// Places to go that are not pages: search and settings.
+function renderQuickItems(dispatch: Dispatch): TemplateResult {
+  const open = (kind: string) => () =>
+    dispatch(openOverlay.create({ overlay: { kind } }));
+  return html`<div class="sidebar__quick">
+    ${renderButton({
+      label: COPY.sidebar.search,
+      icon: "search",
+      onClick: open(PALETTE_OVERLAY_KIND),
+    })}
+    ${renderButton({
+      label: COPY.shell.openSettings,
+      icon: "settings",
+      onClick: open(SETTINGS_OVERLAY_KIND),
+    })}
+  </div>`;
+}
+
+function renderPrivate(state: AppState, dispatch: Dispatch): TemplateResult {
   const rows = selectTreeRows(state);
-  return html`<div class="sidebar">
-    ${renderFavorites(state, dispatch)}
+  return html`<section class="sidebar__section">
+    <h2 class="sidebar__heading" id="sidebar-private">
+      ${COPY.sidebar.private}
+    </h2>
     ${
       rows.length === 0
         ? html`<p class="sidebar__empty">${COPY.shell.emptyWorkspace}</p>`
         : renderTree(rows, { state, dispatch })
     }
-    ${renderFooter(dispatch)}
+  </section>`;
+}
+
+// The sidebar panel: quick items, favorites, the page tree and actions.
+export function renderSidebar(
+  state: AppState,
+  dispatch: Dispatch,
+): TemplateResult {
+  return html`<div class="sidebar">
+    ${renderQuickItems(dispatch)} ${renderFavorites(state, dispatch)}
+    ${renderPrivate(state, dispatch)} ${renderFooter(dispatch)}
   </div>`;
 }

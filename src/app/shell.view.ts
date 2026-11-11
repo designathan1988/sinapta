@@ -1,6 +1,7 @@
 import "./shell.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
+import { createPage } from "../blocks/page/index.ts";
 import {
   PALETTE_OVERLAY,
   renderCommandPalette,
@@ -117,6 +118,12 @@ function renderSidebarPanel(
   return html`<nav class="app__sidebar" aria-label=${COPY.shell.pagesLabel}>
     <header class="app__sidebar-header">
       <span class="app__product">${PRODUCT_NAME}</span>
+      ${renderButton({
+        label: COPY.sidebar.newPage,
+        icon: "compose",
+        isIconOnly: true,
+        onClick: () => dispatch(createPage.create({ parentId: null })),
+      })}
       ${renderButton({
         label: COPY.shell.hideSidebar,
         icon: "sidebar",

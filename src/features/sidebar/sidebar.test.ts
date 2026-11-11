@@ -69,4 +69,18 @@ describe("selectTreeRows", () => {
 
     expect(rows.map((row) => row.isTabStop)).toEqual([true, false]);
   });
+
+  it("tells a database from a page", () => {
+    const workspace = buildWorkspace([
+      { id: "p", props: page("Notes") },
+      {
+        id: "d",
+        type: "database",
+        props: { ...page("Tasks"), properties: [], viewIds: [] },
+      },
+    ]);
+    const rows = selectTreeRows({ ...createInitialState(), workspace });
+
+    expect(rows.map((row) => row.isDatabase)).toEqual([false, true]);
+  });
 });
