@@ -114,4 +114,3 @@ describe("inline Markdown while typing", () => {
     expect(typeAtEnd("**bold*", init, "code")).toEqual(["text.replace"]);
   });
 });
-
