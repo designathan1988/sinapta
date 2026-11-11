@@ -2,8 +2,11 @@ import { describe, expect, it } from "vitest";
 import { SIDEBAR_WIDTH } from "./app-state.ts";
 import { buildWorkspace, toBlockId } from "../model/index.ts";
 import { createTestApp } from "./state-builder.ts";
+import { restoreUi, toPersistedUi } from "./ui.schema.ts";
+import { loadWorkspace } from "./workspace.commands.ts";
 import {
   closeOverlay,
+  openHome,
   openOverlay,
   setActivePage,
   setSidebarWidth,
@@ -91,5 +94,66 @@ describe("ui commands", () => {
     dispatch(togglePageExpanded.create({ pageId }));
 
     expect(store.getState().ui.expandedPageIds).toEqual([]);
+  });
+});
+
+describe("recent pages and home", () => {
+  function appWithPages(count: number) {
+    const ids = Array.from({ length: count }, (_, i) => `p${String(i)}`);
+    const workspace = buildWorkspace(ids.map((id) => ({ id })));
+    return createTestApp({ workspace, commands: uiCommands });
+  }
+
+  it("remembers opened pages newest first, without repeats, at most 20", () => {
+    const { store, dispatch } = appWithPages(25);
+    const open = (index: number) =>
+      dispatch(
+        setActivePage.create({ pageId: toBlockId(`p${String(index)}`) }),
+      );
+
+    for (let index = 0; index < 25; index += 1) open(index);
+    open(10);
+
+    const recent = store.getState().ui.recentPageIds;
+    expect(recent).toHaveLength(20);
+    expect(recent.slice(0, 2)).toEqual(["p10", "p24"]);
+    expect(new Set(recent).size).toBe(20);
+  });
+
+  it("opens home, and leaves it when a page opens, even the same page", () => {
+    const { store, dispatch } = appWithPages(1);
+    const pageId = toBlockId("p0");
+    dispatch(setActivePage.create({ pageId }));
+
+    dispatch(openHome.create({}));
+    expect(store.getState().ui.isHomeOpen).toBe(true);
+
+    dispatch(setActivePage.create({ pageId }));
+    expect(store.getState().ui.isHomeOpen).toBe(false);
+  });
+
+  it("keeps recent pages and home across a reload", () => {
+    const { store, dispatch } = appWithPages(1);
+    dispatch(setActivePage.create({ pageId: toBlockId("p0") }));
+    dispatch(openHome.create({}));
+
+    const restored = restoreUi(toPersistedUi(store.getState().ui));
+
+    expect(restored.recentPageIds).toEqual(["p0"]);
+    expect(restored.isHomeOpen).toBe(true);
+  });
+
+  it("records the page already open when it is opened again", () => {
+    const pageId = toBlockId("p0");
+    const workspace = buildWorkspace([{ id: "p0" }]);
+    const { store, dispatch } = createTestApp({
+      commands: [...uiCommands, loadWorkspace],
+    });
+    const ui = { ...store.getState().ui, activePageId: pageId };
+    dispatch(loadWorkspace.create({ workspace, ui, skippedCount: 0 }));
+
+    dispatch(setActivePage.create({ pageId }));
+
+    expect(store.getState().ui.recentPageIds).toEqual(["p0"]);
   });
 });

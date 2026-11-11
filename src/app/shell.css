@@ -103,6 +103,10 @@
     flex: 1;
   }
 
+  .app__place {
+    font-size: var(--font-size-sm);
+  }
+
   .app__save-status {
     color: var(--color-text-tertiary);
     font-size: var(--font-size-xs);

@@ -1,6 +1,7 @@
 // Commands for the parts of the `ui` slice that belong to no feature.
 import type { BlockId } from "../model/index.ts";
 import {
+  RECENT_PAGES_MAX,
   SIDEBAR_WIDTH,
   type OpenOverlay,
   type TextSelection,
@@ -48,12 +49,34 @@ export const setActivePage = defineCommand<{ pageId: BlockId | null }>({
   type: "ui.setActivePage",
   handle(state, command) {
     const { pageId } = command;
-    if (pageId === state.ui.activePageId) return {};
+    const { ui } = state;
+    // Opening the open page again changes nothing, unless Home hides it or
+    // it is not yet the latest of the recent pages (as after a reload).
+    const isShown = pageId === ui.activePageId && !ui.isHomeOpen;
+    if (isShown && (pageId === null || ui.recentPageIds[0] === pageId)) {
+      return {};
+    }
     if (pageId !== null && state.workspace.blocks[pageId] === undefined) {
       return {};
     }
-    return { ui: { ...state.ui, activePageId: pageId } };
+    const recentPageIds =
+      pageId === null
+        ? ui.recentPageIds
+        : [pageId, ...ui.recentPageIds.filter((id) => id !== pageId)].slice(
+            0,
+            RECENT_PAGES_MAX,
+          );
+    return {
+      ui: { ...ui, activePageId: pageId, isHomeOpen: false, recentPageIds },
+    };
   },
+});
+
+// Shows Home in place of the open page; opening a page leaves it.
+export const openHome = defineCommand<NoPayload>({
+  type: "ui.openHome",
+  handle: (state) =>
+    state.ui.isHomeOpen ? {} : { ui: { ...state.ui, isHomeOpen: true } },
 });
 
 export const togglePageExpanded = defineCommand<{ pageId: BlockId }>({
@@ -97,4 +120,5 @@ export const uiCommands = [
   closeOverlay,
   setActivePage,
   togglePageExpanded,
+  openHome,
 ];

@@ -83,4 +83,14 @@ describe("renderSidebar", () => {
       }),
     ]);
   });
+
+  it("opens Home from the Home item", () => {
+    const { host, commands } = rendered();
+
+    button(host, "Home")?.click();
+
+    expect(commands).toEqual([
+      expect.objectContaining({ type: "ui.openHome" }),
+    ]);
+  });
 });

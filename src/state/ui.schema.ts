@@ -9,6 +9,8 @@ const persistedUiSchema = v.object({
   activeViewIds: v.optional(v.record(blockIdSchema, viewIdSchema), {}),
   sidebarWidth: v.number(),
   isSidebarCollapsed: v.boolean(),
+  recentPageIds: v.optional(v.array(blockIdSchema), []),
+  isHomeOpen: v.optional(v.boolean(), false),
 });
 
 export type PersistedUi = v.InferOutput<typeof persistedUiSchema>;
@@ -20,6 +22,8 @@ export function toPersistedUi(ui: UiState): PersistedUi {
     activeViewIds: { ...ui.activeViewIds },
     sidebarWidth: ui.sidebarWidth,
     isSidebarCollapsed: ui.isSidebarCollapsed,
+    recentPageIds: [...ui.recentPageIds],
+    isHomeOpen: ui.isHomeOpen,
   };
 }
 

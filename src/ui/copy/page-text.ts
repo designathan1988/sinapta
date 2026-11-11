@@ -9,4 +9,14 @@ export const PAGE_TEXT = {
     characters: { one: "character", other: "characters" },
     favorite: "Favorite",
   },
+  home: {
+    title: "Home",
+    morning: "Good morning",
+    afternoon: "Good afternoon",
+    evening: "Good evening",
+    recent: "Recently visited",
+    noRecent: "No pages visited yet. Open a page and it shows here.",
+    upcoming: "Upcoming",
+    noUpcoming: "Nothing dated in the next 7 days.",
+  },
 } as const;

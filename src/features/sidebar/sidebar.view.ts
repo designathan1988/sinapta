@@ -2,6 +2,7 @@ import "./sidebar.css";
 import { html, type TemplateResult } from "lit-html";
 import { createPage } from "../../blocks/page/index.ts";
 import {
+  openHome,
   openOverlay,
   type AppState,
   type Dispatch,
@@ -42,6 +43,11 @@ function renderQuickItems(dispatch: Dispatch): TemplateResult {
   const open = (kind: string) => () =>
     dispatch(openOverlay.create({ overlay: { kind } }));
   return html`<div class="sidebar__quick">
+    ${renderButton({
+      label: COPY.home.title,
+      icon: "home",
+      onClick: () => dispatch(openHome.create({})),
+    })}
     ${renderButton({
       label: COPY.sidebar.search,
       icon: "search",

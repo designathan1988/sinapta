@@ -36,6 +36,7 @@ export { REDO_COMMAND, UNDO_COMMAND } from "./history.ts";
 export {
   closeOverlay,
   openOverlay,
+  openHome,
   setActivePage,
   setSelection,
   setSidebarWidth,

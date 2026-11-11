@@ -31,6 +31,7 @@ import {
 } from "../state/index.ts";
 import { renderBreadcrumbs } from "../features/breadcrumbs/index.ts";
 import { MOVE_TO_OVERLAY, renderMoveTo } from "../features/move-to/index.ts";
+import { renderHome } from "../features/home/index.ts";
 import { renderPageInfo } from "../features/page-info/index.ts";
 import { renderPageMenuButton } from "../features/page-menu/index.ts";
 import {
@@ -153,7 +154,11 @@ function renderTopBar(state: AppState, dispatch: Dispatch): TemplateResult {
   });
   return html`<header class="app__top-bar">
     ${state.ui.isSidebarCollapsed ? showSidebar : nothing}
-    ${renderBreadcrumbs(state, dispatch)}
+    ${
+      state.ui.isHomeOpen
+        ? html`<span class="app__place">${COPY.home.title}</span>`
+        : renderBreadcrumbs(state, dispatch)
+    }
     <span class="app__spacer"></span>
     <span class="app__save-status" role="status"
       >${
@@ -162,7 +167,14 @@ function renderTopBar(state: AppState, dispatch: Dispatch): TemplateResult {
           : COPY.saveStatus[state.persistence.status]
       }</span
     >
-    ${renderPageInfo(state, dispatch)} ${renderActivePageMenu(state, dispatch)}
+    ${
+      state.ui.isHomeOpen
+        ? nothing
+        : [
+            renderPageInfo(state, dispatch),
+            renderActivePageMenu(state, dispatch),
+          ]
+    }
     ${renderButton({
       label: COPY.shell.openSettings,
       icon: "settings",
@@ -206,7 +218,13 @@ export function renderShell(
     ${isSidebarCollapsed ? nothing : renderSidebarPanel(state, dispatch)}
     <main class="app__main" id="main" tabindex="-1">
       ${renderTopBar(state, dispatch)}
-      <div class="app__page">${renderEditor(state, dispatch)}</div>
+      <div class="app__page">
+        ${
+          state.ui.isHomeOpen
+            ? renderHome(state, dispatch)
+            : renderEditor(state, dispatch)
+        }
+      </div>
       ${renderFormatToolbar(state, dispatch)} ${renderOverlay(state, dispatch)}
     </main>
   </div>`;

@@ -47,6 +47,10 @@ export interface OpenOverlay {
 
 export interface UiState {
   readonly activePageId: BlockId | null;
+  // True while Home is shown in place of a page.
+  readonly isHomeOpen: boolean;
+  // Pages opened lately, newest first, at most RECENT_PAGES_MAX.
+  readonly recentPageIds: readonly BlockId[];
   // Pages whose children are shown in the sidebar tree.
   readonly expandedPageIds: readonly BlockId[];
   readonly selection: TextSelection | null;
@@ -116,9 +120,13 @@ export const SIDEBAR_WIDTH = {
   step: 1,
 } as const;
 
+export const RECENT_PAGES_MAX = 20;
+
 export function createInitialUiState(): UiState {
   return {
     activePageId: null,
+    isHomeOpen: false,
+    recentPageIds: [],
     expandedPageIds: [],
     selection: null,
     blockSelection: null,
