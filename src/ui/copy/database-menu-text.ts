@@ -46,6 +46,7 @@ export const DATABASE_MENU_TEXT = {
   formSubmit: "Submit",
   formSent: "Your response was sent.",
   feedEmpty: "Nothing written yet.",
+  moreViews: (count: number) => `${String(count)} more…`,
   noChartProperty: "Add a select or status property to chart the rows by.",
   chartKind: "Chart type",
   chartKinds: {

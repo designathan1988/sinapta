@@ -1,4 +1,4 @@
-import { LAYOUT_ICONS } from "./view-settings/index.ts";
+import { renderViewTabs } from "./view-tabs.view.ts";
 import "./database.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import type { BlockId } from "../../model/index.ts";
@@ -23,66 +23,12 @@ import type { TableContext } from "./table-cell.view.ts";
 import { isOpenFor } from "./database-overlay.ts";
 import { filterCount } from "./filter-match.ts";
 import { selectTableModel } from "./table-model.selectors.ts";
-import { NEW_VIEW_OVERLAY, renderLayout } from "./view-layout.view.ts";
+import { renderLayout } from "./view-layout.view.ts";
 import { setViewSearch } from "./view-search.commands.ts";
 import {
   selectSearchedModel,
   selectViewSearch,
 } from "./view-search.selectors.ts";
-import { setActiveView } from "./view.commands.ts";
-
-function renderNewViewButton(context: TableContext): TemplateResult {
-  const { state, dispatch } = context;
-  const overlay = {
-    kind: NEW_VIEW_OVERLAY,
-    anchorId: context.model.holderId,
-  };
-  const isMenuOpen = isOpenFor(state, overlay);
-  const toggleMenu = (): void => {
-    dispatch(
-      isMenuOpen ? closeOverlay.create({}) : openOverlay.create({ overlay }),
-    );
-  };
-  return html`<button
-    type="button"
-    class="button"
-    data-variant="quiet"
-    data-overlay-anchor
-    aria-haspopup="menu"
-    aria-expanded=${String(isMenuOpen)}
-    aria-label=${COPY.database.newView}
-    title=${tooltipTitle(COPY.database.newView)}
-    interestfor=${TOOLTIP_TARGET}
-    @click=${toggleMenu}
-  >
-    ${renderIcon("plus")}
-  </button>`;
-}
-
-function renderTabs(context: TableContext): TemplateResult {
-  const { model, state, dispatch } = context;
-  const databaseId = model.holderId;
-  const tabs = model.viewIds.flatMap((viewId) => {
-    const view = state.workspace.views[viewId];
-    if (view === undefined) return [];
-    return html`<button
-      type="button"
-      class="database__tab"
-      aria-pressed=${String(view.id === model.view.id)}
-      @click=${() => dispatch(setActiveView.create({ databaseId, viewId }))}
-    >
-      ${renderIcon(LAYOUT_ICONS[view.type])}
-      <span>${view.name}</span>
-    </button>`;
-  });
-  return html`<div
-    class="database__tabs"
-    role="group"
-    aria-label=${COPY.database.views}
-  >
-    ${tabs} ${renderNewViewButton(context)}
-  </div>`;
-}
 
 interface PopoverButton {
   readonly kind: string;
@@ -159,7 +105,7 @@ function renderToolbar(context: TableContext): TemplateResult {
     dispatch(addRow.create({ databaseId: model.database.id, opensPage: true }));
   };
   return html`<div class="database__toolbar">
-    ${renderTabs(context)}
+    ${renderViewTabs(context)}
     <span class="database__spacer"></span>
     ${renderPopoverButton(filters, context)} ${renderSearch(context)}
     ${renderPopoverButton(settings, context)}
