@@ -25,6 +25,9 @@
       },
       "scrim": {
         "$value": "{base.color.black.scrim}"
+      },
+      "callout": {
+        "$value": "{base.color.night.callout}"
       }
     },
     "text": {

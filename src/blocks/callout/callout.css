@@ -8,7 +8,7 @@
     padding: var(--space-inset-md) var(--space-inset-lg) var(--space-inset-md)
       var(--space-inset-md);
     border-radius: var(--radius-md);
-    background-color: var(--editor-block-bg, var(--color-chip-gray-bg));
+    background-color: var(--editor-block-bg, var(--color-bg-callout));
     color: var(--editor-block-text, var(--color-text-primary));
   }
 

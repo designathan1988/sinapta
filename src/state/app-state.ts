@@ -142,7 +142,8 @@ export interface AppState {
 
 export const SIDEBAR_WIDTH = {
   min: 12,
-  initial: 16,
+  // Notion's sidebar, 270 pixels.
+  initial: 16.875,
   max: 30,
   step: 1,
 } as const;

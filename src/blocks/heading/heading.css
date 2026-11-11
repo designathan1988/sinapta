@@ -8,11 +8,14 @@
       line-height: var(--font-line-height-tight);
     }
 
+    /* Larger headings open more space above them, as in Notion. */
     &[data-level="1"] {
+      margin-block-start: var(--space-stack-xl);
       font-size: var(--font-size-xxl);
     }
 
     &[data-level="2"] {
+      margin-block-start: var(--space-stack-lg);
       font-size: var(--font-size-xl);
     }
 

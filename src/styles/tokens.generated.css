@@ -78,6 +78,7 @@
     --base-color-day-active: oklch(0.9282 0.0029 84.6);
     --base-color-day-selected: oklch(0.9425 0.0231 246);
     --base-color-day-code: oklch(0.9669 0.0013 106.4);
+    --base-color-day-callout: oklch(0.9576 0.0027 106.4);
     --base-color-day-text: oklch(0.2928 0.0018 106.5);
     --base-color-day-text-secondary: oklch(0.4812 0.008 97.5);
     --base-color-day-text-tertiary: oklch(0.5632 0.0098 84.6);
@@ -103,6 +104,7 @@
     --base-color-night-active: oklch(0.3368 0 0);
     --base-color-night-selected: oklch(0.2944 0.0428 249.5);
     --base-color-night-code: oklch(0.2435 0 0);
+    --base-color-night-callout: oklch(0.2645 0 0);
     --base-color-night-text: oklch(0.9523 0.0029 84.6);
     --base-color-night-text-secondary: oklch(0.7894 0.006 84.6);
     --base-color-night-text-tertiary: oklch(0.6411 0.0082 80.7);
@@ -132,6 +134,7 @@
     --base-space-16: 4rem;
     --base-space-24: 6rem;
     --base-space-0x5: 0.125rem;
+    --base-space-0x75: 0.1875rem;
     --base-size-4: 1rem;
     --base-size-5: 1.25rem;
     --base-size-6: 1.5rem;
@@ -190,6 +193,7 @@
     --color-bg-selected: light-dark(var(--base-color-day-selected), var(--base-color-night-selected));
     --color-bg-code: light-dark(var(--base-color-day-code), var(--base-color-night-code));
     --color-bg-scrim: light-dark(var(--base-color-black-scrim), var(--base-color-black-scrim));
+    --color-bg-callout: light-dark(var(--base-color-day-callout), var(--base-color-night-callout));
     --color-text-primary: light-dark(var(--base-color-day-text), var(--base-color-night-text));
     --color-text-secondary: light-dark(var(--base-color-day-text-secondary), var(--base-color-night-text-secondary));
     --color-text-tertiary: light-dark(var(--base-color-day-text-tertiary), var(--base-color-night-text-tertiary));
@@ -248,6 +252,7 @@
     --space-inset-lg: var(--base-space-4);
     --space-inset-xl: var(--base-space-6);
     --space-inset-page: var(--base-space-24);
+    --space-block: var(--base-space-0x75);
     --size-border-thin: var(--base-size-hairline);
     --size-border-thick: var(--base-size-thick);
     --size-focus-width: var(--base-size-thick);

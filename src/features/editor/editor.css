@@ -5,6 +5,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-stack-md);
+    line-height: var(--font-line-height-body);
 
     /* Everything sits in a centered column, as wide as the page allows. */
     & > * {
@@ -53,21 +54,24 @@
     }
   }
 
+  /* Notion's rhythm: each block breathes by a few pixels above and below
+     its 24-pixel lines. */
   .editor__block {
     position: relative;
+    padding-block: var(--space-block);
   }
 
   .editor__blocks {
     display: flex;
     flex-direction: column;
-    gap: var(--space-stack-xs);
+    gap: var(--space-stack-xxs);
   }
 
   .editor__children {
     display: flex;
     flex-direction: column;
-    gap: var(--space-stack-xs);
-    margin-block-start: var(--space-stack-xs);
+    gap: var(--space-stack-xxs);
+    margin-block-start: var(--space-stack-xxs);
     padding-inline-start: var(--space-inset-xl);
   }
 
