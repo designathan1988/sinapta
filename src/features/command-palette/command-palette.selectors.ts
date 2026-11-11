@@ -14,6 +14,7 @@ import { COPY } from "../../ui/copy.ts";
 import {
   PALETTE_OVERLAY_KIND,
   SETTINGS_OVERLAY_KIND,
+  SHORTCUT_HELP_OVERLAY_KIND,
 } from "../../ui/shortcuts/index.ts";
 import { createPage, isPageLike } from "../../blocks/page/index.ts";
 import { createDatabase } from "../database/index.ts";
@@ -48,6 +49,7 @@ function actions(): PaletteItem[] {
     action(COPY.palette.newPage, createPage.create({ parentId: null })),
     action(COPY.palette.newDatabase, createDatabase.create({ parentId: null })),
     action(COPY.palette.settings, open(SETTINGS_OVERLAY_KIND)),
+    action(COPY.shortcutHelp.open, open(SHORTCUT_HELP_OVERLAY_KIND)),
     action(COPY.palette.trash, open(TRASH_OVERLAY)),
     action(COPY.palette.export, requestExport.create({})),
     action(COPY.palette.themeLight, setTheme.create({ theme: "light" })),

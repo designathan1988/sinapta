@@ -134,7 +134,7 @@ function inlineMark(event: KeyboardEvent, context: InputContext): boolean {
 function menuKeys(event: KeyboardEvent, context: InputContext): boolean {
   const selection = readSelection();
   if (!(event.ctrlKey || event.metaKey) || selection === null) return false;
-  if (event.key === "/") {
+  if (event.key === "/" && !event.shiftKey) {
     openBlockMenu(selection.blockId, context.dispatch, selection);
     return true;
   }

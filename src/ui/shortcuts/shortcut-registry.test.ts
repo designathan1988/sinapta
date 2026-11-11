@@ -28,6 +28,19 @@ describe("matchShortcut", () => {
     expect(matchShortcut(keyStroke)?.command.type).toBe(type);
   });
 
+  it.each(["?", "/"])(
+    "opens the shortcut reference for Ctrl+Shift and slash reported as %j",
+    (key) => {
+      const shortcut = matchShortcut(
+        stroke({ key, ctrlKey: true, shiftKey: true }),
+      );
+
+      expect(shortcut?.command).toMatchObject({
+        overlay: { kind: "shortcut-help" },
+      });
+    },
+  );
+
   it("ignores a key with no modifier", () => {
     expect(matchShortcut(stroke({}))).toBeUndefined();
   });

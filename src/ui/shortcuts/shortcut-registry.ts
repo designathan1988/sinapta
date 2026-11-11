@@ -29,6 +29,7 @@ export interface Shortcut {
 
 export const SETTINGS_OVERLAY_KIND = "settings";
 export const PALETTE_OVERLAY_KIND = "command-palette";
+export const SHORTCUT_HELP_OVERLAY_KIND = "shortcut-help";
 
 export const SHORTCUTS: readonly Shortcut[] = [
   {
@@ -67,7 +68,21 @@ export const SHORTCUTS: readonly Shortcut[] = [
     withShift: false,
     command: openOverlay.create({ overlay: { kind: SETTINGS_OVERLAY_KIND } }),
   },
+  {
+    // Ctrl and Shift with "/"; see `keyOf` for keyboards that report "?".
+    key: "/",
+    withModifier: true,
+    withShift: true,
+    command: openOverlay.create({
+      overlay: { kind: SHORTCUT_HELP_OVERLAY_KIND },
+    }),
+  },
 ];
+
+// On most keyboards Shift turns "/" into "?"; both name the same key.
+function keyOf(stroke: KeyStroke): string {
+  return stroke.key === "?" ? "/" : stroke.key.toLowerCase();
+}
 
 export function matchShortcut(
   stroke: KeyStroke,
@@ -78,7 +93,7 @@ export function matchShortcut(
   const hasModifier = stroke.ctrlKey || stroke.metaKey;
   return shortcuts.find(
     (shortcut) =>
-      shortcut.key === stroke.key.toLowerCase() &&
+      shortcut.key === keyOf(stroke) &&
       shortcut.withModifier === hasModifier &&
       shortcut.withShift === stroke.shiftKey,
   );

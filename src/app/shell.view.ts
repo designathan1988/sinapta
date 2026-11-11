@@ -35,9 +35,11 @@ import {
   PAGE_MENU_OVERLAY,
   renderPageMenu,
 } from "../features/page-menu/index.ts";
+import { renderShortcutHelp } from "../features/shortcut-help/index.ts";
 import { renderTrash, TRASH_OVERLAY } from "../features/trash/index.ts";
 import { renderButton } from "../ui/button/index.ts";
 import { COPY, PRODUCT_NAME } from "../ui/copy.ts";
+import { SHORTCUT_HELP_OVERLAY_KIND } from "../ui/shortcuts/index.ts";
 
 const WIDTH_PROPERTY = "--app-sidebar-width";
 
@@ -172,6 +174,7 @@ function renderOverlay(
   if (kind === SLASH_MENU_OVERLAY) return renderSlashMenu(state, dispatch);
   if (kind === PAGE_MENU_OVERLAY) return renderPageMenu(state, dispatch);
   if (kind === TONE_OVERLAY) return renderTonePicker(state, dispatch);
+  if (kind === SHORTCUT_HELP_OVERLAY_KIND) return renderShortcutHelp(dispatch);
   return renderEditorOverlay(state, dispatch);
 }
 
