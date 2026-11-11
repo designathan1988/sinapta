@@ -143,9 +143,18 @@ function firstItem(entries: readonly MenuEntry[]): MenuItem | undefined {
   );
 }
 
+// A field of the menu, such as a name, keeps its keys; the search field
+// passes Up, Down and Enter to the rows.
+function isOwnField(target: EventTarget | null): boolean {
+  const isField =
+    target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement;
+  return isField && target.closest(".menu__search") === null;
+}
+
 function onMenuKey(event: KeyboardEvent, choosing: Choosing): void {
   const menu = event.currentTarget;
   if (!(menu instanceof Element)) return;
+  if (event.key !== "Escape" && isOwnField(event.target)) return;
   const isSearch = event.target instanceof HTMLInputElement;
   if (event.key === "Escape" || event.key === "Tab") choosing.close();
   else if (event.key === "Enter" && isSearch) {

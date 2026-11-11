@@ -6,8 +6,11 @@ import { closeOverlay, openOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
-import { isOpenFor } from "./database-overlay.ts";
-import { PROPERTY_EDIT_OVERLAY } from "./property-edit.view.ts";
+import {
+  COLUMN_MENU_OVERLAY,
+  isOpenFor,
+  PROPERTY_EDIT_OVERLAY,
+} from "./database-overlay.ts";
 import { propertyType } from "./property-registry.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import type { TableColumn } from "./table-model.selectors.ts";
@@ -21,7 +24,6 @@ import {
   sortByProperty,
 } from "./view.commands.ts";
 
-export const COLUMN_MENU_OVERLAY = "column-menu";
 export const PROPERTY_TYPES_OVERLAY = "property-types";
 const RESIZE_STEP = 16;
 const RESIZE_KEYS: Record<string, number> = {

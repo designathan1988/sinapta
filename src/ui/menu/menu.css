@@ -196,7 +196,8 @@
         0 0 0 var(--size-border-thin) var(--color-accent-default);
     }
 
-    & input {
+    & input,
+    & textarea {
       flex: 1;
       min-inline-size: 0;
       padding: var(--space-none);
@@ -205,6 +206,7 @@
       background: none;
       color: var(--color-text-primary);
       font-size: var(--font-size-sm);
+      resize: none;
 
       &::placeholder {
         color: var(--color-text-tertiary);

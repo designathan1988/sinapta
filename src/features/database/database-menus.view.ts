@@ -15,10 +15,8 @@ import {
   CELL_RELATION_OVERLAY,
   type TableContext,
 } from "./table-cell.view.ts";
-import {
-  COLUMN_MENU_OVERLAY,
-  PROPERTY_TYPES_OVERLAY,
-} from "./table-header.view.ts";
+import { COLUMN_MENU_OVERLAY } from "./database-overlay.ts";
+import { PROPERTY_TYPES_OVERLAY } from "./table-header.view.ts";
 import { FILTERS_OVERLAY, renderFilters } from "./view-filters.view.ts";
 import {
   renderViewSettings,

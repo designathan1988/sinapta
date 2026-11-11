@@ -207,6 +207,7 @@ export const DATABASE_TEXT = {
     calendarBy: "Show calendar by",
     searchProperty: "Search for a property",
     emptyValue: "Empty",
+    addDescription: "Add a description…",
     noGrouping: "None",
     groupSort: "Sort groups",
     groupSorts: {

@@ -1,15 +1,12 @@
-// The options of a select, multi-select or status property, each with its
-// name, color, moves up and down and delete, and a field to add one.
-import { renderChip } from "../../ui/chip/index.ts";
+// The options of a select, multi-select or status property, as Notion
+// lists them in the property's menu: each a chip whose row opens its own
+// panel, with its name, its place, Delete and its color; and a field that
+// adds one.
 import { html, type TemplateResult } from "lit-html";
-import type {
-  PropertyDefinition,
-  SelectOption,
-} from "../../blocks/database/index.ts";
-import type { Dispatch, OpenOverlay } from "../../state/index.ts";
-import { renderButton } from "../../ui/button/index.ts";
+import type { PropertyDefinition } from "../../blocks/database/index.ts";
+import { openOverlayPanel } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
-import { renderSelect } from "../../ui/select/index.ts";
+import type { MenuEntry } from "../../ui/menu/index.ts";
 import {
   deleteOption,
   moveOption,
@@ -22,101 +19,21 @@ import { addOption, OPTION_COLORS } from "./table.commands.ts";
 
 const TEXT = COPY.database;
 
+// The panel of one option is the overlay's panel "option:<its id>".
+const OPTION_PANEL = "option:";
+
+export function optionOfPanel(panel: string | undefined): string | undefined {
+  return panel?.startsWith(OPTION_PANEL) === true
+    ? panel.slice(OPTION_PANEL.length)
+    : undefined;
+}
+
 function colorLabel(color: string): string {
   const tones: Readonly<Record<string, string>> = COPY.tones;
   return tones[color] ?? color;
 }
 
-interface OptionRow {
-  readonly option: SelectOption;
-  readonly target: OptionTarget;
-  readonly dispatch: Dispatch;
-  readonly overlay: OpenOverlay | null;
-}
-
-// The option's color, chosen from the colors drawn as chips.
-function renderColorSelect(row: OptionRow): TemplateResult {
-  const { option, target, dispatch, overlay } = row;
-  return renderSelect(
-    {
-      id: `color-${target.propertyId}-${target.optionId}`,
-      label: TEXT.optionColor,
-      value: option.color,
-      options: OPTION_COLORS.map((color) => ({
-        value: color,
-        label: colorLabel(color),
-        color,
-      })),
-      variant: "quiet",
-      onChoose: (color) => {
-        dispatch(recolorOption.create({ ...target, color }));
-      },
-    },
-    { overlay, dispatch },
-  );
-}
-
-function renderOptionButtons(row: OptionRow): TemplateResult {
-  const { option, target, dispatch } = row;
-  const move = (offset: number) => () =>
-    dispatch(moveOption.create({ ...target, offset }));
-  const quiet = { isIconOnly: true } as const;
-  return html`${renderButton({
-    ...quiet,
-    label: TEXT.moveOptionUp,
-    icon: "up",
-    onClick: move(-1),
-  })}
-  ${renderButton({
-    ...quiet,
-    label: TEXT.moveOptionDown,
-    icon: "down",
-    onClick: move(1),
-  })}
-  ${renderButton({
-    ...quiet,
-    label: `${TEXT.deleteOption}: ${option.name}`,
-    icon: "trash",
-    variant: "danger",
-    onClick: () => dispatch(deleteOption.create(target)),
-  })}`;
-}
-
-function renderOption(
-  option: SelectOption,
-  property: PropertyDefinition,
-  context: TableContext,
-): TemplateResult {
-  const target = {
-    databaseId: context.model.database.id,
-    propertyId: property.id,
-    optionId: option.id,
-  };
-  const row = {
-    option,
-    target,
-    dispatch: context.dispatch,
-    overlay: context.state.ui.overlay,
-  };
-  const onName = (event: Event): void => {
-    if (!(event.target instanceof HTMLInputElement)) return;
-    const name = event.target.value;
-    context.dispatch(renameOption.create({ ...target, name }));
-  };
-  return html`<li class="database__filter" data-option-id=${option.id}>
-    <span aria-hidden="true">${renderChip(option.name, option.color)}</span>
-    <input
-      class="database__field"
-      type="text"
-      aria-label=${TEXT.optionName}
-      .value=${option.name}
-      @change=${onName}
-    />
-    ${renderColorSelect(row)} ${renderOptionButtons(row)}
-  </li>`;
-}
-
-export function renderOptionList(
+export function renderAddOption(
   property: PropertyDefinition,
   context: TableContext,
 ): TemplateResult {
@@ -131,19 +48,123 @@ export function renderOptionList(
       addOption.create({ databaseId, propertyId: property.id, name }),
     );
   };
-  return html`<fieldset class="database__options">
-    <legend>${TEXT.options}</legend>
-    <ul class="database__filters">
-      ${(property.options ?? []).map((option) =>
-        renderOption(option, property, context),
-      )}
-    </ul>
+  return html`<label class="menu__field">
     <input
-      class="database__field"
       type="text"
       aria-label=${TEXT.addOption}
       placeholder=${TEXT.addOption}
       @keydown=${onAdd}
     />
-  </fieldset>`;
+  </label>`;
+}
+
+// The options under their label, each row its chip and a chevron.
+export function optionEntries(
+  property: PropertyDefinition,
+  context: TableContext,
+): MenuEntry[] {
+  const options = property.options ?? [];
+  if (options.length === 0) return [];
+  return [
+    { kind: "section", label: TEXT.options },
+    ...options.map((option): MenuEntry => ({
+      label: option.name,
+      color: option.color,
+      opensPanel: true,
+      onSelect: () =>
+        context.dispatch(
+          openOverlayPanel.create({ panel: `${OPTION_PANEL}${option.id}` }),
+        ),
+    })),
+  ];
+}
+
+export interface OptionPanel {
+  readonly title: string;
+  readonly lead: TemplateResult;
+  readonly items: readonly MenuEntry[];
+}
+
+function renderName(
+  target: OptionTarget,
+  name: string,
+  context: TableContext,
+): TemplateResult {
+  const rename = (event: Event): void => {
+    if (!(event.target instanceof HTMLInputElement)) return;
+    const next = event.target.value;
+    context.dispatch(renameOption.create({ ...target, name: next }));
+  };
+  return html`<label class="menu__field">
+    <input
+      type="text"
+      aria-label=${TEXT.optionName}
+      data-autofocus
+      .value=${name}
+      @change=${rename}
+    />
+  </label>`;
+}
+
+// Moving an option is the keyboard's way to drag it; Delete goes back to
+// the property's panel.
+function placeItems(target: OptionTarget, context: TableContext): MenuEntry[] {
+  const { dispatch } = context;
+  const move = (offset: number) => (): void => {
+    dispatch(moveOption.create({ ...target, offset }));
+  };
+  return [
+    {
+      label: TEXT.moveOptionUp,
+      icon: "up",
+      keepsOpen: true,
+      onSelect: move(-1),
+    },
+    {
+      label: TEXT.moveOptionDown,
+      icon: "down",
+      keepsOpen: true,
+      onSelect: move(1),
+    },
+    {
+      label: TEXT.deleteOption,
+      icon: "trash",
+      isDanger: true,
+      keepsOpen: true,
+      onSelect: () => {
+        dispatch(deleteOption.create(target));
+        dispatch(openOverlayPanel.create({ panel: null }));
+      },
+    },
+  ];
+}
+
+export function optionPanel(
+  property: PropertyDefinition,
+  optionId: string,
+  context: TableContext,
+): OptionPanel | undefined {
+  const option = property.options?.find((item) => item.id === optionId);
+  if (option === undefined) return undefined;
+  const databaseId = context.model.database.id;
+  const target = { databaseId, propertyId: property.id, optionId };
+  const colors = OPTION_COLORS.map((color): MenuEntry => ({
+    label: colorLabel(color),
+    color,
+    check: "radio",
+    isChecked: option.color === color,
+    keepsOpen: true,
+    onSelect: () =>
+      context.dispatch(recolorOption.create({ ...target, color })),
+  }));
+  return {
+    title: option.name,
+    lead: renderName(target, option.name, context),
+    items: [
+      ...placeItems(target, context),
+      { kind: "divider" },
+      { kind: "section", label: TEXT.optionColor },
+      ...colors,
+    ],
+  };
 }

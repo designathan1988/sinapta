@@ -18,7 +18,7 @@ const STAGE: PropertySpec = {
   ],
 };
 
-function rendered(spec: PropertySpec = STAGE, child?: string) {
+function rendered(spec: PropertySpec = STAGE, child?: string, panel?: string) {
   const app = createDatabaseApp([spec], []);
   const initial = app.store.getState();
   const anchorId = app.propertyIds[0] ?? "";
@@ -29,6 +29,7 @@ function rendered(spec: PropertySpec = STAGE, child?: string) {
       overlay: {
         kind: PROPERTY_EDIT_OVERLAY,
         anchorId,
+        ...(panel !== undefined && { panel }),
         ...(child !== undefined && {
           child: { anchorId: child.replace("{id}", anchorId) },
         }),
@@ -57,7 +58,17 @@ function rendered(spec: PropertySpec = STAGE, child?: string) {
     if (found === undefined) throw new Error(`no ${label} option`);
     found.click();
   };
-  return { host, sent, option, pick };
+  const row = (label: string) => {
+    const found = [
+      ...host.querySelectorAll<HTMLElement>(".menu [data-index]"),
+    ].find(
+      (item) =>
+        item.querySelector(".menu__label")?.textContent.trim() === label,
+    );
+    if (found === undefined) throw new Error(`no ${label} row`);
+    return found;
+  };
+  return { host, sent, option, pick, row };
 }
 
 function change(field: Element | null, value: string): void {
@@ -71,10 +82,26 @@ function change(field: Element | null, value: string): void {
 }
 
 describe("renderPropertyEdit", () => {
-  it("renames an option from its field", () => {
-    const { sent, option } = rendered();
+  it("lists the options as chips, each opening its own panel", () => {
+    const { host, sent, row } = rendered();
 
-    change(option("o2").querySelector("input"), "Shipped");
+    row("Done").click();
+
+    expect(
+      host.querySelector('.menu [data-index] .chip[data-color="green"]'),
+    ).not.toBeNull();
+    expect(sent).toEqual([
+      expect.objectContaining({
+        type: "ui.openOverlayPanel",
+        panel: "option:o2",
+      }),
+    ]);
+  });
+
+  it("renames an option from its panel", () => {
+    const { host, sent } = rendered(STAGE, undefined, "option:o2");
+
+    change(host.querySelector(".menu__field input"), "Shipped");
 
     expect(sent).toEqual([
       expect.objectContaining({
@@ -85,32 +112,29 @@ describe("renderPropertyEdit", () => {
     ]);
   });
 
-  it("recolors an option from its color list", () => {
-    const { sent, pick } = rendered(STAGE, "color-{id}-o1");
+  it("recolors an option from its colors, the current one checked", () => {
+    const { sent, row } = rendered(STAGE, undefined, "option:o1");
 
-    pick("Red");
+    row("Red").click();
 
+    expect(row("Gray").getAttribute("aria-checked")).toBe("true");
     expect(sent).toEqual([
-      expect.objectContaining({ type: "ui.closeChildOverlay" }),
       expect.objectContaining({ type: "option.recolor", color: "red" }),
     ]);
   });
 
-  it("moves and deletes an option with its buttons", () => {
-    const { sent, option } = rendered();
-    // The option's color is a select; the others are its buttons.
-    const buttons = option("o1").querySelectorAll<HTMLButtonElement>(
-      "button:not(.select)",
-    );
+  it("moves and deletes an option from its panel", () => {
+    const { sent, row } = rendered(STAGE, undefined, "option:o1");
 
-    for (const button of buttons) button.click();
+    row("Move option down").click();
+    row("Delete option").click();
 
     expect(sent.map((command) => command.type)).toEqual([
       "option.move",
-      "option.move",
       "option.delete",
+      "ui.openOverlayPanel",
     ]);
-    expect(sent[1]).toMatchObject({ offset: 1 });
+    expect(sent[0]).toMatchObject({ offset: 1 });
   });
 
   it("stores the property's description", () => {

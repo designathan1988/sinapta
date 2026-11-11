@@ -1,20 +1,32 @@
-// The settings of one property: its name, its type's own settings and,
-// for a property with options, the options.
+// The settings of one property, as Notion's property menu: its name with
+// its type's icon, a description, its type's own settings, the options of
+// a property with options, and Delete.
 import { html, nothing, type TemplateResult } from "lit-html";
-import { ref } from "lit-html/directives/ref.js";
 import type { PropertyDefinition } from "../../blocks/database/index.ts";
-import { closeOverlay } from "../../state/index.ts";
-import { COPY } from "../../ui/copy.ts";
 import {
-  focusOverlayAnchor,
-  showPopoverWhenConnected,
-} from "../../ui/overlay/index.ts";
-import { changeProperty, setPropertyConfig } from "./database.commands.ts";
-import { renderOptionList } from "./option-list.view.ts";
+  closeOverlay,
+  openOverlay,
+  openOverlayPanel,
+} from "../../state/index.ts";
+import { COPY } from "../../ui/copy.ts";
+import { renderIcon } from "../../ui/icon/index.ts";
+import { renderMenu, type MenuEntry } from "../../ui/menu/index.ts";
+import {
+  changeProperty,
+  removeProperty,
+  setPropertyConfig,
+} from "./database.commands.ts";
+import {
+  optionEntries,
+  optionOfPanel,
+  optionPanel,
+  renderAddOption,
+} from "./option-list.view.ts";
 import { propertyType } from "./property-registry.ts";
 import type { TableContext } from "./table-cell.view.ts";
+import { COLUMN_MENU_OVERLAY } from "./database-overlay.ts";
 
-export const PROPERTY_EDIT_OVERLAY = "property-edit";
+export { PROPERTY_EDIT_OVERLAY } from "./database-overlay.ts";
 
 function renderNameField(
   property: PropertyDefinition,
@@ -27,11 +39,11 @@ function renderNameField(
     const name = event.target.value;
     context.dispatch(changeProperty.create({ databaseId, propertyId, name }));
   };
-  return html`<label class="database__view-name">
-    ${COPY.database.propertyName}
+  return html`<label class="menu__field database__property-name">
+    ${renderIcon(propertyType(property.type).icon)}
     <input
-      class="database__field"
       type="text"
+      aria-label=${COPY.database.propertyName}
       data-autofocus
       .value=${property.name}
       @change=${rename}
@@ -70,43 +82,83 @@ function renderDescription(
       changeProperty.create({ databaseId, propertyId, description }),
     );
   };
-  return html`<label class="database__view-name">
-    ${COPY.database.propertyDescription}
+  return html`<label class="menu__field">
     <textarea
-      class="database__field"
-      rows="2"
+      rows="1"
+      aria-label=${COPY.database.propertyDescription}
+      placeholder=${COPY.database.addDescription}
       .value=${property.description ?? ""}
       @change=${onChange}
     ></textarea>
   </label>`;
 }
 
+// After the settings: Delete, as at the end of Notion's property menu.
+function actions(
+  property: PropertyDefinition,
+  context: TableContext,
+): MenuEntry[] {
+  const databaseId = context.model.database.id;
+  const propertyId = property.id;
+  return [
+    {
+      label: COPY.database.deleteProperty,
+      icon: "trash",
+      isDanger: true,
+      onSelect: () =>
+        context.dispatch(removeProperty.create({ databaseId, propertyId })),
+    },
+  ];
+}
+
+// One option's panel, reached from the options' rows.
+function renderOptionPanel(
+  property: PropertyDefinition,
+  optionId: string,
+  context: TableContext,
+): TemplateResult | typeof nothing {
+  const panel = optionPanel(property, optionId, context);
+  if (panel === undefined) return nothing;
+  const { dispatch } = context;
+  return renderMenu({
+    label: COPY.database.propertySettings,
+    title: panel.title,
+    onBack: () => dispatch(openOverlayPanel.create({ panel: null })),
+    lead: panel.lead,
+    items: panel.items,
+    onClose: () => dispatch(closeOverlay.create({})),
+  });
+}
+
 export function renderPropertyEdit(
   context: TableContext,
 ): TemplateResult | typeof nothing {
   const { model, dispatch, state } = context;
-  const anchorId = state.ui.overlay?.anchorId;
+  const { overlay } = state.ui;
   const property = model.database.props.properties.find(
-    (item) => item.id === anchorId,
+    (item) => item.id === overlay?.anchorId,
   );
   if (property === undefined) return nothing;
-  const close = (): void => {
-    focusOverlayAnchor();
-    dispatch(closeOverlay.create({}));
-  };
+  const optionId = optionOfPanel(overlay?.panel);
+  if (optionId !== undefined) {
+    return renderOptionPanel(property, optionId, context);
+  }
   const hasOptions = propertyType(property.type).editor === "options";
-  return html`<div
-    class="database__popover"
-    popover="manual"
-    data-overlay
-    aria-label=${COPY.database.propertySettings}
-    ${ref(showPopoverWhenConnected)}
-    @keydown=${(event: KeyboardEvent) => {
-      if (event.key === "Escape") close();
-    }}
-  >
-    ${renderNameField(property, context)}
-    ${renderDescription(property, context)} ${renderConfig(property, context)}
-    ${hasOptions ? renderOptionList(property, context) : nothing}
-  </div>`;
+  const menu = { kind: COLUMN_MENU_OVERLAY, anchorId: property.id };
+  return renderMenu({
+    label: COPY.database.propertySettings,
+    title: COPY.database.editProperty,
+    onBack: () => dispatch(openOverlay.create({ overlay: menu })),
+    lead: html`<div class="database__property-settings">
+      ${renderNameField(property, context)}
+      ${renderDescription(property, context)} ${renderConfig(property, context)}
+      ${hasOptions ? renderAddOption(property, context) : nothing}
+    </div>`,
+    items: [
+      ...(hasOptions ? optionEntries(property, context) : []),
+      { kind: "divider" },
+      ...actions(property, context),
+    ],
+    onClose: () => dispatch(closeOverlay.create({})),
+  });
 }

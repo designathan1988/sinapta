@@ -5,7 +5,7 @@ import type { Command } from "../../state/index.ts";
 import { createDatabaseApp } from "./database-builder.ts";
 import { renderDatabase } from "./database.view.ts";
 import { PROPERTY_EDIT_OVERLAY } from "./property-edit.view.ts";
-import { COLUMN_MENU_OVERLAY } from "./table-header.view.ts";
+import { COLUMN_MENU_OVERLAY } from "./database-overlay.ts";
 
 describe("the table's header", () => {
   it("anchors a property's settings to its column, as its menu was", () => {
