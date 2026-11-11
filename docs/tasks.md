@@ -654,3 +654,27 @@ Checks after milestone 13: 933 tests pass; `npm run verify` green; each
 task checked in the running app. The browser pane's synthetic Ctrl+C and
 Ctrl+V fire no native clipboard events, so clipboard paths are covered by
 unit tests only.
+
+### Milestone 14: New blocks and files
+
+| Task | Status | Tests |
+| --- | --- | --- |
+| 14.1 Simple table block | done | `simple-table.test.ts`, `simple-table-view.test.ts`, `pasted-markdown.test.ts`, `pasted-html-blocks.test.ts`, `editor-context-menu.test.ts` |
+| 14.2 Columns | done | `column-list.test.ts`, `column-view.test.ts`, `tidy.test.ts`, `pointer-drag.test.ts`, `editor-block-drag.test.ts` |
+| 14.3 Equations (format version 11) | done | `tex-parse.test.ts`, `equation.test.ts`, `editor-equation.test.ts`, `editor-equation-view.test.ts` |
+| 14.4 Breadcrumb block | done | `breadcrumb.test.ts` |
+| 14.5 Asset store (format version 12) | done | `asset-store.test.ts`, `asset.test.ts`, `workspace-repository-assets.test.ts`, `workspace-file.test.ts` |
+| 14.6 File, PDF, video and audio blocks | done | `media-blocks.test.ts`, `asset-store.test.ts` |
+| 14.7 Embed block | done | `embed.test.ts` |
+| 14.8 Synced block | done | `synced-block.test.ts`, `editor-block-menu.test.ts`, `editor-paste-blocks.test.ts` |
+| 14.9 Button block | done | `button.test.ts`, `button-view.test.ts`, `slash-menu.test.ts` |
+
+Found on the way: the block context menu opened over a table cell's own
+menu (fixed with a `defaultPrevented` guard in 14.1). Files never travel
+in commands: the asset saver stores them and dispatches only the outcome
+(14.5). The PDF frame is not sandboxed, since Chrome's viewer refuses
+sandboxed frames; files are served as `application/octet-stream` unless
+their type is passive (14.6).
+
+Checks after milestone 14: 1120 tests pass; `npm run verify` green; each
+block checked in the running app.
