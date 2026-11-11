@@ -39,6 +39,7 @@ export {
   type CalendarOptions,
   type TimelineOptions,
   type ChartOptions,
+  type FormOptions,
   type Conjunction,
   type Filter,
   type FilterGroup,

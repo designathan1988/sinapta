@@ -14,6 +14,8 @@ import { cardCommands } from "./card.commands.ts";
 import { calendarOptionCommands } from "./calendar-options.commands.ts";
 import { timelineOptionCommands } from "./timeline-options.commands.ts";
 import { chartOptionCommands } from "./chart-options.commands.ts";
+import { formOptionCommands } from "./form-options.commands.ts";
+import { formCommands } from "./layouts/form/form.commands.ts";
 import { boardCardCommands } from "./layouts/board/board-card.commands.ts";
 
 export { createDatabase } from "./database.commands.ts";
@@ -53,6 +55,8 @@ export const databaseCommands = [
   ...calendarOptionCommands,
   ...timelineOptionCommands,
   ...chartOptionCommands,
+  ...formOptionCommands,
+  ...formCommands,
   ...boardCardCommands,
   ...viewLayoutCommands,
   ...viewSearchCommands,

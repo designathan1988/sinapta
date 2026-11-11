@@ -57,6 +57,7 @@ function createApp() {
     calendar: { mode: "month", showWeekends: true, weekStartsOn: 0 },
     timeline: { zoom: "month", showTable: true },
     chart: { kind: "column", aggregate: "count" },
+    form: { requiredPropertyIds: [], description: "" },
   };
   const workspace = { ...base, views: { [VIEW]: view } };
   return createTestApp({ workspace, commands: pageDuplicateCommands });

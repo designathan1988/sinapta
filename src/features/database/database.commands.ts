@@ -45,6 +45,7 @@ export function emptyView(
     calendar: { mode: "month", showWeekends: true, weekStartsOn: 0 },
     timeline: { zoom: "month", showTable: true },
     chart: { kind: "column", aggregate: "count" },
+    form: { requiredPropertyIds: [], description: "" },
   };
 }
 

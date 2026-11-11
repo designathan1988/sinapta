@@ -86,6 +86,11 @@ export interface UiState {
   // The first day of the week a calendar shows in week mode; null for
   // the current week.
   readonly calendarWeek: string | null;
+  // The questions a form's last sending left unanswered, by view.
+  readonly formErrors: {
+    readonly viewId: string;
+    readonly propertyIds: readonly string[];
+  } | null;
   // What has been typed into each view's search field.
   readonly viewSearches: Readonly<Record<ViewId, string>>;
   // Sidebar width in rem.
@@ -184,6 +189,7 @@ export function createInitialUiState(): UiState {
     selectedRowIds: [],
     calendarMonth: null,
     calendarWeek: null,
+    formErrors: null,
     viewSearches: {},
     sidebarWidth: SIDEBAR_WIDTH.initial,
     isSidebarCollapsed: false,

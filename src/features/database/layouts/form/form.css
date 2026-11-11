@@ -1,0 +1,136 @@
+@layer features {
+  /* Notion's form: a narrow column of questions under the form's name and
+     description, each with its icon and name, a switch that makes it
+     required, its field, and the reason it was not sent. */
+  .form {
+    display: grid;
+    gap: var(--space-stack-md);
+    inline-size: 100%;
+    max-inline-size: var(--size-dialog-width);
+    margin-inline: auto;
+    padding: var(--space-inset-lg) var(--space-none);
+  }
+
+  .form__title {
+    margin: var(--space-none);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .form__description {
+    padding: var(--space-none);
+    border: none;
+    outline: none;
+    background: none;
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: inherit;
+    resize: vertical;
+
+    &::placeholder {
+      color: var(--color-text-tertiary);
+    }
+  }
+
+  .form__question {
+    display: grid;
+    gap: var(--space-stack-xs);
+    padding: var(--space-inset-md);
+    border-radius: var(--radius-lg);
+    box-shadow: inset 0 0 0 var(--size-border-thin) var(--color-border-subtle);
+  }
+
+  .form__question-head {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .form__label {
+    display: flex;
+    gap: var(--space-inline-icon);
+    align-items: center;
+    font-weight: var(--font-weight-medium);
+
+    & > .icon {
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+      color: var(--color-text-secondary);
+    }
+  }
+
+  .form__star {
+    color: var(--color-text-danger);
+  }
+
+  .form__required {
+    display: inline-flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    padding: var(--space-none);
+    border: none;
+    background: none;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+  }
+
+  .form__field {
+    min-block-size: var(--size-control-md);
+    padding: var(--space-none) var(--space-inline-sm);
+    border: none;
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-field);
+    box-shadow: inset 0 0 0 var(--size-border-thin) var(--color-border-default);
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: inherit;
+
+    &:focus {
+      outline: none;
+      box-shadow:
+        inset 0 0 0 var(--size-border-thin) var(--color-accent-default),
+        0 0 0 var(--size-border-thin) var(--color-accent-default);
+    }
+
+    &[aria-invalid="true"] {
+      box-shadow: inset 0 0 0 var(--size-border-thin) var(--color-text-danger);
+    }
+  }
+
+  .form__choices {
+    display: grid;
+    gap: var(--space-stack-xs);
+  }
+
+  .form__choice {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+  }
+
+  .form__error {
+    margin: var(--space-none);
+    color: var(--color-text-danger);
+    font-size: var(--font-size-sm);
+  }
+
+  .form__submit {
+    justify-self: start;
+    min-block-size: var(--size-control-md);
+    padding: var(--space-none) var(--space-inset-md);
+    border: none;
+    border-radius: var(--radius-md);
+    background-color: var(--color-accent-default);
+    color: var(--color-text-on-accent);
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-accent-hover);
+    }
+  }
+}

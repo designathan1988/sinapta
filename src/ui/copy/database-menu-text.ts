@@ -41,6 +41,10 @@ export const DATABASE_MENU_TEXT = {
   showTimelineBy: "Show timeline by",
   showTable: "Show table",
   chartValue: "Value",
+  formRequired: "Required",
+  formRequiredError: "This question is required.",
+  formSubmit: "Submit",
+  formSent: "Your response was sent.",
   noChartProperty: "Add a select or status property to chart the rows by.",
   chartKind: "Chart type",
   chartKinds: {

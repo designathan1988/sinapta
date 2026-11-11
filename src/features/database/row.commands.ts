@@ -26,6 +26,10 @@ export interface AddRowPayload {
   readonly values?: Readonly<Record<string, unknown>>;
   // Opens the new row as a page instead of editing its title in place.
   readonly opensPage?: boolean;
+  // The row's title, as a form's answer gives it.
+  readonly title?: string;
+  // Leaves the interface as it is, as a form that keeps taking answers.
+  readonly staysPut?: boolean;
 }
 
 function afterAdd(state: AppState, id: BlockId, opensPage: boolean): UiState {
@@ -47,8 +51,9 @@ export const addRow = defineCommand<AddRowPayload>({
     if (database === undefined || id === undefined) return {};
     const { now } = command.meta;
     const numbered = numberNewRow(database);
+    const title = command.title?.trim().normalize("NFC") ?? "";
     const props = {
-      title: [],
+      title: title === "" ? [] : [{ text: title }],
       icon: null,
       isFavorite: false,
       isTrashed: false,
@@ -74,7 +79,9 @@ export const addRow = defineCommand<AddRowPayload>({
         },
         ...numbered.operations,
       ],
-      ui: afterAdd(state, id, command.opensPage === true),
+      ...(command.staysPut !== true && {
+        ui: afterAdd(state, id, command.opensPage === true),
+      }),
     };
   },
 });

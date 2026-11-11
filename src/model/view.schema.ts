@@ -32,6 +32,7 @@ export const viewTypeSchema = v.picklist([
   "list",
   "gallery",
   "chart",
+  "form",
 ]);
 
 export const VIEW_TYPES = viewTypeSchema.options;
@@ -105,6 +106,13 @@ export const chartOptionsSchema = v.object({
   valuePropertyId: v.optional(propertyIdSchema),
 });
 
+// What a form asks (version 25): which questions must be answered, and
+// the words above them.
+export const formOptionsSchema = v.object({
+  requiredPropertyIds: v.array(propertyIdSchema),
+  description: v.string(),
+});
+
 export const viewSchema = v.object({
   id: viewIdSchema,
   databaseId: blockIdSchema,
@@ -141,6 +149,7 @@ export const viewSchema = v.object({
   calendar: calendarOptionsSchema,
   timeline: timelineOptionsSchema,
   chart: chartOptionsSchema,
+  form: formOptionsSchema,
 });
 
 export type Filter = v.InferOutput<typeof filterSchema>;
@@ -155,3 +164,4 @@ export type ViewType = v.InferOutput<typeof viewTypeSchema>;
 export type CalendarOptions = v.InferOutput<typeof calendarOptionsSchema>;
 export type TimelineOptions = v.InferOutput<typeof timelineOptionsSchema>;
 export type ChartOptions = v.InferOutput<typeof chartOptionsSchema>;
+export type FormOptions = v.InferOutput<typeof formOptionsSchema>;

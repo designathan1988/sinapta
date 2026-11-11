@@ -34,6 +34,8 @@ import { cardCommands } from "./card.commands.ts";
 import { calendarOptionCommands } from "./calendar-options.commands.ts";
 import { timelineOptionCommands } from "./timeline-options.commands.ts";
 import { chartOptionCommands } from "./chart-options.commands.ts";
+import { formOptionCommands } from "./form-options.commands.ts";
+import { formCommands } from "./layouts/form/form.commands.ts";
 import { boardCardCommands } from "./layouts/board/board-card.commands.ts";
 import {
   pageCommands,
@@ -110,6 +112,8 @@ const DATABASE_TEST_COMMANDS = [
   ...calendarOptionCommands,
   ...timelineOptionCommands,
   ...chartOptionCommands,
+  ...formOptionCommands,
+  ...formCommands,
   ...boardCardCommands,
   ...viewLayoutCommands,
   ...viewSearchCommands,
