@@ -1,6 +1,7 @@
 // Commands that change the text inside one block.
 import { isTextBlock } from "../../blocks/index.ts";
 import {
+  applyInlineMarkdownTo,
   deleteRange,
   insertText,
   plainText,
@@ -11,6 +12,7 @@ import {
   snapToBoundaryAfter,
   toggleMark,
   type BlockId,
+  type InlineMarkdownMatch,
   type Mark,
   type Operation,
   type RichText,
@@ -100,6 +102,29 @@ export const toggleTextMark = defineCommand<ToggleMarkPayload>({
   },
 });
 
+// Formats Markdown typed inside a line once its closing marker is typed.
+// It is its own step in history, so one undo brings the markers back.
+export const applyInlineMarkdown = defineCommand<
+  InlineMarkdownMatch & { blockId: BlockId }
+>({
+  type: "text.applyInlineMarkdown",
+  handle(state, command) {
+    const block = state.workspace.blocks[command.blockId];
+    if (!isTextBlock(block)) return {};
+    const text = applyInlineMarkdownTo(block.props.text, command);
+    if (text === undefined) return {};
+    const caret = command.end - 2 * command.markerLength;
+    return {
+      operations: setText(state, {
+        blockId: block.id,
+        text,
+        now: command.meta.now,
+      }),
+      ui: { ...state.ui, selection: caretAt(block.id, caret) },
+    };
+  },
+});
+
 export interface SetLinkPayload {
   readonly blockId: BlockId;
   readonly start: number;
@@ -157,6 +182,7 @@ export const setTextTone = defineCommand<SetTonePayload>({
 export const editorCommands = [
   replaceText,
   toggleTextMark,
+  applyInlineMarkdown,
   setTextLink,
   setTextTone,
 ];

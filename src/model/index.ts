@@ -95,6 +95,11 @@ export {
   type ToneRange,
 } from "./rich-text.ts";
 export { safeHref, safeImageSource } from "./link-href.ts";
+export {
+  applyInlineMarkdownTo,
+  matchInlineMarkdown,
+  type InlineMarkdownMatch,
+} from "./inline-markdown.ts";
 export { diffText, type TextEdit } from "./text-diff.ts";
 export {
   dropMove,

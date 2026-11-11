@@ -1,14 +1,24 @@
 // Translates input inside text blocks into commands. The browser's default
 // edit is cancelled; the store changes and the text is projected back.
-import { toggleTextMark, replaceText } from "./editor.commands.ts";
+import {
+  applyInlineMarkdown,
+  replaceText,
+  toggleTextMark,
+} from "./editor.commands.ts";
 import { matchBlockShortcut } from "./block-shortcut.ts";
 import { convertBlock } from "./editor-convert.commands.ts";
 import { pasteInto } from "./editor-paste.view.ts";
 import { mergeBlockBackward, splitBlock } from "./editor-structure.commands.ts";
 import { selectNeighborTextBlock } from "./editor.selectors.ts";
 import { blockDefinition, isTextBlock, textOf } from "../../blocks/index.ts";
+import { CODE_TYPE } from "../../blocks/code/index.ts";
 import { PARAGRAPH_TYPE } from "../../blocks/paragraph/index.ts";
-import { diffText, type BlockId, type Mark } from "../../model/index.ts";
+import {
+  diffText,
+  matchInlineMarkdown,
+  type BlockId,
+  type Mark,
+} from "../../model/index.ts";
 import {
   openOverlay,
   REDO_COMMAND,
@@ -97,14 +107,32 @@ function openSlashMenu(target: Target, dispatch: Dispatch): void {
   dispatch(openOverlay.create({ overlay }));
 }
 
+// After a typed key, the Markdown it closes inside the line, if any.
+function inlineMarkdownFor(target: Target, text: string, state: AppState) {
+  const block = state.workspace.blocks[target.blockId];
+  if (!isTextBlock(block) || text.length !== 1) return undefined;
+  // A code block keeps what is typed in it as it is.
+  if (block.type === CODE_TYPE) return undefined;
+  const current = textOf(block);
+  const typed =
+    current.slice(0, target.start) + text + current.slice(target.end);
+  return matchInlineMarkdown(typed, target.start + text.length);
+}
+
 const insert: Handler = (target, event, { state, dispatch }) => {
   const text = insertedText(event);
   const shortcut = shortcutFor(target, text, state);
-  if (shortcut === undefined) {
-    dispatch(replaceText.create({ ...target, text }));
-    if (text === "/") openSlashMenu(target, dispatch);
-  } else {
+  if (shortcut !== undefined) {
     dispatch(convertBlock.create({ blockId: target.blockId, ...shortcut }));
+    return;
+  }
+  dispatch(replaceText.create({ ...target, text }));
+  if (text === "/") openSlashMenu(target, dispatch);
+  const markdown = inlineMarkdownFor(target, text, state);
+  if (markdown !== undefined) {
+    dispatch(
+      applyInlineMarkdown.create({ blockId: target.blockId, ...markdown }),
+    );
   }
 };
 

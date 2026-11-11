@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { toBlockId } from "../../model/index.ts";
 import { createApp, text } from "./editor-builder.ts";
 import {
+  applyInlineMarkdown,
   replaceText,
   setTextLink,
   setTextTone,
@@ -151,5 +152,49 @@ describe("text.setTone", () => {
     expect(store.getState().workspace.blocks[A]?.props.text).toEqual([
       { text: "Hello" },
     ]);
+  });
+});
+
+describe("text.applyInlineMarkdown", () => {
+  const bold = { blockId: A, start: 0, end: 8, markerLength: 2 } as const;
+
+  it("marks the text between the markers and drops the markers", () => {
+    const { store, dispatch } = createApp([text("a", "**bold**")]);
+
+    dispatch(applyInlineMarkdown.create({ ...bold, mark: "bold" }));
+
+    const block = store.getState().workspace.blocks[A];
+    expect(block?.props.text).toEqual([{ text: "bold", marks: ["bold"] }]);
+    expect(store.getState().ui.selection?.focusOffset).toBe(4);
+  });
+
+  it("brings the typed markers back with one undo", () => {
+    const { dispatch, outline } = createApp([text("a", "**bold*")]);
+    dispatch(replaceText.create({ blockId: A, start: 7, end: 7, text: "*" }));
+    dispatch(applyInlineMarkdown.create({ ...bold, mark: "bold" }));
+
+    dispatch({ type: UNDO_COMMAND });
+
+    expect(outline()).toEqual(["paragraph:**bold**"]);
+  });
+
+  it("leaves markers inside inline code alone", () => {
+    const code = [{ text: "**x**", marks: ["code" as const] }];
+    const { store, dispatch } = createApp([
+      { id: "a", type: "paragraph", props: { text: code } },
+    ]);
+    const before = store.getState();
+
+    dispatch(
+      applyInlineMarkdown.create({
+        blockId: A,
+        start: 0,
+        end: 5,
+        markerLength: 2,
+        mark: "bold",
+      }),
+    );
+
+    expect(store.getState()).toBe(before);
   });
 });

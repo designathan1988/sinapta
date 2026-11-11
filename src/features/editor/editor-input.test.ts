@@ -1,6 +1,11 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import { createInitialState, type Command } from "../../state/index.ts";
+import { buildWorkspace } from "../../model/index.ts";
+import {
+  createInitialState,
+  type AppState,
+  type Command,
+} from "../../state/index.ts";
 import { onBeforeInput } from "./editor-input.view.ts";
 
 function typeInto(element: Element): { event: InputEvent; sent: Command[] } {
@@ -37,3 +42,76 @@ describe("onBeforeInput", () => {
     expect(sent).toEqual([]);
   });
 });
+
+// A paragraph holding `text` in the document and in the state, with the
+// caret at its end, and a key typed there.
+function typeAtEnd(text: string, init: InputEventInit, type = "paragraph") {
+  const block = document.createElement("div");
+  block.dataset.blockId = "a";
+  const element = document.createElement("p");
+  element.dataset.text = "";
+  element.textContent = text;
+  block.append(element);
+  document.body.replaceChildren(block);
+  const node = element.firstChild ?? element;
+  document
+    .getSelection()
+    ?.setBaseAndExtent(node, text.length, node, text.length);
+  const initial = createInitialState();
+  const workspace = buildWorkspace([
+    {
+      id: "page",
+      children: [{ id: "a", type, props: { text: [{ text }] } }],
+    },
+  ]);
+  const state: AppState = { ...initial, workspace };
+  const sent: Command[] = [];
+  const context = {
+    state,
+    dispatch: (command: Command) => {
+      sent.push(command);
+      return { ok: true } as const;
+    },
+  };
+  const event = new InputEvent("beforeinput", {
+    cancelable: true,
+    bubbles: true,
+    ...init,
+  });
+  // The test document has no target ranges; the caret is in the selection.
+  Object.defineProperty(event, "target", { value: element });
+  Object.defineProperty(event, "getTargetRanges", { value: () => [] });
+  onBeforeInput(event, context);
+  return sent.map((command) => command.type);
+}
+
+describe("inline Markdown while typing", () => {
+  it("formats the text once its closing marker is typed", () => {
+    const sent = typeAtEnd("**bold*", { inputType: "insertText", data: "*" });
+
+    expect(sent).toEqual(["text.replace", "text.applyInlineMarkdown"]);
+  });
+
+  it("types an ordinary character as it is", () => {
+    const sent = typeAtEnd("**bold", { inputType: "insertText", data: "*" });
+
+    expect(sent).toEqual(["text.replace"]);
+  });
+
+  it("does nothing while an input method is composing", () => {
+    const sent = typeAtEnd("**bold*", {
+      inputType: "insertCompositionText",
+      data: "*",
+      isComposing: true,
+    });
+
+    expect(sent).toEqual([]);
+  });
+
+  it("leaves Markdown in a code block as typed", () => {
+    const init = { inputType: "insertText", data: "*" };
+
+    expect(typeAtEnd("**bold*", init, "code")).toEqual(["text.replace"]);
+  });
+});
+
