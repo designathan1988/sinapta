@@ -520,6 +520,19 @@ Checks after the pass:
 
 Nothing in this file is left not done.
 
+## Rule check pass: record
+
+A check of the code against the acceptance lines of specification section 9
+and `CLAUDE.md`, on a fresh install.
+
+| Item | Status | Tests or check |
+| --- | --- | --- |
+| `database.css` had 375 lines; split into one file per view (`database.css`, `table.css`, `database-menus.css`, `row-properties.css`) | done | Table, menus, chips and row properties checked in the running app in both themes |
+| `JSON.parse` sat in `workspace-file.ts`, outside the schemas; import now decodes through `src/model/json-text.schema.ts` (Valibot `parseJson`) | done | `src/model/json-text.test.ts`, `workspace-file.test.ts` |
+| The row count read "1 rows"; `pluralize` in `src/ui/copy.ts` picks the form | done | `src/ui/copy.test.ts`; "1 row" in the running app |
+
+| Token files over 250 lines against the four fixed files of section 3 | decided | `docs/decisions/0009-token-file-size.md`: token files are exempt from the file limit |
+
 Out of scope by decision, not a task: selecting part of the text of two
 blocks at once. The specification (section 5.3) and decision 0006 make a
 selection that crosses a block boundary a selection of whole blocks, and

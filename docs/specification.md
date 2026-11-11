@@ -153,9 +153,11 @@ defect. `docs/ownership.md` holds the full, current table.
   them in.
 - The lint configuration enforces the import direction, the 250-line file
   limit and the 40-line function limit. A lint error is a build failure.
-  Two exemptions: the function limit is off in `*.test.ts` files, where a
-  `describe` callback is one long function, and default exports are allowed
-  in root `*.config.*` files, where the tools require them.
+  Three exemptions: the function limit is off in `*.test.ts` files, where a
+  `describe` callback is one long function; default exports are allowed in
+  root `*.config.*` files, where the tools require them; and the file limit
+  does not apply to `tokens/*.tokens.json`, which hold values, not behavior
+  (`docs/decisions/0009-token-file-size.md`).
 - New block type: one new folder under `src/blocks/` and one line in the
   registry. New feature: one new folder under `src/features/` and one line
   in `src/app/bootstrap.ts`. A change that needs edits in more places than
@@ -732,7 +734,8 @@ until the previous one meets its acceptance line.
 
 ### Acceptance for the whole project
 
-- No file over 250 lines, no function over 40, zero lint warnings.
+- No file over 250 lines (exemptions in section 2.4), no function over 40,
+  zero lint warnings.
 - Searching the code for calls to the store's `setState` finds them only in
   `src/state/dispatch.ts` (`src/state/store.ts` creates the store and
   exports `setState` to the dispatcher alone); searching for `indexedDB` or
