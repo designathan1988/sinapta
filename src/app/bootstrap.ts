@@ -13,7 +13,10 @@ import {
   pageMoveCommands,
   pageTrashCommands,
 } from "../blocks/page/index.ts";
-import { databaseCommands } from "../features/database/index.ts";
+import {
+  databaseCommands,
+  withPropertyConfigs,
+} from "../features/database/index.ts";
 import { editorCommands } from "../features/editor/index.ts";
 import { formatToolbarKeys } from "../features/format-toolbar/index.ts";
 import {
@@ -86,17 +89,18 @@ async function startPersistence(
   dispatch: Dispatch,
 ): Promise<RepositoryStart> {
   const adapter = createIndexedDbAdapter();
+  const propsSchemas = withPropertyConfigs(BLOCK_PROPS_SCHEMAS);
   startFileTools({
     store,
     dispatch,
     adapter,
-    propsSchemas: BLOCK_PROPS_SCHEMAS,
+    propsSchemas,
   });
   const { isFirstRun } = await startRepository({
     store,
     dispatch,
     adapter,
-    propsSchemas: BLOCK_PROPS_SCHEMAS,
+    propsSchemas,
     tabs: createTabCoordination(),
   });
   // Files people add to blocks are kept beside the workspace.

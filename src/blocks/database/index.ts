@@ -1,7 +1,11 @@
 export { databaseDefinition } from "./database.definition.ts";
 export {
+  databasePropsReader,
   databasePropsSchema,
   propertyDefinitionSchema,
+  selectOptionSchema,
+  type PropertyConfigSchema,
+  type PropertyConfigSchemas,
   type DatabaseBlock,
   type DatabaseProps,
   type PropertyDefinition,

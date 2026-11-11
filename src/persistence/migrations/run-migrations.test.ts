@@ -73,4 +73,14 @@ describe("the migration list", () => {
       file: { schemaVersion: SCHEMA_VERSION, rootIds: ["a"], views: {} },
     });
   });
+
+  it("reads a version 12 database's properties unchanged, with no config", () => {
+    const properties = [{ id: "p", name: "Stage", type: "select" }];
+    const blocks = { db: { type: "database", props: { properties } } };
+
+    expect(runMigrations({ schemaVersion: 12, blocks })).toEqual({
+      ok: true,
+      file: { schemaVersion: 13, blocks },
+    });
+  });
 });

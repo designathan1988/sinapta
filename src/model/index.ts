@@ -42,6 +42,8 @@ export {
   parseWorkspaceFile,
   settingsSchema,
   type ParseWorkspaceResult,
+  type PropsRead,
+  type PropsReader,
   type PropsSchema,
   type PropsSchemas,
   type Settings,

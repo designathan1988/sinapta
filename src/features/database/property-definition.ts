@@ -1,7 +1,10 @@
 // What a property type tells the table about itself: how its values are
 // read, compared, filtered, shown and edited.
 import type { TemplateResult } from "lit-html";
-import type { PropertyDefinition } from "../../blocks/database/index.ts";
+import type {
+  PropertyConfigSchema,
+  PropertyDefinition,
+} from "../../blocks/database/index.ts";
 
 export interface FilterOperator {
   readonly id: string;
@@ -42,6 +45,16 @@ export interface PropertyType {
     value: unknown,
     property: PropertyDefinition,
   ) => TemplateResult | string;
+  // The shape of this type's settings, such as a number's format, checked
+  // when a workspace loads. A property without a config uses
+  // `defaultConfig`.
+  readonly configSchema?: PropertyConfigSchema;
+  readonly defaultConfig?: () => unknown;
+  // The settings shown in the property's menu.
+  readonly renderConfigEditor?: (
+    property: PropertyDefinition,
+    onChange: (config: unknown) => void,
+  ) => TemplateResult;
 }
 
 export const IS_EMPTY: FilterOperator = {

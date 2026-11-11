@@ -74,6 +74,55 @@ describe("parseWorkspaceFile", () => {
     ]);
   });
 
+  it("keeps a block whose reader drops broken parts and counts each part", () => {
+    const schemas: PropsSchemas = new Map([
+      ...PROPS_SCHEMAS,
+      [
+        "list",
+        (json: unknown) => ({
+          ok: true as const,
+          props: { items: ["kept"] },
+          dropped: [`items.1 of ${JSON.stringify(json)}`],
+        }),
+      ],
+    ]);
+    const block = createBlockJson({ type: "list", props: { items: [] } });
+
+    const result = parseWorkspaceFile(
+      createFileJson({ "b-01": block }),
+      schemas,
+    );
+
+    expect(result).toMatchObject({
+      ok: true,
+      workspace: { blocks: { "b-01": { props: { items: ["kept"] } } } },
+      skipped: [
+        {
+          kind: "invalid-record",
+          recordId: "b-01",
+          path: 'props.items.1 of {"items":[]}',
+        },
+      ],
+    });
+  });
+
+  it("skips a block whose reader refuses its props", () => {
+    const schemas: PropsSchemas = new Map([
+      ["page", () => ({ ok: false as const, path: "title" })],
+    ]);
+
+    const result = parseWorkspaceFile(
+      createFileJson({ "b-01": createBlockJson() }),
+      schemas,
+    );
+
+    expect(result).toMatchObject({
+      skipped: [
+        { kind: "invalid-record", recordId: "b-01", path: "props.title" },
+      ],
+    });
+  });
+
   it("skips a block whose props do not fit its type", () => {
     const block = createBlockJson({ props: { title: "plain" } });
 

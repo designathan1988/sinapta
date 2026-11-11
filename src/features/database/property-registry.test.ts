@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { toPropertyId } from "./database-builder.ts";
-import { PROPERTY_TYPES, propertyType } from "./property-registry.ts";
+import { BLOCK_PROPS_SCHEMAS } from "../../blocks/index.ts";
+import { selectOptionSchema } from "../../blocks/database/index.ts";
+import { parseWorkspaceFile, SCHEMA_VERSION } from "../../model/index.ts";
+import { createDatabaseApp, toPropertyId } from "./database-builder.ts";
+import {
+  PROPERTY_TYPES,
+  propertyType,
+  withPropertyConfigs,
+} from "./property-registry.ts";
 
 const property = {
   id: toPropertyId("p"),
@@ -110,5 +117,75 @@ describe("filter operators", () => {
     const [type, id, value, operand, expected] = row;
 
     expect(operator(type, id).test(value, operand)).toBe(expected);
+  });
+});
+
+// A stored workspace whose database's properties carry these configs, in
+// property order; undefined leaves a property without one.
+function storedWithConfigs(configs: readonly unknown[]) {
+  const app = createDatabaseApp(
+    [
+      { name: "Stage", type: "select" },
+      { name: "Size", type: "number" },
+      { name: "Notes", type: "text" },
+    ],
+    [["First"]],
+  );
+  const database = app.database();
+  const properties = database.props.properties.map((each, index) =>
+    configs[index] === undefined ? each : { ...each, config: configs[index] },
+  );
+  const { workspace } = app.store.getState();
+  const blocks = {
+    ...workspace.blocks,
+    [database.id]: { ...database, props: { ...database.props, properties } },
+  };
+  const file = { schemaVersion: SCHEMA_VERSION, ...workspace, blocks };
+  return { databaseId: database.id, json: JSON.parse(JSON.stringify(file)) };
+}
+
+// Configs checked with the shape of a select option, so that the test
+// needs no schema of its own.
+const SCHEMAS = withPropertyConfigs(
+  BLOCK_PROPS_SCHEMAS,
+  new Map([
+    ["select", selectOptionSchema],
+    ["number", selectOptionSchema],
+  ]),
+);
+
+describe("property configs on load", () => {
+  it("skips and counts a property whose config does not fit its type", () => {
+    const option = { id: "o1", name: "Open", color: "gray" };
+    const { databaseId, json } = storedWithConfigs([option, { id: 7 }]);
+
+    const result = parseWorkspaceFile(json, SCHEMAS);
+
+    if (!result.ok) throw new Error("the file did not load");
+    const database = result.workspace.blocks[databaseId];
+    expect(database?.props.properties).toMatchObject([
+      { name: "Stage", config: option },
+      { name: "Notes" },
+    ]);
+    expect(result.skipped).toEqual([
+      {
+        kind: "invalid-record",
+        recordId: databaseId,
+        path: "props.properties.1.config",
+      },
+    ]);
+  });
+
+  it("keeps properties without a config and the database's rows", () => {
+    const { databaseId, json } = storedWithConfigs([]);
+
+    const result = parseWorkspaceFile(json, SCHEMAS);
+
+    expect(result).toMatchObject({ ok: true, skipped: [] });
+    if (!result.ok) return;
+    expect(result.workspace.blocks[databaseId]?.childIds).toHaveLength(1);
+    expect(result.workspace.blocks[databaseId]?.props.properties).toHaveLength(
+      3,
+    );
   });
 });

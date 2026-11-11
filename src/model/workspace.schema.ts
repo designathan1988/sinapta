@@ -4,7 +4,7 @@ import { blockIdSchema, type BlockId, type ViewId } from "./id.schema.ts";
 import type { RecordError, WorkspaceFileError } from "./parse-error.ts";
 import { viewSchema, type View } from "./view.schema.ts";
 
-export const SCHEMA_VERSION = 12;
+export const SCHEMA_VERSION = 13;
 
 export const settingsSchema = v.object({
   theme: v.picklist(["system", "light", "dark"]),
@@ -31,7 +31,20 @@ export interface Workspace {
 // Block type name to the schema of that type's props, supplied by the
 // block registry so that the model does not know any block type.
 export type PropsSchema = v.GenericSchema<unknown, BlockProps>;
-export type PropsSchemas = ReadonlyMap<string, PropsSchema>;
+
+// Reads the props of a type whose props hold parts that are checked one by
+// one, such as the properties of a database: a broken part is dropped and
+// named in `dropped`, so it costs neither the whole block nor silence.
+export type PropsRead =
+  | {
+      readonly ok: true;
+      readonly props: BlockProps;
+      readonly dropped: readonly string[];
+    }
+  | { readonly ok: false; readonly path: string };
+export type PropsReader = (json: unknown) => PropsRead;
+
+export type PropsSchemas = ReadonlyMap<string, PropsSchema | PropsReader>;
 
 export type ParseWorkspaceResult =
   | {
@@ -42,7 +55,8 @@ export type ParseWorkspaceResult =
   | { readonly ok: false; readonly error: WorkspaceFileError };
 
 type RecordResult<TRecord> =
-  { readonly record: TRecord } | { readonly error: RecordError };
+  | { readonly record: TRecord; readonly dropped?: readonly RecordError[] }
+  | { readonly error: RecordError };
 
 function issuePath(issues: readonly v.BaseIssue<unknown>[]): string {
   return issues[0] === undefined ? "" : (v.getDotPath(issues[0]) ?? "");
@@ -65,16 +79,26 @@ function parseBlock(
   if (propsSchema === undefined) {
     return { error: { kind: "unknown-type", recordId: key, type: block.type } };
   }
-  const props = v.safeParse(propsSchema, block.props);
-  if (!props.success) {
-    return invalid(key, `props.${issuePath(props.issues)}`);
-  }
+  const props = readProps(propsSchema, block.props);
+  if (!props.ok) return invalid(key, `props.${props.path}`);
   return {
     record: {
       ...block,
-      props: v.parse(blockSchema.entries.props, props.output),
+      props: v.parse(blockSchema.entries.props, props.props),
     },
+    dropped: props.dropped.map((path) => invalid(key, `props.${path}`).error),
   };
+}
+
+function readProps(
+  schema: PropsSchema | PropsReader,
+  json: unknown,
+): PropsRead {
+  if (typeof schema === "function") return schema(json);
+  const result = v.safeParse(schema, json);
+  return result.success
+    ? { ok: true, props: result.output, dropped: [] }
+    : { ok: false, path: issuePath(result.issues) };
 }
 
 function parseView(key: string, json: unknown): RecordResult<View> {
@@ -97,8 +121,12 @@ function collect<TRecord>(
   const collected: Collected<TRecord> = { records: [], errors: [] };
   for (const [key, json] of Object.entries(entries)) {
     const result = parseRecord(key, json);
-    if ("record" in result) collected.records.push(result.record);
-    else collected.errors.push(result.error);
+    if ("error" in result) {
+      collected.errors.push(result.error);
+      continue;
+    }
+    collected.records.push(result.record);
+    collected.errors.push(...(result.dropped ?? []));
   }
   return collected;
 }

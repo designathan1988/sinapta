@@ -3,6 +3,7 @@ import {
   propertyIdSchema,
   richTextSchema,
   viewIdSchema,
+  type PropsReader,
   type TypedBlock,
 } from "../../model/index.ts";
 import { type DATABASE_TYPE } from "../page/index.ts";
@@ -21,6 +22,9 @@ export const propertyDefinitionSchema = v.object({
   type: v.string(),
   // The choices of a select or multi-select property.
   options: v.optional(v.array(selectOptionSchema)),
+  // The settings of its type, such as a number's format, in the shape its
+  // type's config schema gives; see databasePropsReader.
+  config: v.optional(v.unknown()),
 });
 
 // A database is listed and opened like a page, so it carries the page
@@ -33,6 +37,68 @@ export const databasePropsSchema = v.object({
   properties: v.array(propertyDefinitionSchema),
   viewIds: v.array(viewIdSchema),
 });
+
+// Property type name to the schema of that type's config, supplied by the
+// property registry so that the block does not know any property type.
+export type PropertyConfigSchema = v.GenericSchema;
+export type PropertyConfigSchemas = ReadonlyMap<string, PropertyConfigSchema>;
+
+const storedPropsSchema = v.object({
+  ...databasePropsSchema.entries,
+  properties: v.array(v.unknown()),
+});
+
+type PropertyRead =
+  | { readonly property: v.InferOutput<typeof propertyDefinitionSchema> }
+  | { readonly dropped: string };
+
+function readProperty(
+  json: unknown,
+  path: string,
+  configSchemas: PropertyConfigSchemas,
+): PropertyRead {
+  const parsed = v.safeParse(propertyDefinitionSchema, json);
+  if (!parsed.success) return { dropped: path };
+  const property = parsed.output;
+  const schema = configSchemas.get(property.type);
+  if (schema === undefined || property.config === undefined) {
+    return { property };
+  }
+  const config = v.safeParse(schema, property.config);
+  return config.success
+    ? { property: { ...property, config: config.output } }
+    : { dropped: `${path}.config` };
+}
+
+// Reads a database's props with each property checked on its own: a
+// property that is broken, or whose config does not fit its type, is
+// dropped and named, and the database keeps the rest.
+export function databasePropsReader(
+  configSchemas: PropertyConfigSchemas,
+): PropsReader {
+  return (json) => {
+    const parsed = v.safeParse(storedPropsSchema, json);
+    if (!parsed.success) {
+      const issue = parsed.issues[0];
+      return { ok: false, path: v.getDotPath(issue) ?? "" };
+    }
+    const reads = parsed.output.properties.map((property, index) =>
+      readProperty(property, `properties.${String(index)}`, configSchemas),
+    );
+    return {
+      ok: true,
+      props: {
+        ...parsed.output,
+        properties: reads.flatMap((read) =>
+          "property" in read ? [read.property] : [],
+        ),
+      },
+      dropped: reads.flatMap((read) =>
+        "dropped" in read ? [read.dropped] : [],
+      ),
+    };
+  };
+}
 
 export type SelectOption = v.InferOutput<typeof selectOptionSchema>;
 export type PropertyDefinition = v.InferOutput<typeof propertyDefinitionSchema>;
