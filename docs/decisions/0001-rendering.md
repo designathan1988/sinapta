@@ -31,6 +31,17 @@ every store commit. The default stands, with three precisions:
    a `ref` callback as custom properties, never through a `style` attribute,
    so `style-src 'self'` holds.
 
+### Amendment, 2026-11-11: equations (version 2, task 14.3)
+
+4. Equations are drawn as MathML with lit's `mathml` tag, inside an
+   `html` `<math>` element, from a tree that `src/model/tex/` parses: no
+   markup is parsed from strings and no library is added.
+5. An inline equation inside editable text keeps its TeX source as its own
+   light-DOM text, which the caret counts, and draws the MathML in a shadow
+   root attached to that element (`renderEquationInto` in
+   `src/ui/rich-text/equation.view.ts`). Range.toString() reads only the
+   light text, so caret offsets stay those of the stored text.
+
 ## Options considered
 
 | Option | Complexity | Typing cost at 1,000 blocks | Fit with "no view state" |

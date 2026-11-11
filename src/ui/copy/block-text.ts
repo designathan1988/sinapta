@@ -1,5 +1,13 @@
 // Text inside particular kinds of blocks.
 export const BLOCK_TEXT = {
+  equation: {
+    blockName: "Block equation",
+    edit: "Edit the equation",
+    source: "TeX source",
+    placeholder: "Add a TeX equation",
+    done: "Done",
+    inline: "Edit the inline equation",
+  },
   columns: {
     resize: "Resize columns",
   },

@@ -12,6 +12,7 @@ import { startBlockDrag } from "./editor-block-drag.view.ts";
 import { onSelectionCopy } from "./editor-clipboard.view.ts";
 import { onBlockContextMenu } from "./editor-context-menu.view.ts";
 import { onMentionClick } from "./editor-mention.view.ts";
+import { onEquationClick } from "./editor-equation.view.ts";
 import { renderStartList } from "./editor-start.view.ts";
 import { caretAt } from "./editor.commands.ts";
 import {
@@ -167,6 +168,7 @@ export function renderBlocks(
       }}
       @click=${(event: Event) => {
         onMentionClick(event, context.dispatch);
+        onEquationClick(event, context.dispatch);
       }}
       @compositionstart=${(event: Event) => {
         setComposing(event, true);

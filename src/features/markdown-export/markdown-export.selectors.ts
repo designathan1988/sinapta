@@ -10,6 +10,10 @@ import { CODE_TYPE } from "../../blocks/code/index.ts";
 import { COLUMN_LIST_TYPE } from "../../blocks/column-list/index.ts";
 import { COLUMN_TYPE } from "../../blocks/column/index.ts";
 import { DIVIDER_TYPE } from "../../blocks/divider/index.ts";
+import {
+  EQUATION_TYPE,
+  type EquationBlock,
+} from "../../blocks/equation/index.ts";
 import { HEADING_TYPE, type HeadingBlock } from "../../blocks/heading/index.ts";
 import { IMAGE_TYPE, type ImageBlock } from "../../blocks/image/index.ts";
 import { NUMBERED_LIST_TYPE } from "../../blocks/numbered-list/index.ts";
@@ -47,6 +51,7 @@ const LIST_TYPES = [
 const INDENT = "  ";
 
 function spanToMarkdown(span: TextSpan): string {
+  if (span.equation !== undefined) return `$${span.equation}$`;
   const marks = span.marks ?? [];
   let text = marks.includes("code")
     ? `\`${span.text}\``
@@ -102,6 +107,10 @@ const WRITERS: Readonly<Record<string, (block: Block) => string[]>> = {
   [BOOKMARK_TYPE]: (block) =>
     isBlockOfType<BookmarkBlock>(block, BOOKMARK_TYPE)
       ? [`[${block.props.url}](${block.props.url})`]
+      : [],
+  [EQUATION_TYPE]: (block) =>
+    isBlockOfType<EquationBlock>(block, EQUATION_TYPE)
+      ? ["$$", ...block.props.expression.split("\n"), "$$"]
       : [],
   [SIMPLE_TABLE_TYPE]: (block) =>
     isBlockOfType<SimpleTableBlock>(block, SIMPLE_TABLE_TYPE)

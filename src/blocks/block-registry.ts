@@ -10,6 +10,7 @@ import { columnListDefinition } from "./column-list/index.ts";
 import { columnDefinition } from "./column/index.ts";
 import { databaseDefinition } from "./database/index.ts";
 import { dividerDefinition } from "./divider/index.ts";
+import { equationDefinition } from "./equation/index.ts";
 import { headingDefinition } from "./heading/index.ts";
 import { imageDefinition } from "./image/index.ts";
 import { numberedListDefinition } from "./numbered-list/index.ts";
@@ -40,6 +41,7 @@ export const BLOCK_DEFINITIONS: readonly BlockDefinition[] = [
   bookmarkDefinition,
   simpleTableDefinition,
   tableOfContentsDefinition,
+  equationDefinition,
   columnListDefinition,
   columnDefinition,
 ];

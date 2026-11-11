@@ -190,3 +190,29 @@ describe("columns", () => {
     );
   });
 });
+
+describe("equations", () => {
+  it("are written between dollar signs, inline and as blocks", () => {
+    const workspace = buildWorkspace([
+      {
+        id: "page",
+        props: { title: [] },
+        children: [
+          {
+            id: "a",
+            type: "paragraph",
+            props: {
+              text: [{ text: "so " }, { text: "x^2", equation: "x^2" }],
+            },
+          },
+          { id: "e", type: "equation", props: { expression: "\\frac{a}{b}" } },
+        ],
+      },
+    ]);
+    const state = { ...createInitialState(), workspace };
+
+    expect(selectPageMarkdown(state, toBlockId("page"))).toBe(
+      "# Untitled\n\nso $x^2$\n\n$$\n\\frac{a}{b}\n$$\n",
+    );
+  });
+});

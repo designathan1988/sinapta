@@ -9,6 +9,7 @@ import {
 } from "../../model/index.ts";
 import { createTestApp } from "../../state/index.ts";
 import { editorConvertCommands } from "./editor-convert.commands.ts";
+import { editorEquationCommands } from "./editor-equation.commands.ts";
 import { editorInsertCommands } from "./editor-insert.commands.ts";
 import { editorMoveCommands } from "./editor-move.commands.ts";
 import { editorPasteBlocksCommands } from "./editor-paste-blocks.commands.ts";
@@ -45,6 +46,7 @@ export function createApp(blocks: BlockSpec[], otherPages: BlockSpec[] = []) {
     ...editorPasteCommands,
     ...editorPasteBlocksCommands,
     ...editorSelectionCommands,
+    ...editorEquationCommands,
   ];
   const app = createTestApp({ workspace, commands, tidiers: BLOCK_TIDIERS });
   // The page's content as "type:text" with two spaces of indent per level.

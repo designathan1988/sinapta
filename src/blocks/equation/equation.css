@@ -1,0 +1,56 @@
+@layer blocks {
+  .equation__display {
+    display: block;
+    inline-size: 100%;
+    padding: var(--space-inset-sm);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: inherit;
+    font-size: var(--font-size-lg);
+    text-align: center;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    &[data-empty] {
+      color: var(--color-text-tertiary);
+      font-size: var(--font-size-md);
+    }
+  }
+
+  .equation__editor:popover-open {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: flex-end;
+    padding: var(--space-inset-sm);
+  }
+
+  .equation__source {
+    inline-size: var(--size-dialog-width);
+    max-inline-size: 100%;
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-app);
+    color: var(--color-text-primary);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-sm);
+    resize: vertical;
+  }
+
+  .equation__done {
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: var(--color-accent-default);
+    color: var(--color-text-on-accent);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-accent-hover);
+    }
+  }
+}

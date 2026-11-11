@@ -18,9 +18,15 @@ export function plainText(rich: RichText): string {
   return rich.map((span) => span.text).join("");
 }
 
+// A mention or an inline equation is one piece: it never joins the text
+// next to it, is never half deleted, and passes nothing on to text typed
+// after it.
+export function isPiece(span: TextSpan): boolean {
+  return span.mention !== undefined || span.equation !== undefined;
+}
+
 function hasSameStyle(a: TextSpan, b: TextSpan): boolean {
-  // A mention is one piece; it never joins the text next to it.
-  if (a.mention !== undefined || b.mention !== undefined) return false;
+  if (isPiece(a) || isPiece(b)) return false;
   const marksA = a.marks ?? [];
   const marksB = b.marks ?? [];
   return (
@@ -87,13 +93,17 @@ export function insertText(
   text: string,
 ): RichText {
   const [before, after] = splitRichText(rich, offset);
-  const { mention: _mention, ...style } = before.at(-1) ?? { text: "" };
+  const {
+    mention: _mention,
+    equation: _equation,
+    ...style
+  } = before.at(-1) ?? { text: "" };
   const inserted = withText(style, text.normalize("NFC"));
   return normalize([...before, inserted, ...after]);
 }
 
-// A range that cuts into a mention takes the whole mention, which is one
-// piece and cannot be half deleted.
+// A range that cuts into a piece, a mention or an equation, takes the
+// whole piece.
 export function widenToMentions(
   rich: RichText,
   start: number,
@@ -103,7 +113,7 @@ export function widenToMentions(
   let [from, to] = [start, end];
   for (const span of rich) {
     const spanEnd = position + span.text.length;
-    const isCut = span.mention !== undefined && from < spanEnd && to > position;
+    const isCut = isPiece(span) && from < spanEnd && to > position;
     if (isCut) [from, to] = [Math.min(from, position), Math.max(to, spanEnd)];
     position = spanEnd;
   }

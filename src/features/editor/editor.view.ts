@@ -17,6 +17,8 @@ import { whenConnected } from "../../ui/focus/index.ts";
 import { renderDatabase, renderRowProperties } from "../database/index.ts";
 import { continueWriting, renderBlocks } from "./editor-blocks.view.ts";
 import { renderBlockMenu } from "./editor-block-menu.view.ts";
+import { INLINE_EQUATION_OVERLAY } from "./editor-equation.commands.ts";
+import { renderInlineEquationEditor } from "./editor-equation.view.ts";
 import {
   BLOCK_COLOR_OVERLAY,
   renderColorMenu,
@@ -116,6 +118,9 @@ export function renderEditorOverlay(
   }
   if (state.ui.overlay?.kind === BLOCK_COLOR_OVERLAY) {
     return renderColorMenu(state, dispatch);
+  }
+  if (state.ui.overlay?.kind === INLINE_EQUATION_OVERLAY) {
+    return renderInlineEquationEditor(state, dispatch);
   }
   return renderBlockMenu(state, dispatch);
 }

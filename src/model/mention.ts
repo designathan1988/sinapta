@@ -1,7 +1,7 @@
 // Mentions of pages and dates inside rich text: inserted in place of what
 // was typed to find them, and kept in step with the titles they show.
 import type { BlockId } from "./id.schema.ts";
-import { deleteRange, splitRichText } from "./rich-text.ts";
+import { deleteRange, isPiece, splitRichText } from "./rich-text.ts";
 import type { RichText, TextSpan } from "./rich-text.schema.ts";
 import { concatRichText } from "./rich-text.ts";
 
@@ -38,12 +38,13 @@ export function mentionsPage(rich: RichText, pageId: BlockId): boolean {
   );
 }
 
-// Whether the character at an offset is part of a mention.
+// Whether the character at an offset is part of a piece: a mention or an
+// inline equation.
 export function isInMention(rich: RichText, offset: number): boolean {
   let position = 0;
   for (const span of rich) {
     const end = position + span.text.length;
-    if (offset >= position && offset < end) return span.mention !== undefined;
+    if (offset >= position && offset < end) return isPiece(span);
     position = end;
   }
   return false;

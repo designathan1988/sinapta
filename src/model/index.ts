@@ -84,6 +84,7 @@ export {
   snapToBoundaryAfter,
 } from "./grapheme.ts";
 export {
+  isPiece,
   concatRichText,
   deleteRange,
   insertText,
@@ -132,3 +133,10 @@ export {
   type Drop,
   type DropPosition,
 } from "./block-tree.ts";
+export {
+  LIMIT_FUNCTIONS,
+  parseTex,
+  type MathNode,
+  type TexError,
+  type TexResult,
+} from "./tex/index.ts";

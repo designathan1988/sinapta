@@ -42,6 +42,9 @@ export const textSpanSchema = v.object({
   // span's text is what it shows: the page's title, or the date written
   // out.
   mention: v.optional(mentionSchema),
+  // An inline equation, shown as one piece (version 11): its TeX source,
+  // which is also the span's text.
+  equation: v.optional(v.string()),
 });
 
 export const richTextSchema = v.array(textSpanSchema);

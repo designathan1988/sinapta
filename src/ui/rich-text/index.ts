@@ -1,3 +1,4 @@
+export { renderMath, type MathDisplay } from "./equation.view.ts";
 export { parsePastedHtml } from "./pasted-html.ts";
 export {
   hasMarkdownBlocks,

@@ -17,6 +17,21 @@ describe("projectRichText", () => {
     expect(element.textContent).toBe("see Plan");
   });
 
+  it("shows an inline equation drawn, with its source as its text", () => {
+    const element = document.createElement("p");
+
+    projectRichText(element, [
+      { text: "so " },
+      { text: "x^2", equation: "x^2" },
+    ]);
+
+    const piece = element.querySelector<HTMLElement>(".equation");
+    expect(piece?.getAttribute("contenteditable")).toBe("false");
+    expect(piece?.dataset.equation).toBe("x^2");
+    expect(piece?.shadowRoot?.querySelector("math")).not.toBeNull();
+    expect(element.textContent).toBe("so x^2");
+  });
+
   it("marks a date mention with its day", () => {
     const element = document.createElement("p");
     const mention = { kind: "date" as const, date: "2026-11-11" };

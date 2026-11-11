@@ -121,4 +121,16 @@
       content: "@";
     }
   }
+
+  /* An inline equation is drawn in its own shadow root; this is the box
+     around it in the text. */
+  .equation {
+    padding-inline: var(--space-inline-xs);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
 }

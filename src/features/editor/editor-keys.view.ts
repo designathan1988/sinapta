@@ -7,6 +7,7 @@ import { readSelection, textElementOf } from "../../ui/caret/index.ts";
 import { onBlockKeys } from "./editor-block-keys.view.ts";
 import { deleteMentionByKey } from "./editor-mention.view.ts";
 import { openBlockMenu } from "./editor-block-menu.view.ts";
+import { equationKey } from "./editor-equation.view.ts";
 import { openLinkField } from "./editor-link.view.ts";
 import {
   onSelectionKeyDown,
@@ -154,6 +155,11 @@ function isLeftAlone(event: KeyboardEvent): boolean {
   return event.isComposing || isInControl;
 }
 
+// Keys for the pieces in a text: mentions and inline equations.
+function pieceKeys(event: KeyboardEvent, context: InputContext): boolean {
+  return deleteMentionByKey(event, context) || equationKey(event, context);
+}
+
 export function onBlockKeyDown(
   event: KeyboardEvent,
   context: InputContext,
@@ -164,7 +170,7 @@ export function onBlockKeyDown(
     return;
   }
   const isHandled =
-    deleteMentionByKey(event, context) ||
+    pieceKeys(event, context) ||
     onBlockKeys(event, context) ||
     startBlockSelection(event, context) ||
     indent(event, context) ||

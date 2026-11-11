@@ -8,6 +8,7 @@ import {
   type RichText,
   type TextSpan,
 } from "../../model/index.ts";
+import { renderEquationInto } from "./equation.view.ts";
 
 // Innermost first, so bold wraps italic wraps the rest.
 const MARK_TAGS = [
@@ -45,8 +46,20 @@ function mentionNode(span: TextSpan, mention: Mention): Node {
   return element;
 }
 
+// An inline equation is one piece too; it is drawn in its own shadow
+// root, and its source stays as its text, so the caret counts it.
+function equationNode(span: TextSpan, source: string): Node {
+  const element = wrap(document.createTextNode(span.text), "span");
+  element.className = "equation";
+  element.setAttribute("contenteditable", "false");
+  element.dataset.equation = source;
+  renderEquationInto(element, source);
+  return element;
+}
+
 function spanNode(span: TextSpan): Node {
   if (span.mention !== undefined) return mentionNode(span, span.mention);
+  if (span.equation !== undefined) return equationNode(span, span.equation);
   let node: Node = document.createTextNode(span.text);
   for (const [mark, tag] of MARK_TAGS) {
     if (span.marks?.includes(mark) === true) node = wrap(node, tag);

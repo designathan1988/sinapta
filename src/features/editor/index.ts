@@ -1,5 +1,6 @@
 import { editorColorCommands } from "./editor-color.commands.ts";
 import { editorConvertCommands } from "./editor-convert.commands.ts";
+import { editorEquationCommands } from "./editor-equation.commands.ts";
 import { editorMentionCommands } from "./editor-mention.commands.ts";
 import { editorInsertCommands } from "./editor-insert.commands.ts";
 import { editorMoveCommands } from "./editor-move.commands.ts";
@@ -30,4 +31,5 @@ export const editorCommands = [
   ...editorPasteCommands,
   ...editorPasteBlocksCommands,
   ...editorSelectionCommands,
+  ...editorEquationCommands,
 ];

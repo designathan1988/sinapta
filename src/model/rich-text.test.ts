@@ -227,3 +227,24 @@ describe("text styles of version 2", () => {
     ]);
   });
 });
+
+describe("inline equations", () => {
+  const equation = { text: "x^2", equation: "x^2" };
+
+  it("never join the text next to them", () => {
+    expect(concatRichText([{ text: "a" }], [equation])).toEqual([
+      { text: "a" },
+      equation,
+    ]);
+  });
+
+  it("do not pass on to text typed after them", () => {
+    expect(insertText([equation], 3, "!")).toEqual([equation, { text: "!" }]);
+  });
+
+  it("go whole when a deleted range cuts into them", () => {
+    expect(deleteRange([{ text: "a" }, equation], 2, 3)).toEqual([
+      { text: "a" },
+    ]);
+  });
+});
