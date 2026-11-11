@@ -31,7 +31,7 @@ export function selectTableEntries(model: TableModel): readonly TableEntry[] {
   const entries =
     grouped === undefined
       ? model.rows.map((row): TableEntry => ({ kind: "row", key: row.id, row }))
-      : grouped.groups.flatMap(groupEntries);
+      : grouped.groups.filter((group) => !group.isHidden).flatMap(groupEntries);
   cache.set(model, entries);
   return entries;
 }

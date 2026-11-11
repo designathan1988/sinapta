@@ -34,6 +34,11 @@
     object-fit: cover;
   }
 
+  /* A preset page cover is drawn by its own style, in an empty box. */
+  span.row-card__cover {
+    min-block-size: var(--size-card-cover);
+  }
+
   .row-card__title {
     font-weight: var(--font-weight-medium);
     overflow-wrap: anywhere;

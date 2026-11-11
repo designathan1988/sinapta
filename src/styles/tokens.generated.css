@@ -275,9 +275,12 @@
     --size-dialog-wide: var(--base-size-36);
     --size-board-column: var(--base-size-18);
     --size-card-cover: var(--base-size-12);
+    --size-card-small: var(--base-size-14);
+    --size-card-medium: var(--base-size-16);
+    --size-card-large: var(--base-size-20);
     --size-cover-height: var(--base-size-18);
     --size-table-cell: var(--base-size-10);
-    --size-table-gutter: var(--base-size-10);
+    --size-table-gutter: var(--base-size-2x75);
     --size-top-bar: var(--base-size-2x75);
     --radius-sm: var(--base-radius-1);
     --radius-md: var(--base-radius-2);

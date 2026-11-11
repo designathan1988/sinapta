@@ -19,6 +19,7 @@ import { addGroupBy } from "./0017-group-by.ts";
 import { addCalculations } from "./0018-calculations.ts";
 import { addTableLayout } from "./0019-table-layout.ts";
 import { repairStaleRecords } from "./0020-repair-stale-records.ts";
+import { addBoardCards } from "./0021-board-cards.ts";
 
 // A pure function from format version n to n + 1.
 export type Migration = (
@@ -47,6 +48,7 @@ export const MIGRATIONS: readonly Migration[] = [
   addCalculations,
   addTableLayout,
   repairStaleRecords,
+  addBoardCards,
 ];
 
 export type MigrationResult =

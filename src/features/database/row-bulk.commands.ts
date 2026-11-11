@@ -169,29 +169,41 @@ export const duplicateRows = defineCommand<DuplicatePayload>({
   },
 });
 
-// Moves a row before another row of its database, or to the end on null.
+// The operations that move a row before another row of its database, or
+// to the end on null; none when it is there already, undefined when it
+// cannot move there.
+export function moveRowOperations(
+  state: AppState,
+  rowId: BlockId,
+  beforeRowId: BlockId | null,
+): Operation[] | undefined {
+  const row = selectRow(state, rowId);
+  if (row === undefined || row.parentId === null) return undefined;
+  const siblings = siblingIds(state.workspace, row.parentId);
+  const others = siblings.filter((id) => id !== row.id);
+  const index =
+    beforeRowId === null ? others.length : others.indexOf(beforeRowId);
+  if (index === -1) return undefined;
+  if (siblings.indexOf(row.id) === index) return [];
+  const list = listOf(row.parentId);
+  return [
+    { type: "list.remove", list, id: row.id },
+    { type: "list.insert", list, id: row.id, index },
+  ];
+}
+
 export const moveRow = defineCommand<{
   rowId: BlockId;
   beforeRowId: BlockId | null;
 }>({
   type: "row.move",
   handle(state, command) {
-    const row = selectRow(state, command.rowId);
-    if (row === undefined || row.parentId === null) return {};
-    const siblings = siblingIds(state.workspace, row.parentId);
-    const others = siblings.filter((id) => id !== row.id);
-    const index =
-      command.beforeRowId === null
-        ? others.length
-        : others.indexOf(command.beforeRowId);
-    if (index === -1 || siblings.indexOf(row.id) === index) return {};
-    const list = listOf(row.parentId);
-    return {
-      operations: [
-        { type: "list.remove", list, id: row.id },
-        { type: "list.insert", list, id: row.id, index },
-      ],
-    };
+    const operations = moveRowOperations(
+      state,
+      command.rowId,
+      command.beforeRowId,
+    );
+    return operations === undefined ? {} : { operations };
   },
 });
 

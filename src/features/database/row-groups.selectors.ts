@@ -23,6 +23,8 @@ export interface RowGroup {
   readonly color?: string;
   readonly rows: readonly TableRow[];
   readonly isCollapsed: boolean;
+  // Hidden groups are listed apart, and their rows are not shown.
+  readonly isHidden: boolean;
 }
 
 export interface GroupedRows {
@@ -108,6 +110,21 @@ function orderBuckets(
   return [...empty, ...known, ...rest.slice(knownCount).sort(byName)];
 }
 
+// Groups placed by hand come first, in that order; the others keep theirs.
+function placeByHand(
+  buckets: readonly Bucket[],
+  order: readonly string[],
+): Bucket[] {
+  const rank = (bucket: Bucket): number => {
+    const index = order.indexOf(bucket.group.key);
+    return index === -1 ? order.length : index;
+  };
+  return buckets
+    .map((bucket, index) => ({ bucket, index }))
+    .sort((a, b) => rank(a.bucket) - rank(b.bucket) || a.index - b.index)
+    .map(({ bucket }) => bucket);
+}
+
 function groupRows(model: TableModel): GroupedRows | undefined {
   const { groupBy } = model.view;
   const property = model.database.props.properties.find(
@@ -117,7 +134,10 @@ function groupRows(model: TableModel): GroupedRows | undefined {
   const grouping = groupingOf(propertyType(property.type));
   const buckets = bucketRows(model, property, groupBy);
   const knownCount = grouping.known?.(property).length ?? 0;
-  const groups = orderBuckets(buckets, knownCount, groupBy.sort)
+  const ordered = orderBuckets(buckets, knownCount, groupBy.sort);
+  const placed =
+    groupBy.sort === "manual" ? placeByHand(ordered, groupBy.order) : ordered;
+  const groups = placed
     .filter((bucket) => !groupBy.hideEmpty || bucket.rows.length > 0)
     .map(({ group, rows }) => ({
       ...group,
@@ -127,6 +147,7 @@ function groupRows(model: TableModel): GroupedRows | undefined {
           : group.label,
       rows,
       isCollapsed: groupBy.collapsed.includes(group.key),
+      isHidden: groupBy.hidden.includes(group.key),
     }));
   return { property, groups, grouping };
 }
@@ -145,13 +166,15 @@ export function selectRowGroups(model: TableModel): GroupedRows | undefined {
 const visibleCache = new WeakMap<TableModel, readonly TableRow[]>();
 
 // The rows in the order a grouped view shows them, each once, without
-// the rows of collapsed groups.
+// the rows of collapsed or hidden groups.
 export function selectVisibleRows(model: TableModel): readonly TableRow[] {
   const grouped = selectRowGroups(model);
   if (grouped === undefined) return model.rows;
   const cached = visibleCache.get(model);
   if (cached !== undefined) return cached;
-  const shown = grouped.groups.filter((group) => !group.isCollapsed);
+  const shown = grouped.groups.filter(
+    (group) => !group.isCollapsed && !group.isHidden,
+  );
   const unique = new Map(
     shown.flatMap((group) => group.rows).map((row) => [row.id, row]),
   );

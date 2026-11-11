@@ -5,6 +5,7 @@ import type { ViewType } from "../../model/index.ts";
 import { closeOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderMenu, type MenuItem } from "../../ui/menu/index.ts";
+import { renderCardSettings } from "./card-settings.view.ts";
 import { renderGroupSettings } from "./group-settings.view.ts";
 import { renderBoard } from "./layouts/board/index.ts";
 import { renderCalendar } from "./layouts/calendar/index.ts";
@@ -149,5 +150,10 @@ export function renderLayoutSettings(context: TableContext): TemplateResult {
         )}
       </select>
     </label>
-    ${renderLayoutProperty(context)}`;
+    ${renderLayoutProperty(context)}
+    ${
+      model.view.type === "board" || model.view.type === "gallery"
+        ? renderCardSettings(context)
+        : nothing
+    }`;
 }

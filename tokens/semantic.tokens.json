@@ -339,6 +339,18 @@
     "card": {
       "cover": {
         "$value": "{base.size.12}"
+      },
+      "small": {
+        "$description": "A small card's width on a board or in a gallery.",
+        "$value": "{base.size.14}"
+      },
+      "medium": {
+        "$description": "A medium card's width.",
+        "$value": "{base.size.16}"
+      },
+      "large": {
+        "$description": "A large card's width.",
+        "$value": "{base.size.20}"
       }
     },
     "cover": {
@@ -353,7 +365,7 @@
       },
       "gutter": {
         "$description": "The space before a table's rows for the drag handle and the tick box.",
-        "$value": "{base.size.10}"
+        "$value": "{base.size.2x75}"
       }
     },
     "topBar": {

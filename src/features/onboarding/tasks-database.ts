@@ -48,6 +48,9 @@ function view(ids: TaskIds, index: number, type: ViewType): View[] {
     calculations: {},
     wrappedPropertyIds: [],
     frozenCount: 0,
+    cardSize: "medium",
+    cardPreview: "cover",
+    colorColumns: true,
   };
   if (type === "board") {
     return [{ ...record, groupBy: groupByProperty(status) }];

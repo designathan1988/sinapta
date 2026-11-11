@@ -39,6 +39,9 @@ export function emptyView(
     calculations: {},
     wrappedPropertyIds: [],
     frozenCount: 0,
+    cardSize: "medium",
+    cardPreview: "cover",
+    colorColumns: true,
   };
 }
 

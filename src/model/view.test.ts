@@ -15,6 +15,9 @@ const TABLE = {
   calculations: {},
   wrappedPropertyIds: [],
   frozenCount: 0,
+  cardSize: "medium",
+  cardPreview: "cover",
+  colorColumns: true,
 };
 
 const GROUP_BY = {
@@ -23,6 +26,8 @@ const GROUP_BY = {
   hideEmpty: false,
   collapsed: ["o-1"],
   dateBy: "month",
+  order: ["o-2"],
+  hidden: [],
 };
 
 describe("viewSchema", () => {

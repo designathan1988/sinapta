@@ -28,6 +28,8 @@ import { groupCommands } from "./group.commands.ts";
 import { calculationCommands } from "./calculation.commands.ts";
 import { rowBulkCommands } from "./row-bulk.commands.ts";
 import { tableLayoutCommands } from "./table-layout.commands.ts";
+import { cardCommands } from "./card.commands.ts";
+import { boardCardCommands } from "./layouts/board/board-card.commands.ts";
 import {
   pageCommands,
   pageTrashCommands,
@@ -99,6 +101,8 @@ const DATABASE_TEST_COMMANDS = [
   ...calculationCommands,
   ...rowBulkCommands,
   ...tableLayoutCommands,
+  ...cardCommands,
+  ...boardCardCommands,
   ...viewLayoutCommands,
   ...viewSearchCommands,
   ...calendarCommands,

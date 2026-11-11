@@ -11,8 +11,7 @@ import { selectRowGroups } from "../../row-groups.selectors.ts";
 import { addRow } from "../../row.commands.ts";
 import type { TableContext } from "../../table-cell.view.ts";
 import type { TableRow } from "../../table-model.selectors.ts";
-import { renderRowCard } from "../row-card/index.ts";
-import { selectRowCover } from "./gallery.selectors.ts";
+import { renderRowCard, selectCardPicture } from "../row-card/index.ts";
 
 // The grid of cards; `adds` ends it with a card that adds a row.
 function renderCards(
@@ -32,7 +31,7 @@ function renderCards(
             row,
             columns: model.columns,
             dispatch,
-            cover: selectRowCover(state, row.id),
+            picture: selectCardPicture(state, row.id, model.view.cardPreview),
             cell: selectCellContext(state),
           })}
         </li>`,
@@ -55,15 +54,15 @@ function renderCards(
 export function renderGallery(context: TableContext): TemplateResult {
   const grouped = selectRowGroups(context.model);
   if (grouped === undefined) {
-    return html`<div class="gallery">
+    return html`<div class="gallery" data-size=${context.model.view.cardSize}>
       ${renderCards(context.model.rows, context, true)}
     </div>`;
   }
   const content = (rows: readonly TableRow[]) =>
     renderCards(rows, context, false);
-  return html`<div class="gallery">
-    ${grouped.groups.map((group) =>
-      renderGroupSection({ grouped, group, content }, context),
-    )}
+  return html`<div class="gallery" data-size=${context.model.view.cardSize}>
+    ${grouped.groups
+      .filter((group) => !group.isHidden)
+      .map((group) => renderGroupSection({ grouped, group, content }, context))}
   </div>`;
 }

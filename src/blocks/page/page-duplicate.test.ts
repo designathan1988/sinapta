@@ -51,6 +51,9 @@ function createApp() {
     calculations: {},
     wrappedPropertyIds: [],
     frozenCount: 0,
+    cardSize: "medium",
+    cardPreview: "cover",
+    colorColumns: true,
   };
   const workspace = { ...base, views: { [VIEW]: view } };
   return createTestApp({ workspace, commands: pageDuplicateCommands });

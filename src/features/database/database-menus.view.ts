@@ -20,6 +20,10 @@ import {
   PROPERTY_TYPES_OVERLAY,
 } from "./table-header.view.ts";
 import { renderFilters } from "./view-filters.view.ts";
+import {
+  BOARD_COLUMN_OVERLAY,
+  renderBoardColumnMenu,
+} from "./layouts/board/index.ts";
 import { BULK_EDIT_OVERLAY, renderBulkEdit } from "./table-bulk-edit.view.ts";
 import { NEW_VIEW_OVERLAY, renderNewViewMenu } from "./view-layout.view.ts";
 import { renderProperties } from "./view-properties.view.ts";
@@ -37,6 +41,7 @@ const OVERLAYS: Record<string, Render> = {
   [CELL_RELATION_OVERLAY]: renderCellRelation,
   [FILTERS_OVERLAY]: renderFilters,
   [BULK_EDIT_OVERLAY]: renderBulkEdit,
+  [BOARD_COLUMN_OVERLAY]: renderBoardColumnMenu,
   [PROPERTIES_OVERLAY]: renderProperties,
   [NEW_VIEW_OVERLAY]: renderNewViewMenu,
   [PROPERTY_EDIT_OVERLAY]: renderPropertyEdit,

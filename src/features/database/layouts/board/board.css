@@ -1,5 +1,7 @@
 @layer features {
   .board {
+    --board-card-width: var(--size-card-medium);
+
     display: flex;
     flex: 1;
     gap: var(--space-inline-md);
@@ -7,6 +9,14 @@
     min-block-size: 0;
     padding-block: var(--space-stack-sm);
     overflow: auto;
+
+    &[data-size="small"] {
+      --board-card-width: var(--size-card-small);
+    }
+
+    &[data-size="large"] {
+      --board-card-width: var(--size-card-large);
+    }
   }
 
   /* Each column is tinted with its group's color, as in Notion. */
@@ -17,10 +27,14 @@
     flex: none;
     gap: var(--space-stack-sm);
     align-content: start;
-    inline-size: var(--size-board-column);
+    inline-size: var(--board-card-width);
     padding: var(--space-inset-sm);
     border-radius: var(--radius-md);
-    background-color: color-mix(in oklch, var(--board-tint) 45%, transparent);
+    background-color: transparent;
+
+    .board[data-colored] & {
+      background-color: color-mix(in oklch, var(--board-tint) 45%, transparent);
+    }
 
     &[data-color="brown"] {
       --board-tint: var(--color-chip-brown-bg);
@@ -75,5 +89,67 @@
     margin: var(--space-none);
     padding: var(--space-none);
     list-style: none;
+  }
+
+  .board__menu {
+    display: inline-flex;
+    margin-inline-start: auto;
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--color-text-tertiary);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
+  /* The menu button shows while its column is pointed at or has focus. */
+  .board__column:not(:hover, :focus-within)
+    .board__menu:not([aria-expanded="true"]) {
+    opacity: 0;
+  }
+
+  .board__hidden {
+    display: grid;
+    flex: none;
+    gap: var(--space-stack-xs);
+    align-content: start;
+    inline-size: var(--size-card-small);
+    padding: var(--space-inset-sm);
+  }
+
+  .board__hidden-title {
+    margin: var(--space-none);
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .board__hidden-list {
+    display: grid;
+    gap: var(--space-stack-xxs);
+    margin: var(--space-none);
+    padding: var(--space-none);
+    list-style: none;
+  }
+
+  .board__hidden-group {
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    inline-size: 100%;
+    padding: var(--space-inset-xs);
+    border: none;
+    border-radius: var(--radius-md);
+    background: none;
+    color: var(--color-text-primary);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
   }
 }

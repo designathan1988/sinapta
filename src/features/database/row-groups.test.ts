@@ -3,8 +3,10 @@ import { toBlockId } from "../../model/index.ts";
 import { createDatabaseApp, type DatabaseApp } from "./database-builder.ts";
 import {
   setGroupOptions,
+  setGroupOrder,
   setViewGroupBy,
   toggleGroupCollapsed,
+  toggleGroupHidden,
 } from "./group.commands.ts";
 import { selectRowGroups, selectVisibleRows } from "./row-groups.selectors.ts";
 import { selectTableModel } from "./table-model.selectors.ts";
@@ -166,6 +168,41 @@ describe("grouping rows", () => {
     groupBy(app, 0);
 
     expect(app.view().groupBy).toBeUndefined();
+  });
+
+  it("puts groups in the order placed by hand, the others after", () => {
+    const app = createDatabaseApp([STAGE], [["a", "done"]]);
+    groupBy(app, 0);
+
+    app.dispatch(
+      setGroupOrder.create({ viewId: app.view().id, order: ["done", ""] }),
+    );
+
+    expect(groups(app).map((group) => group.key)).toEqual(["done", "", "todo"]);
+  });
+
+  it("hides a group and leaves its rows out of the visible order", () => {
+    const app = createDatabaseApp(
+      [STAGE],
+      [
+        ["a", "done"],
+        ["b", "todo"],
+      ],
+    );
+    groupBy(app, 0);
+    const viewId = app.view().id;
+
+    app.dispatch(toggleGroupHidden.create({ viewId, key: "done" }));
+
+    const grouped = selectRowGroups(modelOf(app));
+    expect(
+      grouped?.groups.find((group) => group.key === "done")?.isHidden,
+    ).toBe(true);
+    expect(selectVisibleRows(modelOf(app)).map((row) => row.title)).toEqual([
+      "b",
+    ]);
+    app.dispatch(toggleGroupHidden.create({ viewId, key: "done" }));
+    expect(app.view().groupBy?.hidden).toEqual([]);
   });
 
   it("ungroups a view", () => {

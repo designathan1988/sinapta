@@ -189,6 +189,18 @@ export const DATABASE_TEXT = {
     unwrapText: "Unwrap text",
     freezeColumns: "Freeze up to this column",
     unfreezeColumns: "Unfreeze columns",
+    hideGroup: "Hide",
+    showGroup: "Show",
+    hiddenGroups: "Hidden groups",
+    cardSize: "Card size",
+    cardSizes: { small: "Small", medium: "Medium", large: "Large" },
+    cardPreview: "Card preview",
+    cardPreviews: {
+      none: "None",
+      cover: "Page cover",
+      content: "Page content",
+    },
+    colorColumns: "Color columns",
     noGrouping: "None",
     groupSort: "Sort groups",
     groupSorts: {

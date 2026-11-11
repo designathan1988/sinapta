@@ -40,6 +40,10 @@ export const groupBySchema = v.object({
   collapsed: v.array(v.string()),
   // The span of the groups of a date property.
   dateBy: v.picklist(["day", "week", "month", "year"]),
+  // Group keys in the order placed by hand, first; the others follow.
+  order: v.array(v.string()),
+  // Group keys not shown.
+  hidden: v.array(v.string()),
 });
 
 // What a column's footer works out from the rows a view shows. A rollup
@@ -95,6 +99,11 @@ export const viewSchema = v.object({
   // How many columns from the start stay in place while the table
   // scrolls sideways.
   frozenCount: v.pipe(v.number(), v.integer(), v.minValue(0)),
+  // How a board or a gallery shows its cards: how wide, what picture
+  // above the title, and whether a board tints each column.
+  cardSize: v.picklist(["small", "medium", "large"]),
+  cardPreview: v.picklist(["none", "cover", "content"]),
+  colorColumns: v.boolean(),
   // The date property a calendar places its rows by (version 3).
   datePropertyId: v.optional(propertyIdSchema),
 });

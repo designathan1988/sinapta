@@ -58,9 +58,11 @@ export function renderList(context: TableContext): TemplateResult {
   if (grouped !== undefined) {
     const content = (rows: readonly TableRow[]) => renderLines(rows, context);
     return html`<div class="list">
-      ${grouped.groups.map((group) =>
-        renderGroupSection({ grouped, group, content }, context),
-      )}
+      ${grouped.groups
+        .filter((group) => !group.isHidden)
+        .map((group) =>
+          renderGroupSection({ grouped, group, content }, context),
+        )}
     </div>`;
   }
   const databaseId = model.database.id;

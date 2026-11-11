@@ -7,6 +7,7 @@ import { setActivePage, type Dispatch } from "../../../../state/index.ts";
 import { COPY } from "../../../../ui/copy.ts";
 import type { CellContext } from "../../property-definition.ts";
 import { propertyType } from "../../property-registry.ts";
+import type { CardPicture } from "./row-card.selectors.ts";
 import type { TableColumn, TableRow } from "../../table-model.selectors.ts";
 
 export interface RowCardOptions {
@@ -15,8 +16,8 @@ export interface RowCardOptions {
   readonly dispatch: Dispatch;
   // A property the layout already shows, such as a board's group.
   readonly omit?: PropertyId;
-  // An image address shown above the title.
-  readonly cover?: string | undefined;
+  // The picture shown above the title.
+  readonly picture?: CardPicture | undefined;
   readonly onKeyDown?: (event: KeyboardEvent) => void;
   readonly description?: string;
   // The addresses of kept files, for values that show them.
@@ -38,6 +39,19 @@ function renderValues(options: RowCardOptions): TemplateResult[] {
   });
 }
 
+function renderPicture(
+  picture: CardPicture | undefined,
+): TemplateResult | typeof nothing {
+  if (picture === undefined) return nothing;
+  if ("preset" in picture) {
+    return html`<span
+      class="row-card__cover"
+      data-cover=${picture.preset}
+    ></span>`;
+  }
+  return html`<img class="row-card__cover" src=${picture.src} alt="" />`;
+}
+
 export function renderRowCard(options: RowCardOptions): TemplateResult {
   const { row, dispatch } = options;
   const title = row.title === "" ? COPY.sidebar.untitled : row.title;
@@ -49,11 +63,7 @@ export function renderRowCard(options: RowCardOptions): TemplateResult {
     @click=${() => dispatch(setActivePage.create({ pageId: row.id }))}
     @keydown=${options.onKeyDown ?? nothing}
   >
-    ${
-      options.cover === undefined
-        ? nothing
-        : html`<img class="row-card__cover" src=${options.cover} alt="" />`
-    }
+    ${renderPicture(options.picture)}
     <span class="row-card__title" ?data-untitled=${row.title === ""}
       >${title}</span
     >

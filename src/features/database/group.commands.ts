@@ -16,6 +16,8 @@ export function groupByProperty(propertyId: PropertyId): GroupBy {
     hideEmpty: false,
     collapsed: [],
     dateBy: "month",
+    order: [],
+    hidden: [],
   };
 }
 
@@ -36,7 +38,7 @@ function groupedBy(
   )?.props.properties.find((item) => item.id === propertyId);
   if (property === undefined || !isGroupable(property)) return undefined;
   if (view.groupBy === undefined) return groupByProperty(propertyId);
-  return { ...view.groupBy, propertyId, collapsed: [] };
+  return { ...view.groupBy, propertyId, collapsed: [], order: [], hidden: [] };
 }
 
 // Groups a view by a property, keeping how it sorted and hid groups; null
@@ -95,8 +97,40 @@ export const toggleGroupCollapsed = defineCommand<{
   },
 });
 
+// Places groups by hand: these keys first, in this order.
+export const setGroupOrder = defineCommand<{
+  viewId: ViewId;
+  order: readonly string[];
+}>({
+  type: "view.setGroupOrder",
+  handle(state, command) {
+    const view = state.workspace.views[command.viewId];
+    if (view?.groupBy === undefined) return {};
+    const order = [...new Set(command.order)];
+    return patchView(view.id, { groupBy: { ...view.groupBy, order } });
+  },
+});
+
+export const toggleGroupHidden = defineCommand<{
+  viewId: ViewId;
+  key: string;
+}>({
+  type: "view.toggleGroupHidden",
+  handle(state, command) {
+    const view = state.workspace.views[command.viewId];
+    if (view?.groupBy === undefined) return {};
+    const { hidden } = view.groupBy;
+    const next = hidden.includes(command.key)
+      ? hidden.filter((key) => key !== command.key)
+      : [...hidden, command.key];
+    return patchView(view.id, { groupBy: { ...view.groupBy, hidden: next } });
+  },
+});
+
 export const groupCommands = [
   setViewGroupBy,
   setGroupOptions,
   toggleGroupCollapsed,
+  setGroupOrder,
+  toggleGroupHidden,
 ];
