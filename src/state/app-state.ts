@@ -95,6 +95,9 @@ export interface PersistenceState {
   // The text of a file the user chose to import, until it has been read.
   readonly pendingImport: string | null;
   readonly importError: ImportError | null;
+  // True while another tab holds the workspace for writing; this tab shows
+  // it and follows its saves, but changes nothing.
+  readonly isReadOnly: boolean;
 }
 
 export interface AppState {
@@ -139,6 +142,7 @@ export function createInitialState(): AppState {
       exportRequests: 0,
       pendingImport: null,
       importError: null,
+      isReadOnly: false,
     },
   };
 }

@@ -1,8 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
-import { TEST_TIME, toBlockId } from "../model/index.ts";
+import { buildWorkspace, TEST_TIME, toBlockId } from "../model/index.ts";
 import { defineCommand, type NoPayload } from "./command-registry.ts";
 import { addTestBlock, createTestApp } from "./state-builder.ts";
+import { setReadOnly } from "./persistence.commands.ts";
 import { toggleSidebar } from "./ui.commands.ts";
+import { loadWorkspace } from "./workspace.commands.ts";
 
 const brokenCommand = defineCommand<NoPayload>({
   type: "test.broken",
@@ -102,5 +104,45 @@ describe("dispatch", () => {
     });
 
     expect(() => command.create({ type: "other" })).toThrow(/named "type"/);
+  });
+});
+
+describe("dispatch in a read-only tab", () => {
+  function readOnlyApp() {
+    const app = createTestApp({
+      commands: [addTestBlock, toggleSidebar, setReadOnly, loadWorkspace],
+    });
+    app.dispatch(setReadOnly.create({ isReadOnly: true }));
+    return app;
+  }
+
+  it("refuses a change to workspace data and keeps the state", () => {
+    const { store, dispatch } = readOnlyApp();
+    const before = store.getState();
+
+    const result = dispatch(addTestBlock.create({ blockType: "page" }));
+
+    expect(result).toEqual({ ok: false, error: { kind: "read-only" } });
+    expect(store.getState()).toBe(before);
+  });
+
+  it("still applies interface commands", () => {
+    const { store, dispatch } = readOnlyApp();
+
+    expect(dispatch(toggleSidebar.create({})).ok).toBe(true);
+    expect(store.getState().ui.isSidebarCollapsed).toBe(true);
+  });
+
+  it("still loads the workspace another tab saved", () => {
+    const { store, dispatch } = readOnlyApp();
+    const workspace = buildWorkspace([{ id: "saved" }]);
+    const ui = store.getState().ui;
+
+    const result = dispatch(
+      loadWorkspace.create({ workspace, ui, skippedCount: 0 }),
+    );
+
+    expect(result.ok).toBe(true);
+    expect(store.getState().workspace.rootIds).toEqual(["saved"]);
   });
 });

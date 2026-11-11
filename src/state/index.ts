@@ -49,6 +49,7 @@ export {
   persistenceCommands,
   requestExport,
   requestImport,
+  setReadOnly,
   setSaveStatus,
 } from "./persistence.commands.ts";
 export {

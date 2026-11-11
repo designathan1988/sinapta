@@ -1,6 +1,8 @@
 // Text of the shell, the sidebar, page actions, settings and search.
 export const WORKSPACE_TEXT = {
   shell: {
+    readOnlyTab:
+      "This workspace is open in another tab. Close it to edit here.",
     skipToContent: "Skip to content",
     pagesLabel: "Pages",
     hideSidebar: "Hide sidebar",

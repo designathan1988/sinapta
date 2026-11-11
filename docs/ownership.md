@@ -42,9 +42,10 @@ owner listed here exists.
 
 | Concern | Owner | Milestone |
 | --- | --- | --- |
-| Loading and saving, subscription to the store | `src/persistence/workspace-repository.ts` | 1 |
+| Loading and saving, subscription to the store, reloading in a read-only tab, asking for persistent storage | `src/persistence/workspace-repository.ts` | 1 |
 | IndexedDB access | `src/persistence/indexed-db-adapter.ts` | 1 |
 | Storage adapter contract and in-memory adapter for tests | `src/persistence/storage-adapter.ts` | 1 |
+| One writer tab per browser profile (Web Locks) and save messages between tabs (BroadcastChannel) | `src/persistence/tab-lock.ts` | 11 |
 | Migrations | `src/persistence/migrations/run-migrations.ts` plus one file per format change | 1 |
 | JSON export and import, and carrying out export and import requests | `src/persistence/workspace-file.ts` | 7 |
 

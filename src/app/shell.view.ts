@@ -148,7 +148,11 @@ function renderTopBar(state: AppState, dispatch: Dispatch): TemplateResult {
     ${renderBreadcrumbs(state, dispatch)}
     <span class="app__spacer"></span>
     <span class="app__save-status" role="status"
-      >${COPY.saveStatus[state.persistence.status]}</span
+      >${
+        state.persistence.isReadOnly
+          ? COPY.shell.readOnlyTab
+          : COPY.saveStatus[state.persistence.status]
+      }</span
     >
     ${renderActivePageMenu(state, dispatch)}
     ${renderButton({

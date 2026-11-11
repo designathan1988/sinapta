@@ -23,6 +23,7 @@ import {
   UNDO_COMMAND,
 } from "./history.ts";
 import type { AppStore } from "./store.ts";
+import { loadWorkspace } from "./workspace.commands.ts";
 
 export type DispatchError =
   | { readonly kind: "unknown-command"; readonly type: string }
@@ -30,7 +31,9 @@ export type DispatchError =
   | {
       readonly kind: "invariant-broken";
       readonly violation: InvariantViolation;
-    };
+    }
+  // Another tab holds the workspace for writing.
+  | { readonly kind: "read-only" };
 
 export type DispatchResult =
   { readonly ok: true } | { readonly ok: false; readonly error: DispatchError };
@@ -109,6 +112,19 @@ function createMeta(sources: Sources, ids: NewIds): CommandMeta {
   };
 }
 
+// A read-only tab follows the writer tab: it reloads what that tab saved
+// and keeps its own interface state, but writes no workspace data.
+function isRefusedWhileReadOnly(
+  state: AppState,
+  command: Command,
+  effect: CommandEffect,
+): boolean {
+  if (!state.persistence.isReadOnly) return false;
+  if (effect.workspace !== undefined)
+    return command.type !== loadWorkspace.type;
+  return (effect.operations ?? []).length > 0;
+}
+
 function nextState(state: AppState, command: Command, sources: Sources): Next {
   if (command.type === UNDO_COMMAND) {
     return { state: travelHistory(state, "undo") };
@@ -121,7 +137,11 @@ function nextState(state: AppState, command: Command, sources: Sources): Next {
     return { error: { kind: "unknown-command", type: command.type } };
   }
   const meta = createMeta(sources, definition.newIdsFor(command));
-  return applyEffect(state, definition.handle(state, command, meta), meta.now);
+  const effect = definition.handle(state, command, meta);
+  if (isRefusedWhileReadOnly(state, command, effect)) {
+    return { error: { kind: "read-only" } };
+  }
+  return applyEffect(state, effect, meta.now);
 }
 
 export function createDispatcher(options: DispatcherOptions): Dispatch {

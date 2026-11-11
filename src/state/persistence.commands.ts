@@ -45,8 +45,23 @@ export const finishImport = defineCommand<{ error: ImportError | null }>({
   }),
 });
 
+// Set when another tab holds the workspace for writing, and cleared when
+// this tab takes it over.
+export const setReadOnly = defineCommand<{ isReadOnly: boolean }>({
+  type: "persistence.setReadOnly",
+  handle(state, command) {
+    if (command.isReadOnly === state.persistence.isReadOnly) return {};
+    const persistence = {
+      ...state.persistence,
+      isReadOnly: command.isReadOnly,
+    };
+    return { persistence };
+  },
+});
+
 export const persistenceCommands = [
   setSaveStatus,
+  setReadOnly,
   requestExport,
   requestImport,
   finishImport,

@@ -30,6 +30,7 @@ import {
 } from "../state/index.ts";
 import {
   createIndexedDbAdapter,
+  createTabCoordination,
   startFileTools,
   startRepository,
 } from "../persistence/index.ts";
@@ -77,6 +78,7 @@ export async function startApp(container: HTMLElement): Promise<void> {
     dispatch,
     adapter: createIndexedDbAdapter(),
     propsSchemas: BLOCK_PROPS_SCHEMAS,
+    tabs: createTabCoordination(),
   });
   // A first visit opens a short tour; it is saved like any other change.
   if (isFirstRun) dispatch(seedGettingStarted.create({}));

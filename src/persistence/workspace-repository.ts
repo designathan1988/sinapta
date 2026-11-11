@@ -12,14 +12,17 @@ import {
 import {
   loadWorkspace,
   restoreUi,
+  setReadOnly,
   setSaveStatus,
   toPersistedUi,
   type AppState,
   type AppStore,
   type Dispatch,
+  type UiState,
 } from "../state/index.ts";
 import { runMigrations } from "./migrations/run-migrations.ts";
 import type { StorageAdapter, StorageChanges } from "./storage-adapter.ts";
+import { SOLE_TAB, type TabCoordination } from "./tab-lock.ts";
 
 export const SAVE_DEBOUNCE_MS = 300;
 
@@ -28,6 +31,8 @@ export interface RepositoryOptions {
   readonly dispatch: Dispatch;
   readonly adapter: StorageAdapter;
   readonly propsSchemas: PropsSchemas;
+  // How this tab shares storage with other tabs; a tab alone by default.
+  readonly tabs?: TabCoordination;
 }
 
 // Everything changed since the last successful save.
@@ -78,8 +83,12 @@ function toStorageChanges(pending: Pending, state: AppState): StorageChanges {
 
 type LoadResult = "loaded" | "empty" | "unreadable";
 
-// "unreadable" when stored data exists but cannot be used.
-async function load(options: RepositoryOptions): Promise<LoadResult> {
+// "unreadable" when stored data exists but cannot be used. A reload keeps
+// the interface state the tab already has.
+async function load(
+  options: RepositoryOptions,
+  ui?: UiState,
+): Promise<LoadResult> {
   const stored = await options.adapter.load();
   if (stored === null) return "empty";
   const migrated = runMigrations(stored.file);
@@ -89,17 +98,25 @@ async function load(options: RepositoryOptions): Promise<LoadResult> {
   options.dispatch(
     loadWorkspace.create({
       workspace: parsed.workspace,
-      ui: restoreUi(stored.ui),
+      ui: ui ?? restoreUi(stored.ui),
       skippedCount: parsed.skipped.length,
     }),
   );
   return "loaded";
 }
 
-function watch(options: RepositoryOptions): void {
+// Asks the browser not to evict the workspace under storage pressure. It
+// may refuse; the data is then kept as long as the browser allows.
+function requestPersistentStorage(): void {
+  if (typeof navigator === "undefined" || !("storage" in navigator)) return;
+  navigator.storage.persist().catch(() => false);
+}
+
+function watch(options: RepositoryOptions, tabs: TabCoordination): void {
   const { store, dispatch, adapter } = options;
   let pending = createPending();
   let timer: ReturnType<typeof setTimeout> | undefined;
+  let hasSaved = false;
 
   async function flush(): Promise<void> {
     const saving = pending;
@@ -108,6 +125,9 @@ function watch(options: RepositoryOptions): void {
     try {
       await adapter.save(toStorageChanges(saving, store.getState()));
       dispatch(setSaveStatus.create({ status: "saved" }));
+      tabs.announceSave();
+      if (!hasSaved) requestPersistentStorage();
+      hasSaved = true;
     } catch {
       // Keep what was not written so that the next save retries it.
       addChanges(pending, saving);
@@ -140,14 +160,37 @@ export interface RepositoryStart {
   readonly isFirstRun: boolean;
 }
 
+async function reload(options: RepositoryOptions): Promise<void> {
+  await load(options, options.store.getState().ui).catch(() => "unreadable");
+}
+
+// A reader tab shows what the writer tab saved and takes over writing once
+// that tab closes, starting from what it last saved.
+function followWriter(options: RepositoryOptions, tabs: TabCoordination): void {
+  const { dispatch } = options;
+  dispatch(setReadOnly.create({ isReadOnly: true }));
+  tabs.onSaved(() => void reload(options));
+  void tabs.waitForWriter().then(async () => {
+    await reload(options);
+    dispatch(setReadOnly.create({ isReadOnly: false }));
+    watch(options, tabs);
+  });
+}
+
 export async function startRepository(
   options: RepositoryOptions,
 ): Promise<RepositoryStart> {
+  const tabs = options.tabs ?? SOLE_TAB;
+  const role = await tabs.claim();
   const result = await load(options).catch(() => "unreadable" as const);
   if (result === "unreadable") {
     options.dispatch(setSaveStatus.create({ status: "failed" }));
     return { isFirstRun: false };
   }
-  watch(options);
+  if (role === "reader") {
+    followWriter(options, tabs);
+    return { isFirstRun: false };
+  }
+  watch(options, tabs);
   return { isFirstRun: result === "empty" };
 }
