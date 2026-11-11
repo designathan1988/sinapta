@@ -188,8 +188,16 @@ function isBrowserOwned(event: InputEvent): boolean {
   return event.isComposing || event.inputType.includes("Composition");
 }
 
+// Form fields inside a block, such as an image caption, edit themselves.
+function isFormField(target: EventTarget | null): boolean {
+  return (
+    target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement
+  );
+}
+
 export function onBeforeInput(event: InputEvent, context: InputContext): void {
   if (isBrowserOwned(event) || !event.cancelable) return;
+  if (isFormField(event.target)) return;
   event.preventDefault();
   const target = targetOf(event);
   if (target !== undefined) HANDLERS[event.inputType]?.(target, event, context);
