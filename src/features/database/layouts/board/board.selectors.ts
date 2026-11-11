@@ -7,6 +7,10 @@ import type {
 } from "../../../../blocks/database/index.ts";
 import type { BlockId } from "../../../../model/index.ts";
 import type { TableModel, TableRow } from "../../table-model.selectors.ts";
+import {
+  GROUP_PROPERTY_TYPES,
+  propertiesOfTypes,
+} from "../../view-layout.commands.ts";
 
 export interface BoardColumn {
   // Null for the column of rows with no option.
@@ -20,14 +24,12 @@ export interface BoardModel {
   readonly columns: readonly BoardColumn[];
 }
 
-// The view's group property, or the first select property when the view
-// has none yet, such as a board made before the property was added.
+// The view's group property, or the first status or select property when
+// the view has none yet, such as a board made before it was added.
 export function selectGroupProperty(
   model: TableModel,
 ): PropertyDefinition | undefined {
-  const selects = model.database.props.properties.filter(
-    (property) => property.type === "select",
-  );
+  const selects = propertiesOfTypes(model.database, GROUP_PROPERTY_TYPES);
   const id = model.view.groupPropertyId;
   return selects.find((property) => property.id === id) ?? selects[0];
 }

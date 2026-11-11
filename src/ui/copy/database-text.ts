@@ -5,6 +5,12 @@ export const DATABASE_TEXT = {
     startWith: "Get started with",
     statusName: "Status",
     statusOptions: { todo: "Not started", doing: "In progress", done: "Done" },
+    statusGroups: {
+      "to-do": "To-do",
+      "in-progress": "In progress",
+      complete: "Complete",
+    },
+    isInGroup: "Is in group",
     dateName: "Date",
     untitled: "Untitled database",
     nameColumn: "Name",

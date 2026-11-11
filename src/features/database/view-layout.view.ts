@@ -12,8 +12,9 @@ import { renderList } from "./layouts/list/index.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import { renderTable } from "./table.view.ts";
 import {
-  DATE_PROPERTY_TYPE,
-  GROUP_PROPERTY_TYPE,
+  DATE_PROPERTY_TYPES,
+  GROUP_PROPERTY_TYPES,
+  propertiesOfTypes,
   setViewDateProperty,
   setViewGroupProperty,
   setViewType,
@@ -65,7 +66,7 @@ function isViewType(value: string): value is ViewType {
 
 interface PropertyChoice {
   readonly label: string;
-  readonly propertyType: string;
+  readonly propertyTypes: readonly string[];
   readonly current: string | undefined;
   readonly onChoose: (propertyId: string) => void;
 }
@@ -74,8 +75,9 @@ function renderPropertyChoice(
   context: TableContext,
   choice: PropertyChoice,
 ): TemplateResult {
-  const properties = context.model.database.props.properties.filter(
-    (property) => property.type === choice.propertyType,
+  const properties = propertiesOfTypes(
+    context.model.database,
+    choice.propertyTypes,
   );
   return html`<label class="database__view-name">
     ${choice.label}
@@ -113,7 +115,7 @@ function renderLayoutProperty(context: TableContext) {
   if (view.type === "board") {
     return renderPropertyChoice(context, {
       label: COPY.database.groupBy,
-      propertyType: GROUP_PROPERTY_TYPE,
+      propertyTypes: GROUP_PROPERTY_TYPES,
       current: view.groupPropertyId,
       onChoose: (id) => {
         const propertyId = propertyOf(id);
@@ -125,7 +127,7 @@ function renderLayoutProperty(context: TableContext) {
   if (view.type !== "calendar") return nothing;
   return renderPropertyChoice(context, {
     label: COPY.database.dateBy,
-    propertyType: DATE_PROPERTY_TYPE,
+    propertyTypes: DATE_PROPERTY_TYPES,
     current: view.datePropertyId,
     onChoose: (id) => {
       const propertyId = propertyOf(id);

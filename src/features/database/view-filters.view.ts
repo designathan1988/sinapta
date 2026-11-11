@@ -8,6 +8,7 @@ import { closeOverlay } from "../../state/index.ts";
 import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
+import type { FilterOperator, OperandChoice } from "./property-definition.ts";
 import { propertyType } from "./property-registry.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import { titleProperty } from "./table-model.selectors.ts";
@@ -89,16 +90,29 @@ function option(
   return html`<option value=${value} ?selected=${isSelected}>${label}</option>`;
 }
 
+// What a filter's operand is chosen from: the operator's own choices, such
+// as a status group, or else the property's options.
+function operandChoices(
+  property: PropertyDefinition | undefined,
+  operator: FilterOperator | undefined,
+): readonly OperandChoice[] | undefined {
+  if (property === undefined) return undefined;
+  if (operator?.choices !== undefined) return operator.choices(property);
+  return property.options?.map((item) => ({ id: item.id, label: item.name }));
+}
+
 // The value a filter compares with: one of the options for a select
 // property, free text or a date for the others.
 function renderOperand(
   filter: Filter,
   property: PropertyDefinition | undefined,
+  operator: FilterOperator | undefined,
 ): TemplateResult {
   const current = typeof filter.value === "string" ? filter.value : "";
-  if (property?.options !== undefined) {
-    const options = property.options.map((item) =>
-      option(item.id, item.name, item.id === current),
+  const choices = operandChoices(property, operator);
+  if (choices !== undefined) {
+    const options = choices.map((item) =>
+      option(item.id, item.label, item.id === current),
     );
     return renderSelect("value", COPY.database.filterValue, [
       option("", "", current === ""),
@@ -144,7 +158,7 @@ function renderFilterRow(
         option(item.id, item.label, item.id === operator?.id),
       ),
     )}
-    ${operator?.needsOperand === true ? renderOperand(filter, property) : nothing}
+    ${operator?.needsOperand === true ? renderOperand(filter, property, operator) : nothing}
     ${renderButton({
       label: COPY.database.removeFilter,
       icon: "close",

@@ -28,12 +28,13 @@ function operator(type: string, id: string) {
 }
 
 describe("the property registry", () => {
-  it("holds the seven property types of version 1 and four more", () => {
+  it("holds the seven property types of version 1 and the later ones", () => {
     expect(PROPERTY_TYPES.map((item) => item.type)).toEqual([
       "text",
       "number",
       "select",
       "multi-select",
+      "status",
       "date",
       "checkbox",
       "url",

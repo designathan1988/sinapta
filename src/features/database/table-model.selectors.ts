@@ -91,7 +91,7 @@ function passes(
       (item) => item.id === filter.operator,
     );
     const operand = typeof filter.value === "string" ? filter.value : "";
-    return operator === undefined || operator.test(value, operand);
+    return operator === undefined || operator.test(value, operand, property);
   });
 }
 

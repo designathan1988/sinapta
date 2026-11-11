@@ -6,12 +6,33 @@ import type {
   PropertyDefinition,
 } from "../../blocks/database/index.ts";
 
+// One value a filter's operand may take, such as a status group.
+export interface OperandChoice {
+  readonly id: string;
+  readonly label: string;
+}
+
 export interface FilterOperator {
   readonly id: string;
   readonly label: string;
   // False for operators such as "is empty" that compare with nothing.
   readonly needsOperand: boolean;
-  readonly test: (value: unknown, operand: string) => boolean;
+  readonly test: (
+    value: unknown,
+    operand: string,
+    property?: PropertyDefinition,
+  ) => boolean;
+  // The operands to choose from, when not the property's options.
+  readonly choices?: (property: PropertyDefinition) => readonly OperandChoice[];
+}
+
+// The options and config a new property of a type starts with, such as a
+// status property's three options in its three groups.
+export interface StartingSettings {
+  readonly optionCount: number;
+  readonly create: (
+    optionIds: readonly string[],
+  ) => Pick<PropertyDefinition, "options" | "config">;
 }
 
 // How a cell of this type is edited; "none" for values the app keeps.
@@ -50,6 +71,7 @@ export interface PropertyType {
   // `defaultConfig`.
   readonly configSchema?: PropertyConfigSchema;
   readonly defaultConfig?: () => unknown;
+  readonly startingSettings?: StartingSettings;
   // The settings shown in the property's menu.
   readonly renderConfigEditor?: (
     property: PropertyDefinition,

@@ -16,6 +16,7 @@ import {
   type View,
 } from "../../model/index.ts";
 import { defineCommand } from "../../state/index.ts";
+import { propertyType } from "./property-registry.ts";
 
 export const DEFAULT_VIEW_NAME = "Table";
 
@@ -96,14 +97,26 @@ export interface AddPropertyPayload {
   readonly name: string;
 }
 
+// A new property takes one id, plus one for each option its type starts
+// with, such as a status property's three.
 export const addProperty = defineCommand<AddPropertyPayload>({
   type: "property.add",
-  newIds: { properties: 1 },
+  newIds: (payload) => ({
+    properties:
+      1 +
+      (propertyType(payload.propertyType).startingSettings?.optionCount ?? 0),
+  }),
   handle(state, command) {
     const database = selectDatabase(state, command.databaseId);
-    const id = command.meta.propertyIds[0];
+    const [id, ...optionIds] = command.meta.propertyIds;
     if (database === undefined || id === undefined) return {};
-    const property = { id, name: command.name, type: command.propertyType };
+    const starting = propertyType(command.propertyType).startingSettings;
+    const property = {
+      id,
+      name: command.name,
+      type: command.propertyType,
+      ...starting?.create(optionIds),
+    };
     return {
       operations: updateProperties(database, [
         ...database.props.properties,

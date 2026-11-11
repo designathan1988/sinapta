@@ -16,6 +16,7 @@ import { multiSelectProperty } from "./properties/multi-select/index.ts";
 import { numberProperty } from "./properties/number/index.ts";
 import { phoneProperty } from "./properties/phone/index.ts";
 import { selectProperty } from "./properties/select/index.ts";
+import { statusProperty } from "./properties/status/index.ts";
 import { textProperty } from "./properties/text/index.ts";
 import { urlProperty } from "./properties/url/index.ts";
 
@@ -24,6 +25,7 @@ export const PROPERTY_TYPES: readonly PropertyType[] = [
   numberProperty,
   selectProperty,
   multiSelectProperty,
+  statusProperty,
   dateProperty,
   checkboxProperty,
   urlProperty,

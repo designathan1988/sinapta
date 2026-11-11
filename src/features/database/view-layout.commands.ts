@@ -12,15 +12,26 @@ import {
   type CommandEffect,
 } from "../../state/index.ts";
 
-export const GROUP_PROPERTY_TYPE = "select";
-export const DATE_PROPERTY_TYPE = "date";
+// The types a board can group by, the one it prefers first.
+export const GROUP_PROPERTY_TYPES = ["status", "select"] as const;
+export const DATE_PROPERTY_TYPES = ["date"] as const;
 
-function firstOfType(
+// The properties of these types, those of the first type first.
+export function propertiesOfTypes(
   database: DatabaseBlock,
-  type: string,
+  types: readonly string[],
+): DatabaseBlock["props"]["properties"] {
+  const { properties } = database.props;
+  return types.flatMap((type) =>
+    properties.filter((property) => property.type === type),
+  );
+}
+
+function firstOfTypes(
+  database: DatabaseBlock,
+  types: readonly string[],
 ): PropertyId | undefined {
-  return database.props.properties.find((property) => property.type === type)
-    ?.id;
+  return propertiesOfTypes(database, types)[0]?.id;
 }
 
 // What a view of a layout starts with: a board needs a property to group
@@ -31,8 +42,9 @@ export function layoutDefaults(
   viewType: ViewType,
 ): Partial<View> {
   const group =
-    view.groupPropertyId ?? firstOfType(database, GROUP_PROPERTY_TYPE);
-  const date = view.datePropertyId ?? firstOfType(database, DATE_PROPERTY_TYPE);
+    view.groupPropertyId ?? firstOfTypes(database, GROUP_PROPERTY_TYPES);
+  const date =
+    view.datePropertyId ?? firstOfTypes(database, DATE_PROPERTY_TYPES);
   return {
     type: viewType,
     ...(viewType === "board" &&
@@ -78,10 +90,10 @@ export const setViewType = defineCommand<{
   },
 });
 
-// Sets the property a layout uses, if it is of the type that layout needs.
+// Sets the property a layout uses, if it is of a type that layout needs.
 function setLayoutProperty(
   key: "groupPropertyId" | "datePropertyId",
-  propertyType: string,
+  types: readonly string[],
 ) {
   return (
     state: AppState,
@@ -91,7 +103,8 @@ function setLayoutProperty(
     const property = found?.database.props.properties.find(
       (item) => item.id === command.propertyId,
     );
-    if (found === undefined || property?.type !== propertyType) return {};
+    if (found === undefined || property === undefined) return {};
+    if (!types.includes(property.type)) return {};
     return patchView(found.view.id, { [key]: property.id });
   };
 }
@@ -101,7 +114,7 @@ export const setViewGroupProperty = defineCommand<{
   propertyId: PropertyId;
 }>({
   type: "view.setGroupProperty",
-  handle: setLayoutProperty("groupPropertyId", GROUP_PROPERTY_TYPE),
+  handle: setLayoutProperty("groupPropertyId", GROUP_PROPERTY_TYPES),
 });
 
 export const setViewDateProperty = defineCommand<{
@@ -109,7 +122,7 @@ export const setViewDateProperty = defineCommand<{
   propertyId: PropertyId;
 }>({
   type: "view.setDateProperty",
-  handle: setLayoutProperty("datePropertyId", DATE_PROPERTY_TYPE),
+  handle: setLayoutProperty("datePropertyId", DATE_PROPERTY_TYPES),
 });
 
 export const viewLayoutCommands = [
