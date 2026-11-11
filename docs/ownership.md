@@ -107,6 +107,7 @@ owner listed here exists.
 | Slash menu | `src/features/slash-menu/` | 4 |
 | Adding a block below another and duplicating a block | `src/features/editor/editor-insert.commands.ts` | 8 |
 | Writing a page as Markdown and saving it | `src/features/markdown-export/` | 8 |
+| A page's cover and width | `src/blocks/page/page-cover.commands.ts`, `src/features/editor/editor-cover.view.ts` | 10 |
 | Duplicating a page with everything inside it | `src/blocks/page/page-duplicate.commands.ts` | 10 |
 | Formatting toolbar and text color picker over selected text | `src/features/format-toolbar/` | 8 |
 | What a block type declares | `src/blocks/block-definition.ts` | 3 |

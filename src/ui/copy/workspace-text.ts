@@ -26,6 +26,8 @@ export const WORKSPACE_TEXT = {
     trash: "Move to trash",
     duplicate: "Duplicate",
     copySuffix: "(copy)",
+    fullWidthOn: "Use full width",
+    fullWidthOff: "Use normal width",
     exportMarkdown: "Export as Markdown",
     exportedMarkdown: "The page was saved as a Markdown file.",
   },
@@ -50,6 +52,24 @@ export const WORKSPACE_TEXT = {
     confirmBody:
       "The page and everything inside it will be removed. This cannot be undone.",
     cancel: "Cancel",
+  },
+  cover: {
+    add: "Add cover",
+    change: "Change cover",
+    remove: "Remove cover",
+    colors: "Colors",
+    imageLabel: "Image address",
+    imagePlaceholder: "Paste an image link",
+    imageSubmit: "Use image",
+    imageInvalid: "Enter an image address that starts with http or https.",
+    presets: {
+      sunrise: "Sunrise",
+      ocean: "Ocean",
+      forest: "Forest",
+      dusk: "Dusk",
+      sand: "Sand",
+      slate: "Slate",
+    },
   },
   icon: {
     add: "Add icon",

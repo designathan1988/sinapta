@@ -3,6 +3,8 @@ import { html, nothing, type TemplateResult } from "lit-html";
 import {
   createPage,
   duplicatePage,
+  PAGE_TYPE,
+  togglePageFullWidth,
   movePage,
   selectPage,
   selectPageCopySize,
@@ -105,6 +107,22 @@ function moveItems(
   return [...(index > 0 ? [up] : []), ...(index < count - 1 ? [down] : [])];
 }
 
+// Only pages change width: a database always fills it.
+function widthItems(page: PageBlock, dispatch: Dispatch): MenuItem[] {
+  if (page.type !== PAGE_TYPE) return [];
+  const label =
+    page.props.isFullWidth === true
+      ? COPY.pageMenu.fullWidthOff
+      : COPY.pageMenu.fullWidthOn;
+  return [
+    {
+      label,
+      icon: "sidebar",
+      onSelect: () => dispatch(togglePageFullWidth.create({ pageId: page.id })),
+    },
+  ];
+}
+
 // Actions that make something from the page: a duplicate, a file.
 function copyItems(
   state: AppState,
@@ -150,6 +168,7 @@ function menuItems(
       onSelect: () => dispatch(createPage.create({ parentId: pageId })),
     },
     ...moveItems(state, page, dispatch),
+    ...widthItems(page, dispatch),
     ...copyItems(state, pageId, dispatch),
     {
       label: COPY.pageMenu.trash,

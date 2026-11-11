@@ -121,6 +121,10 @@
   }
 
   /* A database page uses the full width and height of the main area. */
+  .app__page:has(> [data-full-width]) {
+    inline-size: 100%;
+  }
+
   .app__page:has(> [data-wide]) {
     flex: 1;
     inline-size: 100%;

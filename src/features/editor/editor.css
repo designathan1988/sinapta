@@ -26,6 +26,12 @@
     display: flex;
   }
 
+  .editor__page-actions {
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: flex-end;
+  }
+
   .editor__title {
     inline-size: 100%;
     padding: var(--space-none);

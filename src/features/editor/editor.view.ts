@@ -1,9 +1,10 @@
 import "./editor.css";
-import { html, type nothing, type TemplateResult } from "lit-html";
+import { html, nothing, type TemplateResult } from "lit-html";
 import { keyed } from "lit-html/directives/keyed.js";
 import { ref } from "lit-html/directives/ref.js";
 import {
   DATABASE_TYPE,
+  PAGE_TYPE,
   renamePage,
   selectPage,
   selectPageTitle,
@@ -17,6 +18,7 @@ import { continueWriting, renderBlocks } from "./editor-blocks.view.ts";
 import { renderBlockMenu } from "./editor-block-menu.view.ts";
 import { LINK_OVERLAY, renderLinkField } from "./editor-link.view.ts";
 import type { InputContext } from "./editor-input.view.ts";
+import { renderAddCover, renderCover } from "./editor-cover.view.ts";
 import { renderIconControl } from "./editor-icon.view.ts";
 
 // A page that opens without a title, such as one just created, takes the
@@ -69,6 +71,7 @@ export function renderEditor(
       <p class="editor__empty">${COPY.editor.noPage}</p>`;
   }
   const context = { state, dispatch };
+  const isPage = page.type === PAGE_TYPE;
   // A row of a database shows its property values above its text.
   const content =
     page.type === DATABASE_TYPE
@@ -78,9 +81,17 @@ export function renderEditor(
   // motion and nothing of the page before it is carried over.
   return html`${keyed(
     page.id,
-    html`<article class="editor" ?data-wide=${page.type === DATABASE_TYPE}>
-      ${renderIconControl(state, page, dispatch)} ${renderTitle(page, context)}
-      ${content}
+    html`<article
+      class="editor"
+      ?data-wide=${page.type === DATABASE_TYPE}
+      ?data-full-width=${page.props.isFullWidth === true}
+    >
+      ${isPage ? renderCover(state, page, dispatch) : nothing}
+      <div class="editor__page-actions">
+        ${renderIconControl(state, page, dispatch)}
+        ${isPage ? renderAddCover(page, dispatch) : nothing}
+      </div>
+      ${renderTitle(page, context)} ${content}
     </article>`,
   )}`;
 }

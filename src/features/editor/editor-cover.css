@@ -1,0 +1,111 @@
+@layer features {
+  .editor__cover {
+    position: relative;
+    block-size: var(--size-card-cover);
+    margin-block-end: var(--space-stack-sm);
+    overflow: hidden;
+    border-radius: var(--radius-md);
+  }
+
+  .editor__cover-image {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  .editor__cover-change {
+    position: absolute;
+    inset-block-end: var(--space-inset-sm);
+    inset-inline-end: var(--space-inset-sm);
+    background-color: var(--color-bg-raised);
+    opacity: 0;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: opacity var(--duration-fast) var(--easing-standard);
+    }
+  }
+
+  .editor__cover:is(:hover, :focus-within) .editor__cover-change {
+    opacity: 1;
+  }
+
+  .editor__cover-picker:popover-open {
+    display: grid;
+    gap: var(--space-stack-sm);
+    padding: var(--space-inset-md);
+  }
+
+  .editor__cover-heading {
+    margin: var(--space-none);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+  }
+
+  .editor__cover-presets {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-inline-xs);
+  }
+
+  .editor__cover-preset {
+    block-size: var(--size-control-md);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+
+    &[aria-pressed="true"] {
+      outline: var(--size-focus-width) solid var(--color-accent-default);
+    }
+  }
+
+  /* Each cover blends two tones of the chip palette, so both themes have
+     their own version of it. */
+  [data-cover="sunrise"] {
+    background-image: linear-gradient(
+      to bottom right,
+      var(--color-chip-yellow-bg),
+      var(--color-chip-red-bg)
+    );
+  }
+
+  [data-cover="ocean"] {
+    background-image: linear-gradient(
+      to bottom right,
+      var(--color-chip-blue-bg),
+      var(--color-chip-purple-bg)
+    );
+  }
+
+  [data-cover="forest"] {
+    background-image: linear-gradient(
+      to bottom right,
+      var(--color-chip-green-bg),
+      var(--color-chip-blue-bg)
+    );
+  }
+
+  [data-cover="dusk"] {
+    background-image: linear-gradient(
+      to bottom right,
+      var(--color-chip-purple-bg),
+      var(--color-chip-orange-bg)
+    );
+  }
+
+  [data-cover="sand"] {
+    background-image: linear-gradient(
+      to bottom right,
+      var(--color-chip-brown-bg),
+      var(--color-chip-yellow-bg)
+    );
+  }
+
+  [data-cover="slate"] {
+    background-image: linear-gradient(
+      to bottom right,
+      var(--color-chip-gray-bg),
+      var(--color-chip-blue-bg)
+    );
+  }
+}
