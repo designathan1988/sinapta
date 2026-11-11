@@ -60,6 +60,10 @@
       --board-tint: var(--color-chip-purple-bg);
     }
 
+    &[data-color="pink"] {
+      --board-tint: var(--color-chip-pink-bg);
+    }
+
     &[data-color="red"] {
       --board-tint: var(--color-chip-red-bg);
     }

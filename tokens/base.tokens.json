@@ -345,6 +345,32 @@
             }
           }
         },
+        "pink": {
+          "tint": {
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.9262, 0.0258, 349.8]
+            }
+          },
+          "ink": {
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.32, 0.0675, 351.0]
+            }
+          },
+          "shade": {
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.3967, 0.087, 351.6]
+            }
+          },
+          "glow": {
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.8952, 0.0381, 351.0]
+            }
+          }
+        },
         "red": {
           "tint": {
             "$value": {

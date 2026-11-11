@@ -116,6 +116,10 @@ describe("the Edit property submenu", () => {
 
     row("Red").click();
 
+    expect(
+      row("Red").querySelector('.chip__swatch[data-color="red"]'),
+    ).not.toBeNull();
+    expect(row("Red").querySelector(".chip")).toBeNull();
     expect(row("Gray").getAttribute("aria-checked")).toBe("true");
     expect(sent).toEqual([
       expect.objectContaining({ type: "option.recolor", color: "red" }),

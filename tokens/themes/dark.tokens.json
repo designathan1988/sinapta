@@ -157,6 +157,14 @@
           "$value": "{base.color.chip.purple.glow}"
         }
       },
+      "pink": {
+        "bg": {
+          "$value": "{base.color.chip.pink.shade}"
+        },
+        "text": {
+          "$value": "{base.color.chip.pink.glow}"
+        }
+      },
       "red": {
         "bg": {
           "$value": "{base.color.chip.red.shade}"

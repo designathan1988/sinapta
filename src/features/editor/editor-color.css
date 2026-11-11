@@ -59,8 +59,16 @@
     --editor-block-text: var(--color-chip-purple-text);
   }
 
+  .editor__block[data-color="pink"] {
+    --editor-block-text: var(--color-chip-pink-text);
+  }
+
   .editor__block[data-color="purple-background"] {
     --editor-block-bg: var(--color-chip-purple-bg);
+  }
+
+  .editor__block[data-color="pink-background"] {
+    --editor-block-bg: var(--color-chip-pink-bg);
   }
 
   .editor__block[data-color="red"] {

@@ -79,7 +79,7 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Relation database | `relation-config.view.ts` | Notion | searchable list of databases |
 | Rollup relation, property, calculation | `rollup-config.view.ts` | Notion | rows with values opening option lists beside them |
 | Button property action | `button-property-config.view.ts` | custom (a list in a form) | option list |
-| Options and their colors | `option-list.view.ts` | custom (colors as chips, not swatches) | each option a row with a grip and its chip, opening its submenu: name, Delete, colors as swatches with a check |
+| Options and their colors | `option-list.view.ts` | Notion (no Default color yet) | each option a row with a grip and its chip, opening its submenu: name, Delete, colors as swatches with a check |
 
 ### Blocks
 
@@ -136,7 +136,7 @@ against the reference on every run.
 ## Open
 
 - Calculation in the footer: the same grouped menu as the column's.
-- Option colors as Notion's swatches, with Default and Pink.
+- Option colors: Notion's Default color.
 - The view settings' Sort panel: the view's sorts, added and removed.
 - A row page's values open the table's own editors.
 - Group headers show "+" and "…" on hover.

@@ -2,7 +2,7 @@
 // the eight tones of the chip palette, or none.
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
-import type { Tone } from "../../model/index.ts";
+import { TONES, type Tone } from "../../model/index.ts";
 import {
   closeOverlay,
   type AppState,
@@ -20,17 +20,6 @@ import {
   TONE_OVERLAY,
   type FormatRange,
 } from "./format-toolbar.selectors.ts";
-
-const TONES: readonly Tone[] = [
-  "gray",
-  "brown",
-  "orange",
-  "yellow",
-  "green",
-  "blue",
-  "purple",
-  "red",
-];
 
 type ToneKey = "color" | "highlight";
 

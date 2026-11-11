@@ -1,1 +1,1 @@
-export { renderChip } from "./chip.view.ts";
+export { renderChip, renderChipSwatch } from "./chip.view.ts";

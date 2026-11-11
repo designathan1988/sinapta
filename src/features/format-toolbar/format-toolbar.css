@@ -152,6 +152,10 @@
     color: var(--color-chip-purple-text);
   }
 
+  .format-toolbar__swatch[data-key="color"][data-tone="pink"] {
+    color: var(--color-chip-pink-text);
+  }
+
   .format-toolbar__swatch[data-key="color"][data-tone="red"] {
     color: var(--color-chip-red-text);
   }
@@ -182,6 +186,10 @@
 
   .format-toolbar__swatch[data-key="highlight"][data-tone="purple"] {
     background-color: var(--color-chip-purple-bg);
+  }
+
+  .format-toolbar__swatch[data-key="highlight"][data-tone="pink"] {
+    background-color: var(--color-chip-pink-bg);
   }
 
   .format-toolbar__swatch[data-key="highlight"][data-tone="red"] {

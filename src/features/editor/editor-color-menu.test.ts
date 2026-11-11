@@ -26,10 +26,10 @@ function rendered() {
 }
 
 describe("renderColorMenu", () => {
-  it("lists the default, eight text colors and eight backgrounds", () => {
+  it("lists the default, nine text colors and nine backgrounds", () => {
     const items = rendered().host.querySelectorAll("[role^=menuitem]");
 
-    expect(items).toHaveLength(17);
+    expect(items).toHaveLength(19);
   });
 
   it("colors the block with the chosen background", () => {

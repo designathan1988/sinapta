@@ -56,6 +56,10 @@
     --base-color-chip-purple-ink: oklch(0.3216 0.0878 310.3);
     --base-color-chip-purple-shade: oklch(0.362 0.0922 304.9);
     --base-color-chip-purple-glow: oklch(0.8952 0.0381 309.6);
+    --base-color-chip-pink-tint: oklch(0.9262 0.0258 349.8);
+    --base-color-chip-pink-ink: oklch(0.32 0.0675 351);
+    --base-color-chip-pink-shade: oklch(0.3967 0.087 351.6);
+    --base-color-chip-pink-glow: oklch(0.8952 0.0381 351);
     --base-color-chip-red-tint: oklch(0.9352 0.0328 29.4);
     --base-color-chip-red-ink: oklch(0.3227 0.102 26.3);
     --base-color-chip-red-shade: oklch(0.4043 0.0807 27.5);
@@ -238,6 +242,8 @@
     --color-chip-blue-text: light-dark(var(--base-color-chip-blue-ink), var(--base-color-chip-blue-glow));
     --color-chip-purple-bg: light-dark(var(--base-color-chip-purple-tint), var(--base-color-chip-purple-shade));
     --color-chip-purple-text: light-dark(var(--base-color-chip-purple-ink), var(--base-color-chip-purple-glow));
+    --color-chip-pink-bg: light-dark(var(--base-color-chip-pink-tint), var(--base-color-chip-pink-shade));
+    --color-chip-pink-text: light-dark(var(--base-color-chip-pink-ink), var(--base-color-chip-pink-glow));
     --color-chip-red-bg: light-dark(var(--base-color-chip-red-tint), var(--base-color-chip-red-shade));
     --color-chip-red-text: light-dark(var(--base-color-chip-red-ink), var(--base-color-chip-red-glow));
     --color-code-keyword: light-dark(var(--base-color-chip-purple-ink), var(--base-color-chip-purple-glow));

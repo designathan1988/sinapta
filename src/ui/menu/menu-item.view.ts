@@ -2,7 +2,7 @@
 // icon, label or chip, description, value, and its check, switch or
 // chevron at the end.
 import { html, nothing, type TemplateResult } from "lit-html";
-import { renderChip } from "../chip/index.ts";
+import { renderChip, renderChipSwatch } from "../chip/index.ts";
 import { renderIcon } from "../icon/index.ts";
 import { renderSwitchMark } from "../switch/index.ts";
 import type { MenuEntry, MenuItem } from "./menu-entry.ts";
@@ -26,6 +26,12 @@ function renderEnd(item: MenuItem): TemplateResult | typeof nothing {
     return renderIcon("chevron");
   }
   return isChecked ? renderIcon("check") : nothing;
+}
+
+// What leads the row: a color's swatch or an icon.
+function renderLead(item: MenuItem): TemplateResult | typeof nothing {
+  if (item.swatch !== undefined) return renderChipSwatch(item.swatch);
+  return item.icon === undefined ? nothing : renderIcon(item.icon);
 }
 
 function renderText(item: MenuItem): TemplateResult {
@@ -79,8 +85,7 @@ export function renderEntry(
     ?data-danger=${entry.isDanger === true}
     ?disabled=${entry.isDisabled === true}
   >
-    ${entry.icon === undefined ? nothing : renderIcon(entry.icon)}
-    ${renderText(entry)}
+    ${renderLead(entry)} ${renderText(entry)}
     ${
       entry.value === undefined
         ? nothing

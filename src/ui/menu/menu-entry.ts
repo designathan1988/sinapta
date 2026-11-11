@@ -21,6 +21,9 @@ interface ItemLook {
   readonly description?: string;
   // Shows the label as a chip of this option color.
   readonly color?: string;
+  // Shows a square of this option color before the label, in place of an
+  // icon, as Notion's lists of colors do.
+  readonly swatch?: string;
   // An icon at the end of the row, such as an eye that shows the state.
   readonly endIcon?: IconName;
   // Leaves the menu open after the choice, as when a choice goes back to

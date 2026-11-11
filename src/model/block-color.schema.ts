@@ -1,6 +1,6 @@
 import * as v from "valibot";
 
-// A whole block's color: one of the eight tones for its text, or the same
+// A whole block's color: one of the nine tones for its text, or the same
 // tone as its background (schema version 6).
 export const blockColorSchema = v.picklist([
   "gray",
@@ -10,6 +10,7 @@ export const blockColorSchema = v.picklist([
   "green",
   "blue",
   "purple",
+  "pink",
   "red",
   "gray-background",
   "brown-background",
@@ -18,6 +19,7 @@ export const blockColorSchema = v.picklist([
   "green-background",
   "blue-background",
   "purple-background",
+  "pink-background",
   "red-background",
 ]);
 

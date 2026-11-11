@@ -1,7 +1,7 @@
 import * as v from "valibot";
 import { blockIdSchema } from "./id.schema.ts";
 
-// The eight named tones of the chip palette, shared by text color,
+// The nine named tones of Notion's palette, shared by text color,
 // highlight and select options.
 export const toneSchema = v.picklist([
   "gray",
@@ -11,6 +11,7 @@ export const toneSchema = v.picklist([
   "green",
   "blue",
   "purple",
+  "pink",
   "red",
 ]);
 

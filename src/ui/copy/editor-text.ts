@@ -66,6 +66,7 @@ export const EDITOR_TEXT = {
     green: "Green",
     blue: "Blue",
     purple: "Purple",
+    pink: "Pink",
     red: "Red",
   },
   link: {

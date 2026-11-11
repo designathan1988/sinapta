@@ -4,6 +4,7 @@
 // that adds one.
 import { html, type TemplateResult } from "lit-html";
 import type { PropertyDefinition } from "../../blocks/database/index.ts";
+import { TONES } from "../../model/index.ts";
 import { closeChildOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import type { MenuEntry, SubmenuContent } from "../../ui/menu/index.ts";
@@ -15,7 +16,7 @@ import {
   type OptionTarget,
 } from "./option.commands.ts";
 import type { TableContext } from "./table-cell.view.ts";
-import { addOption, OPTION_COLORS } from "./table.commands.ts";
+import { addOption } from "./table.commands.ts";
 
 const TEXT = COPY.database;
 
@@ -138,9 +139,10 @@ function optionMenu(
   if (option === undefined) return { label: TEXT.options, items: [] };
   const databaseId = context.model.database.id;
   const target = { databaseId, propertyId: property.id, optionId };
-  const colors = OPTION_COLORS.map((color): MenuEntry => ({
+  // In the palette's order, as Notion lists them.
+  const colors = TONES.map((color): MenuEntry => ({
     label: colorLabel(color),
-    color,
+    swatch: color,
     check: "radio",
     isChecked: option.color === color,
     keepsOpen: true,

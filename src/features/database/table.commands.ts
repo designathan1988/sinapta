@@ -41,6 +41,7 @@ export const OPTION_COLORS = [
   "orange",
   "red",
   "purple",
+  "pink",
   "brown",
   "gray",
 ];

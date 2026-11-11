@@ -157,6 +157,14 @@
           "$value": "{base.color.chip.purple.ink}"
         }
       },
+      "pink": {
+        "bg": {
+          "$value": "{base.color.chip.pink.tint}"
+        },
+        "text": {
+          "$value": "{base.color.chip.pink.ink}"
+        }
+      },
       "red": {
         "bg": {
           "$value": "{base.color.chip.red.tint}"
