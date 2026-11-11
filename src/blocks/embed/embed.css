@@ -1,0 +1,41 @@
+@layer blocks {
+  .embed {
+    --embed-height: var(--size-cover-height);
+
+    position: relative;
+    display: grid;
+    margin: var(--space-none);
+  }
+
+  .embed__frame {
+    display: block;
+    inline-size: 100%;
+    block-size: var(--embed-height);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-hover);
+  }
+
+  /* The bar that sets the height shows on hover and while focused. */
+  .embed__handle {
+    justify-self: center;
+    inline-size: var(--size-control-md);
+    block-size: var(--space-stack-xs);
+    margin-block-start: var(--space-stack-xxs);
+    border-radius: var(--radius-full);
+    background-color: var(--color-border-strong);
+    cursor: ns-resize;
+    opacity: 0;
+    touch-action: none;
+
+    &:focus-visible {
+      opacity: 1;
+      outline: var(--size-focus-width) solid var(--color-border-focus);
+      outline-offset: var(--size-focus-offset);
+    }
+  }
+
+  .embed:hover .embed__handle {
+    opacity: 1;
+  }
+}

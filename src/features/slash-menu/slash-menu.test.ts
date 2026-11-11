@@ -24,7 +24,8 @@ describe("selectSlashItems", () => {
     expect(labels).toEqual(
       expect.arrayContaining(["Video", "Audio", "File", "PDF"]),
     );
-    expect(labels).toHaveLength(27);
+    expect(labels).toContain("Embed");
+    expect(labels).toHaveLength(28);
   });
 
   it("filters by the query without regard to case", () => {

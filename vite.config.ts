@@ -2,6 +2,7 @@ import { relative } from "node:path";
 import type { Plugin } from "vite";
 import { defineConfig } from "vitest/config";
 import { buildTokens } from "./scripts/build-tokens.ts";
+import { FRAME_HOSTS } from "./src/blocks/embed/embed-hosts.ts";
 
 function isTokenFile(file: string): boolean {
   const path = relative(process.cwd(), file).replaceAll("\\", "/");
@@ -49,7 +50,8 @@ const CONTENT_SECURITY_POLICY = [
   // asset store from blob addresses; media and frames will too.
   "img-src 'self' data: blob: https:",
   "media-src 'self' blob: https:",
-  "frame-src blob:",
+  // Stored PDFs, and embeds from the allowed hosts only.
+  `frame-src blob: ${FRAME_HOSTS.join(" ")}`,
   "object-src 'none'",
   "base-uri 'none'",
 ].join("; ");

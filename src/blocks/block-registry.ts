@@ -12,6 +12,7 @@ import { columnListDefinition } from "./column-list/index.ts";
 import { columnDefinition } from "./column/index.ts";
 import { databaseDefinition } from "./database/index.ts";
 import { dividerDefinition } from "./divider/index.ts";
+import { embedDefinition } from "./embed/index.ts";
 import { equationDefinition } from "./equation/index.ts";
 import { fileDefinition } from "./file/index.ts";
 import { headingDefinition } from "./heading/index.ts";
@@ -48,6 +49,7 @@ export const BLOCK_DEFINITIONS: readonly BlockDefinition[] = [
   fileDefinition,
   pdfDefinition,
   bookmarkDefinition,
+  embedDefinition,
   simpleTableDefinition,
   tableOfContentsDefinition,
   equationDefinition,

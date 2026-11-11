@@ -1,5 +1,16 @@
 // Text inside particular kinds of blocks.
 export const BLOCK_TEXT = {
+  embed: {
+    name: "Embed",
+    label: "Address to embed",
+    placeholder: "Paste a YouTube, Vimeo, Figma, Loom or other link",
+    submit: "Embed",
+    invalid:
+      "This address cannot be embedded. Use a link from YouTube, Vimeo, Figma, Loom, CodePen, Google Maps or Docs, Spotify, SoundCloud or X.",
+    frame: "Embedded page",
+    height: "Embed height",
+    heightValue: "pixels",
+  },
   media: {
     submit: "Embed",
     invalid: "Enter an address that starts with https.",
