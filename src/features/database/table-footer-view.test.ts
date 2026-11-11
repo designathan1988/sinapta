@@ -44,8 +44,13 @@ function rendered(isGrouped = false, isOpen = false) {
   const host = document.createElement("div");
   document.body.replaceChildren(host);
   const built = app.store.getState();
+  // Open, with its "More options" group open beside it.
   const overlay = isOpen
-    ? { kind: SELECT_OVERLAY, anchorId: `calculate-${viewId}-${points}` }
+    ? {
+        kind: SELECT_OVERLAY,
+        anchorId: `calculate-${viewId}-${points}`,
+        children: [{ anchorId: `${points}:calculate:more` }],
+      }
     : null;
   const state = { ...built, ui: { ...built.ui, activeCell: null, overlay } };
   render(renderDatabase(state, dispatch), host);
@@ -69,15 +74,15 @@ describe("the table's footer", () => {
     expect(cell.querySelector(".database__calc-value")?.textContent).toBe("13");
   });
 
-  it("opens the calculations that fit, and chooses another or none", () => {
+  it("opens Notion's groups of calculations, and chooses one or none", () => {
     const closed = rendered();
     closed.footer(closed.points).querySelector<HTMLElement>(".select")?.click();
     const open = rendered(false, true);
-    const options = [
-      ...open.host.querySelectorAll<HTMLElement>("[role=option]"),
-    ];
+    const rows = [...open.host.querySelectorAll<HTMLElement>("[data-index]")];
     const pick = (label: string) =>
-      options.find((option) => option.textContent.trim() === label)?.click();
+      rows.find((row) => row.textContent.trim() === label)?.click();
+    const menu = open.host.querySelector(".menu");
+    const own = rows.filter((row) => row.closest(".menu") === menu);
 
     pick("Average");
     pick("None");
@@ -87,7 +92,12 @@ describe("the table's footer", () => {
       type: "ui.openOverlay",
       overlay: { kind: SELECT_OVERLAY },
     });
-    expect(options[0]?.textContent.trim()).toBe("None");
+    expect(own.map((row) => row.textContent.trim())).toEqual([
+      "None",
+      "Count",
+      "Percent",
+      "More options",
+    ]);
     const changes = open.sent.filter(
       (command) => command.type === "view.setCalculation",
     );

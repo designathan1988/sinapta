@@ -1,12 +1,11 @@
 // The footer of the table: under each column, the calculation the view
-// works out from the rows it shows, chosen from a list of those that fit
-// the column, "None" first, as in Notion.
+// works out from the rows it shows, chosen from the same menu as the
+// column's own: "None", then Notion's groups of those that fit.
 import "./table-footer.css";
 import { html, type TemplateResult } from "lit-html";
-import { CALCULATION_KINDS } from "../../model/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderSelect } from "../../ui/select/index.ts";
-import { setCalculation } from "./calculation.commands.ts";
+import { calculationItems } from "./column-menu-items.ts";
 import { calculate, calculationChoices } from "./calculations.selectors.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import type { TableColumn } from "./table-model.selectors.ts";
@@ -20,12 +19,7 @@ function renderCalculation(
   const kind = model.view.calculations[property.id];
   const result =
     kind === undefined ? "" : calculate(model.rows, property, kind);
-  const choose = (value: string): void => {
-    const chosen = CALCULATION_KINDS.find((item) => item === value) ?? null;
-    const viewId = model.view.id;
-    const propertyId = property.id;
-    dispatch(setCalculation.create({ viewId, propertyId, kind: chosen }));
-  };
+
   return html`<td
     class="database__calc"
     data-property-id=${property.id}
@@ -37,9 +31,11 @@ function renderCalculation(
         label: `${COPY.database.calculate} ${property.name}`,
         value: kind,
         options: calculationChoices(column.property),
+        menu: calculationItems(column, context),
         placeholder: COPY.database.calculate,
         variant: "quiet",
-        onChoose: choose,
+        // The menu's own rows choose.
+        onChoose: () => undefined,
       },
       { overlay: state.ui.overlay, dispatch },
     )}

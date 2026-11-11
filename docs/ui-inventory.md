@@ -59,7 +59,7 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Property visibility | `view-settings/choice-panels.ts` | Notion | list with type icons and an eye toggle per property |
 | Filter conjunction | `view-filters.view.ts` | Notion | small select: "And" or "Or" |
 | Filter property, condition, value | `filter-row.view.ts` | Notion | select buttons opening option lists; options of a select property as chips |
-| Calculation | `table-footer.view.ts` | custom (one flat list, not Notion's groups) | "Calculate" with a chevron opening the grouped menu of calculations |
+| Calculation | `table-footer.view.ts` | Notion | "Calculate" with a chevron opening the grouped menu of calculations |
 | Set property on ticked rows | `table-bulk.view.ts` | custom (a list, not a button per property) | a button per property in the bar |
 | Linked view source | `linked-view.view.ts` | Notion | searchable list of databases |
 | Row properties on a row page | `row-properties.view.ts`, `row-option.view.ts` | custom (options are a list; other values are fields, not the table's editors) | property rows; values open their editors |
@@ -135,7 +135,6 @@ against the reference on every run.
 
 ## Open
 
-- Calculation in the footer: the same grouped menu as the column's.
 - Option colors: Notion's Default color.
 - The view settings' Sort panel: the view's sorts, added and removed.
 - A row page's values open the table's own editors.

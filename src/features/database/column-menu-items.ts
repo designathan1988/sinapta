@@ -110,11 +110,12 @@ function calculationGroup(
   };
 }
 
-// The calculation under the column: none, or one of Notion's groups.
-export function calculateItem(
+// The calculations of a column, as Notion's column menu and footer list
+// them: none, then a submenu for each group.
+export function calculationItems(
   column: TableColumn,
   context: TableContext,
-): MenuItem {
+): MenuItem[] {
   const { model, dispatch } = context;
   const viewId = model.view.id;
   const propertyId = column.property.id;
@@ -126,17 +127,24 @@ export function calculateItem(
     onSelect: () =>
       dispatch(setCalculation.create({ viewId, propertyId, kind: null })),
   };
-  const items = [
+  return [
     none,
     ...GROUP_NAMES.filter((name) => groups[name].length > 0).map((name) =>
       calculationGroup(column, context, { name, kinds: groups[name] }),
     ),
   ];
+}
+
+export function calculateItem(
+  column: TableColumn,
+  context: TableContext,
+): MenuItem {
+  const items = calculationItems(column, context);
   return {
     label: TEXT.calculate,
     icon: "sigma",
     submenu: {
-      id: `${propertyId}:calculate`,
+      id: `${column.property.id}:calculate`,
       menu: () => ({ label: TEXT.calculate, items }),
     },
   };

@@ -16,7 +16,7 @@ import {
 } from "../../state/index.ts";
 import { renderChip } from "../chip/index.ts";
 import { renderIcon, type IconName } from "../icon/index.ts";
-import { renderMenu, type MenuItem } from "../menu/index.ts";
+import { renderMenu, type MenuEntry, type MenuItem } from "../menu/index.ts";
 import { childDepthOf, childIndexOf } from "../overlay/index.ts";
 
 export const SELECT_OVERLAY = "select";
@@ -45,6 +45,10 @@ export interface SelectProps {
   // rows such as a filter's; "row" is a menu row, its label then its
   // value, whose list opens beside the menu as Notion's settings do.
   readonly variant?: "field" | "quiet" | "row";
+  // Entries to open in place of the option list, such as groups that
+  // open submenus, as Notion's Calculate does; the options then only
+  // name the current choice.
+  readonly menu?: readonly MenuEntry[];
 }
 
 export interface SelectContext {
@@ -100,12 +104,37 @@ function toggle(
   }
 }
 
+interface Opened {
+  readonly props: SelectProps;
+  readonly context: SelectContext;
+  readonly state: OpenState;
+}
+
+// A menu of entries in place of the options, its submenus beside it.
+function renderEntries(
+  entries: readonly MenuEntry[],
+  { props, context, state }: Opened,
+): TemplateResult {
+  return renderMenu({
+    label: props.label,
+    isChild: state.isChild,
+    items: entries,
+    context,
+    onClose: () => {
+      closeList(state, context.dispatch);
+    },
+  });
+}
+
 function renderList(
   props: SelectProps,
   context: SelectContext,
   state: OpenState,
 ): TemplateResult {
   const { dispatch } = context;
+  if (props.menu !== undefined) {
+    return renderEntries(props.menu, { props, context, state });
+  }
   // An option's value is what is chosen, never shown: the row shows its
   // label, icon, chip and description.
   const items = props.options.map(({ value, ...shown }): MenuItem => ({
