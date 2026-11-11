@@ -35,6 +35,14 @@ export function shortcutFor(target: Target, text: string, state: AppState) {
 const SLASH_MENU_OVERLAY = "slash-menu";
 const MENTION_MENU_OVERLAY = "mention-menu";
 const PAGE_LINK_MENU_OVERLAY = "page-link-menu";
+const EMOJI_MENU_OVERLAY = "emoji-menu";
+
+// The key that opens a menu at once.
+const MENU_KEYS: Readonly<Record<string, string>> = {
+  "/": SLASH_MENU_OVERLAY,
+  "@": MENTION_MENU_OVERLAY,
+  ":": EMOJI_MENU_OVERLAY,
+};
 
 function openMenu(target: Target, kind: string, dispatch: Dispatch): void {
   const overlay = { kind, anchorId: target.blockId, start: target.start };
@@ -43,8 +51,8 @@ function openMenu(target: Target, kind: string, dispatch: Dispatch): void {
 
 // "/" and "@" open their menu at once; "[" does after another "[".
 function menuFor(target: Target, text: string, state: AppState) {
-  if (text === "/") return { kind: SLASH_MENU_OVERLAY, start: target.start };
-  if (text === "@") return { kind: MENTION_MENU_OVERLAY, start: target.start };
+  const kind = MENU_KEYS[text];
+  if (kind !== undefined) return { kind, start: target.start };
   const block = state.workspace.blocks[target.blockId];
   if (text !== "[" || !isTextBlock(block)) return undefined;
   const isSecond = textOf(block)[target.start - 1] === "[";

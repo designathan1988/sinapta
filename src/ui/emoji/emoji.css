@@ -1,0 +1,59 @@
+@layer ui {
+  .emoji {
+    display: grid;
+    gap: var(--space-stack-sm);
+    inline-size: var(--size-dialog-width);
+    max-inline-size: 100%;
+  }
+
+  .emoji__bar {
+    display: flex;
+    gap: var(--space-inline-xs);
+  }
+
+  .emoji__search {
+    flex: 1;
+    min-inline-size: 0;
+    min-block-size: var(--size-control-md);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-app);
+    color: var(--color-text-primary);
+  }
+
+  .emoji__grid {
+    max-block-size: var(--size-menu-max-height);
+    overflow: hidden auto;
+  }
+
+  .emoji__group,
+  .emoji__empty {
+    margin: var(--space-stack-xs) var(--space-none);
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+  }
+
+  .emoji__row {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+  }
+
+  .emoji__choice {
+    display: grid;
+    place-items: center;
+    min-block-size: var(--size-control-md);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    font-size: var(--font-size-xl);
+    line-height: 1;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--color-bg-hover);
+    }
+  }
+}

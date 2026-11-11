@@ -16,6 +16,7 @@ import {
   onboardingCommands,
   seedGettingStarted,
 } from "../features/onboarding/index.ts";
+import { emojiMenuKeys } from "../features/emoji-menu/index.ts";
 import { mentionMenuKeys } from "../features/mention-menu/index.ts";
 import { slashMenuKeys } from "../features/slash-menu/index.ts";
 import {
@@ -60,7 +61,12 @@ const COMMANDS = [
 ];
 
 // Keys that apply while one part of the interface is active.
-const SCOPED_KEYS = [slashMenuKeys, mentionMenuKeys, formatToolbarKeys];
+const SCOPED_KEYS = [
+  slashMenuKeys,
+  mentionMenuKeys,
+  emojiMenuKeys,
+  formatToolbarKeys,
+];
 
 export async function startApp(container: HTMLElement): Promise<void> {
   const store = createAppStore(createInitialState());

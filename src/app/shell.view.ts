@@ -2,25 +2,9 @@ import "./shell.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import { createPage } from "../blocks/page/index.ts";
-import {
-  PALETTE_OVERLAY,
-  renderCommandPalette,
-} from "../features/command-palette/index.ts";
-import { renderEditor, renderEditorOverlay } from "../features/editor/index.ts";
-import {
-  renderFormatToolbar,
-  renderTonePicker,
-  TONE_OVERLAY,
-} from "../features/format-toolbar/index.ts";
-import {
-  renderSlashMenu,
-  SLASH_MENU_OVERLAY,
-} from "../features/slash-menu/index.ts";
+import { renderEditor } from "../features/editor/index.ts";
+import { renderFormatToolbar } from "../features/format-toolbar/index.ts";
 import { renderSidebar } from "../features/sidebar/index.ts";
-import {
-  renderSettings,
-  SETTINGS_OVERLAY,
-} from "../features/settings/index.ts";
 import {
   openOverlay,
   selectIsHomeShown,
@@ -31,24 +15,13 @@ import {
   type Dispatch,
 } from "../state/index.ts";
 import { renderBreadcrumbs } from "../features/breadcrumbs/index.ts";
-import { MOVE_TO_OVERLAY, renderMoveTo } from "../features/move-to/index.ts";
 import { renderHome } from "../features/home/index.ts";
-import {
-  MENTION_MENU_OVERLAY,
-  PAGE_LINK_MENU_OVERLAY,
-  renderMentionMenu,
-} from "../features/mention-menu/index.ts";
 import { renderPageInfo } from "../features/page-info/index.ts";
 import { renderPageMenuButton } from "../features/page-menu/index.ts";
-import {
-  PAGE_MENU_OVERLAY,
-  renderPageMenu,
-} from "../features/page-menu/index.ts";
-import { renderShortcutHelp } from "../features/shortcut-help/index.ts";
-import { renderTrash, TRASH_OVERLAY } from "../features/trash/index.ts";
+import { SETTINGS_OVERLAY } from "../features/settings/index.ts";
 import { renderButton } from "../ui/button/index.ts";
 import { COPY, PRODUCT_NAME } from "../ui/copy.ts";
-import { SHORTCUT_HELP_OVERLAY_KIND } from "../ui/shortcuts/index.ts";
+import { renderOverlay } from "./shell-overlays.view.ts";
 
 const WIDTH_PROPERTY = "--app-sidebar-width";
 
@@ -189,35 +162,6 @@ function renderTopBar(state: AppState, dispatch: Dispatch): TemplateResult {
         dispatch(openOverlay.create({ overlay: { kind: SETTINGS_OVERLAY } })),
     })}
   </header>`;
-}
-
-type OverlayView = (
-  state: AppState,
-  dispatch: Dispatch,
-) => TemplateResult | typeof nothing;
-
-// The view of each overlay kind; the editor shows the rest.
-const OVERLAYS: Readonly<Record<string, OverlayView>> = {
-  [SETTINGS_OVERLAY]: renderSettings,
-  [TRASH_OVERLAY]: renderTrash,
-  [PALETTE_OVERLAY]: renderCommandPalette,
-  [MOVE_TO_OVERLAY]: renderMoveTo,
-  [SLASH_MENU_OVERLAY]: renderSlashMenu,
-  [MENTION_MENU_OVERLAY]: renderMentionMenu,
-  [PAGE_LINK_MENU_OVERLAY]: renderMentionMenu,
-  [PAGE_MENU_OVERLAY]: renderPageMenu,
-  [TONE_OVERLAY]: renderTonePicker,
-  [SHORTCUT_HELP_OVERLAY_KIND]: (_state, dispatch) =>
-    renderShortcutHelp(dispatch),
-};
-
-// At most one overlay is open at a time.
-function renderOverlay(
-  state: AppState,
-  dispatch: Dispatch,
-): TemplateResult | typeof nothing {
-  const view = OVERLAYS[state.ui.overlay?.kind ?? ""] ?? renderEditorOverlay;
-  return view(state, dispatch);
 }
 
 export function renderShell(

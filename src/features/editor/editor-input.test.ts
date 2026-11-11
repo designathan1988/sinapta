@@ -156,6 +156,17 @@ describe("menus opened while typing", () => {
     );
   });
 
+  it("opens the emoji menu at a colon", () => {
+    const sent = sentFor("hi ", ":");
+
+    expect(sent).toContainEqual(
+      expect.objectContaining({
+        type: "ui.openOverlay",
+        overlay: { kind: "emoji-menu", anchorId: "a", start: 3 },
+      }),
+    );
+  });
+
   it("opens no menu while an input method is composing", () => {
     const sent = typeAtEndCommands("see ", {
       inputType: "insertCompositionText",

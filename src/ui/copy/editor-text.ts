@@ -1,6 +1,14 @@
 // Text of the block editor, its menus and the formatting toolbar.
 export const EDITOR_TEXT = {
   slashMenu: { label: "Turn into" },
+  emoji: {
+    search: "Search emoji",
+    results: "Results",
+    none: "No emoji found.",
+    random: "Random",
+    remove: "Remove",
+    menu: "Emoji",
+  },
   mentionMenu: {
     label: "Mention a page or a date",
     today: "Today",

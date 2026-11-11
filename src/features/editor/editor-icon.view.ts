@@ -1,14 +1,13 @@
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import { setPageIcon, type PageBlock } from "../../blocks/page/index.ts";
-import { firstGrapheme } from "../../model/index.ts";
 import {
   closeOverlay,
   openOverlay,
   type AppState,
   type Dispatch,
 } from "../../state/index.ts";
-import { renderButton } from "../../ui/button/index.ts";
+import { renderEmojiPicker } from "../../ui/emoji/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import {
   focusOverlayAnchor,
@@ -17,24 +16,11 @@ import {
 
 export const ICON_OVERLAY = "page-icon";
 
-// The icon is the first whole character typed or pasted, however many
-// code points it is made of.
-function iconFrom(event: InputEvent): string {
-  if (event.isComposing || !(event.target instanceof HTMLInputElement))
-    return "";
-  return firstGrapheme(event.target.value.trim());
-}
-
-function renderRemove(choose: (icon: null) => void): TemplateResult {
-  return renderButton({
-    label: COPY.icon.remove,
-    onClick() {
-      choose(null);
-    },
-  });
-}
-
-function renderPopover(page: PageBlock, dispatch: Dispatch): TemplateResult {
+function renderPopover(
+  state: AppState,
+  page: PageBlock,
+  dispatch: Dispatch,
+): TemplateResult {
   const close = (): void => {
     focusOverlayAnchor();
     dispatch(closeOverlay.create({}));
@@ -43,6 +29,7 @@ function renderPopover(page: PageBlock, dispatch: Dispatch): TemplateResult {
     dispatch(setPageIcon.create({ pageId: page.id, icon }));
     close();
   };
+  const overlay = state.ui.overlay ?? { kind: ICON_OVERLAY };
   return html`<div
     class="editor__icon-popover"
     popover="manual"
@@ -52,22 +39,21 @@ function renderPopover(page: PageBlock, dispatch: Dispatch): TemplateResult {
       if (event.key === "Escape") close();
     }}
   >
-    <label class="editor__icon-field">
-      ${COPY.icon.fieldLabel}
-      <input
-        type="text"
-        data-autofocus
-        @input=${(event: InputEvent) => {
-          const icon = iconFrom(event);
-          if (icon !== "") choose(icon);
-        }}
-      />
-    </label>
-    ${page.props.icon === null ? nothing : renderRemove(choose)}
+    ${renderEmojiPicker({
+      query: overlay.query ?? "",
+      onQuery: (query) =>
+        dispatch(openOverlay.create({ overlay: { ...overlay, query } })),
+      onChoose: choose,
+      ...(page.props.icon !== null && {
+        onRemove: () => {
+          choose(null);
+        },
+      }),
+    })}
   </div>`;
 }
 
-// The page icon as a button that opens a small field to change it.
+// The page icon as a button that opens the emoji picker to change it.
 export function renderIconControl(
   state: AppState,
   page: PageBlock,
@@ -93,5 +79,5 @@ export function renderIconControl(
     >
       ${icon ?? COPY.icon.add}
     </button>
-    ${isOpen ? renderPopover(page, dispatch) : nothing}`;
+    ${isOpen ? renderPopover(state, page, dispatch) : nothing}`;
 }

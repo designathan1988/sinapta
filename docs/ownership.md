@@ -125,6 +125,8 @@ owner listed here exists.
 | What the top bar says about the open page: last edit, favorite star, word count | `src/features/page-info/` | 12 |
 | Home: greeting, recently visited pages, upcoming dates | `src/features/home/` | 12 |
 | The @ and [[ menu: pages and dates to mention; backlinks of a page | `src/features/mention-menu/` | 13 |
+| Emoji data, search and the picker | `src/ui/emoji/` | 13 |
+| The :name emoji menu while typing | `src/features/emoji-menu/` | 13 |
 
 ## Styles and tokens
 
