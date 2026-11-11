@@ -308,6 +308,11 @@
       "cover": {
         "$value": "{base.size.12}"
       }
+    },
+    "cover": {
+      "height": {
+        "$value": "{base.size.18}"
+      }
     }
   },
   "radius": {
@@ -429,6 +434,9 @@
       },
       "title": {
         "$value": "{base.font.size.7}"
+      },
+      "pageIcon": {
+        "$value": "{base.font.size.8}"
       }
     },
     "weight": {

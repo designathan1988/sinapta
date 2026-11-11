@@ -709,6 +709,12 @@
             "value": 2.488,
             "unit": "rem"
           }
+        },
+        "8": {
+          "$value": {
+            "value": 4.25,
+            "unit": "rem"
+          }
         }
       },
       "weight": {

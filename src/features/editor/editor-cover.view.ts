@@ -18,8 +18,17 @@ import {
 } from "../../state/index.ts";
 import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { whenConnected } from "../../ui/focus/index.ts";
 import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
 import { renderUrlField } from "../../ui/url-field/index.ts";
+import {
+  coverPositionOf,
+  coverSliderHandlers,
+  isRepositioning,
+  renderRepositionControls,
+} from "./editor-cover-position.view.ts";
+
+export { COVER_POSITION_OVERLAY } from "./editor-cover-position.view.ts";
 
 export const COVER_OVERLAY = "page-cover";
 
@@ -105,6 +114,49 @@ function renderChangeButton(
   </button>`;
 }
 
+// The image of an image cover; a slider over it while it is repositioned.
+function renderImage(
+  state: AppState,
+  page: PageBlock,
+  dispatch: Dispatch,
+): TemplateResult {
+  const image = html`<img
+    class="editor__cover-image"
+    src=${page.props.cover ?? ""}
+    alt=""
+    draggable="false"
+  />`;
+  if (!isRepositioning(state)) return image;
+  const handlers = coverSliderHandlers(page, dispatch);
+  return html`<div
+    class="editor__cover-slider"
+    role="slider"
+    tabindex="0"
+    aria-label=${COPY.cover.position}
+    aria-orientation="vertical"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    aria-valuenow=${coverPositionOf(page)}
+    @keydown=${handlers.onKeyDown}
+    @pointerdown=${handlers.onPointerDown}
+    @pointermove=${handlers.onPointerMove}
+    @pointerup=${handlers.onPointerUp}
+    ${ref(whenConnectedFocus)}
+  >
+    ${image}
+  </div>`;
+}
+
+function whenConnectedFocus(element: Element | undefined): void {
+  if (element instanceof HTMLElement) {
+    whenConnected(element, () => {
+      element.focus({ preventScroll: true });
+    });
+  }
+}
+
+// The cover spans the whole main area; an image is cut at the page's
+// position, a color preset fills it.
 export function renderCover(
   state: AppState,
   page: PageBlock,
@@ -113,16 +165,27 @@ export function renderCover(
   const { cover } = page.props;
   if (cover === undefined || cover === null) return nothing;
   const isOpen = state.ui.overlay?.kind === COVER_OVERLAY;
+  const isImage = !isPreset(cover);
+  const position = `${String(coverPositionOf(page))}%`;
   return html`<div
     class="editor__cover"
-    data-cover=${isPreset(cover) ? cover : nothing}
+    data-cover=${isImage ? nothing : cover}
+    ?data-overlay=${isRepositioning(state)}
+    ${ref((element) => {
+      if (element instanceof HTMLElement) {
+        element.style.setProperty("--editor-cover-y", position);
+      }
+    })}
   >
-    ${
-      isPreset(cover)
-        ? nothing
-        : html`<img class="editor__cover-image" src=${cover} alt="" />`
-    }
-    ${renderChangeButton(state, page, dispatch)}
+    ${isImage ? renderImage(state, page, dispatch) : nothing}
+    <div class="editor__cover-actions">
+      ${isImage ? renderRepositionControls(state, dispatch) : nothing}
+      ${
+        isRepositioning(state)
+          ? nothing
+          : renderChangeButton(state, page, dispatch)
+      }
+    </div>
     ${isOpen ? renderPicker(page, dispatch) : nothing}
   </div>`;
 }

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { SCHEMA_VERSION } from "../../model/index.ts";
 import {
   isMigrationListComplete,
   runMigrations,
@@ -69,7 +70,7 @@ describe("the migration list", () => {
 
     expect(runMigrations(file)).toEqual({
       ok: true,
-      file: { schemaVersion: 4, rootIds: ["a"], views: {} },
+      file: { schemaVersion: SCHEMA_VERSION, rootIds: ["a"], views: {} },
     });
   });
 });

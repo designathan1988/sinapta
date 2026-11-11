@@ -41,6 +41,9 @@ export const pagePropsSchema = v.object({
   cover: v.optional(v.nullable(v.pipe(v.string(), v.check(isCover)))),
   // The page uses the whole width of the window (schema version 4).
   isFullWidth: v.optional(v.boolean()),
+  // How far down the cover image is shown, from 0 (top) to 100 (bottom)
+  // (schema version 5).
+  coverPosition: v.optional(v.pipe(v.number(), v.minValue(0), v.maxValue(100))),
 });
 
 export type PageProps = v.InferOutput<typeof pagePropsSchema>;

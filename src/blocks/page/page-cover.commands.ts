@@ -64,4 +64,21 @@ export const togglePageFullWidth = defineCommand<{ pageId: BlockId }>({
     })),
 });
 
-export const pageCoverCommands = [setPageCover, togglePageFullWidth];
+// Where the cover image is cut: 0 shows its top, 100 its bottom.
+export const setCoverPosition = defineCommand<{
+  pageId: BlockId;
+  position: number;
+}>({
+  type: "page.setCoverPosition",
+  handle: (state, command) =>
+    updatePage(state, command.pageId, (props) => ({
+      ...props,
+      coverPosition: Math.min(100, Math.max(0, Math.round(command.position))),
+    })),
+});
+
+export const pageCoverCommands = [
+  setPageCover,
+  togglePageFullWidth,
+  setCoverPosition,
+];

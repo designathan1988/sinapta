@@ -3,6 +3,7 @@ import { SCHEMA_VERSION, type WorkspaceFileError } from "../../model/index.ts";
 import { addTextStyles } from "./0002-text-styles.ts";
 import { addViewLayouts } from "./0003-view-layouts.ts";
 import { addPageCover } from "./0004-page-cover.ts";
+import { addPageStyle } from "./0005-page-style.ts";
 
 // A pure function from format version n to n + 1.
 export type Migration = (
@@ -15,6 +16,7 @@ export const MIGRATIONS: readonly Migration[] = [
   addTextStyles,
   addViewLayouts,
   addPageCover,
+  addPageStyle,
 ];
 
 export type MigrationResult =

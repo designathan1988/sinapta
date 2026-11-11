@@ -87,7 +87,10 @@ export function renderEditor(
       ?data-full-width=${page.props.isFullWidth === true}
     >
       ${isPage ? renderCover(state, page, dispatch) : nothing}
-      <div class="editor__page-actions">
+      <div
+        class="editor__page-actions"
+        ?data-has-icon=${page.props.icon !== null}
+      >
         ${renderIconControl(state, page, dispatch)}
         ${isPage ? renderAddCover(page, dispatch) : nothing}
       </div>

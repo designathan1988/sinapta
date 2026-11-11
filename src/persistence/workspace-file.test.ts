@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buildWorkspace,
+  SCHEMA_VERSION,
   TEST_PROPS_SCHEMAS,
   toBlockId,
 } from "../model/index.ts";
@@ -63,7 +64,10 @@ describe("serializeWorkspace and readWorkspaceFile", () => {
   it("writes the current schema version", () => {
     const file: unknown = JSON.parse(serializeWorkspace(WORKSPACE));
 
-    expect(file).toMatchObject({ schemaVersion: 4, rootIds: ["a", "b"] });
+    expect(file).toMatchObject({
+      schemaVersion: SCHEMA_VERSION,
+      rootIds: ["a", "b"],
+    });
   });
 
   it.each([

@@ -4,6 +4,7 @@ import { createTestApp } from "../../state/index.ts";
 import {
   coverFor,
   pageCoverCommands,
+  setCoverPosition,
   setPageCover,
   togglePageFullWidth,
 } from "./page-cover.commands.ts";
@@ -66,5 +67,20 @@ describe("page.toggleFullWidth", () => {
 describe("coverFor", () => {
   it("picks the same preset for the same page every time", () => {
     expect(coverFor(A)).toBe(coverFor(A));
+  });
+});
+
+describe("page.setCoverPosition", () => {
+  it("keeps the cover's vertical position between 0 and 100", () => {
+    const { dispatch, props } = createApp();
+
+    dispatch(setCoverPosition.create({ pageId: A, position: 30 }));
+    expect(props()?.coverPosition).toBe(30);
+
+    dispatch(setCoverPosition.create({ pageId: A, position: 140 }));
+    expect(props()?.coverPosition).toBe(100);
+
+    dispatch(setCoverPosition.create({ pageId: A, position: -5 }));
+    expect(props()?.coverPosition).toBe(0);
   });
 });

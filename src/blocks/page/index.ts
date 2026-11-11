@@ -2,6 +2,7 @@ export { pageDefinition } from "./page.definition.ts";
 export {
   coverFor,
   pageCoverCommands,
+  setCoverPosition,
   setPageCover,
   togglePageFullWidth,
 } from "./page-cover.commands.ts";

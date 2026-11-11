@@ -1,8 +1,21 @@
 @layer features {
   .editor {
+    --editor-column: var(--size-content-max);
+
     display: flex;
     flex-direction: column;
     gap: var(--space-stack-md);
+
+    /* Everything sits in a centered column, as wide as the page allows. */
+    & > * {
+      inline-size: min(var(--editor-column), 100%);
+      margin-inline: auto;
+    }
+
+    &[data-full-width],
+    &[data-wide] {
+      --editor-column: 100%;
+    }
 
     /* A database uses the full width and height of the page area. */
     &[data-wide] {
@@ -28,8 +41,37 @@
 
   .editor__page-actions {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--space-inline-xs);
     align-items: flex-end;
+
+    /* A page icon sits on its own line, and over the cover's edge. */
+    &[data-has-icon] {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  .editor__cover + .editor__page-actions[data-has-icon] {
+    margin-block-start: calc(var(--font-size-page-icon) / -2);
+  }
+
+  /* The quiet page actions appear when the page is hovered or holds focus;
+     touch screens always show them. */
+  @media (hover: hover) {
+    .editor__page-actions > :is(.button, .editor__icon[data-empty]) {
+      opacity: 0;
+
+      @media (prefers-reduced-motion: no-preference) {
+        transition: opacity var(--duration-fast) var(--easing-standard);
+      }
+    }
+
+    .editor:is(:hover, :focus-within)
+      .editor__page-actions
+      > :is(.button, .editor__icon[data-empty]) {
+      opacity: 1;
+    }
   }
 
   .editor__title {
@@ -69,6 +111,12 @@
     &:hover,
     &[aria-expanded="true"] {
       background-color: var(--color-bg-hover);
+    }
+
+    &:not([data-empty]) {
+      position: relative;
+      font-size: var(--font-size-page-icon);
+      line-height: 1;
     }
 
     &[data-empty] {

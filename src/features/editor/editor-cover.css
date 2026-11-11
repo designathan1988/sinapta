@@ -1,10 +1,27 @@
 @layer features {
-  .editor__cover {
+  /* The cover spans the main area edge to edge, above the page column. */
+  .editor > .editor__cover {
     position: relative;
-    block-size: var(--size-card-cover);
-    margin-block-end: var(--space-stack-sm);
+    inline-size: auto;
+    block-size: var(--size-cover-height);
+    margin-block-start: calc(-1 * var(--space-inset-xl));
+    margin-inline: calc(-1 * var(--space-inset-lg));
     overflow: hidden;
-    border-radius: var(--radius-md);
+  }
+
+  .editor__cover-slider {
+    block-size: 100%;
+    cursor: grab;
+    touch-action: none;
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    &:focus-visible {
+      outline: var(--size-focus-width) solid var(--color-border-focus);
+      outline-offset: calc(-1 * var(--size-focus-width));
+    }
   }
 
   .editor__cover-image {
@@ -12,22 +29,45 @@
     inline-size: 100%;
     block-size: 100%;
     object-fit: cover;
+    object-position: center var(--editor-cover-y, 50%);
+    user-select: none;
   }
 
-  .editor__cover-change {
+  .editor__cover-actions {
     position: absolute;
     inset-block-end: var(--space-inset-sm);
-    inset-inline-end: var(--space-inset-sm);
-    background-color: var(--color-bg-raised);
-    opacity: 0;
+    inset-inline-end: var(--space-inset-lg);
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
 
-    @media (prefers-reduced-motion: no-preference) {
-      transition: opacity var(--duration-fast) var(--easing-standard);
+    & .button {
+      background-color: var(--color-bg-raised);
     }
   }
 
-  .editor__cover:is(:hover, :focus-within) .editor__cover-change {
-    opacity: 1;
+  .editor__cover-hint {
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-raised);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+  }
+
+  /* On screens with a pointer the actions appear when the cover is
+     hovered or holds focus; touch screens always show them. */
+  @media (hover: hover) {
+    .editor__cover-actions {
+      opacity: 0;
+
+      @media (prefers-reduced-motion: no-preference) {
+        transition: opacity var(--duration-fast) var(--easing-standard);
+      }
+    }
+
+    .editor__cover:is(:hover, :focus-within) .editor__cover-actions {
+      opacity: 1;
+    }
   }
 
   .editor__cover-picker:popover-open {
