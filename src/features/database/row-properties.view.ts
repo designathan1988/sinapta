@@ -13,6 +13,7 @@ import { COPY } from "../../ui/copy.ts";
 import { dateFromParts, renderDateRange } from "./properties/date/index.ts";
 import { setRowValue } from "./row.commands.ts";
 import {
+  renderRowButton,
   renderRowFiles,
   renderRowRelation,
   type RowPage,
@@ -122,6 +123,7 @@ function renderProperty(
   const { editor } = propertyType(property.type);
   if (editor === "files") return renderRowFiles(row, property, page);
   if (editor === "relation") return renderRowRelation(row, property, page);
+  if (editor === "button") return renderRowButton(row, property, page);
   const controls: Partial<Record<string, typeof renderInput>> = {
     toggle: renderToggle,
     options: renderSelect,

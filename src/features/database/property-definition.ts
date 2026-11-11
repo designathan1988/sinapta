@@ -57,6 +57,7 @@ export type CellEditor =
   | "options"
   | "files"
   | "relation"
+  | "button"
   | "none";
 
 // What a cell may need besides its value, such as the addresses of the

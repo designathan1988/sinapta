@@ -13,6 +13,7 @@ import {
   databaseCommands,
 } from "./database.commands.ts";
 import { optionCommands } from "./option.commands.ts";
+import { buttonPropertyCommands } from "./properties/button/index.ts";
 import {
   relationCommands,
   relationTidier,
@@ -98,6 +99,7 @@ const DATABASE_TEST_COMMANDS = [
   ...tableCommands,
   ...optionCommands,
   ...relationCommands,
+  ...buttonPropertyCommands,
 ];
 
 export function createDatabaseApp(

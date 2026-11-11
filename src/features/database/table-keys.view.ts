@@ -7,6 +7,7 @@ import {
 } from "../../state/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { pressRowButton } from "./properties/button/index.ts";
 import { setRowValue } from "./row.commands.ts";
 import type { PropertyType } from "./property-definition.ts";
 import { propertyType } from "./property-registry.ts";
@@ -53,6 +54,9 @@ function startEditing(cell: CellRef, context: TableContext): void {
   if (editor === "none") return;
   if (editor === "toggle") {
     toggleCell(cell, context, type);
+  } else if (editor === "button" && cell.propertyId !== null) {
+    const { rowId, propertyId } = cell;
+    context.dispatch(pressRowButton.create({ rowId, propertyId }));
   } else if (CELL_POPOVERS[editor] !== undefined) {
     const overlay = { kind: CELL_POPOVERS[editor], anchorId: cell.key };
     context.dispatch(openOverlay.create({ overlay }));

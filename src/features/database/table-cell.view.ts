@@ -127,6 +127,7 @@ function usesInput(column: TableColumn): boolean {
   return (
     column.isTitle ||
     (editor !== "toggle" &&
+      editor !== "button" &&
       editor !== "none" &&
       CELL_POPOVERS[editor] === undefined)
   );

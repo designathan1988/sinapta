@@ -15,6 +15,7 @@ export { withPropertyConfigs } from "./property-registry.ts";
 export { renderRowProperties } from "./row-properties.view.ts";
 
 import { optionCommands } from "./option.commands.ts";
+import { buttonPropertyCommands } from "./properties/button/index.ts";
 import {
   relationCommands,
   relationTidier,
@@ -32,6 +33,7 @@ export const databaseCommands = [
   ...tableCommands,
   ...optionCommands,
   ...relationCommands,
+  ...buttonPropertyCommands,
 ];
 
 // The rules that keep database data whole after any command.

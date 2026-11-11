@@ -1,0 +1,20 @@
+@layer features {
+  /* A row's button, small and quiet in its cell, as in Notion. */
+  .button-property {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--size-control-sm);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-raised);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
+}

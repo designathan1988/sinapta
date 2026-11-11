@@ -4,6 +4,7 @@ import type { PropertyDefinition } from "../../blocks/database/index.ts";
 import type { PageBlock } from "../../blocks/page/index.ts";
 import type { AppState, Dispatch } from "../../state/index.ts";
 import { parseBlockId } from "../../model/index.ts";
+import { buttonLabel, pressRowButton } from "./properties/button/index.ts";
 import { readFiles, renderFilesEditor } from "./properties/files/index.ts";
 import {
   readRelation,
@@ -39,6 +40,28 @@ export function renderRowFiles(
         dispatch(setRowValue.create({ rowId, propertyId, value })),
     })}
   </fieldset>`;
+}
+
+export function renderRowButton(
+  row: PageBlock,
+  property: PropertyDefinition,
+  page: RowPage,
+): TemplateResult {
+  const rowId = row.id;
+  const propertyId = property.id;
+  return html`<div
+    class="database__row-property"
+    data-property-id=${propertyId}
+  >
+    <span class="database__row-name">${property.name}</span>
+    <button
+      type="button"
+      class="button-property"
+      @click=${() => page.dispatch(pressRowButton.create({ rowId, propertyId }))}
+    >
+      ${buttonLabel(property)}
+    </button>
+  </div>`;
 }
 
 export function renderRowRelation(

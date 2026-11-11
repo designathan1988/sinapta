@@ -44,6 +44,7 @@ describe("the property registry", () => {
       "relation",
       "rollup",
       "formula",
+      "button",
       "created-time",
       "edited-time",
       "unique-id",
