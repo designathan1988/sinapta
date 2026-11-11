@@ -10,7 +10,7 @@ import { selectPage, type PageBlock } from "../../blocks/page/index.ts";
 import type { AppState, Dispatch } from "../../state/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
-import { setRowValue } from "./database.commands.ts";
+import { setRowValue } from "./row.commands.ts";
 import { propertyType } from "./property-registry.ts";
 
 const INPUT_TYPES: Record<string, string> = { date: "date" };

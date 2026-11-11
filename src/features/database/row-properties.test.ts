@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { selectPage } from "../../blocks/page/index.ts";
 import { type Command } from "../../state/index.ts";
 import { createDatabaseApp } from "./database-builder.ts";
-import { setRowValue } from "./database.commands.ts";
+import { setRowValue } from "./row.commands.ts";
 import { renderRowProperties } from "./row-properties.view.ts";
 
 // Renders the properties of the first row as its page shows them.

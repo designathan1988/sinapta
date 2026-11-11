@@ -8,13 +8,14 @@ import type { BlockId, PropertyId, View } from "../../model/index.ts";
 import { createTestApp, type TestApp } from "../../state/index.ts";
 import {
   addProperty,
-  addRow,
   changeProperty,
   createDatabase,
   databaseCommands,
-  setRowValue,
 } from "./database.commands.ts";
+import { addRow, rowCommands, setRowValue } from "./row.commands.ts";
 import { tableCommands } from "./table.commands.ts";
+import { calendarCommands } from "./layouts/calendar/calendar.commands.ts";
+import { viewLayoutCommands } from "./view-layout.commands.ts";
 import { viewCommands } from "./view.commands.ts";
 import {
   pageCommands,
@@ -79,19 +80,22 @@ function addRows(app: DatabaseApp, rows: readonly RowSpec[]): void {
   }
 }
 
+const DATABASE_TEST_COMMANDS = [
+  ...databaseCommands,
+  ...rowCommands,
+  ...viewCommands,
+  ...viewLayoutCommands,
+  ...calendarCommands,
+  ...pageCommands,
+  ...pageTrashCommands,
+  ...tableCommands,
+];
+
 export function createDatabaseApp(
   properties: readonly PropertySpec[],
   rows: readonly RowSpec[],
 ): DatabaseApp {
-  const base = createTestApp({
-    commands: [
-      ...databaseCommands,
-      ...viewCommands,
-      ...pageCommands,
-      ...pageTrashCommands,
-      ...tableCommands,
-    ],
-  });
+  const base = createTestApp({ commands: DATABASE_TEST_COMMANDS });
   const { store } = base;
   base.dispatch(createDatabase.create({ parentId: null }));
   const databaseId = mustFind(

@@ -6,13 +6,12 @@ import { BLOCK_PROPS_SCHEMAS } from "../../blocks/block-registry.ts";
 import { createTestApp } from "../../state/index.ts";
 import {
   addProperty,
-  addRow,
   changeProperty,
   createDatabase,
   databaseCommands,
   removeProperty,
-  setRowValue,
 } from "./database.commands.ts";
+import { addRow, rowCommands, setRowValue } from "./row.commands.ts";
 import {
   createView,
   deleteView,
@@ -28,7 +27,7 @@ const ROW = toBlockId("new-2");
 
 function createApp() {
   const app = createTestApp({
-    commands: [...databaseCommands, ...viewCommands],
+    commands: [...databaseCommands, ...rowCommands, ...viewCommands],
   });
   app.dispatch(createDatabase.create({ parentId: null }));
   const database = () => {

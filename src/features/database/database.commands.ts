@@ -5,11 +5,7 @@ import {
   type PropertyDefinition,
   type SelectOption,
 } from "../../blocks/database/index.ts";
-import {
-  DATABASE_TYPE,
-  PAGE_TYPE,
-  selectPage,
-} from "../../blocks/page/index.ts";
+import { DATABASE_TYPE } from "../../blocks/page/index.ts";
 import {
   listOf,
   siblingIds,
@@ -19,7 +15,7 @@ import {
   type PropertyId,
   type View,
 } from "../../model/index.ts";
-import { defineCommand, type AppState } from "../../state/index.ts";
+import { defineCommand } from "../../state/index.ts";
 
 export const DEFAULT_VIEW_NAME = "Table";
 
@@ -156,85 +152,9 @@ export const removeProperty = defineCommand<{
   },
 });
 
-// Adds an empty row, which is a page inside the database.
-export const addRow = defineCommand<{ databaseId: BlockId }>({
-  type: "row.add",
-  newBlockIds: 1,
-  handle(state, command) {
-    const database = selectDatabase(state, command.databaseId);
-    const id = command.meta.blockIds[0];
-    if (database === undefined || id === undefined) return {};
-    const { now } = command.meta;
-    const props = {
-      title: [],
-      icon: null,
-      isFavorite: false,
-      isTrashed: false,
-      values: {},
-    };
-    const record: Block = {
-      id,
-      type: PAGE_TYPE,
-      parentId: database.id,
-      childIds: [],
-      props,
-      createdAt: now,
-      updatedAt: now,
-    };
-    return {
-      operations: [
-        { type: "record.create", kind: "block", record },
-        {
-          type: "list.insert",
-          list: listOf(database.id),
-          id,
-          index: database.childIds.length,
-        },
-      ],
-      ui: {
-        ...state.ui,
-        activeCell: { rowId: id, propertyId: null, isEditing: true },
-      },
-    };
-  },
-});
-
-export interface SetRowValuePayload {
-  readonly rowId: BlockId;
-  readonly propertyId: PropertyId;
-  // Undefined clears the cell.
-  readonly value: unknown;
-}
-
-function isRowOfDatabase(state: AppState, rowId: BlockId): boolean {
-  const row = selectPage(state, rowId);
-  return row !== undefined && selectDatabase(state, row.parentId) !== undefined;
-}
-
-export const setRowValue = defineCommand<SetRowValuePayload>({
-  type: "row.setValue",
-  handle(state, command) {
-    const row = selectPage(state, command.rowId);
-    if (row === undefined || !isRowOfDatabase(state, command.rowId)) return {};
-    const { [command.propertyId]: _previous, ...others } =
-      row.props.values ?? {};
-    const values =
-      command.value === undefined
-        ? others
-        : { ...others, [command.propertyId]: command.value };
-    const props = { ...row.props, values };
-    const patch = { props, updatedAt: command.meta.now };
-    return {
-      operations: [{ type: "record.update", kind: "block", id: row.id, patch }],
-    };
-  },
-});
-
 export const databaseCommands = [
   createDatabase,
   addProperty,
   changeProperty,
   removeProperty,
-  addRow,
-  setRowValue,
 ];

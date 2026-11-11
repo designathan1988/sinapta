@@ -9,7 +9,7 @@ import { parseBlockId, type BlockId } from "../../model/index.ts";
 import { closeOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
-import { setRowValue } from "./database.commands.ts";
+import { setRowValue } from "./row.commands.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import { addOption } from "./table.commands.ts";
 

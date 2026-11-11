@@ -7,7 +7,7 @@ import {
 } from "../../state/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
-import { setRowValue } from "./database.commands.ts";
+import { setRowValue } from "./row.commands.ts";
 import { propertyType } from "./property-registry.ts";
 import { CELL_OPTIONS_OVERLAY, type TableContext } from "./table-cell.view.ts";
 import { cellOf, columnOf, type CellRef } from "./table-cell-ref.ts";
