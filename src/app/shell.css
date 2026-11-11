@@ -140,6 +140,23 @@
     padding: var(--space-inset-xl) var(--space-inset-lg);
   }
 
+  /* The help button floats in the corner of the main area. */
+  .app__help {
+    position: fixed;
+    inset-block-end: var(--space-inset-lg);
+    inset-inline-end: var(--space-inset-lg);
+    z-index: var(--layer-sticky);
+
+    & .button {
+      inline-size: var(--size-control-md);
+      block-size: var(--size-control-md);
+      border: var(--size-border-thin) solid var(--color-border-default);
+      border-radius: var(--radius-full);
+      background-color: var(--color-bg-raised);
+      box-shadow: var(--shadow-card);
+    }
+  }
+
   /* While the sidebar is being resized. */
   .app[data-resizing] .app__resizer {
     inline-size: var(--size-border-thick);

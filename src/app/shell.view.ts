@@ -20,6 +20,7 @@ import { renderPageInfo } from "../features/page-info/index.ts";
 import { renderPageMenuButton } from "../features/page-menu/index.ts";
 import { SETTINGS_OVERLAY } from "../features/settings/index.ts";
 import { renderButton } from "../ui/button/index.ts";
+import { SHORTCUT_HELP_OVERLAY_KIND } from "../ui/shortcuts/index.ts";
 import { COPY, PRODUCT_NAME } from "../ui/copy.ts";
 import { renderOverlay } from "./shell-overlays.view.ts";
 
@@ -169,6 +170,19 @@ function renderTopBar(state: AppState, dispatch: Dispatch): TemplateResult {
   </header>`;
 }
 
+// Help in the corner, as in Notion: it opens the keyboard shortcuts.
+function renderHelpButton(dispatch: Dispatch): TemplateResult {
+  const overlay = { kind: SHORTCUT_HELP_OVERLAY_KIND };
+  return html`<span class="app__help">
+    ${renderButton({
+      label: COPY.shortcutHelp.open,
+      icon: "help",
+      isIconOnly: true,
+      onClick: () => dispatch(openOverlay.create({ overlay })),
+    })}
+  </span>`;
+}
+
 export function renderShell(
   state: AppState,
   dispatch: Dispatch,
@@ -193,6 +207,7 @@ export function renderShell(
         }
       </div>
       ${renderFormatToolbar(state, dispatch)} ${renderOverlay(state, dispatch)}
+      ${renderHelpButton(dispatch)}
     </main>
   </div>`;
 }
