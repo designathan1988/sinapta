@@ -96,4 +96,28 @@ describe("a group's header", () => {
       "view.toggleGroupHidden",
     ]);
   });
+
+  it("renames, recolors and deletes the option the group stands for", () => {
+    const { host, sent } = rendered(true);
+    const row = (label: string) =>
+      [...host.querySelectorAll<HTMLElement>(".menu [data-index]")].find(
+        (item) => item.textContent.trim() === label,
+      );
+    const name = host.querySelector<HTMLInputElement>(
+      ".menu .menu__field input",
+    );
+
+    if (name !== null) name.value = "Shipped";
+    name?.dispatchEvent(new Event("change", { bubbles: true }));
+    row("Red")?.click();
+    row("Delete option")?.click();
+
+    expect(row("Green")?.getAttribute("aria-checked")).toBe("true");
+    expect(sent.map((command) => command.type)).toEqual([
+      "option.rename",
+      "option.recolor",
+      "ui.closeOverlay",
+      "option.delete",
+    ]);
+  });
 });

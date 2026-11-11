@@ -114,7 +114,7 @@ export const DATABASE_TEXT = {
       "percent-unchecked": "Percent unchecked",
     },
     optionName: "Option name",
-    optionColor: "Option color",
+    optionColor: "Colors",
     moveOptionUp: "Move option up",
     moveOptionDown: "Move option down",
     deleteOption: "Delete option",

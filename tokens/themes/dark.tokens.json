@@ -101,6 +101,14 @@
       }
     },
     "chip": {
+      "default": {
+        "bg": {
+          "$value": "{base.color.chip.default.shade}"
+        },
+        "text": {
+          "$value": "{base.color.chip.default.glow}"
+        }
+      },
       "gray": {
         "bg": {
           "$value": "{base.color.chip.gray.shade}"

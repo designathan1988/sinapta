@@ -70,7 +70,7 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Calculate | `column-menu-items.ts` | Notion | None, then Count ›, Percent ›, More options › |
 | Board column menu | `board-column-menu.view.ts` | menu | menu |
 | Row tick box | `table-gutter.view.ts` | Notion | Notion checkbox |
-| Group header | `group-header.view.ts`, `group-menu.view.ts` | Notion | caret, chip, count; hover shows "…" (the group's menu) and "+" (a new row in the group) |
+| Group header | `group-header.view.ts`, `group-menu.view.ts` | Notion | caret, chip, count; hover shows "…" (the group's menu: name, Hide, Delete, Colors for an option's group) and "+" (a new row in the group) |
 
 | Date cell and date value | `ui/date-picker/`, `date-menu.ts`, `cell-date.view.ts` | Notion (no Date format & timezone or Remind rows) | the chosen days in fields, the month with Today and arrows, six weeks of days, End date and Include time switches, Clear |
 
@@ -83,7 +83,7 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Relation database | `relation-config.view.ts` | Notion | searchable list of databases |
 | Rollup relation, property, calculation | `rollup-config.view.ts` | Notion | rows with values opening option lists beside them |
 | Button property action | `button-property-config.view.ts` | custom (a list in a form) | option list |
-| Options and their colors | `option-list.view.ts` | Notion (no Default color yet) | each option a row with a grip and its chip, opening its submenu: name, Delete, colors as swatches with a check |
+| Options and their colors | `option-list.view.ts`, `option-menu-parts.ts` | Notion | each option a row with a grip and its chip, opening its submenu: name, Delete, colors as swatches with a check |
 
 ### Blocks
 
@@ -146,8 +146,6 @@ against the reference on every run.
 
 ## Open
 
-- Option colors: Notion's Default color.
 - Sorts: reorder by dragging the grip (Move up and down by keyboard).
 - Date picker: Date format & timezone, and Remind rows; typing a date into its field.
-- The group menu: rename, color and delete for a group named by an option.
 - Light theme measurements of the menu reference.

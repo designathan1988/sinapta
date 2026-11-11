@@ -4,15 +4,13 @@
 // that adds one.
 import { html, type TemplateResult } from "lit-html";
 import type { PropertyDefinition } from "../../blocks/database/index.ts";
-import { TONES } from "../../model/index.ts";
 import { closeChildOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import type { MenuEntry, SubmenuContent } from "../../ui/menu/index.ts";
+import { optionColorItems, renderOptionName } from "./option-menu-parts.ts";
 import {
   deleteOption,
   moveOption,
-  recolorOption,
-  renameOption,
   type OptionTarget,
 } from "./option.commands.ts";
 import type { TableContext } from "./table-cell.view.ts";
@@ -23,11 +21,6 @@ const TEXT = COPY.database;
 // An option's submenu opens from "Edit property", the column menu's
 // first submenu, so it is the second one open.
 const OPTION_DEPTH = 1;
-
-function colorLabel(color: string): string {
-  const tones: Readonly<Record<string, string>> = COPY.tones;
-  return tones[color] ?? color;
-}
 
 export function renderAddOption(
   property: PropertyDefinition,
@@ -76,27 +69,6 @@ export function optionEntries(
   ];
 }
 
-function renderName(
-  target: OptionTarget,
-  name: string,
-  context: TableContext,
-): TemplateResult {
-  const rename = (event: Event): void => {
-    if (!(event.target instanceof HTMLInputElement)) return;
-    const next = event.target.value;
-    context.dispatch(renameOption.create({ ...target, name: next }));
-  };
-  return html`<label class="menu__field">
-    <input
-      type="text"
-      aria-label=${TEXT.optionName}
-      data-autofocus
-      .value=${name}
-      @change=${rename}
-    />
-  </label>`;
-}
-
 // Moving an option is the keyboard's way to drag it; Delete closes its
 // submenu and leaves the property's.
 function placeItems(target: OptionTarget, context: TableContext): MenuEntry[] {
@@ -139,24 +111,13 @@ function optionMenu(
   if (option === undefined) return { label: TEXT.options, items: [] };
   const databaseId = context.model.database.id;
   const target = { databaseId, propertyId: property.id, optionId };
-  // In the palette's order, as Notion lists them.
-  const colors = TONES.map((color): MenuEntry => ({
-    label: colorLabel(color),
-    swatch: color,
-    check: "radio",
-    isChecked: option.color === color,
-    keepsOpen: true,
-    onSelect: () =>
-      context.dispatch(recolorOption.create({ ...target, color })),
-  }));
   return {
     label: option.name,
-    lead: renderName(target, option.name, context),
+    lead: renderOptionName(target, option.name, context),
     items: [
       ...placeItems(target, context),
       { kind: "divider" },
-      { kind: "section", label: TEXT.optionColor },
-      ...colors,
+      ...optionColorItems(target, option.color, context),
     ],
   };
 }

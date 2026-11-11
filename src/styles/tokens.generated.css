@@ -28,6 +28,10 @@
     --base-color-indigo-700: oklch(0.4 0.18 268);
     --base-color-indigo-800: oklch(0.32 0.13 268);
     --base-color-indigo-900: oklch(0.27 0.09 268);
+    --base-color-chip-default-tint: oklch(0.913 0.0029 84.6 / 0.5);
+    --base-color-chip-default-ink: oklch(0.3098 0.0076 84.6);
+    --base-color-chip-default-shade: oklch(0.3729 0 0);
+    --base-color-chip-default-glow: oklch(0.931 0 0);
     --base-color-chip-gray-tint: oklch(0.913 0.0029 84.6);
     --base-color-chip-gray-ink: oklch(0.3098 0.0076 84.6);
     --base-color-chip-gray-shade: oklch(0.4676 0 0);
@@ -230,6 +234,8 @@
     --color-shadow-overlay: light-dark(var(--base-color-day-shadow), var(--base-color-night-shadow));
     --color-shadow-ring: light-dark(var(--base-color-day-shadow-ring), var(--base-color-night-shadow-ring));
     --color-shadow-soft: light-dark(var(--base-color-day-shadow-soft), var(--base-color-night-shadow-soft));
+    --color-chip-default-bg: light-dark(var(--base-color-chip-default-tint), var(--base-color-chip-default-shade));
+    --color-chip-default-text: light-dark(var(--base-color-chip-default-ink), var(--base-color-chip-default-glow));
     --color-chip-gray-bg: light-dark(var(--base-color-chip-gray-tint), var(--base-color-chip-gray-shade));
     --color-chip-gray-text: light-dark(var(--base-color-chip-gray-ink), var(--base-color-chip-gray-glow));
     --color-chip-brown-bg: light-dark(var(--base-color-chip-brown-tint), var(--base-color-chip-brown-shade));

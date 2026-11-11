@@ -24,6 +24,12 @@
   }
 
   /* Each color sets the two the chip and the swatch draw with. */
+  .chip[data-color="default"],
+  .chip__swatch[data-color="default"] {
+    --chip-bg: var(--color-chip-default-bg);
+    --chip-text: var(--color-chip-default-text);
+  }
+
   .chip[data-color="gray"],
   .chip__swatch[data-color="gray"] {
     --chip-bg: var(--color-chip-gray-bg);

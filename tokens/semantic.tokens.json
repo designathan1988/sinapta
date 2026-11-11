@@ -102,6 +102,14 @@
       }
     },
     "chip": {
+      "default": {
+        "bg": {
+          "$value": "{base.color.chip.default.tint}"
+        },
+        "text": {
+          "$value": "{base.color.chip.default.ink}"
+        }
+      },
       "gray": {
         "bg": {
           "$value": "{base.color.chip.gray.tint}"

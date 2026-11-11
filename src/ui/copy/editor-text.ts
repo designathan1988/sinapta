@@ -59,6 +59,8 @@ export const EDITOR_TEXT = {
     noHighlight: "No highlight",
   },
   tones: {
+    // An option's color only: text and highlights have no "default".
+    default: "Default",
     gray: "Gray",
     brown: "Brown",
     orange: "Orange",
