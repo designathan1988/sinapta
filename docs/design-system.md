@@ -26,9 +26,9 @@ Three tiers. CSS uses the semantic tier only.
 | `space.inline` | `xs`, `sm`, `md`, `lg` | Gaps along a row |
 | `space.stack` | `xxs` to `xxl` | Gaps between stacked items |
 | `space.inset` | `xs` to `xl`, `page` | Padding inside a container |
-| `size` | `border`, `focus`, `icon`, `control`, `row`, `target`, `sidebar`, `content`, `menu`, `dialog` | Fixed measures |
+| `size` | `border`, `focus`, `icon`, `control`, `row`, `target`, `sidebar`, `content`, `menu`, `dialog`, `board.column`, `card.cover` | Fixed measures |
 | `radius` | `sm`, `md`, `full` | Controls, overlays, chips |
-| `shadow` | `overlay`, `dialog` | Top layer only |
+| `shadow` | `overlay`, `dialog`, `card` | Top layer; `card` for cards on boards and galleries |
 | `font` | `family`, `size`, `weight`, `lineHeight` | Type |
 | `duration`, `easing` | `fast`, `medium`; `standard` | Motion |
 | `layer` | `sticky`, `dragPreview` | The only z-order values |
@@ -56,6 +56,10 @@ them; a feature never restyles one.
 | Text field | `<input>` with a visible `<label>` | Single line |
 | Chip | `<span>` | Eight hues |
 | Tooltip | One `popover="hint"` element; a control points at it with `interestfor` | Shows the control's accessible name; `title` where `interestfor` is missing |
+| Web address field | `<form>` with a labeled `<input type="url">`, a submit button and an optional file choice | Shows its hint when the address is refused |
+| Card | `<button>` with a title and the values of visible properties | Optional cover image; used by boards and galleries |
+| Toolbar | `role="toolbar"` popover over selected text | Buttons show pressed state; Alt+F10, arrows, Home, End and Escape |
+| Cover | Band above a page | Six presets that blend two chip tones, so both themes have their own, or an image |
 
 ### States
 

@@ -35,7 +35,10 @@ One command, step by step:
    inverse operations. `workspace-invariants` checks the result. On failure
    nothing changes and `dispatch` returns a typed error.
 5. The dispatcher builds the next `AppState` (workspace, `ui`, `history`,
-   `persistence`) and writes it with one `setState` call.
+   `persistence`) and writes it with one `setState` call. A command whose
+   effect is a whole workspace instead of operations (loading from storage,
+   importing a file, the starting pages of a first visit) clears history,
+   since there is nothing before it to undo.
 6. Subscribers run: the root render re-renders from the new state; the
    repository compares the previous and next workspace, queues the changed
    record ids and saves them after 300 ms; the router writes the URL.
@@ -45,13 +48,16 @@ One command, step by step:
 | Slice | Holds | Saved | In history |
 | --- | --- | --- | --- |
 | `workspace` | `blocks`, `views`, `rootIds`, `settings` (theme) | Yes, per record | Yes, except `settings` |
-| `ui` | Active page, expanded pages, text selection, block selection, sidebar, open overlay, active view per database, active table cell | The lasting part, as one `meta` value | No |
+| `ui` | Active page, expanded pages, text selection, block selection, sidebar, open overlay, active view per database, active table cell, calendar month, search text per view | The lasting part, as one `meta` value | No |
 | `history` | Undo and redo stacks of inverse transactions | No | Is the history |
 | `persistence` | Save status, skipped record count, export and import requests | No | No |
 
 - Workspace data is normalized: maps keyed by id, relations by id.
-- Derived values (breadcrumbs, visible tree, table row models) come from
-  selectors and are never written back.
+- Derived values (breadcrumbs, visible tree, table row models, board
+  columns, calendar days, a page's Markdown, the formatting toolbar's range
+  and style) come from selectors and are never written back. Values the app
+  keeps on a record, such as a row's created time, are read into row values
+  by `src/features/database/row-values.selectors.ts`.
 - The browser owns two things during an interaction: the caret inside the
   focused block and the pointer position during a drag. Both are written to
   the store when the interaction ends.
@@ -78,7 +84,9 @@ Dependencies that would point upward are inverted through registries owned
 by a lower layer and filled in `src/app/bootstrap.ts`:
 
 - Command handlers: `src/state/command-registry.ts`.
-- Block types: `src/blocks/block-registry.ts`.
+- Block types: `src/blocks/block-registry.ts`. A block type's own commands
+  are part of its definition, and bootstrap registers them all from the
+  registry.
 - Property types: `src/features/database/property-registry.ts`.
 - Shortcuts: `src/ui/shortcuts/shortcut-registry.ts`.
 
@@ -108,6 +116,13 @@ only records the request in the `persistence` slice
 `src/persistence/workspace-file.ts`, which subscribes to the store, carries
 it out after the store has finished notifying and dispatches the outcome.
 
+Saving one page as Markdown changes no state, so the page menu builds the
+text with a selector and hands it to `src/ui/download/` directly.
+
+On startup, `startRepository` reports whether storage was empty. Bootstrap
+then dispatches `workspace.seedGettingStarted`, after saving has started,
+so the starting pages are saved like any change.
+
 ## Overlays
 
 `ui.overlay` holds at most one open overlay: its kind, the element it is
@@ -121,6 +136,12 @@ in manual mode, with dismissal owned by `src/ui/overlay/`.
 One root render in `src/app/bootstrap.ts` subscribes to the store and calls
 lit-html `render` with the shell template. Lists are keyed by record id.
 After a render the caret is restored from `ui.selection` by `src/ui/caret/`.
+
+The render runs on every keystroke, so it writes nothing to the document
+that has not changed: `src/app/theme.ts` touches the theme attribute and the
+color-scheme meta only when the theme changes (rewriting the meta restyles
+the whole page), and restoring the caret does not refocus a block that has
+focus.
 
 ## Where things go
 

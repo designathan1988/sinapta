@@ -266,8 +266,9 @@ against the specification.
 
 ## Version 1.1 roadmap
 
-**Status:** Asked for by the owner on 2026-11-10: the app must be complete
-and functional end to end, not basic. Version 1 scope is done; this
+**Status:** Done on 2026-11-11; the record is in `docs/tasks.md`. Asked for
+by the owner on 2026-11-10: the app must be complete and functional end to
+end, not basic. Version 1 scope is done; this
 roadmap widens it with what a Notion-style workspace is expected to do.
 Everything keeps the version 1 architecture: one store, one dispatcher,
 one owner per concern, tokens only. Out-of-scope items that need a server

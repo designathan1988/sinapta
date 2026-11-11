@@ -537,3 +537,55 @@ Out of scope by decision, not a task: selecting part of the text of two
 blocks at once. The specification (section 5.3) and decision 0006 make a
 selection that crosses a block boundary a selection of whole blocks, and
 that is what the keyboard and the pointer now do.
+
+---
+
+# Version 1.1, milestones 8 to 10: record
+
+The roadmap is in `docs/plan.md`. Every item was built test first, checked
+in the running app, verified and committed on its own.
+
+| Item | Status | Tests or check |
+| --- | --- | --- |
+| 8.1 A new or untitled page takes the caret in its title | done | Checked in the running app: New page, type, Enter |
+| 8.2 Formatting toolbar and color picker over selected text | done | `src/features/format-toolbar/format-toolbar.test.ts`, `format-toolbar-keys.test.ts` |
+| 8.3 Underline, strikethrough, text color and highlight (schema version 2) | done | `src/model/rich-text.test.ts`, `src/features/editor/editor.test.ts`, `run-migrations.test.ts` |
+| 8.4 "+" beside each block, duplicate a block | done | `src/features/editor/editor-insert.test.ts`, `src/model/block-copy.test.ts` |
+| 8.5 Paste Markdown as blocks | done | `src/ui/rich-text/pasted-markdown.test.ts`, `editor-paste-blocks.test.ts` |
+| 8.6 Image, web bookmark and table of contents blocks | done | `src/blocks/image/image.test.ts`, `bookmark.test.ts`, `table-of-contents.test.ts` |
+| 8.7 Export a page as Markdown | done | `src/features/markdown-export/markdown-export.test.ts` |
+| 9.1 to 9.3 Board, gallery, list and calendar views (schema version 3) | done | `layouts/board/board.test.ts`, `gallery.test.ts`, `calendar.test.ts`, `view-layout.test.ts`; drag and Alt with the arrow keys checked in the running app |
+| 9.4 Email, phone, created time, last edited time | done | `src/features/database/property-types.test.ts` |
+| 9.5 Search the rows of a view | done | `src/features/database/view-search.test.ts` |
+| 10.1 First visit: Getting started page and Tasks database | done | `src/features/onboarding/onboarding.test.ts`; loads back with no skipped record |
+| 10.2 Duplicate a page with everything inside it | done | `src/blocks/page/page-duplicate.test.ts` |
+| 10.3 Page cover and full width (schema version 4) | done | `src/blocks/page/page-cover.test.ts` |
+| 10.4 Search page text in the command palette | done | `command-palette.test.ts` |
+| 10.5 Keyboard shortcut reference | done | `src/features/shortcut-help/shortcut-help.test.ts`, against the shortcut registry |
+| 10.6 Audit, README and documents | done | See below |
+
+Fixed on the way:
+
+- Text typed in a form field inside a block (an image caption, an address)
+  was cancelled by the editor.
+- Text color had no keyboard path: Alt+F10 now reaches the toolbar.
+- Table of contents links were under the 24 pixel minimum target height.
+- Every root render rewrote the color-scheme meta, which restyled the whole
+  page on each keystroke. Found when the new block controls pushed typing
+  past the target; fixed in `src/app/theme.ts`.
+
+Checks after milestone 10:
+
+- 628 tests pass; type check and lint are clean; `npm run verify` about
+  7 seconds; `npm run build` under 1 second.
+- axe (WCAG 2.2 AA): no violations in the table, board, gallery, list and
+  calendar views, the new view menu, the Properties popover, the Getting
+  started page, the formatting toolbar, the color picker, the cover picker,
+  the shortcut dialog and the palette with text results, in both themes,
+  and in samples of every text color and highlight.
+- Production build with its content security policy: no console errors;
+  images from https addresses show.
+- Typing on a page of 1,000 blocks, production build: median 8.5 ms per
+  keystroke; version 1 measured 19.7 ms back to back on the same machine.
+- Every owner listed in `docs/ownership.md` exists.
+

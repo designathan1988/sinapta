@@ -28,23 +28,26 @@ with no server and no account.
 | Area | Version 1 behavior |
 | --- | --- |
 | Workspace | Sidebar tree of nested pages: create, rename, move by drag, favorite, move to trash, restore |
-| Page | Title, icon (one emoji), body made of blocks |
-| Block types | Paragraph, heading 1 to 3, bulleted list, numbered list, to-do, toggle, quote, callout, divider, code, page link |
-| Block editing | Type, split and merge with Enter and Backspace, indent and outdent with Tab, drag to reorder, slash menu to insert or convert |
-| Inline formatting | Bold, italic, inline code, link |
-| Database | A page type with typed properties: text, number, select, multi-select, date, checkbox, URL. Each row is a page |
-| Table view | Sort, filter, resize, reorder and hide columns, edit cells in place, add rows and properties, several saved views per database |
-| Navigation | Command palette and page search on Ctrl+K or Cmd+K, breadcrumbs, back and forward |
+| Page | Title, icon (one emoji), cover (color preset or image address), full width option, body made of blocks; duplicate a page with everything inside it; export a page as Markdown |
+| Block types | Paragraph, heading 1 to 3, bulleted list, numbered list, to-do, toggle, quote, callout, divider, code, page link, image (web address or a file kept in the workspace), web bookmark, table of contents |
+| Block editing | Type, split and merge with Enter and Backspace, indent and outdent with Tab, drag to reorder, slash menu and a "+" beside each block to insert or convert, duplicate, paste Markdown as blocks |
+| Inline formatting | Bold, italic, underline, strikethrough, inline code, link, text color and highlight, from shortcuts or a toolbar over selected text |
+| Database | A page type with typed properties: text, number, select, multi-select, date, checkbox, URL, email, phone, created time, last edited time. Each row is a page |
+| Views | Table, board grouped by a select property, gallery, list, and month calendar by a date property; sort, filter, search, resize, reorder and hide columns, edit cells in place, add rows and properties, several saved views per database |
+| Navigation | Command palette and search of page titles and page text on Ctrl+K or Cmd+K, breadcrumbs, back and forward, a keyboard shortcut reference |
 | History | Undo and redo for every change to workspace data |
 | Appearance | Light and dark themes following the system setting, with a manual override |
-| Data | Autosave to the browser, export and import of the whole workspace as one JSON file |
+| Data | Autosave to the browser, export and import of the whole workspace as one JSON file; a first visit starts with a tour page and a sample database |
 
 ### Out of scope for version 1
 
 Real-time collaboration, accounts and permissions, a server or sync,
-comments, file and image uploads, board, calendar and gallery views,
-formulas, relations and rollups, mobile layouts below 768 px, offline
-install as a PWA.
+comments, uploads to a server, formulas, relations and rollups, mobile
+layouts below 768 px, offline install as a PWA.
+
+Version 1.1 widened the scope at the owner's request (2026-11-10): board,
+gallery, list and calendar views, and the other additions in the table
+above. `docs/plan.md` lists them as milestones 8 to 10.
 
 ### Quality targets
 
