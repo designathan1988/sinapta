@@ -1,5 +1,8 @@
 @layer ui {
+  /* A menu panel, measured on Notion's: 290 px wide, rows 28 px high
+     with a 6 px radius, values and chevrons muted at the row's end. */
   .menu {
+    inline-size: var(--size-menu-width);
     min-inline-size: var(--size-menu-min-width);
     max-block-size: var(--size-menu-max-height);
     overflow: hidden auto;
@@ -7,22 +10,37 @@
     &:popover-open {
       display: flex;
       flex-direction: column;
-      gap: var(--space-stack-xxs);
     }
   }
 
   .menu__item {
     display: flex;
+    flex: none;
     gap: var(--space-inline-sm);
     align-items: center;
-    min-block-size: var(--size-row-height);
+    min-block-size: var(--size-menu-row);
     padding: var(--space-none) var(--space-inset-sm);
     border: none;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     background-color: transparent;
     color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    line-height: var(--font-line-height-ui);
     text-align: start;
     cursor: pointer;
+    transition: background-color var(--duration-hover) ease-in;
+
+    & > .icon {
+      flex: none;
+      inline-size: var(--size-icon-md);
+      block-size: var(--size-icon-md);
+    }
+
+    & > [data-icon="chevron"] {
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+      color: var(--color-text-tertiary);
+    }
 
     &:hover,
     &:focus-visible {
@@ -41,15 +59,149 @@
       color: var(--color-text-tertiary);
       cursor: default;
     }
+
+    /* A row with a description sits on two lines. */
+    &:has(.menu__description) {
+      align-items: start;
+      padding-block: var(--space-inset-xs);
+    }
   }
 
-  /* A check mark sits at the end of a chosen option. */
-  .menu__label {
+  .menu__text {
+    display: grid;
     flex: 1;
+    min-inline-size: 0;
+  }
+
+  .menu__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .menu__description {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+  }
+
+  .menu__value {
+    flex: none;
+    max-inline-size: 50%;
+    overflow: hidden;
+    color: var(--color-text-tertiary);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .menu__section {
+    margin: var(--space-stack-sm) var(--space-none) var(--space-stack-xxs);
+    padding: var(--space-none) var(--space-inset-sm);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+
+    &:first-child {
+      margin-block-start: var(--space-stack-xxs);
+    }
+  }
+
+  .menu__divider {
+    flex: none;
+    inline-size: 100%;
+    margin: var(--space-stack-xs) var(--space-none);
+    border: none;
+    border-block-start: var(--size-border-thin) solid
+      var(--color-border-default);
+  }
+
+  /* A panel's header: back, title, close. */
+  .menu__header {
+    display: flex;
+    flex: none;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    min-block-size: var(--size-menu-row);
+    margin-block-end: var(--space-stack-xs);
+    padding: var(--space-none) var(--space-inset-xs);
+  }
+
+  .menu__title {
+    flex: 1;
+    overflow: hidden;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-strong);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .menu__back,
+  .menu__close {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--size-control-sm);
+    block-size: var(--size-control-sm);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-full);
+    background: none;
+    color: var(--color-text-tertiary);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+      color: var(--color-text-primary);
+    }
+  }
+
+  .menu__close {
+    background-color: var(--color-bg-hover);
+  }
+
+  /* A search field above the rows, ringed in blue while it has focus. */
+  .menu__search {
+    display: flex;
+    flex: none;
+    align-items: center;
+    min-block-size: var(--size-menu-row);
+    margin: var(--space-none) var(--space-inset-xs) var(--space-stack-xs);
+    padding: var(--space-none) var(--space-inset-xs);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-field);
+    box-shadow: inset 0 0 0 var(--size-border-thin) var(--color-border-default);
+
+    &:focus-within {
+      box-shadow:
+        inset 0 0 0 var(--size-border-thin) var(--color-accent-default),
+        0 0 0 var(--size-border-thin) var(--color-accent-default);
+    }
+
+    & input {
+      flex: 1;
+      min-inline-size: 0;
+      padding: var(--space-none);
+      border: none;
+      outline: none;
+      background: none;
+      color: var(--color-text-primary);
+      font-size: var(--font-size-sm);
+
+      &::placeholder {
+        color: var(--color-text-tertiary);
+      }
+    }
+  }
+
+  .menu__empty {
+    margin: var(--space-none);
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-sm);
   }
 
   .menu__footer {
-    margin: var(--space-none);
+    margin: var(--space-stack-xs) var(--space-none) var(--space-none);
     padding: var(--space-inset-xs) var(--space-inset-sm);
     border-block-start: var(--size-border-thin) solid
       var(--color-border-default);

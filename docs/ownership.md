@@ -18,6 +18,7 @@ owner listed here exists.
 | Command handler registration and lookup | `src/state/command-registry.ts` | 1 |
 | Undo and redo | `src/state/history.ts` | 1 |
 | `ui` slice commands that belong to no feature (sidebar, overlay, selection) | `src/state/ui.commands.ts` | 1 |
+| Inside the open overlay: its panel, the list open in it, its search | `src/state/ui-overlay.commands.ts` | 16 |
 | Settings commands (theme) | `src/state/settings.commands.ts` | 1 |
 | Save status, export and import request commands | `src/state/persistence.commands.ts` | 1 |
 | Cross-feature selectors over `AppState` | `src/state/app-state.selectors.ts` | 1 |
@@ -96,7 +97,10 @@ owner listed here exists.
 | Keyboard shortcuts | `src/ui/shortcuts/shortcut-registry.ts` | 1 |
 | Keys that apply only while one part is active (slash menu, Alt+F10), and the one capture listener for them | `src/ui/shortcuts/scoped-keys.ts` | 11 |
 | Overlay dismissal, anchoring and focus return | `src/ui/overlay/` | 1 |
-| Menu primitive | `src/ui/menu/` | 2 |
+| Menu primitive: every menu and option list (panel, header, search, rows, sections, switch rows) | `src/ui/menu/` | 2 |
+| Select: a control showing a choice that opens its option list, in place of every browser `<select>` | `src/ui/select/` | 16 |
+| Chips: option labels on their color | `src/ui/chip/` | 16 |
+| Switches: the look of an on and off setting | `src/ui/switch/` | 16 |
 | Dialog primitive | `src/ui/dialog/` | 1 |
 | Button primitive | `src/ui/button/` | 1 |
 | Caret reading and restoring in the DOM, selection sync | `src/ui/caret/` | 3 |

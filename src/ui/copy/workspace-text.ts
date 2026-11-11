@@ -45,6 +45,7 @@ export const WORKSPACE_TEXT = {
     moved: "Page moved.",
     notMoved: "The page cannot move further that way.",
   },
+  menu: { back: "Back", close: "Close", noMatches: "No matches" },
   breadcrumbs: { label: "Breadcrumb" },
   favorites: { heading: "Favorites" },
   trash: {

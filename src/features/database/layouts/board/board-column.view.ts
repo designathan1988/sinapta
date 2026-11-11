@@ -1,6 +1,7 @@
 // A column of a board: its header with the group's name, count and menu,
 // its cards and the button that adds a card to it; and the list of the
 // columns the view hides, each shown again by a press.
+import { renderChip } from "../../../../ui/chip/index.ts";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { repeat } from "lit-html/directives/repeat.js";
 import { closeOverlay, openOverlay } from "../../../../state/index.ts";
@@ -98,7 +99,7 @@ export function renderColumn(
     aria-label=${column.label}
   >
     <header class="board__header">
-      <span class="database__chip" data-color=${color}>${column.label}</span>
+      ${renderChip(column.label, color)}
       <span class="board__count">${column.rows.length}</span>
       ${renderMenuButton(context, column)}
     </header>
@@ -136,9 +137,7 @@ export function renderHiddenColumns(
               title=${COPY.database.showGroup}
               @click=${show(column.key)}
             >
-              <span class="database__chip" data-color=${column.color ?? "gray"}
-                >${column.label}</span
-              >
+              ${renderChip(column.label, column.color ?? "gray")}
               <span class="board__count">${column.rows.length}</span>
             </button>
           </li>`,

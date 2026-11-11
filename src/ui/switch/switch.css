@@ -1,0 +1,38 @@
+@layer ui {
+  /* A switch: a pill track and a round knob that slides to the end when
+     the switch is on, as in Notion's settings. */
+  .switch {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    inline-size: var(--size-switch-width);
+    block-size: var(--size-switch-height);
+    padding: var(--space-inset-xxs);
+    border-radius: var(--radius-full);
+    background-color: var(--color-border-strong);
+
+    &::after {
+      content: "";
+      block-size: 100%;
+      aspect-ratio: 1;
+      border-radius: var(--radius-full);
+      background-color: var(--color-text-on-accent);
+    }
+
+    &[data-on] {
+      background-color: var(--color-accent-default);
+
+      &::after {
+        translate: calc(var(--size-switch-width) - var(--size-switch-height));
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: background-color var(--duration-medium) var(--easing-standard);
+
+      &::after {
+        transition: translate var(--duration-medium) var(--easing-standard);
+      }
+    }
+  }
+}

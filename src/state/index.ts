@@ -11,6 +11,7 @@ export {
   type CopiedBlocks,
   type LastTone,
   type OpenOverlay,
+  type OverlayChild,
   type PersistenceState,
   type SaveStatus,
   type TextSelection,
@@ -82,3 +83,9 @@ export {
   failAsset,
 } from "./asset.commands.ts";
 export { selectAssetUrl } from "./asset.selectors.ts";
+export {
+  closeChildOverlay,
+  openChildOverlay,
+  openOverlayPanel,
+  setOverlayQuery,
+} from "./ui-overlay.commands.ts";

@@ -610,6 +610,20 @@
             "components": [0.1684, 0.0, 0],
             "alpha": 0.06
           }
+        },
+        "shadowSoft": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.1684, 0.0, 0],
+            "alpha": 0.06
+          }
+        },
+        "field": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.9593, 0.0036, 84.6],
+            "alpha": 0.6
+          }
         }
       },
       "night": {
@@ -761,15 +775,28 @@
         "shadow": {
           "$value": {
             "colorSpace": "oklch",
-            "components": [0.1684, 0.0, 0],
-            "alpha": 0.4
+            "components": [0.2134, 0.0, 0],
+            "alpha": 0.2
           }
         },
         "shadowRing": {
           "$value": {
             "colorSpace": "oklch",
-            "components": [0.1684, 0.0, 0],
-            "alpha": 0.3
+            "components": [0.34, 0.0034, 106.6]
+          }
+        },
+        "shadowSoft": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.2134, 0.0, 0],
+            "alpha": 0.118
+          }
+        },
+        "field": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.9911, 0, 0],
+            "alpha": 0.03
           }
         }
       }
@@ -976,6 +1003,24 @@
           "value": 2.75,
           "unit": "rem"
         }
+      },
+      "18x125": {
+        "$value": {
+          "value": 18.125,
+          "unit": "rem"
+        }
+      },
+      "1x875": {
+        "$value": {
+          "value": 1.875,
+          "unit": "rem"
+        }
+      },
+      "1x125": {
+        "$value": {
+          "value": 1.125,
+          "unit": "rem"
+        }
       }
     },
     "radius": {
@@ -996,6 +1041,12 @@
         "$value": {
           "value": 999,
           "unit": "px"
+        }
+      },
+      "3": {
+        "$value": {
+          "value": 0.625,
+          "unit": "rem"
         }
       }
     },
@@ -1144,6 +1195,12 @@
       "4": {
         "$value": {
           "value": 1200,
+          "unit": "ms"
+        }
+      },
+      "instant": {
+        "$value": {
+          "value": 20,
           "unit": "ms"
         }
       }

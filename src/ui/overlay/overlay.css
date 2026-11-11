@@ -1,25 +1,35 @@
 @layer ui {
-  /* The control that opened the overlay is the anchor of the overlay. */
+  /* The control that opened the overlay is the anchor of the overlay; the
+     control that opened a list inside the overlay anchors that list. */
   [data-overlay-anchor][aria-expanded="true"],
   [data-overlay-anchor="open"] {
     anchor-name: --overlay-anchor;
   }
 
+  [data-overlay-child-anchor][aria-expanded="true"] {
+    anchor-name: --overlay-child-anchor;
+  }
+
+  /* Every menu and popover is the same panel, measured on Notion's: no
+     border, a ring and two soft shadows, a 10 px radius. */
   [data-overlay][popover] {
     padding: var(--space-inset-xs);
-    border: var(--size-border-thin) solid var(--color-border-default);
-    border-radius: var(--radius-md);
+    border: none;
+    border-radius: var(--radius-lg);
     background-color: var(--color-bg-raised);
     box-shadow: var(--shadow-overlay);
     color: var(--color-text-primary);
     font-size: var(--font-size-sm);
 
-    /* Menus and popovers fade in when they open. */
+    /* It fades in and slides a little towards its place. */
     @media (prefers-reduced-motion: no-preference) {
-      transition: opacity var(--duration-fast) var(--easing-standard);
+      transition:
+        opacity var(--duration-fast) var(--easing-standard),
+        translate var(--duration-fast) var(--easing-standard);
 
       @starting-style {
         opacity: 0;
+        translate: 0 calc(var(--space-stack-xxs) * -2);
       }
     }
   }
@@ -35,6 +45,10 @@
         flip-block,
         flip-inline,
         flip-block flip-inline;
+    }
+
+    [data-overlay][data-child][popover] {
+      position-anchor: --overlay-child-anchor;
     }
   }
 }

@@ -46,6 +46,18 @@ export interface OpenOverlay {
   readonly query?: string;
   // Where a menu opened by a right click shows, in viewport pixels.
   readonly point?: { readonly x: number; readonly y: number };
+  // The panel shown of an overlay that moves between panels, such as a
+  // view's settings; absent for its first panel.
+  readonly panel?: string;
+  // An option list opened from inside the overlay, such as a select in a
+  // popover: it closes alone, and the overlay stays.
+  readonly child?: OverlayChild;
+}
+
+export interface OverlayChild {
+  // The control the list belongs to.
+  readonly anchorId: string;
+  readonly query?: string;
 }
 
 export interface UiState {

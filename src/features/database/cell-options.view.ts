@@ -1,4 +1,5 @@
 // The choices of a select or multi-select cell, with a field to add one.
+import { renderChip } from "../../ui/chip/index.ts";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import type {
@@ -66,9 +67,7 @@ function renderOption(
     data-option-id=${option.id}
     aria-selected=${String(isSelected)}
   >
-    <span class="database__chip" data-color=${option.color}
-      >${option.name}</span
-    >
+    ${renderChip(option.name, option.color)}
   </button>`;
 }
 

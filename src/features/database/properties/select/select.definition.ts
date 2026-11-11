@@ -1,4 +1,5 @@
-import { html, type TemplateResult } from "lit-html";
+import { renderChip as chipOf } from "../../../../ui/chip/index.ts";
+import type { TemplateResult } from "lit-html";
 import type { PropertyDefinition } from "../../../../blocks/database/index.ts";
 import type { GroupKey, Grouping } from "../../grouping-definition.ts";
 import {
@@ -24,9 +25,7 @@ export function renderChip(
 ): TemplateResult | string {
   const option = property.options?.find((item) => item.id === id);
   if (option === undefined) return "";
-  return html`<span class="database__chip" data-color=${option.color}
-    >${option.name}</span
-  >`;
+  return chipOf(option.name, option.color);
 }
 
 // The groups of an option property: one per option, in its order.

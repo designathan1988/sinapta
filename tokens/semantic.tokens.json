@@ -28,6 +28,10 @@
       },
       "callout": {
         "$value": "{base.color.day.callout}"
+      },
+      "field": {
+        "$description": "A search or text field inside a menu.",
+        "$value": "{base.color.day.field}"
       }
     },
     "text": {
@@ -92,6 +96,9 @@
       },
       "ring": {
         "$value": "{base.color.day.shadowRing}"
+      },
+      "soft": {
+        "$value": "{base.color.day.shadowSoft}"
       }
     },
     "chip": {
@@ -241,6 +248,9 @@
       },
       "page": {
         "$value": "{base.space.24}"
+      },
+      "xxs": {
+        "$value": "{base.space.0x5}"
       }
     },
     "block": {
@@ -320,7 +330,11 @@
         "$value": "{base.size.20}"
       },
       "width": {
-        "$value": "{base.size.20}"
+        "$value": "{base.size.18x125}"
+      },
+      "row": {
+        "$description": "A menu row, as tall as Notion's.",
+        "$value": "{base.size.7}"
       }
     },
     "dialog": {
@@ -370,6 +384,15 @@
     },
     "topBar": {
       "$value": "{base.size.2x75}"
+    },
+    "switch": {
+      "width": {
+        "$description": "A switch's track.",
+        "$value": "{base.size.1x875}"
+      },
+      "height": {
+        "$value": "{base.size.1x125}"
+      }
     }
   },
   "radius": {
@@ -382,6 +405,10 @@
     },
     "full": {
       "$value": "{base.radius.pill}"
+    },
+    "lg": {
+      "$description": "Menus, popovers and dialogs.",
+      "$value": "{base.radius.3}"
     }
   },
   "shadow": {
@@ -414,34 +441,34 @@
             "unit": "px"
           },
           "offsetY": {
-            "value": 3,
+            "value": 14,
             "unit": "px"
           },
           "blur": {
-            "value": 6,
+            "value": 28,
             "unit": "px"
           },
           "spread": {
-            "value": 0,
+            "value": -6,
             "unit": "px"
           }
         },
         {
-          "color": "{color.shadow.overlay}",
+          "color": "{color.shadow.soft}",
           "offsetX": {
             "value": 0,
             "unit": "px"
           },
           "offsetY": {
-            "value": 9,
+            "value": 2,
             "unit": "px"
           },
           "blur": {
-            "value": 24,
+            "value": 4,
             "unit": "px"
           },
           "spread": {
-            "value": 0,
+            "value": -1,
             "unit": "px"
           }
         }
@@ -636,6 +663,10 @@
     "flash": {
       "$description": "How long a block linked to stays highlighted.",
       "$value": "{base.duration.4}"
+    },
+    "hover": {
+      "$description": "A row's background following the pointer, as quick as Notion's.",
+      "$value": "{base.duration.instant}"
     }
   },
   "easing": {

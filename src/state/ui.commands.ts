@@ -8,6 +8,7 @@ import {
   type TextSelection,
 } from "./app-state.ts";
 import { defineCommand, type NoPayload } from "./command-registry.ts";
+import { uiOverlayCommands } from "./ui-overlay.commands.ts";
 
 function clampSidebarWidth(width: number): number {
   return Math.min(SIDEBAR_WIDTH.max, Math.max(SIDEBAR_WIDTH.min, width));
@@ -125,6 +126,7 @@ export const setClipboard = defineCommand<{ clipboard: CopiedBlocks | null }>({
 });
 
 export const uiCommands = [
+  ...uiOverlayCommands,
   setClipboard,
   setSelection,
   setSidebarWidth,

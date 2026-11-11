@@ -97,6 +97,8 @@
     --base-color-day-warning: oklch(0.6198 0.1204 74.9);
     --base-color-day-shadow: oklch(0.1684 0 0 / 0.1);
     --base-color-day-shadow-ring: oklch(0.1684 0 0 / 0.06);
+    --base-color-day-shadow-soft: oklch(0.1684 0 0 / 0.06);
+    --base-color-day-field: oklch(0.9593 0.0036 84.6 / 0.6);
     --base-color-night-bg: oklch(0.2134 0 0);
     --base-color-night-sidebar: oklch(0.2435 0 0);
     --base-color-night-raised: oklch(0.2645 0 0);
@@ -121,8 +123,10 @@
     --base-color-night-danger-bg: oklch(0.2927 0.0355 24.9);
     --base-color-night-success: oklch(0.6796 0.093 179.8);
     --base-color-night-warning: oklch(0.7679 0.157 86.5);
-    --base-color-night-shadow: oklch(0.1684 0 0 / 0.4);
-    --base-color-night-shadow-ring: oklch(0.1684 0 0 / 0.3);
+    --base-color-night-shadow: oklch(0.2134 0 0 / 0.2);
+    --base-color-night-shadow-ring: oklch(0.34 0.0034 106.6);
+    --base-color-night-shadow-soft: oklch(0.2134 0 0 / 0.118);
+    --base-color-night-field: oklch(0.9911 0 0 / 0.03);
     --base-space-0: 0rem;
     --base-space-1: 0.25rem;
     --base-space-2: 0.5rem;
@@ -156,8 +160,12 @@
     --base-size-thick: 2px;
     --base-size-16x875: 16.875rem;
     --base-size-2x75: 2.75rem;
+    --base-size-18x125: 18.125rem;
+    --base-size-1x875: 1.875rem;
+    --base-size-1x125: 1.125rem;
     --base-radius-1: 0.25rem;
     --base-radius-2: 0.375rem;
+    --base-radius-3: 0.625rem;
     --base-radius-pill: 999px;
     --base-font-family-sans: ui-sans-serif, "-apple-system", "BlinkMacSystemFont", "Segoe UI Variable Display", "Segoe UI", "Helvetica", "Apple Color Emoji", "Arial", sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
     --base-font-family-serif: ui-serif, "Iowan Old Style", "Palatino Linotype", "Georgia", serif;
@@ -182,6 +190,7 @@
     --base-duration-2: 200ms;
     --base-duration-3: 500ms;
     --base-duration-4: 1200ms;
+    --base-duration-instant: 20ms;
     --base-easing-standard: cubic-bezier(0.2, 0, 0, 1);
     --base-layer-1: 1;
     --base-layer-2: 2;
@@ -194,6 +203,7 @@
     --color-bg-code: light-dark(var(--base-color-day-code), var(--base-color-night-code));
     --color-bg-scrim: light-dark(var(--base-color-black-scrim), var(--base-color-black-scrim));
     --color-bg-callout: light-dark(var(--base-color-day-callout), var(--base-color-night-callout));
+    --color-bg-field: light-dark(var(--base-color-day-field), var(--base-color-night-field));
     --color-text-primary: light-dark(var(--base-color-day-text), var(--base-color-night-text));
     --color-text-secondary: light-dark(var(--base-color-day-text-secondary), var(--base-color-night-text-secondary));
     --color-text-tertiary: light-dark(var(--base-color-day-text-tertiary), var(--base-color-night-text-tertiary));
@@ -212,6 +222,7 @@
     --color-status-danger-bg: light-dark(var(--base-color-day-danger-bg), var(--base-color-night-danger-bg));
     --color-shadow-overlay: light-dark(var(--base-color-day-shadow), var(--base-color-night-shadow));
     --color-shadow-ring: light-dark(var(--base-color-day-shadow-ring), var(--base-color-night-shadow-ring));
+    --color-shadow-soft: light-dark(var(--base-color-day-shadow-soft), var(--base-color-night-shadow-soft));
     --color-chip-gray-bg: light-dark(var(--base-color-chip-gray-tint), var(--base-color-chip-gray-shade));
     --color-chip-gray-text: light-dark(var(--base-color-chip-gray-ink), var(--base-color-chip-gray-glow));
     --color-chip-brown-bg: light-dark(var(--base-color-chip-brown-tint), var(--base-color-chip-brown-shade));
@@ -252,6 +263,7 @@
     --space-inset-lg: var(--base-space-4);
     --space-inset-xl: var(--base-space-6);
     --space-inset-page: var(--base-space-24);
+    --space-inset-xxs: var(--base-space-0x5);
     --space-block: var(--base-space-0x75);
     --size-border-thin: var(--base-size-hairline);
     --size-border-thick: var(--base-size-thick);
@@ -270,7 +282,8 @@
     --size-label-width: var(--base-size-12);
     --size-menu-min-width: var(--base-size-14);
     --size-menu-max-height: var(--base-size-20);
-    --size-menu-width: var(--base-size-20);
+    --size-menu-width: var(--base-size-18x125);
+    --size-menu-row: var(--base-size-7);
     --size-dialog-width: var(--base-size-32);
     --size-dialog-wide: var(--base-size-36);
     --size-board-column: var(--base-size-18);
@@ -282,10 +295,13 @@
     --size-table-cell: var(--base-size-10);
     --size-table-gutter: var(--base-size-2x75);
     --size-top-bar: var(--base-size-2x75);
+    --size-switch-width: var(--base-size-1x875);
+    --size-switch-height: var(--base-size-1x125);
     --radius-sm: var(--base-radius-1);
     --radius-md: var(--base-radius-2);
     --radius-full: var(--base-radius-pill);
-    --shadow-overlay: 0px 0px 0px 1px var(--color-shadow-ring), 0px 3px 6px 0px var(--color-shadow-overlay), 0px 9px 24px 0px var(--color-shadow-overlay);
+    --radius-lg: var(--base-radius-3);
+    --shadow-overlay: 0px 0px 0px 1px var(--color-shadow-ring), 0px 14px 28px -6px var(--color-shadow-overlay), 0px 2px 4px -1px var(--color-shadow-soft);
     --shadow-dialog: 0px 0px 0px 1px var(--color-shadow-ring), 0px 5px 10px 0px var(--color-shadow-overlay), 0px 15px 40px 0px var(--color-shadow-overlay);
     --shadow-card: 0px 0px 0px 1px var(--color-shadow-ring), 0px 2px 4px 0px var(--color-shadow-overlay);
     --font-family-text: var(--base-font-family-sans);
@@ -311,6 +327,7 @@
     --duration-medium: var(--base-duration-2);
     --duration-hint-delay: var(--base-duration-3);
     --duration-flash: var(--base-duration-4);
+    --duration-hover: var(--base-duration-instant);
     --easing-standard: var(--base-easing-standard);
     --layer-sticky: var(--base-layer-1);
     --layer-drag-preview: var(--base-layer-2);

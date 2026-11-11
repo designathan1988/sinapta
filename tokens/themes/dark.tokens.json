@@ -28,6 +28,9 @@
       },
       "callout": {
         "$value": "{base.color.night.callout}"
+      },
+      "field": {
+        "$value": "{base.color.night.field}"
       }
     },
     "text": {
@@ -92,6 +95,9 @@
       },
       "ring": {
         "$value": "{base.color.night.shadowRing}"
+      },
+      "soft": {
+        "$value": "{base.color.night.shadowSoft}"
       }
     },
     "chip": {

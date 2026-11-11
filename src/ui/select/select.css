@@ -1,0 +1,73 @@
+@layer ui {
+  /* The control that shows a choice: boxed in forms, quiet in rows. Its
+     chevron points down and turns up while the list is open. */
+  .select {
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    max-inline-size: 100%;
+    min-block-size: var(--size-menu-row);
+    padding: var(--space-none) var(--space-inset-xs) var(--space-none)
+      var(--space-inset-sm);
+    border: none;
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-field);
+    box-shadow: inset 0 0 0 var(--size-border-thin) var(--color-border-default);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    line-height: var(--font-line-height-ui);
+    text-align: start;
+    cursor: pointer;
+    transition: background-color var(--duration-hover) ease-in;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: var(--color-bg-hover);
+    }
+
+    &[data-variant="quiet"] {
+      padding-inline-start: var(--space-inset-xs);
+      background-color: transparent;
+      box-shadow: none;
+      color: var(--color-text-secondary);
+
+      &:hover,
+      &[aria-expanded="true"] {
+        background-color: var(--color-bg-hover);
+      }
+    }
+
+    & > .icon {
+      flex: none;
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+    }
+
+    & > [data-icon="chevron"] {
+      color: var(--color-text-tertiary);
+      rotate: 90deg;
+    }
+
+    &[aria-expanded="true"] > [data-icon="chevron"] {
+      rotate: -90deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      & > [data-icon="chevron"] {
+        transition: rotate var(--duration-fast) var(--easing-standard);
+      }
+    }
+  }
+
+  .select__value {
+    flex: 1;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &[data-placeholder] {
+      color: var(--color-text-tertiary);
+    }
+  }
+}

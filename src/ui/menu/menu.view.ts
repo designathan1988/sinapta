@@ -1,33 +1,34 @@
+// A menu in the top layer, drawn as Notion draws its menus: an optional
+// header with a back and a close button, an optional search field, then
+// rows, labels and lines. A listbox is the same panel for choosing one
+// value. It is rendered only while it is open.
 import "./menu.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
-import { renderIcon, type IconName } from "../icon/index.ts";
+import { COPY } from "../copy.ts";
+import { renderIcon } from "../icon/index.ts";
 import {
   focusOverlayAnchor,
   showPopoverWhenConnected,
 } from "../overlay/index.ts";
+import {
+  isMenuItem,
+  keepsMenuOpen,
+  visibleEntries,
+  type MenuEntry,
+  type MenuItem,
+} from "./menu-entry.ts";
+import { renderEntry } from "./menu-item.view.ts";
 
-export interface MenuItem {
-  readonly label: string;
-  readonly onSelect: () => void;
-  readonly icon?: IconName;
-  readonly isDanger?: boolean;
-  readonly isDisabled?: boolean;
-  // An option of a group ("radio") or one that turns on and off ("box").
-  readonly check?: "radio" | "box";
-  readonly isChecked?: boolean;
+export interface MenuSearch {
+  readonly placeholder: string;
+  readonly query: string;
+  readonly onQuery: (query: string) => void;
 }
-
-const ROLES = {
-  radio: "menuitemradio",
-  box: "menuitemcheckbox",
-} as const;
-
-const ITEMS = "[role^=menuitem]:not(:disabled)";
 
 export interface MenuOptions {
   readonly label: string;
-  readonly items: readonly MenuItem[];
+  readonly items: readonly MenuEntry[];
   // Called when the menu should close: after a choice, Escape or Tab.
   readonly onClose: () => void;
   // A short note under the items, such as a page's word count.
@@ -35,7 +36,20 @@ export interface MenuOptions {
   // Where a menu opened by a right click shows; otherwise it sits by the
   // control that opened it.
   readonly point?: { readonly x: number; readonly y: number };
+  // A header with this title and a close button, and a back button when
+  // the panel was reached from another one.
+  readonly title?: string;
+  readonly onBack?: () => void;
+  readonly search?: MenuSearch;
+  // "listbox" for choosing one value among options.
+  readonly role?: "menu" | "listbox";
+  // Content above the rows, such as a name field or layout tiles.
+  readonly lead?: TemplateResult;
+  // A list opened from a control inside another overlay.
+  readonly isChild?: boolean;
 }
+
+const ITEMS = "[data-index]:not(:disabled)";
 
 // The point is set through the CSSOM: it changes with every opening.
 function placeAt(point: MenuOptions["point"]) {
@@ -61,60 +75,126 @@ function moveFocus(menu: Element, key: string): boolean {
   return true;
 }
 
-function renderItem(item: MenuItem, index: number): TemplateResult {
-  const { check } = item;
-  const isChecked = item.isChecked === true;
-  return html`<button
-    type="button"
-    class="menu__item"
-    role=${check === undefined ? "menuitem" : ROLES[check]}
-    tabindex="-1"
-    data-index=${index}
-    aria-checked=${check === undefined ? nothing : String(isChecked)}
-    ?data-autofocus=${index === 0}
-    ?data-danger=${item.isDanger === true}
-    ?disabled=${item.isDisabled === true}
-  >
-    ${item.icon === undefined ? nothing : renderIcon(item.icon)}
-    <span class="menu__label">${item.label}</span>
-    ${isChecked ? renderIcon("check") : nothing}
-  </button>`;
+function renderHeader(
+  options: MenuOptions,
+  close: () => void,
+): TemplateResult | typeof nothing {
+  if (options.title === undefined) return nothing;
+  const { onBack } = options;
+  return html`<div class="menu__header">
+    ${
+      onBack === undefined
+        ? nothing
+        : html`<button
+            type="button"
+            class="menu__back"
+            aria-label=${COPY.menu.back}
+            @click=${onBack}
+          >
+            ${renderIcon("back")}
+          </button>`
+    }
+    <span class="menu__title">${options.title}</span>
+    <button
+      type="button"
+      class="menu__close"
+      aria-label=${COPY.menu.close}
+      @click=${close}
+    >
+      ${renderIcon("close")}
+    </button>
+  </div>`;
 }
 
-// A flat menu in the top layer. It is rendered only while it is open.
+function renderSearch(search: MenuSearch | undefined) {
+  if (search === undefined) return nothing;
+  return html`<label class="menu__search">
+    <input
+      type="text"
+      aria-label=${search.placeholder}
+      placeholder=${search.placeholder}
+      autocomplete="off"
+      data-autofocus
+      .value=${search.query}
+      @input=${(event: Event) => {
+        if (event.target instanceof HTMLInputElement)
+          search.onQuery(event.target.value);
+      }}
+    />
+  </label>`;
+}
+
+interface Choosing {
+  readonly items: readonly MenuEntry[];
+  readonly close: () => void;
+}
+
+function choose(item: MenuEntry | undefined, choosing: Choosing): void {
+  if (item === undefined || !isMenuItem(item) || item.isDisabled === true)
+    return;
+  if (!keepsMenuOpen(item)) choosing.close();
+  item.onSelect();
+}
+
+function firstItem(entries: readonly MenuEntry[]): MenuItem | undefined {
+  return entries.find(
+    (entry): entry is MenuItem =>
+      isMenuItem(entry) && entry.isDisabled !== true,
+  );
+}
+
+function onMenuKey(event: KeyboardEvent, choosing: Choosing): void {
+  const menu = event.currentTarget;
+  if (!(menu instanceof Element)) return;
+  const isSearch = event.target instanceof HTMLInputElement;
+  if (event.key === "Escape" || event.key === "Tab") choosing.close();
+  else if (event.key === "Enter" && isSearch) {
+    choose(firstItem(choosing.items), choosing);
+  } else if (!moveFocus(menu, event.key)) return;
+  event.preventDefault();
+}
+
+function renderRows(entries: readonly MenuEntry[], options: MenuOptions) {
+  const isListbox = options.role === "listbox";
+  const first = options.search === undefined ? firstItem(entries) : undefined;
+  if (entries.length === 0) {
+    return html`<p class="menu__empty">${COPY.menu.noMatches}</p>`;
+  }
+  return entries.map((entry, index) =>
+    renderEntry(entry, { index, isListbox, isFirst: entry === first }),
+  );
+}
+
 export function renderMenu(options: MenuOptions): TemplateResult {
+  const items = visibleEntries(options.items, options.search?.query ?? "");
   const close = (): void => {
     focusOverlayAnchor();
     options.onClose();
   };
+  const choosing = { items, close };
   const onClick = (event: Event): void => {
     if (!(event.target instanceof Element)) return;
     const index =
       event.target.closest<HTMLElement>("[data-index]")?.dataset.index;
-    const item = options.items[Number(index ?? -1)];
-    if (item === undefined) return;
-    close();
-    item.onSelect();
-  };
-  const onKeyDown = (event: KeyboardEvent): void => {
-    if (!(event.currentTarget instanceof Element)) return;
-    if (event.key === "Escape" || event.key === "Tab") close();
-    else if (!moveFocus(event.currentTarget, event.key)) return;
-    event.preventDefault();
+    choose(items[Number(index ?? -1)], choosing);
   };
   return html`<div
     class="menu"
-    role="menu"
+    role=${options.role ?? "menu"}
     popover="manual"
     data-overlay
     aria-label=${options.label}
     ?data-at-point=${options.point !== undefined}
+    ?data-child=${options.isChild === true}
     ${ref(placeAt(options.point))}
     ${ref(showPopoverWhenConnected)}
     @click=${onClick}
-    @keydown=${onKeyDown}
+    @keydown=${(event: KeyboardEvent) => {
+      onMenuKey(event, choosing);
+    }}
   >
-    ${options.items.map(renderItem)}
+    ${renderHeader(options, close)} ${renderSearch(options.search)}
+    ${options.lead ?? nothing} ${renderRows(items, options)}
     ${
       options.footer === undefined
         ? nothing

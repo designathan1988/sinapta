@@ -1,6 +1,7 @@
 // The header of a group of rows: one button that collapses or expands
 // the group, showing its name, as a chip when it has a color, and how
 // many rows it holds.
+import { renderChip } from "../../ui/chip/index.ts";
 import "./group.css";
 import { html, type TemplateResult } from "lit-html";
 import { renderIcon } from "../../ui/icon/index.ts";
@@ -16,9 +17,7 @@ export function renderGroupHeader(
   const name =
     group.color === undefined
       ? html`<span class="database__group-name">${group.label}</span>`
-      : html`<span class="database__chip" data-color=${group.color}
-          >${group.label}</span
-        >`;
+      : renderChip(group.label, group.color);
   return html`<button
     type="button"
     class="database__group-toggle"

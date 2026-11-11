@@ -1,0 +1,52 @@
+@layer ui {
+  /* An option of a select property, or a group named by one. */
+  .chip {
+    display: inline-block;
+    margin-inline-end: var(--space-inline-xs);
+    padding: var(--space-none) var(--space-inset-xs);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    line-height: var(--font-line-height-ui);
+    white-space: nowrap;
+  }
+
+  .chip[data-color="gray"] {
+    background-color: var(--color-chip-gray-bg);
+    color: var(--color-chip-gray-text);
+  }
+
+  .chip[data-color="brown"] {
+    background-color: var(--color-chip-brown-bg);
+    color: var(--color-chip-brown-text);
+  }
+
+  .chip[data-color="orange"] {
+    background-color: var(--color-chip-orange-bg);
+    color: var(--color-chip-orange-text);
+  }
+
+  .chip[data-color="yellow"] {
+    background-color: var(--color-chip-yellow-bg);
+    color: var(--color-chip-yellow-text);
+  }
+
+  .chip[data-color="green"] {
+    background-color: var(--color-chip-green-bg);
+    color: var(--color-chip-green-text);
+  }
+
+  .chip[data-color="blue"] {
+    background-color: var(--color-chip-blue-bg);
+    color: var(--color-chip-blue-text);
+  }
+
+  .chip[data-color="purple"] {
+    background-color: var(--color-chip-purple-bg);
+    color: var(--color-chip-purple-text);
+  }
+
+  .chip[data-color="red"] {
+    background-color: var(--color-chip-red-bg);
+    color: var(--color-chip-red-text);
+  }
+}

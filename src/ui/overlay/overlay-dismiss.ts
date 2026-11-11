@@ -3,6 +3,7 @@
 import "./overlay.css";
 import { whenConnected } from "../focus/index.ts";
 import {
+  closeChildOverlay,
   closeOverlay,
   type AppStore,
   type Dispatch,
@@ -15,23 +16,42 @@ const INSIDE = [
   "dialog",
 ].join(", ");
 
+// The list open inside the overlay, and the control that opened it.
+const CHILD = [
+  "[data-overlay][data-child]",
+  "[data-overlay-child-anchor][aria-expanded='true']",
+].join(", ");
+
+function isWithin(target: EventTarget | null, selector: string): boolean {
+  return target instanceof Element && target.closest(selector) !== null;
+}
+
 export function installOverlayDismiss(
   store: AppStore,
   dispatch: Dispatch,
 ): void {
   document.addEventListener("pointerdown", (event) => {
-    if (store.getState().ui.overlay === null) return;
+    const { overlay } = store.getState().ui;
+    if (overlay === null) return;
     const { target } = event;
-    if (target instanceof Element && target.closest(INSIDE) !== null) return;
-    dispatch(closeOverlay.create({}));
+    // A press elsewhere in the overlay closes only the list open in it.
+    if (overlay.child !== undefined && !isWithin(target, CHILD)) {
+      dispatch(closeChildOverlay.create({}));
+    }
+    if (!isWithin(target, INSIDE)) dispatch(closeOverlay.create({}));
   });
 }
 
-// Puts focus back on the control that opened the overlay.
+// Puts focus back on the control that opened the overlay, or the list
+// open inside it.
 export function focusOverlayAnchor(): void {
-  document
-    .querySelector<HTMLElement>("[data-overlay-anchor][aria-expanded='true']")
-    ?.focus();
+  const child = document.querySelector<HTMLElement>(
+    "[data-overlay-child-anchor][aria-expanded='true']",
+  );
+  const anchor = document.querySelector<HTMLElement>(
+    "[data-overlay-anchor][aria-expanded='true']",
+  );
+  (child ?? anchor)?.focus();
 }
 
 // Shows a popover element once it is in the document.

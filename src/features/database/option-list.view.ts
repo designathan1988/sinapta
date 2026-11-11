@@ -1,5 +1,6 @@
 // The options of a select, multi-select or status property, each with its
 // name, color, moves up and down and delete, and a field to add one.
+import { renderChip } from "../../ui/chip/index.ts";
 import { html, type TemplateResult } from "lit-html";
 import type {
   PropertyDefinition,
@@ -94,9 +95,7 @@ function renderOption(
     context.dispatch(renameOption.create({ ...target, name }));
   };
   return html`<li class="database__filter" data-option-id=${option.id}>
-    <span class="database__chip" data-color=${option.color} aria-hidden="true"
-      >${option.name}</span
-    >
+    <span aria-hidden="true">${renderChip(option.name, option.color)}</span>
     <input
       class="database__field"
       type="text"

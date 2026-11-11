@@ -28,6 +28,9 @@
       },
       "callout": {
         "$value": "{base.color.day.callout}"
+      },
+      "field": {
+        "$value": "{base.color.day.field}"
       }
     },
     "text": {
@@ -92,6 +95,9 @@
       },
       "ring": {
         "$value": "{base.color.day.shadowRing}"
+      },
+      "soft": {
+        "$value": "{base.color.day.shadowSoft}"
       }
     },
     "chip": {
