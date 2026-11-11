@@ -65,6 +65,32 @@ describe("page commands", () => {
     expect(page && selectPageTitle(page)).toBe("Roadmap");
   });
 
+  it("shows the new title in every mention of the page", () => {
+    const mention = { kind: "page" as const, pageId: A };
+    const workspace = buildWorkspace([
+      { id: "a" },
+      {
+        id: "notes",
+        children: [
+          {
+            id: "line",
+            type: "paragraph",
+            props: { text: [{ text: "Old", mention }] },
+          },
+        ],
+      },
+    ]);
+    const { store, dispatch } = createTestApp({
+      workspace,
+      commands: pageCommands,
+    });
+
+    dispatch(renamePage.create({ pageId: A, title: "Roadmap" }));
+
+    const line = store.getState().workspace.blocks[toBlockId("line")];
+    expect(line?.props.text).toEqual([{ text: "Roadmap", mention }]);
+  });
+
   it("stores an empty title as no spans", () => {
     const { store, dispatch } = createTestApp({ commands: pageCommands });
     dispatch(createPage.create({ parentId: null }));

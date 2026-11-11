@@ -1,26 +1,20 @@
 // Translates input inside text blocks into commands. The browser's default
 // edit is cancelled; the store changes and the text is projected back.
-import {
-  applyInlineMarkdown,
-  replaceText,
-  toggleTextMark,
-} from "./editor.commands.ts";
-import { matchBlockShortcut } from "./block-shortcut.ts";
+import { replaceText, toggleTextMark } from "./editor.commands.ts";
+import { afterTyping, shortcutFor } from "./editor-typing.view.ts";
 import { convertBlock } from "./editor-convert.commands.ts";
 import { pasteInto } from "./editor-paste.view.ts";
 import { mergeBlockBackward, splitBlock } from "./editor-structure.commands.ts";
 import { selectNeighborTextBlock } from "./editor.selectors.ts";
 import { blockDefinition, isTextBlock, textOf } from "../../blocks/index.ts";
-import { CODE_TYPE } from "../../blocks/code/index.ts";
-import { PARAGRAPH_TYPE } from "../../blocks/paragraph/index.ts";
 import {
   diffText,
-  matchInlineMarkdown,
+  nextBoundary,
+  previousBoundary,
   type BlockId,
   type Mark,
 } from "../../model/index.ts";
 import {
-  openOverlay,
   REDO_COMMAND,
   UNDO_COMMAND,
   type AppState,
@@ -38,7 +32,7 @@ export interface InputContext {
   readonly dispatch: Dispatch;
 }
 
-interface Target {
+export interface Target {
   readonly blockId: BlockId;
   readonly start: number;
   readonly end: number;
@@ -78,62 +72,16 @@ type Handler = (
   context: InputContext,
 ) => void;
 
-// A space after a shortcut at the start of a paragraph converts the
-// paragraph instead of being typed.
-function shortcutFor(target: Target, text: string, state: AppState) {
-  const block = state.workspace.blocks[target.blockId];
-  const isCandidate =
-    text === " " &&
-    target.start === target.end &&
-    block?.type === PARAGRAPH_TYPE;
-  if (!isCandidate || !isTextBlock(block)) return undefined;
-  const prefix = textOf(block).slice(0, target.start);
-  const shortcut = matchBlockShortcut(prefix);
-  return shortcut === undefined
-    ? undefined
-    : { ...shortcut, removePrefix: prefix.length };
-}
-
-// The slash menu feature shows the menu; the editor only says where the
-// "/" is.
-const SLASH_MENU_OVERLAY = "slash-menu";
-
-function openSlashMenu(target: Target, dispatch: Dispatch): void {
-  const overlay = {
-    kind: SLASH_MENU_OVERLAY,
-    anchorId: target.blockId,
-    start: target.start,
-  };
-  dispatch(openOverlay.create({ overlay }));
-}
-
-// After a typed key, the Markdown it closes inside the line, if any.
-function inlineMarkdownFor(target: Target, text: string, state: AppState) {
-  const block = state.workspace.blocks[target.blockId];
-  if (!isTextBlock(block) || text.length !== 1) return undefined;
-  // A code block keeps what is typed in it as it is.
-  if (block.type === CODE_TYPE) return undefined;
-  const current = textOf(block);
-  const typed =
-    current.slice(0, target.start) + text + current.slice(target.end);
-  return matchInlineMarkdown(typed, target.start + text.length);
-}
-
-const insert: Handler = (target, event, { state, dispatch }) => {
+const insert: Handler = (target, event, context) => {
   const text = insertedText(event);
-  const shortcut = shortcutFor(target, text, state);
+  const shortcut = shortcutFor(target, text, context.state);
   if (shortcut !== undefined) {
-    dispatch(convertBlock.create({ blockId: target.blockId, ...shortcut }));
+    const { blockId } = target;
+    context.dispatch(convertBlock.create({ blockId, ...shortcut }));
     return;
   }
-  dispatch(replaceText.create({ ...target, text }));
-  if (text === "/") openSlashMenu(target, dispatch);
-  const markdown = inlineMarkdownFor(target, text, state);
-  if (markdown !== undefined) {
-    dispatch(
-      applyInlineMarkdown.create({ blockId: target.blockId, ...markdown }),
-    );
-  }
+  context.dispatch(replaceText.create({ ...target, text }));
+  afterTyping(target, text, context);
 };
 
 const lineBreak: Handler = (target, _event, { dispatch }) => {
@@ -154,10 +102,31 @@ const paragraph: Handler = (target, event, context) => {
   );
 };
 
+// The character next to a collapsed caret, when there is one: browsers
+// give no range when it is part of a piece the caret cannot enter, such as
+// a mention, which the model then deletes whole.
+function nextToCaret(target: Target, direction: -1 | 1, state: AppState) {
+  const block = state.workspace.blocks[target.blockId];
+  if (!isTextBlock(block)) return undefined;
+  const text = textOf(block);
+  const caret = target.start;
+  if (direction === -1 && caret > 0) {
+    return { ...target, start: previousBoundary(text, caret) };
+  }
+  if (direction === 1 && caret < text.length) {
+    return { ...target, end: nextBoundary(text, caret) };
+  }
+  return undefined;
+}
+
 function remove(direction: -1 | 1): Handler {
   return (target, _event, { state, dispatch }) => {
-    if (target.start !== target.end) {
-      dispatch(replaceText.create({ ...target, text: "" }));
+    const range =
+      target.start === target.end
+        ? nextToCaret(target, direction, state)
+        : target;
+    if (range !== undefined) {
+      dispatch(replaceText.create({ ...range, text: "" }));
       return;
     }
     // Nothing left to delete in this block: join with its neighbor.

@@ -1,5 +1,11 @@
-import type { BlockId, Operation } from "../../model/index.ts";
+import {
+  renameMentions,
+  type BlockId,
+  type Operation,
+} from "../../model/index.ts";
 import { defineCommand, type AppState } from "../../state/index.ts";
+import { COPY } from "../../ui/copy.ts";
+import { isTextBlock } from "../text-block.ts";
 import { PAGE_TYPE, type PageProps } from "./page.schema.ts";
 import { selectPage } from "./page.selectors.ts";
 
@@ -61,12 +67,30 @@ export const createPage = defineCommand<{
 });
 
 // The title is edited as plain text and stored as one span.
+// Every text that mentions the page shows its new title.
+function renamedMentions(
+  state: AppState,
+  pageId: BlockId,
+  title: string,
+): Operation[] {
+  return Object.values(state.workspace.blocks).flatMap((block): Operation[] => {
+    if (!isTextBlock(block)) return [];
+    const text = renameMentions(block.props.text, pageId, title);
+    if (text === block.props.text) return [];
+    const props = { ...block.props, text };
+    return [
+      { type: "record.update", kind: "block", id: block.id, patch: { props } },
+    ];
+  });
+}
+
 export const renamePage = defineCommand<{ pageId: BlockId; title: string }>({
   type: "page.rename",
   handle(state, command) {
     const page = state.workspace.blocks[command.pageId];
     if (page === undefined) return {};
     const title = command.title === "" ? [] : [{ text: command.title }];
+    const label = command.title === "" ? COPY.sidebar.untitled : command.title;
     return {
       mergeKey: `page.rename:${command.pageId}`,
       operations: [
@@ -79,6 +103,7 @@ export const renamePage = defineCommand<{ pageId: BlockId; title: string }>({
             updatedAt: command.meta.now,
           },
         },
+        ...renamedMentions(state, command.pageId, label),
       ],
     };
   },

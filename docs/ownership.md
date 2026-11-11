@@ -124,6 +124,7 @@ owner listed here exists.
 | Interface text (its parts by area in `src/ui/copy/`) | `src/ui/copy.ts` | 1 |
 | What the top bar says about the open page: last edit, favorite star, word count | `src/features/page-info/` | 12 |
 | Home: greeting, recently visited pages, upcoming dates | `src/features/home/` | 12 |
+| The @ and [[ menu: pages and dates to mention; backlinks of a page | `src/features/mention-menu/` | 13 |
 
 ## Styles and tokens
 

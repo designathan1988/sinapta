@@ -1,6 +1,12 @@
 // Text of the block editor, its menus and the formatting toolbar.
 export const EDITOR_TEXT = {
   slashMenu: { label: "Turn into" },
+  mentionMenu: {
+    label: "Mention a page or a date",
+    today: "Today",
+    tomorrow: "Tomorrow",
+    nextWeek: "Next week",
+  },
   blockMenu: {
     open: "Block actions",
     add: "Add a block below",

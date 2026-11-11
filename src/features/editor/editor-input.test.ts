@@ -45,7 +45,11 @@ describe("onBeforeInput", () => {
 
 // A paragraph holding `text` in the document and in the state, with the
 // caret at its end, and a key typed there.
-function typeAtEnd(text: string, init: InputEventInit, type = "paragraph") {
+function typeAtEndSent(
+  text: string,
+  init: InputEventInit,
+  type: string,
+): Command[] {
   const block = document.createElement("div");
   block.dataset.blockId = "a";
   const element = document.createElement("p");
@@ -82,7 +86,16 @@ function typeAtEnd(text: string, init: InputEventInit, type = "paragraph") {
   Object.defineProperty(event, "target", { value: element });
   Object.defineProperty(event, "getTargetRanges", { value: () => [] });
   onBeforeInput(event, context);
-  return sent.map((command) => command.type);
+  return sent;
+}
+
+function typeAtEnd(text: string, init: InputEventInit, type = "paragraph") {
+  return typeAtEndSent(text, init, type).map((command) => command.type);
+}
+
+// The commands sent for a key typed at the end of a paragraph.
+function typeAtEndCommands(text: string, init: InputEventInit): Command[] {
+  return typeAtEndSent(text, init, "paragraph");
 }
 
 describe("inline Markdown while typing", () => {
@@ -112,5 +125,65 @@ describe("inline Markdown while typing", () => {
     const init = { inputType: "insertText", data: "*" };
 
     expect(typeAtEnd("**bold*", init, "code")).toEqual(["text.replace"]);
+  });
+});
+
+describe("menus opened while typing", () => {
+  function sentFor(text: string, data: string) {
+    const sent = typeAtEndCommands(text, { inputType: "insertText", data });
+    return sent;
+  }
+
+  it("opens the mention menu at an @", () => {
+    const sent = sentFor("see ", "@");
+
+    expect(sent).toContainEqual(
+      expect.objectContaining({
+        type: "ui.openOverlay",
+        overlay: { kind: "mention-menu", anchorId: "a", start: 4 },
+      }),
+    );
+  });
+
+  it("opens the page link menu at a second [", () => {
+    const sent = sentFor("see [", "[");
+
+    expect(sent).toContainEqual(
+      expect.objectContaining({
+        type: "ui.openOverlay",
+        overlay: { kind: "page-link-menu", anchorId: "a", start: 4 },
+      }),
+    );
+  });
+
+  it("opens no menu while an input method is composing", () => {
+    const sent = typeAtEndCommands("see ", {
+      inputType: "insertCompositionText",
+      data: "@",
+      isComposing: true,
+    });
+
+    expect(sent).toEqual([]);
+  });
+});
+
+describe("deleting with a collapsed caret", () => {
+  it("deletes the character before the caret when the browser gives no range", () => {
+    const sent = typeAtEndSent(
+      "see Plan",
+      {
+        inputType: "deleteContentBackward",
+      },
+      "paragraph",
+    );
+
+    expect(sent).toEqual([
+      expect.objectContaining({
+        type: "text.replace",
+        start: 7,
+        end: 8,
+        text: "",
+      }),
+    ]);
   });
 });

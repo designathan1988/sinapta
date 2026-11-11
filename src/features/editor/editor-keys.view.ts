@@ -5,6 +5,7 @@ import type { Mark } from "../../model/index.ts";
 import { setSelection } from "../../state/index.ts";
 import { readSelection, textElementOf } from "../../ui/caret/index.ts";
 import { onBlockKeys } from "./editor-block-keys.view.ts";
+import { deleteMentionByKey } from "./editor-mention.view.ts";
 import { openBlockMenu } from "./editor-block-menu.view.ts";
 import { openLinkField } from "./editor-link.view.ts";
 import {
@@ -151,6 +152,7 @@ export function onBlockKeyDown(
     return;
   }
   const isHandled =
+    deleteMentionByKey(event, context) ||
     onBlockKeys(event, context) ||
     startBlockSelection(event, context) ||
     indent(event, context) ||

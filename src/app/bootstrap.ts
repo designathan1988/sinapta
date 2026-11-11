@@ -16,6 +16,7 @@ import {
   onboardingCommands,
   seedGettingStarted,
 } from "../features/onboarding/index.ts";
+import { mentionMenuKeys } from "../features/mention-menu/index.ts";
 import { slashMenuKeys } from "../features/slash-menu/index.ts";
 import {
   createAppStore,
@@ -58,6 +59,9 @@ const COMMANDS = [
   ...onboardingCommands,
 ];
 
+// Keys that apply while one part of the interface is active.
+const SCOPED_KEYS = [slashMenuKeys, mentionMenuKeys, formatToolbarKeys];
+
 export async function startApp(container: HTMLElement): Promise<void> {
   const store = createAppStore(createInitialState());
   const dispatch = createDispatcher({
@@ -85,7 +89,7 @@ export async function startApp(container: HTMLElement): Promise<void> {
   startRouter(store, dispatch);
   installOverlayDismiss(store, dispatch);
   installSelectionSync(store, dispatch);
-  installScopedKeys(store, dispatch, [slashMenuKeys, formatToolbarKeys]);
+  installScopedKeys(store, dispatch, SCOPED_KEYS);
   installTooltip();
   document.addEventListener("keydown", (event) => {
     const shortcut = matchShortcut(event);

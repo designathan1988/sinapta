@@ -19,6 +19,8 @@ export function plainText(rich: RichText): string {
 }
 
 function hasSameStyle(a: TextSpan, b: TextSpan): boolean {
+  // A mention is one piece; it never joins the text next to it.
+  if (a.mention !== undefined || b.mention !== undefined) return false;
   const marksA = a.marks ?? [];
   const marksB = b.marks ?? [];
   return (
@@ -85,9 +87,27 @@ export function insertText(
   text: string,
 ): RichText {
   const [before, after] = splitRichText(rich, offset);
-  const previous = before.at(-1);
-  const inserted = withText(previous ?? { text: "" }, text.normalize("NFC"));
+  const { mention: _mention, ...style } = before.at(-1) ?? { text: "" };
+  const inserted = withText(style, text.normalize("NFC"));
   return normalize([...before, inserted, ...after]);
+}
+
+// A range that cuts into a mention takes the whole mention, which is one
+// piece and cannot be half deleted.
+export function widenToMentions(
+  rich: RichText,
+  start: number,
+  end: number,
+): [number, number] {
+  let position = 0;
+  let [from, to] = [start, end];
+  for (const span of rich) {
+    const spanEnd = position + span.text.length;
+    const isCut = span.mention !== undefined && from < spanEnd && to > position;
+    if (isCut) [from, to] = [Math.min(from, position), Math.max(to, spanEnd)];
+    position = spanEnd;
+  }
+  return [from, to];
 }
 
 export function deleteRange(
@@ -95,8 +115,13 @@ export function deleteRange(
   from: number,
   to: number,
 ): RichText {
-  const [before] = splitRichText(rich, Math.min(from, to));
-  const [, after] = splitRichText(rich, Math.max(from, to));
+  const [start, end] = widenToMentions(
+    rich,
+    Math.min(from, to),
+    Math.max(from, to),
+  );
+  const [before] = splitRichText(rich, start);
+  const [, after] = splitRichText(rich, end);
   return concatRichText(before, after);
 }
 

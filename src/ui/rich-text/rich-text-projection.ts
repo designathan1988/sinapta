@@ -4,6 +4,7 @@
 import {
   plainText,
   safeHref,
+  type Mention,
   type RichText,
   type TextSpan,
 } from "../../model/index.ts";
@@ -33,7 +34,19 @@ function toned(node: Node, span: TextSpan): Node {
   return element;
 }
 
+// A mention is one piece the caret steps over; its data attributes say
+// what it points to.
+function mentionNode(span: TextSpan, mention: Mention): Node {
+  const element = wrap(document.createTextNode(span.text), "span");
+  element.className = "mention";
+  element.setAttribute("contenteditable", "false");
+  if (mention.kind === "page") element.dataset.pageId = mention.pageId;
+  else element.dataset.date = mention.date;
+  return element;
+}
+
 function spanNode(span: TextSpan): Node {
+  if (span.mention !== undefined) return mentionNode(span, span.mention);
   let node: Node = document.createTextNode(span.text);
   for (const [mark, tag] of MARK_TAGS) {
     if (span.marks?.includes(mark) === true) node = wrap(node, tag);

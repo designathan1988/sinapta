@@ -33,6 +33,11 @@ import {
 import { renderBreadcrumbs } from "../features/breadcrumbs/index.ts";
 import { MOVE_TO_OVERLAY, renderMoveTo } from "../features/move-to/index.ts";
 import { renderHome } from "../features/home/index.ts";
+import {
+  MENTION_MENU_OVERLAY,
+  PAGE_LINK_MENU_OVERLAY,
+  renderMentionMenu,
+} from "../features/mention-menu/index.ts";
 import { renderPageInfo } from "../features/page-info/index.ts";
 import { renderPageMenuButton } from "../features/page-menu/index.ts";
 import {
@@ -186,21 +191,33 @@ function renderTopBar(state: AppState, dispatch: Dispatch): TemplateResult {
   </header>`;
 }
 
+type OverlayView = (
+  state: AppState,
+  dispatch: Dispatch,
+) => TemplateResult | typeof nothing;
+
+// The view of each overlay kind; the editor shows the rest.
+const OVERLAYS: Readonly<Record<string, OverlayView>> = {
+  [SETTINGS_OVERLAY]: renderSettings,
+  [TRASH_OVERLAY]: renderTrash,
+  [PALETTE_OVERLAY]: renderCommandPalette,
+  [MOVE_TO_OVERLAY]: renderMoveTo,
+  [SLASH_MENU_OVERLAY]: renderSlashMenu,
+  [MENTION_MENU_OVERLAY]: renderMentionMenu,
+  [PAGE_LINK_MENU_OVERLAY]: renderMentionMenu,
+  [PAGE_MENU_OVERLAY]: renderPageMenu,
+  [TONE_OVERLAY]: renderTonePicker,
+  [SHORTCUT_HELP_OVERLAY_KIND]: (_state, dispatch) =>
+    renderShortcutHelp(dispatch),
+};
+
 // At most one overlay is open at a time.
 function renderOverlay(
   state: AppState,
   dispatch: Dispatch,
 ): TemplateResult | typeof nothing {
-  const kind = state.ui.overlay?.kind;
-  if (kind === SETTINGS_OVERLAY) return renderSettings(state, dispatch);
-  if (kind === TRASH_OVERLAY) return renderTrash(state, dispatch);
-  if (kind === PALETTE_OVERLAY) return renderCommandPalette(state, dispatch);
-  if (kind === MOVE_TO_OVERLAY) return renderMoveTo(state, dispatch);
-  if (kind === SLASH_MENU_OVERLAY) return renderSlashMenu(state, dispatch);
-  if (kind === PAGE_MENU_OVERLAY) return renderPageMenu(state, dispatch);
-  if (kind === TONE_OVERLAY) return renderTonePicker(state, dispatch);
-  if (kind === SHORTCUT_HELP_OVERLAY_KIND) return renderShortcutHelp(dispatch);
-  return renderEditorOverlay(state, dispatch);
+  const view = OVERLAYS[state.ui.overlay?.kind ?? ""] ?? renderEditorOverlay;
+  return view(state, dispatch);
 }
 
 export function renderShell(

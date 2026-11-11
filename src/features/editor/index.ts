@@ -1,5 +1,6 @@
 import { editorColorCommands } from "./editor-color.commands.ts";
 import { editorConvertCommands } from "./editor-convert.commands.ts";
+import { editorMentionCommands } from "./editor-mention.commands.ts";
 import { editorInsertCommands } from "./editor-insert.commands.ts";
 import { editorMoveCommands } from "./editor-move.commands.ts";
 import { editorPasteBlocksCommands } from "./editor-paste-blocks.commands.ts";
@@ -9,6 +10,7 @@ import { editorStructureCommands } from "./editor-structure.commands.ts";
 import { editorCommands as textCommands } from "./editor.commands.ts";
 
 export { setBlockColor } from "./editor-color.commands.ts";
+export { insertMentionAt } from "./editor-mention.commands.ts";
 export { convertBlock } from "./editor-convert.commands.ts";
 export { replaceText, setTextTone, toggleTextMark } from "./editor.commands.ts";
 export { openLinkField } from "./editor-link.view.ts";
@@ -20,6 +22,7 @@ export const editorCommands = [
   ...editorStructureCommands,
   ...editorConvertCommands,
   ...editorColorCommands,
+  ...editorMentionCommands,
   ...editorInsertCommands,
   ...editorMoveCommands,
   ...editorPasteCommands,

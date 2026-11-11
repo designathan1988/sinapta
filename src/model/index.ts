@@ -16,10 +16,12 @@ export {
 } from "./id.schema.ts";
 export {
   richTextSchema,
+  mentionSchema,
   textSpanSchema,
   toneSchema,
   TONES,
   type RichText,
+  type Mention,
   type TextSpan,
   type Tone,
 } from "./rich-text.schema.ts";
@@ -101,6 +103,13 @@ export {
   type BlockColor,
 } from "./block-color.schema.ts";
 export { safeHref, safeImageSource } from "./link-href.ts";
+export {
+  insertMention,
+  isInMention,
+  mentionsPage,
+  renameMentions,
+  type MentionInsert,
+} from "./mention.ts";
 export {
   applyInlineMarkdownTo,
   matchInlineMarkdown,
