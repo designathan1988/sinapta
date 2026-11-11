@@ -900,6 +900,12 @@
           "value": 0.1875,
           "unit": "rem"
         }
+      },
+      "1x5": {
+        "$value": {
+          "value": 0.375,
+          "unit": "rem"
+        }
       }
     },
     "size": {
@@ -1051,6 +1057,12 @@
       "1x125": {
         "$value": {
           "value": 1.125,
+          "unit": "rem"
+        }
+      },
+      "2x125": {
+        "$value": {
+          "value": 2.125,
           "unit": "rem"
         }
       }

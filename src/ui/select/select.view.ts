@@ -45,10 +45,18 @@ export interface SelectProps {
   // rows such as a filter's; "row" is a menu row, its label then its
   // value, whose list opens beside the menu as Notion's settings do.
   readonly variant?: "field" | "quiet" | "row";
-  // Entries to open in place of the option list, such as groups that
-  // open submenus, as Notion's Calculate does; the options then only
-  // name the current choice.
-  readonly menu?: readonly MenuEntry[];
+  // A menu to open in place of the option list: entries such as groups
+  // that open submenus, as Notion's Calculate, and fields above them, as
+  // a date's; the options then only name the current choice.
+  readonly menu?: SelectMenu;
+  // What the control shows in place of the chosen option, such as the
+  // chips of several options or a date.
+  readonly display?: TemplateResult;
+}
+
+export interface SelectMenu {
+  readonly lead?: TemplateResult;
+  readonly items: readonly MenuEntry[];
 }
 
 export interface SelectContext {
@@ -110,15 +118,16 @@ interface Opened {
   readonly state: OpenState;
 }
 
-// A menu of entries in place of the options, its submenus beside it.
+// A menu in place of the options, its submenus beside it.
 function renderEntries(
-  entries: readonly MenuEntry[],
+  menu: SelectMenu,
   { props, context, state }: Opened,
 ): TemplateResult {
   return renderMenu({
     label: props.label,
     isChild: state.isChild,
-    items: entries,
+    items: menu.items,
+    ...(menu.lead !== undefined && { lead: menu.lead }),
     context,
     onClose: () => {
       closeList(state, context.dispatch);
@@ -166,6 +175,9 @@ function renderList(
 }
 
 function renderCurrent(props: SelectProps): TemplateResult {
+  if (props.display !== undefined) {
+    return html`<span class="select__value">${props.display}</span>`;
+  }
   const current = props.options.find((option) => option.value === props.value);
   if (current === undefined) {
     return html`<span class="select__value" data-placeholder

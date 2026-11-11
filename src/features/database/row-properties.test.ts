@@ -61,7 +61,7 @@ describe("renderRowProperties", () => {
     const names = [...container.querySelectorAll(".database__row-name")];
     const points = container.querySelector<HTMLInputElement>("input");
 
-    expect(names.map((name) => name.textContent)).toEqual([
+    expect(names.map((name) => name.textContent.trim())).toEqual([
       "Points",
       "Done",
       "Stage",

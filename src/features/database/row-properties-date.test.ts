@@ -3,6 +3,7 @@ import { render } from "lit-html";
 import { describe, expect, it } from "vitest";
 import { selectPage } from "../../blocks/page/index.ts";
 import { createDatabaseApp } from "./database-builder.ts";
+import { SELECT_OVERLAY } from "../../ui/select/index.ts";
 import { renderRowProperties } from "./row-properties.view.ts";
 
 // Renders a row's date property on the row's page.
@@ -15,9 +16,14 @@ function mount(value?: unknown) {
   if (rowId === undefined) throw new Error("setup");
   const container = document.createElement("div");
   document.body.replaceChildren(container);
+  // The date's fields show in the popover its value opens.
+  const overlay = {
+    kind: SELECT_OVERLAY,
+    anchorId: `row-${rowId}-${app.propertyIds[0] ?? ""}`,
+  };
   const show = () => {
     const state = app.store.getState();
-    const ui = { ...state.ui, activePageId: rowId };
+    const ui = { ...state.ui, activePageId: rowId, overlay };
     render(renderRowProperties({ ...state, ui }, app.dispatch), container);
   };
   show();

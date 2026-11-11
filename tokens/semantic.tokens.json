@@ -213,6 +213,10 @@
       },
       "lg": {
         "$value": "{base.space.4}"
+      },
+      "icon": {
+        "$description": "Between an icon and its label in Notion's rows, and inside a row's value: 6 px.",
+        "$value": "{base.space.1x5}"
       }
     },
     "stack": {
@@ -405,6 +409,16 @@
       },
       "height": {
         "$value": "{base.size.1x125}"
+      }
+    },
+    "property": {
+      "name": {
+        "$description": "The name column of a row page's properties, as Notion's: 160 px.",
+        "$value": "{base.size.10}"
+      },
+      "row": {
+        "$description": "A property's row on a row page, as Notion's: 34 px.",
+        "$value": "{base.size.2x125}"
       }
     }
   },

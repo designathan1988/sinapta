@@ -143,6 +143,7 @@
     --base-space-24: 6rem;
     --base-space-0x5: 0.125rem;
     --base-space-0x75: 0.1875rem;
+    --base-space-1x5: 0.375rem;
     --base-size-4: 1rem;
     --base-size-5: 1.25rem;
     --base-size-6: 1.5rem;
@@ -168,6 +169,7 @@
     --base-size-12x5: 12.5rem;
     --base-size-1x875: 1.875rem;
     --base-size-1x125: 1.125rem;
+    --base-size-2x125: 2.125rem;
     --base-radius-1: 0.25rem;
     --base-radius-2: 0.375rem;
     --base-radius-3: 0.625rem;
@@ -257,6 +259,7 @@
     --space-inline-sm: var(--base-space-2);
     --space-inline-md: var(--base-space-3);
     --space-inline-lg: var(--base-space-4);
+    --space-inline-icon: var(--base-space-1x5);
     --space-stack-xxs: var(--base-space-0x5);
     --space-stack-xs: var(--base-space-1);
     --space-stack-sm: var(--base-space-2);
@@ -305,6 +308,8 @@
     --size-top-bar: var(--base-size-2x75);
     --size-switch-width: var(--base-size-1x875);
     --size-switch-height: var(--base-size-1x125);
+    --size-property-name: var(--base-size-10);
+    --size-property-row: var(--base-size-2x125);
     --radius-sm: var(--base-radius-1);
     --radius-md: var(--base-radius-2);
     --radius-full: var(--base-radius-pill);

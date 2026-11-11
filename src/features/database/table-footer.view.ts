@@ -31,7 +31,7 @@ function renderCalculation(
         label: `${COPY.database.calculate} ${property.name}`,
         value: kind,
         options: calculationChoices(column.property),
-        menu: calculationItems(column, context),
+        menu: { items: calculationItems(column, context) },
         placeholder: COPY.database.calculate,
         variant: "quiet",
         // The menu's own rows choose.

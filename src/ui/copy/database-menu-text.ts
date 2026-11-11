@@ -18,6 +18,7 @@ export const DATABASE_MENU_TEXT = {
   newSort: "New sort",
   sortBy: "Sort by…",
   filterBy: "Filter by…",
+  clearDate: "Clear",
   addSort: "Add sort",
   deleteSort: "Delete sort",
   removeSort: "Remove sort",
