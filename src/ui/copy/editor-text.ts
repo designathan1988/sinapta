@@ -5,6 +5,7 @@ export const EDITOR_TEXT = {
     groups: {
       basic: "Basic blocks",
       media: "Media",
+      database: "Database",
       advanced: "Advanced blocks",
       pages: "Pages",
       colors: "Colors",

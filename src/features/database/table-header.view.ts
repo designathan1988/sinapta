@@ -5,6 +5,7 @@ import { closeOverlay, openOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
+import { isOpenFor } from "./database-overlay.ts";
 import { propertyType } from "./property-registry.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import type { TableColumn } from "./table-model.selectors.ts";
@@ -194,9 +195,12 @@ function renderHeader(
 }
 
 function renderAddProperty(context: TableContext): TemplateResult {
-  const isOpen = context.state.ui.overlay?.kind === PROPERTY_TYPES_OVERLAY;
+  const overlay = {
+    kind: PROPERTY_TYPES_OVERLAY,
+    anchorId: context.model.database.id,
+  };
+  const isOpen = isOpenFor(context.state, overlay);
   const toggle = (): void => {
-    const overlay = { kind: PROPERTY_TYPES_OVERLAY };
     context.dispatch(
       isOpen ? closeOverlay.create({}) : openOverlay.create({ overlay }),
     );

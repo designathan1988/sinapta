@@ -13,6 +13,7 @@ import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
 import type { ScopedKeyHandler, ScopedKeys } from "../../ui/shortcuts/index.ts";
+import { createInlineDatabase } from "../database/index.ts";
 import { convertBlock, replaceText, setBlockColor } from "../editor/index.ts";
 import {
   selectOpenSlashMenu,
@@ -50,6 +51,8 @@ function choose(
   dispatch(replaceText.create({ blockId, start, end, text: "" }));
   if ("createsPage" in item) {
     createSubpage(menu, context);
+  } else if ("createsDatabase" in item) {
+    dispatch(createInlineDatabase.create({ blockId }));
   } else if ("color" in item) {
     dispatch(setBlockColor.create({ blockIds: [blockId], color: item.color }));
   } else {

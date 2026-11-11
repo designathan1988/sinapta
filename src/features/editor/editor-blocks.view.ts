@@ -6,6 +6,8 @@ import { blockDefinition, isTextBlock, textOf } from "../../blocks/index.ts";
 import { isBlockColor, type Block, type BlockId } from "../../model/index.ts";
 import { setSelection } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { DATABASE_TYPE } from "../../blocks/page/index.ts";
+import { renderInlineDatabase } from "../database/index.ts";
 import { appendParagraph } from "./editor-structure.commands.ts";
 import { renderAddButton, renderHandle } from "./editor-block-menu.view.ts";
 import { startBlockDrag } from "./editor-block-drag.view.ts";
@@ -62,9 +64,19 @@ function customProperties(block: Block) {
   });
 }
 
-function renderBlock(block: Block, context: BlockContext): TemplateResult {
+// A database inside the page shows its views in place; any other block
+// draws itself.
+function renderContent(block: Block, context: BlockContext): unknown {
   const { state, dispatch } = context;
-  const content = blockDefinition(block.type)?.render?.(block, dispatch, state);
+  if (block.type === DATABASE_TYPE && block.props.isInline === true) {
+    return renderInlineDatabase(state, dispatch, block.id);
+  }
+  return blockDefinition(block.type)?.render?.(block, dispatch, state);
+}
+
+function renderBlock(block: Block, context: BlockContext): TemplateResult {
+  const { state } = context;
+  const content = renderContent(block, context);
   const isAnchor = state.ui.overlay?.anchorId === block.id;
   return html`<div
     class="editor__block"

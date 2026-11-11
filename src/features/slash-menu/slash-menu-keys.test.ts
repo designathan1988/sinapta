@@ -67,4 +67,15 @@ describe("slashMenuKeys", () => {
     ]);
     expect(sent[2]).toMatchObject({ parentId: "page", index: 1 });
   });
+
+  it("puts a database in the page when Database is chosen", () => {
+    const sent = press("Enter", createState("/datab", 6));
+
+    expect(sent.map((c) => c.type)).toEqual([
+      "ui.closeOverlay",
+      "text.replace",
+      "database.createInline",
+    ]);
+    expect(sent[2]).toMatchObject({ blockId: "a" });
+  });
 });

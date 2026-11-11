@@ -36,6 +36,9 @@ export const databasePropsSchema = v.object({
   icon: v.nullable(v.string()),
   isFavorite: v.boolean(),
   isTrashed: v.boolean(),
+  // Shown inside its parent page's body rather than as a line that opens
+  // it.
+  isInline: v.optional(v.boolean()),
   properties: v.array(propertyDefinitionSchema),
   viewIds: v.array(viewIdSchema),
 });

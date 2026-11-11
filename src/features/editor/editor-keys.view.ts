@@ -146,7 +146,8 @@ function menuKeys(event: KeyboardEvent, context: InputContext): boolean {
 // Keys are left alone while the browser composes text, and in controls
 // inside a block, such as a code block's language, even while the
 // document's selection is still in some text.
-const CONTROL = "input, textarea, select, button, [role='slider']";
+// Controls, and databases inside the page, handle their own keys.
+const CONTROL = "input, textarea, select, button, [role='slider'], .database";
 
 function isLeftAlone(event: KeyboardEvent): boolean {
   const { target } = event;

@@ -27,7 +27,8 @@ describe("selectSlashItems", () => {
     expect(labels).toContain("Embed");
     expect(labels).toContain("Synced block");
     expect(labels).toContain("Button");
-    expect(labels).toHaveLength(30);
+    expect(labels).toContain("Database");
+    expect(labels).toHaveLength(31);
   });
 
   it("filters by the query without regard to case", () => {
@@ -74,12 +75,17 @@ describe("selectSlashItems", () => {
     expect(item("Table of contents")).toMatchObject({ group: "advanced" });
   });
 
-  it("lists basic blocks first, then media, then advanced ones", () => {
+  it("lists basic blocks, then media, databases and advanced ones", () => {
     const groups = selectSlashItems(createInitialState(), "").map(
       (item) => item.group,
     );
 
-    expect([...new Set(groups)]).toEqual(["basic", "media", "advanced"]);
+    expect([...new Set(groups)]).toEqual([
+      "basic",
+      "media",
+      "database",
+      "advanced",
+    ]);
   });
 });
 

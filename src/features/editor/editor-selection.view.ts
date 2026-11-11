@@ -144,7 +144,7 @@ export function onSelectionLeave(
 
 const BLOCK = ".editor__block";
 const NOT_TEXT =
-  "[data-handle], button, input, select, textarea, a, [role='slider']";
+  "[data-handle], button, input, select, textarea, a, [role='slider'], .database";
 
 function blockAt(target: EventTarget | null): BlockId | undefined {
   const block =

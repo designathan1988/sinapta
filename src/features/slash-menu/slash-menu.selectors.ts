@@ -39,7 +39,21 @@ export interface PageSlashItem extends SlashLook {
   readonly createsPage: true;
 }
 
-export type SlashItem = BlockSlashItem | ColorSlashItem | PageSlashItem;
+// A database inside the page, after the block.
+export interface DatabaseSlashItem extends SlashLook {
+  readonly label: string;
+  readonly createsDatabase: true;
+}
+
+export type SlashItem =
+  BlockSlashItem | ColorSlashItem | PageSlashItem | DatabaseSlashItem;
+
+const DATABASE_ITEM: DatabaseSlashItem = {
+  label: COPY.database.inlineDatabase,
+  createsDatabase: true,
+  icon: "table",
+  group: "database",
+};
 
 const PAGE_ITEM: PageSlashItem = {
   label: COPY.blockNames.page,
@@ -131,7 +145,7 @@ export function selectSlashItems(state: AppState, query: string): SlashItem[] {
     fold(item.label).includes(needle);
   const pages = pageItems(state).filter(matches).slice(0, PAGE_LINK_LIMIT);
   const colors = needle === "" ? [] : colorItems().filter(matches);
-  const blocks = [PAGE_ITEM, ...blockItems()].filter(matches);
+  const blocks = [PAGE_ITEM, ...blockItems(), DATABASE_ITEM].filter(matches);
   // Sorted by group, keeping the order within each group.
   const rank = (item: SlashItem): number => SLASH_GROUPS.indexOf(item.group);
   return [...blocks, ...pages, ...colors].toSorted((a, b) => rank(a) - rank(b));

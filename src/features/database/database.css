@@ -4,6 +4,49 @@
     flex: 1;
     flex-direction: column;
     min-block-size: 0;
+
+    /* Inside a page, a database takes the room its rows need. */
+    &[data-inline] {
+      flex: none;
+      margin-block: var(--space-stack-sm);
+    }
+  }
+
+  .database__inline-header {
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+  }
+
+  .database__inline-title {
+    flex: 1;
+    min-inline-size: 0;
+    padding: var(--space-none);
+    border: none;
+    background-color: transparent;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+
+    &::placeholder {
+      color: var(--color-text-tertiary);
+    }
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  .database__inline-open {
+    opacity: 0;
+  }
+
+  .database__inline-header:is(:hover, :focus-within) .database__inline-open {
+    opacity: 1;
+  }
+
+  .database__missing {
+    color: var(--color-text-tertiary);
   }
 
   /* The views bar: tabs at the start, the view's tools at the end, over a

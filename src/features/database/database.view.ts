@@ -1,6 +1,7 @@
 import "./database.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { selectDatabase } from "../../blocks/database/index.ts";
+import type { BlockId } from "../../model/index.ts";
 import {
   closeOverlay,
   openOverlay,
@@ -18,6 +19,7 @@ import {
   renderTableOverlay,
 } from "./database-menus.view.ts";
 import type { TableContext } from "./table-cell.view.ts";
+import { isOpenFor } from "./database-overlay.ts";
 import { selectTableModel } from "./table-model.selectors.ts";
 import { NEW_VIEW_OVERLAY, renderLayout } from "./view-layout.view.ts";
 import { setViewSearch } from "./view-search.commands.ts";
@@ -29,9 +31,12 @@ import { setActiveView } from "./view.commands.ts";
 
 function renderNewViewButton(context: TableContext): TemplateResult {
   const { state, dispatch } = context;
-  const isMenuOpen = state.ui.overlay?.kind === NEW_VIEW_OVERLAY;
+  const overlay = {
+    kind: NEW_VIEW_OVERLAY,
+    anchorId: context.model.database.id,
+  };
+  const isMenuOpen = isOpenFor(state, overlay);
   const toggleMenu = (): void => {
-    const overlay = { kind: NEW_VIEW_OVERLAY };
     dispatch(
       isMenuOpen ? closeOverlay.create({}) : openOverlay.create({ overlay }),
     );
@@ -98,11 +103,12 @@ function renderPopoverButton(
   button: PopoverButton,
   context: TableContext,
 ): TemplateResult {
-  const isOpen = context.state.ui.overlay?.kind === button.kind;
+  const overlay = { kind: button.kind, anchorId: context.model.database.id };
+  const isOpen = isOpenFor(context.state, overlay);
   const toggle = (): void => {
     const next = isOpen
       ? closeOverlay.create({})
-      : openOverlay.create({ overlay: { kind: button.kind } });
+      : openOverlay.create({ overlay });
     context.dispatch(next);
   };
   const count = button.count ?? 0;
@@ -204,11 +210,14 @@ function renderFooter(context: TableContext): TemplateResult {
 const LISTED_LAYOUTS: ReadonlySet<string> = new Set(["table", "list"]);
 
 // A database page: its views as tabs, the view's tools and its table.
-export function renderDatabase(
+// A database's views as tabs, the view's tools and its rows; a header
+// such as an inline database's title goes above them.
+export function renderDatabaseSection(
   state: AppState,
   dispatch: Dispatch,
+  options: { databaseId: BlockId | null; header?: TemplateResult },
 ): TemplateResult | typeof nothing {
-  const database = selectDatabase(state, state.ui.activePageId);
+  const database = selectDatabase(state, options.databaseId);
   // Today in the reader's own time zone, for filters relative to it.
   const today = new Date().toLocaleDateString("en-CA");
   const viewModel =
@@ -218,9 +227,23 @@ export function renderDatabase(
   if (viewModel === undefined) return nothing;
   const model = selectSearchedModel(state, viewModel);
   const context = { state, dispatch, model };
-  return html`<section class="database">
-    ${renderToolbar(context)} ${renderLayout(context)}
+  return html`<section
+    class="database"
+    ?data-inline=${database?.props.isInline === true}
+  >
+    ${options.header ?? nothing} ${renderToolbar(context)}
+    ${renderLayout(context)}
     ${LISTED_LAYOUTS.has(model.view.type) ? renderFooter(context) : nothing}
     ${renderTableOverlay(context)}
   </section>`;
+}
+
+// The database that is open as a page.
+export function renderDatabase(
+  state: AppState,
+  dispatch: Dispatch,
+): TemplateResult | typeof nothing {
+  return renderDatabaseSection(state, dispatch, {
+    databaseId: state.ui.activePageId,
+  });
 }

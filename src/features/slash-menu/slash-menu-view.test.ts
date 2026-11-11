@@ -33,6 +33,7 @@ describe("renderSlashMenu", () => {
     expect(headings.map((heading) => heading.textContent.trim())).toEqual([
       "Basic blocks",
       "Media",
+      "Database",
       "Advanced blocks",
       "Pages",
     ]);

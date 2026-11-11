@@ -40,9 +40,23 @@ const OVERLAYS: Record<string, Render> = {
   [PROPERTY_EDIT_OVERLAY]: renderPropertyEdit,
 };
 
+// Overlays of a whole database, opened from its toolbar or header; they
+// carry the database's id, so that two databases on one page do not both
+// show them.
+const DATABASE_OVERLAYS: ReadonlySet<string> = new Set([
+  PROPERTY_TYPES_OVERLAY,
+  FILTERS_OVERLAY,
+  PROPERTIES_OVERLAY,
+  NEW_VIEW_OVERLAY,
+]);
+
 export function renderTableOverlay(
   context: TableContext,
 ): TemplateResult | typeof nothing {
-  const kind = context.state.ui.overlay?.kind ?? "";
-  return OVERLAYS[kind]?.(context) ?? nothing;
+  const overlay = context.state.ui.overlay;
+  const kind = overlay?.kind ?? "";
+  const isOther =
+    DATABASE_OVERLAYS.has(kind) &&
+    overlay?.anchorId !== context.model.database.id;
+  return isOther ? nothing : (OVERLAYS[kind]?.(context) ?? nothing);
 }

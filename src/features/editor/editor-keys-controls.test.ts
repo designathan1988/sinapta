@@ -8,6 +8,10 @@ describe("keys in a control inside a block", () => {
   it.each([
     ["a list", "<select><option>x</option></select>"],
     ["a slider", '<div role="slider" tabindex="0"></div>'],
+    [
+      "an inline database's cell",
+      '<section class="database"><table><tr><td tabindex="0">x</td></tr></table></section>',
+    ],
   ])("are left to %s even while a caret is in the text", (_, control) => {
     const block = document.createElement("div");
     block.dataset.blockId = "a";

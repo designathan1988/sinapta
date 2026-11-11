@@ -2,12 +2,14 @@
 // listed under and the Markdown that makes the same block, as in Notion.
 import type { IconName } from "../../ui/icon/index.ts";
 
-export type SlashGroup = "basic" | "media" | "advanced" | "pages" | "colors";
+export type SlashGroup =
+  "basic" | "media" | "database" | "advanced" | "pages" | "colors";
 
 // Groups in the order the menu lists them.
 export const SLASH_GROUPS: readonly SlashGroup[] = [
   "basic",
   "media",
+  "database",
   "advanced",
   "pages",
   "colors",
