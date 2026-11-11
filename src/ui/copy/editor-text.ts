@@ -5,6 +5,8 @@ export const EDITOR_TEXT = {
     open: "Block actions",
     add: "Add a block below",
     duplicate: "Duplicate",
+    color: "Color",
+    background: "background",
     turnInto: "Turn into",
     moveUp: "Move up",
     moveDown: "Move down",

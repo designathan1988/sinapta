@@ -1,0 +1,73 @@
+@layer features {
+  /* A colored block: its text takes a tone, or a tone sits behind it.
+     The tones are the chip palette, so both themes have their own. */
+  .editor__block[data-color] {
+    border-radius: var(--radius-sm);
+    background-color: var(--editor-block-bg, transparent);
+    color: var(--editor-block-text, inherit);
+  }
+
+  .editor__block[data-color="gray"] {
+    --editor-block-text: var(--color-chip-gray-text);
+  }
+
+  .editor__block[data-color="gray-background"] {
+    --editor-block-bg: var(--color-chip-gray-bg);
+  }
+
+  .editor__block[data-color="brown"] {
+    --editor-block-text: var(--color-chip-brown-text);
+  }
+
+  .editor__block[data-color="brown-background"] {
+    --editor-block-bg: var(--color-chip-brown-bg);
+  }
+
+  .editor__block[data-color="orange"] {
+    --editor-block-text: var(--color-chip-orange-text);
+  }
+
+  .editor__block[data-color="orange-background"] {
+    --editor-block-bg: var(--color-chip-orange-bg);
+  }
+
+  .editor__block[data-color="yellow"] {
+    --editor-block-text: var(--color-chip-yellow-text);
+  }
+
+  .editor__block[data-color="yellow-background"] {
+    --editor-block-bg: var(--color-chip-yellow-bg);
+  }
+
+  .editor__block[data-color="green"] {
+    --editor-block-text: var(--color-chip-green-text);
+  }
+
+  .editor__block[data-color="green-background"] {
+    --editor-block-bg: var(--color-chip-green-bg);
+  }
+
+  .editor__block[data-color="blue"] {
+    --editor-block-text: var(--color-chip-blue-text);
+  }
+
+  .editor__block[data-color="blue-background"] {
+    --editor-block-bg: var(--color-chip-blue-bg);
+  }
+
+  .editor__block[data-color="purple"] {
+    --editor-block-text: var(--color-chip-purple-text);
+  }
+
+  .editor__block[data-color="purple-background"] {
+    --editor-block-bg: var(--color-chip-purple-bg);
+  }
+
+  .editor__block[data-color="red"] {
+    --editor-block-text: var(--color-chip-red-text);
+  }
+
+  .editor__block[data-color="red-background"] {
+    --editor-block-bg: var(--color-chip-red-bg);
+  }
+}

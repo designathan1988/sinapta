@@ -46,4 +46,14 @@ describe("slashMenuKeys", () => {
 
     expect(types).toEqual(["ui.closeOverlay"]);
   });
+
+  it("colors the block when a color is chosen", () => {
+    const types = press("Enter", createState("/blue", 5)).map((c) => c.type);
+
+    expect(types).toEqual([
+      "ui.closeOverlay",
+      "text.replace",
+      "block.setColor",
+    ]);
+  });
 });

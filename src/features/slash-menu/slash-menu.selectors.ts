@@ -1,7 +1,12 @@
 import { BLOCK_DEFINITIONS, isTextBlock, textOf } from "../../blocks/index.ts";
 import { HEADING_TYPE } from "../../blocks/heading/index.ts";
 import { PAGE_LINK_TYPE } from "../../blocks/page-link/index.ts";
-import type { BlockId, BlockProps } from "../../model/index.ts";
+import {
+  TONES,
+  type BlockColor,
+  type BlockId,
+  type BlockProps,
+} from "../../model/index.ts";
 import type { AppState } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { selectTreeRows } from "../sidebar/index.ts";
@@ -10,13 +15,33 @@ export const SLASH_MENU_OVERLAY = "slash-menu";
 const PAGE_LINK_LIMIT = 5;
 
 // One thing the slash menu can turn the block into.
-export interface SlashItem {
+export interface BlockSlashItem {
   readonly label: string;
   readonly blockType: string;
   readonly extraProps?: BlockProps;
 }
 
-const EXTRA_HEADINGS: readonly SlashItem[] = [
+// A color for the whole block; null takes the color away.
+export interface ColorSlashItem {
+  readonly label: string;
+  readonly color: BlockColor | null;
+}
+
+export type SlashItem = BlockSlashItem | ColorSlashItem;
+
+// Typed as /red, /red background or /default, as in Notion.
+function colorItems(): ColorSlashItem[] {
+  return [
+    { label: COPY.formatToolbar.defaultColor, color: null },
+    ...TONES.map((tone) => ({ label: COPY.tones[tone], color: tone })),
+    ...TONES.map((tone) => ({
+      label: `${COPY.tones[tone]} ${COPY.blockMenu.background}`,
+      color: `${tone}-background` as const,
+    })),
+  ];
+}
+
+const EXTRA_HEADINGS: readonly BlockSlashItem[] = [
   {
     label: COPY.blockNames.heading2,
     blockType: HEADING_TYPE,
@@ -29,8 +54,8 @@ const EXTRA_HEADINGS: readonly SlashItem[] = [
   },
 ];
 
-function blockItems(): SlashItem[] {
-  return BLOCK_DEFINITIONS.flatMap((definition): SlashItem[] => {
+function blockItems(): BlockSlashItem[] {
+  return BLOCK_DEFINITIONS.flatMap((definition): BlockSlashItem[] => {
     if (definition.label === undefined) return [];
     const item = { label: definition.label, blockType: definition.type };
     return definition.type === HEADING_TYPE
@@ -39,7 +64,7 @@ function blockItems(): SlashItem[] {
   });
 }
 
-function pageItems(state: AppState): SlashItem[] {
+function pageItems(state: AppState): BlockSlashItem[] {
   return selectTreeRows({
     ...state,
     ui: { ...state.ui, expandedPageIds: [] },
@@ -60,7 +85,8 @@ export function selectSlashItems(state: AppState, query: string): SlashItem[] {
   const matches = (item: SlashItem): boolean =>
     fold(item.label).includes(needle);
   const pages = pageItems(state).filter(matches).slice(0, PAGE_LINK_LIMIT);
-  return [...blockItems().filter(matches), ...pages];
+  const colors = needle === "" ? [] : colorItems().filter(matches);
+  return [...blockItems().filter(matches), ...pages, ...colors];
 }
 
 export interface OpenSlashMenu {

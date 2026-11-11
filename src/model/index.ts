@@ -18,6 +18,7 @@ export {
   richTextSchema,
   textSpanSchema,
   toneSchema,
+  TONES,
   type RichText,
   type TextSpan,
   type Tone,
@@ -94,6 +95,11 @@ export {
   type MarkRange,
   type ToneRange,
 } from "./rich-text.ts";
+export {
+  blockColorSchema,
+  isBlockColor,
+  type BlockColor,
+} from "./block-color.schema.ts";
 export { safeHref, safeImageSource } from "./link-href.ts";
 export {
   applyInlineMarkdownTo,

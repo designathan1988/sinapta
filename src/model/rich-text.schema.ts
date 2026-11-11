@@ -13,6 +13,9 @@ export const toneSchema = v.picklist([
   "red",
 ]);
 
+// The tones in order, for lists of colors to choose from.
+export const TONES = toneSchema.options;
+
 export const textSpanSchema = v.object({
   text: v.string(),
   marks: v.optional(

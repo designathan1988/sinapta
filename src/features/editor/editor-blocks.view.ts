@@ -1,7 +1,7 @@
 import { html, nothing, type TemplateResult } from "lit-html";
 import { repeat } from "lit-html/directives/repeat.js";
 import { blockDefinition, isTextBlock, textOf } from "../../blocks/index.ts";
-import type { Block, BlockId } from "../../model/index.ts";
+import { isBlockColor, type Block, type BlockId } from "../../model/index.ts";
 import { setSelection } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { appendParagraph } from "./editor-structure.commands.ts";
@@ -53,6 +53,7 @@ function renderBlock(block: Block, context: BlockContext): TemplateResult {
     class="editor__block"
     data-block-id=${block.id}
     data-type=${block.type}
+    data-color=${isBlockColor(block.props.color) ? block.props.color : nothing}
     data-overlay-anchor=${isAnchor ? "open" : nothing}
     ?data-selected=${context.selected.has(block.id)}
   >

@@ -1,10 +1,11 @@
 import * as v from "valibot";
-import { richTextSchema, type TypedBlock } from "../../model/index.ts";
+import { TEXT_BLOCK_ENTRIES } from "../text-block.schema.ts";
+import { type TypedBlock } from "../../model/index.ts";
 
 export const TOGGLE_TYPE = "toggle";
 
 export const togglePropsSchema = v.object({
-  text: richTextSchema,
+  ...TEXT_BLOCK_ENTRIES,
   isOpen: v.boolean(),
 });
 

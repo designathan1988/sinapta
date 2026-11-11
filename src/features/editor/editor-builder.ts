@@ -1,4 +1,5 @@
 // Builds a page of blocks for the editor's tests.
+import { editorColorCommands } from "./editor-color.commands.ts";
 import { isTextBlock, textOf } from "../../blocks/index.ts";
 import {
   buildWorkspace,
@@ -32,6 +33,7 @@ export function createApp(blocks: BlockSpec[]) {
     ...editorCommands,
     ...editorStructureCommands,
     ...editorConvertCommands,
+    ...editorColorCommands,
     ...editorInsertCommands,
     ...editorMoveCommands,
     ...editorPasteCommands,

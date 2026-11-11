@@ -61,3 +61,28 @@ describe("selectOpenSlashMenu", () => {
     expect(selectOpenSlashMenu(createState("ab/", 1, 2))).toBeUndefined();
   });
 });
+
+describe("color items", () => {
+  it("offers text and background colors once something is typed", () => {
+    const items = selectSlashItems(createInitialState(), "blue");
+
+    expect(items).toEqual(
+      expect.arrayContaining([
+        { label: "Blue", color: "blue" },
+        { label: "Blue background", color: "blue-background" },
+      ]),
+    );
+  });
+
+  it("offers the default color to remove one", () => {
+    const items = selectSlashItems(createInitialState(), "default");
+
+    expect(items).toContainEqual({ label: "Default", color: null });
+  });
+
+  it("keeps colors out of the list before anything is typed", () => {
+    const items = selectSlashItems(createInitialState(), "");
+
+    expect(items.some((item) => "color" in item)).toBe(false);
+  });
+});

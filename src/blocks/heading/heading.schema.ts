@@ -1,10 +1,11 @@
 import * as v from "valibot";
-import { richTextSchema, type TypedBlock } from "../../model/index.ts";
+import { TEXT_BLOCK_ENTRIES } from "../text-block.schema.ts";
+import { type TypedBlock } from "../../model/index.ts";
 
 export const HEADING_TYPE = "heading";
 
 export const headingPropsSchema = v.object({
-  text: richTextSchema,
+  ...TEXT_BLOCK_ENTRIES,
   level: v.picklist([1, 2, 3]),
 });
 

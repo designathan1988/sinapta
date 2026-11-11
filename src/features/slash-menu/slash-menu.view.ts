@@ -11,7 +11,7 @@ import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
 import type { ScopedKeyHandler, ScopedKeys } from "../../ui/shortcuts/index.ts";
-import { convertBlock, replaceText } from "../editor/index.ts";
+import { convertBlock, replaceText, setBlockColor } from "../editor/index.ts";
 import {
   selectOpenSlashMenu,
   SLASH_MENU_OVERLAY,
@@ -28,6 +28,10 @@ function choose(
   const { blockId, start, end } = menu;
   dispatch(closeOverlay.create({}));
   dispatch(replaceText.create({ blockId, start, end, text: "" }));
+  if ("color" in item) {
+    dispatch(setBlockColor.create({ blockIds: [blockId], color: item.color }));
+    return;
+  }
   const { blockType, extraProps } = item;
   dispatch(
     convertBlock.create({

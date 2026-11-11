@@ -1,10 +1,11 @@
 import * as v from "valibot";
-import { richTextSchema, type TypedBlock } from "../../model/index.ts";
+import { TEXT_BLOCK_ENTRIES } from "../text-block.schema.ts";
+import { type TypedBlock } from "../../model/index.ts";
 
 export const PARAGRAPH_TYPE = "paragraph";
 
 export const paragraphPropsSchema = v.object({
-  text: richTextSchema,
+  ...TEXT_BLOCK_ENTRIES,
 });
 
 export type ParagraphProps = v.InferOutput<typeof paragraphPropsSchema>;

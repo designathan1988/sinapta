@@ -1,10 +1,11 @@
 import * as v from "valibot";
-import { richTextSchema, type TypedBlock } from "../../model/index.ts";
+import { TEXT_BLOCK_ENTRIES } from "../text-block.schema.ts";
+import { type TypedBlock } from "../../model/index.ts";
 
 export const CALLOUT_TYPE = "callout";
 
 export const calloutPropsSchema = v.object({
-  text: richTextSchema,
+  ...TEXT_BLOCK_ENTRIES,
   // One emoji shown beside the text.
   icon: v.string(),
 });

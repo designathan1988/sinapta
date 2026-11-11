@@ -17,6 +17,10 @@ import { whenConnected } from "../../ui/focus/index.ts";
 import { renderDatabase, renderRowProperties } from "../database/index.ts";
 import { continueWriting, renderBlocks } from "./editor-blocks.view.ts";
 import { renderBlockMenu } from "./editor-block-menu.view.ts";
+import {
+  BLOCK_COLOR_OVERLAY,
+  renderColorMenu,
+} from "./editor-color-menu.view.ts";
 import { LINK_OVERLAY, renderLinkField } from "./editor-link.view.ts";
 import type { InputContext } from "./editor-input.view.ts";
 import { renderAddCover, renderCover } from "./editor-cover.view.ts";
@@ -109,6 +113,9 @@ export function renderEditorOverlay(
 ): TemplateResult | typeof nothing {
   if (state.ui.overlay?.kind === LINK_OVERLAY) {
     return renderLinkField(state, dispatch);
+  }
+  if (state.ui.overlay?.kind === BLOCK_COLOR_OVERLAY) {
+    return renderColorMenu(state, dispatch);
   }
   return renderBlockMenu(state, dispatch);
 }

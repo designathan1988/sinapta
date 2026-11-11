@@ -2,6 +2,7 @@
 import { blockDefinition, isTextBlock } from "../../blocks/index.ts";
 import { PARAGRAPH_TYPE } from "../../blocks/paragraph/index.ts";
 import {
+  isBlockColor,
   splitRichText,
   type Block,
   type BlockId,
@@ -59,7 +60,11 @@ export const convertBlock = defineCommand<ConvertBlockPayload>({
       return {};
     const { now } = command.meta;
     const [, text] = splitRichText(block.props.text, command.removePrefix ?? 0);
-    const props = { ...definition.createProps(text), ...command.extraProps };
+    // A block's color stays with it when it becomes another text type.
+    const color = isBlockColor(block.props.color) ? block.props.color : null;
+    const created = definition.createProps(text);
+    const kept = color !== null && "text" in created ? { color } : {};
+    const props = { ...created, ...kept, ...command.extraProps };
     const patch = { type: command.blockType, props, updatedAt: now };
     const update: Operation = {
       type: "record.update",

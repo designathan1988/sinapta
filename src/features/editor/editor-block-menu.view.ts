@@ -22,6 +22,7 @@ import { COPY } from "../../ui/copy.ts";
 import { startPointerDrag } from "../../ui/drag/index.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { renderMenu, type MenuItem } from "../../ui/menu/index.ts";
+import { colorMenuItem } from "./editor-color-menu.view.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { convertBlock } from "./editor-convert.commands.ts";
 import { duplicateBlock, insertBlockBelow } from "./editor-insert.commands.ts";
@@ -156,7 +157,7 @@ function actionItems(block: Block, context: ActionContext): MenuItem[] {
       ),
   };
   return [
-    ...(isTextBlock(block) ? [turnInto] : []),
+    ...(isTextBlock(block) ? [turnInto, colorMenuItem(overlay, dispatch)] : []),
     {
       label: COPY.blockMenu.duplicate,
       icon: "duplicate",
