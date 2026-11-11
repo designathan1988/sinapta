@@ -116,6 +116,10 @@ against the reference on every run.
   property, its date and time format lists, Change type, Sort,
   Calculate); duplicated a column, inserted one left, renamed it,
   changed it to Select, added two options and opened one's submenu.
+- Blocks: added a code block through the slash menu, opened its
+  language list, searched "py" and chose Python with Enter.
+- View settings: Sort (New sort, sort list, direction list), Filter by.
+- Group header: "…" and "+" on hover, the group menu.
 - Filter popover: with no filter it was 151 px wide and wrapped "Add
   filter group"; it now opens Notion's "Filter by…" list, and the editor
   is at least a menu wide. Conditions' lists open under their control.
