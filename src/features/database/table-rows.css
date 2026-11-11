@@ -64,9 +64,12 @@
     background-color: var(--color-bg-app);
   }
 
-  .database__group-row .database__group-toggle {
+  /* A group's header stays in view as the table scrolls sideways, its
+     "…" and "+" with it. */
+  .database__group-row .database__group-head {
     position: sticky;
     inset-inline-start: var(--size-table-gutter);
+    inline-size: fit-content;
   }
 
   /* Over the table while rows are ticked. */

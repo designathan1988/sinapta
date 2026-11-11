@@ -45,7 +45,7 @@ function rendered(viewType: ViewType, collapsed: readonly string[] = []) {
   const state = { ...built, ui: { ...built.ui, activeCell: null } };
   render(renderDatabase(state, dispatch), host);
   const toggles = [
-    ...host.querySelectorAll<HTMLButtonElement>("[aria-expanded]"),
+    ...host.querySelectorAll<HTMLButtonElement>(".database__group-toggle"),
   ].filter((button) => button.closest("[data-group-key]") !== null);
   return { host, sent, toggles, propertyId };
 }

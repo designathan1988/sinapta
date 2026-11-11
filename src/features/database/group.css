@@ -27,6 +27,45 @@
     }
   }
 
+  .database__group-actions {
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    opacity: 0;
+    transition: opacity var(--duration-hover) ease-in;
+  }
+
+  /* The header's row: the toggle, then the "…" and "+" that show while
+     the pointer rests on the header or focus is in it, as Notion's. */
+  .database__group-head {
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+
+    &:hover > .database__group-actions,
+    &:focus-within > .database__group-actions,
+    & > .database__group-actions[data-open] {
+      opacity: 1;
+    }
+  }
+
+  .database__group-action {
+    display: grid;
+    place-items: center;
+    inline-size: var(--size-control-sm);
+    block-size: var(--size-control-sm);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-md);
+    background: none;
+    color: var(--color-text-tertiary);
+    cursor: pointer;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
   .database__group-count {
     color: var(--color-text-tertiary);
     font-size: var(--font-size-sm);
@@ -58,7 +97,8 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .database__group-toggle > .icon {
+    .database__group-toggle > .icon,
+    .database__group-actions {
       transition: none;
     }
   }

@@ -22,6 +22,9 @@ export const DATABASE_MENU_TEXT = {
   removeSort: "Remove sort",
   sortProperty: "Sort by property",
   sortDirection: "Sort direction",
+  // The "…" and "+" on a group's header, named after the group.
+  groupActions: (group: string) => `Actions for ${group}`,
+  newInGroup: (group: string) => `New row in ${group}`,
   ascending: "Ascending",
   descending: "Descending",
 } as const;

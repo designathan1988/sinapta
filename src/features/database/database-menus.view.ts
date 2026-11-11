@@ -5,6 +5,8 @@ import { renderCellFiles } from "./cell-files.view.ts";
 import { renderCellRelation } from "./cell-relation.view.ts";
 import { renderCellOptions } from "./cell-options.view.ts";
 import { renderColumnMenu, renderTypeMenu } from "./column-menu.view.ts";
+import { GROUP_MENU_OVERLAY } from "./group-actions.ts";
+import { renderGroupMenu } from "./group-menu.view.ts";
 import {
   CELL_FILES_OVERLAY,
   CELL_OPTIONS_OVERLAY,
@@ -40,6 +42,7 @@ const OVERLAYS: Record<string, Render> = {
   [BULK_EDIT_OVERLAY]: renderBulkEdit,
   [BOARD_COLUMN_OVERLAY]: renderBoardColumnMenu,
   [VIEW_SETTINGS_OVERLAY]: renderViewSettings,
+  [GROUP_MENU_OVERLAY]: renderGroupMenu,
   [NEW_VIEW_OVERLAY]: renderNewViewMenu,
 };
 

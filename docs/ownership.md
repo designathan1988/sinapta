@@ -75,6 +75,7 @@ owner listed here exists.
 | Property type definitions | `src/features/database/property-registry.ts` plus one folder per type | 5 |
 | Changing a property's type and carrying its values over | `src/features/database/property-type.commands.ts`, `property-convert.ts`, `property-type.selectors.ts` | 16 |
 | New columns beside a column: duplicate, insert left and right | `src/features/database/property-copy.commands.ts` | 16 |
+| A group's header actions and menu: new row in the group, hide | `src/features/database/group-actions.ts`, `group-header.view.ts`, `group-menu.view.ts` | 16 |
 | A column's menu and its submenus (Edit property, Change type, Sort, Calculate) | `src/features/database/column-menu.view.ts`, `column-menu-items.ts`, `column-place-items.ts`, `property-edit-menu.ts` | 16 |
 | What a property type declares | `src/features/database/property-definition.ts` | 5 |
 | Database columns | `src/features/database/database.commands.ts` | 5 |

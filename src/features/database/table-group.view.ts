@@ -6,12 +6,8 @@ import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { calculate } from "./calculations.selectors.ts";
 import { renderGroupHeader } from "./group-header.view.ts";
-import {
-  groupValues,
-  selectRowGroups,
-  type RowGroup,
-} from "./row-groups.selectors.ts";
-import { addRow } from "./row.commands.ts";
+import { addRowInGroup } from "./group-actions.ts";
+import type { RowGroup } from "./row-groups.selectors.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import type { TableEntry } from "./table-entries.selectors.ts";
 import type { TableColumn } from "./table-model.selectors.ts";
@@ -34,12 +30,9 @@ function renderResult(
 }
 
 function renderAddRow(group: RowGroup, context: TableContext): TemplateResult {
-  const { model, dispatch } = context;
+  const { model } = context;
   const add = (): void => {
-    const grouped = selectRowGroups(model);
-    const values = grouped === undefined ? {} : groupValues(grouped, group.key);
-    const databaseId = model.database.id;
-    dispatch(addRow.create({ databaseId, values, opensPage: true }));
+    addRowInGroup(group, context);
   };
   const button = renderButton({
     label: COPY.database.newCard,

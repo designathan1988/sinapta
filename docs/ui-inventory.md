@@ -69,7 +69,7 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Calculate | `column-menu-items.ts` | Notion | None, then Count ›, Percent ›, More options › |
 | Board column menu | `board-column-menu.view.ts` | menu | menu |
 | Row tick box | `table-gutter.view.ts` | Notion | Notion checkbox |
-| Group header | `group-header.view.ts` | custom | caret, chip, count; hover shows "+" and "…" |
+| Group header | `group-header.view.ts`, `group-menu.view.ts` | Notion | caret, chip, count; hover shows "…" (the group's menu) and "+" (a new row in the group) |
 
 ### Property settings
 
@@ -139,5 +139,5 @@ against the reference on every run.
 - Option colors: Notion's Default color.
 - Sorts: reorder by dragging the grip (Move up and down by keyboard).
 - A row page's values open the table's own editors.
-- Group headers show "+" and "…" on hover.
+- The group menu: rename, color and delete for a group named by an option.
 - Light theme measurements of the menu reference.
