@@ -119,3 +119,43 @@ describe("the filter editor", () => {
     });
   });
 });
+
+describe("the filter editor of a view with no filter", () => {
+  it("lists the properties to filter by, searchable, and adds a condition", () => {
+    const app = createDatabaseApp([{ name: "Notes", type: "text" }], [["A"]]);
+    const [notes] = app.propertyIds;
+    const built = app.store.getState();
+    const overlay = { kind: FILTERS_OVERLAY, anchorId: app.databaseId };
+    const state = { ...built, ui: { ...built.ui, overlay } };
+    const sent: Command[] = [];
+    const host = document.createElement("div");
+    document.body.replaceChildren(host);
+    render(
+      renderDatabase(state, (command) => {
+        sent.push(command);
+        return { ok: true };
+      }),
+      host,
+    );
+    const rows = [...host.querySelectorAll<HTMLElement>(".menu [data-index]")];
+
+    rows.find((row) => row.textContent.trim() === "Notes")?.click();
+
+    expect(
+      host.querySelector<HTMLInputElement>(".menu__search input")?.placeholder,
+    ).toBe("Filter by…");
+    expect(rows.map((row) => row.textContent.trim())).toEqual([
+      "Name",
+      "Notes",
+    ]);
+    expect(sent).toEqual([
+      expect.objectContaining({
+        type: "view.setFilter",
+        filter: {
+          conjunction: "and",
+          items: [expect.objectContaining({ propertyId: notes, value: "" })],
+        },
+      }),
+    ]);
+  });
+});

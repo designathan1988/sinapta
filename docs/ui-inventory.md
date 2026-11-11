@@ -58,6 +58,7 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Color columns | `view-settings/layout-panel.view.ts` | Notion | switch row |
 | Calendar date property | `view-settings/choice-panels.ts` | Notion | row with value and chevron |
 | Property visibility | `view-settings/choice-panels.ts` | Notion | list with type icons and an eye toggle per property |
+| Filter, none yet | `filter-start.view.ts` | Notion | "Filter by…": a searchable list of properties; choosing one adds its condition |
 | Filter conjunction | `view-filters.view.ts` | Notion | small select: "And" or "Or" |
 | Filter property, condition, value | `filter-row.view.ts` | Notion | select buttons opening option lists; options of a select property as chips |
 | Calculation | `table-footer.view.ts` | Notion | "Calculate" with a chevron opening the grouped menu of calculations |
@@ -115,6 +116,9 @@ against the reference on every run.
   property, its date and time format lists, Change type, Sort,
   Calculate); duplicated a column, inserted one left, renamed it,
   changed it to Select, added two options and opened one's submenu.
+- Filter popover: with no filter it was 151 px wide and wrapped "Add
+  filter group"; it now opens Notion's "Filter by…" list, and the editor
+  is at least a menu wide. Conditions' lists open under their control.
 - Found and fixed: a choice in a nested list sent focus to the menu's
   name (a shared ref callback ran again); a tall submenu covered its
   menu (now centered on its row and moved to fit, as Notion's).

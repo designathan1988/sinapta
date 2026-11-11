@@ -2,6 +2,7 @@
   .database__popover:popover-open {
     display: grid;
     gap: var(--space-stack-sm);
+    min-inline-size: var(--size-menu-width);
     padding: var(--space-inset-md);
   }
 

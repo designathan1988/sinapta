@@ -25,6 +25,7 @@ import {
 import { changedFilter, newFilter } from "./filter-fields.ts";
 import { isFilterGroup } from "./filter-match.ts";
 import { renderFilterRow, type FieldChange } from "./filter-row.view.ts";
+import { renderFilterStart } from "./filter-start.view.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import { setViewFilter } from "./view.commands.ts";
 
@@ -194,6 +195,7 @@ function renderItem(
 export function renderFilters(context: TableContext): TemplateResult {
   const { model, dispatch } = context;
   const top = model.view.filter;
+  if (top.items.length === 0) return renderFilterStart(context);
   const add = (isGroup: boolean) => (): void => {
     const filter = newFilter(context);
     if (filter === undefined) return;

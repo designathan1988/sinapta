@@ -17,6 +17,7 @@ export const DATABASE_MENU_TEXT = {
   copyName: (name: string) => `${name} (1)`,
   newSort: "New sort",
   sortBy: "Sort by…",
+  filterBy: "Filter by…",
   addSort: "Add sort",
   deleteSort: "Delete sort",
   removeSort: "Remove sort",
