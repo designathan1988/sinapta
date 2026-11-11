@@ -589,3 +589,39 @@ Checks after milestone 10:
   keystroke; version 1 measured 19.7 ms back to back on the same machine.
 - Every owner listed in `docs/ownership.md` exists.
 
+
+## Version 2 record (Notion parity)
+
+Plan: `docs/superpowers/plans/2026-11-11-notion-parity.md`; analysis and
+decisions: `docs/superpowers/specs/2026-11-11-notion-parity-design.md`.
+
+### Milestone 11: Contract compliance
+
+| Task | Status | Tests |
+| --- | --- | --- |
+| 11.1 ADR-0011 and contract clarifications | done | Documents only |
+| 11.2 `src/blocks/index.ts` and the import rule | done | Lint pattern; 32 imports moved |
+| 11.3 `afterRender`, no timers in views | done | `src/ui/focus/after-render.test.ts` |
+| 11.4 Scoped keys in the shortcuts folder | done | `scoped-keys.test.ts`, `slash-menu-keys.test.ts`, `format-toolbar.test.ts` |
+| 11.5 One writer across tabs, persistent storage | done | `tab-lock.test.ts`, `workspace-repository-tabs.test.ts`, `dispatch.test.ts` |
+| 11.6 Invariants on replaced workspaces | done | `dispatch.test.ts`, `workspace-repository.test.ts`, `workspace-file.test.ts` |
+| 11.7 Architecture fitness tests | done | `src/app/architecture.test.ts`, each rule seen failing on a planted violation |
+
+Found on the way: a load, import or seed that returned a broken page tree
+was committed without the invariant check; a refused load could then have
+saved over stored data. Both fixed test-first in 11.6.
+
+### Milestone 12: Layout and chrome
+
+| Task | Status | Tests |
+| --- | --- | --- |
+| 12.1 Page column, full-bleed cover, large icon, reposition (format version 5) | done | `page-style.test.ts`, `editor-cover.test.ts` |
+| 12.2 Page font and small text | done | `page-style.test.ts`, `menu.test.ts` |
+| 12.3 Top bar: edited time, favorite star, word count, Ctrl+Shift+L | done | `page-info.test.ts`, `page-info-view.test.ts`, `settings.test.ts` |
+| 12.4 Sidebar header, quick items, sections, page glyphs | done | `sidebar.test.ts`, `sidebar-view.test.ts` |
+| 12.5 Right-click menus for blocks, pages and rows | done | `menu.test.ts`, `editor-context-menu.test.ts`, `table-context-menu.test.ts` |
+| 12.6 Start list on empty pages, placeholders | done | `database-start.test.ts`, `editor-start.test.ts` |
+| 12.7 Home with recents and upcoming dates | done | `home.test.ts`, `home-view.test.ts`, `ui.test.ts`, `router.test.ts` |
+
+Checks after milestone 12: 709 tests pass; `npm run verify` about
+10 seconds; every surface checked in the running app in both themes.
