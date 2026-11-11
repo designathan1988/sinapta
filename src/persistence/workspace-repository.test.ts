@@ -214,4 +214,20 @@ describe("workspace repository", () => {
     expect(adapter.saves).toHaveLength(0);
     expect(store.getState().persistence.status).toBe("failed");
   });
+
+  it("does not save over stored data whose page tree is broken", async () => {
+    const built = buildWorkspace([{ id: "a" }, { id: "b" }]);
+    const b = built.blocks[toBlockId("b")];
+    if (b === undefined) throw new Error("The builder lost block b.");
+    const blocks = { ...built.blocks, [b.id]: { ...b, parentId: "a" } };
+    const file = { schemaVersion: 1, ...built, blocks };
+    const adapter = createMemoryAdapter({ file, ui: null });
+    const { store, dispatch } = await start(adapter);
+
+    dispatch(addPage);
+    await vi.advanceTimersByTimeAsync(SAVE_DEBOUNCE_MS);
+
+    expect(adapter.saves).toHaveLength(0);
+    expect(store.getState().persistence.status).toBe("failed");
+  });
 });

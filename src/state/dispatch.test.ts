@@ -146,3 +146,31 @@ describe("dispatch in a read-only tab", () => {
     expect(store.getState().workspace.rootIds).toEqual(["saved"]);
   });
 });
+
+describe("dispatch of a whole workspace", () => {
+  it("refuses one whose child lists disagree with parent ids", () => {
+    const { store, dispatch } = createTestApp({ commands: [loadWorkspace] });
+    const before = store.getState();
+    const built = buildWorkspace([{ id: "a" }, { id: "b" }]);
+    const b = built.blocks[toBlockId("b")];
+    if (b === undefined) throw new Error("The builder lost block b.");
+    // "b" names "a" as its parent, but "a" does not list it.
+    const workspace = {
+      ...built,
+      blocks: { ...built.blocks, [b.id]: { ...b, parentId: toBlockId("a") } },
+    };
+
+    const result = dispatch(
+      loadWorkspace.create({ workspace, ui: before.ui, skippedCount: 0 }),
+    );
+
+    expect(result).toEqual({
+      ok: false,
+      error: {
+        kind: "invariant-broken",
+        violation: { kind: "parent-mismatch", blockId: "b" },
+      },
+    });
+    expect(store.getState()).toBe(before);
+  });
+});

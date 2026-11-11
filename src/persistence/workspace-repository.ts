@@ -95,14 +95,16 @@ async function load(
   if (!migrated.ok) return "unreadable";
   const parsed = parseWorkspaceFile(migrated.file, options.propsSchemas);
   if (!parsed.ok) return "unreadable";
-  options.dispatch(
+  // A tree the dispatcher refuses, such as a child its parent does not
+  // list, is as unusable as a file that does not parse.
+  const result = options.dispatch(
     loadWorkspace.create({
       workspace: parsed.workspace,
       ui: ui ?? restoreUi(stored.ui),
       skippedCount: parsed.skipped.length,
     }),
   );
-  return "loaded";
+  return result.ok ? "loaded" : "unreadable";
 }
 
 // Asks the browser not to evict the workspace under storage pressure. It

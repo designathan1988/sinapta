@@ -7,6 +7,7 @@ import {
   findInvariantViolation,
   type InvariantViolation,
   type OperationError,
+  type Workspace,
 } from "../model/index.ts";
 import type { AppState } from "./app-state.ts";
 import type {
@@ -50,6 +51,18 @@ export interface DispatcherOptions {
 
 type Next = { readonly state: AppState } | { readonly error: DispatchError };
 
+// A workspace that replaces the current one (a load, an import, the first
+// run's pages) is checked whole: every block, and every id at the top level.
+function findWholeWorkspaceViolation(
+  workspace: Workspace,
+): InvariantViolation | undefined {
+  const ids = new Set([
+    ...Object.values(workspace.blocks).map((block) => block.id),
+    ...workspace.rootIds,
+  ]);
+  return findInvariantViolation(workspace, workspace, ids);
+}
+
 function applyEffect(
   state: AppState,
   effect: CommandEffect,
@@ -59,6 +72,10 @@ function applyEffect(
   const ui = effect.ui ?? state.ui;
   const persistence = effect.persistence ?? state.persistence;
   if (effect.workspace !== undefined) {
+    const violation = findWholeWorkspaceViolation(effect.workspace);
+    if (violation !== undefined) {
+      return { error: { kind: "invariant-broken", violation } };
+    }
     const history = { undo: [], redo: [] };
     return { state: { workspace: effect.workspace, ui, history, persistence } };
   }

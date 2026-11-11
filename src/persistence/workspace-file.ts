@@ -119,9 +119,13 @@ export function startFileTools(options: FileToolsOptions): void {
         return;
       }
       const { workspace, skipped } = result;
-      dispatch(
+      const imported = dispatch(
         importWorkspace.create({ workspace, skippedCount: skipped.length }),
       );
+      // A tree the dispatcher refuses is not a workspace this app can use.
+      if (!imported.ok) {
+        dispatch(finishImport.create({ error: "not-a-workspace" }));
+      }
     });
   });
 }

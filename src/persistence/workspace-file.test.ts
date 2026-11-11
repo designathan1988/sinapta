@@ -134,4 +134,28 @@ describe("file tools", () => {
     expect(store.getState().workspace).toBe(before);
     expect(store.getState().persistence.importError).toBe("unreadable");
   });
+
+  it("keeps the workspace and reports a file whose page tree is broken", async () => {
+    const { store, dispatch } = createApp();
+    const before = store.getState().workspace;
+    const b = WORKSPACE.blocks[toBlockId("b")];
+    if (b === undefined) throw new Error("The builder lost block b.");
+    // "b" names "a" as its parent, but "a" does not list it.
+    const broken = {
+      ...WORKSPACE,
+      blocks: {
+        ...WORKSPACE.blocks,
+        [b.id]: { ...b, parentId: toBlockId("a") },
+      },
+    };
+
+    dispatch(requestImport.create({ text: serializeWorkspace(broken) }));
+    await Promise.resolve();
+
+    expect(store.getState().workspace).toBe(before);
+    expect(store.getState().persistence).toMatchObject({
+      pendingImport: null,
+      importError: "not-a-workspace",
+    });
+  });
 });
