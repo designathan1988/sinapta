@@ -15,7 +15,9 @@
     padding-inline-start: var(--space-inset-xl);
   }
 
+  /* At least the minimum target height, though the text is smaller. */
   .table-of-contents__link {
+    min-block-size: var(--size-target-min);
     padding: var(--space-none);
     border: none;
     background-color: transparent;

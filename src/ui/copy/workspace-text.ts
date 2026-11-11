@@ -147,6 +147,7 @@ export const WORKSPACE_TEXT = {
     code: "Inline code",
     link: "Link",
     blockMenu: "Block actions",
+    toolbar: "Move to the formatting toolbar",
     newLine: "Line break in a block",
     heading: "Heading 1, 2 or 3",
     bullet: "Bulleted list",

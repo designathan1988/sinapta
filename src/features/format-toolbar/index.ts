@@ -5,3 +5,4 @@ export {
 } from "./format-toolbar.selectors.ts";
 export { renderFormatToolbar } from "./format-toolbar.view.ts";
 export { renderTonePicker } from "./tone-picker.view.ts";
+export { installFormatToolbarKeys } from "./format-toolbar-keys.view.ts";

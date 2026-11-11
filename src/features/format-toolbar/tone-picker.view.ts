@@ -9,7 +9,10 @@ import {
   type Dispatch,
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
-import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
+import {
+  focusOverlayAnchor,
+  showPopoverWhenConnected,
+} from "../../ui/overlay/index.ts";
 import { setTextTone } from "../editor/index.ts";
 import {
   selectFormatRange,
@@ -50,6 +53,7 @@ function renderSwatch(
     data-key=${key}
     data-tone=${tone ?? "none"}
     aria-pressed=${String(isCurrent)}
+    ?data-autofocus=${isCurrent && key === "color"}
   >
     <span
       class="format-toolbar__swatch"
@@ -70,6 +74,7 @@ function renderGroup(spec: GroupSpec): TemplateResult {
       data-key=${spec.key}
       data-tone="none"
       aria-pressed=${String(spec.current === undefined)}
+      ?data-autofocus=${spec.key === "color" && spec.current === undefined}
     >
       ${spec.noneLabel}
     </button>
@@ -99,6 +104,13 @@ function onPick(event: Event, range: FormatRange, dispatch: Dispatch): void {
   dispatch(closeOverlay.create({}));
 }
 
+// Escape closes the picker and puts focus back on its Color button.
+function onPickerKey(event: KeyboardEvent, dispatch: Dispatch): void {
+  if (event.key !== "Escape") return;
+  focusOverlayAnchor();
+  dispatch(closeOverlay.create({}));
+}
+
 export function renderTonePicker(
   state: AppState,
   dispatch: Dispatch,
@@ -122,7 +134,7 @@ export function renderTonePicker(
       onPick(event, range, dispatch);
     }}
     @keydown=${(event: KeyboardEvent) => {
-      if (event.key === "Escape") dispatch(closeOverlay.create({}));
+      onPickerKey(event, dispatch);
     }}
   >
     ${renderGroup({

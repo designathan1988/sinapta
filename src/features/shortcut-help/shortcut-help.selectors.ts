@@ -44,6 +44,7 @@ export const SHORTCUT_GROUPS: readonly ShortcutGroup[] = [
       entry(TEXT.code, "Mod", "E"),
       entry(TEXT.link, "Mod", "K"),
       entry(TEXT.blockMenu, "Mod", "/"),
+      entry(TEXT.toolbar, "Alt", "F10"),
       entry(TEXT.newLine, "Shift", "Enter"),
     ],
   },

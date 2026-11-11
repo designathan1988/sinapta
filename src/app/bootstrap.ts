@@ -14,6 +14,7 @@ import {
 } from "../blocks/page/index.ts";
 import { databaseCommands } from "../features/database/index.ts";
 import { editorCommands } from "../features/editor/index.ts";
+import { installFormatToolbarKeys } from "../features/format-toolbar/index.ts";
 import {
   onboardingCommands,
   seedGettingStarted,
@@ -95,6 +96,7 @@ export async function startApp(container: HTMLElement): Promise<void> {
   installOverlayDismiss(store, dispatch);
   installSelectionSync(store, dispatch);
   installSlashMenuKeys(store, dispatch);
+  installFormatToolbarKeys();
   installTooltip();
   document.addEventListener("keydown", (event) => {
     const shortcut = matchShortcut(event);
