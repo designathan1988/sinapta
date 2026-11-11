@@ -5,12 +5,12 @@ import {
   closeOverlay,
   openOverlay,
   type AppState,
-  type AppStore,
   type Dispatch,
 } from "../../state/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
+import type { ScopedKeyHandler, ScopedKeys } from "../../ui/shortcuts/index.ts";
 import { convertBlock, replaceText } from "../editor/index.ts";
 import {
   selectOpenSlashMenu,
@@ -55,37 +55,34 @@ function highlight(
   announce(menu.items[activeIndex]?.label ?? "");
 }
 
+// Runs a key's action on the open menu; the keys apply only while one is.
+function onMenu(
+  action: (menu: OpenSlashMenu, dispatch: Dispatch) => void,
+): ScopedKeyHandler {
+  return ({ state, dispatch }) => {
+    const menu = selectOpenSlashMenu(state);
+    if (menu !== undefined) action(menu, dispatch);
+  };
+}
+
 // Focus stays in the text while the menu is open, so its keys are caught
-// on the way down to the editor.
-export function installSlashMenuKeys(
-  store: AppStore,
-  dispatch: Dispatch,
-): void {
-  const actions: Record<string, (menu: OpenSlashMenu) => void> = {
-    ArrowDown: (menu) => {
+// on the way down to the editor, by the scoped keys owner.
+export const slashMenuKeys: ScopedKeys = {
+  isActive: (state) => selectOpenSlashMenu(state) !== undefined,
+  keys: {
+    ArrowDown: onMenu((menu, dispatch) => {
       highlight(menu, 1, dispatch);
-    },
-    ArrowUp: (menu) => {
+    }),
+    ArrowUp: onMenu((menu, dispatch) => {
       highlight(menu, -1, dispatch);
-    },
-    Enter(menu) {
+    }),
+    Enter: onMenu((menu, dispatch) => {
       const item = menu.items[menu.activeIndex];
       if (item !== undefined) choose(menu, item, dispatch);
-    },
-    Escape: () => dispatch(closeOverlay.create({})),
-  };
-  const onKeyDown = (event: KeyboardEvent): void => {
-    const menu = event.isComposing
-      ? undefined
-      : selectOpenSlashMenu(store.getState());
-    const action = actions[event.key];
-    if (menu === undefined || action === undefined) return;
-    event.preventDefault();
-    event.stopPropagation();
-    action(menu);
-  };
-  document.addEventListener("keydown", onKeyDown, { capture: true });
-}
+    }),
+    Escape: ({ dispatch }) => dispatch(closeOverlay.create({})),
+  },
+};
 
 function keepInView(option: Element | undefined, isActive: boolean): void {
   if (isActive) option?.scrollIntoView({ block: "nearest" });

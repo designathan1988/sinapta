@@ -14,6 +14,7 @@ import { COPY } from "../../ui/copy.ts";
 import { afterRender } from "../../ui/focus/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { openLinkField, toggleTextMark } from "../editor/index.ts";
+import { onToolbarKey } from "./format-toolbar-keys.view.ts";
 import {
   selectFormatRange,
   selectRangeStyle,
@@ -146,6 +147,7 @@ export function renderFormatToolbar(
       placeToolbar(element);
     })}
     @pointerdown=${keepSelection}
+    @keydown=${onToolbarKey}
   >
     ${TOOLBAR_MARKS.map(markButton)}
     ${renderLinkButton(range, style.hasLink, dispatch)}

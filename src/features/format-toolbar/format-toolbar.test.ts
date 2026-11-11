@@ -10,6 +10,7 @@ import {
   selectRangeStyle,
   TONE_OVERLAY,
 } from "./format-toolbar.selectors.ts";
+import { formatToolbarKeys } from "./format-toolbar-keys.view.ts";
 
 const A = toBlockId("a");
 
@@ -98,5 +99,20 @@ describe("selectRangeStyle", () => {
     ).toMatchObject({
       highlight: "yellow",
     });
+  });
+});
+
+describe("formatToolbarKeys", () => {
+  it("applies while text is selected, not at a caret", () => {
+    expect(formatToolbarKeys.isActive(stateWith({ anchor: 0, focus: 5 }))).toBe(
+      true,
+    );
+    expect(formatToolbarKeys.isActive(stateWith({ anchor: 3, focus: 3 }))).toBe(
+      false,
+    );
+  });
+
+  it("reaches the toolbar with Alt+F10 only", () => {
+    expect(Object.keys(formatToolbarKeys.keys)).toEqual(["Alt+F10"]);
   });
 });

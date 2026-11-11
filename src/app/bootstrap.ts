@@ -11,12 +11,12 @@ import {
 } from "../blocks/page/index.ts";
 import { databaseCommands } from "../features/database/index.ts";
 import { editorCommands } from "../features/editor/index.ts";
-import { installFormatToolbarKeys } from "../features/format-toolbar/index.ts";
+import { formatToolbarKeys } from "../features/format-toolbar/index.ts";
 import {
   onboardingCommands,
   seedGettingStarted,
 } from "../features/onboarding/index.ts";
-import { installSlashMenuKeys } from "../features/slash-menu/index.ts";
+import { slashMenuKeys } from "../features/slash-menu/index.ts";
 import {
   createAppStore,
   createCommandRegistry,
@@ -35,7 +35,7 @@ import {
 } from "../persistence/index.ts";
 import { installSelectionSync, restoreSelection } from "../ui/caret/index.ts";
 import { installOverlayDismiss } from "../ui/overlay/index.ts";
-import { matchShortcut } from "../ui/shortcuts/index.ts";
+import { installScopedKeys, matchShortcut } from "../ui/shortcuts/index.ts";
 import { installTooltip } from "../ui/tooltip/index.ts";
 import { startRouter } from "./router.ts";
 import { applyTheme } from "./theme.ts";
@@ -83,8 +83,7 @@ export async function startApp(container: HTMLElement): Promise<void> {
   startRouter(store, dispatch);
   installOverlayDismiss(store, dispatch);
   installSelectionSync(store, dispatch);
-  installSlashMenuKeys(store, dispatch);
-  installFormatToolbarKeys();
+  installScopedKeys(store, dispatch, [slashMenuKeys, formatToolbarKeys]);
   installTooltip();
   document.addEventListener("keydown", (event) => {
     const shortcut = matchShortcut(event);

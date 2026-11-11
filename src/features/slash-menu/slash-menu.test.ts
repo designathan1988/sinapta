@@ -1,36 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { buildWorkspace, toBlockId } from "../../model/index.ts";
-import { createInitialState, type AppState } from "../../state/index.ts";
+import { createInitialState } from "../../state/index.ts";
+import { createState } from "./slash-menu-builder.ts";
 import {
   selectOpenSlashMenu,
   selectSlashItems,
-  SLASH_MENU_OVERLAY,
 } from "./slash-menu.selectors.ts";
-
-const A = toBlockId("a");
-
-function createState(text: string, caret: number, start = 0): AppState {
-  const page = {
-    title: [{ text: "Roadmap" }],
-    icon: null,
-    isFavorite: false,
-    isTrashed: false,
-  };
-  const workspace = buildWorkspace([
-    {
-      id: "page",
-      props: page,
-      children: [{ id: "a", type: "paragraph", props: { text: [{ text }] } }],
-    },
-  ]);
-  const state = createInitialState();
-  const ui = {
-    ...state.ui,
-    selection: { blockId: A, anchorOffset: caret, focusOffset: caret },
-    overlay: { kind: SLASH_MENU_OVERLAY, anchorId: A, start },
-  };
-  return { ...state, workspace, ui };
-}
 
 describe("selectSlashItems", () => {
   it("offers every block type the user can pick, and no page type", () => {

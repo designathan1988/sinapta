@@ -1,6 +1,8 @@
 // The keyboard path to the formatting toolbar: Alt+F10 from the text moves
 // focus to its first button, the arrow keys move between buttons, and
 // Escape goes back to the text with the selection as it was.
+import type { ScopedKeys } from "../../ui/shortcuts/index.ts";
+import { selectFormatRange } from "./format-toolbar.selectors.ts";
 
 const TOOLBAR = ".format-toolbar:popover-open";
 const BUTTONS = "button";
@@ -31,7 +33,10 @@ function selectedText(): HTMLElement | null {
   return element?.closest<HTMLElement>("[data-text]") ?? null;
 }
 
-function onToolbarKey(event: KeyboardEvent, toolbar: Element): void {
+// Keys pressed inside the toolbar, handled on the toolbar element itself.
+export function onToolbarKey(event: KeyboardEvent): void {
+  const toolbar = event.currentTarget;
+  if (!(toolbar instanceof Element)) return;
   if (event.key === "Escape") {
     event.preventDefault();
     selectedText()?.focus({ preventScroll: true });
@@ -45,15 +50,13 @@ function onToolbarKey(event: KeyboardEvent, toolbar: Element): void {
   buttons[next]?.focus();
 }
 
-export function installFormatToolbarKeys(): void {
-  document.addEventListener("keydown", (event) => {
-    const toolbar = document.querySelector(TOOLBAR);
-    if (toolbar === null) return;
-    if (event.altKey && event.key === "F10") {
-      event.preventDefault();
-      buttonsOf(toolbar)[0]?.focus();
-    } else if (event.target instanceof Node && toolbar.contains(event.target)) {
-      onToolbarKey(event, toolbar);
-    }
-  });
-}
+// While text is selected, Alt+F10 moves focus from the text to the toolbar.
+export const formatToolbarKeys: ScopedKeys = {
+  isActive: (state) => selectFormatRange(state) !== undefined,
+  keys: {
+    "Alt+F10": () => {
+      const toolbar = document.querySelector(TOOLBAR);
+      if (toolbar !== null) buttonsOf(toolbar)[0]?.focus();
+    },
+  },
+};

@@ -88,6 +88,7 @@ owner listed here exists.
 | Focusing and showing elements once they are in the page, and the only deferral views use (`afterRender`) | `src/ui/focus/` | 5 |
 | Table row models (sort, filter, order through the table engine) | `src/features/database/table-model.selectors.ts` | 5 |
 | Keyboard shortcuts | `src/ui/shortcuts/shortcut-registry.ts` | 1 |
+| Keys that apply only while one part is active (slash menu, Alt+F10), and the one capture listener for them | `src/ui/shortcuts/scoped-keys.ts` | 11 |
 | Overlay dismissal, anchoring and focus return | `src/ui/overlay/` | 1 |
 | Menu primitive | `src/ui/menu/` | 2 |
 | Dialog primitive | `src/ui/dialog/` | 1 |

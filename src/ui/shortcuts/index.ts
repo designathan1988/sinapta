@@ -1,4 +1,11 @@
 export {
+  installScopedKeys,
+  matchScopedKey,
+  type ScopedKeyContext,
+  type ScopedKeyHandler,
+  type ScopedKeys,
+} from "./scoped-keys.ts";
+export {
   matchShortcut,
   PALETTE_OVERLAY_KIND,
   SETTINGS_OVERLAY_KIND,
