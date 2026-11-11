@@ -38,6 +38,7 @@ export {
   type Theme,
   type Workspace,
 } from "./workspace.schema.ts";
+export { parseJsonText, type ParseJsonResult } from "./json-text.schema.ts";
 export { createEmptyWorkspace } from "./workspace.ts";
 export type { RecordError, WorkspaceFileError } from "./parse-error.ts";
 export { applyOperations, type ApplyResult } from "./apply-operation.ts";

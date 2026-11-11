@@ -35,6 +35,7 @@ owner listed here exists.
 | Moving a block within the tree | `src/model/block-tree.ts` | 4 |
 | Grapheme segmentation and offset conversion | `src/model/grapheme.ts` | 2 |
 | Link `href` scheme allow-list | `src/model/link-href.ts` | 3 |
+| Decoding imported JSON text into an unchecked value | `src/model/json-text.schema.ts` | 7 |
 
 ## Persistence
 

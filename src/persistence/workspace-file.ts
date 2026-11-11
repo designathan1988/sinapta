@@ -2,6 +2,7 @@
 // the same shape as stored data and is a public contract: its keys and
 // value formats change only with a schemaVersion bump and a migration.
 import {
+  parseJsonText,
   parseWorkspaceFile,
   SCHEMA_VERSION,
   type PropsSchemas,
@@ -64,13 +65,9 @@ export function readWorkspaceFile(
   text: string,
   propsSchemas: PropsSchemas,
 ): ImportResult {
-  let json: unknown;
-  try {
-    json = JSON.parse(text);
-  } catch {
-    return { ok: false, error: "unreadable" };
-  }
-  const migrated = runMigrations(json);
+  const decoded = parseJsonText(text);
+  if (!decoded.ok) return { ok: false, error: "unreadable" };
+  const migrated = runMigrations(decoded.json);
   if (!migrated.ok) return { ok: false, error: ERRORS[migrated.error.kind] };
   const parsed = parseWorkspaceFile(migrated.file, propsSchemas);
   if (!parsed.ok) return { ok: false, error: ERRORS[parsed.error.kind] };

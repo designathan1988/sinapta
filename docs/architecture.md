@@ -89,7 +89,9 @@ they are configuration, not state.
 
 - JSON enters at storage load and file import, passes through the schemas in
   `src/model/`, and becomes typed values or a typed error. Nothing below the
-  boundary re-checks shapes.
+  boundary re-checks shapes. Imported text is decoded by
+  `src/model/json-text.schema.ts`, then migrated, then typed by the
+  workspace schema; no other module calls `JSON.parse`.
 - Effects live at the edges: the root render (DOM), the repository
   (IndexedDB), the router (URL) and the dispatcher's id and clock stamping.
   Everything between is pure.
