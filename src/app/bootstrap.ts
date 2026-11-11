@@ -19,6 +19,7 @@ import {
   withPropertyConfigs,
 } from "../features/database/index.ts";
 import { editorCommands } from "../features/editor/index.ts";
+import { peekCommands } from "../features/row-peek/index.ts";
 import { formatToolbarKeys } from "../features/format-toolbar/index.ts";
 import {
   onboardingCommands,
@@ -72,6 +73,7 @@ const COMMANDS = [
   ...BLOCK_COMMANDS,
   ...editorCommands,
   ...databaseCommands,
+  ...peekCommands,
   ...onboardingCommands,
 ];
 

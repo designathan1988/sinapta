@@ -37,6 +37,21 @@
       }
     }
 
+    &[data-variant="icon"] {
+      justify-content: center;
+      inline-size: var(--size-control-sm);
+      block-size: var(--size-control-sm);
+      padding: var(--space-none);
+      background-color: transparent;
+      box-shadow: none;
+      color: var(--color-text-secondary);
+
+      &:hover,
+      &[aria-expanded="true"] {
+        background-color: var(--color-bg-hover);
+      }
+    }
+
     & > .icon {
       flex: none;
       inline-size: var(--size-icon-sm);

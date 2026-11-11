@@ -22,6 +22,7 @@ const TABLE = {
   timeline: { zoom: "month", showTable: true },
   chart: { kind: "column", aggregate: "count" },
   form: { requiredPropertyIds: [], description: "" },
+  openMode: "side",
 };
 
 const GROUP_BY = {

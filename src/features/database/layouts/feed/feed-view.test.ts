@@ -77,7 +77,7 @@ describe("the feed", () => {
     host.querySelector<HTMLElement>(".feed__title")?.click();
 
     expect(sent).toEqual([
-      expect.objectContaining({ type: "ui.setActivePage", pageId: rowId }),
+      expect.objectContaining({ type: "row.open", rowId }),
     ]);
   });
 });

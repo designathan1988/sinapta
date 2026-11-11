@@ -164,6 +164,7 @@
     --base-space-16: 4rem;
     --base-space-24: 6rem;
     --base-space-0x5: 0.125rem;
+    --base-space-4x75: 4.75rem;
     --base-space-0x75: 0.1875rem;
     --base-space-1x5: 0.375rem;
     --base-size-4: 1rem;
@@ -181,10 +182,13 @@
     --base-size-30: 30rem;
     --base-size-32: 32rem;
     --base-size-36: 36rem;
+    --base-size-40: 40rem;
     --base-size-45: 45rem;
     --base-size-46: 46rem;
+    --base-size-60: 60rem;
     --base-size-hairline: 1px;
     --base-size-thick: 2px;
+    --base-size-4x5: 4.5rem;
     --base-size-16x875: 16.875rem;
     --base-size-2x75: 2.75rem;
     --base-size-18x125: 18.125rem;
@@ -211,6 +215,7 @@
     --base-font-size-6: 1.875rem;
     --base-font-size-7: 2.5rem;
     --base-font-size-8: 4.25rem;
+    --base-font-size-6x5: 2rem;
     --base-font-weight-400: 400;
     --base-font-weight-500: 500;
     --base-font-weight-600: 600;
@@ -312,6 +317,7 @@
     --space-inset-page: var(--base-space-24);
     --space-inset-xxs: var(--base-space-0x5);
     --space-block: var(--base-space-0x75);
+    --space-peek: var(--base-space-4x75);
     --size-border-thin: var(--base-size-hairline);
     --size-border-thick: var(--base-size-thick);
     --size-focus-width: var(--base-size-thick);
@@ -355,6 +361,9 @@
     --size-timeline-table: var(--base-size-14);
     --size-chart-height: var(--base-size-16);
     --size-chart-donut: var(--base-size-12);
+    --size-peek-side: var(--base-size-40);
+    --size-peek-center: var(--base-size-60);
+    --size-peek-inset: var(--base-size-4x5);
     --radius-sm: var(--base-radius-1);
     --radius-md: var(--base-radius-2);
     --radius-full: var(--base-radius-pill);
@@ -362,6 +371,7 @@
     --shadow-overlay: 0px 0px 0px 1px var(--color-shadow-ring), 0px 14px 28px -6px var(--color-shadow-overlay), 0px 2px 4px -1px var(--color-shadow-soft);
     --shadow-dialog: 0px 0px 0px 1px var(--color-shadow-ring), 0px 5px 10px 0px var(--color-shadow-overlay), 0px 15px 40px 0px var(--color-shadow-overlay);
     --shadow-card: 0px 0px 0px 1px var(--color-shadow-ring), 0px 2px 4px 0px var(--color-shadow-overlay);
+    --shadow-peek: 0px 0px 0px 1px var(--color-shadow-ring), 0px 4px 12px -2px var(--color-shadow-soft);
     --font-family-text: var(--base-font-family-sans);
     --font-family-display: var(--base-font-family-serif);
     --font-family-mono: var(--base-font-family-mono);
@@ -373,6 +383,7 @@
     --font-size-xxl: var(--base-font-size-6);
     --font-size-title: var(--base-font-size-7);
     --font-size-page-icon: var(--base-font-size-8);
+    --font-size-peek-title: var(--base-font-size-6x5);
     --font-weight-regular: var(--base-font-weight-400);
     --font-weight-medium: var(--base-font-weight-500);
     --font-weight-strong: var(--base-font-weight-600);
@@ -389,6 +400,7 @@
     --easing-standard: var(--base-easing-standard);
     --layer-sticky: var(--base-layer-1);
     --layer-drag-preview: var(--base-layer-2);
+    --layer-peek: var(--base-layer-2);
   }
 
   :root[data-theme="light"] {

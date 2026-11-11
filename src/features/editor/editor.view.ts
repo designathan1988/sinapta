@@ -11,6 +11,7 @@ import {
   selectPageTitle,
   type PageBlock,
 } from "../../blocks/page/index.ts";
+import type { BlockId } from "../../model/index.ts";
 import type { AppState, Dispatch } from "../../state/index.ts";
 import { COPY, PRODUCT_NAME } from "../../ui/copy.ts";
 import { whenConnected } from "../../ui/focus/index.ts";
@@ -32,19 +33,20 @@ import { renderIconControl } from "./editor-icon.view.ts";
 // caret in its title, so typing names it. The page element is keyed by page
 // id, so this runs once per opened page, not on every render.
 function focusUntitled(element: Element | undefined): void {
-  if (!(element instanceof HTMLInputElement)) return;
+  if (!(element instanceof HTMLTextAreaElement)) return;
   whenConnected(element, () => {
     if (element.value === "") element.focus();
   });
 }
 
+// A title is one line of text that wraps, as Notion's; a pasted line
+// break becomes a space.
 function renderTitle(page: PageBlock, context: InputContext): TemplateResult {
   const { dispatch } = context;
   const onInput = (event: Event): void => {
-    if (event.target instanceof HTMLInputElement) {
-      dispatch(
-        renamePage.create({ pageId: page.id, title: event.target.value }),
-      );
+    if (event.target instanceof HTMLTextAreaElement) {
+      const title = event.target.value.replace(/\r?\n/g, " ");
+      dispatch(renamePage.create({ pageId: page.id, title }));
     }
   };
   // Enter in the title moves on to the page's text.
@@ -54,36 +56,44 @@ function renderTitle(page: PageBlock, context: InputContext): TemplateResult {
     continueWriting(page.id, context);
   };
   return html`<h1 class="editor__heading">
-    <input
+    <textarea
       class="editor__title"
-      type="text"
+      rows="1"
       aria-label=${COPY.editor.titleLabel}
       placeholder=${COPY.sidebar.untitled}
       .value=${selectPageTitle(page)}
       @input=${onInput}
       @keydown=${onKeyDown}
       ${ref(focusUntitled)}
-    />
+    ></textarea>
   </h1>`;
 }
 
-// The open page: its icon, its title and its blocks.
+// What a page holds under its title: a database's views, or a page's
+// blocks, a row's property values above them.
+function renderContent(page: PageBlock, context: InputContext) {
+  const { state, dispatch } = context;
+  if (page.type === DATABASE_TYPE) return renderDatabase(state, dispatch);
+  return [
+    renderRowProperties(state, dispatch, page.id),
+    renderBlocks(page.id, context),
+  ];
+}
+
+// A page: its icon, its title and its blocks. The open page, unless a
+// peek shows another.
 export function renderEditor(
   state: AppState,
   dispatch: Dispatch,
+  pageId: BlockId | null = state.ui.activePageId,
 ): TemplateResult {
-  const page = selectPage(state, state.ui.activePageId);
+  const page = selectPage(state, pageId);
   if (page === undefined || page.props.isTrashed) {
     return html`<h1 class="visually-hidden">${PRODUCT_NAME}</h1>
       <p class="editor__empty">${COPY.editor.noPage}</p>`;
   }
   const context = { state, dispatch };
   const isPage = page.type === PAGE_TYPE;
-  // A row of a database shows its property values above its text.
-  const content =
-    page.type === DATABASE_TYPE
-      ? renderDatabase(state, dispatch)
-      : [renderRowProperties(state, dispatch), renderBlocks(page.id, context)];
   // Each page gets its own element, so opening a page plays the entry
   // motion and nothing of the page before it is carried over.
   return html`${keyed(
@@ -103,7 +113,7 @@ export function renderEditor(
         ${renderIconControl(state, page, dispatch)}
         ${isPage ? renderAddCover(page, dispatch) : nothing}
       </div>
-      ${renderTitle(page, context)} ${content}
+      ${renderTitle(page, context)} ${renderContent(page, context)}
     </article>`,
   )}`;
 }

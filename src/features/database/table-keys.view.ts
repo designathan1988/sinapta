@@ -1,10 +1,7 @@
 // Turns pointer and keyboard events inside the table body into commands.
+import { openRow } from "./row-open.commands.ts";
 import { renamePage } from "../../blocks/page/index.ts";
-import {
-  openOverlay,
-  setActivePage,
-  type ActiveCell,
-} from "../../state/index.ts";
+import { openOverlay, type ActiveCell } from "../../state/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { pressRowButton } from "./properties/button/index.ts";
@@ -148,7 +145,7 @@ function onCellKey(
   if (step !== undefined) {
     moveActive({ rowId, propertyId, isEditing: false }, step, context);
   } else if (event.key === "Enter" && event.altKey) {
-    context.dispatch(setActivePage.create({ pageId: rowId }));
+    context.dispatch(openRow.create({ rowId, viewId: context.model.view.id }));
   } else if (event.key === "Enter" || event.key === "F2" || event.key === " ") {
     startEditing(cell, context);
   } else if (
@@ -211,7 +208,9 @@ export function onBodyClick(event: MouseEvent, context: TableContext): void {
     return;
   }
   if (target.closest("[data-action=open]") !== null) {
-    context.dispatch(setActivePage.create({ pageId: cell.rowId }));
+    context.dispatch(
+      openRow.create({ rowId: cell.rowId, viewId: context.model.view.id }),
+    );
     return;
   }
   const wasActive = target.closest("[data-pressed-active]") !== null;

@@ -24,6 +24,7 @@ import { addCalendarOptions } from "./0022-calendar-options.ts";
 import { addTimeline } from "./0023-timeline.ts";
 import { addChart } from "./0024-chart.ts";
 import { addForm } from "./0025-form.ts";
+import { addOpenMode } from "./0026-open-mode.ts";
 
 // A pure function from format version n to n + 1.
 export type Migration = (
@@ -57,6 +58,7 @@ export const MIGRATIONS: readonly Migration[] = [
   addTimeline,
   addChart,
   addForm,
+  addOpenMode,
 ];
 
 export type MigrationResult =

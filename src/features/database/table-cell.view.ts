@@ -1,3 +1,4 @@
+import { OPEN_MODE_ICONS } from "./view-settings/index.ts";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import type { AppState, Dispatch } from "../../state/index.ts";
@@ -84,7 +85,11 @@ function renderEditor(value: string, column: TableColumn): TemplateResult {
   />`;
 }
 
-function renderTitle(row: TableRow): TemplateResult {
+// The row's title and, as Notion's, an Open button showing where the row
+// opens.
+function renderTitle(row: TableRow, context: TableContext): TemplateResult {
+  const mode = context.model.view.openMode;
+  const label = COPY.database.openIn[mode];
   return html`<span class="database__title" ?data-untitled=${row.title === ""}
       >${row.title === "" ? COPY.sidebar.untitled : row.title}</span
     >
@@ -93,11 +98,12 @@ function renderTitle(row: TableRow): TemplateResult {
       class="database__open"
       tabindex="-1"
       data-action="open"
-      aria-label=${COPY.database.openRow}
-      title=${tooltipTitle(COPY.database.openRow)}
+      aria-label=${label}
+      title=${tooltipTitle(label)}
       interestfor=${TOOLTIP_TARGET}
     >
-      ${renderIcon("chevron")}
+      ${renderIcon(OPEN_MODE_ICONS[mode])}
+      <span>${COPY.database.open}</span>
     </button>`;
 }
 
@@ -106,7 +112,7 @@ function renderValue(
   column: TableColumn,
   context: TableContext,
 ): TemplateResult | string {
-  if (column.isTitle) return renderTitle(row);
+  if (column.isTitle) return renderTitle(row, context);
   const type = propertyType(column.property.type);
   return type.renderCell(
     type.read(row.values[column.property.id]),

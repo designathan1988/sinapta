@@ -39,14 +39,21 @@
     }
   }
 
+  /* One line that wraps and grows with its text, as Notion's title. */
   .editor__title {
+    display: block;
+    field-sizing: content;
     inline-size: 100%;
     padding: var(--space-none);
+    overflow: hidden;
+    resize: none;
     border: none;
     background-color: transparent;
     color: var(--color-text-primary);
     font-family: inherit;
-    font-size: var(--font-size-title);
+
+    /* A peek sets a smaller title through --editor-title-size. */
+    font-size: var(--editor-title-size, var(--font-size-title));
     font-weight: var(--font-weight-strong);
     line-height: var(--font-line-height-tight);
 

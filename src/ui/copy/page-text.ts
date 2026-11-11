@@ -9,6 +9,15 @@ export const PAGE_TEXT = {
     characters: { one: "character", other: "characters" },
     favorite: "Favorite",
   },
+  peek: {
+    label: "Page peek",
+    close: "Close",
+    expand: "Open as full page",
+    mode: "Peek mode",
+    previous: "Previous page",
+    next: "Next page",
+    modes: { side: "Side peek", center: "Center peek", full: "Full page" },
+  },
   home: {
     title: "Home",
     morning: "Good morning",

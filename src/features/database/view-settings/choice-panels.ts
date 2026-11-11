@@ -4,6 +4,7 @@
 // hides properties.
 import { setTimelineOptions } from "../timeline-options.commands.ts";
 import { setCalendarOptions } from "../calendar-options.commands.ts";
+import { setOpenMode } from "../row-open.commands.ts";
 import type { GroupBy, View } from "../../../model/index.ts";
 import { COPY } from "../../../ui/copy.ts";
 import { setCardOptions, type CardOptions } from "../card.commands.ts";
@@ -153,6 +154,33 @@ export function calendarModePanel(context: TableContext): SettingsPanel {
       choose: (mode) => {
         const viewId = model.view.id;
         dispatch(setCalendarOptions.create({ viewId, options: { mode } }));
+      },
+    }),
+  };
+}
+
+export const OPEN_MODE_ICONS = {
+  side: "peek-side",
+  center: "peek-center",
+  full: "peek-full",
+} as const;
+
+// Where the view opens its rows: in a side or center peek, or as a page.
+export function openModePanel(context: TableContext): SettingsPanel {
+  const { model, dispatch } = context;
+  return {
+    title: COPY.database.openPagesIn,
+    back: "layout",
+    items: choiceItems(context, {
+      choices: (["side", "center", "full"] as const).map((value) => ({
+        value,
+        label: COPY.peek.modes[value],
+        icon: OPEN_MODE_ICONS[value],
+      })),
+      value: model.view.openMode,
+      back: "layout",
+      choose: (openMode) => {
+        dispatch(setOpenMode.create({ viewId: model.view.id, openMode }));
       },
     }),
   };

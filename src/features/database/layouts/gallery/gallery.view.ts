@@ -29,6 +29,7 @@ function renderCards(
         html`<li>
           ${renderRowCard({
             row,
+            viewId: model.view.id,
             columns: model.columns,
             dispatch,
             picture: selectCardPicture(state, row.id, model.view.cardPreview),

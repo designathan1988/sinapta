@@ -34,6 +34,7 @@ function renderCards(
     html`<li>
       ${renderRowCard({
         row,
+        viewId: model.view.id,
         columns: model.columns,
         dispatch,
         omit: board.property.id,

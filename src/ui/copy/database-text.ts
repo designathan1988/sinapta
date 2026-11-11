@@ -59,7 +59,12 @@ export const DATABASE_TEXT = {
     columnMoved: "Column moved.",
     hide: "Hide in this view",
     resizeColumn: "Resize column",
-    openRow: "Open as page",
+    open: "Open",
+    openIn: {
+      side: "Open in side peek",
+      center: "Open in center peek",
+      full: "Open as full page",
+    },
     options: "Options",
     addOption: "Add an option",
     editProperty: "Edit property",

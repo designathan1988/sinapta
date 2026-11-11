@@ -8,6 +8,18 @@
       grid-template-columns: minmax(0, 1fr);
     }
 
+    /* A side peek docks beside the main area, as Notion's, at most half
+       of the window. */
+    &[data-peek="side"] {
+      grid-template-columns:
+        var(--app-sidebar-width) minmax(0, 1fr)
+        min(var(--size-peek-side), 50%);
+    }
+
+    &[data-peek="side"][data-sidebar-collapsed] {
+      grid-template-columns: minmax(0, 1fr) min(var(--size-peek-side), 50%);
+    }
+
     &[data-resizing] {
       cursor: col-resize;
       user-select: none;

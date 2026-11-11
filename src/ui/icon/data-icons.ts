@@ -3,6 +3,13 @@
 import { svg, type TemplateResult } from "lit-html";
 
 export const DATA_PATHS = {
+  "peek-close": svg`<path d="M3.5 4l4 4-4 4M8.5 4l4 4-4 4" />`,
+  "peek-side": svg`<rect x="2" y="3" width="12" height="10" rx="1.5" />
+    <path d="M9 3v10" />`,
+  "peek-center": svg`<rect x="2" y="3" width="12" height="10" rx="1.5" />
+    <rect x="5" y="5.5" width="6" height="5" rx=".5" />`,
+  "peek-full": svg`<rect x="2" y="3" width="12" height="10" rx="1.5" />
+    <rect x="4" y="5" width="8" height="6" rx=".5" />`,
   eye: svg`<path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z" />
     <circle cx="8" cy="8" r="2" />`,
   "eye-off": svg`<path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z" />

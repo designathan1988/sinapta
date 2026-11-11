@@ -89,6 +89,8 @@ owner listed here exists.
 | Table interface state (active cell, scroll window) | `src/features/database/table.commands.ts` | 5 |
 | Row window, cell navigation and column drop order | `src/features/database/table.selectors.ts` | 5 |
 | Property values on a row's page | `src/features/database/row-properties.view.ts` | 7 |
+| Where a view opens its rows (side peek, center peek, full page) | `src/features/database/row-open.commands.ts` | 16 |
+| The row peek: its panel, bar, mode switch and stepping through rows | `src/features/row-peek/` | 16 |
 | Table markup, headers, cells and their events | `src/features/database/table*.view.ts` | 5 |
 | Table menus and popovers | `src/features/database/*-menu.view.ts`, `view-*.view.ts`, `cell-options.view.ts` | 6 |
 | The database block type | `src/blocks/database/` | 5 |

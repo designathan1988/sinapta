@@ -75,16 +75,23 @@
 
   .database__column-menu,
   .database__add-property,
+  /* Notion's Open button: a small raised pill with where the row opens
+     and OPEN in capitals. */
   .database__open {
-    display: inline-grid;
-    place-items: center;
-    inline-size: var(--size-target-min);
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
     block-size: var(--size-target-min);
-    padding: var(--space-none);
+    padding: var(--space-none) var(--space-inset-xs);
     border: none;
     border-radius: var(--radius-sm);
-    background-color: transparent;
-    color: var(--color-text-tertiary);
+    background-color: var(--color-bg-raised);
+    box-shadow: var(--shadow-card);
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
     vertical-align: middle;
     cursor: pointer;
 
@@ -92,6 +99,11 @@
     &[aria-expanded="true"] {
       background-color: var(--color-bg-hover);
       color: var(--color-text-primary);
+    }
+
+    & > .icon {
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
     }
   }
 

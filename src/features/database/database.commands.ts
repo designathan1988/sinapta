@@ -46,6 +46,7 @@ export function emptyView(
     timeline: { zoom: "month", showTable: true },
     chart: { kind: "column", aggregate: "count" },
     form: { requiredPropertyIds: [], description: "" },
+    openMode: "side",
   };
 }
 

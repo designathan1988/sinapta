@@ -86,6 +86,13 @@ export interface UiState {
   // The first day of the week a calendar shows in week mode; null for
   // the current week.
   readonly calendarWeek: string | null;
+  // The row open in a peek beside or over the page, and the view whose
+  // order its next and previous rows follow; null while none is.
+  readonly peek: {
+    readonly pageId: BlockId;
+    readonly viewId: ViewId;
+    readonly mode: "side" | "center";
+  } | null;
   // The questions a form's last sending left unanswered, by view.
   readonly formErrors: {
     readonly viewId: string;
@@ -190,6 +197,7 @@ export function createInitialUiState(): UiState {
     calendarMonth: null,
     calendarWeek: null,
     formErrors: null,
+    peek: null,
     viewSearches: {},
     sidebarWidth: SIDEBAR_WIDTH.initial,
     isSidebarCollapsed: false,

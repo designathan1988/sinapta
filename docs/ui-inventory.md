@@ -37,6 +37,8 @@ Measured in the owner's workspace, dark theme, read-only.
 | Switch | track 30 × 18 px, radius full, padding 2 px, on `#2783DE`; knob 14 px white, moves 12 px; 200 ms ease-out |
 | Layout tile | 83 × 57 px, radius 6 px, ring `inset 0 0 0 1px #383836`; chosen: ring 2 px `#2783DE`, label blue, 11 px |
 | Opening | panels fade and slide in over a short time; submenus open beside their row |
+| Side peek | docked at the window's right, 640 px of 1280; full height; ring `0 0 0 1px #383836` and `0 4px 12px -2px`; bar of 24 px buttons: Close, Open as full page, then the peek mode switch, then Previous and Next (dimmed at the ends), the page's actions at the end; title 32 px bold; text inset 76 px |
+| Table Open button | on hover of the title cell: the open mode's icon and OPEN in 12 px capitals on a raised pill; the peeked row is ringed in blue |
 
 ## Controls
 
@@ -72,6 +74,8 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Row tick box | `table-gutter.view.ts` | Notion | Notion checkbox |
 | Group header | `group-header.view.ts`, `group-menu.view.ts` | Notion | caret, chip, count; hover shows "…" (the group's menu: name, Hide, Delete, Colors for an option's group) and "+" (a new row in the group) |
 
+| Row peek | `features/row-peek/` | Notion (no comments, Share, link or favorite in its bar) | side or center peek with Close, Open as full page, mode switch, Previous and Next, page actions; Escape closes, K and J step |
+| Open pages in | `view-settings/choice-panels.ts` | Notion | row in the Layout panel opening Side peek, Center peek, Full page |
 | Date cell and date value | `ui/date-picker/`, `date-menu.ts`, `cell-date.view.ts` | Notion (no Date format & timezone or Remind rows) | the chosen days in fields, the month with Today and arrows, six weeks of days, End date and Include time switches, Clear |
 
 ### Property settings
@@ -146,6 +150,7 @@ against the reference on every run.
 
 ## Open
 
+- Row peek: comments, Share, copy link and favorite in the bar; resizing the side peek; the peek in the address.
 - Sorts: reorder by dragging the grip (Move up and down by keyboard).
 - Date picker: Date format & timezone, and Remind rows; typing a date into its field.
 - Light theme measurements of the menu reference.

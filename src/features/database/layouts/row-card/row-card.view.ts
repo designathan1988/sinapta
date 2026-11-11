@@ -1,9 +1,10 @@
 // A row shown as a card: its title and the values of the view's visible
 // properties. Board and gallery views show their rows this way.
+import { openRow } from "../../row-open.commands.ts";
 import "./row-card.css";
 import { html, nothing, type TemplateResult } from "lit-html";
-import type { PropertyId } from "../../../../model/index.ts";
-import { setActivePage, type Dispatch } from "../../../../state/index.ts";
+import type { PropertyId, ViewId } from "../../../../model/index.ts";
+import { type Dispatch } from "../../../../state/index.ts";
 import { COPY } from "../../../../ui/copy.ts";
 import type { CellContext } from "../../property-definition.ts";
 import { propertyType } from "../../property-registry.ts";
@@ -14,6 +15,8 @@ export interface RowCardOptions {
   readonly row: TableRow;
   readonly columns: readonly TableColumn[];
   readonly dispatch: Dispatch;
+  // The view the card is in, which says how its row opens.
+  readonly viewId: ViewId;
   // A property the layout already shows, such as a board's group.
   readonly omit?: PropertyId;
   // The picture shown above the title.
@@ -60,7 +63,7 @@ export function renderRowCard(options: RowCardOptions): TemplateResult {
     class="row-card"
     data-row-id=${row.id}
     aria-description=${options.description ?? nothing}
-    @click=${() => dispatch(setActivePage.create({ pageId: row.id }))}
+    @click=${() => dispatch(openRow.create({ rowId: row.id, viewId: options.viewId }))}
     @keydown=${options.onKeyDown ?? nothing}
   >
     ${renderPicture(options.picture)}

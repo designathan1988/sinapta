@@ -7,6 +7,7 @@ import {
   type PropertyDefinition,
 } from "../../blocks/database/index.ts";
 import { selectPage, type PageBlock } from "../../blocks/page/index.ts";
+import type { BlockId } from "../../model/index.ts";
 import type { AppState, Dispatch } from "../../state/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
@@ -81,8 +82,9 @@ function onChange(event: Event, context: RowContext): void {
 export function renderRowProperties(
   state: AppState,
   dispatch: Dispatch,
+  pageId: BlockId | null = state.ui.activePageId,
 ): TemplateResult | typeof nothing {
-  const row = selectPage(state, state.ui.activePageId);
+  const row = selectPage(state, pageId);
   const database = selectDatabase(state, row?.parentId ?? null);
   const properties = database?.props.properties ?? [];
   if (row === undefined || properties.length === 0) return nothing;

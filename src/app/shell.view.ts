@@ -18,6 +18,7 @@ import { renderBreadcrumbs } from "../features/breadcrumbs/index.ts";
 import { renderHome } from "../features/home/index.ts";
 import { renderPageInfo } from "../features/page-info/index.ts";
 import { renderPageMenuButton } from "../features/page-menu/index.ts";
+import { renderPeek } from "../features/row-peek/index.ts";
 import { SETTINGS_OVERLAY } from "../features/settings/index.ts";
 import { renderButton } from "../ui/button/index.ts";
 import { SHORTCUT_HELP_OVERLAY_KIND } from "../ui/shortcuts/index.ts";
@@ -191,6 +192,7 @@ export function renderShell(
   return html`<div
     class="app"
     ?data-sidebar-collapsed=${isSidebarCollapsed}
+    data-peek=${state.ui.peek?.mode ?? nothing}
     ${ref((shell) => {
       setWidth(shell, sidebarWidth);
     })}
@@ -209,5 +211,6 @@ export function renderShell(
       ${renderFormatToolbar(state, dispatch)} ${renderOverlay(state, dispatch)}
       ${renderHelpButton(dispatch)}
     </main>
+    ${renderPeek(state, dispatch)}
   </div>`;
 }

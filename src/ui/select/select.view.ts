@@ -44,7 +44,8 @@ export interface SelectProps {
   // "field" is boxed, for forms; "quiet" is text with a chevron, for
   // rows such as a filter's; "row" is a menu row, its label then its
   // value, whose list opens beside the menu as Notion's settings do.
-  readonly variant?: "field" | "quiet" | "row";
+  // "icon" shows only what `display` gives, as a toolbar button.
+  readonly variant?: "field" | "quiet" | "row" | "icon";
   // A menu to open in place of the option list: entries such as groups
   // that open submenus, as Notion's Calculate, and fields above them, as
   // a date's; the options then only name the current choice.
@@ -214,7 +215,8 @@ export function renderSelect(
           ? html`<span class="select__label">${props.label}</span>`
           : nothing
       }
-      ${renderCurrent(props)} ${renderIcon("chevron")}
+      ${renderCurrent(props)}
+      ${props.variant === "icon" ? nothing : renderIcon("chevron")}
     </button>
     ${state.isOpen ? renderList(props, context, state) : nothing}`;
 }

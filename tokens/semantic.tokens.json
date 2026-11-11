@@ -305,6 +305,10 @@
     },
     "block": {
       "$value": "{base.space.0x75}"
+    },
+    "peek": {
+      "$description": "The space beside a peeked page's text.",
+      "$value": "{base.space.4x75}"
     }
   },
   "size": {
@@ -494,6 +498,20 @@
         "$description": "A donut chart's width.",
         "$value": "{base.size.12}"
       }
+    },
+    "peek": {
+      "side": {
+        "$description": "A side peek's width, as Notion's.",
+        "$value": "{base.size.40}"
+      },
+      "center": {
+        "$description": "A center peek's widest.",
+        "$value": "{base.size.60}"
+      },
+      "inset": {
+        "$description": "The space above and below a center peek.",
+        "$value": "{base.size.4x5}"
+      }
     }
   },
   "radius": {
@@ -677,6 +695,49 @@
           }
         }
       ]
+    },
+    "peek": {
+      "$description": "A side peek's edge: a hairline and a soft shade.",
+      "$value": [
+        {
+          "color": "{color.shadow.ring}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 0,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 0,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 1,
+            "unit": "px"
+          }
+        },
+        {
+          "color": "{color.shadow.soft}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 4,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 12,
+            "unit": "px"
+          },
+          "spread": {
+            "value": -2,
+            "unit": "px"
+          }
+        }
+      ]
     }
   },
   "font": {
@@ -717,6 +778,10 @@
       },
       "pageIcon": {
         "$value": "{base.font.size.8}"
+      },
+      "peekTitle": {
+        "$description": "A page's title in a peek, smaller than on its own page.",
+        "$value": "{base.font.size.6x5}"
       }
     },
     "weight": {
@@ -782,6 +847,10 @@
       "$value": "{base.layer.1}"
     },
     "dragPreview": {
+      "$value": "{base.layer.2}"
+    },
+    "peek": {
+      "$description": "A center peek and the dim behind it, over the page.",
       "$value": "{base.layer.2}"
     }
   }

@@ -3,11 +3,11 @@
 // bar per dated row from its first day to its last. A bar opens its row,
 // moves with Alt and an arrow, stretches with Shift too, or is dragged.
 // Rows without a date are listed under the timeline.
+import { openRow } from "../../row-open.commands.ts";
 import "./timeline.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import type { PropertyId } from "../../../../model/index.ts";
-import { setActivePage } from "../../../../state/index.ts";
 import { COPY } from "../../../../ui/copy.ts";
 import { centerChild, revealOnce } from "../../../../ui/focus/index.ts";
 import { renderSelect } from "../../../../ui/select/index.ts";
@@ -93,7 +93,7 @@ function renderBar(bar: TimelineBar, at: BarContext): TemplateResult {
       data-row-id=${bar.row.id}
       aria-description=${TEXT.moveBarHint}
       ${ref(place(bar.offset, bar.span))}
-      @click=${() => at.context.dispatch(setActivePage.create({ pageId: bar.row.id }))}
+      @click=${() => at.context.dispatch(openRow.create({ rowId: bar.row.id, viewId: at.context.model.view.id }))}
       @keydown=${onKey}
       @pointerdown=${(event: PointerEvent) => {
         startDrag(event, bar, at);
@@ -149,7 +149,7 @@ function renderTable(timeline: Timeline, context: TableContext) {
           role="listitem"
           class="timeline__title"
           data-row-id=${bar.row.id}
-          @click=${() => context.dispatch(setActivePage.create({ pageId: bar.row.id }))}
+          @click=${() => context.dispatch(openRow.create({ rowId: bar.row.id, viewId: context.model.view.id }))}
         >
           ${title(bar.row)}
         </button>`,
@@ -188,7 +188,7 @@ function renderUndated(timeline: Timeline, context: TableContext) {
         html`<button
           type="button"
           class="timeline__title"
-          @click=${() => context.dispatch(setActivePage.create({ pageId: row.id }))}
+          @click=${() => context.dispatch(openRow.create({ rowId: row.id, viewId: context.model.view.id }))}
         >
           ${title(row)}
         </button>`,

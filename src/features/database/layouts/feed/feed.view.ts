@@ -1,8 +1,8 @@
 // A feed, as Notion's: a column of posts, one per row, each with its icon
 // and title, which open the row, and the first blocks of its page.
+import { openRow } from "../../row-open.commands.ts";
 import "./feed.css";
 import { html, nothing, type TemplateResult } from "lit-html";
-import { setActivePage } from "../../../../state/index.ts";
 import { COPY } from "../../../../ui/copy.ts";
 import type { TableContext } from "../../table-cell.view.ts";
 import { selectFeed, type FeedBlock, type FeedPost } from "./feed.selectors.ts";
@@ -21,7 +21,9 @@ function renderBlock(block: FeedBlock): TemplateResult {
 function renderPost(post: FeedPost, context: TableContext): TemplateResult {
   const { row } = post;
   const open = (): void => {
-    context.dispatch(setActivePage.create({ pageId: row.id }));
+    context.dispatch(
+      openRow.create({ rowId: row.id, viewId: context.model.view.id }),
+    );
   };
   return html`<article class="feed__post" data-row-id=${row.id}>
     <button type="button" class="feed__title" @click=${open}>

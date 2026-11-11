@@ -1,0 +1,98 @@
+@layer features {
+  /* Notion's side peek: the row's page docked beside the database, as
+     tall as the window, sliding in from the edge. */
+  .peek {
+    display: flex;
+    flex-direction: column;
+    min-inline-size: 0;
+    overflow: hidden;
+    background-color: var(--color-bg-app);
+    box-shadow: var(--shadow-peek);
+    transition:
+      translate var(--duration-medium) var(--easing-standard),
+      opacity var(--duration-medium) var(--easing-standard);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &[data-mode="side"] {
+      @starting-style {
+        translate: 100% 0;
+      }
+    }
+
+    /* The center peek: a sheet over the page, the page dimmed behind. */
+    &[data-mode="center"] {
+      position: fixed;
+      inset-block: var(--size-peek-inset);
+      inset-inline: 0;
+      z-index: var(--layer-peek);
+      inline-size: min(var(--size-peek-center), 100%);
+      margin-inline: auto;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-dialog);
+
+      @starting-style {
+        opacity: 0;
+        translate: 0 var(--space-inset-md);
+      }
+    }
+  }
+
+  .peek-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: var(--layer-peek);
+    background-color: var(--color-bg-scrim);
+    transition: opacity var(--duration-medium) var(--easing-standard);
+
+    @starting-style {
+      opacity: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  .peek__bar {
+    display: flex;
+    flex: none;
+    gap: var(--space-inset-xxs);
+    align-items: center;
+    block-size: var(--size-top-bar);
+    padding-inline: var(--space-inset-md);
+  }
+
+  .peek__button {
+    inline-size: var(--size-control-sm);
+    padding: var(--space-none);
+
+    &[aria-disabled="true"] {
+      color: var(--color-text-tertiary);
+      cursor: default;
+    }
+  }
+
+  /* The gaps between the bar's groups of buttons. */
+  .peek__gap {
+    inline-size: var(--space-inline-md);
+  }
+
+  .peek__end {
+    display: flex;
+    gap: var(--space-inset-xxs);
+    align-items: center;
+    margin-inline-start: auto;
+  }
+
+  .peek__body {
+    --editor-title-size: var(--font-size-peek-title);
+
+    flex: 1;
+    min-block-size: 0;
+    padding: var(--space-inset-lg) var(--space-peek) var(--space-inset-xl);
+    overflow: hidden auto;
+  }
+}

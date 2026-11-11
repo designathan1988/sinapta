@@ -1,10 +1,10 @@
 // A calendar: a month in weeks or a single week, with or without its
 // weekends, each row on the days of its date property. Rows move between
 // days by drag, or by Alt with an arrow key.
+import { openRow } from "../../row-open.commands.ts";
 import "./calendar.css";
 import { html, type TemplateResult } from "lit-html";
 import type { BlockId } from "../../../../model/index.ts";
-import { setActivePage } from "../../../../state/index.ts";
 import { renderButton } from "../../../../ui/button/index.ts";
 import { COPY } from "../../../../ui/copy.ts";
 import { startPointerDrag } from "../../../../ui/drag/index.ts";
@@ -109,7 +109,7 @@ function renderEntry(
     class="calendar__entry"
     data-row-id=${row.id}
     aria-description=${COPY.database.moveEntryHint}
-    @click=${() => context.dispatch(setActivePage.create({ pageId: row.id }))}
+    @click=${() => context.dispatch(openRow.create({ rowId: row.id, viewId: context.model.view.id }))}
     @keydown=${onKeyDown}
   >
     ${row.title === "" ? COPY.sidebar.untitled : row.title}

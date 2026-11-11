@@ -15,10 +15,14 @@ import { calendarOptionCommands } from "./calendar-options.commands.ts";
 import { timelineOptionCommands } from "./timeline-options.commands.ts";
 import { chartOptionCommands } from "./chart-options.commands.ts";
 import { formOptionCommands } from "./form-options.commands.ts";
+import { rowOpenCommands } from "./row-open.commands.ts";
 import { formCommands } from "./layouts/form/form.commands.ts";
 import { boardCardCommands } from "./layouts/board/board-card.commands.ts";
 
 export { createDatabase } from "./database.commands.ts";
+export { openRow } from "./row-open.commands.ts";
+export { addRow } from "./row.commands.ts";
+export { selectTableModel } from "./table-model.selectors.ts";
 export { groupByProperty } from "./group.commands.ts";
 export { startDatabase } from "./database-start.commands.ts";
 export { renderDatabase } from "./database.view.ts";
@@ -56,6 +60,7 @@ export const databaseCommands = [
   ...timelineOptionCommands,
   ...chartOptionCommands,
   ...formOptionCommands,
+  ...rowOpenCommands,
   ...formCommands,
   ...boardCardCommands,
   ...viewLayoutCommands,

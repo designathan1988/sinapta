@@ -56,7 +56,7 @@ export const setActivePage = defineCommand<{ pageId: BlockId | null }>({
     // it is not yet the latest of the recent pages (as after a reload).
     const isShown = pageId === ui.activePageId && !ui.isHomeOpen;
     if (isShown && (pageId === null || ui.recentPageIds[0] === pageId)) {
-      return {};
+      return ui.peek === null ? {} : { ui: { ...ui, peek: null } };
     }
     if (pageId !== null && state.workspace.blocks[pageId] === undefined) {
       return {};
@@ -68,8 +68,15 @@ export const setActivePage = defineCommand<{ pageId: BlockId | null }>({
             0,
             RECENT_PAGES_MAX,
           );
+    // A row open in a peek closes as another page opens.
     return {
-      ui: { ...ui, activePageId: pageId, isHomeOpen: false, recentPageIds },
+      ui: {
+        ...ui,
+        activePageId: pageId,
+        isHomeOpen: false,
+        recentPageIds,
+        peek: null,
+      },
     };
   },
 });

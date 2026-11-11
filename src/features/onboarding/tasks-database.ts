@@ -55,6 +55,7 @@ function view(ids: TaskIds, index: number, type: ViewType): View[] {
     timeline: { zoom: "month", showTable: true },
     chart: { kind: "column", aggregate: "count" },
     form: { requiredPropertyIds: [], description: "" },
+    openMode: "side",
   };
   if (type === "board") {
     return [{ ...record, groupBy: groupByProperty(status) }];

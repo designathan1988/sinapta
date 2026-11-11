@@ -48,6 +48,12 @@
     background-color: var(--color-bg-selected);
   }
 
+  /* The row open in a peek, ringed in blue as in Notion. */
+  .database__row[data-peeked] {
+    outline: var(--size-border-thin) solid var(--color-border-focus);
+    outline-offset: calc(var(--size-border-thin) * -1);
+  }
+
   .database__cell[data-wrapped] {
     block-size: auto;
     overflow-wrap: anywhere;

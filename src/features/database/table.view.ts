@@ -39,6 +39,7 @@ function renderRow(
     class="database__row"
     data-row-id=${row.id}
     ?data-ticked=${isTicked}
+    ?data-peeked=${context.state.ui.peek?.pageId === row.id}
     aria-rowindex=${index + 2}
   >
     ${renderRowGutter(row, context)}

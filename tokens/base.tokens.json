@@ -1050,6 +1050,12 @@
           "unit": "rem"
         }
       },
+      "4x75": {
+        "$value": {
+          "value": 4.75,
+          "unit": "rem"
+        }
+      },
       "0x75": {
         "$value": {
           "value": 0.1875,
@@ -1140,6 +1146,24 @@
       "36": {
         "$value": {
           "value": 36,
+          "unit": "rem"
+        }
+      },
+      "40": {
+        "$value": {
+          "value": 40,
+          "unit": "rem"
+        }
+      },
+      "60": {
+        "$value": {
+          "value": 60,
+          "unit": "rem"
+        }
+      },
+      "4x5": {
+        "$value": {
+          "value": 4.5,
           "unit": "rem"
         }
       },
@@ -1345,6 +1369,12 @@
         "6": {
           "$value": {
             "value": 1.875,
+            "unit": "rem"
+          }
+        },
+        "6x5": {
+          "$value": {
+            "value": 2,
             "unit": "rem"
           }
         },

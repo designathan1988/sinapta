@@ -23,6 +23,7 @@ export const DATABASE_MENU_TEXT = {
   nextWeek: "Next week",
   calendarAs: "Show calendar as",
   calendarModes: { month: "Month", week: "Week" },
+  openPagesIn: "Open pages in",
   showWeekends: "Show weekends",
   weekStartsMonday: "Start week on Monday",
   timelineZoom: "Zoom",

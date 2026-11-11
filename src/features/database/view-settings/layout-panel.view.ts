@@ -13,6 +13,7 @@ import { setCardOptions } from "../card.commands.ts";
 import type { TableContext } from "../table-cell.view.ts";
 import { setViewType } from "../view-layout.commands.ts";
 import { LAYOUT_ICONS } from "./root-panel.view.ts";
+import { OPEN_MODE_ICONS } from "./choice-panels.ts";
 import { panelRow, type SettingsPanel } from "./settings-panel.ts";
 
 function renderTiles(context: TableContext): TemplateResult {
@@ -106,7 +107,7 @@ function timelineItems(context: TableContext): MenuEntry[] {
   ];
 }
 
-function layoutItems(context: TableContext): MenuEntry[] {
+function typeItems(context: TableContext): MenuEntry[] {
   const { view, database } = context.model;
   if (view.type === "board" || view.type === "gallery") {
     return cardItems(context);
@@ -161,6 +162,21 @@ function calendarItems(context: TableContext): MenuEntry[] {
       onSelect: set({ weekStartsOn: calendar.weekStartsOn === 1 ? 0 : 1 }),
     },
   ];
+}
+
+// Where the view opens its rows, as Notion's "Open pages in"; a chart and
+// a form show no rows to open.
+function openModeItems(context: TableContext): MenuEntry[] {
+  const { view } = context.model;
+  if (view.type === "chart" || view.type === "form") return [];
+  const value = COPY.peek.modes[view.openMode];
+  const icon = OPEN_MODE_ICONS[view.openMode];
+  const row = { label: COPY.database.openPagesIn, icon, value };
+  return [panelRow(context, row, "open-mode")];
+}
+
+function layoutItems(context: TableContext): MenuEntry[] {
+  return [...typeItems(context), ...openModeItems(context)];
 }
 
 export function layoutPanel(context: TableContext): SettingsPanel {

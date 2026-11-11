@@ -151,6 +151,9 @@ export const viewSchema = v.object({
   timeline: timelineOptionsSchema,
   chart: chartOptionsSchema,
   form: formOptionsSchema,
+  // Where the view opens a row (version 26): beside the database, over it,
+  // or as its own page.
+  openMode: v.picklist(["side", "center", "full"]),
 });
 
 export type Filter = v.InferOutput<typeof filterSchema>;
