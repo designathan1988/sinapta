@@ -18,6 +18,10 @@ import {
 import { createPage, isPageLike } from "../../blocks/page/index.ts";
 import { createDatabase } from "../database/index.ts";
 import { TRASH_OVERLAY } from "../trash/index.ts";
+import {
+  foldQuery,
+  selectTextMatches,
+} from "./command-palette-text.selectors.ts";
 
 export const PALETTE_OVERLAY = PALETTE_OVERLAY_KIND;
 const PAGE_LIMIT = 8;
@@ -26,7 +30,10 @@ const PAGE_LIMIT = 8;
 export interface PaletteItem {
   readonly label: string;
   readonly command: Command;
-  readonly kind: "page" | "action";
+  // "content" is a page found by the text of its blocks.
+  readonly kind: "page" | "content" | "action";
+  // The text around the match, for a page found by its text.
+  readonly detail?: string;
 }
 
 function actions(): PaletteItem[] {
@@ -52,11 +59,6 @@ function actions(): PaletteItem[] {
   ];
 }
 
-// Comparison that ignores case and accents' width forms in any language.
-function fold(text: string): string {
-  return text.normalize("NFKC").toLocaleLowerCase("en-US");
-}
-
 // Every page and row that is not in the trash, by title.
 function pages(state: AppState): PaletteItem[] {
   return Object.values(state.workspace.blocks).flatMap(
@@ -70,19 +72,23 @@ function pages(state: AppState): PaletteItem[] {
   );
 }
 
-// What the palette lists for a query: matching pages first, then matching
-// actions. An empty query lists the actions only.
+// What the palette lists for a query: pages whose title matches, then
+// pages whose text matches, then matching actions. An empty query lists the actions only.
 export function selectPaletteItems(
   state: AppState,
   query: string,
 ): PaletteItem[] {
-  const needle = fold(query.trim());
+  const needle = foldQuery(query.trim());
   const matches = (item: PaletteItem): boolean =>
-    fold(item.label).includes(needle);
+    foldQuery(item.label).includes(needle);
   if (needle === "") return actions();
   const found = pages(state)
     .filter(matches)
     .sort((a, b) => a.label.localeCompare(b.label, "en-US"))
     .slice(0, PAGE_LIMIT);
-  return [...found, ...actions().filter(matches)];
+  const titled = new Set(found.map((item) => item.label));
+  const inText = selectTextMatches(state, needle, PAGE_LIMIT)
+    .filter((match) => !titled.has(match.label))
+    .map((match): PaletteItem => ({ ...match, kind: "content" }));
+  return [...found, ...inText, ...actions().filter(matches)];
 }

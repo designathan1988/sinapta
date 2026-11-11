@@ -19,7 +19,8 @@
 
   .command-palette__item {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
     min-block-size: var(--size-row-height);
     padding: var(--space-none) var(--space-inset-sm);
     border-radius: var(--radius-sm);
@@ -33,6 +34,14 @@
     &[data-kind="action"] {
       color: var(--color-text-secondary);
     }
+  }
+
+  .command-palette__detail {
+    overflow: hidden;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .command-palette__empty {

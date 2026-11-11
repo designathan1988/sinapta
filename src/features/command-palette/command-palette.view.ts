@@ -1,5 +1,5 @@
 import "./command-palette.css";
-import { html, type TemplateResult } from "lit-html";
+import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import {
   closeOverlay,
@@ -70,7 +70,12 @@ function renderOption(
       keepInView(option, isActive);
     })}
   >
-    ${item.label}
+    <span class="command-palette__label">${item.label}</span>
+    ${
+      item.detail === undefined
+        ? nothing
+        : html`<span class="command-palette__detail">${item.detail}</span>`
+    }
   </li>`;
 }
 

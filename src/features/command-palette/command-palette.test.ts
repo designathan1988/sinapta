@@ -58,3 +58,46 @@ describe("selectPaletteItems", () => {
     expect(item?.command).toEqual({ type: "ui.setActivePage", pageId: "a" });
   });
 });
+
+describe("searching page text", () => {
+  function stateWithText(): AppState {
+    const workspace = buildWorkspace([
+      {
+        id: "notes",
+        props: page("Meeting notes"),
+        children: [
+          {
+            id: "p",
+            type: "paragraph",
+            props: {
+              text: [
+                { text: "We agreed to ship the Budget review next week." },
+              ],
+            },
+          },
+          { id: "child", props: page("Child"), children: [] },
+        ],
+      },
+      { id: "budget", props: page("Budget 2027") },
+    ]);
+    return { ...createInitialState(), workspace };
+  }
+
+  it("finds a page by text in its blocks and shows the text around the match", () => {
+    const items = selectPaletteItems(stateWithText(), "budget review");
+
+    expect(items[0]).toMatchObject({
+      kind: "content",
+      label: "Meeting notes",
+      detail: "…to ship the Budget review next week.",
+    });
+  });
+
+  it("lists pages whose title matches before pages whose text matches", () => {
+    const kinds = selectPaletteItems(stateWithText(), "budget").map(
+      (item) => item.kind,
+    );
+
+    expect(kinds.slice(0, 2)).toEqual(["page", "content"]);
+  });
+});

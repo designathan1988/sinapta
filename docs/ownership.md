@@ -81,6 +81,7 @@ owner listed here exists.
 | Table menus and popovers | `src/features/database/*-menu.view.ts`, `view-*.view.ts`, `cell-options.view.ts` | 6 |
 | The database block type | `src/blocks/database/` | 5 |
 | Command palette and search | `src/features/command-palette/` | 7 |
+| Finding pages by the text of their blocks | `src/features/command-palette/command-palette-text.selectors.ts` | 10 |
 | Focusing and showing elements once they are in the page | `src/ui/focus/` | 5 |
 | Table row models (sort, filter, order through the table engine) | `src/features/database/table-model.selectors.ts` | 5 |
 | Keyboard shortcuts | `src/ui/shortcuts/shortcut-registry.ts` | 1 |
