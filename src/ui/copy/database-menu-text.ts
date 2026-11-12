@@ -77,6 +77,9 @@ export const DATABASE_MENU_TEXT = {
   formSent: "Your response was sent.",
   feedEmpty: "Nothing written yet.",
   moreViews: (count: number) => `${String(count)} more…`,
+  sortsAndFilters: "Sorts and filters",
+  sortCount: (count: number) => `${String(count)} sorts`,
+  ruleCount: (count: number) => `${String(count)} rules`,
   noChartProperty: "Add a select or status property to chart the rows by.",
   chartKind: "Chart type",
   chartKinds: {

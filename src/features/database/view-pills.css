@@ -1,0 +1,46 @@
+@layer features {
+  /* Notion's row of sorts and filters under the toolbar. */
+  .database__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    padding-block: var(--space-stack-xs);
+    border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
+  }
+
+  /* A rule is a blue pill; "Add filter" a quiet one beside it. */
+  .database__pill {
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    min-block-size: var(--size-control-sm);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: var(--size-border-thin) solid transparent;
+    border-radius: var(--radius-full);
+    background-color: transparent;
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: var(--color-bg-hover);
+    }
+
+    &[data-rule] {
+      border-color: color-mix(
+        in oklch,
+        var(--color-accent-default) 35%,
+        transparent
+      );
+      background-color: var(--color-accent-subtle);
+      color: var(--color-text-accent);
+    }
+
+    & > .icon {
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+    }
+  }
+}

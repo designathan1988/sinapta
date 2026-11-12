@@ -38,15 +38,6 @@ export function setColumnWidth(
   }
 }
 
-// The place of a column in the sort order, shown when several sort.
-function sortRank(column: TableColumn, context: TableContext): string {
-  const { sorts } = context.model.view;
-  const index = sorts.findIndex(
-    (sort) => sort.propertyId === column.property.id,
-  );
-  return sorts.length > 1 && index !== -1 ? String(index + 1) : "";
-}
-
 // The width a pointer position asks for: its distance from the header's
 // start edge.
 function widthAt(event: PointerEvent): number {
@@ -113,15 +104,14 @@ function renderResizer(
   ></span>`;
 }
 
-const SORT_ARROWS = { ascending: "↑", descending: "↓" } as const;
-
 // The header itself, as Notion's: its type's icon and its name; a press
-// opens the column's menu, which holds the sorts.
+// opens the column's menu, which holds the sorts. The sorts show in the
+// row of pills under the toolbar, not in the header.
 function renderHeaderButton(
   column: TableColumn,
   context: TableContext,
 ): TemplateResult {
-  const { property, sortDirection } = column;
+  const { property } = column;
   const { overlay } = context.state.ui;
   const anchorId = column.property.id;
   // The column's menu, with its property's settings in submenus, sits by
@@ -146,9 +136,6 @@ function renderHeaderButton(
   >
     ${renderIcon(column.isTitle ? "title" : propertyType(property.type).icon)}
     <span class="database__header-name">${property.name}</span>
-    <span aria-hidden="true"
-      >${sortDirection ? SORT_ARROWS[sortDirection] : ""}${sortRank(column, context)}</span
-    >
   </button>`;
 }
 

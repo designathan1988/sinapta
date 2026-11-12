@@ -30,6 +30,11 @@ export const VIEW_SETTINGS_OVERLAY = "view-settings";
 // The toolbar's Sort, as Notion's: the sort panels of the view settings,
 // in a popover of their own.
 export const VIEW_SORTS_OVERLAY = "view-sorts";
+// The sort pill under the toolbar opens the same panels.
+const SORT_KINDS: ReadonlySet<string> = new Set([
+  VIEW_SORTS_OVERLAY,
+  "view-sort-pill",
+]);
 
 const PANELS: Readonly<
   Record<string, (context: TableContext) => SettingsPanel>
@@ -57,7 +62,7 @@ const PANELS: Readonly<
 // The panel the overlay opens on: the settings' list of settings, or the
 // sorts, which with none go straight to choosing one.
 function firstPanel(context: TableContext): string | undefined {
-  if (context.state.ui.overlay?.kind !== VIEW_SORTS_OVERLAY) return undefined;
+  if (!SORT_KINDS.has(context.state.ui.overlay?.kind ?? "")) return undefined;
   return context.model.view.sorts.length > 0 ? "sort" : "sort-add";
 }
 

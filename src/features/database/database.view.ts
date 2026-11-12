@@ -1,3 +1,4 @@
+import { renderViewPills } from "./view-pills.view.ts";
 import { renderViewTabs } from "./view-tabs.view.ts";
 import "./database.css";
 import { html, nothing, type TemplateResult } from "lit-html";
@@ -186,7 +187,7 @@ export function renderDatabaseSection(
     ?data-inline=${options.isInline === true}
   >
     ${options.header ?? nothing} ${renderToolbar(context)}
-    ${renderLayout(context)}
+    ${renderViewPills(context)} ${renderLayout(context)}
     ${LISTED_LAYOUTS.has(model.view.type) ? renderFooter(context) : nothing}
     ${renderTableOverlay(context)}
   </section>`;

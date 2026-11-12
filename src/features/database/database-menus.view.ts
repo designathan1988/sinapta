@@ -25,6 +25,11 @@ import { COLUMN_MENU_OVERLAY } from "./database-overlay.ts";
 import { PROPERTY_TYPES_OVERLAY } from "./table-header.view.ts";
 import { FILTERS_OVERLAY, renderFilters } from "./view-filters.view.ts";
 import {
+  VIEW_FILTER_ADD_OVERLAY,
+  VIEW_FILTER_PILL_OVERLAY,
+  VIEW_SORT_PILL_OVERLAY,
+} from "./view-pills.view.ts";
+import {
   renderViewSettings,
   VIEW_SETTINGS_OVERLAY,
   VIEW_SORTS_OVERLAY,
@@ -56,6 +61,9 @@ const OVERLAYS: Record<string, Render> = {
   [BOARD_COLUMN_OVERLAY]: renderBoardColumnMenu,
   [VIEW_SETTINGS_OVERLAY]: renderViewSettings,
   [VIEW_SORTS_OVERLAY]: renderViewSettings,
+  [VIEW_SORT_PILL_OVERLAY]: renderViewSettings,
+  [VIEW_FILTER_PILL_OVERLAY]: renderFilters,
+  [VIEW_FILTER_ADD_OVERLAY]: renderFilters,
   [GROUP_MENU_OVERLAY]: renderGroupMenu,
   [VIEW_TABS_OVERLAY]: renderMoreViews,
   [VIEW_LIST_OVERLAY]: renderViewList,
@@ -71,6 +79,9 @@ const DATABASE_OVERLAYS: ReadonlySet<string> = new Set([
   FILTERS_OVERLAY,
   VIEW_SETTINGS_OVERLAY,
   VIEW_SORTS_OVERLAY,
+  VIEW_SORT_PILL_OVERLAY,
+  VIEW_FILTER_PILL_OVERLAY,
+  VIEW_FILTER_ADD_OVERLAY,
   NEW_VIEW_OVERLAY,
 ]);
 
