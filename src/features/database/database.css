@@ -81,12 +81,17 @@
     padding: var(--space-none) var(--space-inset-sm);
     border: none;
     border-block-end: var(--size-border-thick) solid transparent;
+    border-start-start-radius: var(--radius-sm);
+    border-start-end-radius: var(--radius-sm);
     background-color: transparent;
     color: var(--color-text-secondary);
     font-size: var(--font-size-sm);
     cursor: pointer;
 
+    /* Every tab, the open one too, lights up when pointed at, as
+       Notion's. */
     &:hover {
+      background-color: var(--color-bg-hover);
       color: var(--color-text-primary);
     }
 
