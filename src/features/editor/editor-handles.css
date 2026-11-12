@@ -90,7 +90,9 @@
     opacity: 1;
   }
 
-  .editor__block:hover > .editor__handle {
+  /* Only the innermost block under the pointer shows its handles, as
+     Notion's: a parent block does not show its own beside its child's. */
+  .editor__block:hover:not(:has(.editor__block:hover)) > .editor__handle {
     opacity: 1;
   }
 }
