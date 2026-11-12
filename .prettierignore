@@ -4,3 +4,5 @@ package-lock.json
 # Documents keep their authored layout: CLAUDE.md must match the
 # specification text exactly.
 *.md
+# Spec Kit keeps its own files as it writes them.
+.specify/

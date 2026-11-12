@@ -10,8 +10,11 @@ No UI framework. Full specification: docs/specification.md.
 - npm run verify         type check + lint + full tests; run before every commit
 - npm run tokens         rebuild src/styles/tokens.generated.css
 - npm run audit:ui       interface audit in headless Chrome against the app
-                         at :5190 (UI_AUDIT_URL); ~40 s, run it in the
-                         background; report in .ui-audit/report.md
+                         at :5190 (UI_AUDIT_URL; UI_AUDIT_ONLY narrows it);
+                         about 90 s, run it in the background; report in
+                         .ui-audit/report.md
+- npm run audit:ui:self-test  proves the audit's rules on a fixture of broken
+                         and correct cases; about 2 s, no app needed
 
 ## Architecture rules
 - All state lives in the one store: src/state/store.ts. Views keep no state.
@@ -71,15 +74,23 @@ No UI framework. Full specification: docs/specification.md.
   {path, selector}.
 - Capture each changed surface whole, then each region and every open
   menu state, and inspect them before calling UI work done.
-- Pictures are not enough: run npm run audit:ui. It uses the app as a
-  person would (clicks, keys, every block kind, both themes, 1024 px) and
-  measures each moment: handles level with their block's first line,
-  menus inside the window and beside their control, no sideways scroll,
-  no clipped or covered controls, no unseen text, toolbars on one line,
-  no console errors, and the behaviors it asserts. UI work is done only
-  at "0 found"; fix the interface, or the check with a reason.
-- A new surface or behavior gets its scenario in scripts/ui-audit/
-  before its code; a new kind of defect gets a check there.
+- Pictures are not enough: run npm run audit:ui. It explores the app by
+  itself, needing no per-screen script: it visits every sidebar page,
+  Home and every database view, in light and dark at 1440 px and light at
+  1024 px; points at and focuses one control of each kind (rows first,
+  for controls they show on hover); presses everything that declares it
+  opens something, judges what opens, closes it with Escape and checks
+  nothing is left stuck. Every state is judged against general rules:
+  hover and focus visibly respond and move nothing, menus inside the
+  window and beside their control, nothing clipped, covered, blank,
+  misaligned, unseen, overflowing or zero-size, images load, no sideways
+  scroll, no console errors. Scripted scenarios still check typing, the
+  "/" menu, every block kind and the peek. Its report groups each defect
+  once, with a picture, and says what is new and what was fixed.
+- UI work is done only at "0 found"; fix the interface, or the rule with
+  a reason. A new kind of defect gets a rule in scripts/ui-audit/ and a
+  broken and a correct case in fixtures/defects.html first; the
+  self-test must pass.
 
 ## Read on demand
 - Data flow and layers: docs/architecture.md

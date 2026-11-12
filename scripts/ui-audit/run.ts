@@ -1,17 +1,23 @@
-// The interface audit: opens the app in a fresh, headless Google Chrome at
-// 1440x900 @2x, in the light theme and then the dark, uses it as a person
-// would and checks every moment for broken layout and behavior. Run with `npm run audit:ui` while the app is
-// served (UI_AUDIT_URL, default http://localhost:5190/). Pictures and the
-// report land in .ui-audit/; the exit code is 1 when anything was found.
-import { mkdir, rm, writeFile } from "node:fs/promises";
+// The interface audit: opens the served app in fresh, headless Google
+// Chrome profiles and uses it as a person would. In light and dark at
+// 1440x900 it runs the scripted scenarios, then sweeps every place by
+// itself; at 1024x768 it sweeps again, judging every place and surface.
+// Run with `npm run audit:ui` (UI_AUDIT_URL, default
+// http://localhost:5190/; UI_AUDIT_ONLY narrows it, see
+// specs/001-auto-ui-audit/contracts/cli.md). Pictures and the report land
+// in .ui-audit/; the exit code is 1 when anything was found.
+import { mkdir, readdir, rm } from "node:fs/promises";
 import { chromium, type Browser, type Page } from "playwright-core";
-import { createSession, type Finding, type Session } from "./audit-session.ts";
+import { createSession, type Session } from "./audit-session.ts";
+import { groupFindings, readPrevious, writeReport } from "./report.ts";
 import { BLOCK_SCENARIOS } from "./scenarios-blocks.ts";
 import { DATABASE_SCENARIOS } from "./scenarios-database.ts";
 import { EDITOR_SCENARIOS } from "./scenarios-editor.ts";
 import { SHELL_SCENARIOS } from "./scenarios-shell.ts";
+import { sweepApp, type SweepMode } from "./sweep-places.ts";
 
 const BASE = process.env.UI_AUDIT_URL ?? "http://localhost:5190/";
+const ONLY = (process.env.UI_AUDIT_ONLY ?? "").split(",").filter(Boolean);
 const FOLDER = new URL("../../.ui-audit/", import.meta.url);
 const SCENARIOS = [
   ...EDITOR_SCENARIOS,
@@ -19,6 +25,45 @@ const SCENARIOS = [
   ...BLOCK_SCENARIOS,
   ...DATABASE_SCENARIOS,
 ];
+
+interface Run {
+  readonly label: string;
+  readonly theme: "light" | "dark";
+  readonly width: number;
+  readonly height: number;
+  readonly mode: SweepMode;
+  readonly seconds: number;
+}
+
+const RUNS: readonly Run[] = [
+  {
+    label: "light",
+    theme: "light",
+    width: 1440,
+    height: 900,
+    mode: "full",
+    seconds: 40,
+  },
+  {
+    label: "dark",
+    theme: "dark",
+    width: 1440,
+    height: 900,
+    mode: "full",
+    seconds: 35,
+  },
+  {
+    label: "narrow",
+    theme: "light",
+    width: 1024,
+    height: 768,
+    mode: "narrow",
+    seconds: 15,
+  },
+];
+
+const allows = (...words: string[]) =>
+  ONLY.length === 0 || words.some((word) => ONLY.includes(word));
 
 async function isServed(): Promise<boolean> {
   try {
@@ -39,8 +84,9 @@ function watchErrors(page: Page, session: Session): void {
   });
 }
 
-async function runAll(session: Session): Promise<void> {
+async function runScenarios(session: Session): Promise<void> {
   for (const scenario of SCENARIOS) {
+    session.place = `${session.label} · scenario ${scenario.name}`;
     try {
       await scenario.run(session);
     } catch (error) {
@@ -51,50 +97,55 @@ async function runAll(session: Session): Promise<void> {
   }
 }
 
-function report(findings: readonly Finding[]): string {
-  const lines = findings.map(
-    (finding) =>
-      `| ${finding.step} | ${finding.check} | ${finding.target} | ${finding.detail} |`,
-  );
-  return [
-    `# Interface audit: ${String(findings.length)} found`,
-    "",
-    "| Step | Check | Element | What is wrong |",
-    "| --- | --- | --- | --- |",
-    ...lines,
-    "",
-  ].join("\n");
-}
-
-// Every scenario in a fresh workspace, in one theme.
-async function auditTheme(
-  browser: Browser,
-  theme: "light" | "dark",
-): Promise<Finding[]> {
+async function auditRun(browser: Browser, run: Run): Promise<Session> {
   const context = await browser.newContext({
-    viewport: { width: 1440, height: 900 },
+    viewport: { width: run.width, height: run.height },
     deviceScaleFactor: 2,
-    colorScheme: theme,
+    colorScheme: run.theme,
   });
   const page = await context.newPage();
   page.setDefaultTimeout(5000);
-  const session = createSession(page, FOLDER, theme);
+  const session = createSession({
+    page,
+    folder: FOLDER,
+    label: run.label,
+    seconds: run.seconds,
+  });
   watchErrors(page, session);
-  await page.goto(BASE);
-  await page.locator(".app__page .editor").waitFor();
-  await runAll(session);
+  try {
+    // A dev server may still be compiling a change: the first load waits.
+    await page.goto(BASE, { timeout: 30_000 });
+    await page.locator(".app__page .editor").waitFor({ timeout: 30_000 });
+    if (run.mode === "full" && allows("scenarios")) await runScenarios(session);
+    if (allows("sweep")) await sweepApp(session, run.mode);
+  } catch (error) {
+    const reason = String(error).split("\n")[0] ?? "";
+    session.expect(false, "load", `the run stopped: ${reason}`);
+  }
   await context.close();
-  return session.findings;
+  return session;
 }
 
-async function audit(): Promise<Finding[]> {
+async function auditAll(): Promise<Session[]> {
   const browser = await chromium.launch({ channel: "chrome", headless: true });
   try {
-    const light = await auditTheme(browser, "light");
-    const dark = await auditTheme(browser, "dark");
-    return [...light, ...dark];
+    const sessions: Session[] = [];
+    for (const run of RUNS) {
+      const width = run.mode === "full" ? "desktop" : "narrow";
+      if (allows(run.theme) && allows(width))
+        sessions.push(await auditRun(browser, run));
+    }
+    return sessions;
   } finally {
     await browser.close();
+  }
+}
+
+async function clearPictures(): Promise<void> {
+  await mkdir(FOLDER, { recursive: true });
+  for (const name of await readdir(FOLDER)) {
+    if (name !== "findings.json")
+      await rm(new URL(name, FOLDER), { recursive: true, force: true });
   }
 }
 
@@ -104,13 +155,28 @@ async function main(): Promise<void> {
     process.exitCode = 2;
     return;
   }
-  await rm(FOLDER, { recursive: true, force: true });
-  await mkdir(FOLDER, { recursive: true });
-  const findings = await audit();
-  const text = report(findings);
-  await writeFile(new URL("report.md", FOLDER), text);
-  console.log(text);
-  process.exitCode = findings.length > 0 ? 1 : 0;
+  const started = Date.now();
+  await clearPictures();
+  const previous = await readPrevious(new URL("findings.json", FOLDER));
+  const sessions = await auditAll();
+  const groups = groupFindings(
+    sessions.flatMap((s) => s.findings),
+    new Set(previous.map((g) => g.key)),
+  );
+  const current = new Set(groups.map((group) => group.key));
+  const coverage = sessions.reduce(
+    (sum, s) => ({
+      places: sum.places + s.coverage.places,
+      controls: sum.controls + s.coverage.controls,
+      surfaces: sum.surfaces + s.coverage.surfaces,
+      states: sum.states + s.coverage.states,
+    }),
+    { places: 0, controls: 0, surfaces: 0, states: 0 },
+  );
+  const fixed = previous.filter((group) => !current.has(group.key));
+  const seconds = (Date.now() - started) / 1000;
+  console.log(await writeReport(FOLDER, { groups, fixed, coverage, seconds }));
+  process.exitCode = groups.length > 0 ? 1 : 0;
 }
 
 await main();

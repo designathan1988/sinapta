@@ -1,8 +1,11 @@
 // Checks of the editor and the database tools, run inside the page as
-// page-checks.ts's are: injected by source, calling each other and
-// page-checks.ts's functions by name.
-import type { Problem } from "./page-checks.ts";
-import { describeElement, isShown } from "./page-checks.ts";
+// every page-*.ts file is: injected by source, calling each other by name.
+import {
+  describeElement,
+  isShown,
+  problemOf,
+  type Problem,
+} from "./page-elements.ts";
 
 // Where a block's first row sits, measured on its first character seen;
 // an empty block's editable line where it has none. Text of the blocks
@@ -45,23 +48,18 @@ export function handleProblems(): Problem[] {
     child.classList.contains("editor__handle"),
   );
   return handles.flatMap((handle): Problem[] => {
-    const target = `${describeElement(handle)} of ${describeElement(block)}`;
+    const of = `of ${describeElement(block)}`;
     if (!isShown(handle)) {
-      return [
-        {
-          check: "handle-hidden",
-          target,
-          detail: "not shown while its block is pointed at",
-        },
-      ];
+      const detail = `not shown while its block is pointed at (${of})`;
+      return [problemOf("handle-hidden", handle, detail)];
     }
     const box = handle.getBoundingClientRect();
     const off = box.top + box.height / 2 - center;
     if (Math.abs(off) <= 3) return [];
     const top = block.getBoundingClientRect().top;
     const where = `handle at ${String(Math.round(box.top - top))} px, line at ${String(Math.round(line.top - top))} px from the block's top`;
-    const detail = `${String(Math.round(Math.abs(off)))} px ${off > 0 ? "below" : "above"} the middle of the block's first line (${where})`;
-    return [{ check: "handle-misaligned", target, detail }];
+    const detail = `${String(Math.round(Math.abs(off)))} px ${off > 0 ? "below" : "above"} the middle of the first line ${of} (${where})`;
+    return [problemOf("handle-misaligned", handle, detail)];
   });
 }
 
@@ -79,6 +77,6 @@ export function wrapProblems(): Problem[] {
     const spread = Math.max(...middles) - Math.min(...middles);
     if (!isShown(row) || middles.length < 2 || spread <= 12) return [];
     const detail = `its tools' middles lie ${String(Math.round(spread))} px apart: two lines`;
-    return [{ check: "wrapped-toolbar", target: describeElement(row), detail }];
+    return [problemOf("wrapped-toolbar", row, detail)];
   });
 }

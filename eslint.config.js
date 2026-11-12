@@ -101,7 +101,7 @@ function layerConfigs(layer) {
 }
 
 export default defineConfig([
-  globalIgnores(["dist/", "src/styles/tokens.generated.css"]),
+  globalIgnores(["dist/", "src/styles/tokens.generated.css", ".specify/"]),
   js.configs.recommended,
   tseslint.configs.strictTypeChecked,
   tseslint.configs.stylisticTypeChecked,

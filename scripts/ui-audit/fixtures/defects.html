@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Interface audit self-test</title>
+    <!--
+      Every case is an element with an id and data-expect: the rule the
+      audit must report on it, or "none" for a correct counterpart that it
+      must not report. `npm run audit:ui:self-test` sweeps this page.
+    -->
+    <style>
+      body {
+        margin: 0;
+        padding: 24px;
+        font: 14px/1.5 sans-serif;
+        color: #222;
+        background: #fff;
+      }
+      section {
+        display: flex;
+        gap: 24px;
+        align-items: flex-start;
+        margin-block-end: 32px;
+      }
+      button {
+        font: inherit;
+        padding: 4px 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background: #fff;
+        color: #222;
+      }
+      button:hover,
+      [role="menuitem"]:hover {
+        background: #eee;
+      }
+      button:focus-visible,
+      [role="menuitem"]:focus-visible {
+        outline: 2px solid #2383e2;
+      }
+      #dead-hover:hover {
+        background: #fff;
+      }
+      #shifting:hover {
+        padding-inline: 20px;
+      }
+      #no-focus:focus-visible {
+        outline: none;
+      }
+      .row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        padding: 4px 8px;
+        inline-size: 240px;
+      }
+      .row:hover {
+        background: #f4f4f4;
+      }
+      .row .row-action {
+        opacity: 0;
+      }
+      .row:hover .row-action {
+        opacity: 1;
+      }
+      [popover] {
+        position: fixed;
+        inset: auto;
+        margin: 0;
+        padding: 4px;
+        border: 1px solid #ccc;
+        background: #fff;
+        color: #222;
+      }
+      [role="menuitem"] {
+        display: block;
+        padding: 4px 8px;
+        border: none;
+        background: transparent;
+        inline-size: 160px;
+        text-align: start;
+      }
+      .line {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .line > span {
+        display: inline-block;
+        inline-size: 16px;
+        block-size: 16px;
+        background: #888;
+      }
+      #low {
+        position: relative;
+        top: 4px;
+      }
+      .narrow {
+        inline-size: 60px;
+      }
+      .wraps {
+        overflow-wrap: anywhere;
+      }
+      #squeezed {
+        inline-size: 0;
+        padding: 0;
+        border: 0;
+        overflow: hidden;
+      }
+      .cover-wrap {
+        position: relative;
+      }
+      .cover-wrap > i {
+        position: absolute;
+        inset: 0;
+      }
+      .inset-row {
+        position: relative;
+        display: inline-block;
+        inline-size: 200px;
+      }
+      .inset-row > .inset-more {
+        position: absolute;
+        inset-block-start: 2px;
+        inset-inline-end: 2px;
+      }
+      .grows {
+        inline-size: 0;
+        padding: 0;
+        border: 0;
+        transition: inline-size 150ms;
+      }
+      .cell {
+        display: inline-block;
+        padding: 4px;
+      }
+      .cell:hover {
+        background: #f4f4f4;
+      }
+      .cell:focus-visible,
+      .cell[data-active] {
+        outline: 2px solid #2383e2;
+      }
+      .grows:focus {
+        inline-size: 120px;
+        outline: 2px solid #2383e2;
+      }
+      .text-area {
+        cursor: text;
+        border: none;
+        background: transparent;
+      }
+      .text-area:hover {
+        background: transparent;
+      }
+      .field {
+        border: 1px solid #ccc;
+      }
+      .field:focus-visible {
+        outline: 2px solid #2383e2;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Interface audit self-test</h1>
+
+    <section aria-label="Pointing and focus">
+      <button id="good-hover" class="c-good" data-expect="none">
+        Responds
+      </button>
+      <button id="dead-hover" class="c-dead" data-expect="no-hover-response">
+        Dead hover
+      </button>
+      <span
+        ><button
+          id="shifting"
+          class="c-shift"
+          data-expect="hover-shifts-layout"
+        >
+          Grows
+        </button>
+        <button id="pushed" class="c-pushed" data-expect="none">
+          Neighbor
+        </button></span
+      >
+      <button id="no-focus" class="c-nofocus" data-expect="focus-not-visible">
+        No focus ring
+      </button>
+      <div class="row" data-row-id="r1" id="good-row" data-expect="none">
+        <span>A row</span
+        ><button class="row-action" aria-label="Row actions">…</button>
+      </div>
+    </section>
+
+    <section aria-label="Menus">
+      <button
+        id="good-menu"
+        data-expect="none"
+        aria-haspopup="menu"
+        aria-expanded="false"
+        data-opens="menu-good"
+      >
+        Good menu
+      </button>
+      <button
+        id="off-opener"
+        data-expect="none"
+        aria-haspopup="menu"
+        aria-expanded="false"
+        data-opens="menu-off"
+      >
+        Opens low
+      </button>
+      <button
+        id="far-opener"
+        data-expect="none"
+        aria-haspopup="menu"
+        aria-expanded="false"
+        data-opens="menu-far"
+      >
+        Opens far
+      </button>
+      <button
+        id="sticky-opener"
+        data-expect="none"
+        aria-haspopup="menu"
+        aria-expanded="false"
+        data-opens="menu-sticky"
+      >
+        Never closes
+      </button>
+      <button
+        id="stuck"
+        data-expect="stuck-state"
+        aria-haspopup="menu"
+        aria-expanded="false"
+        data-opens="menu-stuck"
+        data-stays-expanded
+      >
+        Stays expanded
+      </button>
+    </section>
+
+    <div popover="manual" id="menu-good" role="menu" data-expect="none">
+      <button role="menuitem">A choice</button>
+      <button
+        role="menuitem"
+        aria-haspopup="menu"
+        aria-expanded="false"
+        data-opens="menu-sub"
+      >
+        More
+      </button>
+    </div>
+    <div popover="manual" id="menu-sub" role="menu" data-expect="none">
+      <button role="menuitem">Inside</button>
+    </div>
+    <div
+      popover="manual"
+      id="menu-off"
+      role="menu"
+      data-expect="overlay-offscreen"
+      data-place="low"
+    >
+      <button role="menuitem">Low</button>
+    </div>
+    <div
+      popover="manual"
+      id="menu-far"
+      role="menu"
+      data-expect="overlay-detached"
+      data-place="far"
+    >
+      <button role="menuitem">Far</button>
+    </div>
+    <div
+      popover="manual"
+      id="menu-sticky"
+      role="menu"
+      data-expect="not-closing"
+      data-sticky
+    >
+      <button role="menuitem">Stuck open</button>
+    </div>
+    <div popover="manual" id="menu-stuck" role="menu" data-expect="none">
+      <button role="menuitem">Fine</button>
+    </div>
+
+    <section aria-label="Drawing">
+      <svg
+        id="good-icon"
+        data-expect="none"
+        width="16"
+        height="16"
+        viewBox="0 0 16 16"
+      >
+        <path d="M2 2h12v12H2z" fill="#888" />
+      </svg>
+      <svg
+        id="blank"
+        data-expect="blank-icon"
+        width="16"
+        height="16"
+        viewBox="0 0 16 16"
+      ></svg>
+      <img
+        id="good-image"
+        data-expect="none"
+        width="16"
+        height="16"
+        alt=""
+        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect width='16' height='16' fill='%23888'/%3E%3C/svg%3E"
+      />
+      <img
+        id="broken"
+        data-expect="broken-image"
+        width="16"
+        height="16"
+        alt=""
+        src="does-not-exist.png"
+      />
+      <div class="line" id="good-line" data-expect="none">
+        <span></span><span></span><span></span>
+      </div>
+      <div class="line">
+        <span></span><span id="low" data-expect="row-misaligned"></span
+        ><span></span>
+      </div>
+      <div class="narrow wraps" id="good-text" data-expect="none">
+        Averyveryverylongword
+      </div>
+      <div class="narrow" id="spill" data-expect="text-overflow">
+        Averyveryverylongword
+      </div>
+      <div
+        id="fake"
+        data-expect="pressable-not-control"
+        style="cursor: pointer"
+      >
+        Click me
+      </div>
+      <button id="squeezed" data-expect="zero-size-control">Hidden</button>
+    </section>
+
+    <section aria-label="Corrections">
+      <span class="cover-wrap"
+        ><button id="covered" class="c-covered" data-expect="covered">
+          Under a layer</button
+        ><i></i
+      ></span>
+      <span class="inset-row" id="inset-row" data-expect="none"
+        ><button class="c-inset" style="inline-size: 100%">A template</button
+        ><button class="inset-more" aria-label="More">…</button></span
+      >
+      <svg
+        id="line-icon"
+        data-expect="none"
+        width="16"
+        height="16"
+        viewBox="0 0 16 16"
+      >
+        <line x1="2" y1="8" x2="14" y2="8" stroke="#888" />
+      </svg>
+      <span
+        id="emoji"
+        data-expect="none"
+        style="display: inline-block; inline-size: 14px; font-size: 18px"
+        >✅</span
+      >
+      <input
+        id="grows"
+        class="grows"
+        data-expect="none"
+        aria-label="Search rows"
+      />
+      <button id="text-area" class="text-area" data-expect="none">
+        Click here to write
+      </button>
+      <input
+        id="prefocused"
+        class="field"
+        data-expect="none"
+        aria-label="Search actions"
+        autofocus
+      />
+      <span
+        id="active-cell"
+        class="cell"
+        role="gridcell"
+        tabindex="0"
+        data-active
+        data-expect="none"
+        >An active cell</span
+      >
+    </section>
+
+    <script>
+      const place = (popover, opener) => {
+        const r = opener.getBoundingClientRect();
+        const where = popover.dataset.place;
+        popover.style.left = `${where === "far" ? r.left + 260 : r.left}px`;
+        popover.style.top = `${where === "low" ? innerHeight - 20 : r.bottom + 4}px`;
+        if (opener.closest('[role="menu"]')) {
+          popover.style.left = `${r.right + 4}px`;
+          popover.style.top = `${r.top}px`;
+        }
+      };
+      document.addEventListener("click", (event) => {
+        const opener = event.target.closest("[data-opens]");
+        if (opener) {
+          const popover = document.getElementById(opener.dataset.opens);
+          popover.showPopover();
+          place(popover, opener);
+          opener.setAttribute("aria-expanded", "true");
+          return;
+        }
+        if (!event.target.closest("[popover]")) closeAll();
+      });
+      const closeAll = () => {
+        for (const popover of document.querySelectorAll(
+          "[popover]:popover-open",
+        )) {
+          if (popover.hasAttribute("data-sticky")) continue;
+          popover.hidePopover();
+          const opener = document.querySelector(`[data-opens="${popover.id}"]`);
+          if (opener && !opener.hasAttribute("data-stays-expanded"))
+            opener.setAttribute("aria-expanded", "false");
+        }
+      };
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeAll();
+      });
+      document.getElementById("fake").addEventListener("click", () => {});
+    </script>
+  </body>
+</html>

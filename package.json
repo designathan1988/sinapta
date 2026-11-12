@@ -13,6 +13,7 @@
     "test:watch": "vitest --watch",
     "tokens": "node scripts/build-tokens.ts",
     "audit:ui": "node scripts/ui-audit/run.ts",
+    "audit:ui:self-test": "node scripts/ui-audit/self-test.ts",
     "lint": "eslint . --max-warnings 0 --cache --cache-location node_modules/.cache/eslint/ && stylelint \"src/**/*.css\" --max-warnings 0 --cache --cache-location node_modules/.cache/stylelint/ && prettier --check .",
     "format": "prettier --write .",
     "verify": "npm run check && npm run lint && npm run test"
