@@ -55,12 +55,13 @@ No UI framework. Full specification: docs/specification.md.
 - If a rule blocks the task, stop and ask. Do not work around it.
 
 ## Visual checks
-- Judge the interface only from desktop captures at native pixels, never
-  from the built-in browser pane (it is about 800 px wide and shrinks
-  every frame).
+- Judge the interface only from desktop captures at native pixels. Never
+  take a screenshot in the built-in browser pane, of any site: it is
+  about 800 px wide and shrinks every frame. Measure Notion there with
+  JavaScript (sizes and colors) only.
 - Tool: superpowers-chrome use_browser. First hide_browser (headless; never
   pop a window in the owner's face), then set_viewport
-  {width: 1440, height: 900} (deviceScaleFactor 2 for close-ups), then
+  {width: 1440, height: 900, deviceScaleFactor: 2}, then
   navigate to the review server, http://localhost:5190.
 - Each action writes NNN-action.png (1440x900) to the session folder it
   prints; open it with Read. Crop one element with screenshot

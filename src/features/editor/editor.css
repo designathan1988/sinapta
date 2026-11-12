@@ -93,14 +93,16 @@
     }
   }
 
-  /* The handle sits in the margin and appears on hover or while open. */
+  /* The handle sits in the margin and appears on hover or while open: as
+     Notion's, an 18 px grip that ends 18 px before the text, the 24 px
+     "+" right before it. */
   .editor__handle {
     position: absolute;
     inset-block-start: 0;
-    inset-inline-start: calc(var(--space-inset-xl) * -1);
+    inset-inline-start: calc(var(--size-grip-width) * -2);
     display: inline-grid;
     place-items: center;
-    inline-size: var(--size-target-min);
+    inline-size: var(--size-grip-width);
     block-size: var(--size-target-min);
     padding: var(--space-none);
     border: none;
@@ -118,7 +120,10 @@
 
   /* The "+" sits before the grip and adds a block below. */
   .editor__handle[data-add] {
-    inset-inline-start: calc(var(--space-inset-xl) * -2);
+    inset-inline-start: calc(
+      (var(--size-grip-width) * 2 + var(--size-target-min)) * -1
+    );
+    inline-size: var(--size-target-min);
     cursor: pointer;
   }
 

@@ -388,6 +388,12 @@
         "$value": "{base.size.8}"
       }
     },
+    "grip": {
+      "width": {
+        "$description": "A block's grip, as Notion's: 18 px wide, 18 px from the text.",
+        "$value": "{base.size.1x125}"
+      }
+    },
     "target": {
       "min": {
         "$value": "{base.size.6}"

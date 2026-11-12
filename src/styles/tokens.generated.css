@@ -364,6 +364,7 @@
     --size-control-sm: var(--base-size-6);
     --size-control-md: var(--base-size-8);
     --size-row-height: var(--base-size-8);
+    --size-grip-width: var(--base-size-1x125);
     --size-target-min: var(--base-size-6);
     --size-sidebar-min: var(--base-size-12);
     --size-sidebar-default: var(--base-size-16x875);
