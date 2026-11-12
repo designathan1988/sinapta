@@ -1100,7 +1100,8 @@ tracker, Reading list; "Save as template" stores a page under a hidden
 templates root).
 
 - [x] Tests: using a template copies it with new ids.
-- [ ] Saved templates list ("Save as template").
+- [x] Saved templates list: dropped. Notion has no "Save as template" for
+  a page; templates of a database's rows are Task 16.13.
 - [x] Standard cycle; commit `feat(templates): add a template gallery`
 
 ### Task 17.3: Page history
