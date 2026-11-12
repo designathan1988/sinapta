@@ -9,6 +9,16 @@ export const PAGE_TEXT = {
     characters: { one: "character", other: "characters" },
     favorite: "Favorite",
   },
+  backlinks: {
+    label: "Backlinks",
+    count: { one: "backlink", other: "backlinks" },
+    menu: "Backlinks",
+    displays: {
+      expanded: "Show expanded",
+      popover: "Show as a count",
+      off: "Off",
+    },
+  },
   peek: {
     label: "Page peek",
     close: "Close",

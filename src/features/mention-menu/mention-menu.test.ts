@@ -1,11 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { buildWorkspace, toBlockId } from "../../model/index.ts";
-import { createInitialState } from "../../state/index.ts";
 import { createState, TODAY } from "./mention-menu-builder.ts";
 import {
   MENTION_MENU_OVERLAY,
   PAGE_LINK_MENU_OVERLAY,
-  selectBacklinks,
   selectOpenMentionMenu,
 } from "./mention-menu.selectors.ts";
 
@@ -53,30 +50,5 @@ describe("selectOpenMentionMenu", () => {
     const state = createState("no at sign", MENTION_MENU_OVERLAY);
 
     expect(selectOpenMentionMenu(state, TODAY)).toBeUndefined();
-  });
-});
-
-describe("selectBacklinks", () => {
-  it("lists the blocks that mention or link to a page", () => {
-    const plan = toBlockId("plan");
-    const mention = { kind: "page" as const, pageId: plan };
-    const workspace = buildWorkspace([
-      { id: "plan" },
-      {
-        id: "notes",
-        children: [
-          {
-            id: "m",
-            type: "paragraph",
-            props: { text: [{ text: "x", mention }] },
-          },
-          { id: "link", type: "page-link", props: { pageId: "plan" } },
-          { id: "other", type: "paragraph", props: { text: [{ text: "x" }] } },
-        ],
-      },
-    ]);
-    const state = { ...createInitialState(), workspace };
-
-    expect(selectBacklinks(state, plan)).toEqual(["m", "link"]);
   });
 });

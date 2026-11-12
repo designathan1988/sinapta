@@ -5,6 +5,7 @@ export {
   pageStyleCommands,
   setCoverPosition,
   setPageCover,
+  setPageBacklinks,
   setPageFont,
   togglePageFullWidth,
   togglePageSmallText,

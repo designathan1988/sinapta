@@ -1,7 +1,6 @@
 export {
   MENTION_MENU_OVERLAY,
   PAGE_LINK_MENU_OVERLAY,
-  selectBacklinks,
   selectOpenMentionMenu,
   type MentionItem,
 } from "./mention-menu.selectors.ts";

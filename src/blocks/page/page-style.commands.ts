@@ -100,7 +100,20 @@ export const togglePageSmallText = defineCommand<{ pageId: BlockId }>({
     })),
 });
 
+export const setPageBacklinks = defineCommand<{
+  pageId: BlockId;
+  display: "expanded" | "popover" | "off";
+}>({
+  type: "page.setBacklinks",
+  handle: (state, command) =>
+    updatePage(state, command.pageId, (props) => ({
+      ...props,
+      backlinks: command.display,
+    })),
+});
+
 export const pageStyleCommands = [
+  setPageBacklinks,
   setPageCover,
   togglePageFullWidth,
   setCoverPosition,

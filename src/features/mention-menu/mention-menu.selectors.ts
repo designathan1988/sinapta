@@ -1,18 +1,12 @@
 // What the mention menu offers for the text typed after "@" or "[[": pages
-// whose title matches and, after "@", dates. Also which blocks mention a
-// page, for its backlinks.
+// whose title matches and, after "@", dates.
 import { isTextBlock, textOf } from "../../blocks/index.ts";
-import { PAGE_LINK_TYPE } from "../../blocks/page-link/index.ts";
 import {
   isPageLike,
   selectPageTitle,
   type PageBlock,
 } from "../../blocks/page/index.ts";
-import {
-  mentionsPage,
-  type BlockId,
-  type TextSpan,
-} from "../../model/index.ts";
+import { type BlockId, type TextSpan } from "../../model/index.ts";
 import type { AppState } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 
@@ -142,16 +136,4 @@ export function selectOpenMentionMenu(
     items.length - 1,
   );
   return { blockId, start, end, items, activeIndex };
-}
-
-// The blocks that mention the page or link to it, in no set order.
-export function selectBacklinks(state: AppState, pageId: BlockId): BlockId[] {
-  return Object.values(state.workspace.blocks).flatMap((block) => {
-    if (block.type === PAGE_LINK_TYPE && block.props.pageId === pageId) {
-      return [block.id];
-    }
-    return isTextBlock(block) && mentionsPage(block.props.text, pageId)
-      ? [block.id]
-      : [];
-  });
 }

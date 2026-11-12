@@ -56,6 +56,9 @@ export const pagePropsSchema = v.object({
   // When it went to the trash, which empties itself of pages kept there
   // over 30 days, as Notion's does.
   trashedAt: v.optional(v.string()),
+  // Where the page shows the pages that link to it: a count that opens
+  // them (the default), always open, or not at all.
+  backlinks: v.optional(v.picklist(["expanded", "popover", "off"])),
 });
 
 export type PageProps = v.InferOutput<typeof pagePropsSchema>;

@@ -31,6 +31,7 @@ import {
 import { LINK_OVERLAY, renderLinkField } from "./editor-link.view.ts";
 import type { InputContext } from "./editor-input.view.ts";
 import { renderAddCover, renderCover } from "./editor-cover.view.ts";
+import { renderBacklinks } from "../backlinks/index.ts";
 import { renderIconControl } from "./editor-icon.view.ts";
 
 // A page that opens without a title, such as one just created, takes the
@@ -120,7 +121,9 @@ export function renderEditor(
         ${renderIconControl(state, page, dispatch)}
         ${isPage ? renderAddCover(page, dispatch) : nothing}
       </div>
-      ${renderTitle(page, context)} ${renderContent(page, context)}
+      ${renderTitle(page, context)}
+      ${isPage ? renderBacklinks(state, dispatch, page) : nothing}
+      ${renderContent(page, context)}
     </article>`,
   )}`;
 }

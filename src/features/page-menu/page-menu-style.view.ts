@@ -3,6 +3,7 @@
 import {
   PAGE_FONTS,
   PAGE_TYPE,
+  setPageBacklinks,
   setPageFont,
   togglePageFullWidth,
   togglePageSmallText,
@@ -26,6 +27,31 @@ function fontItem(
   };
 }
 
+const DISPLAYS = ["expanded", "popover", "off"] as const;
+
+function backlinksItem(page: PageBlock, dispatch: Dispatch): MenuItem {
+  const current = page.props.backlinks ?? "popover";
+  const pageId = page.id;
+  return {
+    label: COPY.backlinks.menu,
+    icon: "arrow-up-right",
+    value: COPY.backlinks.displays[current],
+    submenu: {
+      id: `backlinks:${pageId}`,
+      menu: () => ({
+        label: COPY.backlinks.menu,
+        items: DISPLAYS.map((display) => ({
+          label: COPY.backlinks.displays[display],
+          check: "radio",
+          isChecked: display === current,
+          onSelect: () =>
+            dispatch(setPageBacklinks.create({ pageId, display })),
+        })),
+      }),
+    },
+  };
+}
+
 export function styleItems(page: PageBlock, dispatch: Dispatch): MenuItem[] {
   if (page.type !== PAGE_TYPE) return [];
   const pageId = page.id;
@@ -37,6 +63,7 @@ export function styleItems(page: PageBlock, dispatch: Dispatch): MenuItem[] {
       isChecked: page.props.isSmallText === true,
       onSelect: () => dispatch(togglePageSmallText.create({ pageId })),
     },
+    backlinksItem(page, dispatch),
     {
       label: COPY.pageMenu.fullWidth,
       check: "box",

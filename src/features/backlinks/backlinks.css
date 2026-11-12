@@ -1,0 +1,75 @@
+@layer features {
+  /* Notion's backlinks: a muted count under the title, its pages listed
+     under it when open. */
+  .backlinks {
+    display: grid;
+    gap: var(--space-stack-xxs);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+  }
+
+  .backlinks__summary {
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    justify-self: start;
+    margin: var(--space-none);
+    padding: var(--space-inset-xxs) var(--space-inset-xs);
+    border-radius: var(--radius-sm);
+    list-style: none;
+    cursor: pointer;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    & > .icon {
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+    }
+  }
+
+  .backlinks__list {
+    display: grid;
+    margin: var(--space-none);
+    padding: var(--space-none);
+    list-style: none;
+  }
+
+  .backlinks__link {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    inline-size: 100%;
+    min-block-size: var(--size-menu-row);
+    padding: var(--space-none) var(--space-inset-xs);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+    text-align: start;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    & > .icon {
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+      color: var(--color-text-secondary);
+    }
+  }
+
+  .backlinks__title {
+    text-decoration: underline;
+    text-decoration-color: var(--color-border-strong);
+    text-underline-offset: var(--size-focus-offset);
+  }
+}
