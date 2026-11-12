@@ -21,8 +21,10 @@ export const VIEW_LIST_OVERLAY = "view-list";
 
 // The tab row's room beside the toolbar, and what one tab and "N more…"
 // take of it, in characters of the 14 px interface text: a tab's icon,
-// gap and padding come to about five.
-const TAB_ROOM = 64;
+// gap and padding come to about five. A database open as a page has the
+// window's width; one inside a page has the page's 704 px column.
+export type TabPlace = "page" | "inline";
+const TAB_ROOM: Readonly<Record<TabPlace, number>> = { page: 100, inline: 64 };
 const TAB_FRAME = 5;
 const MORE_WIDTH = 9;
 
@@ -36,12 +38,13 @@ function tabWidth(view: View): number {
 export function splitViews(
   views: readonly View[],
   activeId: ViewId,
+  place: TabPlace,
 ): { readonly shown: ViewId[]; readonly more: ViewId[] } {
   const ids = views.map((view) => view.id);
   const total = views.reduce((sum, view) => sum + tabWidth(view), 0);
-  if (total <= TAB_ROOM) return { shown: ids, more: [] };
+  if (total <= TAB_ROOM[place]) return { shown: ids, more: [] };
   const active = views.find((view) => view.id === activeId);
-  let room = TAB_ROOM - MORE_WIDTH - (active ? tabWidth(active) : 0);
+  let room = TAB_ROOM[place] - MORE_WIDTH - (active ? tabWidth(active) : 0);
   const shown: ViewId[] = [];
   for (const view of views) {
     if (view.id === activeId) shown.push(view.id);
@@ -53,6 +56,12 @@ export function splitViews(
   }
   if (active !== undefined && !shown.includes(activeId)) shown.push(activeId);
   return { shown, more: ids.filter((id) => !shown.includes(id)) };
+}
+
+// Where the database sits: open as the page, or inside one.
+export function tabPlace(context: TableContext): TabPlace {
+  const { model, state } = context;
+  return model.holderId === state.ui.activePageId ? "page" : "inline";
 }
 
 interface ToggleButton {
@@ -106,7 +115,7 @@ function renderTab(view: View, context: TableContext): TemplateResult {
 export function renderViewTabs(context: TableContext): TemplateResult {
   const { model, state } = context;
   const all = model.viewIds.flatMap((id) => state.workspace.views[id] ?? []);
-  const { shown, more } = splitViews(all, model.view.id);
+  const { shown, more } = splitViews(all, model.view.id, tabPlace(context));
   const views = all.filter((view) => shown.includes(view.id));
   const moreLabel = COPY.database.moreViews(more.length);
   const view = model.view;
