@@ -38,6 +38,7 @@ import { formOptionCommands } from "./form-options.commands.ts";
 import { rowOpenCommands } from "./row-open.commands.ts";
 import { templateCommands } from "./template.commands.ts";
 import { templateDefaultCommands } from "./template-default.commands.ts";
+import { templateRepeatCommands } from "./template-repeat.commands.ts";
 import { csvImportCommands } from "./csv-import.commands.ts";
 import { viewLockCommands } from "./view-lock.commands.ts";
 import { subGroupCommands } from "./sub-group.commands.ts";
@@ -124,6 +125,7 @@ const DATABASE_TEST_COMMANDS = [
   ...rowOpenCommands,
   ...templateCommands,
   ...templateDefaultCommands,
+  ...templateRepeatCommands,
   ...csvImportCommands,
   ...viewLockCommands,
   ...subGroupCommands,

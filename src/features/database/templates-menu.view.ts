@@ -3,7 +3,12 @@
 // "…" (Set as default, Edit, Duplicate, Delete); an empty page; and New
 // template.
 import type { TemplateResult } from "lit-html";
-import { selectPage, selectPageTitle } from "../../blocks/page/index.ts";
+import {
+  selectPage,
+  selectPageTitle,
+  REPEAT_PERIODS,
+  type RepeatPeriod,
+} from "../../blocks/page/index.ts";
 import type { BlockId } from "../../model/index.ts";
 import { closeOverlay, setActivePage } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
@@ -24,6 +29,7 @@ import {
   selectDefaultTemplateId,
   setDefaultTemplate,
 } from "./template-default.commands.ts";
+import { setTemplateRepeat } from "./template-repeat.commands.ts";
 
 export const TEMPLATES_OVERLAY = "templates";
 
@@ -83,6 +89,33 @@ function defaultItem(
   };
 }
 
+// "Repeat", with how often beside it: off, or every day, week, month or
+// year, from the next one.
+function repeatItem(context: TableContext, templateId: BlockId): MenuItem {
+  const every = selectPage(context.state, templateId)?.props.repeat?.every;
+  const choose = (period: RepeatPeriod | null) => (): void => {
+    const today = new Date().toLocaleDateString("en-CA");
+    context.dispatch(
+      setTemplateRepeat.create({ templateId, every: period, today }),
+    );
+  };
+  const choices: MenuEntry[] = [null, ...REPEAT_PERIODS].map((period) => ({
+    label: TEXT.repeatPeriods[period ?? "off"],
+    check: "radio",
+    isChecked: (every ?? null) === period,
+    onSelect: choose(period),
+  }));
+  return {
+    label: TEXT.templateRepeat,
+    icon: "clock",
+    value: TEXT.repeatPeriods[every ?? "off"],
+    submenu: {
+      id: `template-repeat:${templateId}`,
+      menu: () => ({ label: TEXT.templateRepeat, items: choices }),
+    },
+  };
+}
+
 // Whether the template is the default of the view on screen.
 function isDefaultHere(context: TableContext, templateId: BlockId | null) {
   const { state, model } = context;
@@ -97,6 +130,7 @@ function templateActions(
   const copy = selectRowTemplate(state, templateId);
   return [
     defaultItem(context, templateId),
+    repeatItem(context, templateId),
     {
       label: TEXT.templateEdit,
       icon: "compose",

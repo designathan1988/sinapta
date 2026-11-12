@@ -18,6 +18,7 @@ import { formOptionCommands } from "./form-options.commands.ts";
 import { rowOpenCommands } from "./row-open.commands.ts";
 import { templateCommands } from "./template.commands.ts";
 import { templateDefaultCommands } from "./template-default.commands.ts";
+import { templateRepeatCommands } from "./template-repeat.commands.ts";
 import { csvImportCommands } from "./csv-import.commands.ts";
 import { viewLockCommands } from "./view-lock.commands.ts";
 import { subGroupCommands } from "./sub-group.commands.ts";
@@ -27,6 +28,11 @@ import { boardCardCommands } from "./layouts/board/board-card.commands.ts";
 export { createDatabase } from "./database.commands.ts";
 export { openRow } from "./row-open.commands.ts";
 export { addRow } from "./row.commands.ts";
+export {
+  advanceRepeat,
+  selectDueRepeats,
+  type DueRepeat,
+} from "./template-repeat.commands.ts";
 export { selectTableModel } from "./table-model.selectors.ts";
 export { groupByProperty } from "./group.commands.ts";
 export { startDatabase } from "./database-start.commands.ts";
@@ -74,6 +80,7 @@ export const databaseCommands = [
   ...rowOpenCommands,
   ...templateCommands,
   ...templateDefaultCommands,
+  ...templateRepeatCommands,
   ...csvImportCommands,
   ...viewLockCommands,
   ...subGroupCommands,

@@ -77,7 +77,7 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 
 | Row peek | `features/row-peek/` | Notion (no Share: one person, no sharing) | side or center peek with Close, Open as full page, mode switch, Previous and Next, then Comment, Copy link, the favorite star and page actions; the side peek's edge drags it wider (kept), arrows by keyboard; the peek is in the address, so a link opens it and Back closes it; Escape closes, K and J step |
 | Open pages in | `view-settings/choice-panels.ts` | Notion | row in the Layout panel opening Side peek, Center peek, Full page |
-| New and its templates | `database.view.ts`, `templates-menu.view.ts` | Notion (default for the whole database, not per view) | split blue button; the arrow lists "Templates for …", each template with "…" (Set as default, Edit, Duplicate, Delete), Empty page, New template; Default marks the one new rows start from |
+| New and its templates | `database.view.ts`, `templates-menu.view.ts` | Notion (a repeat has no time of day) | split blue button; the arrow lists "Templates for …", each template with "…" (Set as default › For all views / For this view, Repeat › Off, Daily, Weekly, Monthly, Yearly, Edit, Duplicate, Delete), Empty page, New template; Default marks the one the view's new rows start from |
 | Template note | `template-banner.view.ts` | Notion | a strip over a template's page: "You're editing a template in …" |
 | Import | `features/sidebar/sidebar.view.ts`, `csv-file.view.ts`, `features/markdown-import/` | Notion (CSV and Markdown files; no ZIP or other apps) | Import in the sidebar's foot takes several files: a CSV becomes a database named as the file, its columns typed; a Markdown file a page named by its first heading or the file, its blocks nested as written |
 | Export and print | `features/markdown-export/`, `features/page-menu/page-menu.view.ts` | Notion (Markdown only, no HTML) | Export as Markdown saves the page, or with subpages a ZIP of Markdown files in folders as they nest; "Print or save as PDF" prints the page alone |
@@ -166,5 +166,4 @@ against the reference on every run.
 
 ## Open
 
-- Templates: repeating templates.
 - Light theme measurements of the menu reference.

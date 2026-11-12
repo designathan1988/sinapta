@@ -7,8 +7,8 @@ import { renderDatabase } from "./database.view.ts";
 import { addTemplate } from "./template.commands.ts";
 import { TEMPLATES_OVERLAY } from "./templates-menu.view.ts";
 
-// The templates menu with a template's "…" and its "Set as default" open.
-function rendered() {
+// The templates menu with a template's "…" and one of its lists open.
+function rendered(list = "template-default") {
   const app = createDatabaseApp([{ name: "Done", type: "checkbox" }], []);
   app.dispatch(addTemplate.create({ databaseId: app.databaseId }));
   const templateId = app.database().props.templateIds[0];
@@ -18,7 +18,7 @@ function rendered() {
     anchorId: app.databaseId,
     children: [
       { anchorId: `template-more:${templateId}` },
-      { anchorId: `template-default:${templateId}` },
+      { anchorId: `${list}:${templateId}` },
     ],
   };
   const built = app.store.getState();
@@ -62,5 +62,19 @@ describe("the templates menu", () => {
       }),
       { type: "template.setDefault", databaseId: app.databaseId, templateId },
     ]);
+  });
+
+  it("repeats a template weekly from its Repeat list", () => {
+    const { sent, item, templateId } = rendered("template-repeat");
+
+    item("Weekly")?.click();
+
+    expect(sent).toContainEqual(
+      expect.objectContaining({
+        type: "template.setRepeat",
+        templateId,
+        every: "week",
+      }),
+    );
   });
 });

@@ -27,6 +27,7 @@ import { templateCommands } from "../features/templates/index.ts";
 import { inboxCommands } from "../features/inbox/index.ts";
 import { markdownImportCommands } from "../features/markdown-import/index.ts";
 import { startReminderNotices } from "./reminder-notices.ts";
+import { startTemplateRepeats } from "./template-repeats.ts";
 import {
   pageContent,
   pageHistoryCommands,
@@ -184,6 +185,7 @@ export async function startApp(container: HTMLElement): Promise<void> {
   // The trash empties itself of pages kept there over 30 days.
   dispatch(emptyOldTrash.create({}));
   startReminderNotices(store);
+  startTemplateRepeats(store, dispatch);
   startRouter(store, dispatch);
   watchViewport(dispatch);
   startOffline({ store, dispatch });

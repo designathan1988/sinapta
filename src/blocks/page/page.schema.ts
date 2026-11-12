@@ -54,6 +54,15 @@ export const discussionSchema = v.object({
 
 export type Discussion = v.InferOutput<typeof discussionSchema>;
 
+// How often a template makes a row, as Notion's "Repeat".
+export const REPEAT_PERIODS = ["day", "week", "month", "year"] as const;
+
+const repeatSchema = v.object({
+  every: v.picklist(REPEAT_PERIODS),
+  // The next day it makes a row, "2026-11-12".
+  next: v.pipe(v.string(), v.regex(/^\d{4}-\d{2}-\d{2}$/)),
+});
+
 export const pagePropsSchema = v.object({
   title: richTextSchema,
   // One emoji, or null for no icon.
@@ -83,8 +92,11 @@ export const pagePropsSchema = v.object({
   backlinks: v.optional(v.picklist(["expanded", "popover", "off"])),
   // The discussions on the page and its blocks.
   discussions: v.optional(v.array(discussionSchema)),
+  // A database template's repeat: it makes a row from itself on its days.
+  repeat: v.optional(repeatSchema),
 });
 
 export type PageProps = v.InferOutput<typeof pagePropsSchema>;
 export type PageFont = v.InferOutput<typeof pageFontSchema>;
+export type RepeatPeriod = (typeof REPEAT_PERIODS)[number];
 export type PageBlock = TypedBlock<string, PageProps>;
