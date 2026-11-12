@@ -45,6 +45,12 @@
       padding-inline-start: calc(
         var(--space-inset-page) - var(--space-inset-lg)
       );
+
+      /* A narrow main area, as beside a side peek, spends its width on
+         the database rather than on its margin. */
+      @container main (inline-size < 50rem) {
+        padding-inline-start: var(--space-none);
+      }
     }
 
     /* A page that is opened fades and rises into place. */
@@ -61,7 +67,7 @@
   }
 
   /* Notion's rhythm: each block breathes by a few pixels above and below
-     its 24-pixel lines. */
+     its 24-pixel lines. Its handles: editor-handles.css. */
   .editor__block {
     position: relative;
     padding-block: var(--space-block);
@@ -100,48 +106,6 @@
     &:focus-visible {
       color: var(--color-text-tertiary);
     }
-  }
-
-  /* The handle sits in the margin and appears on hover or while open: as
-     Notion's, an 18 px grip that ends 18 px before the text, the 24 px
-     "+" right before it. */
-  .editor__handle {
-    position: absolute;
-    inset-block-start: 0;
-    inset-inline-start: calc(var(--size-grip-width) * -2);
-    display: inline-grid;
-    place-items: center;
-    inline-size: var(--size-grip-width);
-    block-size: var(--size-target-min);
-    padding: var(--space-none);
-    border: none;
-    border-radius: var(--radius-sm);
-    background-color: transparent;
-    color: var(--color-text-tertiary);
-    opacity: 0;
-    cursor: grab;
-    touch-action: none;
-
-    &:hover {
-      background-color: var(--color-bg-hover);
-    }
-  }
-
-  /* The "+" sits before the grip and adds a block below. */
-  .editor__handle[data-add] {
-    inset-inline-start: calc(
-      (var(--size-grip-width) * 2 + var(--size-target-min)) * -1
-    );
-    inline-size: var(--size-target-min);
-    cursor: pointer;
-  }
-
-  .editor__handle:is(:focus-visible, [aria-expanded="true"]) {
-    opacity: 1;
-  }
-
-  .editor__block:hover > .editor__handle {
-    opacity: 1;
   }
 
   .editor__block[data-selected] {

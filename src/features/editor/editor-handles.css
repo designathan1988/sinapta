@@ -1,0 +1,96 @@
+@layer features {
+  /* Where a block's first line sits, for its handles to stand level with it, as
+     Notion's: the space the block opens above that line, as a heading's
+     margin or a callout's padding, and the line's height. The values copy
+     the block's own tokens; `npm run audit:ui` measures every block. */
+  .editor__block {
+    --editor-line-start: var(--space-none);
+    --editor-line-size: var(--size-target-min);
+
+    &:has(> .callout) {
+      --editor-line-start: var(--space-inset-md);
+    }
+
+    /* A code block's first row is its bar: the language, in small text,
+       about 8 px into its frame. */
+    &:has(> .code) {
+      --editor-line-start: var(--space-inset-sm);
+      --editor-line-size: calc(
+        var(--font-size-xs) * var(--font-line-height-body) +
+          var(--size-border-thin) * 2
+      );
+    }
+
+    &:has(> .heading) {
+      --editor-line-start: var(--space-stack-md);
+      --editor-line-size: calc(
+        var(--font-size-lg) * var(--font-line-height-tight)
+      );
+    }
+
+    &:has(> .heading[data-level="1"]) {
+      --editor-line-start: var(--space-stack-xl);
+      --editor-line-size: calc(
+        var(--font-size-xxl) * var(--font-line-height-tight)
+      );
+    }
+
+    &:has(> .heading[data-level="2"]) {
+      --editor-line-start: var(--space-stack-lg);
+      --editor-line-size: calc(
+        var(--font-size-xl) * var(--font-line-height-tight)
+      );
+    }
+
+    &:has(> .heading[data-level="4"]) {
+      --editor-line-size: calc(
+        var(--font-size-md) * var(--font-line-height-tight)
+      );
+    }
+  }
+
+  /* The handle sits in the margin and appears on hover or while open: as
+     Notion's, an 18 px grip that ends 18 px before the text, the 24 px
+     "+" right before it. */
+  .editor__handle {
+    position: absolute;
+    inset-block-start: calc(
+      var(--space-block) + var(--editor-line-start) +
+        (var(--editor-line-size) - var(--size-target-min)) / 2
+    );
+    inset-inline-start: calc(var(--size-grip-width) * -2);
+    display: inline-grid;
+    place-items: center;
+    inline-size: var(--size-grip-width);
+    block-size: var(--size-target-min);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-tertiary);
+    opacity: 0;
+    cursor: grab;
+    touch-action: none;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
+  /* The "+" sits before the grip and adds a block below. */
+  .editor__handle[data-add] {
+    inset-inline-start: calc(
+      (var(--size-grip-width) * 2 + var(--size-target-min)) * -1
+    );
+    inline-size: var(--size-target-min);
+    cursor: pointer;
+  }
+
+  .editor__handle:is(:focus-visible, [aria-expanded="true"]) {
+    opacity: 1;
+  }
+
+  .editor__block:hover > .editor__handle {
+    opacity: 1;
+  }
+}

@@ -9,12 +9,13 @@
     text-size-adjust: none;
   }
 
-  :where(body, h1, h2, h3, p, ul, ol, figure, blockquote, pre) {
+  :where(body, h1, h2, h3, h4, h5, h6, p, ul, ol, figure, blockquote, pre) {
     margin: 0;
   }
 
-  /* Headings carry structure; their look comes from the component. */
-  :where(h1, h2, h3) {
+  /* Headings carry structure; their look comes from the component. A
+     page's third and fourth headings are h4 and h5 under its h1 title. */
+  :where(h1, h2, h3, h4, h5, h6) {
     font-size: inherit;
     font-weight: inherit;
   }
