@@ -26,6 +26,7 @@ function parseDate(text: string, previous?: unknown): DateValue | undefined {
     start,
     ...(end !== undefined && { end }),
     ...(old?.time !== undefined && { time: old.time }),
+    ...(old?.remind !== undefined && { remind: old.remind }),
   };
 }
 

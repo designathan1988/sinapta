@@ -108,4 +108,63 @@ describe("datePickerItems", () => {
       undefined,
     ]);
   });
+
+  it("takes a day typed into its field, and keeps the end and time", () => {
+    const { host, changes } = mount({
+      start: "2026-11-10",
+      end: "2026-11-30",
+      time: "10:00",
+    });
+    const [start, end] = host.querySelectorAll<HTMLInputElement>(
+      "input.date-picker__field[type=text]",
+    );
+
+    if (start) start.value = "Nov 20";
+    start?.dispatchEvent(new Event("change", { bubbles: true }));
+    if (end) end.value = "12/24/2026";
+    end?.dispatchEvent(new Event("change", { bubbles: true }));
+
+    expect(changes).toEqual([
+      { start: "2026-11-20", end: "2026-11-30", time: "10:00" },
+      { start: "2026-11-10", end: "2026-12-24", time: "10:00" },
+    ]);
+  });
+
+  it("puts a typed day that cannot be read back as it was", () => {
+    const { host, changes } = mount({ start: "2026-11-10" });
+    const field = host.querySelector<HTMLInputElement>(
+      "input.date-picker__field[type=text]",
+    );
+
+    if (field) field.value = "someday";
+    field?.dispatchEvent(new Event("change", { bubbles: true }));
+
+    expect(changes).toEqual([]);
+    expect(field?.value).toBe("Nov 10, 2026");
+  });
+
+  it("keeps a range in order when a typed day passes its other end", () => {
+    const { host, changes } = mount({ start: "2026-11-10", end: "2026-11-12" });
+    const [start] = host.querySelectorAll<HTMLInputElement>(
+      "input.date-picker__field[type=text]",
+    );
+
+    if (start) start.value = "Nov 20";
+    start?.dispatchEvent(new Event("change", { bubbles: true }));
+
+    expect(changes).toEqual([{ start: "2026-11-12", end: "2026-11-20" }]);
+  });
+
+  it("sets a reminder from its Remind list", () => {
+    const { changes, item } = mount({ start: "2026-11-10" });
+    const remind = item("Remind");
+    const choices = remind.submenu?.menu().items ?? [];
+    const dayBefore = choices.find(
+      (entry) => "label" in entry && entry.label === "1 day before",
+    );
+
+    if (dayBefore && "onSelect" in dayBefore) dayBefore.onSelect?.();
+
+    expect(changes).toEqual([{ start: "2026-11-10", remind: "1-day" }]);
+  });
 });

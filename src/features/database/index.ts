@@ -34,7 +34,11 @@ export { renderInlineDatabase } from "./database-inline.view.ts";
 export { renderLinkedView } from "./linked-view.view.ts";
 export { createLinkedView } from "./linked-view.commands.ts";
 export { createInlineDatabase } from "./inline-database.commands.ts";
-export { readDateValue, type DateValue } from "./properties/date/index.ts";
+export {
+  readDateValue,
+  reminderDay,
+  type DateValue,
+} from "./properties/date/index.ts";
 export { withPropertyConfigs } from "./property-registry.ts";
 export { renderRowProperties } from "./row-properties.view.ts";
 export { renderTemplateBanner } from "./template-banner.view.ts";

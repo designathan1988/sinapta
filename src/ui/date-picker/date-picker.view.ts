@@ -7,7 +7,13 @@ import { html, nothing, type TemplateResult } from "lit-html";
 import { COPY } from "../copy.ts";
 import { renderIcon } from "../icon/index.ts";
 import { calendarDays, monthOf, shiftMonth } from "./calendar.ts";
-import { chooseDay, type DatePickerProps } from "./date-picker-value.ts";
+import {
+  chooseDay,
+  withDay,
+  type DatePickerProps,
+  type DateRangeValue,
+} from "./date-picker-value.ts";
+import { parseTypedDate } from "./date-parse.ts";
 
 const TEXT = COPY.datePicker;
 
@@ -29,10 +35,37 @@ function at(day: string): Date {
   return new Date(`${day}T00:00:00Z`);
 }
 
-// The chosen days as text, and the time's own field when it has one.
+// A chosen day as a field: a day typed into it, as "Dec 3" or
+// "12/3/2026", takes its place on Enter; text that is no day is put back.
+function renderDayField(
+  props: DatePickerProps,
+  value: DateRangeValue,
+  isEnd: boolean,
+): TemplateResult {
+  const day = isEnd ? (value.end ?? value.start) : value.start;
+  const onDay = (event: Event): void => {
+    event.stopPropagation();
+    if (!(event.target instanceof HTMLInputElement)) return;
+    const typed = parseTypedDate(event.target.value, props.today);
+    if (typed === undefined) {
+      event.target.value = SHORT.format(at(day));
+      return;
+    }
+    props.onChange(withDay(value, typed, isEnd));
+  };
+  return html`<input
+    class="date-picker__field"
+    type="text"
+    autocomplete="off"
+    aria-label=${isEnd ? TEXT.endDate : TEXT.startDate}
+    .value=${SHORT.format(at(day))}
+    @change=${onDay}
+  />`;
+}
+
+// The chosen days as fields, and the time's own field when it has one.
 function renderFields(props: DatePickerProps): TemplateResult {
   const { value } = props;
-  const days = value === undefined ? [] : [value.start, value.end ?? ""];
   // The time's change is the picker's own: no form around it reads it.
   const onTime = (event: Event): void => {
     event.stopPropagation();
@@ -42,14 +75,8 @@ function renderFields(props: DatePickerProps): TemplateResult {
     props.onChange(time === "" ? { ...value } : { ...value, time });
   };
   return html`<div class="date-picker__fields">
-    ${days
-      .filter((day) => day !== "")
-      .map(
-        (day) =>
-          html`<output class="date-picker__field"
-            >${SHORT.format(at(day))}</output
-          >`,
-      )}
+    ${value === undefined ? nothing : renderDayField(props, value, false)}
+    ${value?.end === undefined ? nothing : renderDayField(props, value, true)}
     ${
       value?.time === undefined
         ? nothing

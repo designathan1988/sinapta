@@ -23,6 +23,8 @@ export function renderCellDate(
   const menu = dateMenu({
     stored: values?.[property.id],
     label: property.name,
+    property,
+    databaseId: model.database.id,
     overlay: state.ui.overlay,
     dispatch,
     onChange: (value) => {

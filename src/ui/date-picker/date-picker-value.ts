@@ -1,10 +1,21 @@
 // What a date picker holds and how its choices change it: a first day,
-// an optional last day and an optional time.
+// an optional last day, an optional time and an optional reminder.
+
+// When a date reminds, as Notion's: on its day, or some days before.
+export const REMINDERS = ["day-of", "1-day", "2-days", "1-week"] as const;
+export type Reminder = (typeof REMINDERS)[number];
+export const REMINDER_DAYS: Readonly<Record<Reminder, number>> = {
+  "day-of": 0,
+  "1-day": 1,
+  "2-days": 2,
+  "1-week": 7,
+};
 
 export interface DateRangeValue {
   readonly start: string;
   readonly end?: string;
   readonly time?: string;
+  readonly remind?: Reminder;
 }
 
 export interface DatePickerProps {
@@ -28,6 +39,19 @@ export function chooseDay(
 ): DateRangeValue {
   if (value?.end === undefined) return { ...value, start: day };
   return day > value.start ? { ...value, end: day } : { ...value, start: day };
+}
+
+// The value after a day is typed into the first or last day's field; a
+// range stays in order when the typed day passes its other end.
+export function withDay(
+  value: DateRangeValue,
+  day: string,
+  isEnd: boolean,
+): DateRangeValue {
+  if (value.end === undefined) return { ...value, start: day };
+  const other = isEnd ? value.start : value.end;
+  const [start = day, end = day] = [day, other].sort();
+  return { ...value, start, end };
 }
 
 // The first time a date takes when it starts to include one.

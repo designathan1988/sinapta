@@ -6,7 +6,7 @@ import { createDatabaseApp } from "./database-builder.ts";
 import { renderDatabase } from "./database.view.ts";
 import { CELL_DATE_OVERLAY } from "./table-cell.view.ts";
 
-function rendered(panel?: string) {
+function rendered(panel?: string, child?: string) {
   const app = createDatabaseApp(
     [{ name: "Due", type: "date" }],
     [["A", { start: "2026-11-10" }]],
@@ -18,6 +18,7 @@ function rendered(panel?: string) {
     kind: CELL_DATE_OVERLAY,
     anchorId: `${rowId}:${due}`,
     ...(panel !== undefined && { panel }),
+    ...(child !== undefined && { children: [{ anchorId: child }] }),
   };
   const built = app.store.getState();
   const state = { ...built, ui: { ...built.ui, overlay } };
@@ -67,5 +68,36 @@ describe("a date cell's calendar", () => {
         panel: "month:2027-02",
       }),
     ]);
+  });
+
+  it("sets the property's date format from its Date format list", () => {
+    const { host, sent } = rendered();
+    const row = [...host.querySelectorAll<HTMLElement>(".menu__item")].find(
+      (item) => item.textContent.includes("Date format"),
+    );
+
+    expect(row?.getAttribute("aria-haspopup")).toBe("menu");
+    row?.click();
+
+    expect(sent).toEqual([
+      expect.objectContaining({ type: "ui.openChildOverlay" }),
+    ]);
+  });
+
+  it("writes the chosen date format into the property", () => {
+    const { host, sent, due } = rendered(undefined, "date-format");
+    const full = [
+      ...host.querySelectorAll<HTMLElement>("[role=menuitemradio]"),
+    ].find((item) => item.textContent.includes("Full date"));
+
+    full?.click();
+
+    expect(sent).toContainEqual(
+      expect.objectContaining({
+        type: "property.setConfig",
+        propertyId: due,
+        config: { dateFormat: "full", timeFormat: "12-hour" },
+      }),
+    );
   });
 });

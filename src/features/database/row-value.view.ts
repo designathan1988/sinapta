@@ -114,6 +114,8 @@ function renderDate(
   const menu = dateMenu({
     stored: value,
     label: property.name,
+    property,
+    databaseId: row.parentId,
     overlay: page.state.ui.overlay,
     dispatch: page.dispatch,
     onChange: (next) => {

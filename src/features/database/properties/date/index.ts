@@ -3,6 +3,7 @@ export {
   dateFromParts,
   formatDateValue,
   readDateValue,
+  reminderDay,
   type DateParts,
   type DateValue,
 } from "./date-value.ts";

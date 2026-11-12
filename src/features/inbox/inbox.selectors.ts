@@ -1,6 +1,9 @@
 // The inbox, as Notion's: the reminders that are due, from date mentions
-// set to remind, newest first, each with its page and whether it was read.
+// set to remind and from rows' dates set to remind, newest first, each
+// with its page and whether it was read.
 import { isTextBlock, textOf } from "../../blocks/index.ts";
+import { selectDatabase } from "../../blocks/database/index.ts";
+import { readDateValue, reminderDay } from "../database/index.ts";
 import {
   isPageLike,
   selectIsInTrash,
@@ -33,11 +36,47 @@ function pageOf(workspace: Workspace, block: Block): PageBlock | undefined {
   return undefined;
 }
 
+function titleOf(page: PageBlock): string {
+  const title = selectPageTitle(page);
+  return title === "" ? COPY.sidebar.untitled : title;
+}
+
+// A row's dates set to remind: each falls due on the day it names, and
+// opens the row; its text is the date property's name.
+function rowReminders(
+  state: AppState,
+  block: Block,
+  read: ReadonlySet<string>,
+): Reminder[] {
+  if (!isPageLike(block) || selectIsInTrash(state, block)) return [];
+  const database = selectDatabase(state, block.parentId);
+  const values = block.props.values ?? {};
+  return (database?.props.properties ?? []).flatMap((property) => {
+    const value = readDateValue(values[property.id]);
+    const date = value === undefined ? undefined : reminderDay(value);
+    if (property.type !== "date" || date === undefined) return [];
+    const key = `${block.id}:${property.id}:${date}`;
+    const pageTitle = titleOf(block);
+    const isRead = read.has(key);
+    return [
+      {
+        key,
+        blockId: block.id,
+        pageId: block.id,
+        pageTitle,
+        date,
+        text: property.name,
+        isRead,
+      },
+    ];
+  });
+}
+
 // Every reminder in the workspace, due or not.
 export function selectAllReminders(state: AppState): Reminder[] {
   const read = new Set(state.ui.readReminders);
   return Object.values(state.workspace.blocks).flatMap((block) => {
-    if (!isTextBlock(block)) return [];
+    if (!isTextBlock(block)) return rowReminders(state, block, read);
     const page = pageOf(state.workspace, block);
     if (page === undefined || selectIsInTrash(state, page)) return [];
     const title = selectPageTitle(page);

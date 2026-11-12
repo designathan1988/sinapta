@@ -1,5 +1,11 @@
-// A date value: a first day, an optional last day and an optional time of
-// the first day. Days are calendar days, "2026-11-10", with no zone.
+// A date value: a first day, an optional last day, an optional time of
+// the first day and an optional reminder. Days are calendar days,
+// "2026-11-10", with no zone.
+import {
+  REMINDER_DAYS,
+  REMINDERS,
+  type Reminder,
+} from "../../../../ui/date-picker/index.ts";
 import {
   DEFAULT_DATE_CONFIG,
   type DateConfig,
@@ -10,6 +16,11 @@ export interface DateValue {
   readonly start: string;
   readonly end?: string;
   readonly time?: string;
+  readonly remind?: Reminder;
+}
+
+function isReminder(value: unknown): value is Reminder {
+  return REMINDERS.some((reminder) => reminder === value);
 }
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -30,17 +41,30 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+// A last day that is a day and does not come before the first.
+function isEndOf(end: unknown, start: string): end is string | undefined {
+  return end === undefined || (isDay(end) && end >= start);
+}
+
 export function readDateValue(stored: unknown): DateValue | undefined {
   if (!isRecord(stored) || !isDay(stored.start)) return undefined;
-  const { start, end, time } = stored;
-  const hasEnd = end !== undefined;
-  if (hasEnd && (!isDay(end) || end < start)) return undefined;
+  const { start, end, time, remind } = stored;
+  if (!isEndOf(end, start)) return undefined;
   if (time !== undefined && !isTime(time)) return undefined;
   return {
     start,
-    ...(hasEnd && { end }),
+    ...(end !== undefined && { end }),
     ...(time !== undefined && { time }),
+    ...(isReminder(remind) && { remind }),
   };
+}
+
+// The day a date's reminder falls due, or undefined for none.
+export function reminderDay(value: DateValue): string | undefined {
+  if (value.remind === undefined) return undefined;
+  const day = new Date(`${value.start}T00:00:00Z`);
+  day.setUTCDate(day.getUTCDate() - REMINDER_DAYS[value.remind]);
+  return day.toISOString().slice(0, 10);
 }
 
 const LONG_DAY = new Intl.DateTimeFormat("en-US", {

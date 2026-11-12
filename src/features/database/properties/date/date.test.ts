@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { toPropertyId } from "../../database-builder.ts";
 import { propertyType } from "../../property-registry.ts";
-import { formatDateValue, readDateValue } from "./date-value.ts";
+import { formatDateValue, readDateValue, reminderDay } from "./date-value.ts";
 
 const property = { id: toPropertyId("due"), name: "Due", type: "date" };
 const date = propertyType("date");
@@ -31,6 +31,33 @@ describe("readDateValue", () => {
     expect(
       readDateValue({ start: "2026-11-10", time: "25:00" }),
     ).toBeUndefined();
+  });
+});
+
+describe("a date's reminder", () => {
+  it("is kept when it is one of the choices, and dropped when not", () => {
+    expect(readDateValue({ start: "2026-11-10", remind: "1-day" })).toEqual({
+      start: "2026-11-10",
+      remind: "1-day",
+    });
+    expect(readDateValue({ start: "2026-11-10", remind: "never" })).toEqual({
+      start: "2026-11-10",
+    });
+  });
+
+  it("falls due on the day it names before the date", () => {
+    const due = (remind: string) =>
+      reminderDay(
+        readDateValue({ start: "2026-11-10", remind }) ?? {
+          start: "2026-11-10",
+        },
+      );
+
+    expect(due("day-of")).toBe("2026-11-10");
+    expect(due("1-day")).toBe("2026-11-09");
+    expect(due("2-days")).toBe("2026-11-08");
+    expect(due("1-week")).toBe("2026-11-03");
+    expect(reminderDay({ start: "2026-11-10" })).toBeUndefined();
   });
 });
 

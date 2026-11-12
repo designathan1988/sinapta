@@ -92,7 +92,7 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Trash | `features/trash/` | Notion (a dialog, not a popover beside the sidebar; no Last edited by filter) | a search, an "In" filter of the pages trashed pages were in, rows with icon, title and place, Restore and Delete; pages kept over 30 days are deleted as the app opens |
 | Search (Ctrl+K, Ctrl+P) | `features/command-palette/` | Notion (no Created by, In page, Date filters; no Ask AI) | wide dialog 1006 × 676 px, radius 20; the field, a "Title only" chip, Recent pages or Best matches with each page's place and the text around a match, marked; the active page's preview beside the list; a page found by its text opens at the block, flashed |
 | Sub-group | `view-settings/group-panel.ts`, `layouts/board/board-lanes.view.ts` | Notion (boards; the sub-groups' own sort and hide settings not shown) | Sub-group row in a board's Group panel; lanes with a toggle, chip and count, the column headers once on top; a card dragged to another lane takes its value |
-| Date cell and date value | `ui/date-picker/`, `date-menu.ts`, `cell-date.view.ts` | Notion (no Date format & timezone or Remind rows) | the chosen days in fields, the month with Today and arrows, six weeks of days, End date and Include time switches, Clear |
+| Date cell and date value | `ui/date-picker/`, `date-menu.ts`, `cell-date.view.ts` | Notion (no time zone: days have none) | the chosen days in fields that take a typed day ("Dec 3", "12/3/2026", "tomorrow"), the month with Today and arrows, six weeks of days; End date, Date format › (date and time formats), Include time, Remind › (none, on the day, 1 or 2 days or a week before; due reminders reach the inbox), Clear |
 
 ### Property settings
 
@@ -169,5 +169,4 @@ against the reference on every run.
 - Row peek: comments, Share, copy link and favorite in the bar; resizing the side peek; the peek in the address.
 - Templates: a default per view; repeating templates.
 - Sorts: reorder by dragging the grip (Move up and down by keyboard).
-- Date picker: Date format & timezone, and Remind rows; typing a date into its field.
 - Light theme measurements of the menu reference.
