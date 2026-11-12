@@ -14,6 +14,7 @@ export const bulletedListDefinition: BlockDefinition = {
   propsSchema: bulletedListPropsSchema,
   continuesAs: BULLETED_LIST_TYPE,
   createProps: (text) => ({ text }),
+  drawnFrom: () => [],
   render: (block) =>
     isBlockOfType<BulletedListBlock>(block, BULLETED_LIST_TYPE)
       ? renderBulletedList(block)

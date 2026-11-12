@@ -1,5 +1,6 @@
 export {
   emojiGroups,
+  loadEmoji,
   searchEmoji,
   type Emoji,
   type EmojiGroup,

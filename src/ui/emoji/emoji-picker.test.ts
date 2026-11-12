@@ -1,10 +1,15 @@
 // @vitest-environment happy-dom
 import { render } from "lit-html";
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import {
   renderEmojiPicker,
   type EmojiPickerOptions,
 } from "./emoji-picker.view.ts";
+import { loadEmoji as loadEmojiList } from "./emoji-search.ts";
+
+beforeAll(async () => {
+  await loadEmojiList();
+});
 
 function rendered(overrides: Partial<EmojiPickerOptions> = {}) {
   const chosen: string[] = [];

@@ -75,6 +75,7 @@ import { COPY } from "../ui/copy.ts";
 import { installOverlayDismiss } from "../ui/overlay/index.ts";
 import { installScopedKeys, matchShortcut } from "../ui/shortcuts/index.ts";
 import { installTooltip } from "../ui/tooltip/index.ts";
+import { loadEmoji } from "../ui/emoji/index.ts";
 import { startRouter } from "./router.ts";
 import { runShortcutAction } from "./shortcut-actions.ts";
 import { applyTheme } from "./theme.ts";
@@ -195,4 +196,6 @@ export async function startApp(container: HTMLElement): Promise<void> {
   });
   store.subscribe(renderRoot);
   renderRoot();
+  // The emoji list loads after the first paint, then shows where asked.
+  void loadEmoji().then(renderRoot);
 }

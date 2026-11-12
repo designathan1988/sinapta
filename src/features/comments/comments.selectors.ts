@@ -39,6 +39,17 @@ export function selectOpenDiscussions(
   return { page, discussions };
 }
 
+// How many open discussions a block inside a page has; the page's own
+// are counted at its title, not here.
+export function selectBlockDiscussionCount(
+  state: AppState,
+  blockId: BlockId,
+): number {
+  const found = selectOpenDiscussions(state, blockId);
+  if (found === undefined || found.page.id === blockId) return 0;
+  return found.discussions.length;
+}
+
 // "Just now", "5m ago", "3h ago", or the day, as Notion dates comments.
 export function commentTime(createdAt: string, now: string): string {
   const minutes = Math.floor((Date.parse(now) - Date.parse(createdAt)) / 60000);

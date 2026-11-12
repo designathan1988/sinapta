@@ -1,6 +1,6 @@
 // Emoji by name, for the picker and for ":name" while typing. Names are
-// the Unicode character names, so "heavy black heart" is ❤️.
-import { EMOJI_GROUPS } from "./emoji-data.ts";
+// the Unicode character names, so "heavy black heart" is ❤️. The list
+// loads apart from the app, after it starts, so the app starts sooner.
 
 export interface Emoji {
   readonly char: string;
@@ -20,11 +20,25 @@ function readEntries(entries: string): Emoji[] {
   });
 }
 
+interface EmojiSource {
+  readonly name: string;
+  readonly entries: string;
+}
+
+let source: readonly EmojiSource[] | undefined;
 let groups: readonly EmojiGroup[] | undefined;
 
-// Read once, on first use.
+// Loads the list; until it is loaded there are no emoji to show.
+export async function loadEmoji(): Promise<void> {
+  const data = await import("./emoji-data.ts");
+  source = data.EMOJI_GROUPS;
+  groups = undefined;
+}
+
+// Read once, on first use after loading.
 export function emojiGroups(): readonly EmojiGroup[] {
-  groups ??= EMOJI_GROUPS.map((group) => ({
+  if (source === undefined) return [];
+  groups ??= source.map((group) => ({
     name: group.name,
     emoji: readEntries(group.entries),
   }));

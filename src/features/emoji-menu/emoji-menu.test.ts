@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { buildWorkspace, toBlockId } from "../../model/index.ts";
 import {
   createInitialState,
@@ -12,6 +12,11 @@ import {
   selectOpenEmojiMenu,
 } from "./emoji-menu.selectors.ts";
 import { emojiMenuKeys } from "./emoji-menu.view.ts";
+import { loadEmoji as loadEmojiList } from "../../ui/emoji/index.ts";
+
+beforeAll(async () => {
+  await loadEmojiList();
+});
 
 const A = toBlockId("a");
 

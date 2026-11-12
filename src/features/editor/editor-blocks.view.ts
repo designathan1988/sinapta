@@ -1,5 +1,6 @@
 import "./editor-containers.css";
 import { html, nothing, type TemplateResult } from "lit-html";
+import { guard } from "lit-html/directives/guard.js";
 import { ref } from "lit-html/directives/ref.js";
 import { repeat } from "lit-html/directives/repeat.js";
 import { blockDefinition, isTextBlock, textOf } from "../../blocks/index.ts";
@@ -19,6 +20,7 @@ import { onMentionClick } from "./editor-mention.view.ts";
 import { onEquationClick } from "./editor-equation.view.ts";
 import { renderStartList } from "./editor-start.view.ts";
 import { caretAt } from "./editor.commands.ts";
+import { selectBlockDrawKey } from "./editor-redraw.selectors.ts";
 import {
   onBeforeInput,
   reconcileText,
@@ -99,11 +101,20 @@ function renderBlock(block: Block, context: BlockContext): TemplateResult {
   </div>`;
 }
 
+// A block is drawn again only when what it is drawn from has changed, so
+// a keystroke costs one block, not the page.
+function renderGuarded(block: Block, context: BlockContext): unknown {
+  const isSelected = context.selected.has(block.id);
+  const key = selectBlockDrawKey(context.state, block, isSelected);
+  if (key === undefined) return renderBlock(block, context);
+  return guard([context.dispatch, ...key], () => renderBlock(block, context));
+}
+
 function renderList(blocks: readonly Block[], context: BlockContext): unknown {
   return repeat(
     blocks,
     (block) => block.id,
-    (block) => renderBlock(block, context),
+    (block) => renderGuarded(block, context),
   );
 }
 

@@ -36,6 +36,8 @@ export const simpleTableDefinition: BlockDefinition = {
     hasHeaderColumn: false,
   }),
   commands: simpleTableCommands,
+  // Its cell menu is anchored to a cell, so the whole overlay is read.
+  drawnFrom: (_block, state) => [state.ui.overlay],
   render: (block, dispatch, state) =>
     isBlockOfType<SimpleTableBlock>(block, SIMPLE_TABLE_TYPE)
       ? renderSimpleTable(block, dispatch, state)

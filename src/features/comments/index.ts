@@ -3,6 +3,7 @@ export {
   discussionTidier,
   startDiscussion,
 } from "./comment.commands.ts";
+export { selectBlockDiscussionCount } from "./comments.selectors.ts";
 export {
   COMMENT_COMPOSER_OVERLAY,
   DISCUSSIONS_OVERLAY,

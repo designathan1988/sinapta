@@ -1,5 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { emojiGroups, searchEmoji } from "./emoji-search.ts";
+import { loadEmoji as loadEmojiList } from "./emoji-search.ts";
+
+beforeAll(async () => {
+  await loadEmojiList();
+});
 
 describe("searchEmoji", () => {
   it("finds an emoji by the start of a word of its name", () => {

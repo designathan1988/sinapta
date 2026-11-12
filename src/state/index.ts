@@ -65,6 +65,7 @@ export {
   selectCanRedo,
   selectCanUndo,
   selectIsHomeShown,
+  selectOverlayAt,
   selectTheme,
 } from "./app-state.selectors.ts";
 export { restoreUi, toPersistedUi, type PersistedUi } from "./ui.schema.ts";

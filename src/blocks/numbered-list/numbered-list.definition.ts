@@ -15,6 +15,7 @@ export const numberedListDefinition: BlockDefinition = {
   propsSchema: numberedListPropsSchema,
   continuesAs: NUMBERED_LIST_TYPE,
   createProps: (text) => ({ text }),
+  drawnFrom: (block, state) => [selectListMarker(state, block.id)],
   render: (block, _dispatch, state) =>
     isBlockOfType<NumberedListBlock>(block, NUMBERED_LIST_TYPE)
       ? renderNumberedList(block, selectListMarker(state, block.id))

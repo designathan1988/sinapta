@@ -17,6 +17,7 @@ export const embedDefinition: BlockDefinition = {
   continuesAs: PARAGRAPH_TYPE,
   createProps: () => ({ url: "" }),
   commands: embedCommands,
+  drawnFrom: () => [],
   render: (block, dispatch) =>
     isBlockOfType<EmbedBlock>(block, EMBED_TYPE)
       ? renderEmbed(block, dispatch)

@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 import { render } from "lit-html";
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
+import { loadEmoji } from "../../ui/emoji/index.ts";
 import { buildWorkspace, toBlockId } from "../../model/index.ts";
 import {
   createInitialState,
@@ -35,6 +36,11 @@ function rendered(state: AppState = createInitialState()) {
   render(renderCallout(block, dispatch, state), host);
   return { host, sent };
 }
+
+// The picker lists emoji once the list has loaded.
+beforeAll(async () => {
+  await loadEmoji();
+});
 
 describe("callout.setIcon", () => {
   it("changes the icon, and an empty icon removes it", () => {

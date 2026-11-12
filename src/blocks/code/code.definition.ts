@@ -14,6 +14,8 @@ export const codeDefinition: BlockDefinition = {
   isMultiline: true,
   createProps: (text) => ({ text }),
   commands: codeCommands,
+  // Its language list opens as any select does, from the whole overlay.
+  drawnFrom: (_block, state) => [state.ui.overlay],
   render: (block, dispatch, state) =>
     isBlockOfType<CodeBlock>(block, CODE_TYPE)
       ? renderCode(block, dispatch, state)

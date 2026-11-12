@@ -8,6 +8,7 @@ import {
   imagePropsSchema,
   type ImageBlock,
 } from "./image.schema.ts";
+import { imageAddress } from "./image-address.ts";
 import { renderImage } from "./image.view.ts";
 
 // An image from a web address or a file; any text it is made from is
@@ -19,6 +20,13 @@ export const imageDefinition: BlockDefinition = {
   continuesAs: PARAGRAPH_TYPE,
   createProps: () => ({ src: "", caption: "" }),
   commands: imageCommands,
+  // A stored file's address, and a failed upload's message.
+  drawnFrom: (block, state) => [
+    isBlockOfType<ImageBlock>(block, IMAGE_TYPE)
+      ? imageAddress(block, state)
+      : null,
+    state.persistence.assetError,
+  ],
   render: (block, dispatch, state) =>
     isBlockOfType<ImageBlock>(block, IMAGE_TYPE)
       ? renderImage(block, dispatch, state)

@@ -19,6 +19,7 @@ export const toggleDefinition: BlockDefinition = {
   commands: toggleCommands,
   showsChildren: (block) =>
     !isBlockOfType<ToggleBlock>(block, TOGGLE_TYPE) || block.props.isOpen,
+  drawnFrom: () => [],
   render: (block, dispatch) =>
     isBlockOfType<ToggleBlock>(block, TOGGLE_TYPE)
       ? renderToggle(block, dispatch)

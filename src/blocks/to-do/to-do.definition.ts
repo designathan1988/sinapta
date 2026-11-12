@@ -12,6 +12,7 @@ export const toDoDefinition: BlockDefinition = {
   continuesAs: TO_DO_TYPE,
   createProps: (text) => ({ text, isChecked: false }),
   commands: toDoCommands,
+  drawnFrom: () => [],
   render: (block, dispatch) =>
     isBlockOfType<ToDoBlock>(block, TO_DO_TYPE)
       ? renderToDo(block, dispatch)

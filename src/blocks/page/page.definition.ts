@@ -15,6 +15,7 @@ export const pageDefinition: BlockDefinition = {
   }),
   // Inside another page, a subpage is one line; its blocks are its own.
   showsChildren: () => false,
+  drawnFrom: () => [],
   render: (block, dispatch) =>
     isPageLike(block) ? renderPageRow(block, dispatch) : undefined,
 };

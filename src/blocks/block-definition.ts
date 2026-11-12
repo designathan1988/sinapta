@@ -45,6 +45,11 @@ export interface BlockDefinition {
   readonly customProperties?: (
     block: Block,
   ) => Readonly<Record<string, string>>;
+  // What the block's content shows besides the block itself. The editor
+  // draws a block again only when the block or one of these values has
+  // changed; a type without it, as one that reads the whole workspace, is
+  // drawn again after every change.
+  readonly drawnFrom?: (block: Block, state: AppState) => readonly unknown[];
   // The block's own content, without its children. Undefined for a block
   // of another type.
   readonly render?: (

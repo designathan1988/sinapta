@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 import { render } from "lit-html";
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
+import { loadEmoji } from "../../ui/emoji/index.ts";
 import { selectPage } from "../../blocks/page/index.ts";
 import { buildWorkspace, toBlockId } from "../../model/index.ts";
 import {
@@ -29,6 +30,11 @@ function rendered(query: string) {
   render(renderIconControl(state, page, dispatch), host);
   return { host, sent };
 }
+
+// The picker lists emoji once the list has loaded.
+beforeAll(async () => {
+  await loadEmoji();
+});
 
 describe("the page icon picker", () => {
   it("sets the chosen emoji as the page icon and closes", () => {

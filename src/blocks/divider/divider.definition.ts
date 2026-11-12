@@ -11,5 +11,6 @@ export const dividerDefinition: BlockDefinition = {
   continuesAs: PARAGRAPH_TYPE,
   // A divider holds no text.
   createProps: () => ({}),
+  drawnFrom: () => [],
   render: renderDivider,
 };

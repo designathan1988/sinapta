@@ -17,6 +17,7 @@ export const bookmarkDefinition: BlockDefinition = {
   continuesAs: PARAGRAPH_TYPE,
   createProps: () => ({ url: "" }),
   commands: bookmarkCommands,
+  drawnFrom: () => [],
   render: (block, dispatch) =>
     isBlockOfType<BookmarkBlock>(block, BOOKMARK_TYPE)
       ? renderBookmark(block, dispatch)

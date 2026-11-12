@@ -14,6 +14,7 @@ export const paragraphDefinition: BlockDefinition = {
   propsSchema: paragraphPropsSchema,
   continuesAs: PARAGRAPH_TYPE,
   createProps: (text) => ({ text }),
+  drawnFrom: () => [],
   render: (block) =>
     isBlockOfType<ParagraphBlock>(block, PARAGRAPH_TYPE)
       ? renderParagraph(block)

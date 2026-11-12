@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { buildWorkspace } from "../../model/index.ts";
 import {
   createInitialState,
@@ -7,6 +7,11 @@ import {
   type Command,
 } from "../../state/index.ts";
 import { onBeforeInput } from "./editor-input.view.ts";
+import { loadEmoji as loadEmojiList } from "../../ui/emoji/index.ts";
+
+beforeAll(async () => {
+  await loadEmojiList();
+});
 
 function typeInto(element: Element): { event: InputEvent; sent: Command[] } {
   const sent: Command[] = [];

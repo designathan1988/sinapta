@@ -15,6 +15,7 @@ export const quoteDefinition: BlockDefinition = {
   propsSchema: quotePropsSchema,
   continuesAs: PARAGRAPH_TYPE,
   createProps: (text) => ({ text }),
+  drawnFrom: () => [],
   render: (block) =>
     isBlockOfType<QuoteBlock>(block, QUOTE_TYPE)
       ? renderQuote(block)

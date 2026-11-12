@@ -23,6 +23,7 @@ export const headingDefinition: BlockDefinition = {
     !isBlockOfType<HeadingBlock>(block, HEADING_TYPE) ||
     block.props.isToggleable !== true ||
     block.props.isOpen !== false,
+  drawnFrom: () => [],
   render: (block, dispatch) =>
     isBlockOfType<HeadingBlock>(block, HEADING_TYPE)
       ? renderHeading(block, dispatch)
