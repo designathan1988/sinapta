@@ -2,6 +2,8 @@
 export const EDITOR_TEXT = {
   slashMenu: {
     label: "Turn into",
+    close: "Close menu",
+    closeKey: "esc",
     groups: {
       basic: "Basic blocks",
       media: "Media",

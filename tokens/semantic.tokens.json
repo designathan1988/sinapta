@@ -646,6 +646,24 @@
     "scrollbarThin": {
       "$description": "A menu's scrollbar, thin as Notion's: 6 px.",
       "$value": "{base.size.0x375}"
+    },
+    "slashMenu": {
+      "width": {
+        "$description": "Notion's slash menu, measured: 324 px wide.",
+        "$value": "{base.size.20x25}"
+      },
+      "maxHeight": {
+        "$description": "Notion's slash menu stops at 360 px and scrolls, its footer included.",
+        "$value": "{base.size.22x5}"
+      },
+      "row": {
+        "$description": "A slash menu row, 32 px as Notion's.",
+        "$value": "{base.size.8}"
+      },
+      "footer": {
+        "$description": "The Close menu line under the slash menu's list: 42 px.",
+        "$value": "{base.size.2x625}"
+      }
     }
   },
   "radius": {

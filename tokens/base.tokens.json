@@ -1424,6 +1424,24 @@
           "value": 0.5,
           "unit": "rem"
         }
+      },
+      "20x25": {
+        "$value": {
+          "value": 20.25,
+          "unit": "rem"
+        }
+      },
+      "22x5": {
+        "$value": {
+          "value": 22.5,
+          "unit": "rem"
+        }
+      },
+      "2x625": {
+        "$value": {
+          "value": 2.625,
+          "unit": "rem"
+        }
       }
     },
     "radius": {

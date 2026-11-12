@@ -152,6 +152,15 @@ function renderOptions(menu: OpenSlashMenu): TemplateResult[] {
   });
 }
 
+// "Close menu" and its key under the list, as Notion's; a press on it
+// closes the menu.
+function renderFooter(): TemplateResult {
+  return html`<button type="button" class="slash-menu__footer" tabindex="-1">
+    <span class="slash-menu__label">${COPY.slashMenu.close}</span>
+    <span class="slash-menu__hint">${COPY.slashMenu.closeKey}</span>
+  </button>`;
+}
+
 // The list of block types offered after "/" is typed.
 export function renderSlashMenu(
   state: AppState,
@@ -163,21 +172,31 @@ export function renderSlashMenu(
     // Keep the caret in the text.
     event.preventDefault();
     if (!(event.target instanceof Element)) return;
+    if (event.target.closest(".slash-menu__footer")) {
+      dispatch(closeOverlay.create({}));
+      return;
+    }
     const index =
       event.target.closest<HTMLElement>("[data-index]")?.dataset.index;
     const item = menu.items[Number(index ?? -1)];
     if (item !== undefined) choose(menu, item, { state, dispatch });
   };
+  // As Notion's: the list scrolls inside the menu, over a Close menu line.
   return html`<div
     class="slash-menu"
-    role="listbox"
-    tabindex="0"
     popover="manual"
     data-overlay
-    aria-label=${COPY.slashMenu.label}
     ${ref(showPopoverWhenConnected)}
     @pointerdown=${onPointerDown}
   >
-    ${renderOptions(menu)}
+    <div
+      class="slash-menu__list"
+      role="listbox"
+      tabindex="0"
+      aria-label=${COPY.slashMenu.label}
+    >
+      ${renderOptions(menu)}
+    </div>
+    ${renderFooter()}
   </div>`;
 }

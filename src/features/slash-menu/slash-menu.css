@@ -1,17 +1,54 @@
 @layer features {
   /* Notion's slash menu: groups of blocks, each with its icon,
      its name and the Markdown that makes it. */
+
+  /* Notion's slash menu, measured: 324 px wide, at most 360 px tall, the
+     list scrolling inside it over a Close menu line. */
   .slash-menu {
-    inline-size: var(--size-menu-width);
+    inline-size: var(--size-slash-menu-width);
     max-inline-size: calc(100vw - var(--space-inset-xl));
-    max-block-size: var(--size-menu-max-height);
-    padding: var(--space-inset-xs);
-    overflow: hidden auto;
+    max-block-size: var(--size-slash-menu-max-height);
+    padding: var(--space-none);
+    overflow: hidden;
 
     &:popover-open {
       display: flex;
       flex-direction: column;
-      gap: var(--space-stack-xxs);
+    }
+  }
+
+  .slash-menu__list {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--space-stack-xxs);
+    min-block-size: 0;
+    padding: var(--space-inset-xs);
+    overflow: hidden auto;
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  /* "Close menu" and its key under the list, as Notion's. */
+  .slash-menu__footer {
+    display: flex;
+    flex: none;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    min-block-size: var(--size-slash-menu-footer);
+    padding: var(--space-none) var(--space-inset-md);
+    border: none;
+    border-block-start: var(--size-border-thin) solid var(--color-border-subtle);
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    text-align: start;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
     }
   }
 
@@ -22,14 +59,15 @@
     font-weight: var(--font-weight-medium);
   }
 
-  /* Rows as Notion's slash menu today: 28 px, a plain 20 px icon, its
-     name and the Markdown that makes it. */
+  /* Rows as Notion's slash menu today, measured: 32 px, a plain 20 px
+     icon, its name and the Markdown that makes it. */
   .slash-menu__item {
     display: flex;
-    gap: var(--space-inline-sm);
+    gap: var(--space-inline-xs);
     align-items: center;
-    min-block-size: var(--size-menu-row);
-    padding: var(--space-none) var(--space-inset-sm);
+    min-block-size: var(--size-slash-menu-row);
+    padding-block: var(--space-none);
+    padding-inline: var(--space-inset-md) var(--space-inset-sm);
     border-radius: var(--radius-md);
     font-size: var(--font-size-sm);
     cursor: pointer;
