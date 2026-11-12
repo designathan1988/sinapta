@@ -1088,9 +1088,9 @@ views read-only while locked.
 
 **Files:** `src/features/command-palette/*`, shortcut Ctrl+P.
 
-- [ ] Tests: empty query lists recents; matches in body text show the
+- [x] Tests: empty query lists recents; matches in body text show the
   block snippet and open the page scrolled to it; filter "Title only".
-- [ ] Standard cycle; commit `feat(command-palette): add recents and block results`
+- [x] Standard cycle; commit `feat(command-palette): add recents and block results`
 
 ### Task 17.2: Templates
 
@@ -1099,8 +1099,9 @@ trees like onboarding: Meeting notes, To-do list, Journal, Docs, Project
 tracker, Reading list; "Save as template" stores a page under a hidden
 templates root).
 
-- [ ] Tests: using a template copies it with new ids; saved templates list.
-- [ ] Standard cycle; commit `feat(templates): add a template gallery`
+- [x] Tests: using a template copies it with new ids.
+- [ ] Saved templates list ("Save as template").
+- [x] Standard cycle; commit `feat(templates): add a template gallery`
 
 ### Task 17.3: Page history
 
@@ -1108,9 +1109,9 @@ templates root).
 `snapshots`, one snapshot per page per 10 minutes of edits, 50 per page),
 `src/features/page-history/`.
 
-- [ ] Tests: snapshots are taken on the cadence and capped; restore is one
+- [x] Tests: snapshots are taken on the cadence and capped; restore is one
   undoable command; preview is read-only.
-- [ ] Standard cycle; commit `feat(page-history): keep and restore page versions`
+- [x] Standard cycle; commit `feat(page-history): keep and restore page versions`
 
 ### Task 17.4: Comments (format version 29)
 
@@ -1118,9 +1119,9 @@ templates root).
 operations on the new kind, rich text mark `comment` with an id, create
 `src/features/comments/`; shortcut Ctrl+Shift+M.
 
-- [ ] Tests: comment on selected text highlights it; resolve hides it;
+- [x] Tests: comment on selected text highlights it; resolve hides it;
   deleting the block removes its comments in the same transaction.
-- [ ] Standard cycle; commit `feat(comments): comment on pages and text`
+- [x] Standard cycle; commit `feat(comments): comment on pages and text`
 
 ### Task 17.5: Backlinks and page options
 
@@ -1128,8 +1129,8 @@ operations on the new kind, rich text mark `comment` with an id, create
 13.7); page menu "Customize page" (show backlinks: expanded, popover, off;
 show comments: default, minimal).
 
-- [ ] Tests: count updates when a mention is added or removed.
-- [ ] Standard cycle; commit `feat(backlinks): show pages that link here`
+- [x] Tests: count updates when a mention is added or removed.
+- [x] Standard cycle; commit `feat(backlinks): show pages that link here`
 
 ### Task 17.6: Import and export
 
@@ -1138,9 +1139,9 @@ design D12), `src/features/markdown-import/`; extend
 `src/features/markdown-export/` (page with subpages as a ZIP; HTML export),
 print stylesheet in `src/styles/print.css`.
 
-- [ ] Tests: a ZIP opens in the platform unzip (fixture bytes); Markdown
+- [x] Tests: a ZIP opens in the platform unzip (fixture bytes); Markdown
   import of a folder rebuilds the tree; print hides the chrome.
-- [ ] Standard cycle; commit `feat(markdown-export): export and import page archives`
+- [x] Standard cycle; commit `feat(markdown-export): export and import page archives`
 
 ### Task 17.7: Navigation keys
 
@@ -1149,8 +1150,8 @@ print stylesheet in `src/styles/print.css`.
 **Interfaces:** Ctrl+N new page, Ctrl+[ back, Ctrl+] forward, Ctrl+L copy
 link, Ctrl+Shift+U parent page.
 
-- [ ] Tests: one per key; the shortcut reference lists every key.
-- [ ] Standard cycle; commit `feat(ui): add Notion's navigation shortcuts`
+- [x] Tests: one per key; the shortcut reference lists every key.
+- [x] Standard cycle; commit `feat(ui): add Notion's navigation shortcuts`
 
 ### Task 17.8: Reminders and inbox
 
@@ -1158,18 +1159,18 @@ link, Ctrl+Shift+U parent page.
 `isReminder` and date properties with reminders; `Notification` shown
 while the app is open, permission asked on the first reminder only).
 
-- [ ] Tests: due reminders appear in the inbox; marking read persists;
+- [x] Tests: due reminders appear in the inbox; marking read persists;
   no permission prompt without a reminder.
-- [ ] Standard cycle; commit `feat(inbox): remind about dates`
+- [x] Standard cycle; commit `feat(inbox): remind about dates`
 
 ### Task 17.9: Trash parity
 
 **Files:** `src/features/trash/*` (search, filter by parent, automatic
 deletion after 30 days as a setting, on load).
 
-- [ ] Tests: pages older than 30 days are removed on load when enabled;
+- [x] Tests: pages older than 30 days are removed on load when enabled;
   search filters by title.
-- [ ] Standard cycle; commit `feat(trash): search the trash and empty it after 30 days`
+- [x] Standard cycle; commit `feat(trash): search the trash and empty it after 30 days`
 
 ---
 
