@@ -11,6 +11,7 @@ import { LINKED_VIEW_TYPE } from "../../blocks/linked-view/index.ts";
 import { renderInlineDatabase, renderLinkedView } from "../database/index.ts";
 import { appendParagraph } from "./editor-structure.commands.ts";
 import { renderAddButton, renderHandle } from "./editor-block-menu.view.ts";
+import { renderBlockComments } from "../comments/index.ts";
 import { startBlockDrag } from "./editor-block-drag.view.ts";
 import { onSelectionCopy } from "./editor-clipboard.view.ts";
 import { onBlockContextMenu } from "./editor-context-menu.view.ts";
@@ -92,7 +93,9 @@ function renderBlock(block: Block, context: BlockContext): TemplateResult {
     ?data-selected=${context.selected.has(block.id)}
   >
     ${renderAddButton(block, context)} ${renderHandle(block, context)}
-    ${content ?? nothing} ${renderChildren(block, context)}
+    ${content ?? nothing}
+    ${renderBlockComments(state, context.dispatch, block.id)}
+    ${renderChildren(block, context)}
   </div>`;
 }
 

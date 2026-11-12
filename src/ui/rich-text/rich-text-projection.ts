@@ -65,6 +65,12 @@ function spanNode(span: TextSpan): Node {
     if (span.marks?.includes(mark) === true) node = wrap(node, tag);
   }
   node = toned(node, span);
+  if (span.comments !== undefined && span.comments.length > 0) {
+    const marked = wrap(node, "span");
+    marked.className = "comment-mark";
+    marked.dataset.discussions = span.comments.join(" ");
+    node = marked;
+  }
   const href = span.href === undefined ? undefined : safeHref(span.href);
   if (href === undefined) return node;
   const link = wrap(node, "a");

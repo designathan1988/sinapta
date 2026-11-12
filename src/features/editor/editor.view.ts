@@ -1,3 +1,5 @@
+import { openOverlay } from "../../state/index.ts";
+import { renderButton } from "../../ui/button/index.ts";
 import "./editor.css";
 import "./editor-page-header.css";
 import { html, nothing, type TemplateResult } from "lit-html";
@@ -32,6 +34,10 @@ import { LINK_OVERLAY, renderLinkField } from "./editor-link.view.ts";
 import type { InputContext } from "./editor-input.view.ts";
 import { renderAddCover, renderCover } from "./editor-cover.view.ts";
 import { renderBacklinks } from "../backlinks/index.ts";
+import {
+  COMMENT_COMPOSER_OVERLAY,
+  renderPageDiscussions,
+} from "../comments/index.ts";
 import { renderIconControl } from "./editor-icon.view.ts";
 
 // A page that opens without a title, such as one just created, takes the
@@ -86,6 +92,33 @@ function renderContent(page: PageBlock, context: InputContext) {
   ];
 }
 
+// Notion's "Add comment", beside "Add icon" and "Add cover".
+function renderAddComment(page: PageBlock, dispatch: Dispatch) {
+  const overlay = { kind: COMMENT_COMPOSER_OVERLAY, anchorId: page.id };
+  return renderButton({
+    label: COPY.comments.addToPage,
+    icon: "comment",
+    onClick: () => dispatch(openOverlay.create({ overlay })),
+  });
+}
+
+// Over the title: "Add icon", "Add cover" and "Add comment".
+function renderPageActions(
+  state: AppState,
+  page: PageBlock,
+  dispatch: Dispatch,
+): TemplateResult {
+  const isPage = page.type === PAGE_TYPE;
+  return html`<div
+    class="editor__page-actions"
+    ?data-has-icon=${page.props.icon !== null}
+  >
+    ${renderIconControl(state, page, dispatch)}
+    ${isPage ? renderAddCover(page, dispatch) : nothing}
+    ${isPage ? renderAddComment(page, dispatch) : nothing}
+  </div>`;
+}
+
 // A page: its icon, its title and its blocks. The open page, unless a
 // peek shows another.
 export function renderEditor(
@@ -114,15 +147,9 @@ export function renderEditor(
     >
       ${renderTemplateBanner(state, page.id)}
       ${isPage ? renderCover(state, page, dispatch) : nothing}
-      <div
-        class="editor__page-actions"
-        ?data-has-icon=${page.props.icon !== null}
-      >
-        ${renderIconControl(state, page, dispatch)}
-        ${isPage ? renderAddCover(page, dispatch) : nothing}
-      </div>
-      ${renderTitle(page, context)}
+      ${renderPageActions(state, page, dispatch)} ${renderTitle(page, context)}
       ${isPage ? renderBacklinks(state, dispatch, page) : nothing}
+      ${isPage ? renderPageDiscussions(state, dispatch, page) : nothing}
       ${renderContent(page, context)}
     </article>`,
   )}`;

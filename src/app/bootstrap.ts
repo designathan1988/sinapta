@@ -24,6 +24,10 @@ import {
 import { editorCommands } from "../features/editor/index.ts";
 import { peekCommands } from "../features/row-peek/index.ts";
 import { templateCommands } from "../features/templates/index.ts";
+import {
+  commentCommands,
+  discussionTidier,
+} from "../features/comments/index.ts";
 import { formatToolbarKeys } from "../features/format-toolbar/index.ts";
 import {
   onboardingCommands,
@@ -84,6 +88,7 @@ const COMMANDS = [
   ...peekCommands,
   ...onboardingCommands,
   ...templateCommands,
+  ...commentCommands,
 ];
 
 // Keys that apply while one part of the interface is active.
@@ -126,7 +131,7 @@ function createAppDispatch(store: AppStore): Dispatch {
   const dispatchCommand = createDispatcher({
     store,
     registry: createCommandRegistry(COMMANDS),
-    tidiers: [...BLOCK_TIDIERS, ...DATABASE_TIDIERS],
+    tidiers: [...BLOCK_TIDIERS, ...DATABASE_TIDIERS, discussionTidier],
     guards: [lockGuard],
   });
   return (command) => {

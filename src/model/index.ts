@@ -167,3 +167,9 @@ export {
   type AssetSaveResult,
 } from "./asset.schema.ts";
 export { parseCsv, writeCsv } from "./csv.ts";
+export {
+  addComment,
+  removeComment,
+  textOfRange,
+  type CommentRange,
+} from "./rich-text-comments.ts";

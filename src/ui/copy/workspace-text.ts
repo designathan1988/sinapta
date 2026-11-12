@@ -177,6 +177,7 @@ export const WORKSPACE_TEXT = {
     forward: "Forward",
     copyLink: "Copy the page's link",
     parentPage: "Open the page this one is in",
+    comment: "Comment on the selected text",
     title: "Keyboard shortcuts",
     close: "Close keyboard shortcuts",
     open: "Keyboard shortcuts",

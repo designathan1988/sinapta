@@ -34,6 +34,12 @@ import {
 } from "../features/slash-menu/index.ts";
 import { renderTrash, TRASH_OVERLAY } from "../features/trash/index.ts";
 import {
+  COMMENT_COMPOSER_OVERLAY,
+  DISCUSSIONS_OVERLAY,
+  renderComposerPopover,
+  renderDiscussionsPopover,
+} from "../features/comments/index.ts";
+import {
   renderTemplateGallery,
   TEMPLATE_GALLERY_OVERLAY,
 } from "../features/templates/index.ts";
@@ -49,6 +55,8 @@ type OverlayView = (
 const OVERLAYS: Readonly<Record<string, OverlayView>> = {
   [SETTINGS_OVERLAY]: renderSettings,
   [TRASH_OVERLAY]: renderTrash,
+  [COMMENT_COMPOSER_OVERLAY]: renderComposerPopover,
+  [DISCUSSIONS_OVERLAY]: renderDiscussionsPopover,
   [TEMPLATE_GALLERY_OVERLAY]: renderTemplateGallery,
   [PALETTE_OVERLAY]: renderCommandPalette,
   [MOVE_TO_OVERLAY]: renderMoveTo,

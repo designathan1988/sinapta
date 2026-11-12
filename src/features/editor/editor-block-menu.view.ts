@@ -22,6 +22,7 @@ import { renderIcon } from "../../ui/icon/index.ts";
 import { renderMenu, type MenuItem } from "../../ui/menu/index.ts";
 import { colorMenuItem } from "./editor-color-menu.view.ts";
 import { pageItems } from "./editor-block-page-items.view.ts";
+import { COMMENT_COMPOSER_OVERLAY } from "../comments/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { convertBlock } from "./editor-convert.commands.ts";
 import { duplicateBlock, insertBlockBelow } from "./editor-insert.commands.ts";
@@ -123,6 +124,16 @@ function textItems(block: Block, context: ActionContext): MenuItem[] {
   return [turnInto, colorMenuItem(overlay, dispatch)];
 }
 
+// "Comment": a discussion on the whole block.
+function commentItem(blockId: BlockId, dispatch: Dispatch): MenuItem {
+  const overlay = { kind: COMMENT_COMPOSER_OVERLAY, anchorId: blockId };
+  return {
+    label: COPY.comments.comment,
+    icon: "comment",
+    onSelect: () => dispatch(openOverlay.create({ overlay })),
+  };
+}
+
 function actionItems(block: Block, context: ActionContext): MenuItem[] {
   const { state, dispatch } = context;
   const blockId = block.id;
@@ -136,6 +147,7 @@ function actionItems(block: Block, context: ActionContext): MenuItem[] {
       onSelect: () => dispatch(duplicateBlock.create({ blockId, blockCount })),
     },
     ...pageItems(block, state, dispatch),
+    commentItem(blockId, dispatch),
     {
       label: COPY.blockMenu.moveUp,
       icon: "up",

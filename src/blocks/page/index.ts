@@ -50,6 +50,7 @@ export {
   pagePropsSchema,
   type PageBlock,
   type PageFont,
+  type Discussion,
   type PageProps,
 } from "./page.schema.ts";
 export {

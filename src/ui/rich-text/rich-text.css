@@ -141,4 +141,11 @@
       background-color: var(--color-bg-hover);
     }
   }
+
+  /* Text a discussion is about, as Notion marks it: a yellow wash and a
+     yellow line under it. */
+  .comment-mark {
+    border-block-end: var(--size-border-thick) solid var(--color-tone-yellow);
+    background-color: var(--color-chip-yellow-bg);
+  }
 }

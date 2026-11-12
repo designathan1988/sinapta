@@ -22,7 +22,7 @@ export interface KeyStroke {
 // What a shortcut does that is not a command: Notion's navigation keys,
 // which the app carries out with the browser and the open page.
 export type ShortcutAction =
-  "new-page" | "back" | "forward" | "copy-link" | "parent-page";
+  "new-page" | "back" | "forward" | "copy-link" | "parent-page" | "comment";
 
 interface ShortcutKey {
   // Lower-case `KeyboardEvent.key`.
@@ -54,6 +54,7 @@ export const SHORTCUTS: readonly Shortcut[] = [
   navigation("]", "forward"),
   navigation("l", "copy-link"),
   navigation("u", "parent-page", true),
+  navigation("m", "comment", true),
   {
     key: "z",
     withModifier: true,

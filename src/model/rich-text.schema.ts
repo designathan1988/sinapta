@@ -46,6 +46,8 @@ export const textSpanSchema = v.object({
   // An inline equation, shown as one piece (version 11): its TeX source,
   // which is also the span's text.
   equation: v.optional(v.string()),
+  // The discussions about this text, by id, which the editor marks.
+  comments: v.optional(v.array(blockIdSchema)),
 });
 
 export const richTextSchema = v.array(textSpanSchema);

@@ -25,16 +25,24 @@ export function isPiece(span: TextSpan): boolean {
   return span.mention !== undefined || span.equation !== undefined;
 }
 
+function sameSet<T>(a: readonly T[], b: readonly T[]): boolean {
+  return a.length === b.length && a.every((item) => b.includes(item));
+}
+
+function hasSameLists(a: TextSpan, b: TextSpan): boolean {
+  return (
+    sameSet(a.marks ?? [], b.marks ?? []) &&
+    sameSet(a.comments ?? [], b.comments ?? [])
+  );
+}
+
 function hasSameStyle(a: TextSpan, b: TextSpan): boolean {
   if (isPiece(a) || isPiece(b)) return false;
-  const marksA = a.marks ?? [];
-  const marksB = b.marks ?? [];
   return (
     a.href === b.href &&
     a.color === b.color &&
     a.highlight === b.highlight &&
-    marksA.length === marksB.length &&
-    marksA.every((mark) => marksB.includes(mark))
+    hasSameLists(a, b)
   );
 }
 
@@ -85,8 +93,9 @@ export function concatRichText(first: RichText, second: RichText): RichText {
   return normalize([...first, ...second]);
 }
 
-// Inserted text takes the style of the text just before it. Text is stored
-// in composed form (NFC), so the same visible text is always the same data.
+// Inserted text takes the style of the text just before it, but not its
+// comments, which stay on the text they were about. Text is stored in
+// composed form (NFC), so the same visible text is always the same data.
 export function insertText(
   rich: RichText,
   offset: number,
@@ -96,6 +105,7 @@ export function insertText(
   const {
     mention: _mention,
     equation: _equation,
+    comments: _comments,
     ...style
   } = before.at(-1) ?? { text: "" };
   const inserted = withText(style, text.normalize("NFC"));

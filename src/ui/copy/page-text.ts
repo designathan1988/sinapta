@@ -9,6 +9,18 @@ export const PAGE_TEXT = {
     characters: { one: "character", other: "characters" },
     favorite: "Favorite",
   },
+  comments: {
+    label: "Comments",
+    author: "You",
+    add: "Add a comment…",
+    reply: "Reply…",
+    send: "Send",
+    resolve: "Resolve",
+    delete: "Delete comment",
+    open: "Open comments",
+    addToPage: "Add comment",
+    comment: "Comment",
+  },
   backlinks: {
     label: "Backlinks",
     count: { one: "backlink", other: "backlinks" },

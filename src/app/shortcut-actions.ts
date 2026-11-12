@@ -1,7 +1,13 @@
 // What Notion's navigation keys do: a new page, back and forward through
 // the pages opened, the open page's link copied, and the page it is in.
 import { createPage, isPageLike, selectPage } from "../blocks/page/index.ts";
-import { setActivePage, type AppState, type Dispatch } from "../state/index.ts";
+import {
+  openOverlay,
+  setActivePage,
+  type AppState,
+  type Dispatch,
+} from "../state/index.ts";
+import { COMMENT_COMPOSER_OVERLAY } from "../features/comments/index.ts";
 import { announce } from "../ui/announcer/index.ts";
 import { COPY } from "../ui/copy.ts";
 import type { ShortcutAction } from "../ui/shortcuts/index.ts";
@@ -18,6 +24,20 @@ function openParent(state: AppState, dispatch: Dispatch): void {
     }
     parentId = parent.parentId;
   }
+}
+
+// A discussion on the selected text, or on the block the caret is in.
+function commentOnSelection(state: AppState, dispatch: Dispatch): void {
+  const { selection } = state.ui;
+  if (selection === null) return;
+  const start = Math.min(selection.anchorOffset, selection.focusOffset);
+  const end = Math.max(selection.anchorOffset, selection.focusOffset);
+  const overlay = {
+    kind: COMMENT_COMPOSER_OVERLAY,
+    anchorId: selection.blockId,
+    ...(start !== end && { start, end }),
+  };
+  dispatch(openOverlay.create({ overlay }));
 }
 
 function copyLink(): void {
@@ -46,6 +66,9 @@ export function runShortcutAction(
       return;
     case "parent-page":
       openParent(state, dispatch);
+      return;
+    case "comment":
+      commentOnSelection(state, dispatch);
       return;
   }
 }

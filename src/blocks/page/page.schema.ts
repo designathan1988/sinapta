@@ -1,5 +1,6 @@
 import * as v from "valibot";
 import {
+  blockIdSchema,
   richTextSchema,
   safeImageSource,
   type TypedBlock,
@@ -32,6 +33,27 @@ export function isCover(cover: string): boolean {
 export const PAGE_FONTS = ["default", "serif", "mono"] as const;
 const pageFontSchema = v.picklist(PAGE_FONTS);
 
+// A comment, by the one person who uses the app.
+export const pageCommentSchema = v.object({
+  id: blockIdSchema,
+  text: v.string(),
+  createdAt: v.string(),
+});
+
+// A discussion, as Notion's: its comments, about the page or one of its
+// blocks, resolved or open.
+export const discussionSchema = v.object({
+  id: blockIdSchema,
+  // The block it is about, or null for the page itself.
+  blockId: v.nullable(blockIdSchema),
+  // The text it was started on, as it read then.
+  quote: v.optional(v.string()),
+  isResolved: v.boolean(),
+  comments: v.array(pageCommentSchema),
+});
+
+export type Discussion = v.InferOutput<typeof discussionSchema>;
+
 export const pagePropsSchema = v.object({
   title: richTextSchema,
   // One emoji, or null for no icon.
@@ -59,6 +81,8 @@ export const pagePropsSchema = v.object({
   // Where the page shows the pages that link to it: a count that opens
   // them (the default), always open, or not at all.
   backlinks: v.optional(v.picklist(["expanded", "popover", "off"])),
+  // The discussions on the page and its blocks.
+  discussions: v.optional(v.array(discussionSchema)),
 });
 
 export type PageProps = v.InferOutput<typeof pagePropsSchema>;

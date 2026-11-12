@@ -1,0 +1,181 @@
+@layer features {
+  /* Notion's comments: each discussion a column of comments with a round
+     initial, the author and time over the text, a reply field under them. */
+  .comments {
+    display: grid;
+    gap: var(--space-stack-sm);
+    padding-block: var(--space-inset-sm);
+    border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
+  }
+
+  .comments__discussion {
+    display: grid;
+    gap: var(--space-stack-xs);
+  }
+
+  .comments__head {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: start;
+    justify-content: space-between;
+  }
+
+  .comments__quote {
+    flex: 1;
+    margin: var(--space-none);
+    padding-inline-start: var(--space-inset-sm);
+    border-inline-start: var(--size-border-thick) solid var(--color-tone-yellow);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+  }
+
+  .comments__list {
+    display: grid;
+    gap: var(--space-stack-sm);
+    margin: var(--space-none);
+    padding: var(--space-none);
+    list-style: none;
+  }
+
+  .comments__comment {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: start;
+  }
+
+  .comments__avatar {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    inline-size: var(--size-icon-md);
+    block-size: var(--size-icon-md);
+    border-radius: var(--radius-full);
+    background-color: var(--color-bg-active);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .comments__body {
+    display: grid;
+    flex: 1;
+    gap: var(--space-stack-xxs);
+    min-inline-size: 0;
+  }
+
+  .comments__meta,
+  .comments__text {
+    margin: var(--space-none);
+    font-size: var(--font-size-sm);
+  }
+
+  .comments__meta {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: baseline;
+
+    & > time {
+      color: var(--color-text-tertiary);
+      font-size: var(--font-size-xs);
+    }
+  }
+
+  .comments__text {
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+  }
+
+  .comments__resolve,
+  .comments__delete,
+  .comments__send {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    inline-size: var(--size-control-sm);
+    block-size: var(--size-control-sm);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-tertiary);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+      color: var(--color-text-primary);
+    }
+
+    & > .icon {
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+    }
+  }
+
+  .comments__field {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+
+    & > input {
+      flex: 1;
+      min-inline-size: 0;
+      min-block-size: var(--size-control-sm);
+      padding: var(--space-none);
+      border: none;
+      background-color: transparent;
+      color: var(--color-text-primary);
+      font-family: inherit;
+      font-size: var(--font-size-sm);
+      outline: none;
+
+      &::placeholder {
+        color: var(--color-text-tertiary);
+      }
+    }
+  }
+
+  .comments__popover {
+    inline-size: var(--size-menu-width);
+    padding: var(--space-inset-md);
+  }
+
+  /* A block's discussions, counted at its end as a speech bubble. */
+  .comments__count {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 100%;
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    min-block-size: var(--size-control-sm);
+    margin-inline-start: var(--space-inline-sm);
+    padding: var(--space-none) var(--space-inset-xs);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: var(--color-bg-hover);
+    }
+
+    & > .icon {
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+    }
+  }
+
+  /* A comment's delete button shows while the comment is pointed at. */
+  .comments__comment:not(:hover, :focus-within) > .comments__delete {
+    opacity: 0;
+  }
+
+  /* Resolving sits at the discussion's end, quoted text or not. */
+  .comments__resolve {
+    margin-inline-start: auto;
+  }
+}

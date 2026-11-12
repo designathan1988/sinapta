@@ -1,5 +1,6 @@
 // A toolbar over selected text: marks, link and color. It is shown while
 // a range of one text block is selected, so it holds no state of its own.
+import { COMMENT_COMPOSER_OVERLAY } from "../comments/index.ts";
 import "./format-toolbar.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
@@ -152,5 +153,25 @@ export function renderFormatToolbar(
     ${TOOLBAR_MARKS.map(markButton)}
     ${renderLinkButton(range, style.hasLink, dispatch)}
     ${renderColorButton(state, range, dispatch)}
+    ${renderCommentButton(range, dispatch)}
   </div>`;
+}
+
+// "Comment": a discussion on the selected text.
+function renderCommentButton(
+  range: FormatRange,
+  dispatch: Dispatch,
+): TemplateResult {
+  const overlay = {
+    kind: COMMENT_COMPOSER_OVERLAY,
+    anchorId: range.blockId,
+    start: range.start,
+    end: range.end,
+  };
+  return renderToolButton({
+    label: COPY.comments.comment,
+    glyph: COPY.comments.comment,
+    isPressed: false,
+    onPress: () => dispatch(openOverlay.create({ overlay })),
+  });
 }
