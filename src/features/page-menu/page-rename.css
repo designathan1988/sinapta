@@ -1,0 +1,44 @@
+@layer features {
+  /* Notion's rename field: the page's icon in a small square, then its
+     title, in a panel over the row. */
+  .page-rename:popover-open {
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    inline-size: var(--size-menu-width);
+    padding: var(--space-inset-xs);
+  }
+
+  .page-rename__icon {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    inline-size: var(--size-control-action);
+    block-size: var(--size-control-action);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-secondary);
+
+    & > .icon {
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+    }
+  }
+
+  .page-rename__field {
+    flex: 1;
+    min-inline-size: 0;
+    min-block-size: var(--size-control-action);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-field);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+
+    &:focus-visible {
+      outline: var(--size-focus-width) solid var(--color-border-focus);
+      outline-offset: calc(var(--size-focus-width) * -1);
+    }
+  }
+}

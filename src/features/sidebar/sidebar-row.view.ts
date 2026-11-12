@@ -4,7 +4,12 @@ import type { AppState, Dispatch } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
-import { renderPageMenuButton, TREE_PLACE } from "../page-menu/index.ts";
+import {
+  PAGE_RENAME_OVERLAY,
+  pageMenuAnchorId,
+  renderPageMenuButton,
+  TREE_PLACE,
+} from "../page-menu/index.ts";
 import type { TreeRow } from "./sidebar.selectors.ts";
 
 const LEVEL_PROPERTY = "--sidebar-level";
@@ -63,6 +68,15 @@ export interface Context {
   readonly dispatch: Dispatch;
 }
 
+// The row whose page's rename field is open: the field sits over it.
+function isRenaming(row: TreeRow, context: Context): boolean {
+  const { overlay } = context.state.ui;
+  return (
+    overlay?.kind === PAGE_RENAME_OVERLAY &&
+    overlay.anchorId === pageMenuAnchorId(TREE_PLACE, row.id)
+  );
+}
+
 // One row of the page tree.
 export function renderRow(row: TreeRow, context: Context): TemplateResult {
   const title = row.title === "" ? COPY.sidebar.untitled : row.title;
@@ -75,6 +89,7 @@ export function renderRow(row: TreeRow, context: Context): TemplateResult {
     aria-label=${title}
     aria-level=${row.level}
     aria-current=${row.isActive ? "page" : nothing}
+    data-overlay-anchor=${isRenaming(row, context) ? "open" : nothing}
     aria-expanded=${row.hasChildren ? String(row.isExpanded) : nothing}
     ?data-untitled=${row.title === ""}
     ${ref((element) => {

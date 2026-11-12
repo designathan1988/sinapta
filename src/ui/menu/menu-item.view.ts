@@ -116,7 +116,7 @@ function renderItem(entry: MenuItem, place: EntryPlace): TemplateResult {
     data-index=${place.index}
     aria-checked=${role.startsWith("menuitem") && entry.check !== undefined ? isChecked : nothing}
     aria-selected=${role === "option" ? isChecked : nothing}
-    aria-haspopup=${entry.submenu === undefined ? nothing : "menu"}
+    aria-haspopup=${entry.submenu === undefined ? (entry.opens ?? nothing) : "menu"}
     aria-expanded=${entry.submenu === undefined ? nothing : String(place.isExpanded === true)}
     ?data-overlay-child-anchor=${entry.submenu !== undefined}
     ?data-autofocus=${place.isFirst}

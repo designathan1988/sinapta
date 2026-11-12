@@ -20,6 +20,10 @@ import {
 } from "../features/mention-menu/index.ts";
 import { MOVE_TO_OVERLAY, renderMoveTo } from "../features/move-to/index.ts";
 import {
+  PAGE_RENAME_OVERLAY,
+  renderPageRename,
+} from "../features/page-menu/index.ts";
+import {
   PAGE_MENU_OVERLAY,
   renderPageMenu,
 } from "../features/page-menu/index.ts";
@@ -76,6 +80,7 @@ const OVERLAYS: Readonly<Record<string, OverlayView>> = {
   [TEMPLATE_GALLERY_OVERLAY]: renderTemplateGallery,
   [PALETTE_OVERLAY]: renderCommandPalette,
   [MOVE_TO_OVERLAY]: renderMoveTo,
+  [PAGE_RENAME_OVERLAY]: renderPageRename,
   [SLASH_MENU_OVERLAY]: renderSlashMenu,
   [MENTION_MENU_OVERLAY]: renderMentionMenu,
   [PAGE_LINK_MENU_OVERLAY]: renderMentionMenu,

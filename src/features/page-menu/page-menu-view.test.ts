@@ -8,6 +8,7 @@ import {
   pageMenuAnchorId,
   renderPageMenu,
 } from "./page-menu.view.ts";
+import { PAGE_RENAME_OVERLAY } from "./page-rename.view.ts";
 
 // The page's menu, opened from the top bar or from another place.
 function rendered(isResolved: boolean, place = "bar") {
@@ -57,16 +58,28 @@ describe("the page menu, as Notion's", () => {
 
     const labels = rows.map((row) => row.textContent);
 
-    expect(labels).toHaveLength(5);
+    expect(labels).toHaveLength(6);
     expect(labels[0]).toContain("Add to favorites");
     expect(labels.slice(1).map((label) => label.trim())).toEqual([
       expect.stringContaining("Copy link"),
       expect.stringContaining("Duplicate"),
+      expect.stringContaining("Rename"),
       expect.stringContaining("Move to"),
       expect.stringContaining("Move to trash"),
     ]);
     expect(host.querySelector(".page-menu__fonts")).toBeNull();
     expect(host.textContent).toContain("Edited");
+  });
+
+  it("renames the page from the sidebar beside its row, as Notion's", () => {
+    const { sent, row } = rendered(false, "tree");
+
+    row("Rename")?.click();
+
+    expect(sent.at(-1)).toMatchObject({
+      type: "ui.openOverlay",
+      overlay: { kind: PAGE_RENAME_OVERLAY, anchorId: "tree:page" },
+    });
   });
 
   it("searches its actions", () => {

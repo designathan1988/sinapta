@@ -34,6 +34,8 @@ export const WORKSPACE_TEXT = {
   pageMenu: {
     open: "Page actions",
     addFavorite: "Add to favorites",
+    rename: "Rename",
+    renameField: "Page title",
     removeFavorite: "Remove from favorites",
     moveUp: "Move up",
     moveDown: "Move down",

@@ -19,6 +19,9 @@ interface ItemLook {
   readonly shortcut?: string;
   // True when choosing the row shows another panel of the menu.
   readonly opensPanel?: boolean;
+  // Opens a dialog or a field of its own when chosen, as Notion's Rename;
+  // said to screen readers.
+  readonly opens?: "dialog";
   // A second line under the label.
   readonly description?: string;
   // Shows the label as a chip of this option color.

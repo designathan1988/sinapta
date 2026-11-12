@@ -9,7 +9,7 @@ import {
   togglePageFavorite,
   type PageBlock,
 } from "../../blocks/page/index.ts";
-import { parseBlockId, type BlockId } from "../../model/index.ts";
+import type { BlockId } from "../../model/index.ts";
 import {
   closeOverlay,
   openOverlay,
@@ -32,6 +32,13 @@ import {
   styleItems,
 } from "./page-menu-style.view.ts";
 import {
+  pageIdOfAnchor,
+  pageMenuAnchorId,
+  placeOfAnchor,
+  TREE_PLACE,
+} from "./page-menu-anchor.ts";
+import { renameItem } from "./page-rename.view.ts";
+import {
   exportItems,
   historyItem,
   pageActionItems,
@@ -39,24 +46,7 @@ import {
 } from "./page-menu-items.ts";
 
 export const PAGE_MENU_OVERLAY = "page-menu";
-
-// The same page can show its menu button in several places, so an anchor
-// id names the place as well as the page.
-export function pageMenuAnchorId(place: string, pageId: BlockId): string {
-  return `${place}:${pageId}`;
-}
-
-function pageIdOfAnchor(anchorId: string | undefined): BlockId | undefined {
-  return parseBlockId(anchorId?.split(":")[1] ?? "");
-}
-
-// The sidebar's rows open the menu from the page tree, which shows a
-// shorter menu.
-export const TREE_PLACE = "tree";
-
-function placeOfAnchor(anchorId: string | undefined): string {
-  return anchorId?.split(":")[0] ?? "";
-}
+export { pageMenuAnchorId, TREE_PLACE } from "./page-menu-anchor.ts";
 
 export interface PageMenuButtonOptions {
   readonly place: string;
@@ -184,10 +174,10 @@ function treeEntries(
   page: PageBlock,
   dispatch: Dispatch,
 ): MenuEntry[] {
-  return grouped([
-    [favoriteItem(page, dispatch)],
-    pageActionItems(state, page.id, dispatch),
-  ]);
+  const actions = pageActionItems(state, page.id, dispatch);
+  // Notion's order: copy link, duplicate, rename, move to, the trash.
+  actions.splice(2, 0, renameItem(page.id, dispatch));
+  return grouped([[favoriteItem(page, dispatch)], actions]);
 }
 
 // What the menu holds where it opened: the sidebar's short menu with the
