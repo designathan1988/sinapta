@@ -50,6 +50,21 @@ export function installOverlayDismiss(
   });
 }
 
+// Escape closes an open overlay even while the focus is still on the
+// control that opened it, as after a click; a key pressed inside the
+// overlay is the overlay's own to handle. True when it closed one.
+export function closeOverlayOnEscape(
+  event: KeyboardEvent,
+  store: AppStore,
+  dispatch: Dispatch,
+): boolean {
+  if (event.key !== "Escape" || event.defaultPrevented) return false;
+  if (store.getState().ui.overlay === null) return false;
+  if (isWithin(event.target, "[data-overlay], dialog")) return false;
+  dispatch(closeOverlay.create({}));
+  return true;
+}
+
 // Puts focus back on the control that opened the innermost open list, or
 // on the one that opened the overlay when all of it closes.
 export function focusOverlayAnchor(closing = { isWhole: false }): void {

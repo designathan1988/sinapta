@@ -73,7 +73,10 @@ import { installAssetSaver } from "../ui/asset/index.ts";
 import { installSelectionSync, restoreSelection } from "../ui/caret/index.ts";
 import { announce } from "../ui/announcer/index.ts";
 import { COPY } from "../ui/copy.ts";
-import { installOverlayDismiss } from "../ui/overlay/index.ts";
+import {
+  closeOverlayOnEscape,
+  installOverlayDismiss,
+} from "../ui/overlay/index.ts";
 import { installScopedKeys, matchShortcut } from "../ui/shortcuts/index.ts";
 import { installTooltip } from "../ui/tooltip/index.ts";
 import { loadEmoji } from "../ui/emoji/index.ts";
@@ -194,6 +197,7 @@ export async function startApp(container: HTMLElement): Promise<void> {
   installScopedKeys(store, dispatch, SCOPED_KEYS);
   installTooltip();
   document.addEventListener("keydown", (event) => {
+    if (closeOverlayOnEscape(event, store, dispatch)) return;
     const shortcut = matchShortcut(event);
     if (shortcut === undefined) return;
     event.preventDefault();
