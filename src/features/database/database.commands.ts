@@ -1,4 +1,5 @@
 // Commands on a database: its columns and its rows.
+import { COLUMN_MENU_OVERLAY } from "./database-overlay.ts";
 import {
   selectDatabase,
   type DatabaseBlock,
@@ -110,10 +111,21 @@ export interface AddPropertyPayload {
   readonly databaseId: BlockId;
   readonly propertyType: string;
   readonly name: string;
+  // Added from a table's +, its settings open beside its column, as
+  // Notion's.
+  readonly opensSettings?: boolean;
 }
 
 // A new property takes one id, plus one for each option its type starts
 // with, such as a status property's three.
+function settingsOverlay(propertyId: PropertyId) {
+  return {
+    kind: COLUMN_MENU_OVERLAY,
+    anchorId: propertyId,
+    children: [{ anchorId: `${propertyId}:edit` }],
+  };
+}
+
 export const addProperty = defineCommand<AddPropertyPayload>({
   type: "property.add",
   newIds: (payload) => ({
@@ -140,6 +152,9 @@ export const addProperty = defineCommand<AddPropertyPayload>({
         ]),
         ...numbered.operations,
       ],
+      ...(command.opensSettings === true && {
+        ui: { ...state.ui, overlay: settingsOverlay(id) },
+      }),
     };
   },
 });

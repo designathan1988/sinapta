@@ -11,6 +11,7 @@ import {
   databaseCommands,
   removeProperty,
 } from "./database.commands.ts";
+import { COLUMN_MENU_OVERLAY } from "./database-overlay.ts";
 import { addRow, rowCommands, setRowValue } from "./row.commands.ts";
 import {
   createView,
@@ -58,6 +59,26 @@ function withProperty(propertyType = "text") {
 }
 
 describe("database commands", () => {
+  it("opens a property's settings when asked, as Notion's + does", () => {
+    const app = createApp();
+
+    app.dispatch(
+      addProperty.create({
+        databaseId: DB,
+        propertyType: "text",
+        name: "Text",
+        opensSettings: true,
+      }),
+    );
+
+    const id = app.database().props.properties[0]?.id;
+    expect(app.store.getState().ui.overlay).toEqual({
+      kind: COLUMN_MENU_OVERLAY,
+      anchorId: id,
+      children: [{ anchorId: `${String(id)}:edit` }],
+    });
+  });
+
   it("creates a database with one table view and opens it", () => {
     const { store, database, firstView } = createApp();
 

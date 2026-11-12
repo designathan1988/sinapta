@@ -85,6 +85,7 @@ export function renderColumnMenu(
 export function renderPropertyTypes(
   databaseId: BlockId,
   dispatch: Dispatch,
+  opensSettings = false,
 ): TemplateResult {
   const items = PROPERTY_TYPES.map((type) => ({
     label: type.label,
@@ -95,6 +96,7 @@ export function renderPropertyTypes(
           databaseId,
           propertyType: type.type,
           name: type.label,
+          opensSettings,
         }),
       ),
   }));
@@ -106,5 +108,5 @@ export function renderPropertyTypes(
 }
 
 export function renderTypeMenu(context: TableContext): TemplateResult {
-  return renderPropertyTypes(context.model.database.id, context.dispatch);
+  return renderPropertyTypes(context.model.database.id, context.dispatch, true);
 }
