@@ -136,28 +136,6 @@ export const WORKSPACE_TEXT = {
     saved: "",
     failed: "Not saved",
   },
-  settings: {
-    title: "Settings",
-    close: "Close settings",
-    themeLegend: "Theme",
-    themeSystem: "System",
-    themeLight: "Light",
-    themeDark: "Dark",
-    dataLegend: "Workspace data",
-    export: "Export workspace",
-    import: "Import workspace",
-    importHint:
-      "Importing replaces everything in this browser with the file's content.",
-    skipped: "items could not be read and were skipped.",
-    importErrors: {
-      "not-a-workspace":
-        "This file could not be imported. It is not a Pagecraft workspace file.",
-      "newer-version":
-        "This file was made by a newer version of Pagecraft. Update the app, then import it again.",
-      unreadable:
-        "This file could not be read. Choose a workspace file exported from Pagecraft.",
-    },
-  },
   palette: {
     open: "Search",
     title: "Search and commands",

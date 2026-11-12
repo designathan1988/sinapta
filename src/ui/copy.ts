@@ -9,6 +9,7 @@ import {
   EDITOR_TEXT,
   ONBOARDING_TEXT,
   PAGE_TEXT,
+  SETTINGS_TEXT,
   TEMPLATE_TEXT,
   WORKSPACE_TEXT,
 } from "./copy/index.ts";
@@ -22,6 +23,7 @@ export const COPY = {
   ...PAGE_TEXT,
   ...BLOCK_TEXT,
   ...TEMPLATE_TEXT,
+  ...SETTINGS_TEXT,
   database: { ...DATABASE_TEXT.database, ...DATABASE_MENU_TEXT },
   onboarding: ONBOARDING_TEXT.onboarding,
 } as const;

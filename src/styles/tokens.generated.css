@@ -199,6 +199,7 @@
     --base-size-46: 46rem;
     --base-size-60: 60rem;
     --base-size-63: 63rem;
+    --base-size-72: 72rem;
     --base-size-hairline: 1px;
     --base-size-thick: 2px;
     --base-size-42x25: 42.25rem;
@@ -413,6 +414,9 @@
     --size-search-top: var(--base-size-4x25);
     --size-search-margin: var(--base-size-5x25);
     --size-search-list: var(--base-size-35x75);
+    --size-settings-width: var(--base-size-72);
+    --size-settings-height: var(--base-size-44);
+    --size-settings-nav: var(--base-size-15);
     --size-scrollbar: var(--base-size-0x625);
     --size-scrollbar-thin: var(--base-size-0x375);
     --radius-sm: var(--base-radius-1);

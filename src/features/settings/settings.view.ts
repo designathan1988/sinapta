@@ -1,10 +1,13 @@
+// Settings, as Notion's: a large dialog with its sections listed at the
+// start and the open one beside them, each a title over rows of a name,
+// a line that says what it does, and a control at the row's end.
 import "./settings.css";
-import { html, nothing, type TemplateResult } from "lit-html";
+import { html, type TemplateResult } from "lit-html";
 import type { Theme } from "../../model/index.ts";
 import {
   closeOverlay,
+  openOverlay,
   requestExport,
-  requestImport,
   selectTheme,
   setTheme,
   type AppState,
@@ -13,106 +16,108 @@ import {
 import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderDialog } from "../../ui/dialog/index.ts";
+import { renderIcon, type IconName } from "../../ui/icon/index.ts";
+import { renderSelect } from "../../ui/select/index.ts";
 import { SETTINGS_OVERLAY_KIND } from "../../ui/shortcuts/index.ts";
+import { renderImportRow } from "./settings-import.view.ts";
+import { renderRow } from "./settings-row.view.ts";
 
 export const SETTINGS_OVERLAY = SETTINGS_OVERLAY_KIND;
 
-const THEME_OPTIONS: readonly { value: Theme; label: string }[] = [
-  { value: "system", label: COPY.settings.themeSystem },
-  { value: "light", label: COPY.settings.themeLight },
-  { value: "dark", label: COPY.settings.themeDark },
+const TEXT = COPY.settings;
+
+type Section = keyof typeof TEXT.sections;
+
+const SECTIONS: readonly { id: Section; icon: IconName }[] = [
+  { id: "preferences", icon: "settings" },
+  { id: "data", icon: "download" },
+];
+
+const THEMES: readonly { value: Theme; label: string }[] = [
+  { value: "system", label: TEXT.themeSystem },
+  { value: "light", label: TEXT.themeLight },
+  { value: "dark", label: TEXT.themeDark },
 ];
 
 function isTheme(value: string): value is Theme {
-  return THEME_OPTIONS.some((option) => option.value === value);
+  return THEMES.some((option) => option.value === value);
 }
 
-function renderThemeField(current: Theme, dispatch: Dispatch): TemplateResult {
-  const onChange = (event: Event): void => {
-    const { target } = event;
-    if (target instanceof HTMLInputElement && isTheme(target.value)) {
-      dispatch(setTheme.create({ theme: target.value }));
-    }
-  };
-  return html`<fieldset class="settings__field" @change=${onChange}>
-    <legend class="settings__legend">${COPY.settings.themeLegend}</legend>
-    ${THEME_OPTIONS.map(
-      (option) =>
-        html`<label class="settings__option">
-          <input
-            type="radio"
-            name="theme"
-            value=${option.value}
-            .checked=${option.value === current}
-          />
-          ${option.label}
-        </label>`,
+function sectionOf(state: AppState): Section {
+  return state.ui.overlay?.anchorId === "data" ? "data" : "preferences";
+}
+
+function renderSections(current: Section, dispatch: Dispatch): TemplateResult {
+  const open = (anchorId: Section) => () =>
+    dispatch(
+      openOverlay.create({ overlay: { kind: SETTINGS_OVERLAY, anchorId } }),
+    );
+  return html`<nav class="settings__nav" aria-label=${TEXT.sectionsLabel}>
+    <p class="settings__group">${TEXT.groupLabel}</p>
+    ${SECTIONS.map(
+      (section) =>
+        html`<button
+          type="button"
+          class="settings__section"
+          aria-current=${section.id === current ? "page" : "false"}
+          @click=${open(section.id)}
+        >
+          ${renderIcon(section.icon)}
+          <span>${TEXT.sections[section.id]}</span>
+        </button>`,
     )}
-  </fieldset>`;
+  </nav>`;
 }
 
-// Reads the chosen file as text and hands it on; the persistence layer
-// decides whether it is a workspace.
-function onFileChosen(event: Event, dispatch: Dispatch): void {
-  const input = event.target;
-  const file = input instanceof HTMLInputElement ? input.files?.[0] : undefined;
-  if (file === undefined || !(input instanceof HTMLInputElement)) return;
-  void file.text().then((text) => {
-    input.value = "";
-    dispatch(requestImport.create({ text }));
+function renderPreferences(state: AppState, dispatch: Dispatch) {
+  const select = renderSelect(
+    {
+      id: "settings-theme",
+      label: TEXT.appearance,
+      value: selectTheme(state),
+      options: THEMES,
+      variant: "quiet",
+      onChoose: (value) => {
+        if (isTheme(value)) dispatch(setTheme.create({ theme: value }));
+      },
+    },
+    { overlay: state.ui.overlay, dispatch },
+  );
+  return renderRow(TEXT.appearance, TEXT.appearanceHint, select);
+}
+
+function renderData(state: AppState, dispatch: Dispatch) {
+  const exportButton = renderButton({
+    label: TEXT.exportButton,
+    onClick: () => dispatch(requestExport.create({})),
   });
-}
-
-function renderMessages(state: AppState): TemplateResult | typeof nothing {
-  const { importError, skippedCount } = state.persistence;
-  if (importError !== null) {
-    return html`<p class="settings__message" role="alert" data-error>
-      ${COPY.settings.importErrors[importError]}
-    </p>`;
-  }
-  if (skippedCount === 0) return nothing;
-  return html`<p class="settings__message" role="status">
-    ${String(skippedCount)} ${COPY.settings.skipped}
-  </p>`;
-}
-
-function renderDataField(state: AppState, dispatch: Dispatch): TemplateResult {
-  return html`<fieldset class="settings__field" data-stacked>
-    <legend class="settings__legend">${COPY.settings.dataLegend}</legend>
-    <div class="settings__actions">
-      ${renderButton({
-        label: COPY.settings.export,
-        onClick: () => dispatch(requestExport.create({})),
-      })}
-      <label class="button settings__file" data-variant="quiet">
-        ${COPY.settings.import}
-        <input
-          class="visually-hidden"
-          type="file"
-          accept="application/json,.json"
-          aria-describedby="settings-import-hint"
-          @change=${(event: Event) => {
-            onFileChosen(event, dispatch);
-          }}
-        />
-      </label>
-    </div>
-    <p class="settings__hint" id="settings-import-hint">
-      ${COPY.settings.importHint}
-    </p>
-    ${renderMessages(state)}
-  </fieldset>`;
+  return html`${renderRow(TEXT.export, TEXT.exportHint, exportButton)}
+  ${renderImportRow(state, dispatch)}`;
 }
 
 export function renderSettings(
   state: AppState,
   dispatch: Dispatch,
 ): TemplateResult {
+  const section = sectionOf(state);
+  const content = html`<div class="settings">
+    ${renderSections(section, dispatch)}
+    <section class="settings__panel" aria-labelledby="settings-title">
+      <h3 class="settings__title" id="settings-title">
+        ${TEXT.sections[section]}
+      </h3>
+      ${
+        section === "data"
+          ? renderData(state, dispatch)
+          : renderPreferences(state, dispatch)
+      }
+    </section>
+  </div>`;
   return renderDialog({
-    title: COPY.settings.title,
-    closeLabel: COPY.settings.close,
-    content: html`${renderThemeField(selectTheme(state), dispatch)}
-    ${renderDataField(state, dispatch)}`,
+    title: TEXT.title,
+    closeLabel: TEXT.close,
+    variant: "settings",
+    content,
     onClose: () => dispatch(closeOverlay.create({})),
   });
 }

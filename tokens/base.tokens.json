@@ -1215,6 +1215,12 @@
           "unit": "rem"
         }
       },
+      "72": {
+        "$value": {
+          "value": 72,
+          "unit": "rem"
+        }
+      },
       "42x25": {
         "$value": {
           "value": 42.25,

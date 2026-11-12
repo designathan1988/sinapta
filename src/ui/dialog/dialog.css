@@ -49,4 +49,25 @@
       padding: var(--space-none);
     }
   }
+
+  /* Notion's settings: larger still, centered, its parts edge to edge. */
+  .dialog[data-variant="settings"] {
+    inline-size: min(
+      var(--size-settings-width),
+      100% - var(--size-search-margin)
+    );
+    block-size: min(
+      var(--size-settings-height),
+      100% - var(--size-search-margin)
+    );
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-dialog);
+
+    & > .dialog__panel {
+      display: block;
+      block-size: 100%;
+      padding: var(--space-none);
+    }
+  }
 }

@@ -1,53 +1,113 @@
 @layer features {
-  .settings__field {
-    display: flex;
-    gap: var(--space-inline-lg);
-    margin: var(--space-none);
-    padding: var(--space-none);
-    border: none;
+  /* Notion's settings: the sections in a column of the sidebar's color,
+     the open one beside them. */
+  .settings {
+    display: grid;
+    grid-template-columns: var(--size-settings-nav) minmax(0, 1fr);
+    block-size: 100%;
   }
 
-  .settings__legend {
-    margin-block-end: var(--space-stack-sm);
-    padding: var(--space-none);
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-sm);
+  .settings__nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xxs);
+    padding: var(--space-inset-md) var(--space-inset-sm);
+    overflow: hidden auto;
+    background-color: var(--color-bg-sidebar);
+  }
+
+  .settings__group {
+    margin: var(--space-none);
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
   }
 
-  .settings__option {
-    display: inline-flex;
-    gap: var(--space-inline-xs);
-    align-items: center;
-    min-block-size: var(--size-target-min);
-    cursor: pointer;
-
-    & input {
-      accent-color: var(--color-accent-default);
-    }
-  }
-}
-
-@layer features {
-  .settings__field[data-stacked] {
-    display: grid;
-    gap: var(--space-stack-sm);
-  }
-
-  .settings__actions {
+  /* A section, as a sidebar row: 30 px, its icon, its name. */
+  .settings__section {
     display: flex;
     gap: var(--space-inline-sm);
+    align-items: center;
+    min-block-size: var(--size-sidebar-row);
+    padding-inline: var(--space-inset-sm);
+    border: none;
+    border-radius: var(--radius-md);
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+    text-align: start;
+    cursor: pointer;
+
+    &:hover,
+    &[aria-current="page"] {
+      background-color: var(--color-bg-hover);
+    }
+
+    &[aria-current="page"] {
+      color: var(--color-text-primary);
+    }
+
+    & > .icon {
+      inline-size: var(--size-icon-md);
+      block-size: var(--size-icon-md);
+      color: var(--color-text-tertiary);
+    }
   }
 
-  /* The label is the button; the file input inside it is reached by Tab. */
-  .settings__file:focus-within {
-    outline: var(--size-focus-width) solid var(--color-border-focus);
-    outline-offset: var(--size-focus-offset);
+  .settings__panel {
+    padding: var(--space-stack-xl) var(--space-stack-xxl);
+    overflow: hidden auto;
+  }
+
+  /* The section's title over a hairline, as Notion's. */
+  .settings__title {
+    margin: var(--space-none) var(--space-none) var(--space-stack-md);
+    padding-block-end: var(--space-stack-sm);
+    border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-medium);
+  }
+
+  /* A row: its name and what it does, its control at the end. */
+  .settings__row {
+    display: flex;
+    gap: var(--space-inline-lg);
+    align-items: center;
+    justify-content: space-between;
+    padding-block: var(--space-stack-sm);
+  }
+
+  .settings__text {
+    display: grid;
+    gap: var(--space-stack-xxs);
+    min-inline-size: 0;
+  }
+
+  .settings__name {
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
   }
 
   .settings__hint {
     color: var(--color-text-secondary);
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-xs);
+  }
+
+  .settings__row > .button {
+    border: var(--size-border-thin) solid var(--color-border-default);
+  }
+
+  /* The label is the button; the file input inside it is reached by Tab. */
+  .settings__file {
+    border: var(--size-border-thin) solid var(--color-border-default);
+
+    &:focus-within {
+      outline: var(--size-focus-width) solid var(--color-border-focus);
+      outline-offset: var(--size-focus-offset);
+    }
   }
 
   .settings__message {

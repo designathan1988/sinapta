@@ -605,6 +605,20 @@
         "$value": "{base.size.35x75}"
       }
     },
+    "settings": {
+      "width": {
+        "$description": "Notion's settings dialog, at its widest: 1150 px.",
+        "$value": "{base.size.72}"
+      },
+      "height": {
+        "$description": "Its tallest, near Notion's 715 px.",
+        "$value": "{base.size.44}"
+      },
+      "nav": {
+        "$description": "Its column of sections: 240 px.",
+        "$value": "{base.size.15}"
+      }
+    },
     "scrollbar": {
       "$description": "Notion's scrollbars: 10 px.",
       "$value": "{base.size.0x625}"
