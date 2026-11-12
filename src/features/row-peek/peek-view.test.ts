@@ -25,10 +25,35 @@ function rendered() {
   );
   const button = (label: string) =>
     host.querySelector<HTMLElement>(`button[aria-label="${label}"]`);
-  return { host, sent, button };
+  return { host, sent, button, first };
 }
 
 describe("the row peek view", () => {
+  it("gives the focus back to its row when it closes", () => {
+    const { host, first, button } = rendered();
+    const row = document.createElement("button");
+    row.dataset.rowId = first;
+    document.body.append(row);
+
+    host
+      .querySelector(".peek")
+      ?.dispatchEvent(
+        new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
+      );
+    expect(document.activeElement).toBe(row);
+
+    button(COPY.peek.next)?.focus();
+    button(COPY.peek.close)?.click();
+    expect(document.activeElement).toBe(row);
+  });
+
+  it("takes the focus when it opens, so its keys work at once", async () => {
+    const { host } = rendered();
+    await Promise.resolve();
+
+    expect(document.activeElement).toBe(host.querySelector(".peek"));
+  });
+
   it("shows the peeked row's page", () => {
     const { host } = rendered();
 

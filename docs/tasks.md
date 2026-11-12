@@ -702,3 +702,56 @@ reports it instead.
 
 Checks after milestone 15: 1265 tests pass; `npm run verify` green; each
 surface compared with Notion in the running app, light and dark.
+
+### Milestone 18: Performance and audits
+
+| Task | Status | Tests |
+| --- | --- | --- |
+| 18.1 Performance at the new scale | done | `editor-redraw.test.ts`, `table-model-speed.test.ts` |
+| 18.2 Accessibility and audits | done | `token-contrast.test.ts`, `menu.test.ts`, `select.test.ts`, `comments-view.test.ts`, `timeline-view.test.ts`, `peek-view.test.ts`, `caret.test.ts`, `selection-sync.test.ts` |
+
+Typing on a page of 1,000 mixed blocks (headings, paragraphs with inline
+equations, code, tables, numbered items, quotes, to-dos, bullets) takes
+9.6 ms per keystroke at the median and 11.3 ms at most, layout included;
+it took 72 ms before blocks that have not changed were skipped. Sorting
+5,000 rows by a rollup, filtered, grouped and summed, with two formulas,
+takes under 100 ms. The script is 582 kB (177 kB compressed); the emoji
+data loads after the first paint.
+
+axe-core 4.14 (WCAG 2.2 AA) in the light and dark themes found nothing
+left to fix on: the shell and sidebar, home, search, inbox, trash,
+templates, settings, a page with comments, the block menu with its Turn
+into and Color submenus, the slash and mention menus, the icon picker,
+the comment popovers, a database in its table, board, calendar, timeline,
+chart, form and feed views, its filter, templates and view settings
+menus, the date picker, the peek with its page actions, and page history.
+Found and fixed:
+
+- Muted text on hover and selected surfaces, white on the blue button and
+  on the inbox badge, and accent and red text fell under 4.5:1. The
+  tertiary text, accent text and red tokens are a little deeper in each
+  theme; filled controls use new fill tokens. `token-contrast.test.ts`
+  checks every text color on every surface in both themes.
+- A menu's search field and a row's "…" sat inside its `role="menu"`. The
+  rows now sit in their own list, which carries the menu's role and name,
+  and the "…" is a menu item that opens a menu.
+- A select's name left out the option it shows, and a comment count's
+  name left out the count.
+- The timeline's rows were buttons with a list item role; the "No date"
+  and hidden-groups titles skipped a heading level.
+
+Keyboard walk (keys only): search (Ctrl+K, arrows, Enter); the database
+templates menu, a template's "…" (Right arrow) and Escape back to the
+button; opening a row in peek (Enter), stepping with J and K, Escape;
+page actions to page history and back; a comment on selected text
+(Ctrl+Shift+M), posted with Enter or closed with Escape; the template
+gallery; back and forward (Ctrl+[ and Ctrl+]). Found and fixed:
+
+- A peek did not take the focus, so its keys did nothing until clicked,
+  and closing it lost the focus. It now takes the focus when it opens and
+  gives it back to its row when it closes.
+- The comment popovers did not close on Escape, and closing one lost the
+  focus and the selected text. They close on Escape; while an overlay has
+  the focus, the text keeps its selection and gets it back.
+- The sidebar's Import showed no focus ring: a label now shows the focus
+  of the hidden file field inside it.

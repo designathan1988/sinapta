@@ -15,6 +15,9 @@ export function installSelectionSync(
     const active = document.activeElement;
     // While composing, the caret belongs to the input method.
     if (active?.closest("[data-composing]") != null) return;
+    // A field in an overlay opened from the text, as the comment field,
+    // borrows the focus; the text keeps its selection for when it is back.
+    if (active?.closest("[data-overlay]") != null) return;
     const selection =
       active?.closest("[data-text]") == null ? null : readSelection();
     if (selection === null && store.getState().ui.selection === null) return;

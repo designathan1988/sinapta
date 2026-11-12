@@ -95,7 +95,7 @@
   }
 
   .database__tool[data-active] {
-    color: var(--color-accent-default);
+    color: var(--color-text-accent);
   }
 
   /* The table scrolls inside this box, so its header can stay in view. */

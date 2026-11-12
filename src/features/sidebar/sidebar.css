@@ -229,7 +229,7 @@
     margin-inline-start: auto;
     padding-inline: var(--space-inset-xxs);
     border-radius: var(--radius-full);
-    background-color: var(--color-text-danger);
+    background-color: var(--color-status-danger-fill);
     color: var(--color-text-on-accent);
     font-size: var(--font-size-xs);
     line-height: var(--font-line-height-tight);

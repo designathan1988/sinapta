@@ -45,12 +45,12 @@
     padding: var(--space-inset-xs) var(--space-inset-sm);
     border: none;
     border-radius: var(--radius-sm);
-    background-color: var(--color-accent-default);
+    background-color: var(--color-accent-fill);
     color: var(--color-text-on-accent);
     cursor: pointer;
 
     &:hover {
-      background-color: var(--color-accent-hover);
+      background-color: var(--color-accent-fill-hover);
     }
   }
 }

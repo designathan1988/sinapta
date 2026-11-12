@@ -39,6 +39,7 @@ export const PAGE_TEXT = {
     resolve: "Resolve",
     delete: "Delete comment",
     open: "Open comments",
+    count: { one: "comment", other: "comments" },
     addToPage: "Add comment",
     comment: "Comment",
   },

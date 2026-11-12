@@ -17,6 +17,13 @@
     outline-offset: var(--size-focus-offset);
   }
 
+  /* A control hidden inside its label, as a file field inside its button,
+     shows its focus on the label, which is what the person sees. */
+  label:has(> .visually-hidden:focus-visible) {
+    outline: var(--size-focus-width) solid var(--color-border-focus);
+    outline-offset: var(--size-focus-offset);
+  }
+
   ::selection {
     background-color: var(--color-bg-selected);
   }

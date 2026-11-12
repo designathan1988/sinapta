@@ -45,6 +45,18 @@ function rendered(
 }
 
 describe("renderSelect", () => {
+  it("is named by its label followed by the option it shows", () => {
+    const { host, trigger } = rendered(null);
+    const ids = trigger?.getAttribute("aria-labelledby")?.split(" ") ?? [];
+
+    expect(trigger?.hasAttribute("aria-label")).toBe(false);
+    expect(ids.map((id) => host.querySelector(`#${id}`))).toEqual([
+      host.querySelector(".select__name"),
+      trigger,
+    ]);
+    expect(host.querySelector(".select__name")?.textContent).toBe("Join");
+  });
+
   it("shows the chosen option and opens its list as the overlay", () => {
     const { sent, trigger } = rendered(null);
 

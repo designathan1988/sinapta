@@ -71,6 +71,7 @@ function renderWithMore(
     <button
       type="button"
       class="menu__more"
+      role="menuitem"
       tabindex="-1"
       data-more=${place.index}
       aria-label=${COPY.menu.more}

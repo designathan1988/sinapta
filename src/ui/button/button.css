@@ -31,11 +31,11 @@
     }
 
     &[data-variant="primary"] {
-      background-color: var(--color-accent-default);
+      background-color: var(--color-accent-fill);
       color: var(--color-text-on-accent);
 
       &:hover {
-        background-color: var(--color-accent-hover);
+        background-color: var(--color-accent-fill-hover);
       }
     }
 

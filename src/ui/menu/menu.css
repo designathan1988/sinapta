@@ -19,6 +19,11 @@
     }
   }
 
+  .menu__list {
+    display: flex;
+    flex-direction: column;
+  }
+
   .menu__item {
     display: flex;
     flex: none;

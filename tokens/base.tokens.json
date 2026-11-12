@@ -569,7 +569,13 @@
         "textTertiary": {
           "$value": {
             "colorSpace": "oklch",
-            "components": [0.5632, 0.0098, 84.6]
+            "components": [0.51, 0.0098, 84.6]
+          }
+        },
+        "textAccent": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.52, 0.1674, 252.7]
           }
         },
         "onAccent": {
@@ -614,6 +620,18 @@
             "components": [0.5654, 0.1676, 251.7]
           }
         },
+        "accentFill": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.56, 0.1674, 252.7]
+          }
+        },
+        "accentFillHover": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.52, 0.1674, 252.7]
+          }
+        },
         "accentSubtle": {
           "$value": {
             "colorSpace": "oklch",
@@ -629,13 +647,19 @@
         "danger": {
           "$value": {
             "colorSpace": "oklch",
-            "components": [0.6015, 0.1724, 25.8]
+            "components": [0.54, 0.1724, 25.8]
           }
         },
         "dangerBg": {
           "$value": {
             "colorSpace": "oklch",
             "components": [0.9546, 0.0196, 13.6]
+          }
+        },
+        "dangerFill": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.55, 0.17, 26]
           }
         },
         "success": {
@@ -744,7 +768,13 @@
         "textTertiary": {
           "$value": {
             "colorSpace": "oklch",
-            "components": [0.6411, 0.0082, 80.7]
+            "components": [0.71, 0.0082, 80.7]
+          }
+        },
+        "textAccent": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.664, 0.1008, 238.1]
           }
         },
         "onAccent": {
@@ -789,6 +819,18 @@
             "components": [0.664, 0.1008, 238.1]
           }
         },
+        "accentFill": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.56, 0.1674, 252.7]
+          }
+        },
+        "accentFillHover": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.52, 0.1674, 252.7]
+          }
+        },
         "accentSubtle": {
           "$value": {
             "colorSpace": "oklch",
@@ -804,13 +846,19 @@
         "danger": {
           "$value": {
             "colorSpace": "oklch",
-            "components": [0.6526, 0.1605, 26.5]
+            "components": [0.69, 0.1605, 26.5]
           }
         },
         "dangerBg": {
           "$value": {
             "colorSpace": "oklch",
             "components": [0.2927, 0.0355, 24.9]
+          }
+        },
+        "dangerFill": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.55, 0.17, 26]
           }
         },
         "success": {

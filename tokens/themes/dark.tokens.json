@@ -43,6 +43,9 @@
       "tertiary": {
         "$value": "{base.color.night.textTertiary}"
       },
+      "accent": {
+        "$value": "{base.color.night.textAccent}"
+      },
       "onAccent": {
         "$value": "{base.color.night.onAccent}"
       },
@@ -80,6 +83,12 @@
       "hover": {
         "$value": "{base.color.night.accentHover}"
       },
+      "fill": {
+        "$value": "{base.color.night.accentFill}"
+      },
+      "fillHover": {
+        "$value": "{base.color.night.accentFillHover}"
+      },
       "subtle": {
         "$value": "{base.color.night.accentSubtle}"
       }
@@ -87,6 +96,9 @@
     "status": {
       "dangerBg": {
         "$value": "{base.color.night.dangerBg}"
+      },
+      "dangerFill": {
+        "$value": "{base.color.night.dangerFill}"
       }
     },
     "shadow": {

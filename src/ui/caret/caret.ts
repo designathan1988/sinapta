@@ -97,6 +97,8 @@ export function restoreSelection(
   selection: TextSelection | null,
 ): void {
   if (selection === null) return;
+  // An overlay has the focus; the text takes it back once it closes.
+  if (document.activeElement?.closest("[data-overlay]") != null) return;
   const isFocusLost = document.activeElement === document.body;
   if (!isFocusLost && isSame(readSelection(), selection)) return;
   const text = textElementFor(root, selection.blockId);

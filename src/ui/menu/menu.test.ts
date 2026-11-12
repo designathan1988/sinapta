@@ -42,6 +42,33 @@ describe("renderMenu", () => {
     expect(item?.hasAttribute("aria-checked")).toBe(false);
   });
 
+  it("keeps its search field out of the list of items", () => {
+    const host = document.createElement("div");
+    const onClose = (): void => undefined;
+    const items = [{ label: "Duplicate", onSelect: noop }];
+    const search = { placeholder: "Filter", query: "", onQuery: noop };
+    render(renderMenu({ label: "Filter", items, onClose, search }), host);
+
+    const list = host.querySelector("[role=menu]");
+    expect(list?.getAttribute("aria-label")).toBe("Filter");
+    expect(list?.querySelector("input")).toBeNull();
+    expect(list?.querySelectorAll("[role=menuitem]")).toHaveLength(1);
+  });
+
+  it("makes a row's own actions button an item that opens a menu", () => {
+    const host = rendered([
+      {
+        label: "Weekly",
+        onSelect: noop,
+        more: { id: "w", menu: () => ({ label: "Weekly", items: [] }) },
+      },
+    ]);
+
+    const more = host.querySelector(".menu__more");
+    expect(more?.getAttribute("role")).toBe("menuitem");
+    expect(more?.getAttribute("aria-haspopup")).toBe("menu");
+  });
+
   it("shows a note below the items that is not an item", () => {
     const host = document.createElement("div");
     const onClose = (): void => undefined;

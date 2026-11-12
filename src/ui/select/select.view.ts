@@ -202,9 +202,10 @@ export function renderSelect(
       data-variant=${props.variant ?? "field"}
       ?data-overlay-anchor=${!state.isChild}
       ?data-overlay-child-anchor=${state.isChild}
+      id=${`select-${props.id}`}
       aria-haspopup="listbox"
       aria-expanded=${String(state.isOpen)}
-      aria-label=${props.label}
+      aria-labelledby=${`select-${props.id}-name select-${props.id}`}
       @click=${(event: Event) => {
         if (event.currentTarget instanceof Element)
           toggle(props, context, event.currentTarget);
@@ -212,8 +213,15 @@ export function renderSelect(
     >
       ${
         props.variant === "row"
-          ? html`<span class="select__label">${props.label}</span>`
-          : nothing
+          ? html`<span class="select__label" id=${`select-${props.id}-name`}
+              >${props.label}</span
+            >`
+          : html`<span
+              class="select__name"
+              id=${`select-${props.id}-name`}
+              hidden
+              >${props.label}</span
+            >`
       }
       ${renderCurrent(props)}
       ${props.variant === "icon" ? nothing : renderIcon("chevron")}

@@ -46,7 +46,7 @@
     }
 
     &[aria-pressed="true"] {
-      color: var(--color-accent-default);
+      color: var(--color-text-accent);
     }
 
     &[data-mark="bold"] {

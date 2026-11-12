@@ -92,4 +92,16 @@ describe("the timeline", () => {
     ).toHaveLength(2);
     expect(hidden.host.querySelector(".timeline__table")).toBeNull();
   });
+
+  it("lists the table's rows as items, each a button that opens it", () => {
+    const { host } = rendered();
+
+    const items = host.querySelectorAll(".timeline__table [role=listitem]");
+    expect(items).toHaveLength(2);
+    items.forEach((item) => {
+      expect(item.querySelector("button[data-row-id]")).not.toBeNull();
+      expect(item.querySelector("button")?.hasAttribute("role")).toBe(false);
+    });
+    expect(host.querySelector(".timeline__undated h2")).not.toBeNull();
+  });
 });

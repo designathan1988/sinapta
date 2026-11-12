@@ -144,15 +144,16 @@ function renderTable(timeline: Timeline, context: TableContext) {
     <div class="timeline__table-head">${TEXT.titleColumn}</div>
     ${timeline.bars.map(
       (bar) =>
-        html`<button
-          type="button"
-          role="listitem"
-          class="timeline__title"
-          data-row-id=${bar.row.id}
-          @click=${() => context.dispatch(openRow.create({ rowId: bar.row.id, viewId: context.model.view.id }))}
-        >
-          ${title(bar.row)}
-        </button>`,
+        html`<div class="timeline__row" role="listitem">
+          <button
+            type="button"
+            class="timeline__title"
+            data-row-id=${bar.row.id}
+            @click=${() => context.dispatch(openRow.create({ rowId: bar.row.id, viewId: context.model.view.id }))}
+          >
+            ${title(bar.row)}
+          </button>
+        </div>`,
     )}
   </div>`;
 }
@@ -182,7 +183,7 @@ function renderChart(timeline: Timeline, at: BarContext): TemplateResult {
 function renderUndated(timeline: Timeline, context: TableContext) {
   if (timeline.undated.length === 0) return nothing;
   return html`<section class="timeline__undated">
-    <h3 class="timeline__undated-title">${TEXT.noDate}</h3>
+    <h2 class="timeline__undated-title">${TEXT.noDate}</h2>
     ${timeline.undated.map(
       (row) =>
         html`<button

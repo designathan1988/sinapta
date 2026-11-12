@@ -10,7 +10,7 @@ import {
   type AppState,
   type Dispatch,
 } from "../../state/index.ts";
-import { COPY } from "../../ui/copy.ts";
+import { COPY, pluralize } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
 import { ref } from "lit-html/directives/ref.js";
@@ -75,7 +75,7 @@ export function renderBlockComments(
   return html`<button
     type="button"
     class="comments__count"
-    aria-label=${TEXT.open}
+    aria-label=${`${String(count)} ${pluralize(count, TEXT.count)}`}
     aria-expanded=${String(isOpen)}
     @click=${() =>
       dispatch(
@@ -84,6 +84,17 @@ export function renderBlockComments(
   >
     ${renderIcon("comment")} ${count}
   </button>`;
+}
+
+// Escape closes a comment popover; the text it was opened from takes the
+// focus back.
+function closeOnEscape(dispatch: Dispatch) {
+  return (event: KeyboardEvent): void => {
+    if (event.key !== "Escape") return;
+    event.preventDefault();
+    event.stopPropagation();
+    dispatch(closeOverlay.create({}));
+  };
 }
 
 // A block's open discussions, in a popover by the block.
@@ -102,6 +113,7 @@ export function renderDiscussionsPopover(
     data-overlay
     aria-label=${TEXT.label}
     ${ref(showPopoverWhenConnected)}
+    @keydown=${closeOnEscape(dispatch)}
   >
     ${found.discussions.map((item) => renderDiscussion(item, context))}
   </div>`;
@@ -137,6 +149,7 @@ export function renderComposerPopover(
     data-overlay
     aria-label=${TEXT.add}
     ${ref(showPopoverWhenConnected)}
+    @keydown=${closeOnEscape(dispatch)}
   >
     ${renderNewDiscussion(about, dispatch, () =>
       dispatch(closeOverlay.create({})),

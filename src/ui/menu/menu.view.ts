@@ -156,6 +156,19 @@ function renderRows(entries: readonly MenuEntry[], options: MenuOptions) {
   });
 }
 
+// The rows sit in a list of their own, which carries the menu's role and
+// name, so that its header, search field and footer are not read as items.
+function renderList(entries: readonly MenuEntry[], options: MenuOptions) {
+  if (entries.length === 0) return renderRows(entries, options);
+  return html`<div
+    class="menu__list"
+    role=${options.role ?? "menu"}
+    aria-label=${options.label}
+  >
+    ${renderRows(entries, options)}
+  </div>`;
+}
+
 // How the menu closes: alone, or after a choice that closes the overlay.
 function choosingOf(
   options: MenuOptions,
@@ -193,10 +206,8 @@ export function renderMenu(options: MenuOptions): TemplateResult {
   const isSubmenu = options.placement === "beside";
   return html`<div
     class="menu"
-    role=${options.role ?? "menu"}
     popover="manual"
     data-overlay
-    aria-label=${options.label}
     ?data-at-point=${options.point !== undefined}
     ?data-child=${options.isChild === true}
     data-placement=${options.placement ?? nothing}
@@ -214,7 +225,7 @@ export function renderMenu(options: MenuOptions): TemplateResult {
     }}
   >
     ${renderHeader(options, choosing.close)} ${renderSearch(options.search)}
-    ${options.lead ?? nothing} ${renderRows(items, options)}
+    ${options.lead ?? nothing} ${renderList(items, options)}
     ${
       options.footer === undefined
         ? nothing

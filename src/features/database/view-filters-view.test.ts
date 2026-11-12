@@ -86,8 +86,12 @@ describe("the filter editor", () => {
 
   it("opens the join's list inside the popover and joins with or", () => {
     const closed = rendered();
-    closed.host
-      .querySelector<HTMLElement>('[aria-label="Join conditions with"]')
+    [...closed.host.querySelectorAll<HTMLElement>(".select")]
+      .find(
+        (select) =>
+          select.querySelector(".select__name")?.textContent ===
+          "Join conditions with",
+      )
       ?.click();
     const open = rendered("filter-join-");
     const or = [

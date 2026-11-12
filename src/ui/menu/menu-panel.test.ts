@@ -150,7 +150,9 @@ describe("menu panels", () => {
       { role: "listbox" },
     );
 
-    expect(host.querySelector(".menu")?.getAttribute("role")).toBe("listbox");
+    expect(host.querySelector(".menu__list")?.getAttribute("role")).toBe(
+      "listbox",
+    );
     expect(
       [...host.querySelectorAll("[role=option]")].map((option) =>
         option.getAttribute("aria-selected"),

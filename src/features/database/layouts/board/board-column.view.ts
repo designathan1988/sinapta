@@ -158,7 +158,7 @@ export function renderHiddenColumns(
     class="board__hidden"
     aria-label=${COPY.database.hiddenGroups}
   >
-    <h3 class="board__hidden-title">${COPY.database.hiddenGroups}</h3>
+    <h2 class="board__hidden-title">${COPY.database.hiddenGroups}</h2>
     <ul class="board__hidden-list">
       ${hidden.map(
         (column) =>

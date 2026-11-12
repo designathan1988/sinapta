@@ -78,6 +78,11 @@
     font-size: var(--font-size-sm);
   }
 
+  /* A row of the table holds its title button, which fills it. */
+  .timeline__row {
+    display: grid;
+  }
+
   .timeline__title {
     overflow: hidden;
     min-block-size: var(--size-property-row);

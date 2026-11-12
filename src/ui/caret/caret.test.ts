@@ -48,6 +48,23 @@ describe("restoreSelection", () => {
     expect(document.getSelection()?.anchorOffset).toBe(4);
   });
 
+  it("leaves focus in an overlay, and gives it back once the overlay is gone", () => {
+    const text = mount();
+    const overlay = document.createElement("div");
+    overlay.dataset.overlay = "";
+    overlay.append(document.createElement("input"));
+    document.body.append(overlay);
+    const input = overlay.querySelector("input");
+    input?.focus();
+
+    restoreSelection(document, CARET);
+    expect(document.activeElement).toBe(input);
+
+    overlay.remove();
+    restoreSelection(document, CARET);
+    expect(document.activeElement).toBe(text);
+  });
+
   it("leaves focus alone when there is no selection to restore", () => {
     mount();
     const button = document.querySelector("button");

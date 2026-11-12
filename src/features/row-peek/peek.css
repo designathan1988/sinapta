@@ -16,6 +16,12 @@
       transition: none;
     }
 
+    /* The panel takes focus when it opens so that its keys work; it is
+       not a control, so no ring is drawn around it. */
+    &:focus-visible {
+      outline: none;
+    }
+
     &[data-mode="side"] {
       @starting-style {
         translate: 100% 0;

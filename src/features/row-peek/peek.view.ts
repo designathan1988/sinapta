@@ -4,10 +4,12 @@
 import "./peek.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { keyed } from "lit-html/directives/keyed.js";
+import { ref } from "lit-html/directives/ref.js";
 import { selectPage } from "../../blocks/page/index.ts";
 import type { BlockId, View } from "../../model/index.ts";
 import type { AppState, Command, Dispatch } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { focusOnce } from "../../ui/focus/index.ts";
 import { renderIcon, type IconName } from "../../ui/icon/index.ts";
 import { renderSelect } from "../../ui/select/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
@@ -131,19 +133,42 @@ function onKeyDown(event: KeyboardEvent, state: AppState, dispatch: Dispatch) {
   dispatch(command);
 }
 
+// The row the peek shows, or a control inside it, takes the focus back
+// when the peek closes, as a dialog gives it back to what opened it.
+function focusRow(rowId: BlockId): void {
+  const row = document.querySelector<HTMLElement>(
+    `[data-row-id="${CSS.escape(rowId)}"]`,
+  );
+  const control = row?.matches("button, a, [tabindex]")
+    ? row
+    : row?.querySelector<HTMLElement>("button, a, [tabindex]");
+  control?.focus();
+}
+
+function closingTo(rowId: BlockId, dispatch: Dispatch): Dispatch {
+  return (command) => {
+    const result = dispatch(command);
+    if (command.type === closePeek.type) focusRow(rowId);
+    return result;
+  };
+}
+
 export function renderPeek(
   state: AppState,
-  dispatch: Dispatch,
+  outer: Dispatch,
 ): TemplateResult | typeof nothing {
   const { peek } = state.ui;
   const page = selectPage(state, peek?.pageId ?? null);
   if (peek === null || page === undefined || page.props.isTrashed) {
     return nothing;
   }
+  const dispatch = closingTo(page.id, outer);
   const panel = html`<aside
     class="peek"
     data-mode=${peek.mode}
     aria-label=${TEXT.label}
+    tabindex="-1"
+    ${ref(focusOnce)}
     @keydown=${(event: KeyboardEvent) => {
       onKeyDown(event, state, dispatch);
     }}

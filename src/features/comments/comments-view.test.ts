@@ -6,6 +6,8 @@ import { buildWorkspace, toBlockId } from "../../model/index.ts";
 import { createInitialState, type Command } from "../../state/index.ts";
 import {
   COMMENT_COMPOSER_OVERLAY,
+  renderBlockComments,
+  renderComposerPopover,
   renderPageDiscussions,
 } from "./comment-popovers.view.ts";
 
@@ -90,5 +92,67 @@ describe("a page's comments", () => {
       "comment.start",
       "ui.closeOverlay",
     ]);
+  });
+});
+
+describe("a block's comment count", () => {
+  it("is named by the count it shows", () => {
+    const workspace = buildWorkspace([
+      {
+        id: "page",
+        props: {
+          title: [],
+          icon: null,
+          isFavorite: false,
+          isTrashed: false,
+          discussions: [
+            { ...discussion, blockId: toBlockId("a") },
+            { ...discussion, id: toBlockId("d2"), blockId: toBlockId("a") },
+          ],
+        },
+        children: [{ id: "a", type: "paragraph", props: { text: [] } }],
+      },
+    ]);
+    const state = { ...createInitialState(), workspace };
+    const host = document.createElement("div");
+    render(
+      renderBlockComments(state, () => ({ ok: true }), toBlockId("a")),
+      host,
+    );
+
+    const button = host.querySelector(".comments__count");
+    expect(button?.textContent.trim()).toBe("2");
+    expect(button?.getAttribute("aria-label")).toBe("2 comments");
+  });
+});
+
+describe("the comment composer by a block", () => {
+  it("closes on Escape", () => {
+    const workspace = buildWorkspace([
+      {
+        id: "page",
+        children: [{ id: "a", type: "paragraph", props: { text: [] } }],
+      },
+    ]);
+    const initial = createInitialState();
+    const overlay = { kind: COMMENT_COMPOSER_OVERLAY, anchorId: "a" };
+    const state = { ...initial, workspace, ui: { ...initial.ui, overlay } };
+    const sent: Command[] = [];
+    const host = document.createElement("div");
+    render(
+      renderComposerPopover(state, (command) => {
+        sent.push(command);
+        return { ok: true };
+      }),
+      host,
+    );
+
+    host
+      .querySelector("input")
+      ?.dispatchEvent(
+        new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
+      );
+
+    expect(sent.map((command) => command.type)).toEqual(["ui.closeOverlay"]);
   });
 });

@@ -105,7 +105,7 @@
     }
 
     &[aria-pressed="true"] {
-      background-color: var(--color-accent-default);
+      background-color: var(--color-accent-fill);
       color: var(--color-text-on-accent);
     }
   }

@@ -59,7 +59,7 @@
   }
 
   .calendar__day[data-today] .calendar__date {
-    color: var(--color-accent-default);
+    color: var(--color-text-accent);
     font-weight: var(--font-weight-bold);
   }
 
