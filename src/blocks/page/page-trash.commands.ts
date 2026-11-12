@@ -9,7 +9,8 @@ import {
   type AppState,
   type UiState,
 } from "../../state/index.ts";
-import { selectPage } from "./page.selectors.ts";
+import { selectPage, selectTrashedPages } from "./page.selectors.ts";
+import type { PageBlock } from "./page.schema.ts";
 
 function isInside(
   state: AppState,
@@ -33,11 +34,17 @@ function closeIfInside(state: AppState, pageId: BlockId): UiState {
 function setTrashed(
   state: AppState,
   pageId: BlockId,
-  isTrashed: boolean,
+  trashedAt: string | null,
 ): Operation[] {
   const page = selectPage(state, pageId);
+  const isTrashed = trashedAt !== null;
   if (page === undefined || page.props.isTrashed === isTrashed) return [];
-  const props = { ...page.props, isTrashed };
+  const { trashedAt: _before, ...kept } = page.props;
+  const props = {
+    ...kept,
+    isTrashed,
+    ...(trashedAt !== null && { trashedAt }),
+  };
   return [
     { type: "record.update", kind: "block", id: pageId, patch: { props } },
   ];
@@ -47,7 +54,7 @@ function setTrashed(
 export const trashPage = defineCommand<{ pageId: BlockId }>({
   type: "page.trash",
   handle: (state, command) => ({
-    operations: setTrashed(state, command.pageId, true),
+    operations: setTrashed(state, command.pageId, command.meta.now),
     ui: closeIfInside(state, command.pageId),
   }),
 });
@@ -55,7 +62,7 @@ export const trashPage = defineCommand<{ pageId: BlockId }>({
 export const restorePage = defineCommand<{ pageId: BlockId }>({
   type: "page.restore",
   handle: (state, command) => ({
-    operations: setTrashed(state, command.pageId, false),
+    operations: setTrashed(state, command.pageId, null),
   }),
 });
 
@@ -88,4 +95,39 @@ export const deletePage = defineCommand<{ pageId: BlockId }>({
   },
 });
 
-export const pageTrashCommands = [trashPage, restorePage, deletePage];
+const TRASH_DAYS = 30;
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+// When a page went to the trash; one trashed before the date was kept,
+// when it last changed.
+function trashedAtOf(page: PageBlock): number {
+  return Date.parse(page.props.trashedAt ?? page.updatedAt);
+}
+
+// Deletes for good the pages kept in the trash over 30 days, with all
+// inside them, as Notion's trash does; run as the workspace loads.
+export const emptyOldTrash = defineCommand<Record<string, never>>({
+  type: "page.emptyOldTrash",
+  handle(state, command) {
+    const cutoff = Date.parse(command.meta.now) - TRASH_DAYS * DAY_MS;
+    const old = selectTrashedPages(state).filter(
+      (page) => trashedAtOf(page) < cutoff,
+    );
+    const operations = old.flatMap((page): Operation[] => [
+      { type: "list.remove", list: listOf(page.parentId), id: page.id },
+      ...subtree(state, page).map((block): Operation => ({
+        type: "record.delete",
+        kind: "block",
+        id: block.id,
+      })),
+    ]);
+    return operations.length === 0 ? {} : { operations };
+  },
+});
+
+export const pageTrashCommands = [
+  trashPage,
+  restorePage,
+  deletePage,
+  emptyOldTrash,
+];

@@ -12,12 +12,62 @@
     min-block-size: var(--size-row-height);
   }
 
-  .trash__title {
+  /* Notion's trash: a search and an "In" filter above the pages, each
+     with its icon, title and the pages it was in. */
+  .trash__tools {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+  }
+
+  .trash__search {
     flex: 1;
     min-inline-size: 0;
+    min-block-size: var(--size-control-sm);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: none;
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-field);
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 var(--size-border-thin) var(--color-border-focus);
+    }
+  }
+
+  .trash__icon {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    inline-size: var(--size-icon-md);
+    color: var(--color-text-secondary);
+  }
+
+  .trash__text {
+    display: grid;
+    flex: 1;
+    min-inline-size: 0;
+  }
+
+  .trash__title,
+  .trash__path {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .trash__path {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+  }
+
+  .trash__note {
+    margin: var(--space-none);
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
   }
 
   .trash__empty {

@@ -33,6 +33,7 @@ export {
 } from "./page-move.commands.ts";
 export {
   deletePage,
+  emptyOldTrash,
   pageTrashCommands,
   restorePage,
   trashPage,

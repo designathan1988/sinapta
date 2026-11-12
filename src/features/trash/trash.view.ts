@@ -3,10 +3,9 @@ import { html, nothing, type TemplateResult } from "lit-html";
 import {
   deletePage,
   restorePage,
-  selectPageTitle,
-  selectTrashedPages,
   type PageBlock,
 } from "../../blocks/page/index.ts";
+import { parseBlockId } from "../../model/index.ts";
 import {
   closeOverlay,
   openOverlay,
@@ -16,6 +15,14 @@ import {
 import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderDialog } from "../../ui/dialog/index.ts";
+import { renderIcon } from "../../ui/icon/index.ts";
+import { renderSelect } from "../../ui/select/index.ts";
+import {
+  selectTrashParents,
+  selectTrashRows,
+  type TrashFilter,
+  type TrashRow,
+} from "./trash.selectors.ts";
 
 export const TRASH_OVERLAY = "trash";
 
@@ -45,39 +52,115 @@ function renderConfirmation(
   </div>`;
 }
 
-function renderRow(page: PageBlock, dispatch: Dispatch): TemplateResult {
-  const title = selectPageTitle(page);
+// The trash's search and "In" filter, kept in the open overlay.
+const IN_FLAG = "in:";
+
+function filterOf(state: AppState): TrashFilter {
+  const { overlay } = state.ui;
+  const flag = overlay?.flags?.find((item) => item.startsWith(IN_FLAG));
+  const inId =
+    flag === undefined ? undefined : parseBlockId(flag.slice(IN_FLAG.length));
+  return { query: overlay?.query ?? "", inId: inId ?? null };
+}
+
+function setFilter(dispatch: Dispatch, filter: TrashFilter): void {
+  const flags = filter.inId === null ? [] : [`${IN_FLAG}${filter.inId}`];
+  const overlay = { kind: TRASH_OVERLAY, query: filter.query, flags };
+  dispatch(openOverlay.create({ overlay }));
+}
+
+// "In": the page the listed pages were in, or any.
+function renderInFilter(state: AppState, dispatch: Dispatch): TemplateResult {
+  const filter = filterOf(state);
+  const parents = selectTrashParents(state);
+  const anywhere = "";
+  const options = [
+    { value: anywhere, label: COPY.trash.anywhere },
+    ...parents.map((parent) => ({
+      value: parent.id,
+      label: parent.title,
+      icon: "page" as const,
+    })),
+  ];
+  return renderSelect(
+    {
+      id: "trash-in",
+      label: COPY.trash.in,
+      value: filter.inId ?? anywhere,
+      variant: "quiet",
+      options,
+      onChoose: (value) => {
+        const inId = parents.find((parent) => parent.id === value)?.id;
+        setFilter(dispatch, { ...filter, inId: inId ?? null });
+      },
+    },
+    { overlay: state.ui.overlay, dispatch },
+  );
+}
+
+function renderTools(state: AppState, dispatch: Dispatch): TemplateResult {
+  const filter = filterOf(state);
+  const onInput = (event: Event): void => {
+    if (event.target instanceof HTMLInputElement)
+      setFilter(dispatch, { ...filter, query: event.target.value });
+  };
+  return html`<div class="trash__tools">
+    <input
+      class="trash__search"
+      type="search"
+      autofocus
+      aria-label=${COPY.trash.search}
+      placeholder=${COPY.trash.search}
+      .value=${filter.query}
+      @input=${onInput}
+    />
+    ${renderInFilter(state, dispatch)}
+  </div>`;
+}
+
+function renderRow(row: TrashRow, dispatch: Dispatch): TemplateResult {
+  const { page } = row;
   const overlay = { kind: TRASH_OVERLAY, anchorId: page.id };
   return html`<li class="trash__row">
-    <span class="trash__title"
-      >${page.props.icon ?? ""}
-      ${title === "" ? COPY.sidebar.untitled : title}</span
+    <span class="trash__icon" aria-hidden="true"
+      >${page.props.icon ?? renderIcon("page")}</span
     >
+    <span class="trash__text">
+      <span class="trash__title">${row.title}</span>
+      ${row.path === "" ? nothing : html`<span class="trash__path">${row.path}</span>`}
+    </span>
     ${renderButton({
       label: COPY.trash.restore,
       icon: "restore",
+      isIconOnly: true,
       onClick: () => dispatch(restorePage.create({ pageId: page.id })),
     })}
     ${renderButton({
       label: COPY.trash.delete,
       icon: "trash",
-      variant: "danger",
+      isIconOnly: true,
       onClick: () => dispatch(openOverlay.create({ overlay })),
     })}
   </li>`;
 }
 
 function renderContent(state: AppState, dispatch: Dispatch): TemplateResult {
-  const pages = selectTrashedPages(state);
-  if (pages.length === 0) {
-    return html`<p class="trash__empty">${COPY.trash.empty}</p>`;
-  }
+  const rows = selectTrashRows(state, filterOf(state));
   const pendingId = state.ui.overlay?.anchorId;
-  const pending = pages.find((page) => page.id === pendingId);
-  return html`${pending === undefined ? nothing : renderConfirmation(pending, dispatch)}
-    <ul class="trash__list">
-      ${pages.map((page) => renderRow(page, dispatch))}
-    </ul>`;
+  const pending = rows.find((row) => row.page.id === pendingId)?.page;
+  const isEmpty = selectTrashParents(state).length === 0 && rows.length === 0;
+  return html`${renderTools(state, dispatch)}
+    ${pending === undefined ? nothing : renderConfirmation(pending, dispatch)}
+    ${
+      rows.length === 0
+        ? html`<p class="trash__empty">
+            ${isEmpty ? COPY.trash.empty : COPY.trash.noMatches}
+          </p>`
+        : html`<ul class="trash__list">
+            ${rows.map((row) => renderRow(row, dispatch))}
+          </ul>`
+    }
+    <p class="trash__note">${COPY.trash.autoDelete}</p>`;
 }
 
 export function renderTrash(

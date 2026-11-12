@@ -7,6 +7,7 @@ import {
   BLOCK_TIDIERS,
 } from "../blocks/index.ts";
 import {
+  emptyOldTrash,
   lockGuard,
   pageCommands,
   pageLockCommands,
@@ -149,6 +150,8 @@ export async function startApp(container: HTMLElement): Promise<void> {
   const { isFirstRun } = await startPersistence(store, dispatch);
   // A first visit opens a short tour; it is saved like any other change.
   if (isFirstRun) dispatch(seedGettingStarted.create({}));
+  // The trash empties itself of pages kept there over 30 days.
+  dispatch(emptyOldTrash.create({}));
   startRouter(store, dispatch);
   installOverlayDismiss(store, dispatch);
   installSelectionSync(store, dispatch);

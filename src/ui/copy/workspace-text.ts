@@ -78,6 +78,12 @@ export const WORKSPACE_TEXT = {
     title: "Trash",
     close: "Close trash",
     empty: "The trash is empty.",
+    search: "Search pages in the trash",
+    in: "In",
+    anywhere: "In any page",
+    noMatches: "No pages in the trash match.",
+    autoDelete:
+      "Pages in the trash for over 30 days are deleted automatically.",
     restore: "Restore",
     delete: "Delete permanently",
     confirmTitle: "Delete this page permanently?",
