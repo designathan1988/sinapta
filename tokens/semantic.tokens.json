@@ -615,6 +615,12 @@
         "$value": "{base.size.35x75}"
       }
     },
+    "panel": {
+      "width": {
+        "$description": "A panel beside the sidebar, as Notion's trash: 416 px.",
+        "$value": "{base.size.26}"
+      }
+    },
     "settings": {
       "width": {
         "$description": "Notion's settings dialog, at its widest: 1150 px.",

@@ -50,6 +50,29 @@
     }
   }
 
+  /* Notion's trash: a panel at the foot of the window, just past the
+     sidebar, over the page without dimming it. */
+  .dialog[data-variant="panel"] {
+    inline-size: min(var(--size-panel-width), 100% - var(--size-search-margin));
+    max-block-size: min(
+      var(--size-menu-max-height),
+      100% - var(--size-search-margin)
+    );
+    margin: auto auto var(--space-inset-sm)
+      calc(var(--app-sidebar-width, var(--space-none)) + var(--space-inset-sm));
+    border: none;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-overlay);
+
+    &::backdrop {
+      background-color: transparent;
+    }
+
+    & > .dialog__panel {
+      padding: var(--space-inset-sm);
+    }
+  }
+
   /* Notion's settings: larger still, centered, its parts edge to edge. */
   .dialog[data-variant="settings"] {
     inline-size: min(

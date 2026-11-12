@@ -170,6 +170,7 @@ export function renderTrash(
   return renderDialog({
     title: COPY.trash.title,
     closeLabel: COPY.trash.close,
+    variant: "panel",
     content: renderContent(state, dispatch),
     onClose: () => dispatch(closeOverlay.create({})),
   });

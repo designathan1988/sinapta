@@ -14,7 +14,9 @@ export interface DialogOptions {
   // "search" is Notion's search: wide and tall, its title read but not
   // shown, closed by Escape or a click outside. "settings" is Notion's
   // settings: as large, its sections at the start, each its own title.
-  readonly variant?: "search" | "settings";
+  // "panel" is a smaller panel beside the sidebar's foot, as Notion's
+  // trash, over the page without dimming it.
+  readonly variant?: "search" | "settings" | "panel";
 }
 
 function showWhenConnected(element: Element | undefined): void {

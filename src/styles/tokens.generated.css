@@ -191,6 +191,7 @@
     --base-size-16: 16rem;
     --base-size-18: 18rem;
     --base-size-20: 20rem;
+    --base-size-26: 26rem;
     --base-size-30: 30rem;
     --base-size-32: 32rem;
     --base-size-36: 36rem;
@@ -417,6 +418,7 @@
     --size-search-top: var(--base-size-4x25);
     --size-search-margin: var(--base-size-5x25);
     --size-search-list: var(--base-size-35x75);
+    --size-panel-width: var(--base-size-26);
     --size-settings-width: var(--base-size-72);
     --size-settings-height: var(--base-size-44);
     --size-settings-nav: var(--base-size-15);
