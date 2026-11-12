@@ -1,5 +1,5 @@
 import "./dialog.css";
-import { html, type TemplateResult } from "lit-html";
+import { html, nothing, type TemplateResult } from "lit-html";
 import { keyed } from "lit-html/directives/keyed.js";
 import { ref } from "lit-html/directives/ref.js";
 import { renderButton } from "../button/index.ts";
@@ -11,6 +11,9 @@ export interface DialogOptions {
   readonly content: TemplateResult;
   // Called after the dialog has closed, however it was closed.
   readonly onClose: () => void;
+  // "search" is Notion's search: wide and tall, its title read but not
+  // shown, closed by Escape or a click outside.
+  readonly variant?: "search";
 }
 
 function showWhenConnected(element: Element | undefined): void {
@@ -45,8 +48,10 @@ function onClosed(event: Event, onClose: () => void): void {
 // A modal dialog. It is rendered only while it is open; closing it by any
 // means fires `close`, which the caller turns into a command.
 export function renderDialog(options: DialogOptions): TemplateResult {
+  const isSearch = options.variant === "search";
   const dialog = html`<dialog
     class="dialog"
+    data-variant=${options.variant ?? nothing}
     closedby="any"
     aria-labelledby="dialog-title"
     ${ref(showWhenConnected)}
@@ -56,7 +61,7 @@ export function renderDialog(options: DialogOptions): TemplateResult {
     @click=${closeOnBackdrop}
   >
     <div class="dialog__panel">
-      <header class="dialog__header">
+      <header class=${isSearch ? "visually-hidden" : "dialog__header"}>
         <h2 class="dialog__title" id="dialog-title">${options.title}</h2>
         ${renderButton({
           label: options.closeLabel,

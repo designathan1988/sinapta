@@ -31,4 +31,22 @@
     font-weight: var(--font-weight-strong);
     line-height: var(--font-line-height-tight);
   }
+
+  /* Notion's search: wide, tall, rounded, near the top of the window. */
+  .dialog[data-variant="search"] {
+    inline-size: min(var(--size-search-width), 100%);
+    block-size: min(
+      var(--size-search-height),
+      100% - var(--size-search-margin)
+    );
+    margin-block-start: var(--size-search-top);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-dialog);
+
+    & > .dialog__panel {
+      display: block;
+      block-size: 100%;
+      padding: var(--space-none);
+    }
+  }
 }

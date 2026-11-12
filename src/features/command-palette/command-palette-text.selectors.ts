@@ -1,19 +1,23 @@
 // Pages found by the text of their blocks, for the palette's search. Each
-// result shows the words around the first match on the page.
+// result shows the words around the first match on the page, and opens
+// the page at the block that matched.
 import { isTextBlock, textOf } from "../../blocks/index.ts";
-import {
-  isPageLike,
-  selectPageTitle,
-  type PageBlock,
-} from "../../blocks/page/index.ts";
-import type { Block } from "../../model/index.ts";
-import { setActivePage, type AppState } from "../../state/index.ts";
-import { COPY } from "../../ui/copy.ts";
+import { isPageLike, type PageBlock } from "../../blocks/page/index.ts";
+import type { Block, BlockId } from "../../model/index.ts";
+import type { AppState } from "../../state/index.ts";
+import { hashForBlock } from "../../ui/address/index.ts";
 
 export interface TextMatch {
-  readonly label: string;
+  readonly page: PageBlock;
   readonly detail: string;
-  readonly command: ReturnType<typeof setActivePage.create>;
+  // Where the match sits in the detail, to mark it.
+  readonly match: { readonly start: number; readonly length: number };
+  readonly href: string;
+}
+
+interface BlockText {
+  readonly blockId: BlockId;
+  readonly text: string;
 }
 
 const BEFORE = 12;
@@ -25,38 +29,42 @@ export function foldQuery(text: string): string {
 }
 
 // The text of a page's own blocks, without the pages nested inside it.
-function pageText(state: AppState, block: Block): string[] {
+export function pageTexts(state: AppState, block: Block): BlockText[] {
   return block.childIds.flatMap((id) => {
     const child = state.workspace.blocks[id];
     if (child === undefined || isPageLike(child)) return [];
-    const own = isTextBlock(child) ? [textOf(child)] : [];
-    return [...own, ...pageText(state, child)];
+    const own = isTextBlock(child)
+      ? [{ blockId: id, text: textOf(child) }]
+      : [];
+    return [...own, ...pageTexts(state, child)];
   });
 }
 
 // The words around a match, cut at word starts, with an ellipsis where
-// text was left out.
-function snippet(text: string, index: number, length: number): string {
+// text was left out, and where the match sits in them.
+function snippet(text: string, index: number, length: number) {
   let start = Math.max(0, index - BEFORE);
   if (start > 0 && text[start - 1] !== " ")
     start = text.indexOf(" ", start) + 1 || index;
   const end = Math.min(text.length, index + length + AFTER);
   const head = start > 0 ? "…" : "";
   const tail = end < text.length ? "…" : "";
-  return `${head}${text.slice(start, end)}${tail}`;
+  return {
+    detail: `${head}${text.slice(start, end)}${tail}`,
+    match: { start: head.length + index - start, length },
+  };
 }
 
-function matchIn(page: PageBlock, lines: readonly string[], needle: string) {
-  for (const line of lines) {
-    const index = foldQuery(line).indexOf(needle);
+function matchIn(
+  page: PageBlock,
+  texts: readonly BlockText[],
+  needle: string,
+): TextMatch | undefined {
+  for (const { blockId, text } of texts) {
+    const index = foldQuery(text).indexOf(needle);
     if (index === -1) continue;
-    const title = selectPageTitle(page);
-    const label = `${page.props.icon ?? ""} ${title === "" ? COPY.sidebar.untitled : title}`;
-    return {
-      label: label.trim(),
-      detail: snippet(line, index, needle.length),
-      command: setActivePage.create({ pageId: page.id }),
-    };
+    const href = hashForBlock(page.id, blockId);
+    return { page, href, ...snippet(text, index, needle.length) };
   }
   return undefined;
 }
@@ -70,7 +78,7 @@ export function selectTextMatches(
   for (const block of Object.values(state.workspace.blocks)) {
     if (matches.length >= limit) break;
     if (!isPageLike(block) || block.props.isTrashed) continue;
-    const match = matchIn(block, pageText(state, block), needle);
+    const match = matchIn(block, pageTexts(state, block), needle);
     if (match !== undefined) matches.push(match);
   }
   return matches;

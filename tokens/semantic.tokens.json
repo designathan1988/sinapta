@@ -512,6 +512,28 @@
         "$description": "The space above and below a center peek.",
         "$value": "{base.size.4x5}"
       }
+    },
+    "search": {
+      "width": {
+        "$description": "Notion's search dialog, at its widest.",
+        "$value": "{base.size.63}"
+      },
+      "height": {
+        "$description": "Its tallest.",
+        "$value": "{base.size.42x25}"
+      },
+      "top": {
+        "$description": "The space above it.",
+        "$value": "{base.size.4x25}"
+      },
+      "margin": {
+        "$description": "The room it leaves in the window's height.",
+        "$value": "{base.size.5x25}"
+      },
+      "list": {
+        "$description": "Its list of results, beside the preview.",
+        "$value": "{base.size.35x75}"
+      }
     }
   },
   "radius": {
@@ -528,6 +550,10 @@
     "lg": {
       "$description": "Menus, popovers and dialogs.",
       "$value": "{base.radius.3}"
+    },
+    "xl": {
+      "$description": "Notion's search dialog.",
+      "$value": "{base.radius.5}"
     }
   },
   "shadow": {

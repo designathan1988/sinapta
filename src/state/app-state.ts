@@ -44,6 +44,9 @@ export interface OpenOverlay {
   readonly activeIndex?: number;
   // What has been typed into the overlay's search field.
   readonly query?: string;
+  // The overlay's own switches that are on, such as a search's "Title
+  // only".
+  readonly flags?: readonly string[];
   // Where a menu opened by a right click shows, in viewport pixels.
   readonly point?: { readonly x: number; readonly y: number };
   // The panel shown of an overlay that moves between panels, such as a

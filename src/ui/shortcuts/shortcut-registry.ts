@@ -64,6 +64,13 @@ export const SHORTCUTS: readonly Shortcut[] = [
     command: openOverlay.create({ overlay: { kind: PALETTE_OVERLAY_KIND } }),
   },
   {
+    // Notion's other key for search.
+    key: "p",
+    withModifier: true,
+    withShift: false,
+    command: openOverlay.create({ overlay: { kind: PALETTE_OVERLAY_KIND } }),
+  },
+  {
     key: ",",
     withModifier: true,
     withShift: false,

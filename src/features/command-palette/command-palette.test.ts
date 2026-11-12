@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { buildWorkspace } from "../../model/index.ts";
+import { buildWorkspace, toBlockId } from "../../model/index.ts";
 import { createInitialState, type AppState } from "../../state/index.ts";
+import { hashForBlock } from "../../ui/address/index.ts";
 import { selectPaletteItems } from "./command-palette.selectors.ts";
 
 const page = (title: string, isTrashed = false) => ({
@@ -99,5 +100,79 @@ describe("searching page text", () => {
     );
 
     expect(kinds.slice(0, 2)).toEqual(["page", "content"]);
+  });
+});
+
+describe("recent pages", () => {
+  it("lists the pages opened last first, for an empty query", () => {
+    const state = createState();
+    const recentPageIds = [toBlockId("c"), toBlockId("a1")];
+    const withRecents = { ...state, ui: { ...state.ui, recentPageIds } };
+
+    const items = selectPaletteItems(withRecents, "");
+
+    expect(items.slice(0, 2).map((item) => [item.section, item.label])).toEqual(
+      [
+        ["recent", "Untitled"],
+        ["recent", "Road trip"],
+      ],
+    );
+  });
+});
+
+describe("where a result is", () => {
+  it("shows the pages a page is in", () => {
+    const trip = selectPaletteItems(createState(), "trip")[0];
+
+    expect(trip?.path).toBe("Product Roadmap");
+  });
+
+  it("opens a page found by its text at the block that matched", () => {
+    const state = {
+      ...createInitialState(),
+      workspace: buildWorkspace([
+        {
+          id: "notes",
+          props: page("Notes"),
+          children: [
+            {
+              id: "p",
+              type: "paragraph",
+              props: { text: [{ text: "Ship it" }] },
+            },
+          ],
+        },
+      ]),
+    };
+
+    const found = selectPaletteItems(state, "ship")[0];
+
+    expect(found?.href).toBe(hashForBlock(toBlockId("notes"), toBlockId("p")));
+    expect(found?.match).toEqual({ start: 0, length: 4 });
+  });
+
+  it("finds by titles alone when asked", () => {
+    const state = {
+      ...createInitialState(),
+      workspace: buildWorkspace([
+        {
+          id: "notes",
+          props: page("Notes"),
+          children: [
+            {
+              id: "p",
+              type: "paragraph",
+              props: { text: [{ text: "Road map" }] },
+            },
+          ],
+        },
+      ]),
+    };
+
+    const all = selectPaletteItems(state, "road");
+    const titles = selectPaletteItems(state, "road", { isTitleOnly: true });
+
+    expect(all.map((item) => item.kind)).toContain("content");
+    expect(titles.map((item) => item.kind)).not.toContain("content");
   });
 });

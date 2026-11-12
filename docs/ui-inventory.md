@@ -37,6 +37,7 @@ Measured in the owner's workspace, dark theme, read-only.
 | Switch | track 30 × 18 px, radius full, padding 2 px, on `#2783DE`; knob 14 px white, moves 12 px; 200 ms ease-out |
 | Layout tile | 83 × 57 px, radius 6 px, ring `inset 0 0 0 1px #383836`; chosen: ring 2 px `#2783DE`, label blue, 11 px |
 | Opening | panels fade and slide in over a short time; submenus open beside their row |
+| Search dialog | 1006 × 676 px at 1280 × 760, 68 px from the top, radius 20 px, ring and two shadows; field 16 px; filter chips 24 px pills; rows 36 px, radius 12 px, icon, title, "— path"; the active page previewed on the right |
 | Side peek | docked at the window's right, 640 px of 1280; full height; ring `0 0 0 1px #383836` and `0 4px 12px -2px`; bar of 24 px buttons: Close, Open as full page, then the peek mode switch, then Previous and Next (dimmed at the ends), the page's actions at the end; title 32 px bold; text inset 76 px |
 | Table Open button | on hover of the title cell: the open mode's icon and OPEN in 12 px capitals on a raised pill; the peeked row is ringed in blue |
 
@@ -82,6 +83,7 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Export as CSV | `view-settings/root-panel.view.ts` | Notion (the view only, no Markdown pages) | the view's columns and rows as a UTF-8 CSV file |
 | Lock page, Lock database | `features/page-menu/page-menu.view.ts` | Notion | a switch in the page's menu; a locked page shows "Locked" in the top bar, which unlocks it; typing does nothing and says why |
 | Lock view | `view-settings/root-panel.view.ts` | Notion | a switch in the view settings; filters, sorts and layout stay as they are |
+| Search (Ctrl+K, Ctrl+P) | `features/command-palette/` | Notion (no Created by, In page, Date filters; no Ask AI) | wide dialog 1006 × 676 px, radius 20; the field, a "Title only" chip, Recent pages or Best matches with each page's place and the text around a match, marked; the active page's preview beside the list; a page found by its text opens at the block, flashed |
 | Sub-group | `view-settings/group-panel.ts`, `layouts/board/board-lanes.view.ts` | Notion (boards; the sub-groups' own sort and hide settings not shown) | Sub-group row in a board's Group panel; lanes with a toggle, chip and count, the column headers once on top; a card dragged to another lane takes its value |
 | Date cell and date value | `ui/date-picker/`, `date-menu.ts`, `cell-date.view.ts` | Notion (no Date format & timezone or Remind rows) | the chosen days in fields, the month with Today and arrows, six weeks of days, End date and Include time switches, Clear |
 

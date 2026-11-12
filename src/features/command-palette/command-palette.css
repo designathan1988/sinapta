@@ -1,29 +1,108 @@
 @layer features {
+  /* Notion's search: the field on top, its filters, then the results and
+     the active page's preview side by side, hints at the foot. */
+  .command-palette {
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    block-size: 100%;
+  }
+
+  .command-palette__search {
+    display: flex;
+    gap: var(--space-inline-md);
+    align-items: center;
+    padding: var(--space-inset-md) var(--space-inset-lg);
+    color: var(--color-text-tertiary);
+
+    & > .icon {
+      flex: none;
+      inline-size: var(--size-icon-md);
+      block-size: var(--size-icon-md);
+    }
+  }
+
   .command-palette__field {
-    inline-size: 100%;
-    min-block-size: var(--size-control-md);
-    padding: var(--space-none) var(--space-inset-sm);
-    border: var(--size-border-thin) solid var(--color-border-strong);
-    border-radius: var(--radius-sm);
-    background-color: var(--color-bg-app);
+    flex: 1;
+    min-inline-size: 0;
+    padding: var(--space-none);
+    border: none;
+    background-color: transparent;
     color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: var(--font-size-md);
+    outline: none;
+
+    &::placeholder {
+      color: var(--color-text-tertiary);
+    }
+  }
+
+  .command-palette__filters {
+    display: flex;
+    gap: var(--space-inline-sm);
+    padding: var(--space-none) var(--space-inset-md) var(--space-inset-sm);
+  }
+
+  /* A filter chip: a pill, lit while it is on. */
+  .command-palette__chip {
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    min-block-size: var(--size-control-sm);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-full);
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    &[aria-pressed="true"] {
+      border-color: transparent;
+      background-color: var(--color-bg-selected);
+      color: var(--color-text-link);
+    }
+  }
+
+  .command-palette__body {
+    display: grid;
+    grid-template-columns: minmax(0, var(--size-search-list)) minmax(0, 1fr);
+    gap: var(--space-inline-md);
+    min-block-size: 0;
+    padding: var(--space-none) var(--space-inset-sm);
   }
 
   .command-palette__list {
     display: flex;
     flex-direction: column;
     gap: var(--space-stack-xxs);
-    max-block-size: var(--size-menu-max-height);
+    min-block-size: 0;
+    margin: var(--space-none);
+    padding: var(--space-none);
     overflow: hidden auto;
+    list-style: none;
+  }
+
+  .command-palette__section {
+    padding: var(--space-inset-sm) var(--space-inset-sm) var(--space-inset-xs);
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
   }
 
   .command-palette__item {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-block-size: var(--size-row-height);
-    padding: var(--space-none) var(--space-inset-sm);
-    border-radius: var(--radius-sm);
+    flex: none;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    min-block-size: var(--size-property-row);
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    border-radius: var(--radius-lg);
     cursor: pointer;
 
     &:hover,
@@ -31,25 +110,109 @@
       background-color: var(--color-bg-hover);
     }
 
+    & > .icon {
+      flex: none;
+      inline-size: var(--size-icon-md);
+      block-size: var(--size-icon-md);
+      color: var(--color-text-secondary);
+    }
+
     &[data-kind="action"] {
       color: var(--color-text-secondary);
     }
   }
 
-  .command-palette__detail {
+  .command-palette__emoji {
+    flex: none;
+    inline-size: var(--size-icon-md);
+    text-align: center;
+  }
+
+  .command-palette__text {
+    display: grid;
+    flex: 1;
+    min-inline-size: 0;
+  }
+
+  .command-palette__line {
     overflow: hidden;
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-xs);
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
+  .command-palette__label {
+    font-weight: var(--font-weight-medium);
+  }
+
+  .command-palette__path,
+  .command-palette__detail {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+  }
+
+  .command-palette__detail {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    & mark {
+      background-color: transparent;
+      color: var(--color-text-primary);
+      font-weight: var(--font-weight-medium);
+      text-decoration: underline;
+    }
+  }
+
+  .command-palette__enter {
+    color: var(--color-text-tertiary);
+    font-family: inherit;
+    font-size: var(--font-size-xs);
+  }
+
   .command-palette__empty {
+    padding: var(--space-inset-sm);
     color: var(--color-text-secondary);
     font-size: var(--font-size-sm);
+  }
 
-    &:empty {
-      display: none;
-    }
+  /* The active page, as the search previews it. */
+  .command-palette__preview {
+    display: grid;
+    gap: var(--space-stack-xs);
+    align-content: start;
+    min-block-size: 0;
+    margin-block-end: var(--space-inset-sm);
+    padding: var(--space-inset-lg);
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    box-shadow: inset 0 0 0 var(--size-border-thin) var(--color-border-subtle);
+  }
+
+  .command-palette__preview-path {
+    margin: var(--space-none);
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+  }
+
+  .command-palette__preview-title {
+    display: flex;
+    gap: var(--space-inline-sm);
+    margin: var(--space-none);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-strong);
+  }
+
+  .command-palette__preview-line {
+    margin: var(--space-none);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+  }
+
+  .command-palette__footer {
+    margin: var(--space-none);
+    padding: var(--space-inset-sm) var(--space-inset-md);
+    border-block-start: var(--size-border-thin) solid var(--color-border-subtle);
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
   }
 }
