@@ -1,9 +1,18 @@
 @layer features {
   /* Notion's inbox: each reminder a row with a bell, what it is about and
      its page and day, a blue dot while unread. */
-  .inbox__actions {
+  .inbox__header {
     display: flex;
-    justify-content: flex-end;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    padding-inline-start: var(--space-inset-sm);
+  }
+
+  .inbox__heading {
+    flex: 1;
+    margin: var(--space-none);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-strong);
   }
 
   .inbox__list {
@@ -66,5 +75,20 @@
   .inbox__empty {
     color: var(--color-text-tertiary);
     font-size: var(--font-size-xs);
+  }
+
+  /* With nothing in it, a large bell over the line, in the middle. */
+  .inbox__empty {
+    display: grid;
+    gap: var(--space-stack-sm);
+    justify-items: center;
+    margin: var(--space-none);
+    padding-block: var(--space-stack-xxl);
+    text-align: center;
+
+    & > .icon {
+      inline-size: var(--size-control-sm);
+      block-size: var(--size-control-sm);
+    }
   }
 }

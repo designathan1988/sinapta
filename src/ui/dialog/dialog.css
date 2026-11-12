@@ -73,6 +73,29 @@
     }
   }
 
+  /* Notion's inbox: as tall as the window, just past the sidebar, over
+     the page without dimming it. */
+  .dialog[data-variant="flyout"] {
+    inline-size: min(var(--size-panel-width), 100% - var(--size-search-margin));
+    block-size: 100%;
+    max-block-size: none;
+    margin: var(--space-none);
+    margin-inline-start: var(--app-sidebar-width, var(--space-none));
+    border: none;
+    border-inline-end: var(--size-border-thin) solid var(--color-border-subtle);
+    border-radius: 0;
+    box-shadow: var(--shadow-overlay);
+
+    &::backdrop {
+      background-color: transparent;
+    }
+
+    & > .dialog__panel {
+      align-content: start;
+      padding: var(--space-inset-sm);
+    }
+  }
+
   /* Notion's settings: larger still, centered, its parts edge to edge. */
   .dialog[data-variant="settings"] {
     inline-size: min(

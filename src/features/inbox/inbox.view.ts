@@ -55,35 +55,50 @@ function renderItem(reminder: Reminder, dispatch: Dispatch): TemplateResult {
   </li>`;
 }
 
+// The panel's own head, as Notion's: its title, "Mark all as read" while
+// any is unread, and the close button.
+function renderHeader(
+  unread: readonly Reminder[],
+  dispatch: Dispatch,
+): TemplateResult {
+  const markAll = () =>
+    dispatch(
+      markRemindersRead.create({ keys: unread.map((item) => item.key) }),
+    );
+  return html`<header class="inbox__header">
+    <h3 class="inbox__heading">${TEXT.title}</h3>
+    ${
+      unread.length === 0
+        ? nothing
+        : renderButton({ label: TEXT.markAllRead, onClick: markAll })
+    }
+    ${renderButton({
+      label: TEXT.close,
+      icon: "close",
+      isIconOnly: true,
+      onClick: () => dispatch(closeOverlay.create({})),
+    })}
+  </header>`;
+}
+
 export function renderInbox(
   state: AppState,
   dispatch: Dispatch,
 ): TemplateResult {
   const reminders = selectReminders(state, todayOf(new Date()));
   const unread = reminders.filter((item) => !item.isRead);
-  const content = html`${
-    unread.length === 0
-      ? nothing
-      : html`<div class="inbox__actions">
-          ${renderButton({
-            label: TEXT.markAllRead,
-            onClick: () =>
-              dispatch(
-                markRemindersRead.create({
-                  keys: unread.map((item) => item.key),
-                }),
-              ),
-          })}
-        </div>`
-  }
+  const content = html`${renderHeader(unread, dispatch)}
   ${
     reminders.length === 0
-      ? html`<p class="inbox__empty">${TEXT.empty}</p>`
+      ? html`<p class="inbox__empty">
+          ${renderIcon("bell")}<span>${TEXT.empty}</span>
+        </p>`
       : html`<ul class="inbox__list">
           ${reminders.map((item) => renderItem(item, dispatch))}
         </ul>`
   }`;
   return renderDialog({
+    variant: "flyout",
     title: TEXT.title,
     closeLabel: TEXT.close,
     content,

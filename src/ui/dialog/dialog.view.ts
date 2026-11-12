@@ -15,8 +15,9 @@ export interface DialogOptions {
   // shown, closed by Escape or a click outside. "settings" is Notion's
   // settings: as large, its sections at the start, each its own title.
   // "panel" is a smaller panel beside the sidebar's foot, as Notion's
-  // trash, over the page without dimming it.
-  readonly variant?: "search" | "settings" | "panel";
+  // trash, over the page without dimming it. "flyout" is as tall as the
+  // window beside the sidebar, as Notion's inbox, and heads itself.
+  readonly variant?: "search" | "settings" | "panel" | "flyout";
 }
 
 function showWhenConnected(element: Element | undefined): void {
