@@ -22,11 +22,28 @@
     border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
     background-color: transparent;
     color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
     text-align: start;
     cursor: pointer;
 
     &:hover {
       background-color: var(--color-bg-hover);
+    }
+  }
+
+  /* The page's icon, as Notion's; a dim page without one. */
+  .list__icon {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    margin-inline-end: calc(
+      var(--space-inline-md) * -1 + var(--space-inline-icon)
+    );
+    color: var(--color-text-tertiary);
+
+    & > .icon {
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
     }
   }
 
@@ -49,6 +66,6 @@
     gap: var(--space-inline-sm);
     justify-content: end;
     color: var(--color-text-secondary);
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-xs);
   }
 }

@@ -1,7 +1,7 @@
-// Under a table or a list: "New page", right under the last row, and how
-// many rows the view shows, said to screen readers only, as Notion shows
-// no count. A table puts "New page" in its own footer, above its
-// calculations.
+// Under a table or a list: how many rows the view shows, said to screen
+// readers only, as Notion shows no count. "New page" sits right under
+// the last row: in a table's own footer, above its calculations, and at
+// the end of a list.
 import { withDefaultTemplate } from "./template-default.commands.ts";
 import { html, type TemplateResult } from "lit-html";
 import { COPY, pluralize } from "../../ui/copy.ts";
@@ -47,12 +47,7 @@ function countLabel(context: TableContext): string {
 }
 
 export function renderFooter(context: TableContext): TemplateResult {
-  const isTable = context.model.view.type === "table";
-  const count = html`<span class="database__count visually-hidden" role="status"
+  return html`<span class="database__count visually-hidden" role="status"
     >${countLabel(context)}</span
   >`;
-  if (isTable) return count;
-  return html`<div class="database__footer">
-    ${renderAddRowButton(context)} ${count}
-  </div>`;
 }

@@ -1,11 +1,14 @@
-// A list: one line per row, its title then the values of the view's
-// visible properties; a grouped list shows its lines group by group.
+// A list: one line per row, its page's icon and title, then the values of
+// the view's visible properties; a grouped list shows its lines group by
+// group.
 import { withDefaultTemplate } from "../../template-default.commands.ts";
 import { openRow } from "../../row-open.commands.ts";
 import "./list.css";
 import { html, type TemplateResult } from "lit-html";
 import { repeat } from "lit-html/directives/repeat.js";
+import { selectPage } from "../../../../blocks/page/index.ts";
 import { renderButton } from "../../../../ui/button/index.ts";
+import { renderIcon } from "../../../../ui/icon/index.ts";
 import { COPY } from "../../../../ui/copy.ts";
 import { selectCellContext } from "../../cell-context.selectors.ts";
 import { renderGroupSection } from "../../group-section.view.ts";
@@ -26,12 +29,16 @@ function renderLine(row: TableRow, context: TableContext): TemplateResult {
     return [html`<span>${shown}</span>`];
   });
   const title = row.title === "" ? COPY.sidebar.untitled : row.title;
+  const icon = selectPage(context.state, row.id)?.props.icon ?? null;
   return html`<li>
     <button
       type="button"
       class="list__row"
       @click=${() => context.dispatch(openRow.create({ rowId: row.id, viewId: context.model.view.id }))}
     >
+      <span class="list__icon" aria-hidden="true"
+        >${icon ?? renderIcon("page")}</span
+      >
       <span class="list__title" ?data-untitled=${row.title === ""}
         >${title}</span
       >
