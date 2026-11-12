@@ -79,7 +79,7 @@ describe("page tree commands", () => {
     expect(titles).toEqual([B, A1]);
   });
 
-  it("trashes a page and closes it when it was open", () => {
+  it("trashes a page and keeps it open under Notion's banner", () => {
     const { store, dispatch } = createApp();
     dispatch(setActivePage.create({ pageId: A1 }));
 
@@ -87,7 +87,7 @@ describe("page tree commands", () => {
 
     const state = store.getState();
     expect(selectTrashedPages(state).map((page) => page.id)).toEqual([A]);
-    expect(state.ui.activePageId).toBeNull();
+    expect(state.ui.activePageId).toBe(A1);
     expect(state.workspace.blocks[A1]).toBeDefined();
   });
 

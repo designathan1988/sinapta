@@ -95,6 +95,8 @@ export const WORKSPACE_TEXT = {
       "Pages in the trash for over 30 days are deleted automatically.",
     restore: "Restore",
     delete: "Delete permanently",
+    pageInTrash: "This page is in the trash.",
+    restorePage: "Restore page",
     confirmTitle: "Delete this page permanently?",
     confirmBody:
       "The page and everything inside it will be removed. This cannot be undone.",

@@ -1,7 +1,8 @@
-// Locks, as Notion's: a locked page keeps its text, blocks and settings;
-// a locked database keeps its properties and views while its rows stay
-// free; a locked view keeps its settings. The lock itself, favorites and
-// the trash stay free, and a locked page can still be deleted whole.
+// Locks, as Notion's: a locked page, or one in the trash, keeps its text,
+// blocks and settings; a locked database keeps its properties and views
+// while its rows stay free; a locked view keeps its settings. The lock
+// itself, favorites and the trash stay free, and a locked page can still
+// be deleted whole.
 import type {
   Block,
   BlockId,
@@ -18,6 +19,10 @@ const FREE_PROPS = new Set(["isLocked", "isFavorite", "isTrashed"]);
 const isLocked = (block: Block | undefined): boolean =>
   block?.props.isLocked === true;
 
+// A page in the trash is read only, as Notion's, until it is restored.
+const isFrozen = (block: Block | undefined): boolean =>
+  isLocked(block) || block?.props.isTrashed === true;
+
 interface LockCheck {
   readonly workspace: Workspace;
   // Blocks the command deletes: a lock deleted with its page holds nothing.
@@ -31,7 +36,7 @@ function isHeld(check: LockCheck, blockId: BlockId | null): boolean {
   while (id !== null) {
     const block: Block | undefined = check.workspace.blocks[id];
     if (block === undefined) return false;
-    const locks = isLocked(block) && block.type !== DATABASE_TYPE;
+    const locks = isFrozen(block) && block.type !== DATABASE_TYPE;
     if (locks) return !check.deleted.has(block.id);
     id = block.parentId;
   }
@@ -44,7 +49,7 @@ function same(a: unknown, b: unknown): boolean {
 
 // A change to a locked block's own settings beyond the free ones.
 function changesLockedProps(block: Block | undefined, props: unknown): boolean {
-  if (!isLocked(block) || block === undefined) return false;
+  if (!isFrozen(block) || block === undefined) return false;
   if (typeof props !== "object" || props === null) return false;
   const before: Record<string, unknown> = block.props;
   const after: Record<string, unknown> = { ...props };

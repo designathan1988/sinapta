@@ -50,12 +50,12 @@ function setTrashed(
   ];
 }
 
-// Trashing hides a page and everything inside it; nothing is deleted.
+// Trashing hides a page and everything inside it; nothing is deleted. An
+// open page stays open, read only under a banner, as Notion's.
 export const trashPage = defineCommand<{ pageId: BlockId }>({
   type: "page.trash",
   handle: (state, command) => ({
     operations: setTrashed(state, command.pageId, command.meta.now),
-    ui: closeIfInside(state, command.pageId),
   }),
 });
 

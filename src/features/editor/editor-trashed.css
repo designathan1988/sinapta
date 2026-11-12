@@ -1,0 +1,56 @@
+@layer features {
+  /* Notion's banner over a page in the trash: red, its words and two
+     outlined buttons centered. */
+  .editor__trashed {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-inset-sm) var(--space-inset-md);
+    border-radius: var(--radius-md);
+    background-color: var(--color-status-danger-fill);
+    color: var(--color-text-on-accent);
+    font-size: var(--font-size-sm);
+  }
+
+  .editor__trashed-action {
+    min-block-size: var(--size-control-action);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: var(--size-border-thin) solid currentcolor;
+    border-radius: var(--radius-md);
+    background-color: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
+  /* It spans the main area edge to edge at the page's top, as Notion's;
+     the page keeps its usual room under it. */
+  .editor > .editor__trashed {
+    inline-size: auto;
+    margin: calc(-1 * var(--space-inset-xl)) calc(-1 * var(--space-inset-lg))
+      var(--space-none);
+    border-radius: 0;
+  }
+
+  .editor:has(> .editor__trashed) {
+    padding-block-start: var(--space-none);
+  }
+
+  /* Under the banner, the page keeps its usual room; a cover meets it. */
+  .editor > .editor__trashed:not(:has(+ .editor__cover)) {
+    margin-block-end: calc(
+      var(--space-inset-page) - var(--space-inset-xl) - var(--space-stack-md)
+    );
+  }
+
+  .editor > .editor__trashed + .editor__cover {
+    margin-block-start: calc(-1 * var(--space-stack-md));
+  }
+}

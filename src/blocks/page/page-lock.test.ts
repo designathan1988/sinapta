@@ -95,3 +95,37 @@ describe("a locked database", () => {
     expect(refuses(updateProps("row", { values: { p: "x" } }))).toBe(false);
   });
 });
+
+// A page in the trash, holding a paragraph.
+const TRASHED = buildWorkspace([
+  {
+    id: "gone",
+    props: pageProps({ isTrashed: true }),
+    children: [{ id: "note", type: "paragraph", props: { text: [] } }],
+  },
+]);
+
+function update(blockId: string, change: Record<string, unknown>) {
+  const block = TRASHED.blocks[id(blockId)];
+  const props = { ...block?.props, ...change };
+  return [
+    { type: "record.update", kind: "block", id: id(blockId), patch: { props } },
+  ] satisfies Operation[];
+}
+
+describe("a page in the trash, as Notion's", () => {
+  it("keeps its title and its blocks as they are", () => {
+    expect(
+      lockGuard(TRASHED, update("gone", { title: [{ text: "New" }] })),
+    ).toBe(true);
+    expect(
+      lockGuard(TRASHED, update("note", { text: [{ text: "typed" }] })),
+    ).toBe(true);
+  });
+
+  it("can still be restored", () => {
+    expect(lockGuard(TRASHED, update("gone", { isTrashed: false }))).toBe(
+      false,
+    );
+  });
+});

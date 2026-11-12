@@ -39,6 +39,7 @@ import {
   renderPageDiscussions,
 } from "../comments/index.ts";
 import { renderIconControl } from "./editor-icon.view.ts";
+import { renderTrashedBanner } from "./editor-trashed.view.ts";
 
 // A page that opens without a title, such as one just created, takes the
 // caret in its title, so typing names it. The page element is keyed by page
@@ -46,7 +47,7 @@ import { renderIconControl } from "./editor-icon.view.ts";
 function focusUntitled(element: Element | undefined): void {
   if (!(element instanceof HTMLTextAreaElement)) return;
   whenConnected(element, () => {
-    if (element.value === "") element.focus();
+    if (element.value === "" && !element.readOnly) element.focus();
   });
 }
 
@@ -72,7 +73,7 @@ function renderTitle(page: PageBlock, context: InputContext): TemplateResult {
       rows="1"
       aria-label=${COPY.editor.titleLabel}
       placeholder=${COPY.sidebar.untitled}
-      ?readonly=${page.props.isLocked === true}
+      ?readonly=${page.props.isLocked === true || page.props.isTrashed}
       .value=${selectPageTitle(page)}
       @input=${onInput}
       @keydown=${onKeyDown}
@@ -128,7 +129,7 @@ export function renderEditor(
   pageId: BlockId | null = state.ui.activePageId,
 ): TemplateResult {
   const page = selectPage(state, pageId);
-  if (page === undefined || page.props.isTrashed) {
+  if (page === undefined) {
     return html`<h1 class="visually-hidden">${PRODUCT_NAME}</h1>
       <p class="editor__empty">${COPY.editor.noPage}</p>`;
   }
@@ -144,8 +145,9 @@ export function renderEditor(
       ?data-full-width=${page.props.isFullWidth === true}
       data-font=${page.props.font ?? "default"}
       ?data-small-text=${page.props.isSmallText === true}
-      ?data-locked=${page.props.isLocked === true}
+      ?data-locked=${page.props.isLocked === true || page.props.isTrashed}
     >
+      ${page.props.isTrashed ? renderTrashedBanner(page, dispatch) : nothing}
       ${renderTemplateBanner(state, page.id)}
       ${isPage ? renderCover(state, page, dispatch) : nothing}
       ${renderPageActions(state, page, dispatch)} ${renderTitle(page, context)}
