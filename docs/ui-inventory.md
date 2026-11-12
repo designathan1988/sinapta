@@ -102,7 +102,7 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Date and time formats | `date-config.view.ts` | Notion | rows with values opening option lists beside them |
 | Relation database | `relation-config.view.ts` | Notion | searchable list of databases |
 | Rollup relation, property, calculation | `rollup-config.view.ts` | Notion | rows with values opening option lists beside them |
-| Button property action | `button-property-config.view.ts` | custom (a list in a form) | option list |
+| Button property action | `button-property-config.view.ts` | Notion | rows with values opening option lists; opening the row a switch row |
 | Options and their colors | `option-list.view.ts`, `option-menu-parts.ts` | Notion | each option a row with a grip and its chip, opening its submenu: name, Delete, colors as swatches with a check |
 
 ### Blocks

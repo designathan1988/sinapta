@@ -108,3 +108,32 @@
     }
   }
 }
+
+@layer features {
+  /* A choice that is on or off in a property's settings: its words, then
+     a switch at the row's end, as Notion's. */
+  .database__switch-row {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    justify-content: space-between;
+    inline-size: 100%;
+    min-block-size: var(--size-control-md);
+    padding: var(--space-none) var(--space-inset-xs);
+    border: none;
+    border-radius: var(--radius-md);
+    background: none;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    text-align: start;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    &:focus-visible {
+      outline: var(--size-focus-width) solid var(--color-border-focus);
+    }
+  }
+}

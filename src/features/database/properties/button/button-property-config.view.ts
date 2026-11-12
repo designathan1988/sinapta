@@ -1,6 +1,6 @@
 // The settings of a button property: its label, whether a press opens the
 // row, and the values a press sets: a checkbox, an option or today.
-import { CHECKBOX_CLASS } from "../../../../ui/checkbox/index.ts";
+import { renderSwitchMark } from "../../../../ui/switch/index.ts";
 import { renderConfigChoice } from "../config-choice.view.ts";
 import { html, type TemplateResult } from "lit-html";
 import {
@@ -102,28 +102,28 @@ function renderValueField(
   );
 }
 
+// Opening the row is a switch row, as Notion's settings show such choices.
 function renderOpens(
   config: ButtonPropertyConfig,
   onChange: (config: unknown) => void,
 ) {
   const opens = config.actions.some((action) => action.kind === "open-page");
-  const onToggle = (event: Event): void => {
-    if (!(event.target instanceof HTMLInputElement)) return;
+  const onToggle = (): void => {
     const others = config.actions.filter((each) => each.kind !== "open-page");
-    const actions = event.target.checked
-      ? [...others, { kind: "open-page" as const }]
-      : others;
+    const actions = opens
+      ? others
+      : [...others, { kind: "open-page" as const }];
     onChange({ ...config, actions });
   };
-  return html`<label class="database__check">
-    <input
-      type="checkbox"
-      class=${CHECKBOX_CLASS}
-      .checked=${opens}
-      @change=${onToggle}
-    />
-    ${TEXT.opensRow}
-  </label>`;
+  return html`<button
+    type="button"
+    class="database__switch-row"
+    role="switch"
+    aria-checked=${String(opens)}
+    @click=${onToggle}
+  >
+    <span>${TEXT.opensRow}</span>${renderSwitchMark(opens)}
+  </button>`;
 }
 
 export function renderButtonPropertyConfig(
