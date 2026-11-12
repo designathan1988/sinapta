@@ -5,6 +5,7 @@ import type { Command, Dispatch } from "../../state/index.ts";
 import { createDatabaseApp } from "./database-builder.ts";
 import { renderDatabase } from "./database.view.ts";
 import { selectRows } from "./row-bulk.commands.ts";
+import { BULK_EDIT_OVERLAY } from "./table-bulk-edit.view.ts";
 import { setFrozenCount, toggleWrapped } from "./table-layout.commands.ts";
 import { sortByProperty } from "./view.commands.ts";
 
@@ -112,6 +113,21 @@ describe("selecting rows in a table", () => {
       expect.objectContaining({
         type: "row.deleteMany",
         rowIds: [rowId(0), rowId(2)],
+      }),
+    ]);
+  });
+
+  it("gives the ticked rows a button per property, as Notion's bar", () => {
+    const { host, sent, notes } = rendered({ ticked: [0] });
+    const bar = host.querySelector<HTMLElement>(".database__bulk");
+    if (bar === null) throw new Error("no bar");
+
+    button(bar, "Notes").click();
+
+    expect(sent).toEqual([
+      expect.objectContaining({
+        type: "ui.openOverlay",
+        overlay: { kind: BULK_EDIT_OVERLAY, anchorId: notes },
       }),
     ]);
   });

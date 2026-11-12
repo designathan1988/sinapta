@@ -1,10 +1,12 @@
-// The bar over a table while rows are ticked: how many, a property to
-// give them all one value, and duplicating, deleting or unticking them.
+// The bar over a table while rows are ticked: how many, a button per
+// property to give them all one value, and duplicating, deleting or
+// unticking them.
 import { html, nothing, type TemplateResult } from "lit-html";
-import { openOverlay } from "../../state/index.ts";
+import { closeOverlay, openOverlay } from "../../state/index.ts";
 import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
-import { renderSelect } from "../../ui/select/index.ts";
+import { renderIcon } from "../../ui/icon/index.ts";
+import { isOpenFor } from "./database-overlay.ts";
 import { propertyType } from "./property-registry.ts";
 import {
   deleteRows,
@@ -25,32 +27,34 @@ const EDITABLE = new Set([
   "options",
 ]);
 
-// A list of the properties that can take one value for every ticked row;
-// choosing one opens the editor of that value.
-function renderEditChoice(context: TableContext): TemplateResult {
+// A button per property that can take one value for every ticked row,
+// as Notion's bar; each opens the editor of that value beside it.
+function renderEditButtons(context: TableContext): TemplateResult[] {
   const { model, state, dispatch } = context;
   const properties = model.database.props.properties.filter((property) =>
     EDITABLE.has(propertyType(property.type).editor),
   );
-  return renderSelect(
-    {
-      id: `bulk-${model.view.id}`,
-      label: COPY.database.setProperty,
-      value: undefined,
-      placeholder: COPY.database.setProperty,
-      options: properties.map((property) => ({
-        value: property.id,
-        label: property.name,
-        icon: propertyType(property.type).icon,
-      })),
-      variant: "quiet",
-      onChoose: (anchorId) => {
-        const overlay = { kind: BULK_EDIT_OVERLAY, anchorId };
-        dispatch(openOverlay.create({ overlay }));
-      },
-    },
-    { overlay: state.ui.overlay, dispatch },
-  );
+  return properties.map((property) => {
+    const overlay = { kind: BULK_EDIT_OVERLAY, anchorId: property.id };
+    const isOpen = isOpenFor(state, overlay);
+    return html`<button
+      type="button"
+      class="button database__bulk-property"
+      data-variant="quiet"
+      data-overlay-anchor
+      aria-haspopup="dialog"
+      aria-expanded=${String(isOpen)}
+      @click=${() => {
+        dispatch(
+          isOpen ? closeOverlay.create({}) : openOverlay.create({ overlay }),
+        );
+      }}
+    >
+      ${renderIcon(propertyType(property.type).icon)}<span
+        >${property.name}</span
+      >
+    </button>`;
+  });
 }
 
 export function renderBulkBar(
@@ -71,7 +75,7 @@ export function renderBulkBar(
     <span class="database__bulk-count"
       >${rowIds.length} ${COPY.database.selected}</span
     >
-    ${renderEditChoice(context)}
+    ${renderEditButtons(context)}
     ${renderButton({
       label: COPY.database.duplicateRows,
       icon: "duplicate",

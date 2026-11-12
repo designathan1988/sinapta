@@ -65,7 +65,7 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Filter conjunction | `view-filters.view.ts` | Notion | small select: "And" or "Or" |
 | Filter property, condition, value | `filter-row.view.ts` | Notion | select buttons opening option lists; options of a select property as chips |
 | Calculation | `table-footer.view.ts` | Notion | "Calculate" with a chevron opening the grouped menu of calculations |
-| Set property on ticked rows | `table-bulk.view.ts` | custom (a list, not a button per property) | a button per property in the bar |
+| Set property on ticked rows | `table-bulk.view.ts` | Notion | a button per property in the bar |
 | Linked view source | `linked-view.view.ts` | Notion | searchable list of databases |
 | Row properties on a row page | `row-properties.view.ts`, `row-value.view.ts` | Notion | 34 px rows: the type's icon and name in a 160 px column, then the value drawn as its cell; options, tags and dates open their editors |
 | Column menu | `column-menu.view.ts` | Notion | name with its type's icon in a box; Edit property ›, Change type ›, Filter, Sort ›, Group, Calculate ›, Freeze, Hide, Wrap, Insert left and right, Duplicate, Delete; submenus open on hover beside the row |
