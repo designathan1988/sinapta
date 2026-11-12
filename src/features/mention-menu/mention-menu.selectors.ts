@@ -58,6 +58,31 @@ function dateItem(label: string, date: string): MentionItem {
   return { label, span: { text, mention: { kind: "date", date } } };
 }
 
+const REMIND = "remind";
+
+// After "@remind", reminders: a date mention that the inbox brings back
+// on its day, as Notion's "@remind tomorrow".
+function reminderItems(today: string, needle: string): MentionItem[] {
+  if (!needle.startsWith(REMIND)) return [];
+  const rest = needle.slice(REMIND.length).trim();
+  const days = [
+    { label: TEXT.remindToday, date: today },
+    { label: TEXT.remindTomorrow, date: dayAfter(today, 1) },
+    { label: TEXT.remindNextWeek, date: dayAfter(today, 7) },
+  ];
+  return days
+    .filter((day) => fold(day.label).includes(rest))
+    .map((day) => {
+      const item = dateItem(day.label, day.date);
+      const mention = {
+        kind: "date" as const,
+        date: day.date,
+        isReminder: true,
+      };
+      return { ...item, span: { ...item.span, mention } };
+    });
+}
+
 function dateItems(today: string, needle: string): MentionItem[] {
   const named = [
     dateItem(TEXT.today, today),
@@ -68,7 +93,7 @@ function dateItems(today: string, needle: string): MentionItem[] {
   const typed = /^\d{4}-\d{2}-\d{2}$/.test(needle)
     ? [dateItem(needle, needle)]
     : [];
-  return [...named, ...typed];
+  return [...named, ...typed, ...reminderItems(today, needle)];
 }
 
 export interface OpenMentionMenu {

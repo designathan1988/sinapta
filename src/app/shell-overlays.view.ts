@@ -34,6 +34,7 @@ import {
 } from "../features/slash-menu/index.ts";
 import { renderTrash, TRASH_OVERLAY } from "../features/trash/index.ts";
 import { renderPageHistory } from "../features/page-history/index.ts";
+import { INBOX_OVERLAY, renderInbox } from "../features/inbox/index.ts";
 import {
   COMMENT_COMPOSER_OVERLAY,
   DISCUSSIONS_OVERLAY,
@@ -61,6 +62,7 @@ const OVERLAYS: Readonly<Record<string, OverlayView>> = {
   [SETTINGS_OVERLAY]: renderSettings,
   [TRASH_OVERLAY]: renderTrash,
   [PAGE_HISTORY_OVERLAY]: renderPageHistory,
+  [INBOX_OVERLAY]: renderInbox,
   [COMMENT_COMPOSER_OVERLAY]: renderComposerPopover,
   [DISCUSSIONS_OVERLAY]: renderDiscussionsPopover,
   [TEMPLATE_GALLERY_OVERLAY]: renderTemplateGallery,

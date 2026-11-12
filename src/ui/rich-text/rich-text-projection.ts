@@ -42,7 +42,10 @@ function mentionNode(span: TextSpan, mention: Mention): Node {
   element.className = "mention";
   element.setAttribute("contenteditable", "false");
   if (mention.kind === "page") element.dataset.pageId = mention.pageId;
-  else element.dataset.date = mention.date;
+  else {
+    element.dataset.date = mention.date;
+    if (mention.isReminder === true) element.dataset.reminder = "";
+  }
   return element;
 }
 

@@ -38,6 +38,7 @@ export type BaseIconName =
   | "templates"
   | "comment"
   | "history"
+  | "bell"
   | "help";
 
 export type IconName = BaseIconName | DataIconName | BlockIconName;
@@ -52,6 +53,7 @@ const PATHS: Record<BaseIconName, TemplateResult<2>> = {
       d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.4 3.4l1.4 1.4M11.2 11.2l1.4 1.4M3.4 12.6l1.4-1.4M11.2 4.8l1.4-1.4"
     />`,
   close: svg`<path d="M4 4l8 8M12 4l-8 8" />`,
+  bell: svg`<path d="M4 11V7.5a4 4 0 0 1 8 0V11l1 1.5H3L4 11zM6.5 13.5a1.5 1.5 0 0 0 3 0" />`,
   history: svg`<path d="M2.5 8a5.5 5.5 0 1 0 1.6-3.9M2.5 2.5v2.5H5" />
     <path d="M8 5v3l2 1.5" />`,
   comment: svg`<path d="M3 3.5h10a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H7.5L4.5 14v-2.5H3a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1z" />`,

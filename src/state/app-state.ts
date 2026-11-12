@@ -97,6 +97,8 @@ export interface UiState {
     readonly viewId: ViewId;
     readonly mode: "side" | "center";
   } | null;
+  // The reminders read in the inbox, by block and date.
+  readonly readReminders: readonly string[];
   // The versions of the page whose history is open, once read.
   readonly pageVersions: {
     readonly pageId: BlockId;
@@ -208,6 +210,7 @@ export function createInitialUiState(): UiState {
     formErrors: null,
     peek: null,
     pageVersions: null,
+    readReminders: [],
     viewSearches: {},
     sidebarWidth: SIDEBAR_WIDTH.initial,
     isSidebarCollapsed: false,

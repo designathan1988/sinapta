@@ -24,6 +24,9 @@ export const EDITOR_TEXT = {
     today: "Today",
     tomorrow: "Tomorrow",
     nextWeek: "Next week",
+    remindToday: "Remind me today",
+    remindTomorrow: "Remind me tomorrow",
+    remindNextWeek: "Remind me next week",
   },
   blockMenu: {
     open: "Block actions",

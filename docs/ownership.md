@@ -103,6 +103,8 @@ owner listed here exists.
 | The template gallery and its built-in page templates | `src/features/templates/` | 17 |
 | Comments: discussions on a page, a block or its text; replies, resolving, deleting | `src/features/comments/` | 17 |
 | Keeping page versions in storage | `src/persistence/snapshot-store.ts` | 17 |
+| The inbox: due reminders, read state, the dialog and the sidebar's count | `src/features/inbox/` | 17 |
+| Reminder notifications while the app is open | `src/app/reminder-notices.ts` | 17 |
 | A page's history: its content, restoring a version, the dialog | `src/features/page-history/` | 17 |
 | Marking commented text | `src/model/rich-text-comments.ts`, `src/ui/rich-text/rich-text-projection.ts` | 17 |
 | A board's sub-groups: the setting and its lanes | `src/features/database/sub-group.commands.ts`, `layouts/board/board-lanes.view.ts` | 16 |

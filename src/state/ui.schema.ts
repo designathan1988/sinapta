@@ -11,6 +11,7 @@ const persistedUiSchema = v.object({
   isSidebarCollapsed: v.boolean(),
   recentPageIds: v.optional(v.array(blockIdSchema), []),
   isHomeOpen: v.optional(v.boolean(), false),
+  readReminders: v.optional(v.array(v.string()), []),
 });
 
 export type PersistedUi = v.InferOutput<typeof persistedUiSchema>;
@@ -24,6 +25,7 @@ export function toPersistedUi(ui: UiState): PersistedUi {
     isSidebarCollapsed: ui.isSidebarCollapsed,
     recentPageIds: [...ui.recentPageIds],
     isHomeOpen: ui.isHomeOpen,
+    readReminders: [...ui.readReminders],
   };
 }
 

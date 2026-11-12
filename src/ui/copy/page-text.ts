@@ -9,6 +9,15 @@ export const PAGE_TEXT = {
     characters: { one: "character", other: "characters" },
     favorite: "Favorite",
   },
+  inbox: {
+    open: "Inbox",
+    title: "Inbox",
+    close: "Close inbox",
+    reminder: "Reminder",
+    markAllRead: "Mark all as read",
+    empty: "No reminders yet. Type @remind in a page to set one.",
+    unread: (count: number) => `${String(count)} unread`,
+  },
   pageHistory: {
     open: "Page history",
     title: "Page history",

@@ -148,4 +148,9 @@
     border-block-end: var(--size-border-thick) solid var(--color-tone-yellow);
     background-color: var(--color-chip-yellow-bg);
   }
+
+  /* A reminder: a date mention with an alarm clock before it. */
+  .mention[data-reminder]::before {
+    content: "⏰ ";
+  }
 }

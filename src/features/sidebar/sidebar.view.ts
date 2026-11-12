@@ -1,5 +1,5 @@
 import "./sidebar.css";
-import { html, type TemplateResult } from "lit-html";
+import { html, nothing, type TemplateResult } from "lit-html";
 import { createPage } from "../../blocks/page/index.ts";
 import {
   openHome,
@@ -17,6 +17,7 @@ import {
 import { createDatabase, importCsvFile } from "../database/index.ts";
 import { TEMPLATE_GALLERY_OVERLAY } from "../templates/index.ts";
 import { TRASH_OVERLAY } from "../trash/index.ts";
+import { INBOX_OVERLAY, selectUnreadCount, todayOf } from "../inbox/index.ts";
 import { renderFavorites } from "./sidebar-favorites.view.ts";
 import { renderTree } from "./sidebar-tree.view.ts";
 import { selectTreeRows } from "./sidebar.selectors.ts";
@@ -81,8 +82,32 @@ function renderSearch(dispatch: Dispatch): TemplateResult {
   </button>`;
 }
 
-// Search, home and the ways to start something new.
-function renderQuickItems(dispatch: Dispatch): TemplateResult {
+// Inbox, as Notion's: a bell, and the count of unread reminders.
+function renderInboxItem(state: AppState, dispatch: Dispatch): TemplateResult {
+  const unread = selectUnreadCount(state, todayOf(new Date()));
+  const overlay = { kind: INBOX_OVERLAY };
+  return html`<button
+    type="button"
+    class="button sidebar__inbox"
+    data-variant="quiet"
+    @click=${() => dispatch(openOverlay.create({ overlay }))}
+  >
+    ${renderIcon("bell")}
+    <span>${COPY.inbox.open}</span>
+    ${
+      unread === 0
+        ? nothing
+        : html`<span
+            class="sidebar__badge"
+            aria-label=${COPY.inbox.unread(unread)}
+            >${unread}</span
+          >`
+    }
+  </button>`;
+}
+
+// Search, home, the inbox and the ways to start something new.
+function renderQuickItems(state: AppState, dispatch: Dispatch): TemplateResult {
   return html`${renderSearch(dispatch)}
     <div class="sidebar__quick">
       ${renderButton({
@@ -90,6 +115,7 @@ function renderQuickItems(dispatch: Dispatch): TemplateResult {
         icon: "home",
         onClick: () => dispatch(openHome.create({})),
       })}
+      ${renderInboxItem(state, dispatch)}
       ${renderButton({
         label: COPY.sidebar.newPage,
         icon: "compose",
@@ -123,7 +149,7 @@ export function renderSidebar(
   dispatch: Dispatch,
 ): TemplateResult {
   return html`<div class="sidebar">
-    ${renderQuickItems(dispatch)} ${renderFavorites(state, dispatch)}
+    ${renderQuickItems(state, dispatch)} ${renderFavorites(state, dispatch)}
     ${renderPrivate(state, dispatch)} ${renderFooter(dispatch)}
   </div>`;
 }

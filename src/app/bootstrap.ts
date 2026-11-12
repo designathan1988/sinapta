@@ -24,6 +24,8 @@ import {
 import { editorCommands } from "../features/editor/index.ts";
 import { peekCommands } from "../features/row-peek/index.ts";
 import { templateCommands } from "../features/templates/index.ts";
+import { inboxCommands } from "../features/inbox/index.ts";
+import { startReminderNotices } from "./reminder-notices.ts";
 import {
   pageContent,
   pageHistoryCommands,
@@ -97,6 +99,7 @@ const COMMANDS = [
   ...templateCommands,
   ...commentCommands,
   ...pageHistoryCommands,
+  ...inboxCommands,
   ...pageVersionCommands,
 ];
 
@@ -175,6 +178,7 @@ export async function startApp(container: HTMLElement): Promise<void> {
   if (isFirstRun) dispatch(seedGettingStarted.create({}));
   // The trash empties itself of pages kept there over 30 days.
   dispatch(emptyOldTrash.create({}));
+  startReminderNotices(store);
   startRouter(store, dispatch);
   installOverlayDismiss(store, dispatch);
   installSelectionSync(store, dispatch);

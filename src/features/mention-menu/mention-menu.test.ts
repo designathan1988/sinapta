@@ -51,4 +51,20 @@ describe("selectOpenMentionMenu", () => {
 
     expect(selectOpenMentionMenu(state, TODAY)).toBeUndefined();
   });
+
+  it("offers reminders after @remind, as Notion does", () => {
+    const menu = selectOpenMentionMenu(
+      createState("@remind tomorrow", MENTION_MENU_OVERLAY),
+      TODAY,
+    );
+
+    expect(menu?.items.map((item) => item.label)).toEqual([
+      "Remind me tomorrow",
+    ]);
+    expect(menu?.items[0]?.span.mention).toEqual({
+      kind: "date",
+      date: "2026-11-12",
+      isReminder: true,
+    });
+  });
 });

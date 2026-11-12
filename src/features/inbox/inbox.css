@@ -1,0 +1,70 @@
+@layer features {
+  /* Notion's inbox: each reminder a row with a bell, what it is about and
+     its page and day, a blue dot while unread. */
+  .inbox__actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .inbox__list {
+    display: grid;
+    gap: var(--space-stack-xxs);
+    margin: var(--space-none);
+    padding: var(--space-none);
+    list-style: none;
+  }
+
+  .inbox__item {
+    position: relative;
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: start;
+    inline-size: 100%;
+    padding: var(--space-inset-sm) var(--space-inset-md);
+    border: none;
+    border-radius: var(--radius-md);
+    background-color: transparent;
+    color: var(--color-text-primary);
+    font-family: inherit;
+    text-align: start;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    & > .icon {
+      flex: none;
+      inline-size: var(--size-icon-md);
+      block-size: var(--size-icon-md);
+      color: var(--color-text-secondary);
+    }
+
+    &[data-unread]::after {
+      position: absolute;
+      inset-block-start: var(--space-inset-md);
+      inset-inline-end: var(--space-inset-sm);
+      inline-size: var(--space-inset-xs);
+      block-size: var(--space-inset-xs);
+      border-radius: var(--radius-full);
+      background-color: var(--color-accent-default);
+      content: "";
+    }
+  }
+
+  .inbox__text {
+    display: grid;
+    gap: var(--space-stack-xxs);
+    min-inline-size: 0;
+  }
+
+  .inbox__title {
+    font-size: var(--font-size-sm);
+  }
+
+  .inbox__meta,
+  .inbox__empty {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+  }
+}
