@@ -42,6 +42,10 @@ export const PAGE_TEXT = {
     count: { one: "comment", other: "comments" },
     addToPage: "Add comment",
     comment: "Comment",
+    resolved: "Resolved comments",
+    closeResolved: "Close resolved comments",
+    noResolved: "No resolved comments on this page.",
+    reopen: "Reopen",
   },
   backlinks: {
     label: "Backlinks",

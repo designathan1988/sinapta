@@ -22,6 +22,10 @@ import {
   type AppState,
   type Dispatch,
 } from "../../state/index.ts";
+import {
+  RESOLVED_COMMENTS_OVERLAY,
+  selectResolvedDiscussions,
+} from "../comments/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
@@ -170,6 +174,25 @@ function historyItem(pageId: BlockId, dispatch: Dispatch): MenuItem {
   };
 }
 
+// "Resolved comments", with how many, while the page has any.
+function resolvedItems(
+  state: AppState,
+  pageId: BlockId,
+  dispatch: Dispatch,
+): MenuItem[] {
+  const count = selectResolvedDiscussions(state, pageId).length;
+  if (count === 0) return [];
+  const overlay = { kind: RESOLVED_COMMENTS_OVERLAY, anchorId: pageId };
+  return [
+    {
+      label: COPY.comments.resolved,
+      icon: "comment",
+      value: String(count),
+      onSelect: () => dispatch(openOverlay.create({ overlay })),
+    },
+  ];
+}
+
 function menuItems(
   state: AppState,
   page: PageBlock,
@@ -193,6 +216,7 @@ function menuItems(
     ...styleItems(page, dispatch),
     lockItem(page, dispatch),
     historyItem(pageId, dispatch),
+    ...resolvedItems(state, pageId, dispatch),
     ...copyItems(state, pageId, dispatch),
     {
       label: COPY.pageMenu.trash,

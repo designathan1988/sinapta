@@ -50,6 +50,15 @@ export function selectBlockDiscussionCount(
   return found.discussions.length;
 }
 
+// The page's resolved discussions, oldest first.
+export function selectResolvedDiscussions(
+  state: AppState,
+  pageId: BlockId,
+): Discussion[] {
+  const page = selectPage(state, pageId);
+  return (page?.props.discussions ?? []).filter((item) => item.isResolved);
+}
+
 // "Just now", "5m ago", "3h ago", or the day, as Notion dates comments.
 export function commentTime(createdAt: string, now: string): string {
   const minutes = Math.floor((Date.parse(now) - Date.parse(createdAt)) / 60000);

@@ -10,6 +10,10 @@ import {
   renderComposerPopover,
   renderPageDiscussions,
 } from "./comment-popovers.view.ts";
+import {
+  RESOLVED_COMMENTS_OVERLAY,
+  renderResolvedComments,
+} from "./resolved-comments.view.ts";
 
 const discussion = {
   id: toBlockId("d1"),
@@ -154,5 +158,49 @@ describe("the comment composer by a block", () => {
       );
 
     expect(sent.map((command) => command.type)).toEqual(["ui.closeOverlay"]);
+  });
+});
+
+describe("a page's resolved comments", () => {
+  it("are listed with their text, and reopen from there", () => {
+    const resolved = { ...discussion, id: toBlockId("d9"), isResolved: true };
+    const workspace = buildWorkspace([
+      {
+        id: "page",
+        props: {
+          title: [],
+          icon: null,
+          isFavorite: false,
+          isTrashed: false,
+          discussions: [discussion, resolved],
+        },
+      },
+    ]);
+    const initial = createInitialState();
+    const overlay = { kind: RESOLVED_COMMENTS_OVERLAY, anchorId: "page" };
+    const state = { ...initial, workspace, ui: { ...initial.ui, overlay } };
+    const sent: Command[] = [];
+    const host = document.createElement("div");
+    document.body.replaceChildren(host);
+    render(
+      renderResolvedComments(state, (command) => {
+        sent.push(command);
+        return { ok: true };
+      }),
+      host,
+    );
+
+    const items = host.querySelectorAll(".comments__discussion");
+    expect(items).toHaveLength(1);
+    expect(items[0]?.textContent).toContain("Looks good");
+    host.querySelector<HTMLElement>(".comments__reopen")?.click();
+    expect(sent).toEqual([
+      expect.objectContaining({
+        type: "comment.resolve",
+        pageId: "page",
+        discussionId: "d9",
+        isResolved: false,
+      }),
+    ]);
   });
 });

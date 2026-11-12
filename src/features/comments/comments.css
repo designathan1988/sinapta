@@ -186,4 +186,9 @@
   .comments__resolve {
     margin-inline-start: auto;
   }
+
+  /* A resolved discussion's Reopen sits at the end of its head. */
+  .comments__reopen {
+    margin-inline-start: auto;
+  }
 }

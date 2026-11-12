@@ -40,6 +40,8 @@ import {
   DISCUSSIONS_OVERLAY,
   renderComposerPopover,
   renderDiscussionsPopover,
+  RESOLVED_COMMENTS_OVERLAY,
+  renderResolvedComments,
 } from "../features/comments/index.ts";
 import {
   renderTemplateGallery,
@@ -65,6 +67,7 @@ const OVERLAYS: Readonly<Record<string, OverlayView>> = {
   [INBOX_OVERLAY]: renderInbox,
   [COMMENT_COMPOSER_OVERLAY]: renderComposerPopover,
   [DISCUSSIONS_OVERLAY]: renderDiscussionsPopover,
+  [RESOLVED_COMMENTS_OVERLAY]: renderResolvedComments,
   [TEMPLATE_GALLERY_OVERLAY]: renderTemplateGallery,
   [PALETTE_OVERLAY]: renderCommandPalette,
   [MOVE_TO_OVERLAY]: renderMoveTo,
