@@ -50,7 +50,9 @@
     gap: var(--space-inline-sm);
     align-items: center;
     inline-size: 100%;
-    min-block-size: var(--size-table-row);
+
+    /* 36 px in all with the header's rule, as Notion's. */
+    min-block-size: calc(var(--size-table-row) - var(--size-border-thin));
     padding: var(--space-none) var(--space-inset-sm);
     overflow: hidden;
     border: none;
@@ -94,8 +96,9 @@
     }
   }
 
+  /* A row is 36 px over its 1 px rule, 37 px in all, as Notion's. */
   .database__cell {
-    block-size: var(--size-table-row);
+    block-size: calc(var(--size-table-row) + var(--size-border-thin));
     padding: var(--space-none) var(--space-inset-sm);
     overflow: hidden;
     border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
@@ -129,7 +132,7 @@
   .database__row-icon {
     display: inline-flex;
     align-items: center;
-    margin-inline-end: var(--space-inline-icon);
+    margin-inline-end: var(--space-inline-sm);
     color: var(--color-text-tertiary);
     font-weight: var(--font-weight-regular);
     vertical-align: middle;
@@ -180,6 +183,9 @@
   }
 
   .database__table .database__spacer {
-    block-size: calc(var(--database-spacer-rows, 0) * var(--size-table-row));
+    block-size: calc(
+      var(--database-spacer-rows, 0) *
+        (var(--size-table-row) + var(--size-border-thin))
+    );
   }
 }
