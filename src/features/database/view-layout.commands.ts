@@ -53,6 +53,8 @@ export function layoutDefaults(
       group !== undefined && { groupBy: groupByProperty(group) }),
     ...(viewType === "calendar" &&
       date !== undefined && { datePropertyId: date }),
+    // Notion's gallery shows each page's content on its card.
+    ...(viewType === "gallery" && { cardPreview: "content" as const }),
   };
 }
 

@@ -55,6 +55,19 @@ describe("view.setType", () => {
       datePropertyId: app.propertyIds[1],
     });
   });
+
+  it("previews a gallery's cards by their page content, as Notion's", () => {
+    const app = createApp();
+
+    app.dispatch(
+      setViewType.create({ viewId: app.view().id, viewType: "gallery" }),
+    );
+
+    expect(app.view()).toMatchObject({
+      type: "gallery",
+      cardPreview: "content",
+    });
+  });
 });
 
 describe("view.setGroupBy and view.setDateProperty", () => {

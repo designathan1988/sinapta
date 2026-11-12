@@ -46,6 +46,11 @@ function renderPicture(
   picture: CardPicture | undefined,
 ): TemplateResult | typeof nothing {
   if (picture === undefined) return nothing;
+  if ("lines" in picture) {
+    return html`<span class="row-card__preview" aria-hidden="true"
+      >${picture.lines.map((line) => html`<span>${line}</span>`)}</span
+    >`;
+  }
   if ("preset" in picture) {
     return html`<span
       class="row-card__cover"

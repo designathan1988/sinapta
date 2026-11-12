@@ -29,6 +29,14 @@ function stateWith(kept: Record<string, string> = {}) {
       ],
     },
     { id: "bare", children: [] },
+    {
+      id: "notes",
+      children: [
+        { id: "n1", type: "heading", props: { text: [{ text: "Plan" }] } },
+        { id: "n2", type: "paragraph", props: { text: [] } },
+        { id: "n3", type: "paragraph", props: { text: [{ text: "Ship" }] } },
+      ],
+    },
   ]);
   const initial = createInitialState();
   const persistence = { ...initial.persistence, assetUrls: kept };
@@ -57,8 +65,16 @@ describe("selectCardPicture", () => {
       preset: "ocean",
     });
     expect(selectCardPicture(state, toBlockId("row"), "none")).toBeUndefined();
-    expect(
-      selectCardPicture(state, toBlockId("bare"), "content"),
-    ).toBeUndefined();
+  });
+
+  it("is the page's first lines of text when it has no image", () => {
+    const state = stateWith();
+
+    expect(selectCardPicture(state, toBlockId("notes"), "content")).toEqual({
+      lines: ["Plan", "Ship"],
+    });
+    expect(selectCardPicture(state, toBlockId("bare"), "content")).toEqual({
+      lines: [],
+    });
   });
 });

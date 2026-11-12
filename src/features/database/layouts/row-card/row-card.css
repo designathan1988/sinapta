@@ -24,7 +24,8 @@
     }
   }
 
-  .row-card__cover {
+  .row-card__cover,
+  .row-card__preview {
     display: block;
     inline-size: calc(100% + var(--space-inset-sm) * 2);
     max-inline-size: none;
@@ -32,6 +33,25 @@
     margin: calc(var(--space-inset-sm) * -1) calc(var(--space-inset-sm) * -1)
       var(--space-none);
     object-fit: cover;
+  }
+
+  /* Notion's miniature of the page: its first lines, small, over a rule. */
+  .row-card__preview {
+    display: grid;
+    gap: var(--space-stack-xxs);
+    align-content: start;
+    padding: var(--space-inset-md);
+    overflow: hidden;
+    border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    line-height: var(--font-line-height-tight);
+
+    & > span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 
   /* A preset page cover is drawn by its own style, in an empty box. */
