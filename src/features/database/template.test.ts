@@ -3,13 +3,16 @@ import { createPage, selectPage } from "../../blocks/page/index.ts";
 import { createDatabaseApp } from "./database-builder.ts";
 import { addRow, setRowValue } from "./row.commands.ts";
 import { selectTableModel } from "./table-model.selectors.ts";
+import { createView, setActiveView } from "./view.commands.ts";
 import {
   addTemplate,
   deleteTemplate,
   duplicateTemplate,
+} from "./template.commands.ts";
+import {
   setDefaultTemplate,
   withDefaultTemplate,
-} from "./template.commands.ts";
+} from "./template-default.commands.ts";
 
 // A database with one row, "One", and one template.
 function withTemplate() {
@@ -86,5 +89,46 @@ describe("row templates", () => {
     expect(app.database().props.templateIds).toEqual([]);
     expect(app.database().props.defaultTemplateId).toBeNull();
     expect(app.store.getState().workspace.blocks[templateId]).toBeUndefined();
+  });
+
+  it("gives a view a default of its own, which only its new rows take", () => {
+    const { app, templateId } = withTemplate();
+    const { databaseId } = app;
+    const first = app.view().id;
+    app.dispatch(createView.create({ databaseId, name: "Second" }));
+    const second = app.database().props.viewIds.at(-1);
+    if (second === undefined) throw new Error("setup");
+    const viewIdOf = () =>
+      app.store.getState().ui.activeViewIds[databaseId] ?? first;
+    const templateOf = () =>
+      withDefaultTemplate(app.store.getState(), { databaseId }).template?.id;
+
+    app.dispatch(
+      setDefaultTemplate.create({ databaseId, templateId, viewId: second }),
+    );
+
+    expect(viewIdOf()).toBe(second);
+    expect(templateOf()).toBe(templateId);
+    app.dispatch(setActiveView.create({ databaseId, viewId: first }));
+    expect(templateOf()).toBeUndefined();
+    expect(app.database().props.defaultTemplateId).toBeNull();
+  });
+
+  it("makes a default for all views over each view's own", () => {
+    const { app, templateId } = withTemplate();
+    const { databaseId } = app;
+    const viewId = app.view().id;
+    app.dispatch(
+      setDefaultTemplate.create({ databaseId, templateId: null, viewId }),
+    );
+
+    app.dispatch(setDefaultTemplate.create({ databaseId, templateId }));
+
+    expect(
+      app.store.getState().workspace.views[viewId]?.defaultTemplateId,
+    ).toBe(templateId);
+    expect(
+      withDefaultTemplate(app.store.getState(), { databaseId }).template?.id,
+    ).toBe(templateId);
   });
 });

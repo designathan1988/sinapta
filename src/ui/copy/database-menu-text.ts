@@ -38,6 +38,8 @@ export const DATABASE_MENU_TEXT = {
   templateNew: "New template",
   templateEmpty: "Empty page",
   templateSetDefault: "Set as default",
+  templateForAllViews: "For all views",
+  templateForThisView: "For this view",
   templateDefault: "Default",
   templateEdit: "Edit",
   templateDuplicate: "Duplicate",

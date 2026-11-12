@@ -19,34 +19,84 @@ import {
   deleteTemplate,
   duplicateTemplate,
   selectRowTemplate,
-  setDefaultTemplate,
 } from "./template.commands.ts";
+import {
+  selectDefaultTemplateId,
+  setDefaultTemplate,
+} from "./template-default.commands.ts";
 
 export const TEMPLATES_OVERLAY = "templates";
 
 const TEXT = COPY.database;
 
-function setDefault(context: TableContext, templateId: BlockId | null) {
-  return (): void => {
-    const databaseId = context.model.database.id;
-    context.dispatch(setDefaultTemplate.create({ databaseId, templateId }));
+// "For all views" and "For this view", ticked where the template is the
+// default.
+function defaultChoices(
+  context: TableContext,
+  templateId: BlockId | null,
+): MenuEntry[] {
+  const { database, view } = context.model;
+  const own = view.defaultTemplateId;
+  const isAll =
+    own === undefined && database.props.defaultTemplateId === templateId;
+  const choose = (forView: boolean) => (): void => {
+    context.dispatch(
+      setDefaultTemplate.create({
+        databaseId: database.id,
+        templateId,
+        ...(forView && { viewId: view.id }),
+      }),
+    );
   };
+  return [
+    {
+      label: TEXT.templateForAllViews,
+      check: "box",
+      isChecked: isAll,
+      onSelect: choose(false),
+    },
+    {
+      label: TEXT.templateForThisView,
+      value: view.name,
+      check: "box",
+      isChecked: own === templateId,
+      onSelect: choose(true),
+    },
+  ];
+}
+
+// "Set as default", with its choices beside it, as Notion's; the empty
+// page is a default too.
+function defaultItem(
+  context: TableContext,
+  templateId: BlockId | null,
+): MenuItem {
+  return {
+    label: TEXT.templateSetDefault,
+    submenu: {
+      id: `template-default:${templateId ?? context.model.database.id}`,
+      menu: () => ({
+        label: TEXT.templateSetDefault,
+        items: defaultChoices(context, templateId),
+      }),
+    },
+  };
+}
+
+// Whether the template is the default of the view on screen.
+function isDefaultHere(context: TableContext, templateId: BlockId | null) {
+  const { state, model } = context;
+  return selectDefaultTemplateId(state, model.database.id) === templateId;
 }
 
 function templateActions(
   context: TableContext,
   templateId: BlockId,
 ): MenuEntry[] {
-  const { model, state, dispatch } = context;
-  const isDefault = model.database.props.defaultTemplateId === templateId;
+  const { state, dispatch } = context;
   const copy = selectRowTemplate(state, templateId);
   return [
-    {
-      label: TEXT.templateSetDefault,
-      check: "box",
-      isChecked: isDefault,
-      onSelect: setDefault(context, isDefault ? null : templateId),
-    },
+    defaultItem(context, templateId),
     {
       label: TEXT.templateEdit,
       icon: "compose",
@@ -95,8 +145,7 @@ function templateItem(context: TableContext, templateId: BlockId): MenuItem[] {
   if (page === undefined) return [];
   const title = selectPageTitle(page);
   const label = title === "" ? COPY.sidebar.untitled : title;
-  const isDefault =
-    context.model.database.props.defaultTemplateId === templateId;
+  const isDefault = isDefaultHere(context, templateId);
   return [
     {
       label,
@@ -114,7 +163,7 @@ function templateItem(context: TableContext, templateId: BlockId): MenuItem[] {
 // The empty page, which can be the default too.
 function emptyItem(context: TableContext): MenuItem {
   const { database } = context.model;
-  const isDefault = database.props.defaultTemplateId === null;
+  const isDefault = isDefaultHere(context, null);
   return {
     label: TEXT.templateEmpty,
     icon: "page",
@@ -124,14 +173,7 @@ function emptyItem(context: TableContext): MenuItem {
       id: `template-more:${database.id}`,
       menu: () => ({
         label: TEXT.templateEmpty,
-        items: [
-          {
-            label: TEXT.templateSetDefault,
-            check: "box",
-            isChecked: isDefault,
-            onSelect: setDefault(context, null),
-          },
-        ],
+        items: [defaultItem(context, null)],
       }),
     },
   };

@@ -1,0 +1,66 @@
+// @vitest-environment happy-dom
+import { render } from "lit-html";
+import { describe, expect, it } from "vitest";
+import type { Command, OpenOverlay } from "../../state/index.ts";
+import { createDatabaseApp } from "./database-builder.ts";
+import { renderDatabase } from "./database.view.ts";
+import { addTemplate } from "./template.commands.ts";
+import { TEMPLATES_OVERLAY } from "./templates-menu.view.ts";
+
+// The templates menu with a template's "…" and its "Set as default" open.
+function rendered() {
+  const app = createDatabaseApp([{ name: "Done", type: "checkbox" }], []);
+  app.dispatch(addTemplate.create({ databaseId: app.databaseId }));
+  const templateId = app.database().props.templateIds[0];
+  if (templateId === undefined) throw new Error("setup");
+  const overlay: OpenOverlay = {
+    kind: TEMPLATES_OVERLAY,
+    anchorId: app.databaseId,
+    children: [
+      { anchorId: `template-more:${templateId}` },
+      { anchorId: `template-default:${templateId}` },
+    ],
+  };
+  const built = app.store.getState();
+  const state = {
+    ...built,
+    ui: { ...built.ui, activePageId: app.databaseId, overlay },
+  };
+  const sent: Command[] = [];
+  const host = document.createElement("div");
+  document.body.replaceChildren(host);
+  render(
+    renderDatabase(state, (command) => {
+      sent.push(command);
+      return { ok: true };
+    }),
+    host,
+  );
+  const item = (label: string) =>
+    [...host.querySelectorAll<HTMLElement>("[role^=menuitem]")].find((row) =>
+      row.textContent.trim().startsWith(label),
+    );
+  return { app, sent, item, templateId };
+}
+
+describe("the templates menu", () => {
+  it("sets a template as the default of this view or of all views", () => {
+    const { app, sent, item, templateId } = rendered();
+
+    item("For this view")?.click();
+    item("For all views")?.click();
+
+    expect(item("For this view")?.textContent).toContain("Table");
+    const choices = sent.filter(
+      (command) => command.type !== "ui.closeOverlay",
+    );
+    expect(choices).toEqual([
+      expect.objectContaining({
+        type: "template.setDefault",
+        templateId,
+        viewId: app.view().id,
+      }),
+      { type: "template.setDefault", databaseId: app.databaseId, templateId },
+    ]);
+  });
+});

@@ -1,6 +1,6 @@
 // Under a table or a list: "New page", right under the last row, and how
 // many rows the view shows.
-import { withDefaultTemplate } from "./template.commands.ts";
+import { withDefaultTemplate } from "./template-default.commands.ts";
 import { html, type TemplateResult } from "lit-html";
 import { COPY, pluralize } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";

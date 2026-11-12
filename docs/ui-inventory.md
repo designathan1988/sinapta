@@ -166,5 +166,5 @@ against the reference on every run.
 
 ## Open
 
-- Templates: a default per view; repeating templates.
+- Templates: repeating templates.
 - Light theme measurements of the menu reference.

@@ -1,6 +1,6 @@
 // A list: one line per row, its title then the values of the view's
 // visible properties; a grouped list shows its lines group by group.
-import { withDefaultTemplate } from "../../template.commands.ts";
+import { withDefaultTemplate } from "../../template-default.commands.ts";
 import { openRow } from "../../row-open.commands.ts";
 import "./list.css";
 import { html, type TemplateResult } from "lit-html";

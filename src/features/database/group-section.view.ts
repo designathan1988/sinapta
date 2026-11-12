@@ -1,7 +1,7 @@
 // One group of a grouped list or gallery: its header, then, while it is
 // open, its rows as the layout shows them and a button that adds a row
 // with the group's value.
-import { withDefaultTemplate } from "./template.commands.ts";
+import { withDefaultTemplate } from "./template-default.commands.ts";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";

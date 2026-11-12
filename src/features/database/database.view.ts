@@ -13,7 +13,7 @@ import { renderIcon, type IconName } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { addRow } from "./row.commands.ts";
-import { withDefaultTemplate } from "./template.commands.ts";
+import { withDefaultTemplate } from "./template-default.commands.ts";
 import { TEMPLATES_OVERLAY } from "./templates-menu.view.ts";
 import {
   FILTERS_OVERLAY,

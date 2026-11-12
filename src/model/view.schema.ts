@@ -160,6 +160,9 @@ export const viewSchema = v.object({
   // Locked (version 28): its filters, sorts, grouping and layout stay as
   // they are.
   isLocked: v.boolean(),
+  // The template its new rows start from, when the view has its own: a
+  // template, or null for an empty page; absent, the database's default.
+  defaultTemplateId: v.optional(v.nullable(blockIdSchema)),
 });
 
 export type Filter = v.InferOutput<typeof filterSchema>;

@@ -1,6 +1,6 @@
 // Row templates, as Notion's: pages kept in the database and out of its
-// views, that a new row starts from. One may be the default, which every
-// new row starts from.
+// views, that a new row starts from; which one by default is in
+// template-default.commands.ts.
 import {
   selectDatabase,
   type DatabaseBlock,
@@ -16,16 +16,17 @@ import {
   type Block,
   type BlockId,
   type Operation,
+  type ViewId,
 } from "../../model/index.ts";
 import { defineCommand, type AppState } from "../../state/index.ts";
-import type { AddRowPayload, RowTemplate } from "./row.commands.ts";
+import type { RowTemplate } from "./row.commands.ts";
 
 interface TemplatesChange {
   readonly templateIds?: readonly BlockId[];
   readonly defaultTemplateId?: BlockId | null;
 }
 
-function templatesUpdate(
+export function templatesUpdate(
   database: DatabaseBlock,
   change: TemplatesChange,
 ): Operation {
@@ -68,20 +69,6 @@ export function selectRowTemplate(
   return { id: templateId, blockCount: size.blockCount };
 }
 
-// A new row's payload with the database's default template, unless it
-// names its own.
-export function withDefaultTemplate(
-  state: AppState,
-  payload: AddRowPayload,
-): AddRowPayload {
-  if (payload.template !== undefined) return payload;
-  const database = selectDatabase(state, payload.databaseId);
-  const templateId = database?.props.defaultTemplateId ?? null;
-  const template =
-    templateId === null ? undefined : selectRowTemplate(state, templateId);
-  return template === undefined ? payload : { ...payload, template };
-}
-
 // Adds an empty template at the end and opens it, to be written.
 export const addTemplate = defineCommand<{ databaseId: BlockId }>({
   type: "template.add",
@@ -120,30 +107,19 @@ export const addTemplate = defineCommand<{ databaseId: BlockId }>({
   },
 });
 
-export const setDefaultTemplate = defineCommand<{
-  databaseId: BlockId;
-  // None: new rows start empty.
-  templateId: BlockId | null;
-}>({
-  type: "template.setDefault",
-  handle(state, command) {
-    const database = selectDatabase(state, command.databaseId);
-    const { templateId } = command;
-    if (database === undefined) return {};
-    if (templateId !== null && !database.props.templateIds.includes(templateId))
-      return {};
-    return {
-      operations: [
-        templatesUpdate(database, { defaultTemplateId: templateId }),
-      ],
-    };
-  },
-});
-
 function treeIds(state: AppState, id: BlockId): BlockId[] {
   const block = state.workspace.blocks[id];
   if (block === undefined) return [];
   return [id, ...block.childIds.flatMap((childId) => treeIds(state, childId))];
+}
+
+// A view's own default template; null is an empty page.
+export function viewDefaultUpdate(
+  viewId: ViewId,
+  templateId: BlockId | null,
+): Operation {
+  const patch = { defaultTemplateId: templateId };
+  return { type: "record.update", kind: "view", id: viewId, patch };
 }
 
 // Deletes a template and its blocks for good, as Notion's templates are.
@@ -164,6 +140,11 @@ export const deleteTemplate = defineCommand<{ templateId: BlockId }>({
     return {
       operations: [
         templatesUpdate(database, change),
+        ...database.props.viewIds
+          .filter(
+            (id) => state.workspace.views[id]?.defaultTemplateId === templateId,
+          )
+          .map((id) => viewDefaultUpdate(id, null)),
         { type: "list.remove", list, id: templateId },
         ...treeIds(state, templateId).map((id): Operation => ({
           type: "record.delete",
@@ -222,7 +203,6 @@ export const duplicateTemplate = defineCommand<{
 
 export const templateCommands = [
   addTemplate,
-  setDefaultTemplate,
   deleteTemplate,
   duplicateTemplate,
 ];

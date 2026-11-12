@@ -1,6 +1,6 @@
 // What a group of rows can do besides collapsing: add a row that takes
 // the group's value, and open the group's menu, anchored to its "…".
-import { withDefaultTemplate } from "./template.commands.ts";
+import { withDefaultTemplate } from "./template-default.commands.ts";
 import {
   groupValues,
   selectRowGroups,

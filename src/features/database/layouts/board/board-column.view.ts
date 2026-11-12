@@ -1,7 +1,7 @@
 // A column of a board: its header with the group's name, count and menu,
 // its cards and the button that adds a card to it; and the list of the
 // columns the view hides, each shown again by a press.
-import { withDefaultTemplate } from "../../template.commands.ts";
+import { withDefaultTemplate } from "../../template-default.commands.ts";
 import { renderChip } from "../../../../ui/chip/index.ts";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { repeat } from "lit-html/directives/repeat.js";
