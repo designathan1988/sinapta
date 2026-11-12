@@ -19,12 +19,26 @@
 
   .template-gallery__list {
     display: grid;
-    gap: var(--space-stack-xxs);
+    gap: var(--space-stack-sm);
     align-content: start;
+    overflow: hidden auto;
+  }
+
+  .template-gallery__items {
+    display: grid;
+    gap: var(--space-stack-xxs);
     margin: var(--space-none);
     padding: var(--space-none);
-    overflow: hidden auto;
     list-style: none;
+  }
+
+  /* A kind of template, named in small gray letters, as Notion's. */
+  .template-gallery__group-name {
+    margin: var(--space-none);
+    padding: var(--space-none) var(--space-inset-sm);
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
   }
 
   .template-gallery__item {
@@ -67,7 +81,7 @@
 
   .template-gallery__preview {
     display: grid;
-    grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-rows: auto minmax(0, 1fr);
     gap: var(--space-stack-sm);
     min-block-size: 0;
   }

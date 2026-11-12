@@ -7,6 +7,7 @@ export const TEMPLATE_TEXT = {
     use: "Use this template",
     list: "Templates",
     preview: "Preview",
+    categories: { work: "Work", personal: "Personal" },
     used: "A new page was made from the template.",
     meetingNotes: {
       name: "Meeting notes",

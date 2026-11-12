@@ -9,8 +9,13 @@ import { TO_DO_TYPE } from "../../blocks/to-do/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { rich, seedText, type SeedBlock } from "../onboarding/index.ts";
 
+// The kinds the gallery groups its templates by, in its order.
+export const TEMPLATE_CATEGORIES = ["work", "personal"] as const;
+export type TemplateCategory = (typeof TEMPLATE_CATEGORIES)[number];
+
 export interface PageTemplate {
   readonly id: string;
+  readonly category: TemplateCategory;
   readonly name: string;
   readonly description: string;
   readonly icon: string;
@@ -41,6 +46,7 @@ function page(
 interface TemplateLook {
   readonly text: { readonly name: string; readonly description: string };
   readonly icon: string;
+  readonly category: TemplateCategory;
 }
 
 function template(
@@ -48,39 +54,46 @@ function template(
   look: TemplateLook,
   children: readonly SeedBlock[],
 ): PageTemplate {
-  const { icon } = look;
+  const { icon, category } = look;
   const { name, description } = look.text;
-  return { id, name, description, icon, seed: page(name, icon, children) };
+  const seed = page(name, icon, children);
+  return { id, category, name, description, icon, seed };
 }
 
 const { meetingNotes, toDoList, journal, doc, weeklyPlan, readingList } = TEXT;
 
-export const PAGE_TEMPLATES: readonly PageTemplate[] = [
-  template("meeting-notes", { text: meetingNotes, icon: "\u{1F4DD}" }, [
-    heading(meetingNotes.attendees),
-    bullet(),
-    heading(meetingNotes.agenda),
-    bullet(),
-    heading(meetingNotes.notes),
-    paragraph(),
-    heading(meetingNotes.actions),
-    toDo(),
-  ]),
-  template("to-do-list", { text: toDoList, icon: "\u{2705}" }, [
-    heading(toDoList.today),
-    toDo(),
-    toDo(),
-    heading(toDoList.later),
-    toDo(),
-  ]),
-  template("journal", { text: journal, icon: "\u{1F4D4}" }, [
-    seedText(CALLOUT_TYPE, journal.prompt, { icon: "\u{1F4AD}" }),
-    heading(journal.grateful),
-    bullet(),
-    heading(journal.highlights),
-    paragraph(),
-  ]),
-  template("doc", { text: doc, icon: "\u{1F4C4}" }, [
+const TEMPLATES: readonly PageTemplate[] = [
+  template(
+    "meeting-notes",
+    { text: meetingNotes, icon: "\u{1F4DD}", category: "work" },
+    [
+      heading(meetingNotes.attendees),
+      bullet(),
+      heading(meetingNotes.agenda),
+      bullet(),
+      heading(meetingNotes.notes),
+      paragraph(),
+      heading(meetingNotes.actions),
+      toDo(),
+    ],
+  ),
+  template(
+    "to-do-list",
+    { text: toDoList, icon: "\u{2705}", category: "personal" },
+    [heading(toDoList.today), toDo(), toDo(), heading(toDoList.later), toDo()],
+  ),
+  template(
+    "journal",
+    { text: journal, icon: "\u{1F4D4}", category: "personal" },
+    [
+      seedText(CALLOUT_TYPE, journal.prompt, { icon: "\u{1F4AD}" }),
+      heading(journal.grateful),
+      bullet(),
+      heading(journal.highlights),
+      paragraph(),
+    ],
+  ),
+  template("doc", { text: doc, icon: "\u{1F4C4}", category: "work" }, [
     heading(doc.overview),
     paragraph(),
     heading(doc.details),
@@ -90,19 +103,29 @@ export const PAGE_TEMPLATES: readonly PageTemplate[] = [
   ]),
   template(
     "weekly-plan",
-    { text: weeklyPlan, icon: "\u{1F5D3}\u{FE0F}" },
+    { text: weeklyPlan, icon: "\u{1F5D3}\u{FE0F}", category: "personal" },
     weeklyPlan.days.flatMap((day) => [heading(day), toDo()]),
   ),
-  template("reading-list", { text: readingList, icon: "\u{1F4DA}" }, [
-    seedText(CALLOUT_TYPE, readingList.tip, { icon: "\u{1F4A1}" }),
-    heading(readingList.now),
-    toDo(),
-    heading(readingList.next),
-    bullet(),
-    heading(readingList.done),
-    toDo("", true),
-  ]),
+  template(
+    "reading-list",
+    { text: readingList, icon: "\u{1F4DA}", category: "personal" },
+    [
+      seedText(CALLOUT_TYPE, readingList.tip, { icon: "\u{1F4A1}" }),
+      heading(readingList.now),
+      toDo(),
+      heading(readingList.next),
+      bullet(),
+      heading(readingList.done),
+      toDo("", true),
+    ],
+  ),
 ];
+
+// Grouped by kind, so the list reads, and moves by key, in one order.
+export const PAGE_TEMPLATES: readonly PageTemplate[] =
+  TEMPLATE_CATEGORIES.flatMap((category) =>
+    TEMPLATES.filter((item) => item.category === category),
+  );
 
 export function templateNamed(id: string): PageTemplate | undefined {
   return PAGE_TEMPLATES.find((item) => item.id === id);
