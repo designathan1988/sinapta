@@ -1412,6 +1412,18 @@
           "value": 0.625,
           "unit": "rem"
         }
+      },
+      "2": {
+        "$value": {
+          "value": 2,
+          "unit": "rem"
+        }
+      },
+      "0x5": {
+        "$value": {
+          "value": 0.5,
+          "unit": "rem"
+        }
       }
     },
     "radius": {

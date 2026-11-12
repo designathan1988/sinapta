@@ -48,6 +48,29 @@ describe("selectTimeline", () => {
     expect(timeline?.bars[0]?.offset).toBe(40);
   });
 
+  it("numbers each day under a month zoom's months, as Notion's", () => {
+    const timeline = selectTimeline(model(), {
+      zoom: "month",
+      today: "2026-11-11",
+    });
+
+    expect(timeline?.days.slice(0, 2)).toEqual([
+      { label: "1", offset: 0, span: 1 },
+      { label: "2", offset: 1, span: 1 },
+    ]);
+    expect(timeline?.days[41]).toEqual({ label: "11", offset: 41, span: 1 });
+    expect(timeline?.days).toHaveLength(timeline?.length ?? 0);
+  });
+
+  it("numbers no days where they are too narrow to read", () => {
+    const timeline = selectTimeline(model(), {
+      zoom: "quarter",
+      today: "2026-11-11",
+    });
+
+    expect(timeline?.days).toEqual([]);
+  });
+
   it("lists the rows without a date apart", () => {
     const timeline = selectTimeline(model(), {
       zoom: "week",

@@ -78,6 +78,12 @@
     font-size: var(--font-size-sm);
   }
 
+  /* Under numbered days the table's head spans both header rows, so its
+     titles stay level with their bars. */
+  .timeline[data-numbered] .timeline__table-head {
+    block-size: calc(var(--size-property-row) + var(--size-control-sm));
+  }
+
   /* A row of the table holds its title button, which fills it. */
   .timeline__row {
     display: grid;
@@ -113,11 +119,18 @@
     inline-size: calc(var(--span) * var(--timeline-day));
   }
 
-  .timeline__units {
+  .timeline__units,
+  .timeline__days {
     position: relative;
   }
 
+  .timeline__days {
+    block-size: var(--size-control-sm);
+    border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
+  }
+
   .timeline__unit,
+  .timeline__day,
   .timeline__today,
   .timeline__bar {
     position: absolute;
@@ -134,6 +147,26 @@
     color: var(--color-text-secondary);
     font-size: var(--font-size-xs);
     white-space: nowrap;
+  }
+
+  .timeline__day {
+    display: grid;
+    place-items: center;
+    inline-size: var(--timeline-day);
+    block-size: 100%;
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+
+    /* Today's number on a red round, as Notion's. */
+    &[data-today] > span {
+      display: grid;
+      place-items: center;
+      min-inline-size: var(--size-icon-md);
+      block-size: var(--size-icon-md);
+      border-radius: var(--radius-full);
+      background-color: var(--color-status-danger-fill);
+      color: var(--color-text-on-accent);
+    }
   }
 
   .timeline__today {

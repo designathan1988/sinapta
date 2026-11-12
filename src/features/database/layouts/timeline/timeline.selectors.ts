@@ -32,6 +32,9 @@ export interface Timeline {
   readonly length: number;
   readonly today: number;
   readonly units: readonly TimelineUnit[];
+  // Each day's number under the units, where days are wide enough to
+  // read one: zoomed to weeks or months, as Notion's.
+  readonly days: readonly TimelineUnit[];
   readonly bars: readonly TimelineBar[];
   readonly undated: readonly TableRow[];
 }
@@ -142,6 +145,17 @@ function unitsOf(start: string, end: string, zoom: TimelineZoom) {
   return units;
 }
 
+const NUMBERED_ZOOMS: ReadonlySet<TimelineZoom> = new Set(["week", "month"]);
+
+function daysOf(start: string, length: number, zoom: TimelineZoom) {
+  if (!NUMBERED_ZOOMS.has(zoom)) return [];
+  return Array.from({ length }, (_, offset) => ({
+    label: String(Number(addDays(start, offset).slice(8, 10))),
+    offset,
+    span: 1,
+  }));
+}
+
 interface Dated {
   readonly row: TableRow;
   readonly start: string;
@@ -196,12 +210,14 @@ export function selectTimeline(
     offset: daysBetween(start, item.start),
     span: daysBetween(item.start, item.end) + 1,
   }));
+  const length = daysBetween(start, end);
   return {
     propertyId: property.id,
     start,
-    length: daysBetween(start, end),
+    length,
     today: daysBetween(start, today),
     units: unitsOf(start, end, zoom),
+    days: daysOf(start, length, zoom),
     bars,
     undated,
   };

@@ -24,6 +24,8 @@ import {
 } from "./timeline.selectors.ts";
 
 const TEXT = COPY.database;
+// Today's line runs down the middle of today, under its number.
+const HALF_DAY = 0.5;
 const ZOOMS: readonly TimelineZoom[] = [
   "day",
   "week",
@@ -158,6 +160,22 @@ function renderTable(timeline: Timeline, context: TableContext) {
   </div>`;
 }
 
+// Each day's number under the units, today's in red, as Notion's.
+function renderDays(timeline: Timeline): TemplateResult | typeof nothing {
+  if (timeline.days.length === 0) return nothing;
+  return html`<div class="timeline__days" aria-hidden="true">
+    ${timeline.days.map(
+      (day) =>
+        html`<span
+          class="timeline__day"
+          ?data-today=${day.offset === timeline.today}
+          ${ref(place(day.offset))}
+          ><span>${day.label}</span></span
+        >`,
+    )}
+  </div>`;
+}
+
 function renderChart(timeline: Timeline, at: BarContext): TemplateResult {
   return html`<div
     class="timeline__scroll"
@@ -174,7 +192,11 @@ function renderChart(timeline: Timeline, at: BarContext): TemplateResult {
             >`,
         )}
       </div>
-      <span class="timeline__today" ${ref(place(timeline.today))}></span>
+      ${renderDays(timeline)}
+      <span
+        class="timeline__today"
+        ${ref(place(timeline.today + HALF_DAY))}
+      ></span>
       ${timeline.bars.map((bar) => renderBar(bar, at))}
     </div>
   </div>`;
@@ -205,7 +227,11 @@ export function renderTimeline(context: TableContext): TemplateResult {
     return html`<p class="timeline__empty">${TEXT.noDateProperty}</p>`;
   }
   const at = { context, propertyId: timeline.propertyId };
-  return html`<div class="timeline" data-zoom=${zoom}>
+  return html`<div
+    class="timeline"
+    data-zoom=${zoom}
+    ?data-numbered=${timeline.days.length > 0}
+  >
     ${renderHeader(context)}
     <div class="timeline__body">
       ${showTable ? renderTable(timeline, context) : nothing}

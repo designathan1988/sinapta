@@ -545,24 +545,24 @@
     },
     "timeline": {
       "day": {
-        "$description": "A day's width on a timeline zoomed to days.",
-        "$value": "{base.size.3x0}"
+        "$description": "A day's width on a timeline zoomed to days: 200 px.",
+        "$value": "{base.size.12x5}"
       },
       "week": {
-        "$description": "A day's width zoomed to weeks.",
+        "$description": "A day's width zoomed to weeks: 80 px, a week in 560.",
         "$value": "{base.size.5}"
       },
       "month": {
-        "$description": "A day's width zoomed to months.",
-        "$value": "{base.size.0x375}"
+        "$description": "A day's width zoomed to months, as Notion's: 32 px, a month across the page.",
+        "$value": "{base.size.2}"
       },
       "quarter": {
-        "$description": "A day's width zoomed to quarters.",
-        "$value": "{base.size.0x15625}"
+        "$description": "A day's width zoomed to quarters: 8 px, a quarter in about 730.",
+        "$value": "{base.size.0x5}"
       },
       "year": {
-        "$description": "A day's width zoomed to years.",
-        "$value": "{base.size.0x05}"
+        "$description": "A day's width zoomed to years: 2.5 px, a year in about 910.",
+        "$value": "{base.size.0x15625}"
       },
       "table": {
         "$description": "The table of titles beside a timeline.",
