@@ -54,6 +54,20 @@ No UI framework. Full specification: docs/specification.md.
 - Commit after each task with Conventional Commits; scope = folder name.
 - If a rule blocks the task, stop and ask. Do not work around it.
 
+## Visual checks
+- Judge the interface only from desktop captures at native pixels, never
+  from the built-in browser pane (it is about 800 px wide and shrinks
+  every frame).
+- Tool: superpowers-chrome use_browser. First hide_browser (headless; never
+  pop a window in the owner's face), then set_viewport
+  {width: 1440, height: 900} (deviceScaleFactor 2 for close-ups), then
+  navigate to the review server, http://localhost:5190.
+- Each action writes NNN-action.png (1440x900) to the session folder it
+  prints; open it with Read. Crop one element with screenshot
+  {path, selector}.
+- Capture each changed surface whole, then each region and every open
+  menu state, and inspect them before calling UI work done.
+
 ## Read on demand
 - Data flow and layers: docs/architecture.md
 - Decisions and their reasons: docs/decisions/

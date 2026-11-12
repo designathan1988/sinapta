@@ -15,6 +15,9 @@ class FakeStaticRange {
   }
 }
 const registry = new Map<string, FakeHighlight>();
+// Two frames at 60 Hz: happy-dom is slower than a browser, so one frame in
+// the browser is about two here.
+const TWO_FRAMES = 33;
 
 beforeEach(() => {
   registry.clear();
@@ -72,22 +75,30 @@ describe("paintCode", () => {
     expect(painted("code-keyword")).toEqual(["var"]);
   });
 
-  it("paints a 300-line block within a frame", () => {
+  it("paints a 300-line block in time that grows with its length", () => {
     const line =
       'const total = items.map((item) => item.price * 2); // "sum"\n';
-    const text = line.repeat(300);
-    const element = codeElement(text);
+    // The fastest of fifteen paints: other test files, the watchers and
+    // the browser share the processor in bursts, and a slow algorithm is
+    // slow every time.
+    const fastest = (lines: number): number => {
+      const text = line.repeat(lines);
+      const element = codeElement(text);
+      const times = Array.from({ length: 15 }, () => {
+        const started = performance.now();
+        paintCode(element, { language: "typescript", text: [{ text }] });
+        return performance.now() - started;
+      });
+      return Math.min(...times);
+    };
 
-    // The fastest of fifteen paints, each of new text as typing makes it:
-    // other test files and the watchers share the processor in bursts, and
-    // a slow algorithm is slow every time.
-    const times = Array.from({ length: 15 }, () => {
-      const started = performance.now();
-      paintCode(element, { language: "typescript", text: [{ text }] });
-      return performance.now() - started;
-    });
+    const half = fastest(150);
+    const full = fastest(300);
 
-    expect(Math.min(...times)).toBeLessThan(16);
+    // Twice the lines take about twice the time; a paint that compares
+    // every line with every other would take four times as long.
+    expect(full / half).toBeLessThan(3);
+    expect(full).toBeLessThan(TWO_FRAMES);
     expect(painted("code-keyword")).toHaveLength(300);
   });
 });
