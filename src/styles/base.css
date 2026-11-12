@@ -30,13 +30,15 @@
     display: none;
   }
 
-  /* In menus and popovers the bar is thin and shows only while the panel
-     is pointed at, as Notion's. */
-  [popover]::-webkit-scrollbar {
+  /* In menus, popovers and dialogs the bar is thin and shows only while
+     the panel is pointed at, as Notion's. */
+  :is([popover], dialog)::-webkit-scrollbar,
+  :is([popover], dialog) ::-webkit-scrollbar {
     inline-size: var(--size-scrollbar-thin);
   }
 
-  [popover]:not(:hover)::-webkit-scrollbar-thumb {
+  :is([popover], dialog):not(:hover)::-webkit-scrollbar-thumb,
+  :is([popover], dialog):not(:hover) ::-webkit-scrollbar-thumb {
     background-color: transparent;
   }
 

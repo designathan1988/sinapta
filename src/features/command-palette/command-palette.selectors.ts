@@ -16,6 +16,7 @@ import {
   type Command,
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import type { IconName } from "../../ui/icon/index.ts";
 import {
   PALETTE_OVERLAY_KIND,
   SETTINGS_OVERLAY_KIND,
@@ -45,6 +46,8 @@ export interface PaletteItem {
   readonly kind: "page" | "content" | "action";
   // The list it shows under: recent pages, found pages, or actions.
   readonly section: "recent" | "pages" | "actions";
+  // An action's own icon.
+  readonly glyph?: IconName;
   readonly pageId?: BlockId;
   readonly icon?: string | null;
   // The pages it is in, outermost first.
@@ -89,28 +92,39 @@ function recents(state: AppState): PaletteItem[] {
     .map((page) => pageItem(state, page, "recent"));
 }
 
+// An action's row: its words, its command and its own icon.
+function action(label: string, command: Command, glyph: IconName): PaletteItem {
+  return { label, command, glyph, kind: "action", section: "actions" };
+}
+
 function actions(): PaletteItem[] {
-  const action = (label: string, command: Command): PaletteItem => ({
-    label,
-    command,
-    kind: "action",
-    section: "actions",
-  });
   const open = (kind: string): Command =>
     openOverlay.create({ overlay: { kind } });
   return [
-    action(COPY.palette.newPage, createPage.create({ parentId: null })),
-    action(COPY.palette.newDatabase, createDatabase.create({ parentId: null })),
-    action(COPY.palette.settings, open(SETTINGS_OVERLAY_KIND)),
-    action(COPY.shortcutHelp.open, open(SHORTCUT_HELP_OVERLAY_KIND)),
-    action(COPY.palette.trash, open(TRASH_OVERLAY)),
-    action(COPY.palette.export, requestExport.create({})),
-    action(COPY.palette.themeLight, setTheme.create({ theme: "light" })),
-    action(COPY.palette.themeDark, setTheme.create({ theme: "dark" })),
-    action(COPY.palette.themeSystem, setTheme.create({ theme: "system" })),
-    action(COPY.palette.toggleSidebar, toggleSidebar.create({})),
-    action(COPY.palette.undo, { type: UNDO_COMMAND }),
-    action(COPY.palette.redo, { type: REDO_COMMAND }),
+    action(
+      COPY.palette.newPage,
+      createPage.create({ parentId: null }),
+      "compose",
+    ),
+    action(
+      COPY.palette.newDatabase,
+      createDatabase.create({ parentId: null }),
+      "table",
+    ),
+    action(COPY.palette.settings, open(SETTINGS_OVERLAY_KIND), "settings"),
+    action(COPY.shortcutHelp.open, open(SHORTCUT_HELP_OVERLAY_KIND), "help"),
+    action(COPY.palette.trash, open(TRASH_OVERLAY), "trash"),
+    action(COPY.palette.export, requestExport.create({}), "download"),
+    action(COPY.palette.themeLight, setTheme.create({ theme: "light" }), "sun"),
+    action(COPY.palette.themeDark, setTheme.create({ theme: "dark" }), "moon"),
+    action(
+      COPY.palette.themeSystem,
+      setTheme.create({ theme: "system" }),
+      "monitor",
+    ),
+    action(COPY.palette.toggleSidebar, toggleSidebar.create({}), "sidebar"),
+    action(COPY.palette.undo, { type: UNDO_COMMAND }, "restore"),
+    action(COPY.palette.redo, { type: REDO_COMMAND }, "redo"),
   ];
 }
 

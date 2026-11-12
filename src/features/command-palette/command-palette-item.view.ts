@@ -26,7 +26,7 @@ function renderDetail(item: PaletteItem): TemplateResult | typeof nothing {
 }
 
 function renderLead(item: PaletteItem): TemplateResult {
-  if (item.kind === "action") return renderIcon("chevron");
+  if (item.kind === "action") return renderIcon(item.glyph ?? "chevron");
   return item.icon === null || item.icon === undefined
     ? renderIcon("page")
     : html`<span class="command-palette__emoji">${item.icon}</span>`;

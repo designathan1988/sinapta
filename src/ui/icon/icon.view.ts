@@ -40,7 +40,11 @@ export type BaseIconName =
   | "history"
   | "bell"
   | "help"
-  | "smile";
+  | "smile"
+  | "sun"
+  | "moon"
+  | "monitor"
+  | "redo";
 
 export type IconName = BaseIconName | DataIconName | BlockIconName;
 
@@ -69,6 +73,14 @@ const PATHS: Record<BaseIconName, TemplateResult<2>> = {
     <path d="M6.25 6.25a1.75 1.75 0 1 1 2.5 1.6c-.5.25-.75.6-.75 1.15M8 11.25h.01" />`,
   smile: svg`<circle cx="8" cy="8" r="6" />
     <path d="M5.5 9.5a3 3 0 0 0 5 0M6 6.5h.01M10 6.5h.01" />`,
+  sun: svg`<circle cx="8" cy="8" r="2.75" />
+    <path
+      d="M8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1"
+    />`,
+  moon: svg`<path d="M13 9.5A5.5 5.5 0 1 1 6.5 3a4.5 4.5 0 0 0 6.5 6.5z" />`,
+  monitor: svg`<rect x="2" y="3" width="12" height="8.5" rx="1.5" />
+    <path d="M6 14h4M8 11.5V14" />`,
+  redo: svg`<path d="M13 8a5 5 0 1 1-1.6-3.7M13 3v3h-3" />`,
   plus: svg`<path d="M8 3v10M3 8h10" />`,
   chevron: svg`<path d="M6 4l4 4-4 4" />`,
   back: svg`<path d="M10 4L6 8l4 4" />`,

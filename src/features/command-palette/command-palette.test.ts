@@ -33,6 +33,15 @@ describe("selectPaletteItems", () => {
     expect(labels("").every((label) => !label.includes("Roadmap"))).toBe(true);
   });
 
+  it("gives each action its own icon, as Notion's menus do", () => {
+    const glyphs = selectPaletteItems(createState(), "")
+      .filter((item) => item.kind === "action")
+      .map((item) => item.glyph);
+
+    expect(glyphs.every((glyph) => glyph !== undefined)).toBe(true);
+    expect(new Set(glyphs).size).toBe(glyphs.length);
+  });
+
   it("finds pages by title without regard to case, nested ones too", () => {
     expect(labels("ROAD")).toEqual(["Product Roadmap", "Road trip"]);
   });
