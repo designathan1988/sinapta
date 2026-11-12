@@ -2,12 +2,12 @@
 import "./database-menus.css";
 import { nothing, type TemplateResult } from "lit-html";
 import { renderCellDate } from "./cell-date.view.ts";
-import { renderMoreViews } from "./more-views.view.ts";
+import { renderMoreViews, renderViewList } from "./more-views.view.ts";
 import {
   renderTemplatesMenu,
   TEMPLATES_OVERLAY,
 } from "./templates-menu.view.ts";
-import { VIEW_TABS_OVERLAY } from "./view-tabs.view.ts";
+import { VIEW_LIST_OVERLAY, VIEW_TABS_OVERLAY } from "./view-tabs.view.ts";
 import { renderCellFiles } from "./cell-files.view.ts";
 import { renderCellRelation } from "./cell-relation.view.ts";
 import { renderCellOptions } from "./cell-options.view.ts";
@@ -53,6 +53,7 @@ const OVERLAYS: Record<string, Render> = {
   [VIEW_SETTINGS_OVERLAY]: renderViewSettings,
   [GROUP_MENU_OVERLAY]: renderGroupMenu,
   [VIEW_TABS_OVERLAY]: renderMoreViews,
+  [VIEW_LIST_OVERLAY]: renderViewList,
   [TEMPLATES_OVERLAY]: renderTemplatesMenu,
   [NEW_VIEW_OVERLAY]: renderNewViewMenu,
 };

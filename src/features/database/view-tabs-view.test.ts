@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import type { Command, OpenOverlay } from "../../state/index.ts";
 import { createDatabaseApp } from "./database-builder.ts";
 import { renderDatabase } from "./database.view.ts";
-import { VIEW_TABS_OVERLAY } from "./view-tabs.view.ts";
+import { VIEW_LIST_OVERLAY, VIEW_TABS_OVERLAY } from "./view-tabs.view.ts";
 import { createView, setActiveView } from "./view.commands.ts";
 
 const SHORT = ["Board", "Calendar", "Timeline", "Chart"];
@@ -18,7 +18,8 @@ const LONG = [
 
 interface Options {
   readonly names?: readonly string[];
-  readonly isMoreOpen?: boolean;
+  // The overlay open over the database.
+  readonly open?: string;
   readonly showsLast?: boolean;
 }
 
@@ -39,9 +40,9 @@ function rendered(options: Options = {}) {
   }
   const built = app.store.getState();
   const overlay: OpenOverlay | null =
-    options.isMoreOpen === true
-      ? { kind: VIEW_TABS_OVERLAY, anchorId: databaseId }
-      : null;
+    options.open === undefined
+      ? null
+      : { kind: options.open, anchorId: databaseId };
   const state = { ...built, ui: { ...built.ui, overlay } };
   const sent: Command[] = [];
   const host = document.createElement("div");
@@ -86,12 +87,49 @@ describe("the view tabs", () => {
   });
 
   it("lists the other views in a menu, each opening its view", () => {
-    const { host, sent, viewIds } = rendered({ isMoreOpen: true });
+    const { host, sent, viewIds } = rendered({ open: VIEW_TABS_OVERLAY });
     const rows = [...host.querySelectorAll<HTMLElement>(".menu [data-index]")];
 
     rows.at(-1)?.click();
 
     expect(rows.map((row) => row.textContent.trim())).toEqual(LONG.slice(3));
+    expect(sent.at(-1)).toMatchObject({
+      type: "ui.setActiveView",
+      viewId: viewIds.at(-1),
+    });
+  });
+});
+
+// Where the tabs do not fit, as beside a side peek, Notion shows the open
+// view as one button that lists them all.
+describe("the view switch", () => {
+  it("names the open view and opens the list of views", () => {
+    const { host, sent } = rendered({ names: SHORT });
+    const toggle = host.querySelector<HTMLElement>(".database__switch");
+
+    toggle?.click();
+
+    expect(toggle?.textContent.trim()).toBe("Table");
+    expect(sent.at(-1)).toMatchObject({
+      type: "ui.openOverlay",
+      overlay: { kind: VIEW_LIST_OVERLAY },
+    });
+  });
+
+  it("lists every view, the open one checked, each opening its view", () => {
+    const { host, sent, viewIds } = rendered({
+      names: SHORT,
+      open: VIEW_LIST_OVERLAY,
+    });
+    const rows = [...host.querySelectorAll<HTMLElement>(".menu [data-index]")];
+
+    rows.at(-1)?.click();
+
+    expect(rows.map((row) => row.textContent.trim())).toEqual([
+      "Table",
+      ...SHORT,
+    ]);
+    expect(rows[0]?.getAttribute("aria-checked")).toBe("true");
     expect(sent.at(-1)).toMatchObject({
       type: "ui.setActiveView",
       viewId: viewIds.at(-1),

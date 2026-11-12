@@ -1,5 +1,7 @@
 // The tabs of a database's views, as Notion's: the views that fit and the
 // open one, then "N more…" opening the others, then "+" for a new view.
+// Where the database is too narrow for tabs, the open view stands alone
+// as a switch listing them all.
 import { html, nothing, type TemplateResult } from "lit-html";
 import type { View, ViewId } from "../../model/index.ts";
 import { closeOverlay, openOverlay } from "../../state/index.ts";
@@ -13,6 +15,9 @@ import { NEW_VIEW_OVERLAY } from "./view-layout.view.ts";
 import { setActiveView } from "./view.commands.ts";
 
 export const VIEW_TABS_OVERLAY = "view-tabs";
+// Every view, listed from the switch that stands for the tabs where they
+// do not fit.
+export const VIEW_LIST_OVERLAY = "view-list";
 
 // The tab row's room beside the toolbar, and what one tab and "N more…"
 // take of it, in characters of the 14 px interface text: a tab's icon,
@@ -50,16 +55,24 @@ export function splitViews(
   return { shown, more: ids.filter((id) => !shown.includes(id)) };
 }
 
+interface ToggleButton {
+  readonly kind: string;
+  readonly label: string;
+  readonly content: TemplateResult;
+  // The button's class within the database; "more views" by default.
+  readonly part?: string;
+}
+
 function renderToggle(
   context: TableContext,
-  button: { kind: string; label: string; content: TemplateResult },
+  button: ToggleButton,
 ): TemplateResult {
   const { state, dispatch, model } = context;
   const overlay = { kind: button.kind, anchorId: model.holderId };
   const isOpen = isOpenFor(state, overlay);
   return html`<button
     type="button"
-    class="button database__more-views"
+    class="button ${button.part ?? "database__more-views"}"
     data-variant="quiet"
     data-overlay-anchor
     aria-haspopup="menu"
@@ -96,25 +109,29 @@ export function renderViewTabs(context: TableContext): TemplateResult {
   const { shown, more } = splitViews(all, model.view.id);
   const views = all.filter((view) => shown.includes(view.id));
   const moreLabel = COPY.database.moreViews(more.length);
-  return html`<div
-    class="database__tabs"
-    role="group"
-    aria-label=${COPY.database.views}
-  >
-    ${views.map((view) => renderTab(view, context))}
-    ${
-      more.length === 0
-        ? nothing
-        : renderToggle(context, {
-            kind: VIEW_TABS_OVERLAY,
-            label: moreLabel,
-            content: html`${moreLabel}`,
-          })
-    }
-    ${renderToggle(context, {
-      kind: NEW_VIEW_OVERLAY,
-      label: COPY.database.newView,
-      content: renderIcon("plus"),
+  const view = model.view;
+  return html`${renderToggle(context, {
+      kind: VIEW_LIST_OVERLAY,
+      label: view.name,
+      part: "database__switch",
+      content: html`${renderIcon(LAYOUT_ICONS[view.type])}
+        <span>${view.name}</span>${renderIcon("chevron")}`,
     })}
-  </div>`;
+    <div class="database__tabs" role="group" aria-label=${COPY.database.views}>
+      ${views.map((view) => renderTab(view, context))}
+      ${
+        more.length === 0
+          ? nothing
+          : renderToggle(context, {
+              kind: VIEW_TABS_OVERLAY,
+              label: moreLabel,
+              content: html`${moreLabel}`,
+            })
+      }
+      ${renderToggle(context, {
+        kind: NEW_VIEW_OVERLAY,
+        label: COPY.database.newView,
+        content: renderIcon("plus"),
+      })}
+    </div>`;
 }
