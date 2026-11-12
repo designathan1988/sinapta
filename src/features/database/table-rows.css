@@ -37,7 +37,11 @@
   .database__row:not(:hover, :focus-within, [data-ticked])
     .database__gutter
     > *,
-  .database__table:not(:has([data-ticked]), :has(thead:hover))
+  .database__table:not(
+      :has([data-ticked]),
+      :has(thead:hover),
+      :has(thead:focus-within)
+    )
     thead
     .database__gutter
     > * {
