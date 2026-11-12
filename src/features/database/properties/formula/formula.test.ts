@@ -11,6 +11,7 @@ import {
 const PROPERTIES: readonly FormulaProperty[] = [
   { id: toPropertyId("due"), name: "Due", type: "date" },
   { id: toPropertyId("hours"), name: "Hours", type: "number" },
+  { id: toPropertyId("missing"), name: "Missing", type: "date" },
   { id: toPropertyId("tags"), name: "Tags", type: "multi-select" },
   {
     id: toPropertyId("f1"),
@@ -96,6 +97,11 @@ describe("formulas", () => {
       run('first(prop("Tags")) + last(prop("Tags")) + at(prop("Tags"), 1)'),
     ).toBe("DesignCodeCode");
     expect(run('prop("Tags").length()')).toBe(2);
+  });
+
+  it("is empty, not an error, when a date it needs is empty, as Notion's", () => {
+    expect(run('dateBetween(prop("Missing"), now(), "days")')).toBeNull();
+    expect(run('formatDate(prop("Missing"), "YYYY")')).toBeNull();
   });
 
   it("gives an error value for a division by zero", () => {

@@ -5,6 +5,7 @@ import type { FormulaNode } from "./formula-parse.ts";
 import {
   asList,
   asNumber,
+  FormulaEmpty,
   FormulaError,
   isDate,
   isEmptyValue,
@@ -141,10 +142,13 @@ function call(node: FormulaNode & { kind: "call" }, env: Env): FormulaValue {
   const fn = FUNCTIONS[name];
   if (fn === undefined)
     throw new FormulaError(`There is no function named ${name}.`);
-  return fn.call(
-    args.map((arg) => evaluate(arg, env)),
-    env.context.now,
-  );
+  const values = args.map((arg) => evaluate(arg, env));
+  try {
+    return fn.call(values, env.context.now);
+  } catch (error) {
+    if (error instanceof FormulaEmpty) return null;
+    throw error;
+  }
 }
 
 function evaluate(node: FormulaNode, env: Env): FormulaValue {

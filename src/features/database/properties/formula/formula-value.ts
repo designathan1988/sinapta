@@ -14,6 +14,10 @@ export type FormulaValue =
 // zero; the cell shows its message.
 export class FormulaError extends Error {}
 
+// A date a function needs is empty: the function's result is empty too,
+// as in Notion, not an error.
+export class FormulaEmpty extends Error {}
+
 export function isDate(value: FormulaValue): value is FormulaDate {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
@@ -63,6 +67,7 @@ export function asList(
 
 export function asDate(value: FormulaValue, name: string): FormulaDate {
   if (isDate(value)) return value;
+  if (value === null) throw new FormulaEmpty(name);
   throw new FormulaError(`${name} needs a date.`);
 }
 

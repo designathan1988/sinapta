@@ -157,7 +157,7 @@ against the reference on every run.
 ## Open
 
 - Row peek: comments, Share, copy link and favorite in the bar; resizing the side peek; the peek in the address.
-- Templates: a default per view; repeating templates; a formula over an empty value shows its error in red where Notion shows nothing.
+- Templates: a default per view; repeating templates.
 - Sorts: reorder by dragging the grip (Move up and down by keyboard).
 - Date picker: Date format & timezone, and Remind rows; typing a date into its field.
 - Light theme measurements of the menu reference.
