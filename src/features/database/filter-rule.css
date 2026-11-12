@@ -1,0 +1,24 @@
+@layer features {
+  /* Notion's rule popover: the property and its operator on one line,
+     the delete button at its end, the value under them. */
+  .database__rule:popover-open {
+    gap: var(--space-stack-xs);
+    padding: var(--space-inset-sm);
+  }
+
+  .database__rule-head {
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+
+    & > .database__spacer {
+      flex: 1;
+    }
+  }
+
+  .database__rule-name {
+    color: var(--color-text-secondary);
+  }
+}

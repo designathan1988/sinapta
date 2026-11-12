@@ -80,6 +80,10 @@ export const DATABASE_MENU_TEXT = {
   sortsAndFilters: "Sorts and filters",
   sortCount: (count: number) => `${String(count)} sorts`,
   ruleCount: (count: number) => `${String(count)} rules`,
+  // A filter rule's pill: "Stage: Done", "Stage: Is not Done".
+  rulePill: (name: string, rule: string) => `${name}: ${rule}`,
+  ruleWithOperator: (operator: string, operand: string) =>
+    `${operator} ${operand}`,
   noChartProperty: "Add a select or status property to chart the rows by.",
   chartKind: "Chart type",
   chartKinds: {

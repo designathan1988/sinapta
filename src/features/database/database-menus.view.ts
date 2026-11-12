@@ -25,6 +25,12 @@ import { COLUMN_MENU_OVERLAY } from "./database-overlay.ts";
 import { PROPERTY_TYPES_OVERLAY } from "./table-header.view.ts";
 import { FILTERS_OVERLAY, renderFilters } from "./view-filters.view.ts";
 import {
+  isSimpleFilter,
+  VIEW_FILTER_RULE_OVERLAY,
+} from "./filter-rule-anchor.ts";
+import { renderFilterRule } from "./filter-rule.view.ts";
+import { renderFilterStart } from "./filter-start.view.ts";
+import {
   VIEW_FILTER_ADD_OVERLAY,
   VIEW_FILTER_PILL_OVERLAY,
   VIEW_SORT_PILL_OVERLAY,
@@ -49,6 +55,14 @@ export {
 
 type Render = (context: TableContext) => TemplateResult | typeof nothing;
 
+// "Add filter" lists the properties for a new rule, as Notion's; an
+// advanced filter adds its rules in its own editor.
+function renderFilterAdd(context: TableContext): TemplateResult {
+  return isSimpleFilter(context.model.view.filter)
+    ? renderFilterStart(context)
+    : renderFilters(context);
+}
+
 const OVERLAYS: Record<string, Render> = {
   [COLUMN_MENU_OVERLAY]: renderColumnMenu,
   [PROPERTY_TYPES_OVERLAY]: renderTypeMenu,
@@ -63,7 +77,8 @@ const OVERLAYS: Record<string, Render> = {
   [VIEW_SORTS_OVERLAY]: renderViewSettings,
   [VIEW_SORT_PILL_OVERLAY]: renderViewSettings,
   [VIEW_FILTER_PILL_OVERLAY]: renderFilters,
-  [VIEW_FILTER_ADD_OVERLAY]: renderFilters,
+  [VIEW_FILTER_ADD_OVERLAY]: renderFilterAdd,
+  [VIEW_FILTER_RULE_OVERLAY]: renderFilterRule,
   [GROUP_MENU_OVERLAY]: renderGroupMenu,
   [VIEW_TABS_OVERLAY]: renderMoreViews,
   [VIEW_LIST_OVERLAY]: renderViewList,

@@ -42,5 +42,10 @@
       inline-size: var(--size-icon-sm);
       block-size: var(--size-icon-sm);
     }
+
+    /* A rule's pill ends in an arrow that points down, as Notion's. */
+    &[data-rule] > .icon:last-child {
+      rotate: 90deg;
+    }
   }
 }

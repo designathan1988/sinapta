@@ -4,6 +4,10 @@ import { describe, expect, it } from "vitest";
 import type { Command, Dispatch } from "../../state/index.ts";
 import { createDatabaseApp } from "./database-builder.ts";
 import { FILTERS_OVERLAY } from "./database-menus.view.ts";
+import {
+  ruleAnchorId,
+  VIEW_FILTER_RULE_OVERLAY,
+} from "./filter-rule-anchor.ts";
 import { renderDatabase } from "./database.view.ts";
 import { TITLE_PROPERTY_ID } from "./table-model.selectors.ts";
 import { setViewFilter } from "./view.commands.ts";
@@ -158,6 +162,14 @@ describe("the filter editor of a view with no filter", () => {
         filter: {
           conjunction: "and",
           items: [expect.objectContaining({ propertyId: notes, value: "" })],
+        },
+      }),
+      // Then the new rule opens by its pill, as Notion's.
+      expect.objectContaining({
+        type: "ui.openOverlay",
+        overlay: {
+          kind: VIEW_FILTER_RULE_OVERLAY,
+          anchorId: ruleAnchorId(app.databaseId, 0),
         },
       }),
     ]);

@@ -3,11 +3,18 @@
 // filter"; each opens its popover beside it.
 import "./view-pills.css";
 import { html, nothing, type TemplateResult } from "lit-html";
+import type { PropertyDefinition } from "../../blocks/database/index.ts";
 import type { PropertyId } from "../../model/index.ts";
 import { closeOverlay, openOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon, type IconName } from "../../ui/icon/index.ts";
 import { isOpenFor } from "./database-overlay.ts";
+import { filterLabel } from "./filter-label.ts";
+import {
+  isSimpleFilter,
+  ruleAnchorId,
+  VIEW_FILTER_RULE_OVERLAY,
+} from "./filter-rule-anchor.ts";
 import { filterCount, isFilterGroup } from "./filter-match.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import { titleProperty } from "./table-model.selectors.ts";
@@ -20,20 +27,29 @@ export const VIEW_FILTER_ADD_OVERLAY = "view-filter-add";
 
 interface Pill {
   readonly kind: string;
+  readonly anchorId: string;
   readonly label: string;
   readonly icon: IconName;
   // A rule that applies, drawn in blue; "Add filter" is quiet.
   readonly isRule: boolean;
 }
 
-function propertyName(context: TableContext, id: PropertyId): string {
+function propertyOf(
+  context: TableContext,
+  id: PropertyId,
+): PropertyDefinition | undefined {
   const { properties } = context.model.database.props;
-  const all = [titleProperty(), ...properties];
-  return all.find((property) => property?.id === id)?.name ?? "";
+  return [titleProperty(), ...properties].find(
+    (property) => property?.id === id,
+  );
+}
+
+function propertyName(context: TableContext, id: PropertyId): string {
+  return propertyOf(context, id)?.name ?? "";
 }
 
 function renderPill(pill: Pill, context: TableContext): TemplateResult {
-  const overlay = { kind: pill.kind, anchorId: context.model.holderId };
+  const overlay = { kind: pill.kind, anchorId: pill.anchorId };
   const isOpen = isOpenFor(context.state, overlay);
   const toggle = (): void => {
     context.dispatch(
@@ -49,7 +65,9 @@ function renderPill(pill: Pill, context: TableContext): TemplateResult {
     aria-expanded=${String(isOpen)}
     @click=${toggle}
   >
-    ${renderIcon(pill.icon)}<span>${pill.label}</span>
+    ${renderIcon(pill.icon)}<span>${pill.label}</span>${
+      pill.isRule ? renderIcon("chevron") : nothing
+    }
   </button>`;
 }
 
@@ -61,34 +79,51 @@ function sortPill(context: TableContext): Pill | undefined {
     sorts.length === 1
       ? propertyName(context, first.propertyId)
       : COPY.database.sortCount(sorts.length);
-  return { kind: VIEW_SORT_PILL_OVERLAY, label, icon: "sort", isRule: true };
-}
-
-function filterPill(context: TableContext): Pill | undefined {
-  const { filter } = context.model.view;
-  const count = filterCount(filter);
-  const [first] = filter.items;
-  if (first === undefined || count === 0) return undefined;
-  const label =
-    count === 1 && !isFilterGroup(first)
-      ? propertyName(context, first.propertyId)
-      : COPY.database.ruleCount(count);
   return {
-    kind: VIEW_FILTER_PILL_OVERLAY,
+    kind: VIEW_SORT_PILL_OVERLAY,
+    anchorId: context.model.holderId,
     label,
-    icon: "filter",
+    icon: "sort",
     isRule: true,
   };
+}
+
+// A pill for each rule of a simple filter, as Notion's; an advanced
+// filter, with groups or joined by or, counts its rules on one pill.
+function filterPills(context: TableContext): Pill[] {
+  const { filter } = context.model.view;
+  const { holderId } = context.model;
+  const count = filterCount(filter);
+  if (count === 0) return [];
+  if (!isSimpleFilter(filter)) {
+    const label = COPY.database.ruleCount(count);
+    const kind = VIEW_FILTER_PILL_OVERLAY;
+    return [{ kind, anchorId: holderId, label, icon: "filter", isRule: true }];
+  }
+  return filter.items.flatMap((rule, index): Pill[] => {
+    if (isFilterGroup(rule)) return [];
+    const property = propertyOf(context, rule.propertyId);
+    return [
+      {
+        kind: VIEW_FILTER_RULE_OVERLAY,
+        anchorId: ruleAnchorId(holderId, index),
+        label: property === undefined ? "" : filterLabel(rule, property),
+        icon: "filter",
+        isRule: true,
+      },
+    ];
+  });
 }
 
 export function renderViewPills(
   context: TableContext,
 ): TemplateResult | typeof nothing {
   const sort = sortPill(context);
-  const filter = filterPill(context);
-  if (sort === undefined && filter === undefined) return nothing;
+  const filters = filterPills(context);
+  if (sort === undefined && filters.length === 0) return nothing;
   const add: Pill = {
     kind: VIEW_FILTER_ADD_OVERLAY,
+    anchorId: context.model.holderId,
     label: COPY.database.addFilter,
     icon: "plus",
     isRule: false,
@@ -98,7 +133,7 @@ export function renderViewPills(
     role="group"
     aria-label=${COPY.database.sortsAndFilters}
   >
-    ${[sort, filter, add].map((pill) =>
+    ${[sort, ...filters, add].map((pill) =>
       pill === undefined ? nothing : renderPill(pill, context),
     )}
   </div>`;
