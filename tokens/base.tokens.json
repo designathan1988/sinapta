@@ -701,6 +701,12 @@
             "components": [0.9593, 0.0036, 84.6],
             "alpha": 0.6
           }
+        },
+        "scrollbar": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.86, 0.007, 90]
+          }
         }
       },
       "night": {
@@ -898,6 +904,12 @@
             "colorSpace": "oklch",
             "components": [0.9911, 0, 0],
             "alpha": 0.03
+          }
+        },
+        "scrollbar": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.4, 0.008, 230]
           }
         }
       },
@@ -1350,6 +1362,12 @@
       "3": {
         "$value": {
           "value": 0.75,
+          "unit": "rem"
+        }
+      },
+      "0x625": {
+        "$value": {
+          "value": 0.625,
           "unit": "rem"
         }
       }

@@ -1,5 +1,6 @@
 import { OPEN_MODE_ICONS } from "./view-settings/index.ts";
 import { html, nothing, type TemplateResult } from "lit-html";
+import { selectPage } from "../../blocks/page/index.ts";
 import { ref } from "lit-html/directives/ref.js";
 import type { AppState, Dispatch } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
@@ -90,7 +91,10 @@ function renderEditor(value: string, column: TableColumn): TemplateResult {
 function renderTitle(row: TableRow, context: TableContext): TemplateResult {
   const mode = context.model.view.openMode;
   const label = COPY.database.openIn[mode];
-  return html`<span class="database__title" ?data-untitled=${row.title === ""}
+  const icon = selectPage(context.state, row.id)?.props.icon ?? null;
+  return html`<span class="database__row-icon" aria-hidden="true"
+      >${icon ?? renderIcon("page")}</span
+    ><span class="database__title" ?data-untitled=${row.title === ""}
       >${row.title === "" ? COPY.sidebar.untitled : row.title}</span
     >
     <button

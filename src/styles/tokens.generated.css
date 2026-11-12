@@ -111,6 +111,7 @@
     --base-color-day-shadow-ring: oklch(0.1684 0 0 / 0.06);
     --base-color-day-shadow-soft: oklch(0.1684 0 0 / 0.06);
     --base-color-day-field: oklch(0.9593 0.0036 84.6 / 0.6);
+    --base-color-day-scrollbar: oklch(0.86 0.007 90);
     --base-color-night-bg: oklch(0.2134 0 0);
     --base-color-night-sidebar: oklch(0.2435 0 0);
     --base-color-night-raised: oklch(0.2645 0 0);
@@ -143,6 +144,7 @@
     --base-color-night-shadow-ring: oklch(0.34 0.0034 106.6);
     --base-color-night-shadow-soft: oklch(0.2134 0 0 / 0.118);
     --base-color-night-field: oklch(0.9911 0 0 / 0.03);
+    --base-color-night-scrollbar: oklch(0.4 0.008 230);
     --base-color-tone-gray-day: oklch(0.5692 0.0047 91.5);
     --base-color-tone-gray-night: oklch(0.6895 0 0);
     --base-color-tone-brown-day: oklch(0.5766 0.0758 45.6);
@@ -214,6 +216,7 @@
     --base-size-0x375: 0.375rem;
     --base-size-0x15625: 0.15625rem;
     --base-size-0x05: 0.05rem;
+    --base-size-0x625: 0.625rem;
     --base-radius-1: 0.25rem;
     --base-radius-2: 0.375rem;
     --base-radius-3: 0.625rem;
@@ -316,6 +319,7 @@
     --color-tone-purple: light-dark(var(--base-color-tone-purple-day), var(--base-color-tone-purple-night));
     --color-tone-pink: light-dark(var(--base-color-tone-pink-day), var(--base-color-tone-pink-night));
     --color-tone-red: light-dark(var(--base-color-tone-red-day), var(--base-color-tone-red-night));
+    --color-scrollbar-thumb: light-dark(var(--base-color-day-scrollbar), var(--base-color-night-scrollbar));
     --space-none: var(--base-space-0);
     --space-inline-xxs: var(--base-space-0x5);
     --space-inline-xs: var(--base-space-1);
@@ -391,6 +395,7 @@
     --size-search-top: var(--base-size-4x25);
     --size-search-margin: var(--base-size-5x25);
     --size-search-list: var(--base-size-35x75);
+    --size-scrollbar: var(--base-size-0x625);
     --radius-sm: var(--base-radius-1);
     --radius-md: var(--base-radius-2);
     --radius-full: var(--base-radius-pill);

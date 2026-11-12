@@ -12,6 +12,34 @@
     line-height: var(--font-line-height-ui);
   }
 
+  /* Scrollbars as Notion's: a plain gray thumb, 10 px, no arrows and no
+     track. Chrome and Safari draw them from these; others from the
+     standard properties below. */
+  ::-webkit-scrollbar {
+    inline-size: var(--size-scrollbar);
+    block-size: var(--size-scrollbar);
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-scrollbar-thumb);
+  }
+
+  ::-webkit-scrollbar-button,
+  ::-webkit-scrollbar-corner {
+    display: none;
+  }
+
+  @supports not selector(::-webkit-scrollbar) {
+    :root {
+      scrollbar-color: var(--color-scrollbar-thumb) transparent;
+    }
+
+    * {
+      scrollbar-width: thin;
+    }
+  }
+
   :focus-visible {
     outline: var(--size-focus-width) solid var(--color-border-focus);
     outline-offset: var(--size-focus-offset);

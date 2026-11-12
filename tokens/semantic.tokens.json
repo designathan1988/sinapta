@@ -244,6 +244,12 @@
         "$value": "{base.color.tone.red.day}"
       },
       "$description": "Notion's text colors: text, block text, color swatches and charts."
+    },
+    "scrollbar": {
+      "thumb": {
+        "$value": "{base.color.day.scrollbar}",
+        "$description": "Notion's scrollbars: a plain gray thumb on no track."
+      }
     }
   },
   "space": {
@@ -554,6 +560,10 @@
         "$description": "Its list of results, beside the preview.",
         "$value": "{base.size.35x75}"
       }
+    },
+    "scrollbar": {
+      "$description": "Notion's scrollbars: 10 px.",
+      "$value": "{base.size.0x625}"
     }
   },
   "radius": {

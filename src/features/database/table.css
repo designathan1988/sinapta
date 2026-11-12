@@ -1,5 +1,8 @@
 @layer features {
+  /* As wide as its columns, as Notion's: each keeps its width and the
+     table scrolls sideways rather than squeezing them. */
   .database__table {
+    inline-size: max-content;
     border-collapse: collapse;
     font-size: var(--font-size-sm);
     table-layout: fixed;
@@ -147,6 +150,7 @@
     }
 
     &[data-type="title"] {
+      position: relative;
       font-weight: var(--font-weight-medium);
     }
 
@@ -161,13 +165,34 @@
     }
   }
 
+  /* The row's icon before its title, as Notion's; a dim page without
+     one. */
+  .database__row-icon {
+    display: inline-flex;
+    align-items: center;
+    margin-inline-end: var(--space-inline-icon);
+    color: var(--color-text-tertiary);
+    font-weight: var(--font-weight-regular);
+    vertical-align: middle;
+
+    & > .icon {
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+    }
+  }
+
   .database__title[data-untitled] {
     color: var(--color-text-tertiary);
   }
 
+  /* The Open pill lies over the title's end, as Notion's, never pushing
+     the title to a second line. */
   .database__open {
-    float: inline-end;
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-end: var(--space-inset-xs);
     opacity: 0;
+    translate: 0 -50%;
   }
 
   .database__cell:is(:hover, :focus-visible) .database__open {

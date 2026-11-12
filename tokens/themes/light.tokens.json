@@ -242,6 +242,11 @@
       "red": {
         "$value": "{base.color.tone.red.day}"
       }
+    },
+    "scrollbar": {
+      "thumb": {
+        "$value": "{base.color.day.scrollbar}"
+      }
     }
   }
 }

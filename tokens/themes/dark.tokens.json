@@ -242,6 +242,11 @@
       "red": {
         "$value": "{base.color.tone.red.night}"
       }
+    },
+    "scrollbar": {
+      "thumb": {
+        "$value": "{base.color.night.scrollbar}"
+      }
     }
   }
 }
