@@ -6,7 +6,7 @@ import { selectColumnDrop } from "./table.selectors.ts";
 import { setPropertyOrder } from "./view.commands.ts";
 
 const COLUMN = "th[data-property-id]";
-const NOT_DRAGGABLE = ".database__resizer, .database__column-menu";
+const NOT_DRAGGABLE = ".database__resizer";
 
 // A header dragged sideways moves its column. The column menu's "Move
 // left" and "Move right" do the same from the keyboard.

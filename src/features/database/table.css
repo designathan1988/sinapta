@@ -43,11 +43,13 @@
     }
   }
 
-  .database__sort {
+  /* The header is one button over the whole cell, as Notion's: a press
+     opens the column's menu. */
+  .database__header-button {
     display: inline-flex;
     gap: var(--space-inline-sm);
     align-items: center;
-    max-inline-size: calc(100% - var(--size-control-md));
+    inline-size: 100%;
     min-block-size: var(--size-table-row);
     padding: var(--space-none) var(--space-inset-sm);
     overflow: hidden;
@@ -57,8 +59,9 @@
     font-weight: inherit;
     cursor: pointer;
 
-    &:hover {
-      color: var(--color-text-primary);
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: var(--color-bg-hover);
     }
 
     &:focus-visible {

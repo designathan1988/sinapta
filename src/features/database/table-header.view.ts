@@ -1,5 +1,6 @@
-// The header row of the table: sort buttons, column menus, resize handles
-// and the button that adds a property.
+// The header row of the table: each header a button that opens its
+// column's menu, as Notion's; resize handles; and the button that adds a
+// property.
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import { closeOverlay, openOverlay } from "../../state/index.ts";
@@ -17,7 +18,6 @@ import {
   MAX_COLUMN_WIDTH,
   MIN_COLUMN_WIDTH,
   resizeProperty,
-  sortByProperty,
 } from "./view.commands.ts";
 
 export const PROPERTY_TYPES_OVERLAY = "property-types";
@@ -36,29 +36,6 @@ export function setColumnWidth(
   if (column instanceof HTMLElement) {
     column.style.setProperty("inline-size", `${String(width)}px`);
   }
-}
-
-const NEXT_SORT = {
-  none: "ascending",
-  ascending: "descending",
-  descending: null,
-} as const;
-
-// A press on a header cycles its sort: ascending, descending, none. With
-// Shift held the view's other sorts stay, so several properties sort.
-function cycleSort(
-  event: MouseEvent,
-  column: TableColumn,
-  context: TableContext,
-): void {
-  context.dispatch(
-    sortByProperty.create({
-      viewId: context.model.view.id,
-      propertyId: column.property.id,
-      direction: NEXT_SORT[column.sortDirection ?? "none"],
-      keepOthers: event.shiftKey,
-    }),
-  );
 }
 
 // The place of a column in the sort order, shown when several sort.
@@ -136,10 +113,15 @@ function renderResizer(
   ></span>`;
 }
 
-function renderMenuButton(
+const SORT_ARROWS = { ascending: "↑", descending: "↓" } as const;
+
+// The header itself, as Notion's: its type's icon and its name; a press
+// opens the column's menu, which holds the sorts.
+function renderHeaderButton(
   column: TableColumn,
   context: TableContext,
 ): TemplateResult {
+  const { property, sortDirection } = column;
   const { overlay } = context.state.ui;
   const anchorId = column.property.id;
   // The column's menu, with its property's settings in submenus, sits by
@@ -154,19 +136,21 @@ function renderMenuButton(
   };
   return html`<button
     type="button"
-    class="database__column-menu"
+    class="database__header-button"
     data-overlay-anchor
     aria-haspopup="menu"
     aria-expanded=${String(isOpen)}
-    aria-label=${`${COPY.database.columnActions}: ${column.property.name}`}
-    interestfor=${TOOLTIP_TARGET}
+    title=${property.description ?? nothing}
+    aria-description=${property.description ?? nothing}
     @click=${toggle}
   >
-    ${renderIcon("more")}
+    ${renderIcon(column.isTitle ? "title" : propertyType(property.type).icon)}
+    <span class="database__header-name">${property.name}</span>
+    <span aria-hidden="true"
+      >${sortDirection ? SORT_ARROWS[sortDirection] : ""}${sortRank(column, context)}</span
+    >
   </button>`;
 }
-
-const SORT_ARROWS = { ascending: "↑", descending: "↓" } as const;
 
 function renderHeader(
   column: TableColumn,
@@ -183,22 +167,7 @@ function renderHeader(
       setFrozenStart(element, column.frozenStart);
     })}
   >
-    <button
-      type="button"
-      class="database__sort"
-      title=${property.description ?? nothing}
-      aria-description=${property.description ?? nothing}
-      @click=${(event: MouseEvent) => {
-        cycleSort(event, column, context);
-      }}
-    >
-      ${renderIcon(column.isTitle ? "title" : propertyType(property.type).icon)}
-      <span class="database__header-name">${property.name}</span>
-      <span aria-hidden="true"
-        >${sortDirection ? SORT_ARROWS[sortDirection] : ""}${sortRank(column, context)}</span
-      >
-    </button>
-    ${renderMenuButton(column, context)} ${renderResizer(column, context)}
+    ${renderHeaderButton(column, context)} ${renderResizer(column, context)}
   </th>`;
 }
 
