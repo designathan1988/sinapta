@@ -222,6 +222,11 @@ function leaveText(event: KeyboardEvent): void {
 }
 
 export function onBlockKeys(event: KeyboardEvent, context: InputContext) {
+  // A key pressed in a picker or menu inside the block is the picker's:
+  // Escape there closes it and gives focus back to what opened it.
+  const pressed = event.target;
+  if (pressed instanceof Element && pressed.closest("[data-overlay]"))
+    return false;
   const selection = readSelection();
   const action = blockKeyAction(event);
   if (selection === null || action === undefined) return false;

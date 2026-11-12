@@ -24,8 +24,14 @@ import {
 import { convertBlock } from "./editor-convert.commands.ts";
 import { insertBlockBelow } from "./editor-insert.commands.ts";
 import type { InputContext } from "./editor-input.view.ts";
+import { BLOCK_COLOR_OVERLAY } from "./editor-color-menu.view.ts";
 
 export const BLOCK_MENU_OVERLAY = "block-menu";
+
+const HANDLE_MENUS: ReadonlySet<string> = new Set([
+  BLOCK_MENU_OVERLAY,
+  BLOCK_COLOR_OVERLAY,
+]);
 
 // Opened from the keyboard, the menu remembers where the caret was so
 // that closing it puts the caret back.
@@ -55,8 +61,10 @@ export function renderHandle(
   context: InputContext,
 ): TemplateResult {
   const { overlay } = context.state.ui;
+  // Open only for the block's own menu and its colors: a picker of the
+  // block, such as a callout's icon, is another control's.
   const isOpen =
-    overlay?.anchorId === block.id && overlay.kind !== "slash-menu";
+    overlay?.anchorId === block.id && HANDLE_MENUS.has(overlay.kind);
   const onClick = (): void => {
     if (isOpen) context.dispatch(closeOverlay.create({}));
     else openBlockMenu(block.id, context.dispatch);
