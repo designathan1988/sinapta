@@ -58,6 +58,24 @@
     }
   }
 
+  /* A sort's grip, as Notion's: dim, a hand to drag it by. */
+  .view-settings__grip {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--color-text-tertiary);
+    cursor: grab;
+    touch-action: none;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
   .view-settings__remove {
     display: grid;
     flex: none;

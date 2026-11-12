@@ -87,6 +87,7 @@ export const DATABASE_MENU_TEXT = {
   addSort: "Add sort",
   deleteSort: "Delete sort",
   removeSort: "Remove sort",
+  moveSort: "Move sort",
   sortProperty: "Sort by property",
   sortDirection: "Sort direction",
   // The "…" and "+" on a group's header, named after the group.

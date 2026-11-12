@@ -167,5 +167,4 @@ against the reference on every run.
 ## Open
 
 - Templates: a default per view; repeating templates.
-- Sorts: reorder by dragging the grip (Move up and down by keyboard).
 - Light theme measurements of the menu reference.

@@ -4,6 +4,7 @@
 import { html, type TemplateResult } from "lit-html";
 import type { PropertyDefinition } from "../../../blocks/database/index.ts";
 import { COPY } from "../../../ui/copy.ts";
+import { startPointerDrag, type DragPosition } from "../../../ui/drag/index.ts";
 import { renderIcon } from "../../../ui/icon/index.ts";
 import type { MenuItem } from "../../../ui/menu/index.ts";
 import { renderSelect } from "../../../ui/select/index.ts";
@@ -84,13 +85,42 @@ function renderDirection(at: SortAt, context: TableContext): TemplateResult {
   );
 }
 
+// Moves the sort at one place to another; a place outside the list
+// changes nothing.
+function moveSort(context: TableContext, from: number, to: number): void {
+  const { sorts } = context.model.view;
+  const sort = sorts[from];
+  if (sort === undefined || to < 0 || to >= sorts.length || to === from) return;
+  setSorts(context, sorts.toSpliced(from, 1).toSpliced(to, 0, sort));
+}
+
+// The grip drags its sort to another place; Up and Down move it a place.
+function renderGrip(at: SortAt, context: TableContext): TemplateResult {
+  const steps: Partial<Record<string, number>> = { ArrowUp: -1, ArrowDown: 1 };
+  const onKeyDown = (event: KeyboardEvent): void => {
+    const step = steps[event.key];
+    if (step === undefined) return;
+    event.preventDefault();
+    event.stopPropagation();
+    moveSort(context, at.index, at.index + step);
+  };
+  return html`<button
+    type="button"
+    class="view-settings__grip"
+    aria-label=${TEXT.moveSort}
+    @keydown=${onKeyDown}
+  >
+    ${renderIcon("grip")}
+  </button>`;
+}
+
 // One sort: the grip, its property and direction, and Remove.
 function renderSort(at: SortAt, context: TableContext): TemplateResult {
   const remove = (): void => {
     setSorts(context, context.model.view.sorts.toSpliced(at.index, 1));
   };
-  return html`<div class="view-settings__sort">
-    ${renderIcon("grip")} ${renderProperty(at, context)}
+  return html`<div class="view-settings__sort" data-sort-index=${at.index}>
+    ${renderGrip(at, context)} ${renderProperty(at, context)}
     ${renderDirection(at, context)}
     <button
       type="button"
@@ -101,6 +131,31 @@ function renderSort(at: SortAt, context: TableContext): TemplateResult {
       ${renderIcon("close")}
     </button>
   </div>`;
+}
+
+function indexOf(element: HTMLElement): number {
+  return Number(element.dataset.sortIndex ?? -1);
+}
+
+// A sort dropped before or after another takes that place.
+function onSortDrop(context: TableContext) {
+  return (source: HTMLElement, target: HTMLElement, at: DragPosition) => {
+    const from = indexOf(source);
+    const place = indexOf(target) + (at === "after" ? 1 : 0);
+    moveSort(context, from, from < place ? place - 1 : place);
+  };
+}
+
+// A drag starts only from a sort's grip, not from its lists.
+function onSortsPointerDown(event: PointerEvent, context: TableContext): void {
+  const onGrip =
+    event.target instanceof Element &&
+    event.target.closest(".view-settings__grip") !== null;
+  if (!onGrip) return;
+  startPointerDrag(event, {
+    itemSelector: ".view-settings__sort",
+    onDrop: onSortDrop(context),
+  });
 }
 
 export function sortPanel(context: TableContext): SettingsPanel {
@@ -127,7 +182,12 @@ export function sortPanel(context: TableContext): SettingsPanel {
   return {
     title: TEXT.sort,
     back: null,
-    lead: html`<div class="view-settings__sorts">
+    lead: html`<div
+      class="view-settings__sorts"
+      @pointerdown=${(event: PointerEvent) => {
+        onSortsPointerDown(event, context);
+      }}
+    >
       ${sorts.map((sort, index) => renderSort({ sort, index }, context))}
     </div>`,
     items,

@@ -15,12 +15,28 @@ export interface Setup {
   readonly grouped?: boolean;
   readonly board?: boolean;
   readonly sorted?: boolean;
+  // Sorted by Due, then by Files.
+  readonly sortedTwice?: boolean;
   readonly calendar?: boolean;
   readonly timeline?: boolean;
   readonly chart?: boolean;
 }
 
 type App = ReturnType<typeof createDatabaseApp>;
+
+// The view's sorts as the test asks: by Due, then by Files too.
+function arrangeSorts(app: App, setup: Setup, due: PropertyId): void {
+  const viewId = app.view().id;
+  if (setup.sorted === true || setup.sortedTwice === true) {
+    const sort = { viewId, propertyId: due, keepOthers: true } as const;
+    app.dispatch(sortByProperty.create({ ...sort, direction: "descending" }));
+  }
+  const files = app.propertyIds[1];
+  if (setup.sortedTwice === true && files !== undefined) {
+    const sort = { viewId, propertyId: files, keepOthers: true } as const;
+    app.dispatch(sortByProperty.create({ ...sort, direction: "ascending" }));
+  }
+}
 
 // The view as the test asks: its layout, its grouping and its sort.
 function arrange(app: App, setup: Setup, due: PropertyId): void {
@@ -38,10 +54,7 @@ function arrange(app: App, setup: Setup, due: PropertyId): void {
   if (setup.grouped === true) {
     app.dispatch(setViewGroupBy.create({ viewId, propertyId: due }));
   }
-  if (setup.sorted === true) {
-    const sort = { viewId, propertyId: due, keepOthers: true } as const;
-    app.dispatch(sortByProperty.create({ ...sort, direction: "descending" }));
-  }
+  arrangeSorts(app, setup, due);
 }
 
 function rowFinder(host: HTMLElement) {

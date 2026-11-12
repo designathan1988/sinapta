@@ -57,6 +57,34 @@ describe("the view settings' sorts", () => {
     ]);
   });
 
+  it("moves a sort up and down from its grip by keyboard", () => {
+    const { host, sent, due, files } = rendered({
+      panel: "sort",
+      sortedTwice: true,
+    });
+    const grips = host.querySelectorAll<HTMLElement>(".view-settings__grip");
+    const press = (grip: HTMLElement | undefined, key: string) =>
+      grip?.dispatchEvent(new KeyboardEvent("keydown", { key, bubbles: true }));
+
+    press(grips[1], "ArrowUp");
+    press(grips[0], "ArrowUp");
+    press(grips[0], "ArrowDown");
+
+    expect(grips[0]?.getAttribute("aria-label")).toBe("Move sort");
+    expect(
+      sent.map((command) => ("sorts" in command ? command.sorts : null)),
+    ).toEqual([
+      [
+        { propertyId: files, direction: "ascending" },
+        { propertyId: due, direction: "descending" },
+      ],
+      [
+        { propertyId: files, direction: "ascending" },
+        { propertyId: due, direction: "descending" },
+      ],
+    ]);
+  });
+
   it("adds another sort and deletes them all", () => {
     const { sent, row } = rendered({ panel: "sort", sorted: true });
 
