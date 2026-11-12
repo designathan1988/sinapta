@@ -28,7 +28,8 @@ export function colorMenuItem(
 ): MenuItem {
   return {
     label: COPY.blockMenu.color,
-    icon: "chevron",
+    icon: "color",
+    opensPanel: true,
     onSelect: () =>
       dispatch(
         openOverlay.create({

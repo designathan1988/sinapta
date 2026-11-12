@@ -15,6 +15,8 @@ interface ItemLook {
   readonly isChecked?: boolean;
   // The setting's current value, muted at the end of the row.
   readonly value?: string;
+  // The keys that do the same, small and muted at the end, as Notion's.
+  readonly shortcut?: string;
   // True when choosing the row shows another panel of the menu.
   readonly opensPanel?: boolean;
   // A second line under the label.

@@ -1,16 +1,12 @@
 // The handle beside each block and the menus it opens: block actions and
 // the list of types to turn the block into.
 import { html, nothing, type TemplateResult } from "lit-html";
-import { BLOCK_DEFINITIONS, isTextBlock } from "../../blocks/index.ts";
-import {
-  countBlockTree,
-  parseBlockId,
-  type Block,
-  type BlockId,
-} from "../../model/index.ts";
+import { BLOCK_DEFINITIONS } from "../../blocks/index.ts";
+import { parseBlockId, type Block, type BlockId } from "../../model/index.ts";
 import {
   closeOverlay,
   openOverlay,
+  setOverlayQuery,
   setSelection,
   type AppState,
   type Dispatch,
@@ -20,17 +16,16 @@ import {
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { renderMenu, type MenuItem } from "../../ui/menu/index.ts";
-import { colorMenuItem } from "./editor-color-menu.view.ts";
-import { pageItems } from "./editor-block-page-items.view.ts";
-import { COMMENT_COMPOSER_OVERLAY } from "../comments/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
+import {
+  blockActionEntries,
+  TURN_INTO_OVERLAY,
+} from "./editor-block-actions.view.ts";
 import { convertBlock } from "./editor-convert.commands.ts";
-import { duplicateBlock, insertBlockBelow } from "./editor-insert.commands.ts";
+import { insertBlockBelow } from "./editor-insert.commands.ts";
 import type { InputContext } from "./editor-input.view.ts";
-import { deleteBlock, moveBlockBy } from "./editor-move.commands.ts";
 
 export const BLOCK_MENU_OVERLAY = "block-menu";
-const TURN_INTO_OVERLAY = "turn-into";
 
 // Opened from the keyboard, the menu remembers where the caret was so
 // that closing it puts the caret back.
@@ -71,6 +66,7 @@ export function renderHandle(
     class="editor__handle"
     tabindex="-1"
     data-handle
+    data-overlay-anchor
     aria-haspopup="menu"
     aria-expanded=${String(isOpen)}
     aria-label=${COPY.blockMenu.open}
@@ -99,72 +95,6 @@ export function renderAddButton(
   >
     ${renderIcon("plus")}
   </button>`;
-}
-
-interface ActionContext {
-  readonly overlay: OpenOverlay;
-  readonly state: AppState;
-  readonly dispatch: Dispatch;
-}
-
-// A text block can turn into another type and take a color.
-function textItems(block: Block, context: ActionContext): MenuItem[] {
-  const { overlay, dispatch } = context;
-  if (!isTextBlock(block)) return [];
-  const turnInto: MenuItem = {
-    label: COPY.blockMenu.turnInto,
-    icon: "chevron",
-    onSelect: () =>
-      dispatch(
-        openOverlay.create({
-          overlay: { ...overlay, kind: TURN_INTO_OVERLAY },
-        }),
-      ),
-  };
-  return [turnInto, colorMenuItem(overlay, dispatch)];
-}
-
-// "Comment": a discussion on the whole block.
-function commentItem(blockId: BlockId, dispatch: Dispatch): MenuItem {
-  const overlay = { kind: COMMENT_COMPOSER_OVERLAY, anchorId: blockId };
-  return {
-    label: COPY.comments.comment,
-    icon: "comment",
-    onSelect: () => dispatch(openOverlay.create({ overlay })),
-  };
-}
-
-function actionItems(block: Block, context: ActionContext): MenuItem[] {
-  const { state, dispatch } = context;
-  const blockId = block.id;
-  // Blocks in the tree of the block, for a copy of it.
-  const blockCount = countBlockTree(state.workspace, blockId);
-  return [
-    ...textItems(block, context),
-    {
-      label: COPY.blockMenu.duplicate,
-      icon: "duplicate",
-      onSelect: () => dispatch(duplicateBlock.create({ blockId, blockCount })),
-    },
-    ...pageItems(block, state, dispatch),
-    commentItem(blockId, dispatch),
-    {
-      label: COPY.blockMenu.moveUp,
-      icon: "up",
-      onSelect: () => dispatch(moveBlockBy.create({ blockId, offset: -1 })),
-    },
-    {
-      label: COPY.blockMenu.moveDown,
-      icon: "down",
-      onSelect: () => dispatch(moveBlockBy.create({ blockId, offset: 1 })),
-    },
-    {
-      label: COPY.blockMenu.delete,
-      icon: "trash",
-      isDanger: true,
-      onSelect: () => dispatch(deleteBlock.create({ blockId })),
-    },
-  ];
 }
 
 // Converting keeps the caret where the menu was opened from.
@@ -203,12 +133,18 @@ export function renderBlockMenu(
     if (selection !== undefined) dispatch(setSelection.create({ selection }));
   };
   if (overlay.kind === BLOCK_MENU_OVERLAY) {
-    const items = actionItems(block, { overlay, state, dispatch });
+    // As Notion's: a search over the actions, the menu before the grip
+    // (or where a right click was).
     return renderMenu({
       label: COPY.blockMenu.open,
-      items,
+      items: blockActionEntries(block, { overlay, state, dispatch }),
       onClose,
-      ...(overlay.point && { point: overlay.point }),
+      search: {
+        placeholder: COPY.blockMenu.search,
+        query: overlay.query ?? "",
+        onQuery: (query) => dispatch(setOverlayQuery.create({ query })),
+      },
+      ...(overlay.point ? { point: overlay.point } : { placement: "before" }),
     });
   }
   if (overlay.kind === TURN_INTO_OVERLAY) {

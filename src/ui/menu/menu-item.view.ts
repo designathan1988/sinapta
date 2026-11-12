@@ -129,6 +129,11 @@ function renderItem(entry: MenuItem, place: EntryPlace): TemplateResult {
         ? nothing
         : html`<span class="menu__value">${entry.value}</span>`
     }
+    ${
+      entry.shortcut === undefined
+        ? nothing
+        : html`<kbd class="menu__shortcut">${entry.shortcut}</kbd>`
+    }
     ${renderEnd(entry)}
   </button>`;
 }

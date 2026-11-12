@@ -66,5 +66,14 @@
       align-self: anchor-center;
       position-try-fallbacks: flip-inline;
     }
+
+    /* A block's menu opens before its grip, centered on it, as Notion's;
+       it turns to the other side where there is no room. */
+    [data-overlay][data-placement="before"][popover] {
+      margin: var(--space-none) var(--space-inset-xs);
+      position-area: inline-start span-all;
+      align-self: anchor-center;
+      position-try-fallbacks: flip-inline;
+    }
   }
 }

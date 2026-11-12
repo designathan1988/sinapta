@@ -46,6 +46,10 @@ export const EDITOR_TEXT = {
     turnIntoPage: "Turn into page",
     copyLink: "Copy link to block",
     linkCopied: "Link copied.",
+    search: "Search actions…",
+    duplicateKeys: "Ctrl+D",
+    deleteKeys: "Del",
+    commentKeys: "Ctrl+Shift+M",
   },
   formatToolbar: {
     label: "Text formatting",

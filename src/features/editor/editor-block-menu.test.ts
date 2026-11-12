@@ -30,7 +30,73 @@ function choose(label: string, blocks: BlockSpec[] = [text("a", "Plan")]) {
   return { item, sent };
 }
 
+// The open block menu of a text block, its search holding the query.
+function opened(query?: string) {
+  const { store } = createApp([text("a", "Plan")]);
+  const state = store.getState();
+  const overlay = {
+    kind: BLOCK_MENU_OVERLAY,
+    anchorId: "a",
+    ...(query !== undefined && { query }),
+  };
+  const sent: Command[] = [];
+  const host = document.createElement("div");
+  render(
+    renderBlockMenu({ ...state, ui: { ...state.ui, overlay } }, (command) => {
+      sent.push(command);
+      return { ok: true };
+    }),
+    host,
+  );
+  const rows = [...host.querySelectorAll<HTMLElement>("[role^=menuitem]")];
+  const textOf = (row: HTMLElement) =>
+    row.textContent.replace(/\s+/g, " ").trim();
+  return { host, sent, rows: rows.map(textOf) };
+}
+
 describe("the block menu", () => {
+  it("searches its actions under the block's type, as Notion's", () => {
+    const { host } = opened();
+
+    expect(host.querySelector("input")?.placeholder).toBe("Search actions…");
+    expect(host.querySelector(".menu__section")?.textContent.trim()).toBe(
+      "Text",
+    );
+  });
+
+  it("lists Notion's actions in its groups, with their keys", () => {
+    const { host, rows } = opened();
+
+    expect(rows.map((row) => row.replace(/\s+/g, " "))).toEqual([
+      "Turn into",
+      "Color",
+      "Copy link to block",
+      "Duplicate Ctrl+D",
+      "Move to",
+      "Delete Del",
+      "Comment Ctrl+Shift+M",
+      "Turn into page",
+      "Move to new column",
+    ]);
+    expect(host.querySelectorAll(".menu__divider")).toHaveLength(3);
+  });
+
+  it("keeps the actions that match what is typed", () => {
+    expect(opened("dup").rows).toEqual(["Duplicate Ctrl+D"]);
+  });
+
+  it("follows what is typed in its search", () => {
+    const { host, sent } = opened();
+    const input = host.querySelector("input");
+    if (input) input.value = "co";
+
+    input?.dispatchEvent(new Event("input", { bubbles: true }));
+
+    expect(sent).toContainEqual(
+      expect.objectContaining({ type: "ui.setOverlayQuery", query: "co" }),
+    );
+  });
+
   it("turns the block into a page", () => {
     const { sent } = choose("Turn into page");
 

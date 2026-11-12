@@ -38,11 +38,8 @@ function turnIntoPageItem(block: Block, state: AppState, dispatch: Dispatch) {
   ];
 }
 
-export function pageItems(
-  block: Block,
-  state: AppState,
-  dispatch: Dispatch,
-): MenuItem[] {
+// "Copy link to block", first of Notion's second group.
+export function copyLinkItem(block: Block, state: AppState): MenuItem {
   const blockId = block.id;
   const pageId = selectPageIdOf(state, blockId);
   const copyLink = (): void => {
@@ -50,18 +47,33 @@ export function pageItems(
     writeSystemClipboard(linkToBlock(pageId, blockId));
     announce(COPY.blockMenu.linkCopied);
   };
-  const moveTo = (): void => {
-    const overlay = { kind: MOVE_TO_OVERLAY, anchorId: blockId };
-    dispatch(openOverlay.create({ overlay }));
+  return { label: COPY.blockMenu.copyLink, icon: "link", onSelect: copyLink };
+}
+
+// "Move to", the dialog that moves the block to another page.
+export function moveToItem(block: Block, dispatch: Dispatch): MenuItem {
+  const overlay = { kind: MOVE_TO_OVERLAY, anchorId: block.id };
+  return {
+    label: COPY.blockMenu.moveTo,
+    icon: "move",
+    onSelect: () => dispatch(openOverlay.create({ overlay })),
   };
+}
+
+// Pagecraft's own, after Notion's groups: a page of the block, its sync,
+// and a new column for it (the keyboard's way to make columns).
+export function extraItems(
+  block: Block,
+  state: AppState,
+  dispatch: Dispatch,
+): MenuItem[] {
+  const blockId = block.id;
   return [
     ...turnIntoPageItem(block, state, dispatch),
     ...syncedItems(block, state, dispatch),
-    { label: COPY.blockMenu.copyLink, icon: "link", onSelect: copyLink },
-    { label: COPY.blockMenu.moveTo, icon: "move", onSelect: moveTo },
     {
       label: COPY.blockMenu.moveToNewColumn,
-      icon: "move",
+      icon: "columns",
       onSelect: () => dispatch(moveToNewColumn.create({ blockId })),
     },
   ];

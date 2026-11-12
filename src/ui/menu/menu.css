@@ -115,6 +115,16 @@
     white-space: nowrap;
   }
 
+  /* A row's keys, as Notion's: 12 px, muted, at the end. */
+  .menu__shortcut {
+    flex: none;
+    margin-inline-start: auto;
+    color: var(--color-text-tertiary);
+    font-family: inherit;
+    font-size: var(--font-size-xs);
+    white-space: nowrap;
+  }
+
   .menu__section {
     margin: var(--space-stack-sm) var(--space-none) var(--space-stack-xxs);
     padding: var(--space-none) var(--space-inset-sm);

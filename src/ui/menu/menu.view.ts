@@ -58,7 +58,7 @@ export interface MenuOptions {
   readonly isChild?: boolean;
   // A submenu sits beside the row that opened it, not under it; an editor
   // of a cell lies over the cell, at least as wide.
-  readonly placement?: "beside" | "over";
+  readonly placement?: "beside" | "over" | "before";
   // The open overlay, for menus whose rows open submenus.
   readonly context?: MenuContext;
 }
