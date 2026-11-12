@@ -175,16 +175,20 @@
       color: var(--color-text-secondary);
     }
   }
-
-  .database__count {
-    padding-inline: var(--space-inset-sm);
-    color: var(--color-text-tertiary);
-    font-size: var(--font-size-xs);
-    white-space: nowrap;
-  }
 }
 
 @layer features {
+  /* The view's tools, as Notion's: 28 px, a 6 px radius, quiet gray. */
+  .database__toolbar .button {
+    min-inline-size: var(--size-control-action);
+    min-block-size: var(--size-control-action);
+    border-radius: var(--radius-md);
+
+    &:not([data-variant="primary"]) {
+      color: var(--color-text-tertiary);
+    }
+  }
+
   /* Notion's New: the button and the arrow that lists the templates, one
      blue control split by a hairline. */
   .database__new {
@@ -197,8 +201,8 @@
     }
   }
 
-  .database__new-templates {
-    min-inline-size: var(--size-icon-md);
+  .database__new > .database__new-templates {
+    min-inline-size: var(--size-target-min);
     padding-inline: var(--space-inset-xxs);
     border-start-start-radius: 0;
     border-end-start-radius: 0;

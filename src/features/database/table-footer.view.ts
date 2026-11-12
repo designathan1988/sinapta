@@ -7,6 +7,7 @@ import { COPY } from "../../ui/copy.ts";
 import { renderSelect } from "../../ui/select/index.ts";
 import { calculationItems } from "./column-menu-items.ts";
 import { calculate, calculationChoices } from "./calculations.selectors.ts";
+import { renderAddRowButton } from "./database-footer.view.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import type { TableColumn } from "./table-model.selectors.ts";
 
@@ -43,8 +44,16 @@ function renderCalculation(
   </td>`;
 }
 
+// "New page" right under the last row, then the calculations, as Notion's.
 export function renderTableFooter(context: TableContext): TemplateResult {
+  const span = context.model.columns.length + 1;
   return html`<tfoot>
+    <tr class="database__new-row">
+      <td class="database__gutter"></td>
+      <td class="database__new-cell" colspan=${span}>
+        ${renderAddRowButton(context)}
+      </td>
+    </tr>
     <tr class="database__calc-row">
       <td class="database__gutter"></td>
       ${context.model.columns.map((column) =>

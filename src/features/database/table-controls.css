@@ -1,0 +1,71 @@
+@layer features {
+  /* A column's "…" and the "+" that adds a property: plain 28 px icon
+     buttons with a 6 px radius, as Notion's. */
+  .database__column-menu,
+  .database__add-property {
+    display: inline-grid;
+    place-items: center;
+    inline-size: var(--size-control-action);
+    block-size: var(--size-control-action);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-md);
+    background-color: transparent;
+    color: var(--color-text-tertiary);
+    vertical-align: middle;
+    cursor: pointer;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: var(--color-bg-hover);
+      color: var(--color-text-primary);
+    }
+
+    & > .icon {
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+    }
+  }
+
+  /* Notion's Open button: a small raised pill with where the row opens
+     and OPEN in capitals. */
+  .database__open {
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    block-size: var(--size-target-min);
+    padding: var(--space-none) var(--space-inset-xs);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-raised);
+    box-shadow: var(--shadow-card);
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    vertical-align: middle;
+    cursor: pointer;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: var(--color-bg-hover);
+      color: var(--color-text-primary);
+    }
+
+    & > .icon {
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+    }
+  }
+
+  /* A column's menu shows while its header is pointed at or in use. */
+  .database__header .database__column-menu {
+    opacity: 0;
+  }
+
+  .database__header:is(:hover, :focus-within) .database__column-menu,
+  .database__header .database__column-menu[aria-expanded="true"] {
+    opacity: 1;
+  }
+}

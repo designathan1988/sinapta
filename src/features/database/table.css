@@ -12,7 +12,7 @@
     position: sticky;
     inset-block-start: 0;
     z-index: var(--layer-sticky);
-    block-size: var(--size-row-height);
+    block-size: var(--size-table-row);
     padding: var(--space-none);
     border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
     border-inline-end: var(--size-border-thin) solid var(--color-border-subtle);
@@ -48,7 +48,7 @@
     gap: var(--space-inline-sm);
     align-items: center;
     max-inline-size: calc(100% - var(--size-control-md));
-    min-block-size: var(--size-row-height);
+    min-block-size: var(--size-table-row);
     padding: var(--space-none) var(--space-inset-sm);
     overflow: hidden;
     border: none;
@@ -76,50 +76,6 @@
     text-overflow: ellipsis;
   }
 
-  .database__column-menu,
-  .database__add-property,
-  /* Notion's Open button: a small raised pill with where the row opens
-     and OPEN in capitals. */
-  .database__open {
-    display: inline-flex;
-    gap: var(--space-inline-xs);
-    align-items: center;
-    block-size: var(--size-target-min);
-    padding: var(--space-none) var(--space-inset-xs);
-    border: none;
-    border-radius: var(--radius-sm);
-    background-color: var(--color-bg-raised);
-    box-shadow: var(--shadow-card);
-    color: var(--color-text-secondary);
-    font-family: inherit;
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
-    text-transform: uppercase;
-    vertical-align: middle;
-    cursor: pointer;
-
-    &:hover,
-    &[aria-expanded="true"] {
-      background-color: var(--color-bg-hover);
-      color: var(--color-text-primary);
-    }
-
-    & > .icon {
-      inline-size: var(--size-icon-sm);
-      block-size: var(--size-icon-sm);
-    }
-  }
-
-  /* A column's menu shows while its header is pointed at or in use. */
-  .database__header .database__column-menu {
-    opacity: 0;
-  }
-
-  .database__header:is(:hover, :focus-within) .database__column-menu,
-  .database__header .database__column-menu[aria-expanded="true"] {
-    opacity: 1;
-  }
-
   /* A hairline at the column's edge that is the handle to resize it. */
   .database__resizer {
     position: absolute;
@@ -136,7 +92,7 @@
   }
 
   .database__cell {
-    block-size: var(--size-row-height);
+    block-size: var(--size-table-row);
     padding: var(--space-none) var(--space-inset-sm);
     overflow: hidden;
     border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
@@ -221,6 +177,6 @@
   }
 
   .database__table .database__spacer {
-    block-size: calc(var(--database-spacer-rows, 0) * var(--size-row-height));
+    block-size: calc(var(--database-spacer-rows, 0) * var(--size-table-row));
   }
 }

@@ -1353,6 +1353,12 @@
           "unit": "rem"
         }
       },
+      "2x25": {
+        "$value": {
+          "value": 2.25,
+          "unit": "rem"
+        }
+      },
       "3x0": {
         "$value": {
           "value": 3,

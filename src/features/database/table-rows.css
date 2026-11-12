@@ -14,9 +14,9 @@
     white-space: nowrap;
   }
 
+  /* The gutter is outside the table's lines, as Notion's handles are. */
   thead .database__gutter {
     inset-block-start: 0;
-    border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
   }
 
   .database__row-handle {

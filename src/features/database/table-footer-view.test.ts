@@ -65,6 +65,21 @@ function rendered(isGrouped = false, isOpen = false) {
 }
 
 describe("the table's footer", () => {
+  it("puts New page right under the rows, above the calculations", () => {
+    const { host } = rendered();
+    const footerRows = [...host.querySelectorAll("tfoot tr")];
+
+    expect(footerRows[0]?.querySelector(".database__add-row")).not.toBeNull();
+    expect(footerRows[1]?.classList.contains("database__calc-row")).toBe(true);
+    expect(host.querySelectorAll(".database__add-row")).toHaveLength(1);
+  });
+
+  it("tells screen readers how many rows show, as Notion shows none", () => {
+    const count = rendered().host.querySelector(".database__count");
+
+    expect(count?.classList.contains("visually-hidden")).toBe(true);
+  });
+
   it("shows the column's calculation and its result", () => {
     const { footer, points } = rendered();
 
