@@ -14,11 +14,12 @@
     align-items: center;
   }
 
+  /* The month, as Notion's: a small bold label. */
   .calendar__month {
     flex: 1;
     margin: var(--space-none);
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-strong);
   }
 
   .calendar__grid {
@@ -27,11 +28,13 @@
     table-layout: fixed;
     font-size: var(--font-size-sm);
 
+    /* Weekdays small and muted, at the cells' end, over their dates. */
     & th {
-      padding: var(--space-inset-xs);
-      color: var(--color-text-secondary);
-      font-weight: var(--font-weight-medium);
-      text-align: start;
+      padding: var(--space-inset-xs) var(--space-inset-sm);
+      color: var(--color-text-tertiary);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-regular);
+      text-align: end;
     }
   }
 
@@ -52,15 +55,24 @@
     }
   }
 
+  /* The date at the cell's end; today's white in a red circle, as
+     Notion's. */
   .calendar__date {
-    display: block;
-    margin-block-end: var(--space-stack-xs);
-    font-size: var(--font-size-xs);
+    display: grid;
+    place-items: center;
+    inline-size: fit-content;
+    min-inline-size: var(--size-icon-md);
+    block-size: var(--size-icon-md);
+    margin: var(--space-none) var(--space-none) var(--space-stack-xs) auto;
+    padding-inline: var(--space-inset-xxs);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
   }
 
   .calendar__day[data-today] .calendar__date {
-    color: var(--color-text-accent);
-    font-weight: var(--font-weight-bold);
+    background-color: var(--color-status-danger-fill);
+    color: var(--color-text-on-accent);
+    font-weight: var(--font-weight-medium);
   }
 
   .calendar__entry {
@@ -69,10 +81,12 @@
     margin-block-end: var(--space-stack-xs);
     padding: var(--space-none) var(--space-inset-xs);
     overflow: hidden;
-    border: var(--size-border-thin) solid var(--color-border-default);
-    border-radius: var(--radius-sm);
+    border: none;
+    border-radius: var(--radius-md);
     background-color: var(--color-bg-raised);
+    box-shadow: var(--shadow-card);
     color: var(--color-text-primary);
+    font-weight: var(--font-weight-medium);
     text-align: start;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -87,10 +101,11 @@
     }
   }
 
+  /* "+" at the cell's start, clear of the date. */
   .calendar__add {
     position: absolute;
     inset-block-start: var(--space-inset-xs);
-    inset-inline-end: var(--space-inset-xs);
+    inset-inline-start: var(--space-inset-xs);
     opacity: 0;
   }
 
