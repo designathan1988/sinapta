@@ -194,6 +194,7 @@
     --base-size-32: 32rem;
     --base-size-36: 36rem;
     --base-size-40: 40rem;
+    --base-size-44: 44rem;
     --base-size-45: 45rem;
     --base-size-46: 46rem;
     --base-size-60: 60rem;
@@ -238,10 +239,12 @@
     --base-font-size-8: 4.25rem;
     --base-font-size-0x6875: 0.6875rem;
     --base-font-size-6x5: 2rem;
+    --base-font-size-4x875: 4.875rem;
     --base-font-weight-400: 400;
     --base-font-weight-500: 500;
     --base-font-weight-600: 600;
     --base-font-weight-700: 700;
+    --base-font-line-height-dense: 1.2;
     --base-font-line-height-tight: 1.25;
     --base-font-line-height-snug: 1.4;
     --base-font-line-height-relaxed: 1.5;
@@ -369,7 +372,7 @@
     --size-sidebar-button: var(--base-size-7);
     --size-sidebar-footer: var(--base-size-2x75);
     --size-sidebar-key: var(--base-size-1x125);
-    --size-content-max: var(--base-size-45);
+    --size-content-max: var(--base-size-44);
     --size-label-width: var(--base-size-12);
     --size-menu-min-width: var(--base-size-14);
     --size-menu-max-height: var(--base-size-30);
@@ -428,7 +431,7 @@
     --font-size-xl: var(--base-font-size-5);
     --font-size-xxl: var(--base-font-size-6);
     --font-size-title: var(--base-font-size-7);
-    --font-size-page-icon: var(--base-font-size-8);
+    --font-size-page-icon: var(--base-font-size-4x875);
     --font-size-peek-title: var(--base-font-size-6x5);
     --font-size-key: var(--base-font-size-0x6875);
     --font-weight-regular: var(--base-font-weight-400);
@@ -438,6 +441,7 @@
     --font-line-height-tight: var(--base-font-line-height-tight);
     --font-line-height-ui: var(--base-font-line-height-snug);
     --font-line-height-body: var(--base-font-line-height-relaxed);
+    --font-line-height-title: var(--base-font-line-height-dense);
     --duration-none: var(--base-duration-0);
     --duration-fast: var(--base-duration-1);
     --duration-medium: var(--base-duration-2);

@@ -426,7 +426,8 @@
     },
     "content": {
       "max": {
-        "$value": "{base.size.45}"
+        "$description": "A page's text column, as Notion's at 1440 px: 704 px.",
+        "$value": "{base.size.44}"
       }
     },
     "label": {
@@ -869,7 +870,8 @@
         "$value": "{base.font.size.7}"
       },
       "pageIcon": {
-        "$value": "{base.font.size.8}"
+        "$description": "A page's emoji icon over its title, as Notion's 78 px icon.",
+        "$value": "{base.font.size.4x875}"
       },
       "peekTitle": {
         "$description": "A page's title in a peek, smaller than on its own page.",
@@ -905,6 +907,10 @@
       },
       "body": {
         "$value": "{base.font.lineHeight.relaxed}"
+      },
+      "title": {
+        "$description": "A page's title, as Notion's: 40 px type on a 48 px line.",
+        "$value": "{base.font.lineHeight.dense}"
       }
     }
   },

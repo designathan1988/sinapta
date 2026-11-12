@@ -1293,6 +1293,12 @@
           "unit": "rem"
         }
       },
+      "44": {
+        "$value": {
+          "value": 44,
+          "unit": "rem"
+        }
+      },
       "45": {
         "$value": {
           "value": 45,
@@ -1510,6 +1516,12 @@
             "unit": "rem"
           }
         },
+        "4x875": {
+          "$value": {
+            "value": 4.875,
+            "unit": "rem"
+          }
+        },
         "7": {
           "$value": {
             "value": 2.5,
@@ -1540,6 +1552,9 @@
       },
       "lineHeight": {
         "$type": "number",
+        "dense": {
+          "$value": 1.2
+        },
         "tight": {
           "$value": 1.25
         },

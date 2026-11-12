@@ -4,13 +4,20 @@
     display: flex;
   }
 
+  /* A page without a cover leaves Notion's 96 px over its header. */
+  .editor:not([data-wide], :has(> .editor__cover)) {
+    padding-block-start: calc(var(--space-inset-page) - var(--space-inset-xl));
+  }
+
   /* One row of actions over the title, each as Notion's: 28 px, its icon
-     and its words 6 px apart, quiet gray. */
+     and its words 6 px apart, quiet gray, side by side, their icons in
+     line with the text. It sits 8 px under the icon, 4 px over the title. */
   .editor__page-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-inline-xxs);
     align-items: center;
+    margin-block-end: calc(var(--space-stack-xs) - var(--space-stack-md));
+    translate: calc(var(--space-inset-sm) * -1) 0;
 
     & > .button {
       gap: var(--space-inline-icon);
@@ -34,6 +41,10 @@
 
   .editor__cover + .editor__page-icon {
     margin-block-start: calc(var(--font-size-page-icon) / -2);
+  }
+
+  .editor__page-icon + .editor__page-actions {
+    margin-block-start: calc(var(--space-stack-sm) - var(--space-stack-md));
   }
 
   /* The quiet page actions appear when the page is hovered or holds focus;
@@ -67,8 +78,8 @@
 
     /* A peek sets a smaller title through --editor-title-size. */
     font-size: var(--editor-title-size, var(--font-size-title));
-    font-weight: var(--font-weight-strong);
-    line-height: var(--font-line-height-tight);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--font-line-height-title);
 
     &::placeholder {
       color: var(--color-text-tertiary);
@@ -81,24 +92,27 @@
     }
   }
 
+  /* The page's emoji, as Notion's 78 px icon at the text's start: a square
+     that centers the glyph, which is wider than it draws. */
   .editor__icon {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
     align-self: flex-start;
-    min-inline-size: var(--size-control-md);
-    min-block-size: var(--size-control-md);
-    padding: var(--space-none) var(--space-inset-xs);
+    inline-size: var(--font-size-page-icon);
+    block-size: var(--font-size-page-icon);
+    padding: var(--space-none);
     border: none;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     background-color: transparent;
+    font-size: var(--font-size-page-icon);
+    line-height: 1;
     cursor: pointer;
 
     &:hover,
     &[aria-expanded="true"] {
       background-color: var(--color-bg-hover);
     }
-
-    position: relative;
-    font-size: var(--font-size-page-icon);
-    line-height: 1;
   }
 
   .editor__icon-popover:popover-open {
