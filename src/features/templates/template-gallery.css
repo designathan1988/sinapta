@@ -1,0 +1,142 @@
+@layer features {
+  /* Notion's template gallery: the templates down the side, the chosen
+     one shown as a page beside them, with the button that uses it. */
+  .template-gallery {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-columns: minmax(0, var(--size-menu-width)) minmax(0, 1fr);
+    gap: var(--space-inline-md);
+    block-size: 100%;
+    padding: var(--space-inset-md);
+  }
+
+  .template-gallery__heading {
+    grid-column: 1 / -1;
+    margin: var(--space-none);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-strong);
+  }
+
+  .template-gallery__list {
+    display: grid;
+    gap: var(--space-stack-xxs);
+    align-content: start;
+    margin: var(--space-none);
+    padding: var(--space-none);
+    overflow: hidden auto;
+    list-style: none;
+  }
+
+  .template-gallery__item {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: start;
+    inline-size: 100%;
+    padding: var(--space-inset-sm);
+    border: none;
+    border-radius: var(--radius-lg);
+    background-color: transparent;
+    color: var(--color-text-primary);
+    font-family: inherit;
+    text-align: start;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    &[aria-pressed="true"] {
+      background-color: var(--color-bg-selected);
+    }
+  }
+
+  .template-gallery__item-text {
+    display: grid;
+    gap: var(--space-stack-xxs);
+  }
+
+  .template-gallery__item-name {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .template-gallery__item-description {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+  }
+
+  .template-gallery__preview {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: var(--space-stack-sm);
+    min-block-size: 0;
+  }
+
+  .template-gallery__page {
+    display: grid;
+    gap: var(--space-stack-xs);
+    align-content: start;
+    padding: var(--space-inset-xl);
+    overflow: hidden auto;
+    border-radius: var(--radius-lg);
+    box-shadow: inset 0 0 0 var(--size-border-thin) var(--color-border-subtle);
+  }
+
+  .template-gallery__icon {
+    margin: var(--space-none);
+    font-size: var(--font-size-xxl);
+  }
+
+  .template-gallery__title {
+    margin: var(--space-none);
+    font-size: var(--font-size-xxl);
+    font-weight: var(--font-weight-strong);
+  }
+
+  .template-gallery__block {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    margin: var(--space-none);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+
+    &[data-type="heading"] {
+      margin-block-start: var(--space-stack-sm);
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-strong);
+    }
+
+    &[data-type="bulleted-list"]::before {
+      content: "•";
+    }
+
+    &[data-type="to-do"]::before {
+      content: "☐";
+    }
+
+    &[data-type="to-do"][data-checked]::before {
+      content: "☑";
+    }
+
+    &[data-type="callout"] {
+      padding: var(--space-inset-sm);
+      border-radius: var(--radius-md);
+      background-color: var(--color-bg-callout);
+    }
+  }
+
+  .template-gallery__blank {
+    flex: 1;
+    max-inline-size: var(--size-card-small);
+    block-size: var(--size-border-thick);
+    border-radius: var(--radius-full);
+    background-color: var(--color-border-subtle);
+  }
+
+  .template-gallery__actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-block-end: var(--space-inset-sm);
+  }
+}

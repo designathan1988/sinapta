@@ -96,13 +96,13 @@ describe("renderSidebar", () => {
     ]);
   });
 
-  it("keeps settings and the trash at the foot of the sidebar", () => {
+  it("keeps settings, templates and the trash at the foot of the sidebar", () => {
     const footer = rendered().host.querySelector(".sidebar__footer");
 
     expect(
       [...(footer?.querySelectorAll("button") ?? [])].map((item) =>
         item.textContent.trim(),
       ),
-    ).toEqual(["Settings", "Trash"]);
+    ).toEqual(["Settings", "Templates", "Trash"]);
   });
 });

@@ -15,6 +15,7 @@ import {
   SETTINGS_OVERLAY_KIND,
 } from "../../ui/shortcuts/index.ts";
 import { createDatabase, importCsvFile } from "../database/index.ts";
+import { TEMPLATE_GALLERY_OVERLAY } from "../templates/index.ts";
 import { TRASH_OVERLAY } from "../trash/index.ts";
 import { renderFavorites } from "./sidebar-favorites.view.ts";
 import { renderTree } from "./sidebar-tree.view.ts";
@@ -29,6 +30,11 @@ function renderFooter(dispatch: Dispatch): TemplateResult {
       label: COPY.shell.openSettings,
       icon: "settings",
       onClick: open(SETTINGS_OVERLAY_KIND),
+    })}
+    ${renderButton({
+      label: COPY.templates.open,
+      icon: "templates",
+      onClick: open(TEMPLATE_GALLERY_OVERLAY),
     })}
     ${renderImport(dispatch)}
     ${renderButton({

@@ -33,6 +33,10 @@ import {
   SLASH_MENU_OVERLAY,
 } from "../features/slash-menu/index.ts";
 import { renderTrash, TRASH_OVERLAY } from "../features/trash/index.ts";
+import {
+  renderTemplateGallery,
+  TEMPLATE_GALLERY_OVERLAY,
+} from "../features/templates/index.ts";
 import type { AppState, Dispatch } from "../state/index.ts";
 import { SHORTCUT_HELP_OVERLAY_KIND } from "../ui/shortcuts/index.ts";
 
@@ -45,6 +49,7 @@ type OverlayView = (
 const OVERLAYS: Readonly<Record<string, OverlayView>> = {
   [SETTINGS_OVERLAY]: renderSettings,
   [TRASH_OVERLAY]: renderTrash,
+  [TEMPLATE_GALLERY_OVERLAY]: renderTemplateGallery,
   [PALETTE_OVERLAY]: renderCommandPalette,
   [MOVE_TO_OVERLAY]: renderMoveTo,
   [SLASH_MENU_OVERLAY]: renderSlashMenu,

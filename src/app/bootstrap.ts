@@ -23,6 +23,7 @@ import {
 } from "../features/database/index.ts";
 import { editorCommands } from "../features/editor/index.ts";
 import { peekCommands } from "../features/row-peek/index.ts";
+import { templateCommands } from "../features/templates/index.ts";
 import { formatToolbarKeys } from "../features/format-toolbar/index.ts";
 import {
   onboardingCommands,
@@ -82,6 +83,7 @@ const COMMANDS = [
   ...databaseCommands,
   ...peekCommands,
   ...onboardingCommands,
+  ...templateCommands,
 ];
 
 // Keys that apply while one part of the interface is active.

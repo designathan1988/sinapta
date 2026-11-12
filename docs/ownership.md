@@ -99,6 +99,8 @@ owner listed here exists.
 | Locks: what a locked page, database or view keeps; locking a page | `src/blocks/page/page-lock.ts` | 16 |
 | Locking a view | `src/features/database/view-lock.commands.ts` | 16 |
 | Backlinks: the pages that link to a page, and showing them under its title | `src/features/backlinks/` | 17 |
+| Seeds: block trees that become pages with new ids | `src/features/onboarding/seed.ts` | 17 |
+| The template gallery and its built-in page templates | `src/features/templates/` | 17 |
 | A board's sub-groups: the setting and its lanes | `src/features/database/sub-group.commands.ts`, `layouts/board/board-lanes.view.ts` | 16 |
 | CSV import: column types, the new database; CSV export of a view | `src/features/database/csv-import.ts`, `csv-import.commands.ts`, `csv-export.selectors.ts`, `csv-file.view.ts` | 16 |
 | Table markup, headers, cells and their events | `src/features/database/table*.view.ts` | 5 |

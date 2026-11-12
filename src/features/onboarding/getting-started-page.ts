@@ -9,27 +9,12 @@ import { PARAGRAPH_TYPE } from "../../blocks/paragraph/index.ts";
 import { QUOTE_TYPE } from "../../blocks/quote/index.ts";
 import { TO_DO_TYPE } from "../../blocks/to-do/index.ts";
 import { TOGGLE_TYPE } from "../../blocks/toggle/index.ts";
-import type { BlockProps, RichText } from "../../model/index.ts";
+import { rich, seedText, type SeedBlock } from "./seed.ts";
 import { COPY } from "../../ui/copy.ts";
-
-export interface SeedBlock {
-  readonly type: string;
-  readonly props: BlockProps;
-  readonly children?: readonly SeedBlock[];
-}
 
 const TEXT = COPY.onboarding;
 
-const rich = (text: string): RichText => [{ text }];
-
-const block = (
-  type: string,
-  text: string,
-  extra: BlockProps = {},
-): SeedBlock => ({
-  type,
-  props: { text: rich(text), ...extra },
-});
+const block = seedText;
 
 const heading = (text: string, level: number): SeedBlock =>
   block(HEADING_TYPE, text, { level });
@@ -68,8 +53,3 @@ export const GETTING_STARTED: SeedBlock = {
     block(QUOTE_TYPE, TEXT.closing),
   ],
 };
-
-export function countSeedBlocks(seed: SeedBlock): number {
-  const children = seed.children ?? [];
-  return children.reduce((sum, child) => sum + countSeedBlocks(child), 1);
-}

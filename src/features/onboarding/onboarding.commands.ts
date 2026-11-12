@@ -4,15 +4,11 @@ import {
   applyOperations,
   listOf,
   type Block,
-  type BlockId,
   type Operation,
 } from "../../model/index.ts";
 import { defineCommand } from "../../state/index.ts";
-import {
-  countSeedBlocks,
-  GETTING_STARTED,
-  type SeedBlock,
-} from "./getting-started-page.ts";
+import { GETTING_STARTED } from "./getting-started-page.ts";
+import { countSeedBlocks, placeSeed } from "./seed.ts";
 import {
   TASK_PROPERTIES,
   TASK_ROWS,
@@ -22,37 +18,6 @@ import {
 } from "./tasks-database.ts";
 
 const PAGE_BLOCKS = countSeedBlocks(GETTING_STARTED);
-
-interface Placing {
-  readonly ids: readonly BlockId[];
-  readonly now: string;
-  next: number;
-}
-
-// The records of a seed tree, each before its children, with ids taken in
-// order.
-function place(
-  seed: SeedBlock,
-  parentId: BlockId | null,
-  placing: Placing,
-): Block[] {
-  const id = placing.ids[placing.next];
-  placing.next += 1;
-  if (id === undefined) return [];
-  const children = (seed.children ?? []).map((child) =>
-    place(child, id, placing),
-  );
-  const record: Block = {
-    id,
-    type: seed.type,
-    parentId,
-    childIds: children.flatMap((list) => list[0]?.id ?? []),
-    props: seed.props,
-    createdAt: placing.now,
-    updatedAt: placing.now,
-  };
-  return [record, ...children.flat()];
-}
 
 function createAll(blocks: readonly Block[]): Operation[] {
   return blocks.map((record) => ({
@@ -73,7 +38,7 @@ export const seedGettingStarted = defineCommand<Record<string, never>>({
     if (state.workspace.rootIds.length > 0) return {};
     const { blockIds, viewIds, propertyIds, now } = command.meta;
     const placing = { ids: blockIds.slice(0, PAGE_BLOCKS), now, next: 0 };
-    const page = place(GETTING_STARTED, null, placing);
+    const page = placeSeed(GETTING_STARTED, null, placing);
     const [databaseId, ...rowIds] = blockIds.slice(PAGE_BLOCKS);
     const root = page[0];
     if (root === undefined || databaseId === undefined) return {};
