@@ -18,6 +18,7 @@ import { TEMPLATES_OVERLAY } from "./templates-menu.view.ts";
 import {
   FILTERS_OVERLAY,
   VIEW_SETTINGS_OVERLAY,
+  VIEW_SORTS_OVERLAY,
   renderTableOverlay,
 } from "./database-menus.view.ts";
 import { LISTED_LAYOUTS, renderFooter } from "./database-footer.view.ts";
@@ -98,6 +99,12 @@ function renderToolbar(context: TableContext): TemplateResult {
     icon: "filter",
     count: filterCount(model.view.filter),
   } as const;
+  const sorts = {
+    kind: VIEW_SORTS_OVERLAY,
+    label: COPY.database.sort,
+    icon: "sort",
+    count: model.view.sorts.length,
+  } as const;
   const settings = {
     kind: VIEW_SETTINGS_OVERLAY,
     label: COPY.database.viewSettings,
@@ -106,7 +113,8 @@ function renderToolbar(context: TableContext): TemplateResult {
   return html`<div class="database__toolbar">
     ${renderViewTabs(context)}
     <span class="database__spacer"></span>
-    ${renderPopoverButton(filters, context)} ${renderSearch(context)}
+    ${renderPopoverButton(filters, context)}
+    ${renderPopoverButton(sorts, context)} ${renderSearch(context)}
     ${renderPopoverButton(settings, context)} ${renderNewButton(context)}
   </div>`;
 }

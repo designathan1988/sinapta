@@ -122,10 +122,6 @@
     }
   }
 
-  .database__tool[data-active] {
-    color: var(--color-text-accent);
-  }
-
   /* The table scrolls inside this box, so its header can stay in view. */
   .database__scroll {
     flex: 0 1 auto;
@@ -212,6 +208,11 @@
 
     &:not([data-variant="primary"]) {
       color: var(--color-text-tertiary);
+    }
+
+    /* A tool that applies, such as a filter or a sort, shows in blue. */
+    &[data-active] {
+      color: var(--color-text-accent);
     }
   }
 

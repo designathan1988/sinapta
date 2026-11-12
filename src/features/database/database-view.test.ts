@@ -4,8 +4,10 @@ import { describe, expect, it } from "vitest";
 import type { Command, Dispatch } from "../../state/index.ts";
 import { createDatabaseApp } from "./database-builder.ts";
 import { renderDatabase } from "./database.view.ts";
+import { VIEW_SORTS_OVERLAY } from "./view-settings/index.ts";
 
-function rendered() {
+// The database, with an overlay of its own open when one is named.
+function rendered(open?: string) {
   const app = createDatabaseApp(
     [
       { name: "Due", type: "date" },
@@ -20,7 +22,11 @@ function rendered() {
   };
   const host = document.createElement("div");
   document.body.replaceChildren(host);
-  render(renderDatabase(app.store.getState(), dispatch), host);
+  const built = app.store.getState();
+  const overlay =
+    open === undefined ? null : { kind: open, anchorId: app.databaseId };
+  const state = { ...built, ui: { ...built.ui, overlay } };
+  render(renderDatabase(state, dispatch), host);
   const button = (label: string) => {
     const found = [...host.querySelectorAll("button")].find(
       (item) =>
@@ -59,6 +65,28 @@ describe("renderDatabase", () => {
       "ui.openOverlay",
     ]);
     expect(sent[1]).toMatchObject({ overlay: { kind: "view-settings" } });
+  });
+
+  it("opens the view's sorts from the Sort button, as Notion's", () => {
+    const { sent, button } = rendered();
+
+    button("Sort").click();
+
+    expect(sent).toHaveLength(1);
+    expect(sent[0]).toMatchObject({
+      type: "ui.openOverlay",
+      overlay: { kind: VIEW_SORTS_OVERLAY },
+    });
+  });
+
+  it("lists the properties to sort by while the view has no sort", () => {
+    const { host } = rendered(VIEW_SORTS_OVERLAY);
+
+    const rows = [...host.querySelectorAll(".menu [data-index]")].map((row) =>
+      row.textContent.trim(),
+    );
+
+    expect(rows).toEqual(["Name", "Due", "Done"]);
   });
 
   it("marks each column and each view with its type's icon", () => {
