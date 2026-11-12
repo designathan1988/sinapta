@@ -15,7 +15,9 @@ import { renderIcon } from "../../ui/icon/index.ts";
 import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
 import { ref } from "lit-html/directives/ref.js";
 import { selectOpenDiscussions, selectPageOf } from "./comments.selectors.ts";
+import { startDiscussion } from "./comment.commands.ts";
 import {
+  renderCommentField,
   renderDiscussion,
   renderNewDiscussion,
   type NewDiscussion,
@@ -55,6 +57,28 @@ export function renderPageDiscussions(
           )
         : nothing
     }
+  </section>`;
+}
+
+// A database row's discussions, under its properties as Notion's: its
+// comments, then a field that is always there to start one. It takes
+// focus only when asked for, by "Add comment".
+export function renderRowDiscussions(
+  state: AppState,
+  dispatch: Dispatch,
+  page: PageBlock,
+): TemplateResult {
+  const found = selectOpenDiscussions(state, page.id);
+  const { overlay } = state.ui;
+  const isAdding =
+    overlay?.kind === COMMENT_COMPOSER_OVERLAY && overlay.anchorId === page.id;
+  const context = { page, dispatch, now: now() };
+  const start = (text: string): void => {
+    dispatch(startDiscussion.create({ pageId: page.id, blockId: null, text }));
+  };
+  return html`<section class="comments" data-row aria-label=${TEXT.label}>
+    ${(found?.discussions ?? []).map((item) => renderDiscussion(item, context))}
+    ${renderCommentField(TEXT.add, start, isAdding)}
   </section>`;
 }
 

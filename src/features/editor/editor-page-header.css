@@ -137,3 +137,17 @@
     }
   }
 }
+
+@layer features {
+  /* A row's comments sit right under its properties, as Notion's, and
+     one rule under them parts the header from the page's blocks. */
+  .editor > .database__row-properties:has(+ .comments[data-row]) {
+    margin-block-end: var(--space-none);
+    padding-block-end: var(--space-none);
+    border-block-end: none;
+  }
+
+  .editor > .comments[data-row] {
+    padding-block-start: var(--space-none);
+  }
+}

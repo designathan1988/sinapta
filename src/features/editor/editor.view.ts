@@ -14,6 +14,7 @@ import {
   selectPageTitle,
   type PageBlock,
 } from "../../blocks/page/index.ts";
+import { selectDatabase } from "../../blocks/database/index.ts";
 import type { BlockId } from "../../model/index.ts";
 import type { AppState, Dispatch } from "../../state/index.ts";
 import { COPY, PRODUCT_NAME } from "../../ui/copy.ts";
@@ -38,6 +39,7 @@ import { renderBacklinks } from "../backlinks/index.ts";
 import {
   COMMENT_COMPOSER_OVERLAY,
   renderPageDiscussions,
+  renderRowDiscussions,
 } from "../comments/index.ts";
 import { renderIconControl } from "./editor-icon.view.ts";
 import { renderTrashedBanner } from "./editor-trashed.view.ts";
@@ -83,13 +85,20 @@ function renderTitle(page: PageBlock, context: InputContext): TemplateResult {
   </h1>`;
 }
 
+// A page inside a database: a row, with its properties and comments.
+function isRow(state: AppState, page: PageBlock): boolean {
+  return selectDatabase(state, page.parentId) !== undefined;
+}
+
 // What a page holds under its title: a database's views, or a page's
-// blocks, a row's property values above them.
+// blocks; a row's property values and its comments above them, as
+// Notion's.
 function renderContent(page: PageBlock, context: InputContext) {
   const { state, dispatch } = context;
   if (page.type === DATABASE_TYPE) return renderDatabase(state, dispatch);
   return [
     renderRowProperties(state, dispatch, page.id),
+    isRow(state, page) ? renderRowDiscussions(state, dispatch, page) : nothing,
     renderBlocks(page.id, context),
   ];
 }
@@ -153,7 +162,11 @@ export function renderEditor(
       ${isPage ? renderCover(state, page, dispatch) : nothing}
       ${renderPageActions(state, page, dispatch)} ${renderTitle(page, context)}
       ${isPage ? renderBacklinks(state, dispatch, page) : nothing}
-      ${isPage ? renderPageDiscussions(state, dispatch, page) : nothing}
+      ${
+        isPage && !isRow(state, page)
+          ? renderPageDiscussions(state, dispatch, page)
+          : nothing
+      }
       ${renderContent(page, context)}
     </article>`,
   )}`;

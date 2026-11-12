@@ -18,4 +18,5 @@ export {
   renderComposerPopover,
   renderDiscussionsPopover,
   renderPageDiscussions,
+  renderRowDiscussions,
 } from "./comment-popovers.view.ts";
