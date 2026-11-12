@@ -1346,6 +1346,12 @@
           "value": 0.05,
           "unit": "rem"
         }
+      },
+      "3": {
+        "$value": {
+          "value": 0.75,
+          "unit": "rem"
+        }
       }
     },
     "radius": {

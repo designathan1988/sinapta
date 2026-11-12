@@ -39,8 +39,12 @@ function renderLead(item: MenuItem): TemplateResult | typeof nothing {
 function renderText(item: MenuItem): TemplateResult {
   const label =
     item.color === undefined ? item.label : renderChip(item.label, item.color);
+  const prefix =
+    item.prefix === undefined
+      ? nothing
+      : html`<span class="menu__prefix">${item.prefix}</span>`;
   return html`<span class="menu__text">
-    <span class="menu__label">${label}</span>
+    <span class="menu__label">${prefix}${label}</span>
     ${
       item.description === undefined
         ? nothing

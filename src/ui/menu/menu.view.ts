@@ -56,8 +56,9 @@ export interface MenuOptions {
   readonly lead?: TemplateResult;
   // A list opened from a control inside another overlay.
   readonly isChild?: boolean;
-  // A submenu sits beside the row that opened it, not under it.
-  readonly placement?: "beside";
+  // A submenu sits beside the row that opened it, not under it; an editor
+  // of a cell lies over the cell, at least as wide.
+  readonly placement?: "beside" | "over";
   // The open overlay, for menus whose rows open submenus.
   readonly context?: MenuContext;
 }

@@ -1,0 +1,76 @@
+@layer features {
+  /* The top of a cell's option editor, as Notion's: the chosen options as
+     chips and the search field, on a pale field the width of the menu,
+     over a hairline. */
+  .database__option-field {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-stack-xxs) var(--space-inline-xs);
+    align-items: center;
+    min-block-size: var(--size-control-md);
+    margin: calc(var(--space-inset-xs) * -1) calc(var(--space-inset-xs) * -1)
+      var(--space-stack-xs);
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
+    border-start-start-radius: var(--radius-lg);
+    border-start-end-radius: var(--radius-lg);
+    background-color: var(--color-bg-field);
+    box-shadow: none;
+
+    /* Notion's field has no ring: its own background shows where the
+       typing goes. */
+    &:focus-within {
+      box-shadow: none;
+    }
+
+    & > .chip {
+      margin-inline-end: var(--space-none);
+    }
+
+    & > input {
+      flex: 1;
+      min-inline-size: var(--size-label-width);
+      padding: var(--space-none);
+      border: none;
+      background: none;
+      color: var(--color-text-primary);
+      font-family: inherit;
+      font-size: inherit;
+
+      &::placeholder {
+        color: var(--color-text-tertiary);
+      }
+
+      /* The field's own background shows where typing goes. */
+      &:focus-visible {
+        outline: none;
+      }
+    }
+  }
+
+  /* An option's row, as Notion's: a narrow grip, shown while the row is
+     pointed at or chosen by keyboard, close before its chip. */
+  [data-placement="over"] .menu__item {
+    gap: var(--space-inline-xxs);
+
+    & > .icon {
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+    }
+  }
+
+  [data-placement="over"] .menu__item:not(:hover, :focus-visible) > .icon {
+    visibility: hidden;
+  }
+
+  .menu__prefix {
+    margin-inline-end: var(--space-inline-xs);
+    color: var(--color-text-secondary);
+  }
+
+  /* The editor lies over its cell, which shows no outline around it. */
+  :root:has([data-placement="over"]:popover-open)
+    .database__cell[data-overlay-anchor="open"] {
+    outline-color: transparent;
+  }
+}

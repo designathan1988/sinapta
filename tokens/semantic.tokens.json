@@ -252,6 +252,10 @@
       "$value": "{base.space.0}"
     },
     "inline": {
+      "xxs": {
+        "$description": "Between a chip and its x, and a narrow grip and its row: 2 px.",
+        "$value": "{base.space.0x5}"
+      },
       "xs": {
         "$value": "{base.space.1}"
       },
@@ -347,6 +351,10 @@
       },
       "md": {
         "$value": "{base.size.5}"
+      },
+      "xs": {
+        "$description": "A small mark inside a chip, as a chosen option's x: 12 px.",
+        "$value": "{base.size.3}"
       }
     },
     "control": {

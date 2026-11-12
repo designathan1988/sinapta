@@ -4,8 +4,13 @@ import {
   selectDatabase,
   type SelectOption,
 } from "../../blocks/database/index.ts";
-import type { BlockId, PropertyId } from "../../model/index.ts";
-import { defineCommand, type ActiveCell } from "../../state/index.ts";
+import type { BlockId, Operation, PropertyId } from "../../model/index.ts";
+import {
+  defineCommand,
+  type ActiveCell,
+  type AppState,
+} from "../../state/index.ts";
+import { rowValueUpdate, selectRow } from "./row.commands.ts";
 
 function isSameCell(a: ActiveCell | null, b: ActiveCell | null): boolean {
   if (a === null || b === null) return a === b;
@@ -50,6 +55,30 @@ export interface AddOptionPayload {
   readonly databaseId: BlockId;
   readonly propertyId: PropertyId;
   readonly name: string;
+  // The row whose cell takes the new option, as Notion's "Create" in a
+  // cell's editor does: a multi-select adds it, the others become it.
+  readonly rowId?: BlockId;
+}
+
+// The new option given to the row's cell, in the same step.
+function choiceFor(
+  state: AppState,
+  command: AddOptionPayload & { readonly now: string },
+  chosen: { readonly propertyType: string; readonly optionId: string },
+): Operation[] {
+  const row =
+    command.rowId === undefined ? undefined : selectRow(state, command.rowId);
+  if (row === undefined) return [];
+  const current = row.props.values?.[command.propertyId];
+  const kept = Array.isArray(current)
+    ? current.filter((id): id is string => typeof id === "string")
+    : [];
+  const value =
+    chosen.propertyType === "multi-select"
+      ? [...kept, chosen.optionId]
+      : chosen.optionId;
+  const change = { propertyId: command.propertyId, value };
+  return [rowValueUpdate(row, change, command.now)];
 }
 
 // Adds a choice to a select or multi-select property.
@@ -70,6 +99,15 @@ export const addOption = defineCommand<AddOptionPayload>({
       return { ...property, options: [...options, option] };
     });
     const props = { ...database.props, properties };
+    const property = properties.find((item) => item.id === command.propertyId);
+    const choice =
+      property === undefined
+        ? []
+        : choiceFor(
+            state,
+            { ...command, now: command.meta.now },
+            { propertyType: property.type, optionId: id },
+          );
     return {
       operations: [
         {
@@ -78,6 +116,7 @@ export const addOption = defineCommand<AddOptionPayload>({
           id: database.id,
           patch: { props },
         },
+        ...choice,
       ],
     };
   },

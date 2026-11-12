@@ -21,6 +21,8 @@ interface ItemLook {
   readonly description?: string;
   // Shows the label as a chip of this option color.
   readonly color?: string;
+  // Words before the label, as Notion's "Create" before a new option.
+  readonly prefix?: string;
   // Shows a square of this option color before the label, in place of an
   // icon, as Notion's lists of colors do.
   readonly swatch?: string;

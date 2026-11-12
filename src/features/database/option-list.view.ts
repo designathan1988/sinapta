@@ -102,7 +102,7 @@ function placeItems(target: OptionTarget, context: TableContext): MenuEntry[] {
   ];
 }
 
-function optionMenu(
+export function optionMenu(
   property: PropertyDefinition,
   optionId: string,
   context: TableContext,

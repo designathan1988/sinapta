@@ -12,6 +12,29 @@
     white-space: nowrap;
   }
 
+  /* A chosen option's x, small and dim until pointed at. */
+  .chip__remove {
+    display: inline-grid;
+    place-items: center;
+    margin-inline-start: var(--space-inline-xxs);
+    padding: var(--space-none);
+    border: none;
+    background: none;
+    color: inherit;
+    vertical-align: middle;
+    opacity: 0.6;
+    cursor: pointer;
+
+    & > .icon {
+      inline-size: var(--size-icon-xs);
+      block-size: var(--size-icon-xs);
+    }
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
   /* A color to choose, as Notion's option colors: a small square of the
      color's background, ringed so a pale one still shows. */
   .chip__swatch {
