@@ -11,6 +11,10 @@ export const WORKSPACE_TEXT = {
     resizeSidebar: "Resize sidebar",
     emptyWorkspace: "No pages yet. Create a page to start writing.",
     openSettings: "Settings",
+    updateReady: "A new version of Pagecraft is ready.",
+    updateReload: "Reload",
+    updateLater: "Later",
+    updating: "Updating…",
   },
   sidebar: {
     import: "Import",

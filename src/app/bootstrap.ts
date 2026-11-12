@@ -78,6 +78,7 @@ import { installTooltip } from "../ui/tooltip/index.ts";
 import { loadEmoji } from "../ui/emoji/index.ts";
 import { startRouter } from "./router.ts";
 import { watchViewport } from "./viewport.ts";
+import { startOffline } from "./offline.ts";
 import { runShortcutAction } from "./shortcut-actions.ts";
 import { applyTheme } from "./theme.ts";
 import { renderShell } from "./shell.view.ts";
@@ -185,6 +186,7 @@ export async function startApp(container: HTMLElement): Promise<void> {
   startReminderNotices(store);
   startRouter(store, dispatch);
   watchViewport(dispatch);
+  startOffline({ store, dispatch });
   installOverlayDismiss(store, dispatch);
   installSelectionSync(store, dispatch);
   installScopedKeys(store, dispatch, SCOPED_KEYS);

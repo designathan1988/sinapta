@@ -10,6 +10,7 @@ import {
 import { defineCommand, type NoPayload } from "./command-registry.ts";
 import { uiOverlayCommands } from "./ui-overlay.commands.ts";
 import { setNarrow } from "./viewport.commands.ts";
+import { updateCommands } from "./update.commands.ts";
 
 function clampSidebarWidth(width: number): number {
   return Math.min(SIDEBAR_WIDTH.max, Math.max(SIDEBAR_WIDTH.min, width));
@@ -153,4 +154,5 @@ export const uiCommands = [
   togglePageExpanded,
   openHome,
   setNarrow,
+  ...updateCommands,
 ];

@@ -68,6 +68,9 @@ owner listed here exists.
 | Sidebar tree and favorites | `src/features/sidebar/` | 2 |
 | The window's width as state, and the narrow-window drawer | `src/state/viewport.commands.ts`, `src/app/viewport.ts` | 19 |
 | The sidebar panel beside the page, its resizer, or the drawer over it | `src/app/shell-sidebar.view.ts`, `src/app/sidebar-width.ts` | 19 |
+| Working offline: the service worker, what it keeps, and its build step | `src/app/service-worker.ts`, `src/app/offline-cache.ts`, `vite.config.ts` | 19 |
+| A new version: its state, the watch that offers it, and the prompt | `src/state/update.commands.ts`, `src/app/offline.ts`, `src/app/update-prompt.view.ts` | 19 |
+| Installing as an app: the manifest and icons | `public/` | 19 |
 | Open page: title and icon | `src/features/editor/` | 2 |
 | Page actions menu | `src/features/page-menu/` | 2 |
 | Breadcrumbs | `src/features/breadcrumbs/` | 2 |

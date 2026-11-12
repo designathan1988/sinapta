@@ -118,6 +118,8 @@ export interface UiState {
   // page, open or closed on its own; neither is saved.
   readonly isNarrow: boolean;
   readonly isDrawerOpen: boolean;
+  // A new version of the app: none, ready to apply, or being applied.
+  readonly update: "none" | "ready" | "applying";
   readonly overlay: OpenOverlay | null;
   // The text color or highlight used last, for Ctrl+Shift+H.
   readonly lastTone: LastTone | null;
@@ -220,6 +222,7 @@ export function createInitialUiState(): UiState {
     isSidebarCollapsed: false,
     isNarrow: false,
     isDrawerOpen: false,
+    update: "none",
     overlay: null,
     lastTone: null,
     clipboard: null,

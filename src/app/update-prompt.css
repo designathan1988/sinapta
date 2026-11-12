@@ -1,0 +1,26 @@
+@layer features {
+  /* A notice at the foot of the window, over the page, as Notion's. */
+  .update-prompt {
+    position: fixed;
+    inset-block-end: var(--space-inset-lg);
+    inset-inline: 0;
+    z-index: var(--layer-toast);
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    inline-size: max-content;
+    max-inline-size: calc(100% - 2 * var(--space-inset-lg));
+    margin-inline: auto;
+    padding: var(--space-inset-xs) var(--space-inset-xs) var(--space-inset-xs)
+      var(--space-inset-md);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-raised);
+    box-shadow: var(--shadow-overlay);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+  }
+
+  .update-prompt__text {
+    flex: 1;
+  }
+}

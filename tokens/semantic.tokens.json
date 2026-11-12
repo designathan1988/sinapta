@@ -894,6 +894,10 @@
     "drawer": {
       "$description": "The sidebar as a drawer over the page on a narrow window, and the dim behind it.",
       "$value": "{base.layer.3}"
+    },
+    "toast": {
+      "$description": "A notice at the foot of the window, over everything else.",
+      "$value": "{base.layer.3}"
     }
   }
 }

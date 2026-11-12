@@ -427,6 +427,7 @@
     --layer-drag-preview: var(--base-layer-2);
     --layer-peek: var(--base-layer-2);
     --layer-drawer: var(--base-layer-3);
+    --layer-toast: var(--base-layer-3);
   }
 
   :root[data-theme="light"] {

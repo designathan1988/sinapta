@@ -23,6 +23,7 @@ import { COPY } from "../ui/copy.ts";
 import { renderOverlay } from "./shell-overlays.view.ts";
 import { renderSidebarPanel } from "./shell-sidebar.view.ts";
 import { setWidth } from "./sidebar-width.ts";
+import { renderUpdatePrompt } from "./update-prompt.view.ts";
 
 function renderActivePageMenu(
   state: AppState,
@@ -131,5 +132,6 @@ export function renderShell(
     <div class="app__peek" ?inert=${isBehind}>
       ${renderPeek(state, dispatch)}
     </div>
+    ${renderUpdatePrompt(state, dispatch)}
   </div>`;
 }

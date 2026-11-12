@@ -49,6 +49,7 @@ export {
   uiCommands,
 } from "./ui.commands.ts";
 export { setNarrow } from "./viewport.commands.ts";
+export { applyUpdate, dismissUpdate, updateReady } from "./update.commands.ts";
 export {
   setTheme,
   settingsCommands,
