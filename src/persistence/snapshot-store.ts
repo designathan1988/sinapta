@@ -1,6 +1,7 @@
 // Page versions, as Notion's page history: copies of an open page's own
-// content, kept at most every 10 minutes while it is edited, the 50
-// newest of each page. The app says what a page's own content is.
+// content as it was before a run of edits, kept at most every 10 minutes
+// while it is edited, the 50 newest of each page. The app says what a
+// page's own content is.
 import {
   parseBlockId,
   type Block,
@@ -104,7 +105,7 @@ function takeDue(
   for (const pageId of editedPages(after)) {
     const content = options.contentOf(after.workspace, pageId);
     const earlier = options.contentOf(before.workspace, pageId);
-    if (content.length === 0 || sameContent(content, earlier)) continue;
+    if (earlier.length === 0 || sameContent(content, earlier)) continue;
     const last = lastTaken.get(pageId);
     if (last !== undefined && time - last < SNAPSHOT_EVERY_MS) continue;
     lastTaken.set(pageId, time);
@@ -112,7 +113,7 @@ function takeDue(
       id: `${pageId}@${takenAt}`,
       pageId,
       takenAt,
-      blocks: content,
+      blocks: earlier,
     };
     void keep(options.storage, snapshot);
   }

@@ -102,6 +102,8 @@ owner listed here exists.
 | Seeds: block trees that become pages with new ids | `src/features/onboarding/seed.ts` | 17 |
 | The template gallery and its built-in page templates | `src/features/templates/` | 17 |
 | Comments: discussions on a page, a block or its text; replies, resolving, deleting | `src/features/comments/` | 17 |
+| Keeping page versions in storage | `src/persistence/snapshot-store.ts` | 17 |
+| A page's history: its content, restoring a version, the dialog | `src/features/page-history/` | 17 |
 | Marking commented text | `src/model/rich-text-comments.ts`, `src/ui/rich-text/rich-text-projection.ts` | 17 |
 | A board's sub-groups: the setting and its lanes | `src/features/database/sub-group.commands.ts`, `layouts/board/board-lanes.view.ts` | 16 |
 | CSV import: column types, the new database; CSV export of a view | `src/features/database/csv-import.ts`, `csv-import.commands.ts`, `csv-export.selectors.ts`, `csv-file.view.ts` | 16 |
