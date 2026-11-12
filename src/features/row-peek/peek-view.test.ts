@@ -96,6 +96,18 @@ describe("the row peek view", () => {
     expect(sent.at(-1)?.type).toBe("peek.close");
   });
 
+  it("closes on Escape from the page's title, which has no block to select", () => {
+    const { host, sent } = rendered();
+    const event = new KeyboardEvent("keydown", {
+      key: "Escape",
+      bubbles: true,
+    });
+
+    host.querySelector(".peek .editor__title")?.dispatchEvent(event);
+
+    expect(sent.at(-1)?.type).toBe("peek.close");
+  });
+
   it("comments on its page, copies its link and favors it from its bar", () => {
     const writeText = vi.fn(() => Promise.resolve());
     Object.defineProperty(navigator, "clipboard", {

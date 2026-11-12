@@ -116,15 +116,20 @@ function renderBar(
   </div>`;
 }
 
-function isEditing(target: EventTarget | null): boolean {
+// A field that keeps the keys it is typed with. The page's title gives
+// Escape up: it has no block for Escape to select, so Escape closes the
+// peek from it, as Notion's.
+function isEditing(event: KeyboardEvent): boolean {
+  const { target } = event;
   if (!(target instanceof HTMLElement)) return false;
+  if (event.key === "Escape" && target.matches(".editor__title")) return false;
   return target.isContentEditable || target.matches("input, textarea");
 }
 
 // Escape closes the peek, and K and J step through the rows, unless a
 // field or a menu has the keys.
 function onKeyDown(event: KeyboardEvent, state: AppState, dispatch: Dispatch) {
-  if (state.ui.overlay !== null || isEditing(event.target)) return;
+  if (state.ui.overlay !== null || isEditing(event)) return;
   const commands: Partial<Record<string, Command>> = {
     Escape: closePeek.create({}),
     k: stepPeek.create({ by: -1 }),
