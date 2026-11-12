@@ -25,7 +25,7 @@ import {
   type MenuEntry,
   type MenuItem,
 } from "../../ui/menu/index.ts";
-import { wordCountLabel } from "../page-info/index.ts";
+import { selectEditedLabel, wordCountLabel } from "../page-info/index.ts";
 import {
   backlinksItem,
   renderFontTiles,
@@ -48,6 +48,14 @@ export function pageMenuAnchorId(place: string, pageId: BlockId): string {
 
 function pageIdOfAnchor(anchorId: string | undefined): BlockId | undefined {
   return parseBlockId(anchorId?.split(":")[1] ?? "");
+}
+
+// The sidebar's rows open the menu from the page tree, which shows a
+// shorter menu.
+export const TREE_PLACE = "tree";
+
+function placeOfAnchor(anchorId: string | undefined): string {
+  return anchorId?.split(":")[0] ?? "";
 }
 
 export interface PageMenuButtonOptions {
@@ -112,17 +120,22 @@ function lockItem(page: PageBlock, dispatch: Dispatch): MenuItem {
   };
 }
 
+function favoriteItem(page: PageBlock, dispatch: Dispatch): MenuItem {
+  const pageId = page.id;
+  return {
+    label: page.props.isFavorite
+      ? COPY.pageMenu.removeFavorite
+      : COPY.pageMenu.addFavorite,
+    icon: "star",
+    onSelect: () => dispatch(togglePageFavorite.create({ pageId })),
+  };
+}
+
 // The page's place: a favorite or not, and a page inside it.
 function placeItems(page: PageBlock, dispatch: Dispatch): MenuItem[] {
   const pageId = page.id;
   return [
-    {
-      label: page.props.isFavorite
-        ? COPY.pageMenu.removeFavorite
-        : COPY.pageMenu.addFavorite,
-      icon: "star",
-      onSelect: () => dispatch(togglePageFavorite.create({ pageId })),
-    },
+    favoriteItem(page, dispatch),
     {
       label: COPY.pageMenu.addSubpage,
       icon: "plus",
@@ -164,6 +177,38 @@ function menuEntries(
   ]);
 }
 
+// The sidebar's shorter menu, as Notion's: favorite, then what acts on
+// the page; its style and files are the open page's own menu.
+function treeEntries(
+  state: AppState,
+  page: PageBlock,
+  dispatch: Dispatch,
+): MenuEntry[] {
+  return grouped([
+    [favoriteItem(page, dispatch)],
+    pageActionItems(state, page.id, dispatch),
+  ]);
+}
+
+// What the menu holds where it opened: the sidebar's short menu with the
+// page's last edit, as Notion's; elsewhere every group, the style tiles
+// and the word count.
+function menuParts(state: AppState, page: PageBlock, dispatch: Dispatch) {
+  const anchorId = state.ui.overlay?.anchorId;
+  if (placeOfAnchor(anchorId) === TREE_PLACE) {
+    return {
+      items: treeEntries(state, page, dispatch),
+      footer: selectEditedLabel(state, page.id, new Date().toISOString()),
+    };
+  }
+  const tiles = renderFontTiles(page, dispatch);
+  return {
+    items: menuEntries(state, page, dispatch),
+    footer: wordCountLabel(state, page.id),
+    ...(tiles === nothing ? {} : { lead: tiles }),
+  };
+}
+
 // The open page menu, if any. Rendered once, at the shell.
 export function renderPageMenu(
   state: AppState,
@@ -173,18 +218,15 @@ export function renderPageMenu(
   if (overlay?.kind !== PAGE_MENU_OVERLAY) return nothing;
   const page = selectPage(state, pageIdOfAnchor(overlay.anchorId) ?? null);
   if (page === undefined) return nothing;
-  const tiles = renderFontTiles(page, dispatch);
   return renderMenu({
     label: COPY.pageMenu.open,
-    items: menuEntries(state, page, dispatch),
+    ...menuParts(state, page, dispatch),
     onClose: () => dispatch(closeOverlay.create({})),
-    footer: wordCountLabel(state, page.id),
     search: {
       placeholder: COPY.menu.searchActions,
       query: overlay.query ?? "",
       onQuery: (query) => dispatch(setOverlayQuery.create({ query })),
     },
-    ...(tiles === nothing ? {} : { lead: tiles }),
     ...(overlay.point && { point: overlay.point }),
   });
 }

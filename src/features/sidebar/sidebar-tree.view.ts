@@ -17,8 +17,12 @@ import {
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { startPointerDrag } from "../../ui/drag/index.ts";
-import { PAGE_MENU_OVERLAY, pageMenuAnchorId } from "../page-menu/index.ts";
-import { renderRow, TREE_PLACE, type Context } from "./sidebar-row.view.ts";
+import {
+  PAGE_MENU_OVERLAY,
+  pageMenuAnchorId,
+  TREE_PLACE,
+} from "../page-menu/index.ts";
+import { renderRow, type Context } from "./sidebar-row.view.ts";
 import type { TreeRow } from "./sidebar.selectors.ts";
 
 function rowOf(event: Event): HTMLElement | null {

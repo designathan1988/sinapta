@@ -4,12 +4,10 @@ import type { AppState, Dispatch } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
-import { renderPageMenuButton } from "../page-menu/index.ts";
+import { renderPageMenuButton, TREE_PLACE } from "../page-menu/index.ts";
 import type { TreeRow } from "./sidebar.selectors.ts";
 
 const LEVEL_PROPERTY = "--sidebar-level";
-// Names the tree as the place of a row's page menu button.
-export const TREE_PLACE = "tree";
 
 function renderAddButton(): TemplateResult {
   return html`<button

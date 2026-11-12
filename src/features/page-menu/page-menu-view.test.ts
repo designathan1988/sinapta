@@ -9,7 +9,8 @@ import {
   renderPageMenu,
 } from "./page-menu.view.ts";
 
-function rendered(isResolved: boolean) {
+// The page's menu, opened from the top bar or from another place.
+function rendered(isResolved: boolean, place = "bar") {
   const discussion = {
     id: toBlockId("d1"),
     blockId: null,
@@ -31,7 +32,7 @@ function rendered(isResolved: boolean) {
     },
   ]);
   const initial = createInitialState();
-  const anchorId = pageMenuAnchorId("bar", toBlockId("page"));
+  const anchorId = pageMenuAnchorId(place, toBlockId("page"));
   const overlay = { kind: PAGE_MENU_OVERLAY, anchorId };
   const state = { ...initial, workspace, ui: { ...initial.ui, overlay } };
   const sent: Command[] = [];
@@ -51,6 +52,23 @@ function rendered(isResolved: boolean) {
 }
 
 describe("the page menu, as Notion's", () => {
+  it("keeps the sidebar's menu short: favorite, then the page's actions", () => {
+    const { host, rows } = rendered(false, "tree");
+
+    const labels = rows.map((row) => row.textContent);
+
+    expect(labels).toHaveLength(5);
+    expect(labels[0]).toContain("Add to favorites");
+    expect(labels.slice(1).map((label) => label.trim())).toEqual([
+      expect.stringContaining("Copy link"),
+      expect.stringContaining("Duplicate"),
+      expect.stringContaining("Move to"),
+      expect.stringContaining("Move to trash"),
+    ]);
+    expect(host.querySelector(".page-menu__fonts")).toBeNull();
+    expect(host.textContent).toContain("Edited");
+  });
+
   it("searches its actions", () => {
     const { host } = rendered(false);
 
