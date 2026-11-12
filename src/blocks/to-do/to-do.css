@@ -1,7 +1,9 @@
 @layer blocks {
+  /* As Notion's: the box centered in a 24 px column, the text 6 px after
+     it, 30 px from the page's text. */
   .to-do {
     display: flex;
-    gap: var(--space-inline-sm);
+    gap: var(--space-inline-icon);
     align-items: flex-start;
 
     &[data-checked] .rich-text {
@@ -13,5 +15,6 @@
   /* The box itself is ui's checkbox; here it only sits on the first line. */
   .to-do__check {
     margin-block: var(--space-inset-xs);
+    margin-inline: calc((var(--size-target-min) - var(--size-icon-sm)) / 2);
   }
 }

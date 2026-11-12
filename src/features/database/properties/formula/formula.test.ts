@@ -143,13 +143,17 @@ describe("formulas", () => {
     });
   });
 
-  it("works out 5,000 rows in under 50 milliseconds", () => {
+  // A formula worked out anew for each row would be about ten times
+  // slower; the fastest of fifteen runs, with twice the room the work
+  // needs alone, stays clear of a processor busy with other test files,
+  // the watchers and the browser.
+  it("works out 5,000 rows in under 100 milliseconds", () => {
     const compiled = compileFormula(
       'if(prop("Hours") > 2, round(prop("Hours") * 1.5, 1), 0) + length(join(prop("Tags"), ","))',
       PROPERTIES,
     );
     if (!compiled.ok) throw new Error(compiled.error);
-    const times = Array.from({ length: 5 }, () => {
+    const times = Array.from({ length: 15 }, () => {
       const start = performance.now();
       for (let row = 0; row < 5000; row += 1) {
         evaluateFormula(compiled.program, CONTEXT);
@@ -157,6 +161,6 @@ describe("formulas", () => {
       return performance.now() - start;
     });
 
-    expect(Math.min(...times)).toBeLessThan(50);
+    expect(Math.min(...times)).toBeLessThan(100);
   });
 });

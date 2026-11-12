@@ -1,7 +1,8 @@
 @layer blocks {
+  /* As Notion's: the arrow in a 24 px column, the text 6 px after it. */
   .toggle {
     display: flex;
-    gap: var(--space-inline-xs);
+    gap: var(--space-inline-icon);
     align-items: flex-start;
   }
 

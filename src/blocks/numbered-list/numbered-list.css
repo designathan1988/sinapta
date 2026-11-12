@@ -1,16 +1,18 @@
 @layer blocks {
+  /* As Notion's: the number centered in a 24 px column, the text 6 px
+     after it. */
   .numbered-list {
     display: flex;
-    gap: var(--space-inline-sm);
+    gap: var(--space-inline-icon);
   }
 
   .numbered-list__marker {
     flex: none;
-    min-inline-size: var(--size-icon-sm);
+    min-inline-size: var(--size-target-min);
     color: var(--color-text-secondary);
     font-variant-numeric: tabular-nums;
     line-height: var(--font-line-height-body);
-    text-align: end;
+    text-align: center;
     user-select: none;
   }
 }

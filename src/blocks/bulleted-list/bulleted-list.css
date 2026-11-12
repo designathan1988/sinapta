@@ -1,12 +1,14 @@
 @layer blocks {
+  /* As Notion's: the bullet centered in a 24 px column, the text 6 px
+     after it. */
   .bulleted-list {
     display: flex;
-    gap: var(--space-inline-sm);
+    gap: var(--space-inline-icon);
 
     &::before {
       content: "•";
       flex: none;
-      inline-size: var(--size-icon-sm);
+      inline-size: var(--size-target-min);
       color: var(--color-text-secondary);
       line-height: var(--font-line-height-body);
       text-align: center;
