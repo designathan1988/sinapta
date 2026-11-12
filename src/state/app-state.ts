@@ -1,4 +1,5 @@
 // The shape of the single application state and its initial value.
+import type { PageVersion } from "./page-versions.commands.ts";
 import {
   createEmptyWorkspace,
   type AssetError,
@@ -95,6 +96,11 @@ export interface UiState {
     readonly pageId: BlockId;
     readonly viewId: ViewId;
     readonly mode: "side" | "center";
+  } | null;
+  // The versions of the page whose history is open, once read.
+  readonly pageVersions: {
+    readonly pageId: BlockId;
+    readonly versions: readonly PageVersion[];
   } | null;
   // The questions a form's last sending left unanswered, by view.
   readonly formErrors: {
@@ -201,6 +207,7 @@ export function createInitialUiState(): UiState {
     calendarWeek: null,
     formErrors: null,
     peek: null,
+    pageVersions: null,
     viewSearches: {},
     sidebarWidth: SIDEBAR_WIDTH.initial,
     isSidebarCollapsed: false,

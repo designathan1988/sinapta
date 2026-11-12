@@ -1,0 +1,98 @@
+@layer features {
+  /* Notion's page history: the version shown as a page, read only, with
+     the versions down the side and Restore under them. */
+  .page-history {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, var(--size-menu-narrow));
+    gap: var(--space-inline-md);
+    block-size: 100%;
+    padding: var(--space-inset-md);
+  }
+
+  .page-history__heading {
+    grid-column: 1 / -1;
+    margin: var(--space-none);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-strong);
+  }
+
+  .page-history__preview {
+    display: grid;
+    gap: var(--space-stack-xs);
+    align-content: start;
+    padding: var(--space-inset-xl);
+    overflow: hidden auto;
+    border-radius: var(--radius-lg);
+    box-shadow: inset 0 0 0 var(--size-border-thin) var(--color-border-subtle);
+  }
+
+  .page-history__title {
+    margin: var(--space-none);
+    font-size: var(--font-size-xxl);
+    font-weight: var(--font-weight-strong);
+  }
+
+  .page-history__line {
+    margin: var(--space-none);
+    font-size: var(--font-size-sm);
+
+    &[data-type="heading"] {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-strong);
+    }
+
+    &[data-type="to-do"]::before {
+      content: "☐ ";
+    }
+
+    &[data-type="bulleted-list"]::before {
+      content: "• ";
+    }
+  }
+
+  .page-history__side {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: var(--space-stack-sm);
+    min-block-size: 0;
+  }
+
+  .page-history__list {
+    display: grid;
+    gap: var(--space-stack-xxs);
+    align-content: start;
+    margin: var(--space-none);
+    padding: var(--space-none);
+    overflow: hidden auto;
+    list-style: none;
+  }
+
+  .page-history__version {
+    inline-size: 100%;
+    min-block-size: var(--size-menu-row);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: none;
+    border-radius: var(--radius-md);
+    background-color: transparent;
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+    text-align: start;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    &[aria-pressed="true"] {
+      background-color: var(--color-bg-selected);
+    }
+  }
+
+  .page-history__note {
+    grid-column: 1 / -1;
+    margin: var(--space-none);
+    color: var(--color-text-secondary);
+  }
+}

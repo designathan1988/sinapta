@@ -7,12 +7,13 @@ import type {
   StoredAsset,
   StoredData,
 } from "./storage-adapter.ts";
+import type { SnapshotStorage, StoredSnapshot } from "./snapshot-store.ts";
 
 // Storage identity: changing this name would hide existing data.
 const DATABASE_NAME = "pagecraft";
 // Changes only when the object stores change, not with the record format.
-// Version 2 adds the asset store.
-const DATABASE_VERSION = 2;
+// Version 2 adds the asset store; version 3 the page versions.
+const DATABASE_VERSION = 3;
 const STORES = ["blocks", "views", "meta"] as const;
 
 interface PagecraftDatabase extends DBSchema {
@@ -20,6 +21,11 @@ interface PagecraftDatabase extends DBSchema {
   views: { key: string; value: View };
   meta: { key: string; value: unknown };
   assets: { key: string; value: StoredAsset };
+  snapshots: {
+    key: string;
+    value: StoredSnapshot;
+    indexes: { pageId: string };
+  };
 }
 
 function open(): Promise<IDBPDatabase<PagecraftDatabase>> {
@@ -32,6 +38,12 @@ function open(): Promise<IDBPDatabase<PagecraftDatabase>> {
       }
       if (oldVersion < 2)
         database.createObjectStore("assets", { keyPath: "id" });
+      if (oldVersion < 3) {
+        const snapshots = database.createObjectStore("snapshots", {
+          keyPath: "id",
+        });
+        snapshots.createIndex("pageId", "pageId");
+      }
     },
   });
 }
@@ -99,6 +111,31 @@ async function putAssets(assets: readonly StoredAsset[]): Promise<void> {
   for (const asset of assets) void store.put(asset);
   await transaction.done;
   database.close();
+}
+
+async function listSnapshots(pageId: string): Promise<StoredSnapshot[]> {
+  const database = await open();
+  const list = await database.getAllFromIndex("snapshots", "pageId", pageId);
+  database.close();
+  return list;
+}
+
+async function putSnapshot(snapshot: StoredSnapshot): Promise<void> {
+  const database = await open();
+  await database.put("snapshots", snapshot);
+  database.close();
+}
+
+async function deleteSnapshots(ids: readonly string[]): Promise<void> {
+  const database = await open();
+  const transaction = database.transaction("snapshots", "readwrite");
+  for (const id of ids) void transaction.store.delete(id);
+  await transaction.done;
+  database.close();
+}
+
+export function createIndexedDbSnapshots(): SnapshotStorage {
+  return { listSnapshots, putSnapshot, deleteSnapshots };
 }
 
 export function createIndexedDbAdapter(): StorageAdapter {

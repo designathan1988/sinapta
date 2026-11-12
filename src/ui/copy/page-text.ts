@@ -9,6 +9,18 @@ export const PAGE_TEXT = {
     characters: { one: "character", other: "characters" },
     favorite: "Favorite",
   },
+  pageHistory: {
+    open: "Page history",
+    title: "Page history",
+    close: "Close page history",
+    versions: "Versions",
+    preview: "Version preview",
+    restore: "Restore version",
+    loading: "Reading the versions…",
+    empty:
+      "No versions yet. While you edit, a version is kept every 10 minutes.",
+    restored: "The page was restored to the version.",
+  },
   comments: {
     label: "Comments",
     author: "You",

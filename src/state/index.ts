@@ -90,3 +90,9 @@ export {
   openOverlayPanel,
   setOverlayQuery,
 } from "./ui-overlay.commands.ts";
+export {
+  PAGE_HISTORY_OVERLAY,
+  pageVersionCommands,
+  setPageVersions,
+  type PageVersion,
+} from "./page-versions.commands.ts";

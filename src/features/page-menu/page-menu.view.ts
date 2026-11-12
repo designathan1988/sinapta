@@ -18,6 +18,7 @@ import { exportPageAsMarkdown } from "../markdown-export/index.ts";
 import {
   closeOverlay,
   openOverlay,
+  PAGE_HISTORY_OVERLAY,
   type AppState,
   type Dispatch,
 } from "../../state/index.ts";
@@ -152,6 +153,16 @@ function lockItem(page: PageBlock, dispatch: Dispatch): MenuItem {
   };
 }
 
+// "Page history": the page's versions, to look at and restore.
+function historyItem(pageId: BlockId, dispatch: Dispatch): MenuItem {
+  const overlay = { kind: PAGE_HISTORY_OVERLAY, anchorId: pageId };
+  return {
+    label: COPY.pageHistory.open,
+    icon: "history",
+    onSelect: () => dispatch(openOverlay.create({ overlay })),
+  };
+}
+
 function menuItems(
   state: AppState,
   page: PageBlock,
@@ -174,6 +185,7 @@ function menuItems(
     ...moveItems(state, page, dispatch),
     ...styleItems(page, dispatch),
     lockItem(page, dispatch),
+    historyItem(pageId, dispatch),
     ...copyItems(state, pageId, dispatch),
     {
       label: COPY.pageMenu.trash,

@@ -25,6 +25,10 @@ import { editorCommands } from "../features/editor/index.ts";
 import { peekCommands } from "../features/row-peek/index.ts";
 import { templateCommands } from "../features/templates/index.ts";
 import {
+  pageContent,
+  pageHistoryCommands,
+} from "../features/page-history/index.ts";
+import {
   commentCommands,
   discussionTidier,
 } from "../features/comments/index.ts";
@@ -47,14 +51,17 @@ import {
   persistenceCommands,
   selectTheme,
   settingsCommands,
+  pageVersionCommands,
   uiCommands,
   workspaceCommands,
 } from "../state/index.ts";
 import {
   createIndexedDbAdapter,
   createTabCoordination,
+  createIndexedDbSnapshots,
   startAssetStore,
   startFileTools,
+  startSnapshots,
   startRepository,
   type RepositoryStart,
 } from "../persistence/index.ts";
@@ -89,6 +96,8 @@ const COMMANDS = [
   ...onboardingCommands,
   ...templateCommands,
   ...commentCommands,
+  ...pageHistoryCommands,
+  ...pageVersionCommands,
 ];
 
 // Keys that apply while one part of the interface is active.
@@ -122,6 +131,13 @@ async function startPersistence(
   });
   // Files people add to blocks are kept beside the workspace.
   installAssetSaver(startAssetStore({ adapter, dispatch }));
+  // Versions of the pages being edited, for their history.
+  startSnapshots({
+    store,
+    dispatch,
+    storage: createIndexedDbSnapshots(),
+    contentOf: pageContent,
+  });
   return { isFirstRun };
 }
 
