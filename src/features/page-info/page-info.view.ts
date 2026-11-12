@@ -1,4 +1,5 @@
-// The top bar's page details: when the open page was last edited, and a
+// The top bar's page details, as Notion's: when the open page was last
+// edited, which opens its history, a button that copies its link, and a
 // star that adds it to or removes it from the favorites.
 import "./page-info.css";
 import { html, nothing, type TemplateResult } from "lit-html";
@@ -9,8 +10,16 @@ import {
   type PageBlock,
 } from "../../blocks/page/index.ts";
 import type { BlockId } from "../../model/index.ts";
-import type { AppState, Dispatch } from "../../state/index.ts";
+import {
+  openOverlay,
+  PAGE_HISTORY_OVERLAY,
+  type AppState,
+  type Dispatch,
+} from "../../state/index.ts";
+import { linkToPage } from "../../ui/address/index.ts";
+import { announce } from "../../ui/announcer/index.ts";
 import { COPY, pluralize } from "../../ui/copy.ts";
+import { writeSystemClipboard } from "../editor/index.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { selectEditedLabel, selectWordCount } from "./page-info.selectors.ts";
@@ -33,6 +42,23 @@ function renderLocked(
   </button>`;
 }
 
+// The page's address on the clipboard, as Notion's link button.
+function renderCopyLink(pageId: BlockId): TemplateResult {
+  return html`<button
+    type="button"
+    class="page-info__action"
+    aria-label=${COPY.pageInfo.copyLink}
+    title=${tooltipTitle(COPY.pageInfo.copyLink)}
+    interestfor=${TOOLTIP_TARGET}
+    @click=${() => {
+      writeSystemClipboard(linkToPage(pageId));
+      announce(COPY.shell.linkCopied);
+    }}
+  >
+    ${renderIcon("link")}
+  </button>`;
+}
+
 export function renderPageInfo(
   state: AppState,
   dispatch: Dispatch,
@@ -42,11 +68,21 @@ export function renderPageInfo(
   const pageId = page.id;
   // The label is worked out at each render; the next change updates it.
   const edited = selectEditedLabel(state, pageId, new Date().toISOString());
+  const history = { kind: PAGE_HISTORY_OVERLAY, anchorId: pageId };
   return html`${renderLocked(page, dispatch)}
-    <span class="page-info__edited">${edited}</span>
     <button
       type="button"
-      class="page-info__favorite"
+      class="page-info__edited"
+      title=${tooltipTitle(COPY.pageHistory.open)}
+      interestfor=${TOOLTIP_TARGET}
+      @click=${() => dispatch(openOverlay.create({ overlay: history }))}
+    >
+      ${edited}
+    </button>
+    ${renderCopyLink(pageId)}
+    <button
+      type="button"
+      class="page-info__action page-info__favorite"
       aria-pressed=${String(page.props.isFavorite)}
       aria-label=${COPY.pageInfo.favorite}
       title=${tooltipTitle(COPY.pageInfo.favorite)}

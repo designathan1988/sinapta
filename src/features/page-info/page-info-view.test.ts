@@ -46,6 +46,38 @@ describe("renderPageInfo", () => {
     ]);
   });
 
+  it("opens the page's history from when it was edited, as Notion's", () => {
+    const { host, commands } = rendered(false);
+
+    host.querySelector<HTMLElement>(".page-info__edited")?.click();
+
+    expect(commands).toEqual([
+      expect.objectContaining({
+        type: "ui.openOverlay",
+        overlay: { kind: "page-history", anchorId: "page" },
+      }),
+    ]);
+  });
+
+  it("copies the page's link from the link button", () => {
+    const written: string[] = [];
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: {
+        writeText: (text: string) => {
+          written.push(text);
+          return Promise.resolve();
+        },
+      },
+    });
+    const { host } = rendered(false);
+
+    host.querySelector<HTMLElement>("[aria-label='Copy link']")?.click();
+
+    expect(written).toHaveLength(1);
+    expect(written[0]).toContain("page");
+  });
+
   it("says when the page was last edited", () => {
     expect(rendered(false).host.textContent).toContain("Edited");
   });

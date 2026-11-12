@@ -89,7 +89,11 @@ const PATHS: Record<BaseIconName, TemplateResult<2>> = {
   home: svg`<path d="M2.5 7.5L8 3l5.5 4.5M4 6.5v7h8v-7" />`,
   compose: svg`<path d="M7.5 2.5h-4a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-4" />
     <path d="M11.5 2l2.5 2.5L8.5 10H6V7.5z" />`,
-  more: svg`<path d="M3.5 8h.01M8 8h.01M12.5 8h.01" />`,
+  more: svg`<g fill="currentColor" stroke="none">
+    <circle cx="3.25" cy="8" r="1.25" />
+    <circle cx="8" cy="8" r="1.25" />
+    <circle cx="12.75" cy="8" r="1.25" />
+  </g>`,
   star: svg`<path
     d="M8 2.2l1.8 3.7 4 .6-2.9 2.8.7 4L8 11.4l-3.6 1.9.7-4L2.2 6.5l4-.6z"
   />`,

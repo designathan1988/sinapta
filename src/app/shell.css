@@ -101,10 +101,10 @@
      end, in one quiet line. */
   .app__top-bar {
     display: flex;
-    gap: var(--space-inline-xs);
+    gap: var(--space-inline-xxs);
     align-items: center;
     min-block-size: var(--size-top-bar);
-    padding: var(--space-none) var(--space-inset-sm);
+    padding: var(--space-none) var(--space-inset-md);
     color: var(--color-text-secondary);
     font-size: var(--font-size-sm);
   }

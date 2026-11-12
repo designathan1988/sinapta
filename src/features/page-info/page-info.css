@@ -1,8 +1,21 @@
 @layer features {
+  /* "Edited 5m ago", as Notion's: a quiet 28 px button that opens the
+     page's history. */
   .page-info__edited {
+    min-block-size: var(--size-control-action);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: none;
+    border-radius: var(--radius-md);
+    background-color: transparent;
     color: var(--color-text-tertiary);
-    font-size: var(--font-size-xs);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
     white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
   }
 
   /* Notion's lock chip: a lock and "Locked", muted, that unlocks. */
@@ -10,10 +23,10 @@
     display: inline-flex;
     gap: var(--space-inline-xs);
     align-items: center;
-    min-block-size: var(--size-control-sm);
-    padding: var(--space-none) var(--space-inset-xs);
+    min-block-size: var(--size-control-action);
+    padding: var(--space-none) var(--space-inset-sm);
     border: none;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     background-color: transparent;
     color: var(--color-text-secondary);
     font-family: inherit;
@@ -30,14 +43,15 @@
     }
   }
 
-  .page-info__favorite {
+  /* The link and the star: 28 px with a 20 px mark, as Notion's. */
+  .page-info__action {
     display: inline-grid;
     place-items: center;
-    min-inline-size: var(--size-control-sm);
-    min-block-size: var(--size-control-sm);
+    inline-size: var(--size-control-action);
+    block-size: var(--size-control-action);
     padding: var(--space-none);
     border: none;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     background-color: transparent;
     color: var(--color-text-secondary);
     cursor: pointer;
@@ -46,12 +60,17 @@
       background-color: var(--color-bg-hover);
     }
 
-    /* A favorite's star is filled. */
-    &[aria-pressed="true"] {
-      color: var(--color-tone-yellow);
+    & > .icon {
+      inline-size: var(--size-icon-md);
+      block-size: var(--size-icon-md);
     }
+  }
 
-    &[aria-pressed="true"] .icon {
+  /* A favorite's star is filled. */
+  .page-info__favorite[aria-pressed="true"] {
+    color: var(--color-tone-yellow);
+
+    & .icon {
       fill: currentcolor;
     }
   }

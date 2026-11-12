@@ -70,6 +70,7 @@ export function renderPageMenuButton(
   return html`<button
     type="button"
     class="page-menu__button"
+    data-place=${options.place}
     tabindex=${options.isTabStop === false ? "-1" : "0"}
     data-overlay-anchor
     aria-haspopup="menu"

@@ -27,7 +27,7 @@
     padding: var(--space-none) var(--space-inset-xs);
     overflow: hidden;
     border: none;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     background-color: transparent;
     color: var(--color-text-secondary);
     text-overflow: ellipsis;

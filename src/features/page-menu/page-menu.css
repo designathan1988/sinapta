@@ -17,5 +17,24 @@
       background-color: var(--color-bg-active);
       color: var(--color-text-primary);
     }
+
+    /* In the top bar, as Notion's "…": 28 px, a 6 px radius, a 20 px
+       mark. */
+    &[data-place="bar"] {
+      inline-size: var(--size-control-action);
+      block-size: var(--size-control-action);
+      border-radius: var(--radius-md);
+      color: var(--color-text-secondary);
+
+      &:hover,
+      &[aria-expanded="true"] {
+        background-color: var(--color-bg-hover);
+      }
+
+      & > .icon {
+        inline-size: var(--size-icon-md);
+        block-size: var(--size-icon-md);
+      }
+    }
   }
 }

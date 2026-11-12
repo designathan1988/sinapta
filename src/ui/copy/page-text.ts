@@ -8,6 +8,7 @@ export const PAGE_TEXT = {
     words: { one: "word", other: "words" },
     characters: { one: "character", other: "characters" },
     favorite: "Favorite",
+    copyLink: "Copy link",
   },
   inbox: {
     open: "Inbox",
