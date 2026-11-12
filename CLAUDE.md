@@ -9,9 +9,12 @@ No UI framework. Full specification: docs/specification.md.
 - npm run test:watch     tests in watch mode (keep running in background)
 - npm run verify         type check + lint + full tests; run before every commit
 - npm run tokens         rebuild src/styles/tokens.generated.css
-- npm run audit:ui       optional interface sweep in headless Chrome; it
-                         takes minutes, so it is not part of the workflow;
-                         run it only when the owner asks
+- npm run detect         interface defect detector (lab tool in
+                         ../ui-defect-lab): every page, view and control in
+                         light, dark and 1024 px, judged by comparison, not
+                         per-screen rules; ~25 s against the server at :5190
+                         (start it, stop it after); report with CSS and
+                         template file:line in .detector/report.md
 
 ## Architecture rules
 - All state lives in the one store: src/state/store.ts. Views keep no state.
@@ -72,7 +75,8 @@ No UI framework. Full specification: docs/specification.md.
 - Capture each changed surface whole, then each region and every open
   menu state, and inspect them before calling UI work done.
 - Every check takes seconds, not minutes. Point at the changed control
-  yourself and look; never wait on a long sweep. Stop the review server
+  yourself and look; after interface work run npm run detect and fix
+  what it reports (0 found). Stop the review server
   and any other process you started as soon as you are done with it.
 
 ## Read on demand

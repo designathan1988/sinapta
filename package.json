@@ -16,7 +16,8 @@
     "audit:ui:self-test": "node scripts/ui-audit/self-test.ts",
     "lint": "eslint . --max-warnings 0 --cache --cache-location node_modules/.cache/eslint/ && stylelint \"src/**/*.css\" --max-warnings 0 --cache --cache-location node_modules/.cache/stylelint/ && prettier --check .",
     "format": "prettier --write .",
-    "verify": "npm run check && npm run lint && npm run test"
+    "verify": "npm run check && npm run lint && npm run test",
+    "detect": "node ../ui-defect-lab/detector/run.mjs http://localhost:5190/ .detector"
   },
   "dependencies": {
     "@tanstack/table-core": "9.3.1",

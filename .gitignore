@@ -4,3 +4,4 @@ dist/
 .eslintcache
 .stylelintcache
 .ui-audit/
+.detector/
