@@ -81,16 +81,19 @@
     padding-inline-start: var(--space-inset-xl);
   }
 
-  /* The space below the text: a click here continues the page. */
+  /* The space under the blocks that takes a click to write; its hint
+     sits on its first line, where the text would go, not in its middle
+     as a button would center it. */
   .editor__continue {
+    display: grid;
     flex: 1;
+    align-content: start;
     min-block-size: var(--size-sidebar-min);
     padding: var(--space-none);
     border: none;
     background-color: transparent;
     color: transparent;
     text-align: start;
-    vertical-align: top;
     cursor: text;
 
     &[data-empty],
