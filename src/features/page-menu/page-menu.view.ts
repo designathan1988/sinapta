@@ -2,10 +2,8 @@ import "./page-menu.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import {
   createPage,
-  duplicatePage,
   movePage,
   selectPage,
-  selectPageCopySize,
   selectPagePosition,
   DATABASE_TYPE,
   setPageLocked,
@@ -14,24 +12,19 @@ import {
   type PageBlock,
 } from "../../blocks/page/index.ts";
 import { parseBlockId, type BlockId } from "../../model/index.ts";
-import { exportPageAsMarkdown } from "../markdown-export/index.ts";
 import {
   closeOverlay,
   openOverlay,
-  PAGE_HISTORY_OVERLAY,
   type AppState,
   type Dispatch,
 } from "../../state/index.ts";
-import {
-  RESOLVED_COMMENTS_OVERLAY,
-  selectResolvedDiscussions,
-} from "../comments/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { renderMenu, type MenuItem } from "../../ui/menu/index.ts";
 import { wordCountLabel } from "../page-info/index.ts";
 import { styleItems } from "./page-menu-style.view.ts";
+import { copyItems, historyItem, resolvedItems } from "./page-menu-items.ts";
 
 export const PAGE_MENU_OVERLAY = "page-menu";
 // Opened from this menu; rendered by the move-to feature.
@@ -114,38 +107,6 @@ function moveItems(
   return [...(index > 0 ? [up] : []), ...(index < count - 1 ? [down] : [])];
 }
 
-// Actions that make something from the page: a duplicate, a file.
-function copyItems(
-  state: AppState,
-  pageId: BlockId,
-  dispatch: Dispatch,
-): MenuItem[] {
-  return [
-    {
-      label: COPY.pageMenu.duplicate,
-      icon: "duplicate",
-      onSelect: () => {
-        const size = selectPageCopySize(state, pageId);
-        dispatch(duplicatePage.create({ pageId, ...size }));
-      },
-    },
-    {
-      label: COPY.pageMenu.exportMarkdown,
-      icon: "download",
-      onSelect: () => {
-        exportPageAsMarkdown(state, pageId);
-      },
-    },
-    {
-      label: COPY.pageMenu.print,
-      icon: "page",
-      onSelect: () => {
-        window.print();
-      },
-    },
-  ];
-}
-
 // Notion's lock switch: a page's text and blocks, or a database's
 // properties and views, stay as they are while it is on.
 function lockItem(page: PageBlock, dispatch: Dispatch): MenuItem {
@@ -162,35 +123,6 @@ function lockItem(page: PageBlock, dispatch: Dispatch): MenuItem {
     onSelect: () =>
       dispatch(setPageLocked.create({ pageId, isLocked: !isLocked })),
   };
-}
-
-// "Page history": the page's versions, to look at and restore.
-function historyItem(pageId: BlockId, dispatch: Dispatch): MenuItem {
-  const overlay = { kind: PAGE_HISTORY_OVERLAY, anchorId: pageId };
-  return {
-    label: COPY.pageHistory.open,
-    icon: "history",
-    onSelect: () => dispatch(openOverlay.create({ overlay })),
-  };
-}
-
-// "Resolved comments", with how many, while the page has any.
-function resolvedItems(
-  state: AppState,
-  pageId: BlockId,
-  dispatch: Dispatch,
-): MenuItem[] {
-  const count = selectResolvedDiscussions(state, pageId).length;
-  if (count === 0) return [];
-  const overlay = { kind: RESOLVED_COMMENTS_OVERLAY, anchorId: pageId };
-  return [
-    {
-      label: COPY.comments.resolved,
-      icon: "comment",
-      value: String(count),
-      onSelect: () => dispatch(openOverlay.create({ overlay })),
-    },
-  ];
 }
 
 function menuItems(

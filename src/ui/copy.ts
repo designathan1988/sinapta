@@ -5,6 +5,7 @@ import {
   BLOCK_TEXT,
   DATABASE_MENU_TEXT,
   DATABASE_TEXT,
+  DATE_TEXT,
   EDITOR_TEXT,
   ONBOARDING_TEXT,
   PAGE_TEXT,
@@ -16,6 +17,7 @@ export const PRODUCT_NAME = "Pagecraft";
 
 export const COPY = {
   ...WORKSPACE_TEXT,
+  ...DATE_TEXT,
   ...EDITOR_TEXT,
   ...PAGE_TEXT,
   ...BLOCK_TEXT,

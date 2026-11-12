@@ -11,6 +11,7 @@ import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { downloadFile, downloadTextFile } from "../../ui/download/index.ts";
 import { selectPageArchive, selectSubpages } from "./page-archive.selectors.ts";
+import { htmlFileName, selectPageHtml } from "./html-export.selectors.ts";
 import {
   markdownFileName,
   selectPageMarkdown,
@@ -31,6 +32,18 @@ export function exportPageAsMarkdown(state: AppState, pageId: BlockId): void {
     text: selectPageMarkdown(state, pageId),
   });
   announce(COPY.pageMenu.exportedMarkdown);
+}
+
+// The page as one HTML file.
+export function exportPageAsHtml(state: AppState, pageId: BlockId): void {
+  const page = selectPage(state, pageId);
+  if (page === undefined) return;
+  downloadTextFile({
+    name: htmlFileName(selectPageTitle(page)),
+    type: "text/html",
+    text: selectPageHtml(state, pageId),
+  });
+  announce(COPY.pageMenu.exportedHtml);
 }
 
 function exportArchive(state: AppState, page: PageBlock): void {

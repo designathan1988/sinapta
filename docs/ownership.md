@@ -66,6 +66,7 @@ owner listed here exists.
 | What file, PDF, video and audio blocks share: props, commands, empty field, caption | `src/blocks/media/` | 14 |
 | Pages: schema, commands, selectors, tree moves, trash | `src/blocks/page/` | 2 |
 | Sidebar tree and favorites | `src/features/sidebar/` | 2 |
+| A page as one HTML file | `src/features/markdown-export/html-export.selectors.ts` | 20 |
 | Repeating templates: the repeat, its days, and the check that adds their rows | `src/features/database/template-repeat.commands.ts`, `src/app/template-repeats.ts` | 20 |
 | The widths a person drags: the sidebar's and the side peek's | `src/state/widths.ts`, `src/features/row-peek/peek-resizer.view.ts` | 20 |
 | The window's width as state, and the narrow-window drawer | `src/state/viewport.commands.ts`, `src/app/viewport.ts` | 19 |
