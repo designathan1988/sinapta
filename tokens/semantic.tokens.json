@@ -591,6 +591,10 @@
       "inset": {
         "$description": "The space above and below a center peek.",
         "$value": "{base.size.4x5}"
+      },
+      "pageMin": {
+        "$description": "The page's least width beside a side peek: the peek narrows first, 416 px.",
+        "$value": "{base.size.26}"
       }
     },
     "search": {

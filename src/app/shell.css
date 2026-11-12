@@ -1,6 +1,8 @@
 @layer features {
+  /* Nothing scrolls the window sideways, not even a peek sliding in. */
   .app {
     display: grid;
+    overflow: clip;
     grid-template-columns: var(--app-sidebar-width) minmax(0, 1fr);
     block-size: 100%;
 
@@ -8,18 +10,21 @@
       grid-template-columns: minmax(0, 1fr);
     }
 
-    /* A side peek docks beside the main area, as Notion's, at most half
-       of the window. */
+    /* A side peek docks beside the main area, as Notion's; it narrows
+       before the page does, which keeps at least its least width. */
     &[data-peek="side"] {
       grid-template-columns:
         var(--app-sidebar-width) minmax(0, 1fr)
-        min(var(--app-peek-width, var(--size-peek-side)), 75%);
+        min(
+          var(--app-peek-width, var(--size-peek-side)),
+          100% - var(--app-sidebar-width) - var(--size-peek-page-min)
+        );
     }
 
     &[data-peek="side"][data-sidebar-collapsed] {
       grid-template-columns: minmax(0, 1fr) min(
           var(--app-peek-width, var(--size-peek-side)),
-          75%
+          100% - var(--size-peek-page-min)
         );
     }
 
@@ -89,6 +94,7 @@
   .app__main {
     display: flex;
     flex-direction: column;
+    container: main / inline-size;
     min-inline-size: 0;
     overflow: hidden auto;
 

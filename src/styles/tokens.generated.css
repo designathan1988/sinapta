@@ -415,6 +415,7 @@
     --size-peek-side: var(--base-size-40);
     --size-peek-center: var(--base-size-60);
     --size-peek-inset: var(--base-size-4x5);
+    --size-peek-page-min: var(--base-size-26);
     --size-search-width: var(--base-size-63);
     --size-search-height: var(--base-size-42x25);
     --size-search-top: var(--base-size-4x25);
