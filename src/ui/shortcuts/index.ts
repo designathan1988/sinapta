@@ -13,4 +13,5 @@ export {
   SHORTCUTS,
   type KeyStroke,
   type Shortcut,
+  type ShortcutAction,
 } from "./shortcut-registry.ts";

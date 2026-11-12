@@ -19,20 +19,41 @@ export interface KeyStroke {
   readonly isComposing: boolean;
 }
 
-export interface Shortcut {
+// What a shortcut does that is not a command: Notion's navigation keys,
+// which the app carries out with the browser and the open page.
+export type ShortcutAction =
+  "new-page" | "back" | "forward" | "copy-link" | "parent-page";
+
+interface ShortcutKey {
   // Lower-case `KeyboardEvent.key`.
   readonly key: string;
   // Ctrl on Windows and Linux, Command on macOS.
   readonly withModifier: boolean;
   readonly withShift: boolean;
-  readonly command: Command;
 }
+
+export type Shortcut = ShortcutKey &
+  (
+    | { readonly command: Command; readonly action?: undefined }
+    | { readonly action: ShortcutAction; readonly command?: undefined }
+  );
+
+const navigation = (
+  key: string,
+  action: ShortcutAction,
+  withShift = false,
+): Shortcut => ({ key, withModifier: true, withShift, action });
 
 export const SETTINGS_OVERLAY_KIND = "settings";
 export const PALETTE_OVERLAY_KIND = "command-palette";
 export const SHORTCUT_HELP_OVERLAY_KIND = "shortcut-help";
 
 export const SHORTCUTS: readonly Shortcut[] = [
+  navigation("n", "new-page"),
+  navigation("[", "back"),
+  navigation("]", "forward"),
+  navigation("l", "copy-link"),
+  navigation("u", "parent-page", true),
   {
     key: "z",
     withModifier: true,

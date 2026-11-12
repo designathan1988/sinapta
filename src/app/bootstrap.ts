@@ -60,6 +60,7 @@ import { installOverlayDismiss } from "../ui/overlay/index.ts";
 import { installScopedKeys, matchShortcut } from "../ui/shortcuts/index.ts";
 import { installTooltip } from "../ui/tooltip/index.ts";
 import { startRouter } from "./router.ts";
+import { runShortcutAction } from "./shortcut-actions.ts";
 import { applyTheme } from "./theme.ts";
 import { renderShell } from "./shell.view.ts";
 
@@ -157,7 +158,8 @@ export async function startApp(container: HTMLElement): Promise<void> {
     const shortcut = matchShortcut(event);
     if (shortcut === undefined) return;
     event.preventDefault();
-    dispatch(shortcut.command);
+    if (shortcut.command !== undefined) dispatch(shortcut.command);
+    else runShortcutAction(shortcut.action, store.getState(), dispatch);
   });
   store.subscribe(renderRoot);
   renderRoot();

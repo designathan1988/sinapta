@@ -4,6 +4,7 @@ export const WORKSPACE_TEXT = {
     readOnlyTab:
       "This workspace is open in another tab. Close it to edit here.",
     skipToContent: "Skip to content",
+    linkCopied: "Link copied.",
     pagesLabel: "Pages",
     hideSidebar: "Hide sidebar",
     showSidebar: "Show sidebar",
@@ -165,6 +166,11 @@ export const WORKSPACE_TEXT = {
     redo: "Redo",
   },
   shortcutHelp: {
+    newPage: "New page",
+    back: "Back",
+    forward: "Forward",
+    copyLink: "Copy the page's link",
+    parentPage: "Open the page this one is in",
     title: "Keyboard shortcuts",
     close: "Close keyboard shortcuts",
     open: "Keyboard shortcuts",

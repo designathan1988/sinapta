@@ -14,6 +14,22 @@ function stroke(overrides: Partial<KeyStroke>): KeyStroke {
   };
 }
 
+describe("Notion's navigation keys", () => {
+  it.each([
+    ["Ctrl+N", stroke({ key: "n", ctrlKey: true }), "new-page"],
+    ["Ctrl+[", stroke({ key: "[", ctrlKey: true }), "back"],
+    ["Ctrl+]", stroke({ key: "]", ctrlKey: true }), "forward"],
+    ["Ctrl+L", stroke({ key: "l", ctrlKey: true }), "copy-link"],
+    [
+      "Ctrl+Shift+U",
+      stroke({ key: "U", ctrlKey: true, shiftKey: true }),
+      "parent-page",
+    ],
+  ])("match %s", (_, keyStroke, action) => {
+    expect(matchShortcut(keyStroke)?.action).toBe(action);
+  });
+});
+
 describe("matchShortcut", () => {
   it.each([
     ["Ctrl+Z", stroke({ ctrlKey: true }), UNDO_COMMAND],
@@ -25,7 +41,7 @@ describe("matchShortcut", () => {
     ],
     ["Ctrl+Y", stroke({ key: "y", ctrlKey: true }), REDO_COMMAND],
   ])("matches %s", (_, keyStroke, type) => {
-    expect(matchShortcut(keyStroke)?.command.type).toBe(type);
+    expect(matchShortcut(keyStroke)?.command?.type).toBe(type);
   });
 
   it.each(["?", "/"])(
@@ -46,7 +62,7 @@ describe("matchShortcut", () => {
       stroke({ key: "L", ctrlKey: true, shiftKey: true }),
     );
 
-    expect(shortcut?.command.type).toBe("settings.toggleTheme");
+    expect(shortcut?.command?.type).toBe("settings.toggleTheme");
   });
 
   it("ignores a key with no modifier", () => {
