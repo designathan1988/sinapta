@@ -68,6 +68,11 @@
       background-color: var(--color-bg-hover);
       color: var(--color-text-primary);
     }
+
+    /* The open page's row darkens a step when pointed at, as Notion's. */
+    &[aria-current="page"]:hover {
+      background-color: var(--color-bg-active);
+    }
   }
 
   .sidebar__row {
