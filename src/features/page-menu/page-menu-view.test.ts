@@ -43,11 +43,54 @@ function rendered(isResolved: boolean) {
     }),
     host,
   );
-  const item = [...host.querySelectorAll<HTMLElement>("[data-index]")].find(
-    (row) => row.textContent.includes("Resolved comments"),
-  );
-  return { sent, item };
+  const rows = [...host.querySelectorAll<HTMLElement>("[data-index]")];
+  const row = (label: string) =>
+    rows.find((element) => element.textContent.includes(label));
+  const item = row("Resolved comments");
+  return { sent, item, host, row, rows };
 }
+
+describe("the page menu, as Notion's", () => {
+  it("searches its actions", () => {
+    const { host } = rendered(false);
+
+    expect(host.querySelector("input")?.placeholder).toBe("Search actions…");
+  });
+
+  it("chooses the page's style from three tiles", () => {
+    const { host, sent } = rendered(false);
+    const tiles = [
+      ...host.querySelectorAll<HTMLButtonElement>(".page-menu__font"),
+    ];
+
+    tiles[1]?.click();
+
+    expect(tiles.map((tile) => tile.getAttribute("aria-pressed"))).toEqual([
+      "true",
+      "false",
+      "false",
+    ]);
+    expect(sent).toContainEqual(
+      expect.objectContaining({ type: "page.setFont", font: "serif" }),
+    );
+  });
+
+  it("turns small text and full width on and off with switches", () => {
+    const { row } = rendered(false);
+
+    expect(row("Small text")?.querySelector(".switch")).not.toBeNull();
+    expect(row("Full width")?.querySelector(".switch")).not.toBeNull();
+  });
+
+  it("copies the link and moves the page, and leaves moving up to keys", () => {
+    const { row, host } = rendered(false);
+
+    expect(row("Copy link")).toBeDefined();
+    expect(row("Move to")).toBeDefined();
+    expect(row("Move up")).toBeUndefined();
+    expect(host.querySelectorAll(".menu__divider").length).toBeGreaterThan(2);
+  });
+});
 
 describe("the page menu", () => {
   it("opens the page's resolved comments, with their count", () => {

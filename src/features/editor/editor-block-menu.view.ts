@@ -140,7 +140,7 @@ export function renderBlockMenu(
       items: blockActionEntries(block, { overlay, state, dispatch }),
       onClose,
       search: {
-        placeholder: COPY.blockMenu.search,
+        placeholder: COPY.menu.searchActions,
         query: overlay.query ?? "",
         onQuery: (query) => dispatch(setOverlayQuery.create({ query })),
       },

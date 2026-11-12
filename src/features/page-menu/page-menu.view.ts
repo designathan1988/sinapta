@@ -2,33 +2,43 @@ import "./page-menu.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import {
   createPage,
-  movePage,
   selectPage,
-  selectPagePosition,
   DATABASE_TYPE,
+  PAGE_TYPE,
   setPageLocked,
   togglePageFavorite,
-  trashPage,
   type PageBlock,
 } from "../../blocks/page/index.ts";
 import { parseBlockId, type BlockId } from "../../model/index.ts";
 import {
   closeOverlay,
   openOverlay,
+  setOverlayQuery,
   type AppState,
   type Dispatch,
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
-import { renderMenu, type MenuItem } from "../../ui/menu/index.ts";
+import {
+  renderMenu,
+  type MenuEntry,
+  type MenuItem,
+} from "../../ui/menu/index.ts";
 import { wordCountLabel } from "../page-info/index.ts";
-import { styleItems } from "./page-menu-style.view.ts";
-import { copyItems, historyItem, resolvedItems } from "./page-menu-items.ts";
+import {
+  backlinksItem,
+  renderFontTiles,
+  styleItems,
+} from "./page-menu-style.view.ts";
+import {
+  exportItems,
+  historyItem,
+  pageActionItems,
+  resolvedItems,
+} from "./page-menu-items.ts";
 
 export const PAGE_MENU_OVERLAY = "page-menu";
-// Opened from this menu; rendered by the move-to feature.
-export const MOVE_TO_OVERLAY_KIND = "move-to";
 
 // The same page can show its menu button in several places, so an anchor
 // id names the place as well as the page.
@@ -84,30 +94,6 @@ export function renderPageMenuButton(
   </button>`;
 }
 
-// Move actions that cannot apply are left out: a greyed-out item would not
-// say why it is unavailable.
-function moveItems(
-  state: AppState,
-  page: PageBlock,
-  dispatch: Dispatch,
-): MenuItem[] {
-  const { id: pageId, parentId } = page;
-  const { index, count } = selectPagePosition(state, page);
-  const move = (offset: number) => () =>
-    dispatch(movePage.create({ pageId, parentId, index: index + offset }));
-  const up: MenuItem = {
-    label: COPY.pageMenu.moveUp,
-    icon: "up",
-    onSelect: move(-1),
-  };
-  const down: MenuItem = {
-    label: COPY.pageMenu.moveDown,
-    icon: "down",
-    onSelect: move(1),
-  };
-  return [...(index > 0 ? [up] : []), ...(index < count - 1 ? [down] : [])];
-}
-
 // Notion's lock switch: a page's text and blocks, or a database's
 // properties and views, stay as they are while it is on.
 function lockItem(page: PageBlock, dispatch: Dispatch): MenuItem {
@@ -126,11 +112,8 @@ function lockItem(page: PageBlock, dispatch: Dispatch): MenuItem {
   };
 }
 
-function menuItems(
-  state: AppState,
-  page: PageBlock,
-  dispatch: Dispatch,
-): MenuItem[] {
+// The page's place: a favorite or not, and a page inside it.
+function placeItems(page: PageBlock, dispatch: Dispatch): MenuItem[] {
   const pageId = page.id;
   return [
     {
@@ -145,19 +128,40 @@ function menuItems(
       icon: "plus",
       onSelect: () => dispatch(createPage.create({ parentId: pageId })),
     },
-    ...moveItems(state, page, dispatch),
-    ...styleItems(page, dispatch),
-    lockItem(page, dispatch),
-    historyItem(pageId, dispatch),
-    ...resolvedItems(state, pageId, dispatch),
-    ...copyItems(state, pageId, dispatch),
-    {
-      label: COPY.pageMenu.trash,
-      icon: "trash",
-      isDanger: true,
-      onSelect: () => dispatch(trashPage.create({ pageId })),
-    },
   ];
+}
+
+const DIVIDER: MenuEntry = { kind: "divider" };
+
+// Groups with a line between each, leaving out the empty ones.
+function grouped(groups: readonly (readonly MenuItem[])[]): MenuEntry[] {
+  return groups
+    .filter((group) => group.length > 0)
+    .flatMap((group, index): MenuEntry[] =>
+      index === 0 ? [...group] : [DIVIDER, ...group],
+    );
+}
+
+// Notion's groups: act on the page; its style; its lock and place; its
+// past; its files. Moving up and down is the sidebar's Alt with arrows.
+function menuEntries(
+  state: AppState,
+  page: PageBlock,
+  dispatch: Dispatch,
+): MenuEntry[] {
+  const pageId = page.id;
+  const isPage = page.type === PAGE_TYPE;
+  return grouped([
+    pageActionItems(state, pageId, dispatch),
+    styleItems(page, dispatch),
+    [
+      lockItem(page, dispatch),
+      ...(isPage ? [backlinksItem(page, dispatch)] : []),
+      ...placeItems(page, dispatch),
+    ],
+    [historyItem(pageId, dispatch), ...resolvedItems(state, pageId, dispatch)],
+    exportItems(state, pageId),
+  ]);
 }
 
 // The open page menu, if any. Rendered once, at the shell.
@@ -169,11 +173,18 @@ export function renderPageMenu(
   if (overlay?.kind !== PAGE_MENU_OVERLAY) return nothing;
   const page = selectPage(state, pageIdOfAnchor(overlay.anchorId) ?? null);
   if (page === undefined) return nothing;
+  const tiles = renderFontTiles(page, dispatch);
   return renderMenu({
     label: COPY.pageMenu.open,
-    items: menuItems(state, page, dispatch),
+    items: menuEntries(state, page, dispatch),
     onClose: () => dispatch(closeOverlay.create({})),
     footer: wordCountLabel(state, page.id),
+    search: {
+      placeholder: COPY.menu.searchActions,
+      query: overlay.query ?? "",
+      onQuery: (query) => dispatch(setOverlayQuery.create({ query })),
+    },
+    ...(tiles === nothing ? {} : { lead: tiles }),
     ...(overlay.point && { point: overlay.point }),
   });
 }

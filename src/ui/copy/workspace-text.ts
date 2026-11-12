@@ -53,6 +53,10 @@ export const WORKSPACE_TEXT = {
     print: "Print or save as PDF",
     lockPage: "Lock page",
     lockDatabase: "Lock database",
+    copyLink: "Copy link",
+    copyLinkKeys: "Ctrl+L",
+    moveToAction: "Move to",
+    style: "Style",
   },
   // A locked page or view, as Notion's.
   lock: {
@@ -73,6 +77,7 @@ export const WORKSPACE_TEXT = {
     close: "Close",
     noMatches: "No matches",
     more: "More actions",
+    searchActions: "Search actions…",
   },
   // Notion's date picker.
   breadcrumbs: { label: "Breadcrumb" },
