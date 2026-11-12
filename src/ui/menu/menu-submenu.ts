@@ -125,6 +125,24 @@ export function isMoreOpen(
   );
 }
 
+// Closes the submenu or the row's actions open beside a menu, if any:
+// Escape takes them back one at a time, as Notion's. True when it did.
+export function closeOpenChild(
+  items: readonly MenuEntry[],
+  context: MenuContext | undefined,
+): boolean {
+  if (context === undefined) return false;
+  for (const item of items) {
+    if (!isMenuItem(item)) continue;
+    const id = item.submenu?.id ?? item.more?.id;
+    const index = id === undefined ? -1 : childIndexOf(context.overlay, id);
+    if (index === -1) continue;
+    context.dispatch(closeChildOverlay.create({ depth: index }));
+    return true;
+  }
+  return false;
+}
+
 // Opens or closes a row's actions from its "…", or from the arrow keys.
 export function toggleMore(
   item: MenuItem,

@@ -8,6 +8,7 @@ import {
   type MenuItem,
 } from "./menu-entry.ts";
 import {
+  closeOpenChild,
   hasSubmenu,
   isMoreOpen,
   openSubmenu,
@@ -117,6 +118,16 @@ function isOwnField(target: EventTarget | null): boolean {
   return isField && target.closest(".menu__search") === null;
 }
 
+// Escape closes a submenu open beside the menu first, then the menu; Tab
+// closes the menu. True when the key was one of them.
+function onLeaveKey(key: string, choosing: Choosing): boolean {
+  if (key === "Escape" && closeOpenChild(choosing.items, choosing.context))
+    return true;
+  if (key !== "Escape" && key !== "Tab") return false;
+  choosing.close();
+  return true;
+}
+
 export function onMenuKey(
   event: KeyboardEvent,
   choosing: Choosing,
@@ -126,8 +137,9 @@ export function onMenuKey(
   if (!(menu instanceof Element)) return;
   if (event.key !== "Escape" && isOwnField(event.target)) return;
   const isSearch = event.target instanceof HTMLInputElement;
-  if (event.key === "Escape" || event.key === "Tab") choosing.close();
-  else if (event.key === "Enter" && isSearch) {
+  if (onLeaveKey(event.key, choosing)) {
+    // Handled: the key stays in the menu.
+  } else if (event.key === "Enter" && isSearch) {
     choose(firstItem(choosing.items), choosing, menu);
   } else if (
     !onSideKey(event, choosing, isSubmenu) &&

@@ -107,6 +107,18 @@ describe("a menu row with a submenu", () => {
     ]);
   });
 
+  it("closes only the submenu on Escape while the focus is on the menu, as Notion's", () => {
+    const { sent, row } = rendered(OPEN);
+
+    row("Hide").dispatchEvent(
+      new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
+    );
+
+    expect(sent).toEqual([
+      expect.objectContaining({ type: "ui.closeChildOverlay", depth: 0 }),
+    ]);
+  });
+
   it("closes only the submenu with the left arrow key", () => {
     const { sent, row } = rendered(OPEN);
 
