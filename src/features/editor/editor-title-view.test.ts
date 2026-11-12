@@ -39,6 +39,29 @@ describe("the page title", () => {
     expect(field).toBeInstanceOf(HTMLTextAreaElement);
   });
 
+  it("offers to add an icon, a cover and a comment as alike buttons", () => {
+    const { field } = titleField();
+    const actions = [
+      ...(field
+        ?.closest(".editor")
+        ?.querySelectorAll(".editor__page-actions > button") ?? []),
+    ];
+
+    expect(actions.map((item) => item.textContent.trim())).toEqual([
+      "Add icon",
+      "Add cover",
+      "Add comment",
+    ]);
+    expect(actions.every((item) => item.classList.contains("button"))).toBe(
+      true,
+    );
+    expect(
+      actions.map((item) =>
+        item.querySelector(".icon")?.getAttribute("data-icon"),
+      ),
+    ).toEqual(["smile", "image", "comment"]);
+  });
+
   it("keeps a pasted line break out of the title", () => {
     const { field, sent } = titleField();
     if (!(field instanceof HTMLTextAreaElement)) throw new Error("no field");

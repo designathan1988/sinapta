@@ -11,7 +11,7 @@ import { VIEW_TYPES, type BlockId, type ViewType } from "../../model/index.ts";
 import type { AppState, Dispatch } from "../../state/index.ts";
 import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
-import { startDatabase } from "../database/index.ts";
+import { LAYOUT_ICONS, startDatabase } from "../database/index.ts";
 
 // The layouts in Notion's order.
 const LAYOUTS = VIEW_TYPES;
@@ -45,7 +45,7 @@ export function renderStartList(
       ${LAYOUTS.map((viewType) =>
         renderButton({
           label: COPY.database.layouts[viewType],
-          icon: "database",
+          icon: LAYOUT_ICONS[viewType],
           variant: "quiet",
           onClick: start(viewType),
         }),

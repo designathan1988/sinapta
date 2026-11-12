@@ -209,6 +209,7 @@
     --base-size-2x75: 2.75rem;
     --base-size-18x125: 18.125rem;
     --base-size-12x5: 12.5rem;
+    --base-size-0x875: 0.875rem;
     --base-size-1x375: 1.375rem;
     --base-size-1x875: 1.875rem;
     --base-size-1x125: 1.125rem;
@@ -354,6 +355,8 @@
     --size-icon-sm: var(--base-size-4);
     --size-icon-md: var(--base-size-5);
     --size-icon-xs: var(--base-size-3);
+    --size-icon-action: var(--base-size-0x875);
+    --size-control-action: var(--base-size-7);
     --size-control-sm: var(--base-size-6);
     --size-control-md: var(--base-size-8);
     --size-row-height: var(--base-size-8);

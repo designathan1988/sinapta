@@ -9,6 +9,7 @@ import {
 } from "../../state/index.ts";
 import { renderEmojiPicker } from "../../ui/emoji/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { renderIcon } from "../../ui/icon/index.ts";
 import {
   focusOverlayAnchor,
   showPopoverWhenConnected,
@@ -53,7 +54,9 @@ function renderPopover(
   </div>`;
 }
 
-// The page icon as a button that opens the emoji picker to change it.
+// The page icon as a button that opens the emoji picker to change it; a
+// page without one shows "Add icon" among the actions over its title, a
+// button like "Add cover", as Notion's.
 export function renderIconControl(
   state: AppState,
   page: PageBlock,
@@ -68,16 +71,18 @@ export function renderIconControl(
         : openOverlay.create({ overlay: { kind: ICON_OVERLAY } }),
     );
   };
+  const content =
+    icon ?? html`${renderIcon("smile")}<span>${COPY.icon.add}</span>`;
   return html`<button
       type="button"
-      class="editor__icon"
+      class=${icon === null ? "button" : "editor__icon"}
+      data-variant=${icon === null ? "quiet" : nothing}
       data-overlay-anchor
       aria-expanded=${String(isOpen)}
       aria-label=${icon === null ? nothing : COPY.icon.change}
-      ?data-empty=${icon === null}
       @click=${toggle}
     >
-      ${icon ?? COPY.icon.add}
+      ${content}
     </button>
     ${isOpen ? renderPopover(state, page, dispatch) : nothing}`;
 }

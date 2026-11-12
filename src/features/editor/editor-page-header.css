@@ -4,27 +4,42 @@
     display: flex;
   }
 
+  /* One row of actions over the title, each as Notion's: 28 px, its icon
+     and its words 6 px apart, quiet gray. */
   .editor__page-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-inline-xs);
-    align-items: flex-end;
+    gap: var(--space-inline-xxs);
+    align-items: center;
 
-    /* A page icon sits on its own line, and over the cover's edge. */
-    &[data-has-icon] {
-      flex-direction: column;
-      align-items: flex-start;
+    & > .button {
+      gap: var(--space-inline-icon);
+      min-block-size: var(--size-control-action);
+      padding-inline: var(--space-inset-sm);
+      border-radius: var(--radius-md);
+      color: var(--color-text-tertiary);
+      font-weight: var(--font-weight-regular);
+
+      & > .icon {
+        inline-size: var(--size-icon-action);
+        block-size: var(--size-icon-action);
+      }
     }
   }
 
-  .editor__cover + .editor__page-actions[data-has-icon] {
+  /* A page icon sits on its own line, over the cover's edge. */
+  .editor__page-icon {
+    display: flex;
+  }
+
+  .editor__cover + .editor__page-icon {
     margin-block-start: calc(var(--font-size-page-icon) / -2);
   }
 
   /* The quiet page actions appear when the page is hovered or holds focus;
      touch screens always show them. */
   @media (hover: hover) {
-    .editor__page-actions > :is(.button, .editor__icon[data-empty]) {
+    .editor__page-actions > .button {
       opacity: 0;
 
       @media (prefers-reduced-motion: no-preference) {
@@ -32,9 +47,7 @@
       }
     }
 
-    .editor:is(:hover, :focus-within)
-      .editor__page-actions
-      > :is(.button, .editor__icon[data-empty]) {
+    .editor:is(:hover, :focus-within) .editor__page-actions > .button {
       opacity: 1;
     }
   }
@@ -76,8 +89,6 @@
     border: none;
     border-radius: var(--radius-sm);
     background-color: transparent;
-    font-size: var(--font-size-xxl);
-    line-height: var(--font-line-height-tight);
     cursor: pointer;
 
     &:hover,
@@ -85,16 +96,9 @@
       background-color: var(--color-bg-hover);
     }
 
-    &:not([data-empty]) {
-      position: relative;
-      font-size: var(--font-size-page-icon);
-      line-height: 1;
-    }
-
-    &[data-empty] {
-      color: var(--color-text-secondary);
-      font-size: var(--font-size-sm);
-    }
+    position: relative;
+    font-size: var(--font-size-page-icon);
+    line-height: 1;
   }
 
   .editor__icon-popover:popover-open {

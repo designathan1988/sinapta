@@ -365,9 +365,17 @@
       "xs": {
         "$description": "A small mark inside a chip, as a chosen option's x: 12 px.",
         "$value": "{base.size.3}"
+      },
+      "action": {
+        "$description": "The icon of a page header action, as Notion's: 14 px.",
+        "$value": "{base.size.0x875}"
       }
     },
     "control": {
+      "action": {
+        "$description": "A page header action, as Notion's Add cover: 28 px.",
+        "$value": "{base.size.7}"
+      },
       "sm": {
         "$value": "{base.size.6}"
       },

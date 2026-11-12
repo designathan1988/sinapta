@@ -43,6 +43,24 @@ describe("renderStartList", () => {
     ]);
   });
 
+  it("shows each layout with its own icon, as Notion's", () => {
+    const icons = [
+      ...rendered([]).host.querySelectorAll(".editor__start-options .icon"),
+    ].map((icon) => icon.getAttribute("data-icon"));
+
+    expect(icons).toEqual([
+      "table",
+      "board",
+      "timeline",
+      "calendar",
+      "list",
+      "gallery",
+      "chart",
+      "feed",
+      "form",
+    ]);
+  });
+
   it("offers nothing once the page has content", () => {
     expect(rendered([{ id: "text" }]).host.querySelector("button")).toBeNull();
   });

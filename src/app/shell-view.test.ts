@@ -40,6 +40,17 @@ describe("renderShell", () => {
     expect(host.querySelector(".app__sidebar .sidebar__footer")).not.toBeNull();
   });
 
+  it("says nothing once saved: the page says when it was edited", () => {
+    const state = createInitialState();
+    const persistence = { ...state.persistence, status: "saved" as const };
+
+    const { host } = rendered({ ...state, persistence });
+
+    expect(host.querySelector(".app__save-status")?.textContent.trim()).toBe(
+      "",
+    );
+  });
+
   it("keeps the focus in an open drawer: all else is inert", async () => {
     const { host } = rendered(withDrawer());
     await Promise.resolve();

@@ -123,10 +123,12 @@ export const WORKSPACE_TEXT = {
     fieldLabel: "Icon (one emoji)",
     remove: "Remove icon",
   },
+  // Notion says nothing once a change is saved: "Edited just now" tells
+  // it. Only saving and a failure are said.
   saveStatus: {
     idle: "",
-    saving: "Saving",
-    saved: "Saved",
+    saving: "Saving…",
+    saved: "",
     failed: "Not saved",
   },
   settings: {

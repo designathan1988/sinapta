@@ -36,6 +36,7 @@ export {
 export { selectTableModel } from "./table-model.selectors.ts";
 export { groupByProperty } from "./group.commands.ts";
 export { startDatabase } from "./database-start.commands.ts";
+export { LAYOUT_ICONS } from "./view-settings/index.ts";
 export { renderDatabase } from "./database.view.ts";
 export { renderInlineDatabase } from "./database-inline.view.ts";
 export { renderLinkedView } from "./linked-view.view.ts";

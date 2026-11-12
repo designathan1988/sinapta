@@ -199,6 +199,7 @@ export function renderAddCover(
   if (page.props.cover != null) return nothing;
   return renderButton({
     label: COPY.cover.add,
+    icon: "image",
     onClick: () =>
       dispatch(
         setPageCover.create({ pageId: page.id, cover: coverFor(page.id) }),

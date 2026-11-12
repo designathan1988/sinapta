@@ -39,7 +39,8 @@ export type BaseIconName =
   | "comment"
   | "history"
   | "bell"
-  | "help";
+  | "help"
+  | "smile";
 
 export type IconName = BaseIconName | DataIconName | BlockIconName;
 
@@ -66,6 +67,8 @@ const PATHS: Record<BaseIconName, TemplateResult<2>> = {
     <path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" />`,
   help: svg`<circle cx="8" cy="8" r="6" />
     <path d="M6.25 6.25a1.75 1.75 0 1 1 2.5 1.6c-.5.25-.75.6-.75 1.15M8 11.25h.01" />`,
+  smile: svg`<circle cx="8" cy="8" r="6" />
+    <path d="M5.5 9.5a3 3 0 0 0 5 0M6 6.5h.01M10 6.5h.01" />`,
   plus: svg`<path d="M8 3v10M3 8h10" />`,
   chevron: svg`<path d="M6 4l4 4-4 4" />`,
   back: svg`<path d="M10 4L6 8l4 4" />`,

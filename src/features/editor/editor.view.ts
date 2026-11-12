@@ -102,21 +102,22 @@ function renderAddComment(page: PageBlock, dispatch: Dispatch) {
   });
 }
 
-// Over the title: "Add icon", "Add cover" and "Add comment".
+// Over the title, as Notion's: the page's icon on its own line, then one
+// row of "Add icon", "Add cover" and "Add comment", as each applies.
 function renderPageActions(
   state: AppState,
   page: PageBlock,
   dispatch: Dispatch,
 ): TemplateResult {
   const isPage = page.type === PAGE_TYPE;
-  return html`<div
-    class="editor__page-actions"
-    ?data-has-icon=${page.props.icon !== null}
-  >
-    ${renderIconControl(state, page, dispatch)}
-    ${isPage ? renderAddCover(page, dispatch) : nothing}
-    ${isPage ? renderAddComment(page, dispatch) : nothing}
-  </div>`;
+  const hasIcon = page.props.icon !== null;
+  const icon = renderIconControl(state, page, dispatch);
+  return html`${hasIcon ? html`<div class="editor__page-icon">${icon}</div>` : nothing}
+    <div class="editor__page-actions">
+      ${hasIcon ? nothing : icon}
+      ${isPage ? renderAddCover(page, dispatch) : nothing}
+      ${isPage ? renderAddComment(page, dispatch) : nothing}
+    </div>`;
 }
 
 // A page: its icon, its title and its blocks. The open page, unless a
