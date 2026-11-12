@@ -27,3 +27,10 @@ export function selectOverlayAt(
   const { overlay } = state.ui;
   return overlay?.anchorId === blockId ? overlay : null;
 }
+
+// The sidebar shows beside the page on a wide window unless hidden, and
+// over it on a narrow one while its drawer is open.
+export function selectIsSidebarShown(state: AppState): boolean {
+  const { isNarrow, isDrawerOpen, isSidebarCollapsed } = state.ui;
+  return isNarrow ? isDrawerOpen : !isSidebarCollapsed;
+}

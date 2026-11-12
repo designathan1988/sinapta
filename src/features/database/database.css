@@ -50,9 +50,11 @@
   }
 
   /* The views bar: tabs at the start, the view's tools at the end, over a
-     rule that runs the width of the page, as in Notion. */
+     rule that runs the width of the page, as in Notion; on a narrow page
+     the tools go to a second line. */
   .database__toolbar {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--space-inline-xs);
     align-items: center;
     min-block-size: var(--size-control-md);

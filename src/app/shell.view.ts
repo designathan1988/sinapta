@@ -1,15 +1,12 @@
 import "./shell.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
-import { createPage } from "../blocks/page/index.ts";
 import { renderEditor } from "../features/editor/index.ts";
 import { renderFormatToolbar } from "../features/format-toolbar/index.ts";
-import { renderSidebar } from "../features/sidebar/index.ts";
 import {
   openOverlay,
   selectIsHomeShown,
-  setSidebarWidth,
-  SIDEBAR_WIDTH,
+  selectIsSidebarShown,
   toggleSidebar,
   type AppState,
   type Dispatch,
@@ -22,105 +19,10 @@ import { renderPeek } from "../features/row-peek/index.ts";
 import { SETTINGS_OVERLAY } from "../features/settings/index.ts";
 import { renderButton } from "../ui/button/index.ts";
 import { SHORTCUT_HELP_OVERLAY_KIND } from "../ui/shortcuts/index.ts";
-import { COPY, PRODUCT_NAME } from "../ui/copy.ts";
+import { COPY } from "../ui/copy.ts";
 import { renderOverlay } from "./shell-overlays.view.ts";
-
-const WIDTH_PROPERTY = "--app-sidebar-width";
-
-function setWidth(shell: Element | null | undefined, width: number): void {
-  if (shell instanceof HTMLElement) {
-    shell.style.setProperty(WIDTH_PROPERTY, `${String(width)}rem`);
-  }
-}
-
-// The pointer position converted to a sidebar width in rem.
-function widthAt(event: PointerEvent): number {
-  const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
-  return event.clientX / rem;
-}
-
-const KEY_STEPS: Record<string, (width: number) => number> = {
-  ArrowLeft: (width) => width - SIDEBAR_WIDTH.step,
-  ArrowRight: (width) => width + SIDEBAR_WIDTH.step,
-  Home: () => SIDEBAR_WIDTH.min,
-  End: () => SIDEBAR_WIDTH.max,
-};
-
-// The attribute tells the styles, and anyone looking, that a resize is
-// under way.
-function capturePointer(event: PointerEvent): void {
-  if (event.currentTarget instanceof Element) {
-    event.currentTarget.setPointerCapture(event.pointerId);
-    event.currentTarget.closest(".app")?.setAttribute("data-resizing", "");
-  }
-}
-
-// While dragging, the browser owns the width; the store gets it once.
-function previewWidth(event: PointerEvent): void {
-  const target = event.currentTarget;
-  if (target instanceof Element && target.hasPointerCapture(event.pointerId)) {
-    setWidth(target.closest(".app"), widthAt(event));
-  }
-}
-
-function renderResizer(state: AppState, dispatch: Dispatch): TemplateResult {
-  const { sidebarWidth } = state.ui;
-  const onPointerUp = (event: PointerEvent): void => {
-    if (event.currentTarget instanceof Element) {
-      event.currentTarget.closest(".app")?.removeAttribute("data-resizing");
-    }
-    dispatch(setSidebarWidth.create({ width: widthAt(event) }));
-  };
-  const onKeyDown = (event: KeyboardEvent): void => {
-    const step = KEY_STEPS[event.key];
-    if (step === undefined) return;
-    event.preventDefault();
-    dispatch(setSidebarWidth.create({ width: step(sidebarWidth) }));
-  };
-  return html`<div
-    class="app__resizer"
-    role="separator"
-    tabindex="0"
-    aria-orientation="vertical"
-    aria-label=${COPY.shell.resizeSidebar}
-    aria-valuenow=${sidebarWidth}
-    aria-valuemin=${SIDEBAR_WIDTH.min}
-    aria-valuemax=${SIDEBAR_WIDTH.max}
-    @pointerdown=${capturePointer}
-    @pointermove=${previewWidth}
-    @pointerup=${onPointerUp}
-    @keydown=${onKeyDown}
-  ></div>`;
-}
-
-function renderSidebarPanel(
-  state: AppState,
-  dispatch: Dispatch,
-): TemplateResult {
-  return html`<nav class="app__sidebar" aria-label=${COPY.shell.pagesLabel}>
-    <header class="app__sidebar-header">
-      <span class="app__product">
-        <span class="app__badge" aria-hidden="true"
-          >${PRODUCT_NAME.slice(0, 1)}</span
-        >
-        ${PRODUCT_NAME}
-      </span>
-      ${renderButton({
-        label: COPY.sidebar.newPage,
-        icon: "compose",
-        isIconOnly: true,
-        onClick: () => dispatch(createPage.create({ parentId: null })),
-      })}
-      ${renderButton({
-        label: COPY.shell.hideSidebar,
-        icon: "sidebar",
-        isIconOnly: true,
-        onClick: () => dispatch(toggleSidebar.create({})),
-      })}
-    </header>
-    ${renderSidebar(state, dispatch)} ${renderResizer(state, dispatch)}
-  </nav>`;
-}
+import { renderSidebarPanel } from "./shell-sidebar.view.ts";
+import { setWidth } from "./sidebar-width.ts";
 
 function renderActivePageMenu(
   state: AppState,
@@ -131,15 +33,25 @@ function renderActivePageMenu(
   return renderPageMenuButton({ place: "bar", pageId, state, dispatch });
 }
 
+// The button that brings back a hidden sidebar, or opens the drawer.
+function renderShowSidebar(
+  state: AppState,
+  dispatch: Dispatch,
+): TemplateResult | typeof nothing {
+  if (selectIsSidebarShown(state)) return nothing;
+  return html`<span data-sidebar-open
+    >${renderButton({
+      label: COPY.shell.showSidebar,
+      icon: "sidebar",
+      isIconOnly: true,
+      onClick: () => dispatch(toggleSidebar.create({})),
+    })}</span
+  >`;
+}
+
 function renderTopBar(state: AppState, dispatch: Dispatch): TemplateResult {
-  const showSidebar = renderButton({
-    label: COPY.shell.showSidebar,
-    icon: "sidebar",
-    isIconOnly: true,
-    onClick: () => dispatch(toggleSidebar.create({})),
-  });
   return html`<header class="app__top-bar">
-    ${state.ui.isSidebarCollapsed ? showSidebar : nothing}
+    ${renderShowSidebar(state, dispatch)}
     ${
       selectIsHomeShown(state)
         ? html`<span class="app__place">${COPY.home.title}</span>`
@@ -188,18 +100,23 @@ export function renderShell(
   state: AppState,
   dispatch: Dispatch,
 ): TemplateResult {
-  const { isSidebarCollapsed, sidebarWidth } = state.ui;
+  const { isNarrow, isDrawerOpen, sidebarWidth } = state.ui;
+  // An open drawer keeps the focus: all else is out of reach behind it.
+  const isBehind = isNarrow && isDrawerOpen;
   return html`<div
     class="app"
-    ?data-sidebar-collapsed=${isSidebarCollapsed}
+    ?data-sidebar-collapsed=${isNarrow || !selectIsSidebarShown(state)}
+    ?data-narrow=${isNarrow}
     data-peek=${state.ui.peek?.mode ?? nothing}
     ${ref((shell) => {
       setWidth(shell, sidebarWidth);
     })}
   >
-    <a class="app__skip-link" href="#main">${COPY.shell.skipToContent}</a>
-    ${isSidebarCollapsed ? nothing : renderSidebarPanel(state, dispatch)}
-    <main class="app__main" id="main" tabindex="-1">
+    <a class="app__skip-link" href="#main" ?inert=${isBehind}
+      >${COPY.shell.skipToContent}</a
+    >
+    ${renderSidebarPanel(state, dispatch)}
+    <main class="app__main" id="main" tabindex="-1" ?inert=${isBehind}>
       ${renderTopBar(state, dispatch)}
       <div class="app__page">
         ${
@@ -211,6 +128,8 @@ export function renderShell(
       ${renderFormatToolbar(state, dispatch)} ${renderOverlay(state, dispatch)}
       ${renderHelpButton(dispatch)}
     </main>
-    ${renderPeek(state, dispatch)}
+    <div class="app__peek" ?inert=${isBehind}>
+      ${renderPeek(state, dispatch)}
+    </div>
   </div>`;
 }

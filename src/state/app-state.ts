@@ -114,6 +114,10 @@ export interface UiState {
   // Sidebar width in rem.
   readonly sidebarWidth: number;
   readonly isSidebarCollapsed: boolean;
+  // A window under 768 px wide shows the sidebar as a drawer over the
+  // page, open or closed on its own; neither is saved.
+  readonly isNarrow: boolean;
+  readonly isDrawerOpen: boolean;
   readonly overlay: OpenOverlay | null;
   // The text color or highlight used last, for Ctrl+Shift+H.
   readonly lastTone: LastTone | null;
@@ -214,6 +218,8 @@ export function createInitialUiState(): UiState {
     viewSearches: {},
     sidebarWidth: SIDEBAR_WIDTH.initial,
     isSidebarCollapsed: false,
+    isNarrow: false,
+    isDrawerOpen: false,
     overlay: null,
     lastTone: null,
     clipboard: null,

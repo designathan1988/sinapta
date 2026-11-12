@@ -48,6 +48,7 @@ export {
   toggleSidebar,
   uiCommands,
 } from "./ui.commands.ts";
+export { setNarrow } from "./viewport.commands.ts";
 export {
   setTheme,
   settingsCommands,
@@ -65,6 +66,7 @@ export {
   selectCanRedo,
   selectCanUndo,
   selectIsHomeShown,
+  selectIsSidebarShown,
   selectOverlayAt,
   selectTheme,
 } from "./app-state.selectors.ts";

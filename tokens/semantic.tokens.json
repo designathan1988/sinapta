@@ -890,6 +890,10 @@
     "peek": {
       "$description": "A center peek and the dim behind it, over the page.",
       "$value": "{base.layer.2}"
+    },
+    "drawer": {
+      "$description": "The sidebar as a drawer over the page on a narrow window, and the dim behind it.",
+      "$value": "{base.layer.3}"
     }
   }
 }

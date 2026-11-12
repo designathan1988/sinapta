@@ -66,6 +66,8 @@ owner listed here exists.
 | What file, PDF, video and audio blocks share: props, commands, empty field, caption | `src/blocks/media/` | 14 |
 | Pages: schema, commands, selectors, tree moves, trash | `src/blocks/page/` | 2 |
 | Sidebar tree and favorites | `src/features/sidebar/` | 2 |
+| The window's width as state, and the narrow-window drawer | `src/state/viewport.commands.ts`, `src/app/viewport.ts` | 19 |
+| The sidebar panel beside the page, its resizer, or the drawer over it | `src/app/shell-sidebar.view.ts`, `src/app/sidebar-width.ts` | 19 |
 | Open page: title and icon | `src/features/editor/` | 2 |
 | Page actions menu | `src/features/page-menu/` | 2 |
 | Breadcrumbs | `src/features/breadcrumbs/` | 2 |

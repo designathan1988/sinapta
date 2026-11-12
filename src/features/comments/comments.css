@@ -167,6 +167,14 @@
       inline-size: var(--size-icon-sm);
       block-size: var(--size-icon-sm);
     }
+
+    /* A narrow window has no room beside the text: the count sits at the
+       block's end, over it. */
+    @media (width < 48rem) {
+      inset-inline: auto 0;
+      margin-inline-start: var(--space-none);
+      background-color: var(--color-bg-app);
+    }
   }
 
   /* A comment's delete button shows while the comment is pointed at. */

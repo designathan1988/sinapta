@@ -100,5 +100,10 @@
     min-block-size: 0;
     padding: var(--space-inset-lg) var(--space-peek) var(--space-inset-xl);
     overflow: hidden auto;
+
+    /* On a narrow window the peek covers it, with the page's gutters. */
+    @media (width < 48rem) {
+      padding-inline: var(--space-inset-lg);
+    }
   }
 }

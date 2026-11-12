@@ -246,6 +246,7 @@
     --base-easing-standard: cubic-bezier(0.2, 0, 0, 1);
     --base-layer-1: 1;
     --base-layer-2: 2;
+    --base-layer-3: 3;
     --color-bg-app: light-dark(var(--base-color-day-bg), var(--base-color-night-bg));
     --color-bg-sidebar: light-dark(var(--base-color-day-sidebar), var(--base-color-night-sidebar));
     --color-bg-raised: light-dark(var(--base-color-day-raised), var(--base-color-night-raised));
@@ -425,6 +426,7 @@
     --layer-sticky: var(--base-layer-1);
     --layer-drag-preview: var(--base-layer-2);
     --layer-peek: var(--base-layer-2);
+    --layer-drawer: var(--base-layer-3);
   }
 
   :root[data-theme="light"] {

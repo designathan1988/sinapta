@@ -9,6 +9,7 @@ import {
 } from "./app-state.ts";
 import { defineCommand, type NoPayload } from "./command-registry.ts";
 import { uiOverlayCommands } from "./ui-overlay.commands.ts";
+import { setNarrow } from "./viewport.commands.ts";
 
 function clampSidebarWidth(width: number): number {
   return Math.min(SIDEBAR_WIDTH.max, Math.max(SIDEBAR_WIDTH.min, width));
@@ -23,10 +24,13 @@ export const setSidebarWidth = defineCommand<{ width: number }>({
   },
 });
 
+// On a narrow window the button opens and closes the drawer instead.
 export const toggleSidebar = defineCommand<NoPayload>({
   type: "ui.toggleSidebar",
-  handle: (state) => ({
-    ui: { ...state.ui, isSidebarCollapsed: !state.ui.isSidebarCollapsed },
+  handle: ({ ui }) => ({
+    ui: ui.isNarrow
+      ? { ...ui, isDrawerOpen: !ui.isDrawerOpen }
+      : { ...ui, isSidebarCollapsed: !ui.isSidebarCollapsed },
   }),
 });
 
@@ -56,7 +60,8 @@ export const setActivePage = defineCommand<{ pageId: BlockId | null }>({
     // it is not yet the latest of the recent pages (as after a reload).
     const isShown = pageId === ui.activePageId && !ui.isHomeOpen;
     if (isShown && (pageId === null || ui.recentPageIds[0] === pageId)) {
-      return ui.peek === null ? {} : { ui: { ...ui, peek: null } };
+      const isClosed = ui.peek === null && !ui.isDrawerOpen;
+      return isClosed ? {} : { ui: { ...ui, peek: null, isDrawerOpen: false } };
     }
     if (pageId !== null && state.workspace.blocks[pageId] === undefined) {
       return {};
@@ -76,6 +81,7 @@ export const setActivePage = defineCommand<{ pageId: BlockId | null }>({
         isHomeOpen: false,
         recentPageIds,
         peek: null,
+        isDrawerOpen: false,
       },
     };
   },
@@ -86,8 +92,11 @@ export const openHome = defineCommand<NoPayload>({
   type: "ui.openHome",
   handle(state) {
     const { ui } = state;
-    if (ui.isHomeOpen && ui.activePageId === null) return {};
-    return { ui: { ...ui, isHomeOpen: true, activePageId: null } };
+    if (ui.isHomeOpen && ui.activePageId === null && !ui.isDrawerOpen)
+      return {};
+    return {
+      ui: { ...ui, isHomeOpen: true, activePageId: null, isDrawerOpen: false },
+    };
   },
 });
 
@@ -143,4 +152,5 @@ export const uiCommands = [
   setActivePage,
   togglePageExpanded,
   openHome,
+  setNarrow,
 ];
