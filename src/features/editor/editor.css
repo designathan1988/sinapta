@@ -1,21 +1,30 @@
 @layer features {
   .editor {
     --editor-column: var(--size-content-max);
+    --editor-gutter: var(--space-none);
 
     display: flex;
     flex-direction: column;
     gap: var(--space-stack-md);
     line-height: var(--font-line-height-body);
 
-    /* Everything sits in a centered column, as wide as the page allows. */
+    /* Everything sits in a centered column, as wide as the page allows
+       beside its gutters. */
     & > * {
-      inline-size: min(var(--editor-column), 100%);
+      inline-size: min(var(--editor-column), 100% - var(--editor-gutter) * 2);
       margin-inline: auto;
     }
 
     &[data-full-width],
     &[data-wide] {
       --editor-column: 100%;
+    }
+
+    /* A page in the main area keeps Notion's 96 px each side, room for
+       its blocks' handles: in a narrow window, or at full width, the
+       column narrows rather than cut them off. */
+    .app__page > &:not([data-wide]) {
+      --editor-gutter: calc(var(--space-inset-page) - var(--space-inset-lg));
     }
 
     /* The page's style: its typeface, which the title, headings and
