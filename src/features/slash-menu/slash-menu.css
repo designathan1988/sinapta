@@ -1,5 +1,5 @@
 @layer features {
-  /* Notion's block menu: groups of blocks, each with an icon in a tile,
+  /* Notion's slash menu: groups of blocks, each with its icon,
      its name and the Markdown that makes it. */
   .slash-menu {
     inline-size: var(--size-menu-width);
@@ -22,11 +22,13 @@
     font-weight: var(--font-weight-medium);
   }
 
+  /* Rows as Notion's slash menu today: 28 px, a plain 20 px icon, its
+     name and the Markdown that makes it. */
   .slash-menu__item {
     display: flex;
     gap: var(--space-inline-sm);
     align-items: center;
-    min-block-size: var(--size-control-md);
+    min-block-size: var(--size-menu-row);
     padding: var(--space-none) var(--space-inset-sm);
     border-radius: var(--radius-md);
     font-size: var(--font-size-sm);
@@ -42,12 +44,14 @@
     display: inline-grid;
     flex: none;
     place-items: center;
-    inline-size: var(--size-control-sm);
-    block-size: var(--size-control-sm);
-    border: var(--size-border-thin) solid var(--color-border-default);
-    border-radius: var(--radius-sm);
-    background-color: var(--color-bg-raised);
+    inline-size: var(--size-icon-md);
+    block-size: var(--size-icon-md);
     color: var(--color-text-secondary);
+
+    & > .icon {
+      inline-size: var(--size-icon-md);
+      block-size: var(--size-icon-md);
+    }
   }
 
   .slash-menu__label {

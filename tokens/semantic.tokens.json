@@ -608,6 +608,10 @@
     "scrollbar": {
       "$description": "Notion's scrollbars: 10 px.",
       "$value": "{base.size.0x625}"
+    },
+    "scrollbarThin": {
+      "$description": "A menu's scrollbar, thin as Notion's: 6 px.",
+      "$value": "{base.size.0x375}"
     }
   },
   "radius": {

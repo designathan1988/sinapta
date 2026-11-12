@@ -414,6 +414,7 @@
     --size-search-margin: var(--base-size-5x25);
     --size-search-list: var(--base-size-35x75);
     --size-scrollbar: var(--base-size-0x625);
+    --size-scrollbar-thin: var(--base-size-0x375);
     --radius-sm: var(--base-radius-1);
     --radius-md: var(--base-radius-2);
     --radius-full: var(--base-radius-pill);

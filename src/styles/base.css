@@ -30,6 +30,16 @@
     display: none;
   }
 
+  /* In menus and popovers the bar is thin and shows only while the panel
+     is pointed at, as Notion's. */
+  [popover]::-webkit-scrollbar {
+    inline-size: var(--size-scrollbar-thin);
+  }
+
+  [popover]:not(:hover)::-webkit-scrollbar-thumb {
+    background-color: transparent;
+  }
+
   @supports not selector(::-webkit-scrollbar) {
     :root {
       scrollbar-color: var(--color-scrollbar-thumb) transparent;
