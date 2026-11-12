@@ -19,6 +19,7 @@ import { rowOpenCommands } from "./row-open.commands.ts";
 import { templateCommands } from "./template.commands.ts";
 import { csvImportCommands } from "./csv-import.commands.ts";
 import { viewLockCommands } from "./view-lock.commands.ts";
+import { subGroupCommands } from "./sub-group.commands.ts";
 import { formCommands } from "./layouts/form/form.commands.ts";
 import { boardCardCommands } from "./layouts/board/board-card.commands.ts";
 
@@ -69,6 +70,7 @@ export const databaseCommands = [
   ...templateCommands,
   ...csvImportCommands,
   ...viewLockCommands,
+  ...subGroupCommands,
   ...formCommands,
   ...boardCardCommands,
   ...viewLayoutCommands,

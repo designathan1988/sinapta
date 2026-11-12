@@ -7,26 +7,33 @@ import { COPY } from "../../../../ui/copy.ts";
 import type { TableContext } from "../../table-cell.view.ts";
 import { startCardDrag } from "./board-cards.view.ts";
 import { renderColumn, renderHiddenColumns } from "./board-column.view.ts";
-import { selectBoard } from "./board.selectors.ts";
+import { renderLanes } from "./board-lanes.view.ts";
+import { selectBoard, selectBoardLanes } from "./board.selectors.ts";
 
 export function renderBoard(context: TableContext): TemplateResult {
   const board = selectBoard(context.model);
   if (board === undefined) {
     return html`<p class="board__empty">${COPY.database.noGroupProperty}</p>`;
   }
-  const boardContext = { ...context, board };
+  const lanes = selectBoardLanes(context.model);
+  const boardContext = { ...context, board, ...(lanes && { lanes }) };
   const { view } = context.model;
   return html`<div
     class="board"
     data-size=${view.cardSize}
     ?data-colored=${view.colorColumns}
+    ?data-lanes=${lanes !== undefined}
     @pointerdown=${(event: PointerEvent) => {
       startCardDrag(event, boardContext);
     }}
   >
-    ${board.columns
-      .filter((column) => !column.isHidden)
-      .map((column) => renderColumn(boardContext, column))}
+    ${
+      lanes === undefined
+        ? board.columns
+            .filter((column) => !column.isHidden)
+            .map((column) => renderColumn(boardContext, column))
+        : renderLanes(boardContext, lanes)
+    }
     ${renderHiddenColumns(boardContext)}
   </div>`;
 }

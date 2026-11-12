@@ -9,10 +9,16 @@ import { startPointerDrag } from "../../../../ui/drag/index.ts";
 import { whenConnected } from "../../../../ui/focus/index.ts";
 import type { TableContext } from "../../table-cell.view.ts";
 import { moveCard } from "./board-card.commands.ts";
-import { selectCardMove, type BoardModel } from "./board.selectors.ts";
+import {
+  selectCardMove,
+  type BoardLanes,
+  type BoardModel,
+} from "./board.selectors.ts";
 
 export interface BoardContext extends TableContext {
   readonly board: BoardModel;
+  // The board's lanes, when the view sub-groups.
+  readonly lanes?: BoardLanes;
 }
 
 // Focus follows the card to its new place, so the keys keep moving it.
@@ -40,6 +46,22 @@ interface Move {
   readonly rowId: BlockId;
   readonly key: string;
   readonly beforeRowId: BlockId | null;
+  // The lane it goes to, on a board with lanes.
+  readonly laneKey?: string;
+}
+
+// The lane's value for a card that changes lanes; null when it stays.
+function laneChangeOf(context: BoardContext, target: Move) {
+  const { lanes } = context;
+  if (lanes === undefined || target.laneKey === undefined) return null;
+  const from = lanes.lanes.find((lane) =>
+    lane.rows.some((row) => row.id === target.rowId),
+  );
+  if (from?.key === target.laneKey || lanes.valueFor === undefined) return null;
+  return {
+    propertyId: lanes.property.id,
+    value: lanes.valueFor(target.laneKey),
+  };
 }
 
 function move(context: BoardContext, target: Move): void {
@@ -58,7 +80,8 @@ function move(context: BoardContext, target: Move): void {
   const change = isOther
     ? { propertyId: board.property.id, value: board.valueFor?.(key) }
     : null;
-  dispatch(moveCard.create({ rowId, beforeRowId, change }));
+  const laneChange = laneChangeOf(context, target);
+  dispatch(moveCard.create({ rowId, beforeRowId, change, laneChange }));
   if (isOther) announce(`${COPY.database.cardMoved} ${column.label}`);
   focusCard(rowId);
 }
@@ -111,6 +134,8 @@ export function startCardDrag(event: PointerEvent, context: BoardContext) {
       )?.id;
       const key =
         target.closest<HTMLElement>(".board__column")?.dataset.groupKey;
+      const laneKey =
+        target.closest<HTMLElement>(".board__lane")?.dataset.laneKey;
       if (rowId === undefined || key === undefined) return;
       const onto = context.model.rows.find(
         (row) => row.id === target.dataset.rowId,
@@ -121,7 +146,12 @@ export function startCardDrag(event: PointerEvent, context: BoardContext) {
           : position === "after"
             ? rowAfter(context, onto)
             : onto;
-      move(context, { rowId, key, beforeRowId });
+      move(context, {
+        rowId,
+        key,
+        beforeRowId,
+        ...(laneKey !== undefined && { laneKey }),
+      });
     },
   });
 }

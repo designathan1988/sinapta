@@ -5,6 +5,7 @@ import type { GroupBy } from "../../../model/index.ts";
 import { COPY } from "../../../ui/copy.ts";
 import type { MenuEntry, MenuItem } from "../../../ui/menu/index.ts";
 import { setGroupOptions, setViewGroupBy } from "../group.commands.ts";
+import { setViewSubGroupBy } from "../sub-group.commands.ts";
 import { propertyType } from "../property-registry.ts";
 import { isGroupable } from "../row-groups.selectors.ts";
 import type { TableContext } from "../table-cell.view.ts";
@@ -45,6 +46,53 @@ function hideEmptyRow(context: TableContext, groupBy: GroupBy): MenuItem {
           options: { hideEmpty: !groupBy.hideEmpty },
         }),
       ),
+  };
+}
+
+// A board's lanes, as Notion's Sub-group row.
+function subGroupRows(context: TableContext): MenuEntry[] {
+  const { view, database } = context.model;
+  if (view.type !== "board") return [];
+  const property = database.props.properties.find(
+    (item) => item.id === view.subGroupBy?.propertyId,
+  );
+  const row = {
+    label: COPY.database.subGroup,
+    icon: "group",
+    value: property?.name ?? COPY.database.noSubGroup,
+  } as const;
+  return [panelRow(context, row, "sub-group")];
+}
+
+// The properties to sub-group by, besides the grouping's, and None.
+export function subGroupPanel(context: TableContext): SettingsPanel {
+  const { model, dispatch } = context;
+  const viewId = model.view.id;
+  const groupable = model.database.props.properties.filter(
+    (property) =>
+      isGroupable(property) && property.id !== model.view.groupBy?.propertyId,
+  );
+  const none = "";
+  const choices = [
+    { value: none, label: COPY.database.noSubGroup },
+    ...groupable.map((property) => ({
+      value: property.id,
+      label: property.name,
+      icon: propertyType(property.type).icon,
+    })),
+  ];
+  return {
+    title: COPY.database.subGroup,
+    back: "group",
+    items: choiceItems(context, {
+      choices,
+      value: model.view.subGroupBy?.propertyId ?? none,
+      back: "group",
+      choose: (id) => {
+        const propertyId = groupable.find((item) => item.id === id)?.id ?? null;
+        dispatch(setViewSubGroupBy.create({ viewId, propertyId }));
+      },
+    }),
   };
 }
 
@@ -94,6 +142,7 @@ function groupedItems(
       "group-sort",
     ),
     hideEmptyRow(context, groupBy),
+    ...subGroupRows(context),
     ...removeRows(context),
   ];
 }

@@ -82,6 +82,7 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Export as CSV | `view-settings/root-panel.view.ts` | Notion (the view only, no Markdown pages) | the view's columns and rows as a UTF-8 CSV file |
 | Lock page, Lock database | `features/page-menu/page-menu.view.ts` | Notion | a switch in the page's menu; a locked page shows "Locked" in the top bar, which unlocks it; typing does nothing and says why |
 | Lock view | `view-settings/root-panel.view.ts` | Notion | a switch in the view settings; filters, sorts and layout stay as they are |
+| Sub-group | `view-settings/group-panel.ts`, `layouts/board/board-lanes.view.ts` | Notion (boards; the sub-groups' own sort and hide settings not shown) | Sub-group row in a board's Group panel; lanes with a toggle, chip and count, the column headers once on top; a card dragged to another lane takes its value |
 | Date cell and date value | `ui/date-picker/`, `date-menu.ts`, `cell-date.view.ts` | Notion (no Date format & timezone or Remind rows) | the chosen days in fields, the month with Today and arrows, six weeks of days, End date and Include time switches, Clear |
 
 ### Property settings

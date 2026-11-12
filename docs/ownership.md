@@ -98,6 +98,7 @@ owner listed here exists.
 | Guards: rules that refuse a command's changes before they apply | `src/state/guard.ts` | 16 |
 | Locks: what a locked page, database or view keeps; locking a page | `src/blocks/page/page-lock.ts` | 16 |
 | Locking a view | `src/features/database/view-lock.commands.ts` | 16 |
+| A board's sub-groups: the setting and its lanes | `src/features/database/sub-group.commands.ts`, `layouts/board/board-lanes.view.ts` | 16 |
 | CSV import: column types, the new database; CSV export of a view | `src/features/database/csv-import.ts`, `csv-import.commands.ts`, `csv-export.selectors.ts`, `csv-file.view.ts` | 16 |
 | Table markup, headers, cells and their events | `src/features/database/table*.view.ts` | 5 |
 | Table menus and popovers | `src/features/database/*-menu.view.ts`, `view-*.view.ts`, `cell-options.view.ts` | 6 |

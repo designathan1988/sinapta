@@ -4,7 +4,7 @@
 import type { BlockId, PropertyId } from "../../../../model/index.ts";
 import { defineCommand } from "../../../../state/index.ts";
 import { moveRowOperations } from "../../row-bulk.commands.ts";
-import { rowValueUpdate, selectRow } from "../../row.commands.ts";
+import { rowValuesUpdate, selectRow } from "../../row.commands.ts";
 
 export interface MoveCardPayload {
   readonly rowId: BlockId;
@@ -12,10 +12,15 @@ export interface MoveCardPayload {
   // view is sorted and keeps no order of its own.
   readonly beforeRowId: BlockId | null;
   // The value of the new column, or null within the same column.
-  readonly change: {
-    readonly propertyId: PropertyId;
-    readonly value: unknown;
-  } | null;
+  readonly change: ValueChange | null;
+  // The value of the new lane, when the board has lanes and the card
+  // goes to another.
+  readonly laneChange?: ValueChange | null;
+}
+
+interface ValueChange {
+  readonly propertyId: PropertyId;
+  readonly value: unknown;
 }
 
 export const moveCard = defineCommand<MoveCardPayload>({
@@ -24,10 +29,14 @@ export const moveCard = defineCommand<MoveCardPayload>({
     const row = selectRow(state, command.rowId);
     const moves = moveRowOperations(state, command.rowId, command.beforeRowId);
     if (row === undefined || moves === undefined) return {};
-    const { change } = command;
-    const value =
-      change === null ? [] : [rowValueUpdate(row, change, command.meta.now)];
-    return { operations: [...value, ...moves] };
+    const changes = [command.change, command.laneChange ?? null].flatMap(
+      (change) => (change === null ? [] : [change]),
+    );
+    const update =
+      changes.length === 0
+        ? []
+        : [rowValuesUpdate(row, changes, command.meta.now)];
+    return { operations: [...update, ...moves] };
   },
 });
 

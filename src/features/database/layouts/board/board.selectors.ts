@@ -51,6 +51,42 @@ export function selectBoard(model: TableModel): BoardModel | undefined {
   };
 }
 
+export interface BoardLane extends RowGroup {
+  readonly columns: readonly BoardColumn[];
+}
+
+export interface BoardLanes {
+  readonly property: PropertyDefinition;
+  readonly lanes: readonly BoardLane[];
+  // The value a card takes in a lane; absent when cards cannot move
+  // between lanes.
+  readonly valueFor?: (key: string) => unknown;
+}
+
+// The board's lanes when the view sub-groups: the shown sub-groups, each
+// holding every column with the lane's rows.
+export function selectBoardLanes(model: TableModel): BoardLanes | undefined {
+  const { subGroupBy } = model.view;
+  if (subGroupBy === undefined) return undefined;
+  const grouped = selectRowGroups({
+    ...model,
+    view: { ...model.view, groupBy: subGroupBy },
+  });
+  if (grouped === undefined) return undefined;
+  const lanes = grouped.groups
+    .filter((group) => !group.isHidden)
+    .map((group) => ({
+      ...group,
+      columns: selectBoard({ ...model, rows: group.rows })?.columns ?? [],
+    }));
+  const { valueFor } = grouped.grouping;
+  return {
+    property: grouped.property,
+    lanes,
+    ...(valueFor !== undefined && { valueFor }),
+  };
+}
+
 export function selectBoardColumns(
   model: TableModel,
 ): readonly BoardColumn[] | undefined {

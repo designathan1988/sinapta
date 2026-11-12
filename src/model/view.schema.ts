@@ -132,6 +132,9 @@ export const viewSchema = v.object({
   hiddenPropertyIds: v.array(propertyIdSchema),
   // The select property a board groups its cards by (version 3).
   groupBy: v.optional(groupBySchema),
+  // A board's second grouping, as Notion's sub-groups: lanes across the
+  // board, each holding every column.
+  subGroupBy: v.optional(groupBySchema),
   // The calculation shown under each column, by property; the title
   // column's under "title".
   calculations: v.record(propertyIdSchema, calculationSchema),

@@ -147,14 +147,30 @@ function isRowOfDatabase(state: AppState, rowId: BlockId): boolean {
 // The update that gives a row a value; undefined clears the cell.
 export function rowValueUpdate(
   row: PageBlock,
-  change: { readonly propertyId: PropertyId; readonly value: unknown },
+  change: ValueChange,
   now: string,
 ): Operation {
-  const { [change.propertyId]: _previous, ...others } = row.props.values ?? {};
-  const values =
-    change.value === undefined
+  return rowValuesUpdate(row, [change], now);
+}
+
+interface ValueChange {
+  readonly propertyId: PropertyId;
+  readonly value: unknown;
+}
+
+// One update giving a row several values, as a card moved to another
+// column and lane takes both.
+export function rowValuesUpdate(
+  row: PageBlock,
+  changes: readonly ValueChange[],
+  now: string,
+): Operation {
+  const values = changes.reduce<Record<string, unknown>>((all, change) => {
+    const { [change.propertyId]: _previous, ...others } = all;
+    return change.value === undefined
       ? others
       : { ...others, [change.propertyId]: change.value };
+  }, row.props.values ?? {});
   const props = { ...row.props, values };
   const patch = { props, updatedAt: now };
   return { type: "record.update", kind: "block", id: row.id, patch };

@@ -27,6 +27,8 @@ export const DATABASE_MENU_TEXT = {
   csvColumn: (index: number) => `Column ${String(index)}`,
   exportCsv: "Export as CSV",
   lockView: "Lock view",
+  subGroup: "Sub-group",
+  noSubGroup: "None",
   exportedCsv: "Exported the view as CSV.",
   importCsv: "Import CSV",
   importedCsv: "Imported the CSV file as a database.",

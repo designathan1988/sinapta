@@ -85,43 +85,64 @@ function renderMenuButton(
   </button>`;
 }
 
-export function renderColumn(
+// A column's header: its group's chip, count and menu.
+export function renderColumnHeader(
   context: BoardContext,
   column: BoardColumn,
 ): TemplateResult {
-  const { model, dispatch, board } = context;
+  return html`<header class="board__header">
+    ${renderChip(column.label, column.color ?? "gray")}
+    <span class="board__count">${column.rows.length}</span>
+    ${renderMenuButton(context, column)}
+  </header>`;
+}
+
+// Adds a card with the column's value, and its lane's in a lane.
+function renderNewCard(
+  context: BoardContext,
+  values: Readonly<Record<string, unknown>>,
+): TemplateResult {
+  const { model, dispatch, state } = context;
+  const payload = {
+    databaseId: model.database.id,
+    values,
+    opensPage: true,
+    viewId: model.view.id,
+  };
+  return renderButton({
+    label: COPY.database.newCard,
+    icon: "plus",
+    onClick: () => dispatch(addRow.create(withDefaultTemplate(state, payload))),
+  });
+}
+
+// A column of cards, with its header; inside a lane, without one, its
+// cards and new cards taking the lane's value too.
+export function renderColumn(
+  context: BoardContext,
+  column: BoardColumn,
+  lane?: BoardLaneValues,
+): TemplateResult {
+  const { board } = context;
   const value = board.valueFor?.(column.key);
-  const values = value === undefined ? {} : { [board.property.id]: value };
-  const databaseId = model.database.id;
-  const color = column.color ?? "gray";
+  const values = {
+    ...lane?.values,
+    ...(value !== undefined && { [board.property.id]: value }),
+  };
   return html`<section
     class="board__column"
     data-group-key=${column.key}
-    data-color=${color}
+    data-color=${column.color ?? "gray"}
     aria-label=${column.label}
   >
-    <header class="board__header">
-      ${renderChip(column.label, color)}
-      <span class="board__count">${column.rows.length}</span>
-      ${renderMenuButton(context, column)}
-    </header>
-    ${renderCards(context, column)}
-    ${renderButton({
-      label: COPY.database.newCard,
-      icon: "plus",
-      onClick: () =>
-        dispatch(
-          addRow.create(
-            withDefaultTemplate(context.state, {
-              databaseId,
-              values,
-              opensPage: true,
-              viewId: context.model.view.id,
-            }),
-          ),
-        ),
-    })}
+    ${lane === undefined ? renderColumnHeader(context, column) : nothing}
+    ${renderCards(context, column)} ${renderNewCard(context, values)}
   </section>`;
+}
+
+// What a lane gives the cards added in it.
+export interface BoardLaneValues {
+  readonly values: Readonly<Record<string, unknown>>;
 }
 
 export function renderHiddenColumns(

@@ -20,7 +20,7 @@ import {
   propertiesPanel,
 } from "./choice-panels.ts";
 import { chartKindPanel, chartXPanel, chartYPanel } from "./chart-panels.ts";
-import { groupPanel } from "./group-panel.ts";
+import { groupPanel, subGroupPanel } from "./group-panel.ts";
 import { layoutPanel } from "./layout-panel.view.ts";
 import { rootPanel } from "./root-panel.view.ts";
 import { sortAddPanel, sortPanel } from "./sort-panel.view.ts";
@@ -36,6 +36,7 @@ const PANELS: Readonly<
   sort: sortPanel,
   "sort-add": sortAddPanel,
   group: groupPanel,
+  "sub-group": subGroupPanel,
   "group-by": groupByPanel,
   "group-sort": groupSortPanel,
   "group-date": groupDatePanel,
