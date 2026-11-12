@@ -230,7 +230,7 @@ export const DATABASE_TEXT = {
     collapseGroup: "Collapse group",
     expandGroup: "Expand group",
     weekOf: "Week of",
-    newCard: "New",
+    newCard: "New page",
     cardMoved: "Moved to",
     moveCardHint: "Alt with Left or Right moves the card to the next column.",
     moreCards: "more",

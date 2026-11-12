@@ -95,6 +95,16 @@
     list-style: none;
   }
 
+  /* "+ New page" at a column's foot, as Notion's: quiet, at the start. */
+  .board__column > .button {
+    justify-content: flex-start;
+    min-block-size: var(--size-control-action);
+    padding-inline: var(--space-inset-xs);
+    border-radius: var(--radius-md);
+    color: var(--color-text-tertiary);
+    font-weight: var(--font-weight-regular);
+  }
+
   .board__menu {
     display: inline-flex;
     margin-inline-start: auto;

@@ -85,7 +85,7 @@ describe.each<ViewType>(["table", "list", "gallery"])(
         ...(group?.parentElement?.querySelectorAll("button") ?? []),
       ].find(
         (button) =>
-          button.textContent.trim() === "New" &&
+          button.textContent.trim() === "New page" &&
           button.closest("[data-group-add]")?.getAttribute("data-group-add") ===
             "done",
       );

@@ -487,7 +487,8 @@
     },
     "cover": {
       "height": {
-        "$value": "{base.size.18}"
+        "$description": "A page's cover, as Notion's at 1440x900: 270 px.",
+        "$value": "{base.size.16x875}"
       }
     },
     "table": {

@@ -39,8 +39,9 @@
     display: flex;
   }
 
+  /* Over a cover, the icon rises 42 of its 78 px into it, as Notion's. */
   .editor__cover + .editor__page-icon {
-    margin-block-start: calc(var(--font-size-page-icon) / -2);
+    margin-block-start: calc(var(--font-size-page-icon) * -0.54);
   }
 
   .editor__page-icon + .editor__page-actions {
