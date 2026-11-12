@@ -13,11 +13,14 @@
     &[data-peek="side"] {
       grid-template-columns:
         var(--app-sidebar-width) minmax(0, 1fr)
-        min(var(--size-peek-side), 50%);
+        min(var(--app-peek-width, var(--size-peek-side)), 75%);
     }
 
     &[data-peek="side"][data-sidebar-collapsed] {
-      grid-template-columns: minmax(0, 1fr) min(var(--size-peek-side), 50%);
+      grid-template-columns: minmax(0, 1fr) min(
+          var(--app-peek-width, var(--size-peek-side)),
+          75%
+        );
     }
 
     &[data-resizing] {

@@ -2,12 +2,14 @@
 import * as v from "valibot";
 import { blockIdSchema, viewIdSchema } from "../model/index.ts";
 import { createInitialUiState, type UiState } from "./app-state.ts";
+import { PEEK_WIDTH } from "./widths.ts";
 
 const persistedUiSchema = v.object({
   activePageId: v.nullable(blockIdSchema),
   expandedPageIds: v.optional(v.array(blockIdSchema), []),
   activeViewIds: v.optional(v.record(blockIdSchema, viewIdSchema), {}),
   sidebarWidth: v.number(),
+  peekWidth: v.optional(v.number(), PEEK_WIDTH.initial),
   isSidebarCollapsed: v.boolean(),
   recentPageIds: v.optional(v.array(blockIdSchema), []),
   isHomeOpen: v.optional(v.boolean(), false),
@@ -22,6 +24,7 @@ export function toPersistedUi(ui: UiState): PersistedUi {
     expandedPageIds: [...ui.expandedPageIds],
     activeViewIds: { ...ui.activeViewIds },
     sidebarWidth: ui.sidebarWidth,
+    peekWidth: ui.peekWidth,
     isSidebarCollapsed: ui.isSidebarCollapsed,
     recentPageIds: [...ui.recentPageIds],
     isHomeOpen: ui.isHomeOpen,

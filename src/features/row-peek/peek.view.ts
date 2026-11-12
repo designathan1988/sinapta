@@ -22,6 +22,8 @@ import {
   stepPeek,
 } from "./peek.commands.ts";
 import { selectPeekPlace } from "./peek.selectors.ts";
+import { renderPeekActions } from "./peek-actions.view.ts";
+import { renderPeekResizer } from "./peek-resizer.view.ts";
 
 const TEXT = COPY.peek;
 
@@ -108,6 +110,7 @@ function renderBar(
       isDisabled: !place.hasNext,
     })}
     <span class="peek__end">
+      ${renderPeekActions(state, dispatch, pageId)}
       ${renderPageMenuButton({ place: "peek", pageId, state, dispatch })}
     </span>
   </div>`;
@@ -173,6 +176,7 @@ export function renderPeek(
       onKeyDown(event, state, dispatch);
     }}
   >
+    ${peek.mode === "side" ? renderPeekResizer(state, outer) : nothing}
     ${renderBar(state, dispatch, page.id)}
     <div class="peek__body">
       ${keyed(page.id, renderEditor(state, dispatch, page.id))}

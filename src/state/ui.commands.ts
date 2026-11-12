@@ -3,25 +3,30 @@ import type { BlockId } from "../model/index.ts";
 import {
   RECENT_PAGES_MAX,
   type CopiedBlocks,
-  SIDEBAR_WIDTH,
   type OpenOverlay,
   type TextSelection,
 } from "./app-state.ts";
+import { clampWidth, PEEK_WIDTH, SIDEBAR_WIDTH } from "./widths.ts";
 import { defineCommand, type NoPayload } from "./command-registry.ts";
 import { uiOverlayCommands } from "./ui-overlay.commands.ts";
 import { setNarrow } from "./viewport.commands.ts";
 import { updateCommands } from "./update.commands.ts";
 
-function clampSidebarWidth(width: number): number {
-  return Math.min(SIDEBAR_WIDTH.max, Math.max(SIDEBAR_WIDTH.min, width));
-}
-
 export const setSidebarWidth = defineCommand<{ width: number }>({
   type: "ui.setSidebarWidth",
   handle(state, command) {
-    const sidebarWidth = clampSidebarWidth(command.width);
+    const sidebarWidth = clampWidth(command.width, SIDEBAR_WIDTH);
     if (sidebarWidth === state.ui.sidebarWidth) return {};
     return { ui: { ...state.ui, sidebarWidth } };
+  },
+});
+
+export const setPeekWidth = defineCommand<{ width: number }>({
+  type: "ui.setPeekWidth",
+  handle(state, command) {
+    const peekWidth = clampWidth(command.width, PEEK_WIDTH);
+    if (peekWidth === state.ui.peekWidth) return {};
+    return { ui: { ...state.ui, peekWidth } };
   },
 });
 
@@ -147,6 +152,7 @@ export const uiCommands = [
   setClipboard,
   setSelection,
   setSidebarWidth,
+  setPeekWidth,
   toggleSidebar,
   openOverlay,
   closeOverlay,

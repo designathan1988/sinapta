@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { render } from "lit-html";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { Command } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { openRow } from "../database/index.ts";
@@ -94,5 +94,47 @@ describe("the row peek view", () => {
     host.querySelector(".peek__bar")?.dispatchEvent(event);
 
     expect(sent.at(-1)?.type).toBe("peek.close");
+  });
+
+  it("comments on its page, copies its link and favors it from its bar", () => {
+    const writeText = vi.fn(() => Promise.resolve());
+    Object.defineProperty(navigator, "clipboard", {
+      value: { writeText },
+      configurable: true,
+    });
+    const { sent, button, first } = rendered();
+
+    button(COPY.peek.comment)?.click();
+    button(COPY.peek.copyLink)?.click();
+    button(COPY.peek.favorite)?.click();
+
+    expect(sent).toEqual([
+      expect.objectContaining({
+        type: "ui.openOverlay",
+        overlay: { kind: "comment-composer", anchorId: first },
+      }),
+      expect.objectContaining({ type: "page.toggleFavorite", pageId: first }),
+    ]);
+    expect(writeText).toHaveBeenCalledWith(
+      expect.stringContaining(`#/page/${first}`),
+    );
+    expect(button(COPY.peek.favorite)?.getAttribute("aria-pressed")).toBe(
+      "false",
+    );
+  });
+
+  it("widens and narrows a side peek from its edge by keyboard", () => {
+    const { host, sent } = rendered();
+    const edge = host.querySelector<HTMLElement>(".peek__resizer");
+
+    expect(edge?.getAttribute("role")).toBe("separator");
+    expect(edge?.getAttribute("aria-valuenow")).toBe("40");
+    for (const key of ["ArrowLeft", "ArrowRight", "End"]) {
+      edge?.dispatchEvent(new KeyboardEvent("keydown", { key, bubbles: true }));
+    }
+
+    expect(
+      sent.map((command) => ("width" in command ? command.width : null)),
+    ).toEqual([41, 39, 60]);
   });
 });

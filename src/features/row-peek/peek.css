@@ -2,6 +2,7 @@
   /* Notion's side peek: the row's page docked beside the database, as
      tall as the window, sliding in from the edge. */
   .peek {
+    position: relative;
     display: flex;
     flex-direction: column;
     min-inline-size: 0;
@@ -104,6 +105,32 @@
     /* On a narrow window the peek covers it, with the page's gutters. */
     @media (width < 48rem) {
       padding-inline: var(--space-inset-lg);
+    }
+  }
+
+  /* A favorite's star is filled, as on the top bar. */
+  .peek__action[aria-pressed="true"] {
+    color: var(--color-tone-yellow);
+
+    & .icon {
+      fill: currentcolor;
+    }
+  }
+
+  /* The side peek's edge drags it wider or narrower: a hairline, with a
+     wider grab area. */
+  .peek__resizer {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    z-index: var(--layer-sticky);
+    inline-size: var(--space-inline-xs);
+    cursor: col-resize;
+    touch-action: none;
+
+    &:hover,
+    &:focus-visible {
+      box-shadow: inset var(--size-border-thick) 0 0 var(--color-border-focus);
     }
   }
 }

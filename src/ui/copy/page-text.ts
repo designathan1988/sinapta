@@ -60,6 +60,10 @@ export const PAGE_TEXT = {
     mode: "Peek mode",
     previous: "Previous page",
     next: "Next page",
+    comment: "Comment",
+    copyLink: "Copy link",
+    favorite: "Favorite",
+    resize: "Resize peek",
     modes: { side: "Side peek", center: "Center peek", full: "Full page" },
   },
   home: {

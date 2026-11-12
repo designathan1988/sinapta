@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { SIDEBAR_WIDTH } from "./app-state.ts";
+import { PEEK_WIDTH, SIDEBAR_WIDTH } from "./widths.ts";
 import { buildWorkspace, toBlockId } from "../model/index.ts";
 import { createTestApp } from "./state-builder.ts";
 import { restoreUi, toPersistedUi } from "./ui.schema.ts";
@@ -10,6 +10,7 @@ import {
   openHome,
   openOverlay,
   setActivePage,
+  setPeekWidth,
   setSidebarWidth,
   togglePageExpanded,
   toggleSidebar,
@@ -21,6 +22,19 @@ function createApp() {
 }
 
 describe("ui commands", () => {
+  it("sets the side peek's width within its bounds, and keeps it", () => {
+    const { store, dispatch } = createApp();
+    expect(store.getState().ui.peekWidth).toBe(PEEK_WIDTH.initial);
+
+    dispatch(setPeekWidth.create({ width: 50 }));
+    expect(store.getState().ui.peekWidth).toBe(50);
+    dispatch(setPeekWidth.create({ width: 999 }));
+    expect(store.getState().ui.peekWidth).toBe(PEEK_WIDTH.max);
+
+    const restored = restoreUi(toPersistedUi(store.getState().ui));
+    expect(restored.peekWidth).toBe(PEEK_WIDTH.max);
+  });
+
   it("sets the sidebar width", () => {
     const { store, dispatch } = createApp();
 

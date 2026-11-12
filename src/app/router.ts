@@ -11,7 +11,12 @@ import {
   type Dispatch,
   type UiState,
 } from "../state/index.ts";
-import { hashForPage, parsePageHash } from "../ui/address/index.ts";
+import { openPeek } from "../features/row-peek/index.ts";
+import {
+  hashForPage,
+  hashForPeek,
+  parsePageHash,
+} from "../ui/address/index.ts";
 import { afterRender } from "../ui/focus/index.ts";
 
 const HOME_HASH = "#/home";
@@ -27,8 +32,11 @@ export function isHomeHash(hash: string): boolean {
 }
 
 export function hashForUi(ui: UiState): string {
-  const isHome = ui.isHomeOpen && ui.activePageId === null;
-  return isHome ? HOME_HASH : hashForPage(ui.activePageId);
+  const { activePageId, peek } = ui;
+  if (ui.isHomeOpen && activePageId === null) return HOME_HASH;
+  return activePageId !== null && peek !== null
+    ? hashForPeek(activePageId, peek)
+    : hashForPage(activePageId);
 }
 
 // Opens what a URL names. A link to a block also puts the caret at the
@@ -45,7 +53,10 @@ export function openFromHash(
   const address = parsePageHash(hash);
   if (address === null) return undefined;
   dispatch(setActivePage.create({ pageId: address.pageId }));
-  const { blockId } = address;
+  const { blockId, peek } = address;
+  if (peek !== undefined && peek.pageId in state.workspace.blocks) {
+    dispatch(openPeek.create({ peek }));
+  }
   if (blockId === undefined || !(blockId in state.workspace.blocks)) {
     return undefined;
   }
@@ -72,14 +83,25 @@ function revealBlock(blockId: BlockId): void {
   });
 }
 
+// The row a URL has open in a peek, or null.
+function peekIdFromHash(hash: string): BlockId | null {
+  return parsePageHash(hash)?.peek?.pageId ?? null;
+}
+
 // Moving within one page, as when a link to a block becomes the page's
-// own address, replaces the history entry rather than adding one.
+// own address, replaces the history entry rather than adding one; a peek
+// that opens or closes adds one, so that Back closes it.
 function writeUrl(store: AppStore): void {
   const hash = hashForUi(store.getState().ui);
   if (hash === location.hash) return;
   const url = hash === "" ? location.pathname : hash;
   const pageId = pageIdFromHash(hash);
-  if (pageId !== null && pageId === pageIdFromHash(location.hash)) {
+  const isSamePeek = peekIdFromHash(hash) === peekIdFromHash(location.hash);
+  if (
+    pageId !== null &&
+    pageId === pageIdFromHash(location.hash) &&
+    isSamePeek
+  ) {
     history.replaceState(null, "", url);
   } else {
     history.pushState(null, "", url);

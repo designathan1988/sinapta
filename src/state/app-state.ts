@@ -1,5 +1,6 @@
 // The shape of the single application state and its initial value.
 import type { PageVersion } from "./page-versions.commands.ts";
+import { PEEK_WIDTH, SIDEBAR_WIDTH } from "./widths.ts";
 import {
   createEmptyWorkspace,
   type AssetError,
@@ -111,8 +112,9 @@ export interface UiState {
   } | null;
   // What has been typed into each view's search field.
   readonly viewSearches: Readonly<Record<ViewId, string>>;
-  // Sidebar width in rem.
+  // Sidebar and side peek widths in rem.
   readonly sidebarWidth: number;
+  readonly peekWidth: number;
   readonly isSidebarCollapsed: boolean;
   // A window under 768 px wide shows the sidebar as a drawer over the
   // page, open or closed on its own; neither is saved.
@@ -189,14 +191,6 @@ export interface AppState {
   readonly persistence: PersistenceState;
 }
 
-export const SIDEBAR_WIDTH = {
-  min: 12,
-  // Notion's sidebar, 270 pixels.
-  initial: 16.875,
-  max: 30,
-  step: 1,
-} as const;
-
 export const RECENT_PAGES_MAX = 20;
 
 export function createInitialUiState(): UiState {
@@ -219,6 +213,7 @@ export function createInitialUiState(): UiState {
     readReminders: [],
     viewSearches: {},
     sidebarWidth: SIDEBAR_WIDTH.initial,
+    peekWidth: PEEK_WIDTH.initial,
     isSidebarCollapsed: false,
     isNarrow: false,
     isDrawerOpen: false,

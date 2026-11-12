@@ -11,6 +11,7 @@ import { editorStructureCommands } from "./editor-structure.commands.ts";
 import { editorCommands as textCommands } from "./editor.commands.ts";
 
 export { setBlockColor } from "./editor-color.commands.ts";
+export { writeSystemClipboard } from "./editor-clipboard.view.ts";
 export { insertMentionAt } from "./editor-mention.commands.ts";
 export { convertBlock } from "./editor-convert.commands.ts";
 export { moveBlocksToPage } from "./editor-move.commands.ts";

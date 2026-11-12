@@ -75,7 +75,7 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Row tick box | `table-gutter.view.ts` | Notion | Notion checkbox |
 | Group header | `group-header.view.ts`, `group-menu.view.ts` | Notion | caret, chip, count; hover shows "…" (the group's menu: name, Hide, Delete, Colors for an option's group) and "+" (a new row in the group) |
 
-| Row peek | `features/row-peek/` | Notion (no comments, Share, link or favorite in its bar) | side or center peek with Close, Open as full page, mode switch, Previous and Next, page actions; Escape closes, K and J step |
+| Row peek | `features/row-peek/` | Notion (no Share: one person, no sharing) | side or center peek with Close, Open as full page, mode switch, Previous and Next, then Comment, Copy link, the favorite star and page actions; the side peek's edge drags it wider (kept), arrows by keyboard; the peek is in the address, so a link opens it and Back closes it; Escape closes, K and J step |
 | Open pages in | `view-settings/choice-panels.ts` | Notion | row in the Layout panel opening Side peek, Center peek, Full page |
 | New and its templates | `database.view.ts`, `templates-menu.view.ts` | Notion (default for the whole database, not per view) | split blue button; the arrow lists "Templates for …", each template with "…" (Set as default, Edit, Duplicate, Delete), Empty page, New template; Default marks the one new rows start from |
 | Template note | `template-banner.view.ts` | Notion | a strip over a template's page: "You're editing a template in …" |
@@ -166,7 +166,6 @@ against the reference on every run.
 
 ## Open
 
-- Row peek: comments, Share, copy link and favorite in the bar; resizing the side peek; the peek in the address.
 - Templates: a default per view; repeating templates.
 - Sorts: reorder by dragging the grip (Move up and down by keyboard).
 - Light theme measurements of the menu reference.

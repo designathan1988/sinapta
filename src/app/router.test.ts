@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { buildWorkspace, toBlockId } from "../model/index.ts";
+import { buildWorkspace, parseViewId, toBlockId } from "../model/index.ts";
+import { parsePageHash } from "../ui/address/index.ts";
 import {
   createInitialState,
   createInitialUiState,
@@ -43,6 +44,22 @@ describe("router", () => {
     expect(isHomeHash("#/page/abc")).toBe(false);
   });
 
+  it("writes a row open in a peek into the page's URL, and reads it back", () => {
+    const viewId = parseViewId("view");
+    if (viewId === undefined) throw new Error("setup");
+    const peek = { pageId: toBlockId("row"), viewId, mode: "center" as const };
+    const ui = {
+      ...createInitialUiState(),
+      activePageId: toBlockId("abc"),
+      peek,
+    };
+
+    const hash = hashForUi(ui);
+
+    expect(hash).toBe("#/page/abc?peek=row&view=view&mode=center");
+    expect(parsePageHash(hash)).toEqual({ pageId: "abc", peek });
+  });
+
   it("writes the open page's URL when Home is not shown", () => {
     const ui = { ...createInitialUiState(), activePageId: toBlockId("abc") };
 
@@ -71,6 +88,16 @@ describe("opening a link to a block", () => {
       expect.objectContaining({
         type: "ui.setSelection",
         selection: { blockId: "b1", anchorOffset: 0, focusOffset: 0 },
+      }),
+    ]);
+  });
+
+  it("opens a row in a peek over the page", () => {
+    expect(open("#/page/p1?peek=b1&view=v1&mode=side")).toEqual([
+      expect.objectContaining({ type: "ui.setActivePage", pageId: "p1" }),
+      expect.objectContaining({
+        type: "peek.open",
+        peek: { pageId: "b1", viewId: "v1", mode: "side" },
       }),
     ]);
   });

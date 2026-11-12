@@ -1,7 +1,7 @@
 // The row peek: closing it, opening its row as its own page, and stepping
 // to the next or previous row in the order of the view it came from.
 import { selectPage } from "../../blocks/page/index.ts";
-import type { View } from "../../model/index.ts";
+import type { BlockId, View, ViewId } from "../../model/index.ts";
 import { defineCommand } from "../../state/index.ts";
 import { selectPeekRows } from "./peek.selectors.ts";
 
@@ -68,4 +68,22 @@ export const setPeekMode = defineCommand<{ mode: View["openMode"] }>({
   },
 });
 
-export const peekCommands = [closePeek, expandPeek, stepPeek, setPeekMode];
+// Opens a row in a peek as an address names it: the row, the view whose
+// order it follows, and how it shows.
+export const openPeek = defineCommand<{
+  peek: { pageId: BlockId; viewId: ViewId; mode: "side" | "center" };
+}>({
+  type: "peek.open",
+  handle(state, { peek }) {
+    if (state.workspace.blocks[peek.pageId] === undefined) return {};
+    return { ui: { ...state.ui, peek } };
+  },
+});
+
+export const peekCommands = [
+  closePeek,
+  expandPeek,
+  stepPeek,
+  setPeekMode,
+  openPeek,
+];

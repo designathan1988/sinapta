@@ -1,7 +1,6 @@
 export {
   createInitialState,
   createInitialUiState,
-  SIDEBAR_WIDTH,
   type ActiveCell,
   type BlockSelection,
   type AppState,
@@ -18,6 +17,7 @@ export {
   type UiState,
 } from "./app-state.ts";
 export { createAppStore, type AppStore } from "./store.ts";
+export { PEEK_WIDTH, SIDEBAR_WIDTH } from "./widths.ts";
 export {
   createCommandRegistry,
   defineCommand,
@@ -43,6 +43,7 @@ export {
   setActivePage,
   setClipboard,
   setSelection,
+  setPeekWidth,
   setSidebarWidth,
   togglePageExpanded,
   toggleSidebar,
