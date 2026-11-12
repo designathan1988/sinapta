@@ -36,9 +36,15 @@
       font-size: var(--font-size-sm);
     }
 
-    /* A database uses the full width and height of the page area. */
+    /* A database uses the full width and height of the page area, and
+       starts 96 px from the main area's edge, as Notion's (the page area
+       already gives some of it); its boards and tables still scroll to
+       the window's edge. */
     &[data-wide] {
       block-size: 100%;
+      padding-inline-start: calc(
+        var(--space-inset-page) - var(--space-inset-lg)
+      );
     }
 
     /* A page that is opened fades and rises into place. */

@@ -12,7 +12,7 @@ import type { MenuEntry } from "../../../ui/menu/index.ts";
 import { setCardOptions } from "../card.commands.ts";
 import type { TableContext } from "../table-cell.view.ts";
 import { setViewType } from "../view-layout.commands.ts";
-import { LAYOUT_ICONS } from "./root-panel.view.ts";
+import { LAYOUT_ICONS } from "../layout-icons.ts";
 import { OPEN_MODE_ICONS } from "./choice-panels.ts";
 import { panelRow, type SettingsPanel } from "./settings-panel.ts";
 

@@ -15,6 +15,7 @@ import { renderList } from "./layouts/list/index.ts";
 import { renderTimeline } from "./layouts/timeline/index.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import { renderTable } from "./table.view.ts";
+import { LAYOUT_ICONS } from "./layout-icons.ts";
 import { createView } from "./view.commands.ts";
 
 export const NEW_VIEW_OVERLAY = "new-view";
@@ -41,6 +42,7 @@ export function renderNewViewMenu(context: TableContext): TemplateResult {
   const databaseId = model.holderId;
   const items = VIEW_TYPES.map((viewType): MenuItem => ({
     label: COPY.database.layouts[viewType],
+    icon: LAYOUT_ICONS[viewType],
     onSelect: () => {
       const name = COPY.database.layouts[viewType];
       dispatch(createView.create({ databaseId, name, viewType }));

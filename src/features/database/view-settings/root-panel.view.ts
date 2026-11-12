@@ -2,29 +2,16 @@
 // setting with its current value, and the view's own actions.
 import { exportViewAsCsv } from "../csv-file.view.ts";
 import type { TemplateResult } from "lit-html";
-import type { ViewType } from "../../../model/index.ts";
 import { openOverlay } from "../../../state/index.ts";
 import { COPY } from "../../../ui/copy.ts";
-import type { IconName } from "../../../ui/icon/index.ts";
 import { renderMenuName, type MenuEntry } from "../../../ui/menu/index.ts";
 import { filterCount } from "../filter-match.ts";
+import { LAYOUT_ICONS } from "../layout-icons.ts";
 import type { TableContext } from "../table-cell.view.ts";
 import { FILTERS_OVERLAY } from "../view-filters.view.ts";
 import { setViewLocked } from "../view-lock.commands.ts";
 import { deleteView, renameView } from "../view.commands.ts";
 import { panelRow, type SettingsPanel } from "./settings-panel.ts";
-
-export const LAYOUT_ICONS: Readonly<Record<ViewType, IconName>> = {
-  table: "table",
-  board: "board",
-  gallery: "gallery",
-  list: "list",
-  calendar: "calendar",
-  timeline: "timeline",
-  chart: "chart",
-  form: "form",
-  feed: "feed",
-};
 
 function renderName(context: TableContext): TemplateResult {
   const { model, dispatch } = context;
