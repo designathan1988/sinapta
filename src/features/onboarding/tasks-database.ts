@@ -77,12 +77,21 @@ function properties(ids: TaskIds) {
     {
       id: status,
       name: TEXT.status,
-      type: "select",
+      // Notion's Status: each option in its group, To-do, In progress
+      // and Complete.
+      type: "status",
       options: [
         { id: todo, name: TEXT.notStarted, color: "gray" },
         { id: doing, name: TEXT.inProgress, color: "blue" },
         { id: done, name: TEXT.done, color: "green" },
       ],
+      config: {
+        groups: [
+          { id: "to-do", optionIds: [todo] },
+          { id: "in-progress", optionIds: [doing] },
+          { id: "complete", optionIds: [done] },
+        ],
+      },
     },
     { id: due, name: TEXT.due, type: "date" },
   ];

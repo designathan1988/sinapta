@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { selectDatabase } from "../../blocks/database/index.ts";
 import { BLOCK_PROPS_SCHEMAS } from "../../blocks/index.ts";
 import { selectPageTitle, selectPage } from "../../blocks/page/index.ts";
 import { parseWorkspaceFile } from "../../model/index.ts";
@@ -28,6 +29,24 @@ describe("workspace.seedGettingStarted", () => {
       Object.values(state.workspace.views).map((view) => view.type),
     ).toEqual(["table", "board", "calendar"]);
     expect(state.ui.activePageId).toBe(pageId);
+  });
+
+  it("gives the tasks Notion's Status, its options in the three groups", () => {
+    const state = seed();
+    const database = selectDatabase(state, state.workspace.rootIds[1] ?? null);
+    const [status] = database?.props.properties ?? [];
+
+    expect(status).toMatchObject({
+      name: "Status",
+      type: "status",
+      config: {
+        groups: [
+          { id: "to-do", optionIds: [expect.any(String)] },
+          { id: "in-progress", optionIds: [expect.any(String)] },
+          { id: "complete", optionIds: [expect.any(String)] },
+        ],
+      },
+    });
   });
 
   it("writes only records that load back through the schemas", () => {
