@@ -73,6 +73,7 @@ export function renderPageInfo(
     <button
       type="button"
       class="page-info__edited"
+      data-tooltip=${COPY.pageHistory.open}
       title=${tooltipTitle(COPY.pageHistory.open)}
       interestfor=${TOOLTIP_TARGET}
       @click=${() => dispatch(openOverlay.create({ overlay: history }))}

@@ -27,7 +27,17 @@ export function installTooltip(): void {
     const source = "source" in event ? event.source : null;
     if (!(hint instanceof HTMLElement) || hint.id !== TOOLTIP_ID) return;
     if (!(source instanceof Element)) return;
-    hint.textContent = source.getAttribute("aria-label") ?? "";
+    // A control whose name is its own text asks for other words by
+    // data-tooltip; a control with no words shows no empty hint.
+    const words =
+      source.getAttribute("data-tooltip") ??
+      source.getAttribute("aria-label") ??
+      "";
+    if (words === "") {
+      event.preventDefault();
+      return;
+    }
+    hint.textContent = words;
   };
   // The event does not bubble out of the hint in every browser.
   document.addEventListener("interest", onInterest, true);
