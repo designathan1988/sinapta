@@ -173,4 +173,10 @@ export {
   textOfRange,
   type CommentRange,
 } from "./rich-text-comments.ts";
-export { crc32, writeZip, type ZipFile } from "./zip.ts";
+export {
+  crc32,
+  readZip,
+  writeZip,
+  type ZipEntry,
+  type ZipFile,
+} from "./zip.ts";

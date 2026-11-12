@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { crc32, writeZip } from "./zip.ts";
+import { crc32, readZip, writeZip } from "./zip.ts";
 
 const encode = (text: string) => new TextEncoder().encode(text);
 
@@ -45,5 +45,28 @@ describe("ZIP archives", () => {
       { name: "Plan.md", crc: crc32(encode("# Plan\n")), size: 7 },
       { name: "Plan/Résumé.md", crc: 0x3610a686, size: 5 },
     ]);
+  });
+});
+
+describe("readZip", () => {
+  it("reads back the files an archive holds, by path", () => {
+    const encoder = new TextEncoder();
+    const archive = writeZip([
+      { path: "Plans.md", data: encoder.encode("# Plans") },
+      { path: "Plans/Ideas é.md", data: encoder.encode("# Ideas") },
+    ]);
+
+    const entries = readZip(archive);
+
+    expect(entries.map((entry) => entry.path)).toEqual([
+      "Plans.md",
+      "Plans/Ideas é.md",
+    ]);
+    expect(entries.map((entry) => entry.method)).toEqual([0, 0]);
+    expect(new TextDecoder().decode(entries[1]?.data)).toBe("# Ideas");
+  });
+
+  it("finds nothing in bytes that are no archive", () => {
+    expect(readZip(new Uint8Array([1, 2, 3]))).toEqual([]);
   });
 });

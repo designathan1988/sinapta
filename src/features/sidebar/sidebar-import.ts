@@ -1,16 +1,24 @@
 // Import, as Notion's: a CSV file becomes a new database, a Markdown file
-// a new page.
+// a new page, and a ZIP archive of Markdown files, as Notion exports
+// them, pages with their subpages.
 import type { Dispatch } from "../../state/index.ts";
 import { importCsvFile } from "../database/index.ts";
-import { importMarkdownFile } from "../markdown-import/index.ts";
+import {
+  importArchiveFile,
+  importMarkdownFile,
+} from "../markdown-import/index.ts";
 
-const ACCEPTED = ".csv,text/csv,.md,.markdown,text/markdown";
+const ACCEPTED =
+  ".csv,text/csv,.md,.markdown,text/markdown,.zip,application/zip";
+
+function importerOf(file: File) {
+  if (/\.zip$/i.test(file.name)) return importArchiveFile;
+  if (/\.(md|markdown)$/i.test(file.name)) return importMarkdownFile;
+  return importCsvFile;
+}
 
 export function importFiles(files: readonly File[], dispatch: Dispatch): void {
-  for (const file of files) {
-    const isMarkdown = /\.(md|markdown)$/i.test(file.name);
-    void (isMarkdown ? importMarkdownFile : importCsvFile)(file, dispatch);
-  }
+  for (const file of files) void importerOf(file)(file, dispatch);
 }
 
 // The file chooser, opened by Import in the workspace menu. The choice in

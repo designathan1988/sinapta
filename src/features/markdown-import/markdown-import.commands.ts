@@ -1,6 +1,7 @@
 // A Markdown file imported as a page, as Notion's import does: named as
 // the file, its blocks each of their kind, nested as their indent says,
-// at the top level, and opened; one step to undo.
+// at the top level, and opened; an archive's subpages inside their
+// pages, after their blocks. One step to undo.
 import { PAGE_TYPE } from "../../blocks/page/index.ts";
 import {
   listOf,
@@ -12,6 +13,7 @@ import {
 import { defineCommand } from "../../state/index.ts";
 import type { PastedBlock } from "../../ui/rich-text/index.ts";
 import { pastedBlockProps } from "../editor/index.ts";
+import type { ImportedPage } from "./archive-pages.ts";
 
 interface Nesting {
   readonly children: Map<BlockId, BlockId[]>;
@@ -40,14 +42,17 @@ function nest(
   return { children, parents };
 }
 
-function pageRecord(
-  id: BlockId,
-  title: string,
-  meta: { readonly childIds: BlockId[]; readonly now: string },
-): Block {
+interface PageMeta {
+  readonly childIds: BlockId[];
+  readonly parentId: BlockId | null;
+  readonly now: string;
+}
+
+function pageRecord(id: BlockId, title: string, meta: PageMeta): Block {
   const trimmed = title.trim();
+  const { childIds, parentId } = meta;
   return {
-    ...{ id, type: PAGE_TYPE, parentId: null, childIds: meta.childIds },
+    ...{ id, type: PAGE_TYPE, parentId, childIds },
     props: {
       title: trimmed === "" ? [] : [{ text: trimmed }],
       icon: null,
@@ -75,23 +80,62 @@ function blockRecords(
   });
 }
 
-export const importMarkdown = defineCommand<{
-  title: string;
-  blocks: readonly PastedBlock[];
-}>({
+// The ids a page takes: its own, its blocks', and its subpages'.
+function idsNeeded(page: ImportedPage): number {
+  const subpages = page.subpages ?? [];
+  return subpages.reduce(
+    (sum, subpage) => sum + idsNeeded(subpage),
+    1 + page.blocks.length,
+  );
+}
+
+interface Place {
+  readonly parentId: BlockId | null;
+  readonly now: string;
+}
+
+// A page's records, its subpages' after its blocks, from its share of
+// the new ids: its own first, then its blocks', then each subpage's.
+function pageRecords(
+  page: ImportedPage,
+  ids: readonly BlockId[],
+  place: Place,
+): Block[] {
+  const [pageId, ...rest] = ids;
+  if (pageId === undefined) return [];
+  const blockIds = rest.slice(0, page.blocks.length);
+  const subpages: Block[][] = [];
+  let at = page.blocks.length;
+  for (const subpage of page.subpages ?? []) {
+    const share = rest.slice(at, at + idsNeeded(subpage));
+    const parent = { parentId: pageId, now: place.now };
+    subpages.push(pageRecords(subpage, share, parent));
+    at += share.length;
+  }
+  const nesting = nest(pageId, page.blocks, blockIds);
+  const childIds = [
+    ...(nesting.children.get(pageId) ?? []),
+    ...subpages.flatMap((records) => records[0]?.id ?? []),
+  ];
+  const { now, parentId } = place;
+  return [
+    pageRecord(pageId, page.title, { childIds, parentId, now }),
+    ...blockRecords(page.blocks, blockIds, { ...nesting, now }),
+    ...subpages.flat(),
+  ];
+}
+
+export const importMarkdown = defineCommand<ImportedPage>({
   type: "page.importMarkdown",
-  newIds: (payload) => ({ blocks: 1 + payload.blocks.length }),
+  newIds: (payload) => ({ blocks: idsNeeded(payload) }),
   handle(state, command) {
-    const [pageId, ...ids] = command.meta.blockIds;
+    const { now, blockIds } = command.meta;
+    const records = pageRecords(command, blockIds, { parentId: null, now });
+    const pageId = records[0]?.id;
     if (pageId === undefined) return {};
-    const { now } = command.meta;
-    const nesting = nest(pageId, command.blocks, ids);
-    const childIds = nesting.children.get(pageId) ?? [];
-    const page = pageRecord(pageId, command.title, { childIds, now });
-    const records = blockRecords(command.blocks, ids, { ...nesting, now });
     const index = siblingIds(state.workspace, null).length;
     const operations: Operation[] = [
-      ...[page, ...records].map((record): Operation => ({
+      ...records.map((record): Operation => ({
         type: "record.create",
         kind: "block",
         record,

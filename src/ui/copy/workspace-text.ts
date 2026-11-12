@@ -19,6 +19,8 @@ export const WORKSPACE_TEXT = {
   sidebar: {
     import: "Import",
     importedMarkdown: "The Markdown file was imported as a page.",
+    importedArchive: "The archive's pages were imported.",
+    importedNothing: "The archive holds no Markdown pages to import.",
     newPage: "New page",
     search: "Search",
     searchShortcut: "Ctrl+K",

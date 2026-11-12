@@ -118,3 +118,66 @@ export function writeZip(files: readonly ZipFile[]): Uint8Array {
     endRecord(entries.length, size, offset),
   ]);
 }
+
+// A file as an archive holds it: stored (method 0) or deflated (8), as
+// read; inflating a deflated one is the reader's, since it needs the
+// browser.
+export interface ZipEntry {
+  readonly path: string;
+  readonly method: number;
+  readonly data: Uint8Array;
+  // Its size once inflated.
+  readonly size: number;
+}
+
+const END_RECORD_SIZE = 22;
+
+// The end record sits last, before a comment of up to 65,535 bytes.
+function findEndRecord(view: DataView): number | undefined {
+  const last = view.byteLength - END_RECORD_SIZE;
+  const first = Math.max(0, last - 0xffff);
+  for (let at = last; at >= first; at -= 1) {
+    if (view.getUint32(at, true) === END_SIGNATURE) return at;
+  }
+  return undefined;
+}
+
+function entryAt(bytes: Uint8Array, view: DataView, at: number) {
+  const nameLength = view.getUint16(at + 28, true);
+  const recordLength = 46 + nameLength + view.getUint16(at + 30, true);
+  const local = view.getUint32(at + 42, true);
+  const dataStart =
+    local +
+    30 +
+    view.getUint16(local + 26, true) +
+    view.getUint16(local + 28, true);
+  const compressed = view.getUint32(at + 20, true);
+  const entry: ZipEntry = {
+    path: new TextDecoder().decode(
+      bytes.subarray(at + 46, at + 46 + nameLength),
+    ),
+    method: view.getUint16(at + 10, true),
+    data: bytes.subarray(dataStart, dataStart + compressed),
+    size: view.getUint32(at + 24, true),
+  };
+  return { entry, next: at + recordLength + view.getUint16(at + 32, true) };
+}
+
+// The files an archive lists in its central directory, folders left out;
+// none when the bytes are no archive.
+export function readZip(bytes: Uint8Array): ZipEntry[] {
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  if (bytes.byteLength < END_RECORD_SIZE) return [];
+  const end = findEndRecord(view);
+  if (end === undefined) return [];
+  const count = view.getUint16(end + 10, true);
+  const entries: ZipEntry[] = [];
+  let at = view.getUint32(end + 16, true);
+  for (let index = 0; index < count; index += 1) {
+    if (view.getUint32(at, true) !== CENTRAL_SIGNATURE) return [];
+    const { entry, next } = entryAt(bytes, view, at);
+    if (!entry.path.endsWith("/")) entries.push(entry);
+    at = next;
+  }
+  return entries;
+}
