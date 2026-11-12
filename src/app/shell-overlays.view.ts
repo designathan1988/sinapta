@@ -48,6 +48,11 @@ import {
   TEMPLATE_GALLERY_OVERLAY,
 } from "../features/templates/index.ts";
 import {
+  renderSidebarMenu,
+  SIDEBAR_APPS_OVERLAY,
+  SIDEBAR_WORKSPACE_OVERLAY,
+} from "../features/sidebar/index.ts";
+import {
   PAGE_HISTORY_OVERLAY,
   type AppState,
   type Dispatch,
@@ -77,6 +82,8 @@ const OVERLAYS: Readonly<Record<string, OverlayView>> = {
   [EMOJI_MENU_OVERLAY]: renderEmojiMenu,
   [PAGE_MENU_OVERLAY]: renderPageMenu,
   [TONE_OVERLAY]: renderTonePicker,
+  [SIDEBAR_WORKSPACE_OVERLAY]: renderSidebarMenu,
+  [SIDEBAR_APPS_OVERLAY]: renderSidebarMenu,
   [SHORTCUT_HELP_OVERLAY_KIND]: (_state, dispatch) =>
     renderShortcutHelp(dispatch),
 };

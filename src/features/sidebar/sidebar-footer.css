@@ -1,0 +1,79 @@
+@layer features {
+  /* The foot, as Notion's: 44 px under a hairline, the workspace and its
+     menu, then help and the apps menu, 28 px each, 2 px apart. */
+  .sidebar__footer {
+    display: flex;
+    gap: var(--space-inline-xxs);
+    align-items: center;
+    min-block-size: var(--size-sidebar-footer);
+    padding-inline: var(--space-inset-sm);
+    border-block-start: var(--size-border-thin) solid var(--color-border-subtle);
+  }
+
+  .sidebar__workspace,
+  .sidebar__tool {
+    display: inline-flex;
+    align-items: center;
+    block-size: var(--size-sidebar-button);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-md);
+    background-color: transparent;
+    color: var(--color-text-tertiary);
+    cursor: pointer;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
+  .sidebar__workspace {
+    flex: 1;
+    gap: var(--space-inline-sm);
+    min-inline-size: 0;
+    padding-inline: var(--space-inset-sm);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+
+    /* The chevron points down, as a menu's. */
+    & > .icon {
+      rotate: 90deg;
+      inline-size: var(--size-icon-xs);
+      block-size: var(--size-icon-xs);
+      color: var(--color-text-tertiary);
+    }
+  }
+
+  .sidebar__tool {
+    justify-content: center;
+    inline-size: var(--size-sidebar-button);
+
+    & > .icon {
+      inline-size: var(--size-icon-md);
+      block-size: var(--size-icon-md);
+    }
+  }
+
+  /* The workspace's mark: its first letter on a square. */
+  .sidebar__mark {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    inline-size: var(--size-sidebar-icon);
+    block-size: var(--size-sidebar-icon);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-text-primary);
+    color: var(--color-bg-app);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-strong);
+  }
+
+  .sidebar__workspace-name {
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

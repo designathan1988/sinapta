@@ -1,0 +1,85 @@
+@layer features {
+  /* The top row: hide, then the inbox and a new page at its end. */
+  .sidebar__top {
+    display: flex;
+    gap: var(--space-inline-xxs);
+    align-items: center;
+    padding: var(--space-inset-sm) var(--space-inset-md) var(--space-none);
+
+    & .button {
+      inline-size: var(--size-sidebar-button);
+      block-size: var(--size-sidebar-button);
+      border-radius: var(--radius-md);
+      color: var(--color-text-tertiary);
+
+      & > .icon {
+        inline-size: var(--size-icon-md);
+        block-size: var(--size-icon-md);
+      }
+    }
+  }
+
+  .sidebar__spacer {
+    flex: 1;
+  }
+
+  /* The inbox's count of unread reminders, on the corner of its icon. */
+  .sidebar__inbox {
+    position: relative;
+    display: inline-flex;
+  }
+
+  .sidebar__badge {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    display: inline-grid;
+    place-items: center;
+    min-inline-size: var(--size-icon-xs);
+    padding-inline: var(--space-inset-xxs);
+    border-radius: var(--radius-full);
+    background-color: var(--color-status-danger-fill);
+    color: var(--color-text-on-accent);
+    font-size: var(--font-size-key);
+    line-height: var(--font-line-height-tight);
+    pointer-events: none;
+  }
+
+  /* The search field: an outline, its text and its shortcut. */
+  .sidebar__search {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    min-block-size: var(--size-row-height);
+    margin: var(--space-inset-sm) var(--space-inset-md) var(--space-none);
+    padding: var(--space-none) var(--space-inset-xs) var(--space-none)
+      var(--space-inset-sm);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-field);
+    background-color: transparent;
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-sm);
+    text-align: start;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    & kbd {
+      display: inline-grid;
+      place-items: center;
+      block-size: var(--size-sidebar-key);
+      padding-inline: var(--space-inset-xs);
+      border-radius: var(--radius-sm);
+      background-color: var(--color-bg-active);
+      font-family: inherit;
+      font-size: var(--font-size-key);
+      font-weight: var(--font-weight-medium);
+    }
+  }
+
+  .sidebar__search-label {
+    flex: 1;
+  }
+}

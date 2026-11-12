@@ -209,6 +209,7 @@
     --base-size-2x75: 2.75rem;
     --base-size-18x125: 18.125rem;
     --base-size-12x5: 12.5rem;
+    --base-size-1x375: 1.375rem;
     --base-size-1x875: 1.875rem;
     --base-size-1x125: 1.125rem;
     --base-size-2x125: 2.125rem;
@@ -221,6 +222,7 @@
     --base-radius-2: 0.375rem;
     --base-radius-3: 0.625rem;
     --base-radius-5: 1.25rem;
+    --base-radius-2x5: 0.5rem;
     --base-radius-pill: 999px;
     --base-font-family-sans: ui-sans-serif, "-apple-system", "BlinkMacSystemFont", "Segoe UI Variable Display", "Segoe UI", "Helvetica", "Apple Color Emoji", "Arial", sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
     --base-font-family-serif: ui-serif, "Iowan Old Style", "Palatino Linotype", "Georgia", serif;
@@ -233,6 +235,7 @@
     --base-font-size-6: 1.875rem;
     --base-font-size-7: 2.5rem;
     --base-font-size-8: 4.25rem;
+    --base-font-size-0x6875: 0.6875rem;
     --base-font-size-6x5: 2rem;
     --base-font-weight-400: 400;
     --base-font-weight-500: 500;
@@ -334,6 +337,7 @@
     --space-stack-lg: var(--base-space-6);
     --space-stack-xl: var(--base-space-8);
     --space-stack-xxl: var(--base-space-12);
+    --space-stack-section: var(--base-space-3);
     --space-inset-xs: var(--base-space-1);
     --space-inset-sm: var(--base-space-2);
     --space-inset-md: var(--base-space-3);
@@ -357,6 +361,11 @@
     --size-sidebar-min: var(--base-size-12);
     --size-sidebar-default: var(--base-size-16x875);
     --size-sidebar-max: var(--base-size-30);
+    --size-sidebar-row: var(--base-size-1x875);
+    --size-sidebar-icon: var(--base-size-1x375);
+    --size-sidebar-button: var(--base-size-7);
+    --size-sidebar-footer: var(--base-size-2x75);
+    --size-sidebar-key: var(--base-size-1x125);
     --size-content-max: var(--base-size-45);
     --size-label-width: var(--base-size-12);
     --size-menu-min-width: var(--base-size-14);
@@ -401,6 +410,7 @@
     --radius-full: var(--base-radius-pill);
     --radius-lg: var(--base-radius-3);
     --radius-xl: var(--base-radius-5);
+    --radius-field: var(--base-radius-2x5);
     --shadow-overlay: 0px 0px 0px 1px var(--color-shadow-ring), 0px 14px 28px -6px var(--color-shadow-overlay), 0px 2px 4px -1px var(--color-shadow-soft);
     --shadow-dialog: 0px 0px 0px 1px var(--color-shadow-ring), 0px 5px 10px 0px var(--color-shadow-overlay), 0px 15px 40px 0px var(--color-shadow-overlay);
     --shadow-card: 0px 0px 0px 1px var(--color-shadow-ring), 0px 2px 4px 0px var(--color-shadow-overlay);
@@ -417,6 +427,7 @@
     --font-size-title: var(--base-font-size-7);
     --font-size-page-icon: var(--base-font-size-8);
     --font-size-peek-title: var(--base-font-size-6x5);
+    --font-size-key: var(--base-font-size-0x6875);
     --font-weight-regular: var(--base-font-weight-400);
     --font-weight-medium: var(--base-font-weight-500);
     --font-weight-strong: var(--base-font-weight-600);

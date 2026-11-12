@@ -1,89 +1,62 @@
 @layer features {
+  /* The sidebar, measured on Notion's at 1440x900: a top row and a search
+     field that stay, rows and sections that scroll, and a foot. */
   .sidebar {
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: var(--space-stack-md);
-    align-items: stretch;
+    min-block-size: 0;
   }
 
-  /* Sidebar items are rows of Notion's height, not buttons. */
+  /* Rows and sections scroll between the top and the foot; the scrollbar
+     shows only while the sidebar is pointed at, as Notion's. */
+  .sidebar__scroll {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--space-stack-section);
+    min-block-size: 0;
+    padding: var(--space-stack-section) var(--space-inset-sm);
+    overflow: hidden auto;
+
+    &:not(:hover)::-webkit-scrollbar-thumb {
+      background-color: transparent;
+    }
+  }
+
   .sidebar__quick,
-  .sidebar__footer {
+  .sidebar__section,
+  .sidebar__tree {
     display: flex;
     flex-direction: column;
-    gap: var(--space-stack-xxs);
-
-    & > .button {
-      justify-content: flex-start;
-      gap: var(--space-inline-sm);
-      min-block-size: var(--size-row-height);
-      padding-inline: var(--space-inset-sm);
-      border-radius: var(--radius-md);
-      color: var(--color-text-secondary);
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-regular);
-    }
   }
 
-  .sidebar__footer {
-    margin-block-start: auto;
-  }
-
-  /* The search field: a quiet box with its shortcut, as in Notion. */
-  .sidebar__search {
-    display: flex;
-    gap: var(--space-inline-sm);
-    align-items: center;
-    min-block-size: var(--size-row-height);
-    padding: var(--space-none) var(--space-inset-sm);
-    border: var(--size-border-thin) solid var(--color-border-default);
-    border-radius: var(--radius-md);
-    background-color: var(--color-bg-app);
-    color: var(--color-text-tertiary);
-    font-size: var(--font-size-sm);
-    text-align: start;
-    cursor: pointer;
-
-    &:hover {
-      background-color: var(--color-bg-hover);
-    }
-
-    & kbd {
-      padding: var(--space-none) var(--space-inset-xs);
-      border: var(--size-border-thin) solid var(--color-border-default);
-      border-radius: var(--radius-sm);
-      font-family: inherit;
-      font-size: var(--font-size-xs);
-    }
-  }
-
-  .sidebar__search-label {
-    flex: 1;
-  }
-
-  .sidebar__empty {
-    padding: var(--space-inset-sm);
-    color: var(--color-text-secondary);
+  .sidebar__section + .sidebar__section {
+    margin-block-start: var(--space-stack-xs);
   }
 
   .sidebar__tree {
-    display: flex;
     touch-action: none;
     user-select: none;
-    flex-direction: column;
-    gap: var(--space-stack-xxs);
   }
 
+  /* Every row is Notion's: 30 px, an icon in a 22 px column, its label
+     after an 8 px gap, a 6 px radius, and indented 8 px a level. */
+  .sidebar__item,
   .sidebar__row {
     display: flex;
-    gap: var(--space-inline-xs);
+    gap: var(--space-inline-sm);
     align-items: center;
-    min-block-size: var(--size-row-height);
-    padding-inline: calc((var(--sidebar-level, 1) - 1) * var(--space-inset-lg))
-      var(--space-inset-xs);
+    inline-size: 100%;
+    min-block-size: var(--size-sidebar-row);
+    padding-inline: var(--space-inset-sm);
+    border: none;
     border-radius: var(--radius-md);
+    background-color: transparent;
     color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-regular);
+    text-align: start;
     cursor: pointer;
 
     &:hover,
@@ -94,8 +67,11 @@
     &[aria-current="page"] {
       background-color: var(--color-bg-hover);
       color: var(--color-text-primary);
-      font-weight: var(--font-weight-medium);
     }
+  }
+
+  .sidebar__row {
+    padding-inline-start: calc(var(--space-inset-sm) * var(--sidebar-level, 1));
   }
 
   .sidebar__title {
@@ -110,14 +86,57 @@
     display: inline-grid;
     flex: none;
     place-items: center;
-    min-inline-size: var(--size-icon-md);
+    inline-size: var(--size-sidebar-icon);
+    block-size: var(--size-sidebar-icon);
+    color: var(--color-text-tertiary);
   }
 
-  .sidebar__icon:empty {
+  .sidebar__quick .sidebar__icon > .icon {
+    inline-size: var(--size-icon-md);
+    block-size: var(--size-icon-md);
+  }
+
+  /* A page with pages inside: its icon, and its chevron in the same place
+     while the row is pointed at or focused. */
+  .sidebar__toggle {
+    position: relative;
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-tertiary);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-active);
+      color: var(--color-text-primary);
+    }
+  }
+
+  .sidebar__chevron {
+    position: absolute;
+    inset: 0;
     display: none;
+    place-items: center;
   }
 
-  .sidebar__toggle,
+  .sidebar__row[aria-expanded="true"] .sidebar__chevron {
+    rotate: 90deg;
+  }
+
+  .sidebar__row:is(:hover, :focus-visible, :focus-within) > .sidebar__toggle {
+    & > .sidebar__icon {
+      visibility: hidden;
+    }
+
+    & > .sidebar__chevron {
+      display: grid;
+    }
+  }
+
   .sidebar__add {
     display: inline-grid;
     flex: none;
@@ -135,11 +154,6 @@
       background-color: var(--color-bg-active);
       color: var(--color-text-primary);
     }
-
-    &[hidden] {
-      display: inline-grid;
-      visibility: hidden;
-    }
   }
 
   /* Row actions appear on hover, on keyboard focus and while open. */
@@ -153,50 +167,24 @@
     opacity: 1;
   }
 
-  .sidebar__section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-stack-xxs);
-  }
-
   .sidebar__heading {
+    display: flex;
+    align-items: center;
+    min-block-size: var(--size-sidebar-row);
     margin: var(--space-none);
-    padding: var(--space-inset-xs) var(--space-inset-sm);
+    padding-inline: var(--space-inset-sm);
     color: var(--color-text-tertiary);
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
   }
 
-  .sidebar__favorite {
-    display: flex;
-    gap: var(--space-inline-xs);
-    align-items: center;
-    inline-size: 100%;
-    min-block-size: var(--size-row-height);
-    padding: var(--space-none) var(--space-inset-sm);
-    border: none;
-    border-radius: var(--radius-sm);
-    background-color: transparent;
+  .sidebar__empty {
+    padding: var(--space-inset-sm);
     color: var(--color-text-secondary);
-    text-align: start;
-    cursor: pointer;
-
-    &:hover {
-      background-color: var(--color-bg-hover);
-    }
-
-    &[aria-current="page"] {
-      color: var(--color-text-primary);
-      font-weight: var(--font-weight-medium);
-    }
   }
 
   .sidebar__row[data-untitled] .sidebar__title {
     color: var(--color-text-tertiary);
-  }
-
-  .sidebar__row[aria-expanded="true"] .sidebar__toggle {
-    rotate: 90deg;
   }
 
   /* Drop markers while a page is dragged. */
@@ -215,23 +203,5 @@
 
   .sidebar__row[data-drop="inside"] {
     background-color: var(--color-bg-selected);
-  }
-
-  /* The inbox's count of unread reminders, a small red pill at its end. */
-  .sidebar__inbox {
-    justify-content: flex-start;
-  }
-
-  .sidebar__badge {
-    display: inline-grid;
-    place-items: center;
-    min-inline-size: var(--size-icon-sm);
-    margin-inline-start: auto;
-    padding-inline: var(--space-inset-xxs);
-    border-radius: var(--radius-full);
-    background-color: var(--color-status-danger-fill);
-    color: var(--color-text-on-accent);
-    font-size: var(--font-size-xs);
-    line-height: var(--font-line-height-tight);
   }
 }

@@ -56,11 +56,14 @@
     background-color: var(--color-bg-selected);
   }
 
-  /* Text for assistive technology only. */
+  /* Text for assistive technology only. The negative margin keeps its
+     pixel inside its place: the announcer at the end of the page would
+     otherwise make the window one pixel too tall, and show a scrollbar. */
   .visually-hidden {
     position: absolute;
     inline-size: var(--size-border-thin);
     block-size: var(--size-border-thin);
+    margin: calc(var(--size-border-thin) * -1);
     overflow: hidden;
     clip-path: inset(50%);
     white-space: nowrap;

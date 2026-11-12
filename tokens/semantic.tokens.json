@@ -300,6 +300,10 @@
       },
       "xxl": {
         "$value": "{base.space.12}"
+      },
+      "section": {
+        "$description": "Between the sidebar's groups, as Notion's: 12 px.",
+        "$value": "{base.space.3}"
       }
     },
     "inset": {
@@ -390,6 +394,26 @@
       },
       "max": {
         "$value": "{base.size.30}"
+      },
+      "row": {
+        "$description": "A sidebar row, as Notion's: 30 px.",
+        "$value": "{base.size.1x875}"
+      },
+      "icon": {
+        "$description": "The column of a sidebar row's icon: 22 px.",
+        "$value": "{base.size.1x375}"
+      },
+      "button": {
+        "$description": "An icon button in the sidebar: 28 px.",
+        "$value": "{base.size.7}"
+      },
+      "footer": {
+        "$description": "The sidebar's foot: 44 px.",
+        "$value": "{base.size.2x75}"
+      },
+      "key": {
+        "$description": "The shortcut hint in the search field: 18 px.",
+        "$value": "{base.size.1x125}"
       }
     },
     "content": {
@@ -584,6 +608,10 @@
     "xl": {
       "$description": "Notion's search dialog.",
       "$value": "{base.radius.5}"
+    },
+    "field": {
+      "$description": "The sidebar's search field, as Notion's: 8 px.",
+      "$value": "{base.radius.2x5}"
     }
   },
   "shadow": {
@@ -838,6 +866,10 @@
       "peekTitle": {
         "$description": "A page's title in a peek, smaller than on its own page.",
         "$value": "{base.font.size.6x5}"
+      },
+      "key": {
+        "$description": "A key in a shortcut hint, as Notion's: 11 px.",
+        "$value": "{base.font.size.0x6875}"
       }
     },
     "weight": {

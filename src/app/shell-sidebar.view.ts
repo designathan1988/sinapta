@@ -2,7 +2,6 @@
 // a drawer over it.
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
-import { createPage } from "../blocks/page/index.ts";
 import { renderSidebar } from "../features/sidebar/index.ts";
 import {
   selectIsSidebarShown,
@@ -12,8 +11,7 @@ import {
   type AppState,
   type Dispatch,
 } from "../state/index.ts";
-import { renderButton } from "../ui/button/index.ts";
-import { COPY, PRODUCT_NAME } from "../ui/copy.ts";
+import { COPY } from "../ui/copy.ts";
 import { focusOnce } from "../ui/focus/index.ts";
 import { setWidth, widthAt } from "./sidebar-width.ts";
 
@@ -79,29 +77,6 @@ function closeDrawer(dispatch: Dispatch): void {
   document.querySelector<HTMLElement>("[data-sidebar-open] button")?.focus();
 }
 
-function renderHeader(dispatch: Dispatch): TemplateResult {
-  return html`<header class="app__sidebar-header">
-    <span class="app__product">
-      <span class="app__badge" aria-hidden="true"
-        >${PRODUCT_NAME.slice(0, 1)}</span
-      >
-      ${PRODUCT_NAME}
-    </span>
-    ${renderButton({
-      label: COPY.sidebar.newPage,
-      icon: "compose",
-      isIconOnly: true,
-      onClick: () => dispatch(createPage.create({ parentId: null })),
-    })}
-    ${renderButton({
-      label: COPY.shell.hideSidebar,
-      icon: "sidebar",
-      isIconOnly: true,
-      onClick: () => dispatch(toggleSidebar.create({})),
-    })}
-  </header>`;
-}
-
 export function renderSidebarPanel(
   state: AppState,
   dispatch: Dispatch,
@@ -127,7 +102,7 @@ export function renderSidebarPanel(
       ${isNarrow ? ref(focusOnce) : nothing}
       @keydown=${onKeyDown}
     >
-      ${renderHeader(dispatch)} ${renderSidebar(state, dispatch)}
+      ${renderSidebar(state, dispatch)}
       ${isNarrow ? nothing : renderResizer(state, dispatch)}
     </nav>`;
 }

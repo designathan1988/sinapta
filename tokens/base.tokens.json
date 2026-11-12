@@ -1317,6 +1317,12 @@
           "unit": "rem"
         }
       },
+      "1x375": {
+        "$value": {
+          "value": 1.375,
+          "unit": "rem"
+        }
+      },
       "1x875": {
         "$value": {
           "value": 1.875,
@@ -1386,6 +1392,12 @@
           "unit": "rem"
         }
       },
+      "2x5": {
+        "$value": {
+          "value": 0.5,
+          "unit": "rem"
+        }
+      },
       "pill": {
         "$value": {
           "value": 999,
@@ -1444,6 +1456,12 @@
       },
       "size": {
         "$type": "dimension",
+        "0x6875": {
+          "$value": {
+            "value": 0.6875,
+            "unit": "rem"
+          }
+        },
         "1": {
           "$value": {
             "value": 0.75,

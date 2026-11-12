@@ -27,6 +27,9 @@ export const WORKSPACE_TEXT = {
     addSubpage: "Add a page inside",
     expandPage: "Expand",
     collapsePage: "Collapse",
+    help: "Help and keyboard shortcuts",
+    apps: "Templates, trash and more",
+    workspaceMenu: "Workspace",
   },
   pageMenu: {
     open: "Page actions",

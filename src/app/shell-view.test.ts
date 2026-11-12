@@ -28,24 +28,16 @@ function withDrawer(): AppState {
 }
 
 describe("renderShell", () => {
-  it("opens the keyboard shortcuts from the help button in the corner", () => {
-    const sent: Command[] = [];
-    const dispatch: Dispatch = (command) => {
-      sent.push(command);
-      return { ok: true };
-    };
-    const host = document.createElement("div");
-    document.body.replaceChildren(host);
-    render(renderShell(createInitialState(), dispatch), host);
+  it("keeps help and settings in the sidebar, not on the page, as Notion", () => {
+    const { host } = rendered();
+    const main = host.querySelector(".app__main");
+    const labels = [...(main?.querySelectorAll("button") ?? [])].map(
+      (item) => item.getAttribute("aria-label") ?? "",
+    );
 
-    host.querySelector<HTMLButtonElement>(".app__help button")?.click();
-
-    expect(sent).toEqual([
-      expect.objectContaining({
-        type: "ui.openOverlay",
-        overlay: { kind: "shortcut-help" },
-      }),
-    ]);
+    expect(labels).not.toContain("Settings");
+    expect(labels).not.toContain("Help and keyboard shortcuts");
+    expect(host.querySelector(".app__sidebar .sidebar__footer")).not.toBeNull();
   });
 
   it("keeps the focus in an open drawer: all else is inert", async () => {

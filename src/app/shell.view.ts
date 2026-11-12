@@ -4,7 +4,6 @@ import { ref } from "lit-html/directives/ref.js";
 import { renderEditor } from "../features/editor/index.ts";
 import { renderFormatToolbar } from "../features/format-toolbar/index.ts";
 import {
-  openOverlay,
   selectIsHomeShown,
   selectIsSidebarShown,
   toggleSidebar,
@@ -16,9 +15,7 @@ import { renderHome } from "../features/home/index.ts";
 import { renderPageInfo } from "../features/page-info/index.ts";
 import { renderPageMenuButton } from "../features/page-menu/index.ts";
 import { renderPeek } from "../features/row-peek/index.ts";
-import { SETTINGS_OVERLAY } from "../features/settings/index.ts";
 import { renderButton } from "../ui/button/index.ts";
-import { SHORTCUT_HELP_OVERLAY_KIND } from "../ui/shortcuts/index.ts";
 import { COPY } from "../ui/copy.ts";
 import { renderOverlay } from "./shell-overlays.view.ts";
 import { renderSidebarPanel } from "./shell-sidebar.view.ts";
@@ -74,27 +71,7 @@ function renderTopBar(state: AppState, dispatch: Dispatch): TemplateResult {
             renderActivePageMenu(state, dispatch),
           ]
     }
-    ${renderButton({
-      label: COPY.shell.openSettings,
-      icon: "settings",
-      isIconOnly: true,
-      onClick: () =>
-        dispatch(openOverlay.create({ overlay: { kind: SETTINGS_OVERLAY } })),
-    })}
   </header>`;
-}
-
-// Help in the corner, as in Notion: it opens the keyboard shortcuts.
-function renderHelpButton(dispatch: Dispatch): TemplateResult {
-  const overlay = { kind: SHORTCUT_HELP_OVERLAY_KIND };
-  return html`<span class="app__help">
-    ${renderButton({
-      label: COPY.shortcutHelp.open,
-      icon: "help",
-      isIconOnly: true,
-      onClick: () => dispatch(openOverlay.create({ overlay })),
-    })}
-  </span>`;
 }
 
 export function renderShell(
@@ -127,7 +104,6 @@ export function renderShell(
         }
       </div>
       ${renderFormatToolbar(state, dispatch)} ${renderOverlay(state, dispatch)}
-      ${renderHelpButton(dispatch)}
     </main>
     <div class="app__peek" ?inert=${isBehind}>
       ${renderPeek(state, dispatch)}

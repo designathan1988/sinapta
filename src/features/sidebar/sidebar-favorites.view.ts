@@ -9,6 +9,7 @@ import {
   type Dispatch,
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { renderIcon } from "../../ui/icon/index.ts";
 
 // Favorite pages, listed above the tree for quick access.
 export function renderFavorites(
@@ -22,11 +23,13 @@ export function renderFavorites(
     return html`<li>
       <button
         type="button"
-        class="sidebar__favorite"
+        class="sidebar__item"
         aria-current=${state.ui.activePageId === page.id ? "page" : nothing}
         @click=${() => dispatch(setActivePage.create({ pageId: page.id }))}
       >
-        <span aria-hidden="true">${page.props.icon ?? ""}</span>
+        <span class="sidebar__icon" aria-hidden="true"
+          >${page.props.icon ?? renderIcon("page")}</span
+        >
         <span class="sidebar__title"
           >${title === "" ? COPY.sidebar.untitled : title}</span
         >

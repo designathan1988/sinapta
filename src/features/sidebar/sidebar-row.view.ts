@@ -40,6 +40,26 @@ function renderRowIcon(row: TreeRow): TemplateResult {
   >`;
 }
 
+// As Notion's, a page with pages inside shows its chevron where its icon
+// is, while its row is pointed at or focused.
+function renderLead(row: TreeRow): TemplateResult {
+  if (!row.hasChildren) return renderRowIcon(row);
+  return html`<button
+    type="button"
+    class="sidebar__toggle"
+    tabindex="-1"
+    data-action="toggle"
+    aria-label=${
+      row.isExpanded ? COPY.sidebar.collapsePage : COPY.sidebar.expandPage
+    }
+  >
+    ${renderRowIcon(row)}
+    <span class="sidebar__chevron" aria-hidden="true"
+      >${renderIcon("chevron")}</span
+    >
+  </button>`;
+}
+
 export interface Context {
   readonly state: AppState;
   readonly dispatch: Dispatch;
@@ -63,19 +83,7 @@ export function renderRow(row: TreeRow, context: Context): TemplateResult {
       setLevel(element, row.level);
     })}
   >
-    <button
-      type="button"
-      class="sidebar__toggle"
-      tabindex="-1"
-      data-action="toggle"
-      aria-label=${
-        row.isExpanded ? COPY.sidebar.collapsePage : COPY.sidebar.expandPage
-      }
-      ?hidden=${!row.hasChildren}
-    >
-      ${renderIcon("chevron")}
-    </button>
-    ${renderRowIcon(row)}
+    ${renderLead(row)}
     <span class="sidebar__title">${title}</span>
     ${renderPageMenuButton({
       place: TREE_PLACE,

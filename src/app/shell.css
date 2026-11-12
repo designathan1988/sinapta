@@ -49,48 +49,16 @@
     }
   }
 
+  /* The sidebar fills the window's height; its rows scroll inside it. */
   .app__sidebar {
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: var(--space-stack-sm);
     min-inline-size: 0;
-    padding: var(--space-inset-sm);
-    overflow: hidden auto;
+    overflow: hidden;
     background-color: var(--color-bg-sidebar);
     color: var(--color-text-secondary);
     font-size: var(--font-size-sm);
-  }
-
-  .app__sidebar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-block-size: var(--size-row-height);
-    padding-inline-start: var(--space-inset-sm);
-  }
-
-  /* The workspace's name beside its badge, as at the top of Notion's
-     sidebar. */
-  .app__product {
-    display: inline-flex;
-    gap: var(--space-inline-sm);
-    align-items: center;
-    color: var(--color-text-primary);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-  }
-
-  .app__badge {
-    display: inline-grid;
-    place-items: center;
-    inline-size: var(--size-icon-md);
-    block-size: var(--size-icon-md);
-    border-radius: var(--radius-sm);
-    background-color: var(--color-text-primary);
-    color: var(--color-bg-app);
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-strong);
   }
 
   /* A hairline on the sidebar's edge; it is the handle that resizes it. */
@@ -158,23 +126,6 @@
   .app__page {
     inline-size: 100%;
     padding: var(--space-inset-xl) var(--space-inset-lg);
-  }
-
-  /* The help button floats in the corner of the main area. */
-  .app__help {
-    position: fixed;
-    inset-block-end: var(--space-inset-lg);
-    inset-inline-end: var(--space-inset-lg);
-    z-index: var(--layer-sticky);
-
-    & .button {
-      inline-size: var(--size-control-md);
-      block-size: var(--size-control-md);
-      border: var(--size-border-thin) solid var(--color-border-default);
-      border-radius: var(--radius-full);
-      background-color: var(--color-bg-raised);
-      box-shadow: var(--shadow-card);
-    }
   }
 
   /* While the sidebar is being resized. */
