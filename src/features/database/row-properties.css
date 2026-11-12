@@ -9,6 +9,32 @@
     border-block-end: var(--size-border-thin) solid var(--color-border-default);
   }
 
+  /* "Add a property": a quiet row under the others, as Notion's. */
+  .database__row-add {
+    display: flex;
+    gap: var(--space-inline-icon);
+    align-items: center;
+    justify-self: start;
+    min-block-size: var(--size-property-row);
+    padding-inline: var(--space-inline-icon) var(--space-inline-sm);
+    border: none;
+    border-radius: var(--radius-md);
+    background-color: transparent;
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: var(--color-bg-hover);
+    }
+
+    & > .icon {
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+    }
+  }
+
   .database__row-property {
     display: grid;
     grid-template-columns: var(--size-property-name) minmax(0, 1fr);

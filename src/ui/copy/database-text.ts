@@ -33,6 +33,7 @@ export const DATABASE_TEXT = {
     searchPlaceholder: "Search",
     properties: "Properties",
     addProperty: "Add property",
+    addAProperty: "Add a property",
     addFilter: "Add filter",
     addFilterGroup: "Add filter group",
     removeFilter: "Remove filter",

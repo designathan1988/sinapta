@@ -3,7 +3,8 @@
 // sort, group and calculate, how the table shows the column, and new
 // columns beside it; and the menu of property types to add.
 import { nothing, type TemplateResult } from "lit-html";
-import { closeOverlay } from "../../state/index.ts";
+import type { BlockId } from "../../model/index.ts";
+import { closeOverlay, type Dispatch } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import {
   renderMenu,
@@ -79,13 +80,17 @@ export function renderColumnMenu(
   });
 }
 
-export function renderTypeMenu(context: TableContext): TemplateResult {
-  const databaseId = context.model.database.id;
+// The property types to add one of, from a table's "+" or a row page's
+// "Add a property".
+export function renderPropertyTypes(
+  databaseId: BlockId,
+  dispatch: Dispatch,
+): TemplateResult {
   const items = PROPERTY_TYPES.map((type) => ({
     label: type.label,
     icon: type.icon,
     onSelect: () =>
-      context.dispatch(
+      dispatch(
         addProperty.create({
           databaseId,
           propertyType: type.type,
@@ -96,6 +101,10 @@ export function renderTypeMenu(context: TableContext): TemplateResult {
   return renderMenu({
     label: COPY.database.addProperty,
     items,
-    onClose: () => context.dispatch(closeOverlay.create({})),
+    onClose: () => dispatch(closeOverlay.create({})),
   });
+}
+
+export function renderTypeMenu(context: TableContext): TemplateResult {
+  return renderPropertyTypes(context.model.database.id, context.dispatch);
 }

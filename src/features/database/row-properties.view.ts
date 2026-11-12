@@ -8,7 +8,12 @@ import {
 } from "../../blocks/database/index.ts";
 import { selectPage, type PageBlock } from "../../blocks/page/index.ts";
 import type { BlockId } from "../../model/index.ts";
-import type { AppState, Dispatch } from "../../state/index.ts";
+import {
+  closeOverlay,
+  openOverlay,
+  type AppState,
+  type Dispatch,
+} from "../../state/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
@@ -16,6 +21,10 @@ import { setRowValue } from "./row.commands.ts";
 import type { RowPage } from "./row-files.view.ts";
 import { propertyType } from "./property-registry.ts";
 import { renderRowValue } from "./row-value.view.ts";
+import { renderPropertyTypes } from "./column-menu.view.ts";
+
+// The property types, opened from a row page's "Add a property".
+export const ROW_ADD_PROPERTY_OVERLAY = "row-add-property";
 
 // One property as Notion's row page shows it: its type's icon and name,
 // then its value.
@@ -79,6 +88,35 @@ function onChange(event: Event, context: RowContext): void {
   );
 }
 
+// Notion's "Add a property" under a row's properties: it opens the
+// property types beside it, and the chosen one joins the database.
+function renderAddProperty(
+  row: PageBlock,
+  databaseId: BlockId,
+  page: RowPage,
+): TemplateResult {
+  const { state, dispatch } = page;
+  const overlay = { kind: ROW_ADD_PROPERTY_OVERLAY, anchorId: row.id };
+  const open = state.ui.overlay;
+  const isOpen = open?.kind === overlay.kind && open.anchorId === row.id;
+  const toggle = (): void => {
+    dispatch(
+      isOpen ? closeOverlay.create({}) : openOverlay.create({ overlay }),
+    );
+  };
+  return html`<button
+      type="button"
+      class="database__row-add"
+      data-overlay-anchor
+      aria-haspopup="menu"
+      aria-expanded=${String(isOpen)}
+      @click=${toggle}
+    >
+      ${renderIcon("plus")}<span>${COPY.database.addAProperty}</span>
+    </button>
+    ${isOpen ? renderPropertyTypes(databaseId, dispatch) : nothing}`;
+}
+
 export function renderRowProperties(
   state: AppState,
   dispatch: Dispatch,
@@ -87,7 +125,8 @@ export function renderRowProperties(
   const row = selectPage(state, pageId);
   const database = selectDatabase(state, row?.parentId ?? null);
   const properties = database?.props.properties ?? [];
-  if (row === undefined || properties.length === 0) return nothing;
+  if (row === undefined || database === undefined || properties.length === 0)
+    return nothing;
   return html`<div
     class="database__row-properties"
     role="group"
@@ -99,5 +138,6 @@ export function renderRowProperties(
     ${properties.map((property) =>
       renderProperty(row, property, { state, dispatch }),
     )}
+    ${renderAddProperty(row, database.id, { state, dispatch })}
   </div>`;
 }
