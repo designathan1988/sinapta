@@ -7,11 +7,27 @@ import { renderDatabase } from "./database.view.ts";
 import { VIEW_TABS_OVERLAY } from "./view-tabs.view.ts";
 import { createView, setActiveView } from "./view.commands.ts";
 
-// A database with five views; the fifth is shown when asked.
-function rendered(options: { isMoreOpen?: boolean; showsLast?: boolean } = {}) {
+const SHORT = ["Board", "Calendar", "Timeline", "Chart"];
+// Names too long for every tab to fit beside the toolbar.
+const LONG = [
+  ...SHORT,
+  "Everything due this week",
+  "Waiting on someone else",
+  "Finished last quarter",
+];
+
+interface Options {
+  readonly names?: readonly string[];
+  readonly isMoreOpen?: boolean;
+  readonly showsLast?: boolean;
+}
+
+// A database with a "Table" view and one view per name; the last is
+// open when asked.
+function rendered(options: Options = {}) {
   const app = createDatabaseApp([], []);
   const databaseId = app.databaseId;
-  for (const name of ["Board", "Calendar", "Timeline", "Chart"]) {
+  for (const name of options.names ?? LONG) {
     app.dispatch(createView.create({ databaseId, name, viewType: "board" }));
   }
   const viewIds = app.database().props.viewIds;
@@ -45,19 +61,28 @@ function rendered(options: { isMoreOpen?: boolean; showsLast?: boolean } = {}) {
 }
 
 describe("the view tabs", () => {
-  it("shows the first three views and the rest under N more", () => {
+  it("shows every view when all the tabs fit", () => {
+    const { host, tabs } = rendered({ names: SHORT });
+
+    expect(tabs()).toEqual(["Table", ...SHORT]);
+    expect(host.querySelector(".database__tabs")?.textContent).not.toContain(
+      "more…",
+    );
+  });
+
+  it("shows the views that fit and the rest under N more", () => {
     const { host, tabs } = rendered();
 
-    expect(tabs()).toEqual(["Table", "Board", "Calendar"]);
+    expect(tabs()).toEqual(["Table", "Board", "Calendar", "Timeline"]);
     expect(host.querySelector(".database__more-views")?.textContent).toContain(
-      "2 more",
+      "4 more",
     );
   });
 
   it("always shows the view that is open", () => {
     const { tabs } = rendered({ showsLast: true });
 
-    expect(tabs()).toEqual(["Table", "Board", "Chart"]);
+    expect(tabs()).toEqual(["Table", "Board", "Finished last quarter"]);
   });
 
   it("lists the other views in a menu, each opening its view", () => {
@@ -66,10 +91,7 @@ describe("the view tabs", () => {
 
     rows.at(-1)?.click();
 
-    expect(rows.map((row) => row.textContent.trim())).toEqual([
-      "Timeline",
-      "Chart",
-    ]);
+    expect(rows.map((row) => row.textContent.trim())).toEqual(LONG.slice(3));
     expect(sent.at(-1)).toMatchObject({
       type: "ui.setActiveView",
       viewId: viewIds.at(-1),

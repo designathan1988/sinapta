@@ -12,18 +12,16 @@ import { setActiveView } from "./view.commands.ts";
 export function renderMoreViews(context: TableContext): TemplateResult {
   const { model, state, dispatch } = context;
   const databaseId = model.holderId;
-  const { more } = splitViews(model.viewIds, model.view.id);
-  const items = more.flatMap((viewId): MenuItem[] => {
-    const view = state.workspace.views[viewId];
-    if (view === undefined) return [];
-    return [
-      {
-        label: view.name,
-        icon: LAYOUT_ICONS[view.type],
-        onSelect: () => dispatch(setActiveView.create({ databaseId, viewId })),
-      },
-    ];
-  });
+  const all = model.viewIds.flatMap((id) => state.workspace.views[id] ?? []);
+  const { more } = splitViews(all, model.view.id);
+  const items = all
+    .filter((view) => more.includes(view.id))
+    .map((view): MenuItem => ({
+      label: view.name,
+      icon: LAYOUT_ICONS[view.type],
+      onSelect: () =>
+        dispatch(setActiveView.create({ databaseId, viewId: view.id })),
+    }));
   return renderMenu({
     label: COPY.database.views,
     items,

@@ -1,6 +1,5 @@
-// The tabs of a database's views, as Notion's: the first three views and
-// the open one, then "N more…" opening the others, then "+" for a new
-// view.
+// The tabs of a database's views, as Notion's: the views that fit and the
+// open one, then "N more…" opening the others, then "+" for a new view.
 import { html, nothing, type TemplateResult } from "lit-html";
 import type { View, ViewId } from "../../model/index.ts";
 import { closeOverlay, openOverlay } from "../../state/index.ts";
@@ -15,20 +14,40 @@ import { setActiveView } from "./view.commands.ts";
 
 export const VIEW_TABS_OVERLAY = "view-tabs";
 
-// How many tabs show before the others go under "N more…".
-const SHOWN_TABS = 3;
+// The tab row's room beside the toolbar, and what one tab and "N more…"
+// take of it, in characters of the 14 px interface text: a tab's icon,
+// gap and padding come to about five.
+const TAB_ROOM = 64;
+const TAB_FRAME = 5;
+const MORE_WIDTH = 9;
 
-// The views shown as tabs: the first ones, the open one in the last place
-// when it is further on.
+function tabWidth(view: View): number {
+  return view.name.length + TAB_FRAME;
+}
+
+// The views shown as tabs, as Notion's: every one when they all fit;
+// otherwise the first that fit beside "N more…", and the open one in the
+// last place when it is further on.
 export function splitViews(
-  viewIds: readonly ViewId[],
+  views: readonly View[],
   activeId: ViewId,
 ): { readonly shown: ViewId[]; readonly more: ViewId[] } {
-  const first = viewIds.slice(0, SHOWN_TABS);
-  const shown = first.includes(activeId)
-    ? first
-    : [...first.slice(0, SHOWN_TABS - 1), activeId];
-  return { shown, more: viewIds.filter((id) => !shown.includes(id)) };
+  const ids = views.map((view) => view.id);
+  const total = views.reduce((sum, view) => sum + tabWidth(view), 0);
+  if (total <= TAB_ROOM) return { shown: ids, more: [] };
+  const active = views.find((view) => view.id === activeId);
+  let room = TAB_ROOM - MORE_WIDTH - (active ? tabWidth(active) : 0);
+  const shown: ViewId[] = [];
+  for (const view of views) {
+    if (view.id === activeId) shown.push(view.id);
+    else if (tabWidth(view) > room) break;
+    else {
+      room -= tabWidth(view);
+      shown.push(view.id);
+    }
+  }
+  if (active !== undefined && !shown.includes(activeId)) shown.push(activeId);
+  return { shown, more: ids.filter((id) => !shown.includes(id)) };
 }
 
 function renderToggle(
@@ -73,8 +92,9 @@ function renderTab(view: View, context: TableContext): TemplateResult {
 
 export function renderViewTabs(context: TableContext): TemplateResult {
   const { model, state } = context;
-  const { shown, more } = splitViews(model.viewIds, model.view.id);
-  const views = shown.flatMap((id) => state.workspace.views[id] ?? []);
+  const all = model.viewIds.flatMap((id) => state.workspace.views[id] ?? []);
+  const { shown, more } = splitViews(all, model.view.id);
+  const views = all.filter((view) => shown.includes(view.id));
   const moreLabel = COPY.database.moreViews(more.length);
   return html`<div
     class="database__tabs"
