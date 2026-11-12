@@ -32,23 +32,30 @@
     font-size: var(--font-size-sm);
   }
 
+  /* Recently visited, as Notion's: a row of small square cards. */
   .home__cards {
-    display: grid;
-    grid-template-columns: repeat(
-      auto-fill,
-      minmax(var(--size-sidebar-min), 1fr)
-    );
-    gap: var(--space-inline-sm);
+    display: flex;
+    gap: var(--space-inline-md);
+    margin: var(--space-none);
+    padding: var(--space-none) var(--space-none) var(--space-stack-xs);
+    overflow: auto hidden;
+    list-style: none;
   }
 
+  /* A card: the cover as a band, the icon over its edge, the title on two
+     lines at most, and when the page was edited. */
   .home__card {
-    display: grid;
-    gap: var(--space-stack-sm);
-    inline-size: 100%;
-    padding: var(--space-inset-md);
-    border: var(--size-border-thin) solid var(--color-border-default);
-    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    inline-size: var(--size-home-card-width);
+    block-size: var(--size-home-card-width);
+    padding: var(--space-none);
+    overflow: hidden;
+    border: none;
+    border-radius: var(--radius-lg);
     background-color: var(--color-bg-raised);
+    box-shadow: var(--shadow-card);
     color: var(--color-text-primary);
     text-align: start;
     cursor: pointer;
@@ -58,16 +65,45 @@
     }
   }
 
+  .home__card-cover {
+    flex: none;
+    inline-size: 100%;
+    block-size: var(--size-home-card-cover);
+    background-color: var(--color-bg-active);
+    background-size: cover;
+  }
+
   .home__card-icon {
+    display: inline-grid;
+    place-items: center;
+    margin: calc(var(--size-icon-md) * -0.8) var(--space-inset-md)
+      var(--space-stack-xs);
     font-size: var(--font-size-xl);
     line-height: 1;
+
+    & > .icon {
+      inline-size: var(--size-icon-md);
+      block-size: var(--size-icon-md);
+      color: var(--color-text-secondary);
+    }
   }
 
   .home__card-title {
+    display: -webkit-box;
+    padding-inline: var(--space-inset-md);
     overflow: hidden;
-    font-weight: var(--font-weight-medium);
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-strong);
+    line-height: var(--font-line-height-tight);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .home__card-time {
+    margin-block-start: auto;
+    padding: var(--space-none) var(--space-inset-md) var(--space-inset-md);
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
   }
 
   .home__dates {

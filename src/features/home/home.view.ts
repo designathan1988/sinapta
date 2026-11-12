@@ -1,7 +1,11 @@
 // Home: a greeting, the pages visited lately, and the dates coming up.
 import "./home.css";
-import { html, type TemplateResult } from "lit-html";
-import { selectPageTitle, type PageBlock } from "../../blocks/page/index.ts";
+import { html, nothing, type TemplateResult } from "lit-html";
+import {
+  COVER_PRESETS,
+  selectPageTitle,
+  type PageBlock,
+} from "../../blocks/page/index.ts";
 import {
   setActivePage,
   type AppState,
@@ -9,6 +13,7 @@ import {
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
+import { selectEditedLabel } from "../page-info/index.ts";
 import {
   selectRecentPages,
   selectUpcoming,
@@ -29,18 +34,37 @@ function greeting(hour: number): string {
   return hour < 18 ? TEXT.afternoon : TEXT.evening;
 }
 
-function renderCard(page: PageBlock, dispatch: Dispatch): TemplateResult {
+// A color cover shows on the card's band; an image cover or none leaves
+// the band plain.
+function coverOf(page: PageBlock): string | undefined {
+  const { cover } = page.props;
+  return COVER_PRESETS.find((preset) => preset === cover);
+}
+
+// A card as Notion's: the page's cover as a band, its icon over the
+// band's edge, its title and when it was edited.
+function renderCard(
+  page: PageBlock,
+  state: AppState,
+  dispatch: Dispatch,
+): TemplateResult {
   const title = selectPageTitle(page) || COPY.sidebar.untitled;
+  const edited = selectEditedLabel(state, page.id, new Date().toISOString());
   return html`<li>
     <button
       type="button"
       class="home__card"
       @click=${() => dispatch(setActivePage.create({ pageId: page.id }))}
     >
+      <span
+        class="home__card-cover"
+        data-cover=${coverOf(page) ?? nothing}
+      ></span>
       <span class="home__card-icon" aria-hidden="true"
         >${page.props.icon ?? renderIcon("page")}</span
       >
       <span class="home__card-title">${title}</span>
+      <span class="home__card-time">${edited}</span>
     </button>
   </li>`;
 }
@@ -78,7 +102,7 @@ export function renderHome(
         recent.length === 0
           ? html`<p class="home__empty">${TEXT.noRecent}</p>`
           : html`<ul class="home__cards">
-              ${recent.map((page) => renderCard(page, dispatch))}
+              ${recent.map((page) => renderCard(page, state, dispatch))}
             </ul>`
       }
     </section>

@@ -183,6 +183,7 @@
     --base-size-6: 1.5rem;
     --base-size-7: 1.75rem;
     --base-size-8: 2rem;
+    --base-size-9: 9rem;
     --base-size-10: 10rem;
     --base-size-12: 12rem;
     --base-size-14: 14rem;
@@ -377,6 +378,8 @@
     --size-sidebar-key: var(--base-size-1x125);
     --size-content-max: var(--base-size-44);
     --size-label-width: var(--base-size-12);
+    --size-home-card-width: var(--base-size-9);
+    --size-home-card-cover: var(--base-size-2x75);
     --size-menu-min-width: var(--base-size-14);
     --size-menu-max-height: var(--base-size-40);
     --size-menu-width: var(--base-size-18x125);

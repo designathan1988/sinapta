@@ -441,6 +441,16 @@
         "$value": "{base.size.12}"
       }
     },
+    "homeCard": {
+      "width": {
+        "$description": "A page's card on Home, as Notion's: 144 px.",
+        "$value": "{base.size.9}"
+      },
+      "cover": {
+        "$description": "The cover band at the card's top: 44 px.",
+        "$value": "{base.size.2x75}"
+      }
+    },
     "menu": {
       "minWidth": {
         "$value": "{base.size.14}"
