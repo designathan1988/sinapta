@@ -17,6 +17,7 @@ import {
 import { createDatabase, importCsvFile } from "../database/index.ts";
 import { TEMPLATE_GALLERY_OVERLAY } from "../templates/index.ts";
 import { TRASH_OVERLAY } from "../trash/index.ts";
+import { importMarkdownFile } from "../markdown-import/index.ts";
 import { INBOX_OVERLAY, selectUnreadCount, todayOf } from "../inbox/index.ts";
 import { renderFavorites } from "./sidebar-favorites.view.ts";
 import { renderTree } from "./sidebar-tree.view.ts";
@@ -46,22 +47,27 @@ function renderFooter(dispatch: Dispatch): TemplateResult {
   </div>`;
 }
 
-// Import, as in Notion's sidebar: a CSV file becomes a new database.
+// Import, as in Notion's sidebar: a CSV file becomes a new database, a
+// Markdown file a new page.
 function renderImport(dispatch: Dispatch): TemplateResult {
   const onChange = (event: Event): void => {
     const input = event.target;
     if (!(input instanceof HTMLInputElement)) return;
-    const file = input.files?.[0];
+    const files = [...(input.files ?? [])];
     input.value = "";
-    if (file !== undefined) void importCsvFile(file, dispatch);
+    for (const file of files) {
+      const isMarkdown = /\.(md|markdown)$/i.test(file.name);
+      void (isMarkdown ? importMarkdownFile : importCsvFile)(file, dispatch);
+    }
   };
   return html`<label class="button sidebar__import" data-variant="quiet">
     ${renderIcon("download")}
-    <span>${COPY.database.importCsv}</span>
+    <span>${COPY.sidebar.import}</span>
     <input
       class="visually-hidden"
       type="file"
-      accept=".csv,text/csv"
+      multiple
+      accept=".csv,text/csv,.md,.markdown,text/markdown"
       @change=${onChange}
     />
   </label>`;

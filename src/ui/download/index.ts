@@ -1,1 +1,6 @@
-export { downloadTextFile, type TextFile } from "./download.ts";
+export {
+  downloadFile,
+  downloadTextFile,
+  type BinaryFile,
+  type TextFile,
+} from "./download.ts";

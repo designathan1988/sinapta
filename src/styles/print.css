@@ -1,0 +1,25 @@
+@layer base {
+  /* Printing, or saving as PDF, shows the open page alone: no sidebar,
+     no bar, no handles or buttons around its text. */
+  @media print {
+    .app {
+      display: block;
+    }
+
+    .app__sidebar,
+    .app__top-bar,
+    .app__help,
+    .peek,
+    .editor__handle,
+    .editor__page-actions,
+    .comments__count,
+    .format-toolbar,
+    [data-overlay] {
+      display: none;
+    }
+
+    .app__main {
+      overflow: visible;
+    }
+  }
+}

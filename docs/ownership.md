@@ -95,6 +95,10 @@ owner listed here exists.
 | The New button's template list and the note over a template | `src/features/database/templates-menu.view.ts`, `template-banner.view.ts` | 16 |
 | A menu row's own actions behind its "…" | `src/ui/menu/menu-submenu.ts`, `menu-item.view.ts`, `menu-more.css` | 16 |
 | Reading and writing CSV text (RFC 4180) | `src/model/csv.ts` | 16 |
+| Writing ZIP archives (stored, CRC-32) | `src/model/zip.ts` | 17 |
+| A page and its subpages as an archive of Markdown files | `src/features/markdown-export/page-archive.selectors.ts` | 17 |
+| Importing Markdown files as pages | `src/features/markdown-import/` | 17 |
+| Printing a page alone | `src/styles/print.css` | 17 |
 | Guards: rules that refuse a command's changes before they apply | `src/state/guard.ts` | 16 |
 | Locks: what a locked page, database or view keeps; locking a page | `src/blocks/page/page-lock.ts` | 16 |
 | Locking a view | `src/features/database/view-lock.commands.ts` | 16 |

@@ -25,6 +25,7 @@ import { editorCommands } from "../features/editor/index.ts";
 import { peekCommands } from "../features/row-peek/index.ts";
 import { templateCommands } from "../features/templates/index.ts";
 import { inboxCommands } from "../features/inbox/index.ts";
+import { markdownImportCommands } from "../features/markdown-import/index.ts";
 import { startReminderNotices } from "./reminder-notices.ts";
 import {
   pageContent,
@@ -100,6 +101,7 @@ const COMMANDS = [
   ...commentCommands,
   ...pageHistoryCommands,
   ...inboxCommands,
+  ...markdownImportCommands,
   ...pageVersionCommands,
 ];
 

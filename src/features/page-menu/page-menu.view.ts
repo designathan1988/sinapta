@@ -132,6 +132,13 @@ function copyItems(
         exportPageAsMarkdown(state, pageId);
       },
     },
+    {
+      label: COPY.pageMenu.print,
+      icon: "page",
+      onSelect: () => {
+        window.print();
+      },
+    },
   ];
 }
 

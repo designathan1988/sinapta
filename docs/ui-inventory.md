@@ -79,7 +79,8 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Open pages in | `view-settings/choice-panels.ts` | Notion | row in the Layout panel opening Side peek, Center peek, Full page |
 | New and its templates | `database.view.ts`, `templates-menu.view.ts` | Notion (default for the whole database, not per view) | split blue button; the arrow lists "Templates for …", each template with "…" (Set as default, Edit, Duplicate, Delete), Empty page, New template; Default marks the one new rows start from |
 | Template note | `template-banner.view.ts` | Notion | a strip over a template's page: "You're editing a template in …" |
-| Import CSV | `features/sidebar/sidebar.view.ts`, `csv-file.view.ts` | Notion (CSV only) | Import in the sidebar's foot; a CSV becomes a database named as the file, its columns typed |
+| Import | `features/sidebar/sidebar.view.ts`, `csv-file.view.ts`, `features/markdown-import/` | Notion (CSV and Markdown files; no ZIP or other apps) | Import in the sidebar's foot takes several files: a CSV becomes a database named as the file, its columns typed; a Markdown file a page named by its first heading or the file, its blocks nested as written |
+| Export and print | `features/markdown-export/`, `features/page-menu/page-menu.view.ts` | Notion (Markdown only, no HTML) | Export as Markdown saves the page, or with subpages a ZIP of Markdown files in folders as they nest; "Print or save as PDF" prints the page alone |
 | Export as CSV | `view-settings/root-panel.view.ts` | Notion (the view only, no Markdown pages) | the view's columns and rows as a UTF-8 CSV file |
 | Lock page, Lock database | `features/page-menu/page-menu.view.ts` | Notion | a switch in the page's menu; a locked page shows "Locked" in the top bar, which unlocks it; typing does nothing and says why |
 | Lock view | `view-settings/root-panel.view.ts` | Notion | a switch in the view settings; filters, sorts and layout stay as they are |

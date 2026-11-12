@@ -50,7 +50,7 @@ function kindProps(block: PastedBlock): BlockProps {
 }
 
 // Pasted kinds are named like the block types they become.
-function propsFor(block: PastedBlock): BlockProps {
+export function propsFor(block: PastedBlock): BlockProps {
   const base = blockDefinition(block.kind)?.createProps(block.text) ?? {};
   return {
     ...base,

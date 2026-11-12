@@ -13,6 +13,8 @@ export const WORKSPACE_TEXT = {
     openSettings: "Settings",
   },
   sidebar: {
+    import: "Import",
+    importedMarkdown: "The Markdown file was imported as a page.",
     newPage: "New page",
     search: "Search",
     searchShortcut: "Ctrl+K",
@@ -37,6 +39,9 @@ export const WORKSPACE_TEXT = {
     fullWidth: "Full width",
     exportMarkdown: "Export as Markdown",
     exportedMarkdown: "The page was saved as a Markdown file.",
+    exportedArchive:
+      "The page and its subpages were saved as a ZIP of Markdown files.",
+    print: "Print or save as PDF",
     lockPage: "Lock page",
     lockDatabase: "Lock database",
   },
