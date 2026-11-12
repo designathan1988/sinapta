@@ -255,6 +255,7 @@
     --base-font-weight-700: 700;
     --base-font-line-height-dense: 1.2;
     --base-font-line-height-tight: 1.25;
+    --base-font-line-height-compact: 1.3;
     --base-font-line-height-snug: 1.4;
     --base-font-line-height-relaxed: 1.5;
     --base-duration-0: 0ms;
@@ -465,6 +466,7 @@
     --font-line-height-ui: var(--base-font-line-height-snug);
     --font-line-height-body: var(--base-font-line-height-relaxed);
     --font-line-height-title: var(--base-font-line-height-dense);
+    --font-line-height-heading: var(--base-font-line-height-compact);
     --duration-none: var(--base-duration-0);
     --duration-fast: var(--base-duration-1);
     --duration-medium: var(--base-duration-2);

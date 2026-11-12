@@ -5,12 +5,14 @@
     font-weight: var(--font-weight-strong);
 
     & .rich-text {
-      line-height: var(--font-line-height-tight);
+      line-height: var(--font-line-height-heading);
     }
 
-    /* Larger headings open more space above them, as in Notion. */
+    /* Larger headings open more space above them, as in Notion. A heading 1's
+       text starts 32 px under the block before it, as measured on Notion:
+       its own block and text insets are part of that space. */
     &[data-level="1"] {
-      margin-block-start: var(--space-stack-xl);
+      margin-block-start: calc(var(--space-stack-xl) - var(--space-block) * 2);
       font-size: var(--font-size-xxl);
     }
 

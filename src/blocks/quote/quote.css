@@ -1,10 +1,11 @@
 @layer blocks {
+  /* Notion's quote, measured: body text in the text's own color, a bar
+     of that color at its start. */
   .quote {
     display: flex;
     padding-inline-start: var(--space-inset-lg);
-    border-inline-start: var(--size-border-thick) solid
-      var(--color-border-strong);
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-lg);
+    border-inline-start: var(--size-border-thick) solid currentcolor;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-md);
   }
 }

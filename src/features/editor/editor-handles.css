@@ -24,27 +24,27 @@
     &:has(> .heading) {
       --editor-line-start: var(--space-stack-md);
       --editor-line-size: calc(
-        var(--font-size-lg) * var(--font-line-height-tight)
+        var(--font-size-lg) * var(--font-line-height-heading)
       );
     }
 
     &:has(> .heading[data-level="1"]) {
-      --editor-line-start: var(--space-stack-xl);
+      --editor-line-start: calc(var(--space-stack-xl) - var(--space-block) * 2);
       --editor-line-size: calc(
-        var(--font-size-xxl) * var(--font-line-height-tight)
+        var(--font-size-xxl) * var(--font-line-height-heading)
       );
     }
 
     &:has(> .heading[data-level="2"]) {
       --editor-line-start: var(--space-stack-lg);
       --editor-line-size: calc(
-        var(--font-size-xl) * var(--font-line-height-tight)
+        var(--font-size-xl) * var(--font-line-height-heading)
       );
     }
 
     &:has(> .heading[data-level="4"]) {
       --editor-line-size: calc(
-        var(--font-size-md) * var(--font-line-height-tight)
+        var(--font-size-md) * var(--font-line-height-heading)
       );
     }
   }

@@ -1,7 +1,9 @@
 @layer blocks {
   .divider {
     inline-size: 100%;
-    margin: var(--space-stack-sm) var(--space-none);
+
+    /* 13 px in all with its block, as Notion's divider. */
+    margin: var(--space-block) var(--space-none);
     border: none;
     border-block-start: var(--size-border-thin) solid
       var(--color-border-default);

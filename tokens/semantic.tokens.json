@@ -978,6 +978,10 @@
       "title": {
         "$description": "A page's title, as Notion's: 40 px type on a 48 px line.",
         "$value": "{base.font.lineHeight.dense}"
+      },
+      "heading": {
+        "$description": "A heading block, as Notion's: 30 px type on a 39 px line, 24 px on 31.2 px.",
+        "$value": "{base.font.lineHeight.compact}"
       }
     }
   },
