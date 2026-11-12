@@ -139,10 +139,23 @@ function call(node: FormulaNode & { kind: "call" }, env: Env): FormulaValue {
   if (name === "if" || name === "ifs") return ifs(args, env);
   if (name === "map" || name === "filter")
     return overList(args, env, name === "filter");
+  return callFunction(
+    name,
+    args.map((arg) => evaluate(arg, env)),
+    env,
+  );
+}
+
+// A function of the formula library; one given an empty date it needs
+// is empty, as in Notion.
+function callFunction(
+  name: string,
+  values: readonly FormulaValue[],
+  env: Env,
+): FormulaValue {
   const fn = FUNCTIONS[name];
   if (fn === undefined)
     throw new FormulaError(`There is no function named ${name}.`);
-  const values = args.map((arg) => evaluate(arg, env));
   try {
     return fn.call(values, env.context.now);
   } catch (error) {
