@@ -48,8 +48,10 @@
     margin-block-start: calc(var(--space-stack-sm) - var(--space-stack-md));
   }
 
-  /* The quiet page actions appear when the page is hovered or holds focus;
-     touch screens always show them. */
+  /* The quiet page actions appear while the page's header (its icon, the
+     actions and the title) is pointed at or holds the focus, as Notion's;
+     working in the page's blocks leaves them hidden. Touch screens always
+     show them. */
   @media (hover: hover) {
     .editor__page-actions > .button {
       opacity: 0;
@@ -59,7 +61,14 @@
       }
     }
 
-    .editor:is(:hover, :focus-within) .editor__page-actions > .button {
+    .editor:has(
+        > :is(.editor__page-icon, .editor__page-actions, .editor__heading):is(
+            :hover,
+            :focus-within
+          )
+      )
+      .editor__page-actions
+      > .button {
       opacity: 1;
     }
   }
