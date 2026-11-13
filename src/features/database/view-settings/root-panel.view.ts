@@ -76,15 +76,37 @@ function filterRow(context: TableContext): MenuEntry {
   };
 }
 
+// A calendar places rows by date and does not group them.
+function groupRows(context: TableContext): MenuEntry[] {
+  const { view, database } = context.model;
+  if (view.type === "calendar") return [];
+  const grouped = database.props.properties.find(
+    (property) => property.id === view.groupBy?.propertyId,
+  );
+  const group = {
+    label: COPY.database.group,
+    icon: "group" as const,
+    value: grouped?.name ?? COPY.database.noGrouping,
+  };
+  return [panelRow(context, group, "group")];
+}
+
+// "Conditional color", with how many rules the view has.
+function colorRow(view: TableContext["model"]["view"]) {
+  const count = view.colorRules?.length ?? 0;
+  return {
+    label: COPY.database.conditionalColor,
+    icon: "color" as const,
+    ...(count > 0 && { value: String(count) }),
+  };
+}
+
 function settingRows(context: TableContext): MenuEntry[] {
   const { view, database } = context.model;
   const { layouts } = COPY.database;
   const shown = database.props.properties.filter(
     (property) => !view.hiddenPropertyIds.includes(property.id),
   ).length;
-  const grouped = database.props.properties.find(
-    (property) => property.id === view.groupBy?.propertyId,
-  );
   const layout = {
     label: COPY.database.layout,
     icon: LAYOUT_ICONS[view.type],
@@ -94,11 +116,6 @@ function settingRows(context: TableContext): MenuEntry[] {
     label: COPY.database.propertyVisibility,
     icon: "eye" as const,
     value: String(shown),
-  };
-  const group = {
-    label: COPY.database.group,
-    icon: "group" as const,
-    value: grouped?.name ?? COPY.database.noGrouping,
   };
   // With no sort, the Sort row goes straight to choosing one, as Notion's.
   const sortCount = view.sorts.length;
@@ -112,8 +129,8 @@ function settingRows(context: TableContext): MenuEntry[] {
     panelRow(context, visibility, "properties"),
     filterRow(context),
     panelRow(context, sort, sortCount > 0 ? "sort" : "sort-add"),
-    // A calendar places rows by date and does not group them.
-    ...(view.type === "calendar" ? [] : [panelRow(context, group, "group")]),
+    ...groupRows(context),
+    panelRow(context, colorRow(view), "color"),
   ];
 }
 

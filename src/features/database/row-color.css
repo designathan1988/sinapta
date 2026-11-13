@@ -1,0 +1,184 @@
+@layer features {
+  /* Conditional color, as Notion's: a row the first matching rule keeps
+     takes that rule's color on its background, or on its title's text
+     (the calendar entry being its own title). */
+  :is(
+    .database__row,
+    .row-card,
+    .list__row,
+    .calendar__entry
+  )[data-color="gray"] {
+    background-color: var(--color-chip-gray-bg);
+  }
+
+  :is(
+    .database__row,
+    .row-card,
+    .list__row,
+    .calendar__entry
+  )[data-color="brown"] {
+    background-color: var(--color-chip-brown-bg);
+  }
+
+  :is(
+    .database__row,
+    .row-card,
+    .list__row,
+    .calendar__entry
+  )[data-color="orange"] {
+    background-color: var(--color-chip-orange-bg);
+  }
+
+  :is(
+    .database__row,
+    .row-card,
+    .list__row,
+    .calendar__entry
+  )[data-color="yellow"] {
+    background-color: var(--color-chip-yellow-bg);
+  }
+
+  :is(
+    .database__row,
+    .row-card,
+    .list__row,
+    .calendar__entry
+  )[data-color="green"] {
+    background-color: var(--color-chip-green-bg);
+  }
+
+  :is(
+    .database__row,
+    .row-card,
+    .list__row,
+    .calendar__entry
+  )[data-color="blue"] {
+    background-color: var(--color-chip-blue-bg);
+  }
+
+  :is(
+    .database__row,
+    .row-card,
+    .list__row,
+    .calendar__entry
+  )[data-color="purple"] {
+    background-color: var(--color-chip-purple-bg);
+  }
+
+  :is(
+    .database__row,
+    .row-card,
+    .list__row,
+    .calendar__entry
+  )[data-color="pink"] {
+    background-color: var(--color-chip-pink-bg);
+  }
+
+  :is(
+    .database__row,
+    .row-card,
+    .list__row,
+    .calendar__entry
+  )[data-color="red"] {
+    background-color: var(--color-chip-red-bg);
+  }
+
+  :is(
+      .database__row,
+      .row-card,
+      .list__row,
+      .calendar__entry
+    )[data-color="gray-text"]
+    :is(.database__title, .row-card__title, .list__title, .list__title-field),
+  .calendar__entry[data-color="gray-text"] {
+    color: var(--color-tone-gray);
+  }
+
+  :is(
+      .database__row,
+      .row-card,
+      .list__row,
+      .calendar__entry
+    )[data-color="brown-text"]
+    :is(.database__title, .row-card__title, .list__title, .list__title-field),
+  .calendar__entry[data-color="brown-text"] {
+    color: var(--color-tone-brown);
+  }
+
+  :is(
+      .database__row,
+      .row-card,
+      .list__row,
+      .calendar__entry
+    )[data-color="orange-text"]
+    :is(.database__title, .row-card__title, .list__title, .list__title-field),
+  .calendar__entry[data-color="orange-text"] {
+    color: var(--color-tone-orange);
+  }
+
+  :is(
+      .database__row,
+      .row-card,
+      .list__row,
+      .calendar__entry
+    )[data-color="yellow-text"]
+    :is(.database__title, .row-card__title, .list__title, .list__title-field),
+  .calendar__entry[data-color="yellow-text"] {
+    color: var(--color-tone-yellow);
+  }
+
+  :is(
+      .database__row,
+      .row-card,
+      .list__row,
+      .calendar__entry
+    )[data-color="green-text"]
+    :is(.database__title, .row-card__title, .list__title, .list__title-field),
+  .calendar__entry[data-color="green-text"] {
+    color: var(--color-tone-green);
+  }
+
+  :is(
+      .database__row,
+      .row-card,
+      .list__row,
+      .calendar__entry
+    )[data-color="blue-text"]
+    :is(.database__title, .row-card__title, .list__title, .list__title-field),
+  .calendar__entry[data-color="blue-text"] {
+    color: var(--color-tone-blue);
+  }
+
+  :is(
+      .database__row,
+      .row-card,
+      .list__row,
+      .calendar__entry
+    )[data-color="purple-text"]
+    :is(.database__title, .row-card__title, .list__title, .list__title-field),
+  .calendar__entry[data-color="purple-text"] {
+    color: var(--color-tone-purple);
+  }
+
+  :is(
+      .database__row,
+      .row-card,
+      .list__row,
+      .calendar__entry
+    )[data-color="pink-text"]
+    :is(.database__title, .row-card__title, .list__title, .list__title-field),
+  .calendar__entry[data-color="pink-text"] {
+    color: var(--color-tone-pink);
+  }
+
+  :is(
+      .database__row,
+      .row-card,
+      .list__row,
+      .calendar__entry
+    )[data-color="red-text"]
+    :is(.database__title, .row-card__title, .list__title, .list__title-field),
+  .calendar__entry[data-color="red-text"] {
+    color: var(--color-tone-red);
+  }
+}

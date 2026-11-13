@@ -1,10 +1,11 @@
 // A calendar: a month in weeks or a single week, with or without its
 // weekends, each row on the days of its date property. Rows move between
 // days by drag, or by Alt with an arrow key.
+import { selectRowColor } from "../../row-color.selectors.ts";
 import { withDefaultTemplate } from "../../template-default.commands.ts";
 import { openRow } from "../../row-open.commands.ts";
 import "./calendar.css";
-import { html, type TemplateResult } from "lit-html";
+import { html, nothing, type TemplateResult } from "lit-html";
 import type { BlockId } from "../../../../model/index.ts";
 import { renderButton } from "../../../../ui/button/index.ts";
 import { COPY } from "../../../../ui/copy.ts";
@@ -109,6 +110,7 @@ function renderEntry(
     type="button"
     class="calendar__entry"
     data-row-id=${row.id}
+    data-color=${selectRowColor(context.model, row, context.state) ?? nothing}
     aria-description=${COPY.database.moveEntryHint}
     @click=${() => context.dispatch(openRow.create({ rowId: row.id, viewId: context.model.view.id }))}
     @keydown=${onKeyDown}
@@ -210,7 +212,7 @@ export function renderCalendar(context: TableContext): TemplateResult {
   }
   const today = localToday();
   const { ui } = context.state;
-  const { mode, weekStartsOn } = context.model.view.calendar;
+  const { mode, weekStartsOn, wrapTitles } = context.model.view.calendar;
   const week = selectWeekDays(ui.calendarWeek ?? today, weekStartsOn)[0];
   const shown = {
     mode,
@@ -218,7 +220,11 @@ export function renderCalendar(context: TableContext): TemplateResult {
     week: week ?? today,
   };
   const calendar = { ...context, entries, shown, today };
-  return html`<div class="calendar" data-mode=${mode}>
+  return html`<div
+    class="calendar"
+    data-mode=${mode}
+    ?data-wrap=${wrapTitles === true}
+  >
     ${renderCalendarHeader(shown, context.dispatch)} ${renderGrid(calendar)}
   </div>`;
 }

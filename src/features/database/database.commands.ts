@@ -17,6 +17,7 @@ import {
   type View,
 } from "../../model/index.ts";
 import { defineCommand } from "../../state/index.ts";
+import { colorRulesAfterRemoving } from "./color-rules.commands.ts";
 import { propertyType } from "./property-registry.ts";
 import { numberExistingRows } from "./row-numbering.ts";
 
@@ -200,8 +201,8 @@ export const changeProperty = defineCommand<ChangePropertyPayload>({
   },
 });
 
-// Removes a column. Cell values stay in the rows, unseen, so that undo and
-// a later format can bring them back.
+// Removes a column, and the color rules left without a condition. Cell
+// values stay in the rows, unseen, for undo and a later format.
 export const removeProperty = defineCommand<{
   databaseId: BlockId;
   propertyId: PropertyId;
@@ -214,7 +215,9 @@ export const removeProperty = defineCommand<{
       (property) => property.id !== command.propertyId,
     );
     if (properties.length === database.props.properties.length) return {};
-    return { operations: updateProperties(database, properties) };
+    const rules = colorRulesAfterRemoving(state, database, command.propertyId);
+    const operations = updateProperties(database, properties);
+    return { operations: [...operations, ...rules] };
   },
 });
 

@@ -1,3 +1,4 @@
+import "./row-color.css";
 import "./table.css";
 import "./table-controls.css";
 import { html, nothing, type TemplateResult } from "lit-html";
@@ -25,6 +26,7 @@ import { renderTableGroupEntry } from "./table-group.view.ts";
 import type { TableRow } from "./table-model.selectors.ts";
 import { setTableFirstRow } from "./table.commands.ts";
 import { selectRowWindow } from "./table.selectors.ts";
+import { selectRowColor } from "./row-color.selectors.ts";
 
 const SPACER_PROPERTY = "--database-spacer-rows";
 // Scrolling by fewer rows than this does not move the window.
@@ -41,6 +43,7 @@ function renderRow(
     data-row-id=${row.id}
     ?data-ticked=${isTicked}
     ?data-peeked=${context.state.ui.peek?.pageId === row.id}
+    data-color=${selectRowColor(context.model, row, context.state) ?? nothing}
     aria-rowindex=${index + 2}
   >
     ${renderRowGutter(row, context)}
