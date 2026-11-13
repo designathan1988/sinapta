@@ -14,6 +14,11 @@ export const numberConfigSchema = v.object({
   // An ISO 4217 code, such as "BRL", for the currency format.
   currency: v.optional(v.pipe(v.string(), v.regex(/^[A-Z]{3}$/))),
   display: v.picklist(NUMBER_DISPLAYS),
+  // Digits after the point, as Notion's "Decimal places"; unset is the
+  // format's own default.
+  decimals: v.optional(
+    v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(5)),
+  ),
   // What a full bar or ring stands for; 100 when unset.
   divideBy: v.optional(v.pipe(v.number(), v.finite(), v.gtValue(0))),
 });

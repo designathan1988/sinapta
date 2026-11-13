@@ -18,6 +18,11 @@ describe("formatNumber", () => {
     expect(formatNumber(0.256, { ...PLAIN, format: "percent" })).toBe("25.6%");
   });
 
+  it("writes the decimal places the property sets", () => {
+    expect(formatNumber(2, { ...PLAIN, decimals: 2 })).toBe("2.00");
+    expect(formatNumber(1.236, { ...PLAIN, decimals: 1 })).toBe("1.2");
+  });
+
   it("writes a currency the way the locale does", () => {
     const config = { ...PLAIN, format: "currency", currency: "BRL" } as const;
 

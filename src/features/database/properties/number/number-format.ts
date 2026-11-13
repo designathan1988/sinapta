@@ -7,7 +7,20 @@ const DEFAULT_CURRENCY = "USD";
 const DEFAULT_DIVISOR = 100;
 const MAX_FRACTION_DIGITS = 6;
 
+// Fixed digits after the point when the property sets them.
+function decimalOptions(config: NumberConfig): Intl.NumberFormatOptions {
+  if (config.decimals === undefined) return {};
+  return {
+    minimumFractionDigits: config.decimals,
+    maximumFractionDigits: config.decimals,
+  };
+}
+
 function formatOptions(config: NumberConfig): Intl.NumberFormatOptions {
+  return { ...baseOptions(config), ...decimalOptions(config) };
+}
+
+function baseOptions(config: NumberConfig): Intl.NumberFormatOptions {
   switch (config.format) {
     case "number":
       return { useGrouping: false, maximumFractionDigits: MAX_FRACTION_DIGITS };

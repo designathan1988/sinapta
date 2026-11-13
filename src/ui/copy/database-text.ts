@@ -125,6 +125,8 @@ export const DATABASE_TEXT = {
     moveOptionDown: "Move option down",
     deleteOption: "Delete option",
     numberFormat: "Number format",
+    decimalPlaces: "Decimal places",
+    decimalDefault: "Default",
     numberFormats: {
       number: "Number",
       comma: "Number with commas",

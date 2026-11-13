@@ -117,6 +117,34 @@ function renderFormat(
   );
 }
 
+const DECIMALS = ["0", "1", "2", "3", "4", "5"] as const;
+
+function renderDecimals(
+  config: NumberConfig,
+  onChange: (config: NumberConfig) => void,
+  editing: Editing,
+): TemplateResult {
+  return renderChoice(
+    {
+      name: "decimals",
+      label: TEXT.decimalPlaces,
+      choices: [
+        ["default", TEXT.decimalDefault],
+        ...DECIMALS.map((value) => [value, value] as const),
+      ],
+      current:
+        config.decimals === undefined ? "default" : String(config.decimals),
+      onPick: (value) => {
+        const { decimals: _unset, ...rest } = config;
+        onChange(
+          value === "default" ? rest : { ...rest, decimals: Number(value) },
+        );
+      },
+    },
+    editing,
+  );
+}
+
 function renderDisplay(
   config: NumberConfig,
   onChange: (config: NumberConfig) => void,
@@ -152,6 +180,7 @@ export function renderNumberConfig(
       ? renderCurrency(config, onChange, editing)
       : nothing;
   return html`${renderFormat(config, onChange, editing)} ${currency}
+  ${renderDecimals(config, onChange, editing)}
   ${renderDisplay(config, onChange, editing)}
   ${config.display === "number" ? nothing : renderDivisor(config, onChange)}`;
 }
