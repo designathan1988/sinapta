@@ -1011,6 +1011,38 @@ items above, found while photographing them:
 35. **done** [T101, FR-020] "Is between" read in the app's own date words
     ("Nov 10, 2026"), not the browser's date field, whose day order
     follows the system's language.
+36. **done** [T103, FR-015, FR-016, `n56-color-rule`, `n56-bg`, `n56-apply`,
+    `n56-value`] A conditional color rule, read in Notion (a rule made on
+    the test database and deleted at once): "Nova configuração de cor"
+    first asks "Procurar uma propriedade..." (the title first, then the
+    properties A–Z); the rule then reads "<property> é ⌄" in grey with a
+    trash ("Excluir regra de cor condicional"), a value field
+    ("Selecione..."; a checkbox's Marcadas / Desmarcadas), "Plano de
+    fundo da página" with a swatch and "Verde" ›, ten swatches in two rows
+    of five, no names; "Aplicar a" › Linha inteira, Esta propriedade; and
+    "+ Adicionar outro" under the rule. A new rule is green; with no value
+    it colors no row.
+37. **done** [T104, FR-032, `n53-tabs/05-home-tab`] Under the Home tab the
+    sidebar lists New page first: no Home row repeats the tab.
+38. **done** [T105, FR-017, `n55-words2`, `n55-words4`] Notion's English words,
+    looked up among the strings of Notion's own code loaded on the test
+    page (its menus opened and closed first): found as Pagecraft writes
+    them: Show as, Display as, Source, Card layout, Compact, Fit media,
+    Wrap page titles, Separate start and end dates, Directly edit page
+    name, Wrap properties, Card preview, Card size, Color columns, Show
+    calendar by, Show weekends, Show timeline by, Show table, Start date,
+    End date, Text by, Number by, Exact, Alphabetical, Unique, Group by,
+    Hide empty groups, Remove grouping, Conditional color, New color
+    setting, Page background, Apply to, Add another, This property,
+    Checkbox, Number, Bar, Ring, Changes apply to all views showing this
+    property., Divide by, Show number, Set as default, Empty page,
+    Upload, Embed link, Edit automation, Edit property, Suggest edits,
+    Suggesting, Add reaction, Accept, Reject, Upcoming events, Filter…,
+    the eight emoji groups. Corrected: "Whole row" → "Entire row",
+    "Search for a property" → "Search for a property…". Not in the code
+    loaded (their menus load apart), so kept as the audit read them: the
+    date conditions, Show large counts as 99+, the cadence words, the
+    button's actions, Move to tab, Manage in Notion Calendar.
 
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,
