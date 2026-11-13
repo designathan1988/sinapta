@@ -63,25 +63,45 @@ No UI framework. Full specification: docs/specification.md.
 - If a rule blocks the task, stop and ask. Do not work around it.
 
 ## Visual checks
-- Judge the interface only from desktop captures at native pixels. Never
-  take a screenshot in the built-in browser pane, of any site: it is
-  about 800 px wide and shrinks every frame. Measure Notion there with
-  JavaScript (sizes and colors) only.
-- Tool: npm run capture -- <steps.json> (scripts/capture.ts): headless
-  Chrome, never a window, 1440x900 at 2x, against the review server,
-  http://localhost:5190. Each step can click, point at an element with
-  the real mouse, photograph the window or a region, and print a value
-  read from the page. Open every PNG with Read and look at it.
+- Judge the interface only from photos at native pixels. Never use a
+  screenshot of the built-in browser pane as a photo, of any site: the
+  pane shrinks every frame to 800 px, and its zoom only crops that.
+- Pagecraft: npm run capture -- <steps.json> (scripts/capture.ts):
+  headless Chrome through playwright-core, never a window, 1440x900 at
+  2x, against the review server, http://localhost:5190. Each step can
+  click, point at an element with the real mouse, photograph the window
+  or a region, and print a value read from the page. Open every PNG
+  with Read and look at it.
+- Notion: the owner's Chrome through the Claude in Chrome extension
+  (tools mcp__claude-in-chrome__*; first tabs_context_mcp with
+  createIfEmpty, then work in that new tab). Notion's test workspace is
+  signed in there. A photo is the extension's zoom of a region (at most
+  about 1440 px of page per zoom, returned at the monitor's own pixels),
+  saved with save_to_disk and copied to .captures/notion/NNN-name.png.
+  The plain screenshot is only for aiming. Measure with javascript_tool
+  (getComputedStyle, inline styles, aria-label) under a real hover.
+- Install what a check needs (npm devDependencies, Claude Code plugins
+  such as superpowers-chrome) instead of working around it.
 - Check every control in each of its states: at rest, pointed at,
-  pressed, open, focused. Point at the same control in Notion with the
-  real pointer and read its computed styles; record the numbers in
-  docs/notion-study.md, the one file for Notion findings.
+  pressed, open, focused, in Notion and in Pagecraft; record the numbers
+  in docs/notion-study.md, the one file for Notion findings.
 - Capture each changed surface whole, then each region and every open
   menu state, and inspect them before calling UI work done.
-- Every check takes seconds, not minutes. Point at the changed control
-  yourself and look, and measure the same control in Notion (sizes,
-  fonts, colors) and match it. Stop the review server
-  and any other process you started as soon as you are done with it.
+- Every check takes seconds. Stop the review server and any other
+  process you started as soon as you are done with it.
+- Subagents only read and search; they never run code, servers or
+  browsers, and no server or browser runs beside them (it froze the
+  machine on 2026-11-12). One process at a time.
+- No automated interface detectors (abandoned 2026-11-12): use the app
+  as a person would, photograph it, and match Notion's numbers.
+
+## Memory
+- Do not use Claude Code's memory folder in the user's home. Everything
+  learned about this project is written in this repository (this file,
+  docs/notion-study.md, docs/tasks.md, docs/decisions/) and read back
+  from disk.
+- Auto memory is switched off in .claude/settings.json
+  (autoMemoryEnabled and autoDreamEnabled false). Keep it off.
 
 ## Read on demand
 - Data flow and layers: docs/architecture.md

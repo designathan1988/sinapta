@@ -251,6 +251,34 @@ Automations and AI autofill, which need a server.
   blocks it added) marked in Notion's colors against the version before.
   "Group by" and authors are not built (one person).
 
+## Feature catalog (audit of 2026-11-13)
+
+Every entry Notion offers, in its words, and whether Pagecraft has it:
+**yes**, **part** (what is missing said), **no**, or **n/a** (needs a
+server, AI or other people). Photos of Notion are kept in
+`.captures/notion/` (the pane's frames, 800 px wide).
+
+### Slash menu (`/` on an empty line), 15 sections
+
+Photo `001-slash-menu.jpg`. A 309 px panel, 320 px of list before it
+scrolls, "Close menu  esc" at its foot; typing filters it.
+
+| Section | Entries | Pagecraft |
+| --- | --- | --- |
+| Suggestions | AI notes; HTML (new) | n/a; **no** (HTML block) |
+| Basic blocks | Text; Heading 1–4 (`#`…`####`); Bulleted list (`-`); Numbered list (`1.`); To-do list (`[]`); Toggle list (`>`); Page; Callout; Quote (`"`); Table; Divider (`---`); Link to page | **yes** |
+| Media | Image; Video; Audio; Code (```` ``` ````); File; Web bookmark | **yes** |
+| Database | Table view; Board view; Gallery view; List view; Feed view; Dashboard view (new); Calendar view; Timeline view; Map view (new); Vertical bar chart; Horizontal bar chart; Line chart; Donut chart; Number chart; Form; Database – inline; Database – full page; Linked view of data source | **part**: only "inline database" and "linked view" are listed; no entry per view, no number chart, no dashboard, no map, no full-page database entry |
+| Advanced blocks | Table of contents; Block equation; Button; Breadcrumb; Tabs (new); Synced block; Toggle heading 1–3 (`# >`…); 2, 3, 4, 5 columns; Code – Mermaid; AI block | **part**: no Tabs, no Mermaid, columns as one entry; AI n/a |
+| Inline | Mention a person; Mention a page or data source; Date or reminder; Emoji; Inline equation | **yes** (a person: n/a) |
+| Integrations | Embed; HTML; Google Drive, Tweet, GitHub Gist, Google Maps, Figma, … (about 50 named services) | **part**: one Embed for any address; no named services |
+| Import | CSV; Text and Markdown; Confluence; Google Docs; Dropbox Paper; Evernote; Workflowy; Word; Monday; Quip; ZIP | **part**: CSV, Markdown, ZIP from the sidebar, not from `/` |
+| Turn into | Heading 1–4; Page in; Bulleted, numbered, to-do, toggle lists; Code; Quote; Toggle heading 1–4 | **no** in `/` (the block menu has Turn into) |
+| Actions | Link to block (Alt+Shift+L); Duplicate (Ctrl+D); Move to (Ctrl+Shift+P); Delete (Del); Ask AI | **no** in `/` (the block menu has them); no "Link to block" |
+| A short break | Brew | n/a |
+| Text color | Default and 9 colors | **yes** |
+| Background color | Default and 9 colors | **yes** |
+
 ## Controls
 
 **Now** says what the control is today: "native" (a browser `<select>`
