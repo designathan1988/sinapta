@@ -4,7 +4,10 @@
 import { html, type TemplateResult } from "lit-html";
 import { COPY } from "../../ui/copy.ts";
 import { parseTypedDate } from "../../ui/date-picker/index.ts";
-import { BETWEEN_SEPARATOR, formatDateValue } from "./properties/date/index.ts";
+import {
+  BETWEEN_SEPARATOR,
+  formatFilterDate,
+} from "./properties/date/index.ts";
 
 export interface BetweenProps {
   readonly operand: string;
@@ -12,7 +15,7 @@ export interface BetweenProps {
 }
 
 function shown(day: string): string {
-  return day === "" ? "" : formatDateValue({ start: day });
+  return day === "" ? "" : formatFilterDate({ start: day });
 }
 
 // A field's day: what it reads as, empty when emptied, else the day it

@@ -1,7 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { toPropertyId } from "../../database-builder.ts";
 import { propertyType } from "../../property-registry.ts";
-import { formatDateValue, readDateValue, reminderDay } from "./date-value.ts";
+import {
+  formatDateValue,
+  formatFilterDate,
+  readDateValue,
+  reminderDay,
+} from "./date-value.ts";
+import { readDateConfig } from "./date.schema.ts";
 
 const property = { id: toPropertyId("due"), name: "Due", type: "date" };
 const date = propertyType("date");
@@ -62,10 +68,11 @@ describe("a date's reminder", () => {
 });
 
 describe("formatDateValue", () => {
-  it("writes a day in the property's date format", () => {
+  it("writes a day in the property's date format, Full date first, as Notion's", () => {
     const day = { start: "2026-11-10" };
 
-    expect(formatDateValue(day)).toBe("Nov 10, 2026");
+    // Notion's formats (n74-relative-code): "ll" read as Luxon's DDD.
+    expect(formatDateValue(day)).toBe("November 10, 2026");
     expect(
       formatDateValue(day, { dateFormat: "full", timeFormat: "12-hour" }),
     ).toBe("November 10, 2026");
@@ -86,13 +93,66 @@ describe("formatDateValue", () => {
   it("writes a range with an arrow and a time in the time format", () => {
     const range = { start: "2026-11-10", end: "2026-11-12", time: "21:05" };
 
-    expect(formatDateValue(range)).toBe("Nov 10, 2026 9:05 PM → Nov 12, 2026");
+    expect(formatDateValue(range)).toBe(
+      "November 10, 2026 9:05 PM → November 12, 2026",
+    );
     expect(
       formatDateValue(range, {
         dateFormat: "month-day-year",
         timeFormat: "24-hour",
       }),
     ).toBe("11/10/2026 21:05 → 11/12/2026");
+  });
+});
+
+describe("Notion's Short date and Relative", () => {
+  const TODAY = "2026-11-13";
+  const as = (start: string, dateFormat: "short" | "relative") =>
+    formatDateValue({ start }, { dateFormat, timeFormat: "12-hour" }, TODAY);
+
+  it("writes a short date as the month and day, the year left out", () => {
+    // n73-relative-dates: "nov. 13" for 2025 too, "dez. 25".
+    expect(as("2026-11-10", "short")).toBe("Nov 10");
+    expect(as("2025-11-13", "short")).toBe("Nov 13");
+  });
+
+  it.each([
+    ["2026-11-13", "Today"],
+    ["2026-11-14", "Tomorrow"],
+    ["2026-11-12", "Yesterday"],
+    ["2026-11-16", "Next Monday"],
+    ["2026-11-10", "Tuesday"],
+    ["2026-11-06", "Last Friday"],
+    ["2026-11-25", "November 25, 2026"],
+    ["2025-11-13", "November 13, 2025"],
+  ])("writes %s, seen from Friday 2026-11-13, as %s", (start, words) => {
+    expect(as(start, "relative")).toBe(words);
+  });
+});
+
+describe("Notion's Hidden time format", () => {
+  it("leaves the time out of a date that has one", () => {
+    const value = { start: "2026-11-10", time: "21:05" };
+
+    expect(
+      formatDateValue(value, { dateFormat: "full", timeFormat: "hidden" }),
+    ).toBe("November 10, 2026");
+  });
+});
+
+describe("a date's config", () => {
+  it("reads the old medium format as Full date, as Notion reads its old one", () => {
+    expect(
+      readDateConfig({ dateFormat: "medium", timeFormat: "24-hour" }),
+    ).toEqual({ dateFormat: "full", timeFormat: "24-hour" });
+  });
+});
+
+describe("formatFilterDate", () => {
+  it("writes the days of a filter as the filter's fields do", () => {
+    expect(formatFilterDate({ start: "2026-11-10", end: "2026-11-14" })).toBe(
+      "Nov 10, 2026 → Nov 14, 2026",
+    );
   });
 });
 

@@ -11,6 +11,7 @@ import {
   type DateConfig,
   type DateFormat,
 } from "./date.schema.ts";
+import { relativeDayWords } from "./relative-day.ts";
 
 export interface DateValue {
   readonly start: string;
@@ -75,20 +76,31 @@ const MEDIUM_DAY = new Intl.DateTimeFormat("en-US", {
   dateStyle: "medium",
   timeZone: "UTC",
 });
+const SHORT_DAY = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "numeric",
+  timeZone: "UTC",
+});
 
-function formatDay(day: string, format: DateFormat): string {
+function longDay(day: string): string {
+  return LONG_DAY.format(new Date(`${day}T00:00:00Z`));
+}
+
+function formatDay(day: string, format: DateFormat, today: string): string {
   const [year = "", month = "", date = ""] = day.split("-");
   switch (format) {
-    case "medium":
-      return MEDIUM_DAY.format(new Date(`${day}T00:00:00Z`));
     case "full":
-      return LONG_DAY.format(new Date(`${day}T00:00:00Z`));
+      return longDay(day);
+    case "short":
+      return SHORT_DAY.format(new Date(`${day}T00:00:00Z`));
     case "month-day-year":
       return `${month}/${date}/${year}`;
     case "day-month-year":
       return `${date}/${month}/${year}`;
     case "year-month-day":
       return `${year}/${month}/${date}`;
+    case "relative":
+      return relativeDayWords(day, today, longDay);
     default: {
       const unknown: never = format;
       return unknown;
@@ -104,17 +116,32 @@ function formatTime(time: string, config: DateConfig): string {
   return `${String(hour)}:${String(minutes).padStart(2, "0")} ${suffix}`;
 }
 
+// Today is the reader's own day unless given: the Relative format reads
+// days from it.
 export function formatDateValue(
   value: DateValue,
   config: DateConfig = DEFAULT_DATE_CONFIG,
+  today: string = new Date().toLocaleDateString("en-CA"),
 ): string {
   const { dateFormat } = config;
-  const start = formatDay(value.start, dateFormat);
+  const start = formatDay(value.start, dateFormat, today);
   const time =
-    value.time === undefined ? "" : ` ${formatTime(value.time, config)}`;
+    value.time === undefined || config.timeFormat === "hidden"
+      ? ""
+      : ` ${formatTime(value.time, config)}`;
   const end =
-    value.end === undefined ? "" : ` → ${formatDay(value.end, dateFormat)}`;
+    value.end === undefined
+      ? ""
+      : ` → ${formatDay(value.end, dateFormat, today)}`;
   return `${start}${time}${end}`;
+}
+
+// The days of a filter as its fields write them: "Nov 10, 2026".
+export function formatFilterDate(value: DateValue): string {
+  const write = (day: string) =>
+    MEDIUM_DAY.format(new Date(`${day}T00:00:00Z`));
+  const end = value.end === undefined ? "" : ` → ${write(value.end)}`;
+  return `${write(value.start)}${end}`;
 }
 
 export interface DateParts {

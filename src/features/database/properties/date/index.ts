@@ -2,6 +2,7 @@ export { dateProperty } from "./date.definition.ts";
 export {
   dateFromParts,
   formatDateValue,
+  formatFilterDate,
   readDateValue,
   reminderDay,
   type DateParts,

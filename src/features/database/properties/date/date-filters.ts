@@ -15,7 +15,7 @@ import {
   relativeSpan,
 } from "./date-relative.ts";
 import {
-  formatDateValue,
+  formatFilterDate,
   isDay,
   overlaps,
   readDateValue,
@@ -117,7 +117,7 @@ const BETWEEN: FilterOperator = {
   describe: (operand) => {
     const days = readBetween(operand);
     if (days === undefined) return "";
-    return formatDateValue({ start: days[0], end: days[1] });
+    return formatFilterDate({ start: days[0], end: days[1] });
   },
   test(value, operand, context) {
     const days = readBetween(operand);

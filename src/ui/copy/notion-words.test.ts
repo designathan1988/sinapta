@@ -32,6 +32,37 @@ describe("the copy of the new controls", () => {
     });
   });
 
+  it("names the date formats and a relative day as Notion's", () => {
+    // dateHelpers.dateFormat.fullDate, .shortDate, .monthDayYear,
+    // .dayMonthYear, .yearMonthDay, .relative
+    expect(COPY.database.dateFormats).toEqual({
+      full: "Full date",
+      short: "Short date",
+      "month-day-year": "Month/Day/Year",
+      "day-month-year": "Day/Month/Year",
+      "year-month-day": "Year/Month/Day",
+      relative: "Relative",
+    });
+    // dateHelpers.hiddenTimeFormat, .12hourTimeFormat, .24hourTimeFormat
+    expect(COPY.database.timeFormats).toEqual({
+      hidden: "Hidden",
+      "12-hour": "12 hour",
+      "24-hour": "24 hour",
+    });
+    // dateFormatHelpers.text.today, .tomorrow, .yesterday,
+    // .nextDayOfTheWeek, .lastDayOfTheWeek
+    const days = COPY.database.relativeDays;
+    expect([days.today, days.tomorrow, days.yesterday]).toEqual([
+      "Today",
+      "Tomorrow",
+      "Yesterday",
+    ]);
+    expect([days.next("Monday"), days.last("Friday")]).toEqual([
+      "Next Monday",
+      "Last Friday",
+    ]);
+  });
+
   it("names the cadence's rows and presets as Notion's", () => {
     const { cadence } = COPY;
     // automations.RecurrenceEditor.startTimeLabel, .timezone

@@ -8,6 +8,7 @@ import {
   DATABASE_MENU_TEXT,
   DATABASE_OPTIONS_TEXT,
   DATABASE_TEXT,
+  DATE_FORMAT_TEXT,
   DATE_TEXT,
   EDITOR_TEXT,
   ONBOARDING_TEXT,
@@ -37,6 +38,7 @@ export const COPY = {
     ...DATABASE_TEXT.database,
     ...DATABASE_MENU_TEXT,
     ...DATABASE_OPTIONS_TEXT,
+    ...DATE_FORMAT_TEXT,
   },
   onboarding: ONBOARDING_TEXT.onboarding,
 } as const;

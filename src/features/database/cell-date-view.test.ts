@@ -84,6 +84,16 @@ describe("a date cell's calendar", () => {
     ]);
   });
 
+  it("shows the property's date format beside its row, as Notion's", () => {
+    const { host } = rendered();
+    const row = [...host.querySelectorAll<HTMLElement>(".menu__item")].find(
+      (item) => item.textContent.includes("Date format"),
+    );
+
+    // n71-date-cell: "Formato de data · Data completa".
+    expect(row?.querySelector(".menu__value")?.textContent).toBe("Full date");
+  });
+
   it("writes the chosen date format into the property", () => {
     const { host, sent, due } = rendered(undefined, "date-format");
     const full = [

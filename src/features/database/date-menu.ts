@@ -74,6 +74,7 @@ function formatItem(input: DateMenuInput, databaseId: BlockId): MenuItem {
   ];
   return {
     label: TEXT.dateFormat,
+    value: TEXT.dateFormats[config.dateFormat],
     submenu: {
       id: "date-format",
       menu: () => ({ label: TEXT.dateFormat, items }),
