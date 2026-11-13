@@ -19,8 +19,10 @@ import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import {
   addRow,
   openRow,
+  selectRowTemplate,
   selectViewRows,
   setActiveView,
+  withDefaultTemplate,
   type TableRow,
 } from "../database/index.ts";
 import { selectSection, type Section } from "./sidebar-views.selectors.ts";
@@ -48,8 +50,27 @@ function openSectionDatabase(section: Section, dispatch: Dispatch): void {
   }
 }
 
-function addSectionPage(section: Section, dispatch: Dispatch): void {
-  dispatch(addRow.create({ databaseId: section.databaseId, opensPage: true }));
+// "+": a page from the section's template, an empty one, or else the
+// view's default template.
+function addSectionPage(section: Section, context: Context): void {
+  const { state, dispatch } = context;
+  const { entry, databaseId } = section;
+  const payload = { databaseId, opensPage: true, viewId: entry.viewId };
+  if (entry.templateId === null) {
+    dispatch(addRow.create(payload));
+    return;
+  }
+  const template =
+    entry.templateId === undefined
+      ? undefined
+      : selectRowTemplate(state, entry.templateId);
+  dispatch(
+    addRow.create(
+      template === undefined
+        ? withDefaultTemplate(state, payload)
+        : { ...payload, template },
+    ),
+  );
 }
 
 function renderTool(
@@ -128,7 +149,7 @@ function renderHead(section: Section, context: Context): TemplateResult {
         openSectionDatabase(section, dispatch);
       })}
       ${renderTool(TEXT.addPage, "plus", () => {
-        addSectionPage(section, dispatch);
+        addSectionPage(section, context);
       })}
       ${renderMenuButton(section, context)}
     </span>

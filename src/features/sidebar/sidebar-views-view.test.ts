@@ -70,6 +70,19 @@ function rendered(open?: { child?: string }) {
 }
 
 describe("a view kept in the sidebar", () => {
+  it("starts its new pages empty when Template is Empty", () => {
+    const shown = rendered({ child: "template" });
+
+    shown.item("Empty")?.click();
+
+    expect(shown.sent).toContainEqual(
+      expect.objectContaining({
+        type: "settings.setSidebarView",
+        changes: { templateId: null },
+      }),
+    );
+  });
+
   it("lists the view's pages under the database's name", () => {
     const { host } = rendered();
 
@@ -124,6 +137,7 @@ describe("a view kept in the sidebar", () => {
       "Show page icon",
       "Source",
       "View",
+      "Template",
       "Remove section",
     ]);
   });

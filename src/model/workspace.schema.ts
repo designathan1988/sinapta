@@ -23,6 +23,9 @@ const sidebarViewSchema = v.object({
   // Where its pages open; absent, beside the page.
   openMode: v.optional(v.picklist(["side", "center", "full"])),
   isCollapsed: v.optional(v.boolean()),
+  // The template its "+" starts pages from, or null for an empty page;
+  // absent, the view's default.
+  templateId: v.optional(v.nullable(blockIdSchema)),
 });
 
 export const settingsSchema = v.object({

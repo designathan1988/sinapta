@@ -22,6 +22,7 @@ import {
   type MenuItem,
 } from "../../ui/menu/index.ts";
 import { LAYOUT_ICONS } from "../database/index.ts";
+import { templateItem } from "./sidebar-view-template.ts";
 import { selectSection, type Section } from "./sidebar-views.selectors.ts";
 import { choiceItem, type ChoiceRow } from "./sidebar-view-choice.ts";
 import { SIDEBAR_VIEW_OVERLAY } from "./sidebar-views.view.ts";
@@ -138,6 +139,9 @@ function settingItems(context: Context): MenuEntry[] {
     iconsItem(context),
     sourceItem(context),
     viewItem(context),
+    templateItem(submenuOf(context), context.section, (templateId) => {
+      change(context, { templateId });
+    }),
   ];
 }
 

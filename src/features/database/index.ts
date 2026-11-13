@@ -42,6 +42,11 @@ export { selectTableModel, type TableRow } from "./table-model.selectors.ts";
 export { selectViewRows } from "./view-rows.selectors.ts";
 export { selectHolderOfView } from "./view-holder.selectors.ts";
 export { setActiveView } from "./view.commands.ts";
+export { selectRowTemplate } from "./template.commands.ts";
+export {
+  selectDefaultTemplateId,
+  withDefaultTemplate,
+} from "./template-default.commands.ts";
 export { groupByProperty } from "./group.commands.ts";
 export { startDatabase } from "./database-start.commands.ts";
 export { LAYOUT_ICONS } from "./layout-icons.ts";

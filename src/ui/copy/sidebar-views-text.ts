@@ -14,6 +14,8 @@ export const SIDEBAR_VIEWS_TEXT = {
     showPageIcon: "Show page icon",
     source: "Source",
     view: "View",
+    template: "Template",
+    emptyTemplate: "Empty",
     moveUp: "Move up",
     moveDown: "Move down",
     remove: "Remove section",

@@ -1,10 +1,13 @@
 // What a view kept in the sidebar shows: its section's name, the database
 // it reads and the views it could show instead.
-import { selectPageTitle } from "../../blocks/page/index.ts";
+import { isPageLike, selectPageTitle } from "../../blocks/page/index.ts";
 import type { BlockId, SidebarView, ViewId } from "../../model/index.ts";
 import type { AppState } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
-import { selectHolderOfView } from "../database/index.ts";
+import {
+  selectDefaultTemplateId,
+  selectHolderOfView,
+} from "../database/index.ts";
 
 export interface Section {
   readonly entry: SidebarView;
@@ -15,6 +18,9 @@ export interface Section {
   readonly viewIds: readonly ViewId[];
   // True when the view is the database's own, not a linked view's.
   readonly isOwnView: boolean;
+  // The database's templates, and the one its new pages take by default.
+  readonly templates: readonly { id: BlockId; title: string }[];
+  readonly defaultTemplateId: BlockId | null;
 }
 
 export function selectSection(
@@ -34,5 +40,12 @@ export function selectSection(
     databaseName,
     viewIds: holder.viewIds,
     isOwnView: holder.holderId === holder.database.id,
+    templates: holder.database.props.templateIds.flatMap((id) => {
+      const page = state.workspace.blocks[id];
+      if (page === undefined || !isPageLike(page)) return [];
+      const name = selectPageTitle(page);
+      return [{ id, title: name === "" ? COPY.sidebar.untitled : name }];
+    }),
+    defaultTemplateId: selectDefaultTemplateId(state, holder.database.id),
   };
 }
