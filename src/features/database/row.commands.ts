@@ -23,7 +23,7 @@ import {
   type UiState,
 } from "../../state/index.ts";
 import { statusOptionFor } from "./properties/status/index.ts";
-import { numberNewRow } from "./row-numbering.ts";
+import { numberNewRow, startingValues } from "./row-numbering.ts";
 import { fromTemplate } from "./row-template.ts";
 
 export interface AddRowPayload {
@@ -119,7 +119,11 @@ export const addRow = defineCommand<AddRowPayload>({
     const id = command.meta.blockIds[0];
     if (database === undefined || id === undefined) return {};
     const numbered = numberNewRow(database);
-    const values = { ...command.values, ...numbered.values };
+    const values = {
+      ...startingValues(database),
+      ...command.values,
+      ...numbered.values,
+    };
     const record = plainRow({ id, database, command, values });
     const records = fromTemplate(state, command, values) ?? [record];
     return {

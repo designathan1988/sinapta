@@ -5,9 +5,7 @@ import { openOverlay, type ActiveCell } from "../../state/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { pressRowButton } from "./properties/button/index.ts";
-import { setRowValue, setStatusChecked } from "./row.commands.ts";
-import { isStatusChecked } from "./properties/status/index.ts";
-import type { PropertyType } from "./property-definition.ts";
+import { setRowValue } from "./row.commands.ts";
 import { editorOf, propertyType } from "./property-registry.ts";
 import { CELL_POPOVERS, type TableContext } from "./table-cell.view.ts";
 import { cellOf, columnOf, type CellRef } from "./table-cell-ref.ts";
@@ -15,6 +13,7 @@ import { setActiveCell, setTableFirstRow } from "./table.commands.ts";
 import { selectCellNeighbor, type CellStep } from "./table.selectors.ts";
 import { selectEntryIndex } from "./table-entries.selectors.ts";
 import { onRowKey } from "./table-row-keys.view.ts";
+import { toggleCell } from "./table-cell-toggle.ts";
 
 function activate(
   cell: CellRef,
@@ -24,33 +23,6 @@ function activate(
   const { rowId, propertyId } = cell;
   context.dispatch(
     setActiveCell.create({ cell: { rowId, propertyId, isEditing } }),
-  );
-}
-
-// A checkbox cell is not opened: Enter turns it on or off; a status shown
-// as a checkbox ticks Complete or To-do.
-function toggleCell(
-  cell: CellRef,
-  context: TableContext,
-  type: PropertyType,
-): void {
-  if (cell.propertyId === null) return;
-  const row = context.model.rows.find((item) => item.id === cell.rowId);
-  const property = columnOf(cell, context)?.property;
-  if (property?.type === "status") {
-    const { rowId, propertyId } = cell;
-    const value = type.read(row?.values[propertyId]);
-    const checked = !isStatusChecked(property, value);
-    context.dispatch(setStatusChecked.create({ rowId, propertyId, checked }));
-    return;
-  }
-  const isChecked = type.read(row?.values[cell.propertyId]) === true;
-  context.dispatch(
-    setRowValue.create({
-      rowId: cell.rowId,
-      propertyId: cell.propertyId,
-      value: isChecked ? undefined : true,
-    }),
   );
 }
 
@@ -116,9 +88,12 @@ function onEditorKey(
     event.preventDefault();
     commit(input, context);
   } else if (event.key === "Escape" && cell !== undefined) {
-    settle(input);
+    // Escape keeps what was typed, as Notion's; text that cannot fit goes.
     event.preventDefault();
-    activate(cell, false, context);
+    if (!commit(input, context)) {
+      settle(input);
+      activate(cell, false, context);
+    }
   }
   event.stopPropagation();
 }

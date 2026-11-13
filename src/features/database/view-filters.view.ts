@@ -209,7 +209,7 @@ export function renderFilters(context: TableContext): TemplateResult {
     popover="manual"
     data-overlay
     ${ref(showPopoverWhenConnected)}
-    @change=${(event: Event) => {
+    @input=${(event: Event) => {
       onInput(event, context);
     }}
     @keydown=${(event: KeyboardEvent) => {

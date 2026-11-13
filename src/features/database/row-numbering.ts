@@ -45,6 +45,19 @@ interface NewRowValues {
 }
 
 // The values a new row gets from its database's numbering properties.
+// The values a new row starts with by its properties' types, such as a
+// status's first To-do option; a row's own values replace them.
+export function startingValues(
+  database: DatabaseBlock,
+): Record<string, unknown> {
+  const values: Record<string, unknown> = {};
+  for (const property of database.props.properties) {
+    const value = propertyType(property.type).newRowValue?.(property);
+    if (value !== undefined) values[property.id] = value;
+  }
+  return values;
+}
+
 export function numberNewRow(database: DatabaseBlock): NewRowValues {
   const values: Record<string, unknown> = {};
   const properties = database.props.properties.map((property) => {

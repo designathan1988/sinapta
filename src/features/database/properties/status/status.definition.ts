@@ -8,7 +8,7 @@ import type {
   PropertyType,
 } from "../../property-definition.ts";
 import { checkboxProperty } from "../checkbox/index.ts";
-import { selectProperty } from "../select/index.ts";
+import { OPTION_GROUPING, selectProperty } from "../select/index.ts";
 import { isStatusChecked, showsAsCheckbox } from "./status-checkbox.ts";
 import {
   readStatusConfig,
@@ -68,6 +68,14 @@ export const statusProperty: PropertyType = {
     );
   },
   filterOperators: [...selectProperty.filterOperators, IN_GROUP],
+  // As Notion's status board: no "No <name>" column unless a page has no
+  // status, since every new page starts with one.
+  grouping: { ...OPTION_GROUPING, keepsEmptyGroup: false },
+  // A new page starts in To-do's first option, as Notion's "Not started".
+  newRowValue: (property) =>
+    readStatusConfig(property.config)?.groups.find(
+      (group) => group.id === "to-do",
+    )?.optionIds[0],
   configSchema: statusConfigSchema,
   defaultConfig,
   startingSettings: {

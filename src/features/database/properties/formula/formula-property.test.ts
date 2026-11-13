@@ -65,6 +65,12 @@ describe("the formula property", () => {
     );
   });
 
+  it("is empty, not a mistake, before anything is written", () => {
+    const app = createApp("  ");
+
+    expect(app.score()).toBeNull();
+  });
+
   it("is worked out by the app, never typed", () => {
     expect(propertyType("formula").editor).toBe("none");
   });

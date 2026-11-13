@@ -7,6 +7,18 @@ import {
 } from "./slash-menu.selectors.ts";
 
 describe("selectSlashItems", () => {
+  it("puts the closest match first, as Notion's", () => {
+    const labels = selectSlashItems(createInitialState(), "toggle").map(
+      (item) => item.label,
+    );
+
+    expect(labels[0]).toBe("Toggle");
+    expect(labels.slice(1, 3)).toEqual([
+      "Toggle heading 1",
+      "Toggle heading 2",
+    ]);
+  });
+
   it("offers every block type the user can pick, and no page type", () => {
     const labels = selectSlashItems(createInitialState(), "").map(
       (item) => item.label,

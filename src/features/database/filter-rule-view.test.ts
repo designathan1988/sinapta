@@ -14,7 +14,7 @@ import { setViewFilter } from "./view.commands.ts";
 
 // A view filtered by Notes contains "x" and Stage is Done, with the
 // second rule's popover open (and, when asked, one of its lists).
-function rendered(child?: string) {
+function rendered(child?: string, index = 1) {
   const app = createDatabaseApp(
     [
       { name: "Notes", type: "text" },
@@ -39,7 +39,7 @@ function rendered(child?: string) {
   const built = app.store.getState();
   const overlay = {
     kind: VIEW_FILTER_RULE_OVERLAY,
-    anchorId: ruleAnchorId(app.databaseId, 1),
+    anchorId: ruleAnchorId(app.databaseId, index),
     ...(child !== undefined && { children: [{ anchorId: child }] }),
   };
   const state = { ...built, ui: { ...built.ui, overlay } };
@@ -77,6 +77,24 @@ describe("a filter rule opened from its pill", () => {
     expect(
       head?.querySelector("#select-filter-rule-1-more")?.textContent,
     ).toContain("More filter actions");
+  });
+
+  it("filters as the value is typed, as Notion's", () => {
+    const { rule, sent, first, second } = rendered(undefined, 0);
+    const field = rule?.querySelector<HTMLInputElement>('[data-field="value"]');
+    if (field === null || field === undefined) throw new Error("no field");
+
+    field.value = "abc";
+    field.dispatchEvent(new Event("input", { bubbles: true }));
+
+    expect(sent).toContainEqual(
+      expect.objectContaining({
+        filter: {
+          conjunction: "and",
+          items: [{ ...first, value: "abc" }, second],
+        },
+      }),
+    );
   });
 
   it("lists Delete filter and Add to advanced filter behind its …", () => {

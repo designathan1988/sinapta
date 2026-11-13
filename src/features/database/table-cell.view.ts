@@ -152,15 +152,24 @@ function usesInput(column: TableColumn): boolean {
   );
 }
 
+// Whether the cell is the active one, is being edited, and takes the
+// focus: while a menu is open its fields keep the focus, and the cell takes
+// it back once the menu closes.
+export function cellState(row: TableRow, column: TableColumn, state: AppState) {
+  const active = isActive(row, column, state);
+  const isEditing =
+    active && state.ui.activeCell?.isEditing === true && usesInput(column);
+  const takesFocus = active && !isEditing && state.ui.overlay === null;
+  return { active, isEditing, takesFocus };
+}
+
 export function renderCell(
   row: TableRow,
   column: TableColumn,
   context: TableContext,
 ): TemplateResult {
   const { state } = context;
-  const active = isActive(row, column, state);
-  const isEditing =
-    active && state.ui.activeCell?.isEditing === true && usesInput(column);
+  const { active, isEditing, takesFocus } = cellState(row, column, state);
   const key = cellKey(row.id, column);
   const isAnchor = state.ui.overlay?.anchorId === key;
   // While its editor is open the cell itself is not a focus target.
@@ -177,7 +186,7 @@ export function renderCell(
     ?data-frozen=${column.frozenStart !== undefined}
     ${ref((element) => {
       setFrozenStart(element, column.frozenStart);
-      if (active && !isEditing) focusCell(element);
+      if (takesFocus) focusCell(element);
     })}
   >
     ${

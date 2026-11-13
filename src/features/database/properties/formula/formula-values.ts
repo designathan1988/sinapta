@@ -111,6 +111,8 @@ export function formulaResult(
   reading: RowReading,
 ): FormulaResult {
   if (reading.depth >= MAX_DEPTH) return null;
+  // A formula not written yet is empty, as Notion's, not a mistake.
+  if (readFormulaConfig(property.config).expression.trim() === "") return null;
   const program = compiled(property, reading.properties);
   if (!program.ok) return { error: program.error };
   return evaluateFormula(program.program, {

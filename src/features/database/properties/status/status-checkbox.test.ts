@@ -68,9 +68,10 @@ describe("a status shown as a checkbox", () => {
 
   it("cannot be ticked while Complete has no option", () => {
     const { app, rowId, propertyId, value } = createApp(true);
+    const before = value();
 
     app.dispatch(setStatusChecked.create({ rowId, propertyId, checked: true }));
 
-    expect(value()).toBeUndefined();
+    expect(value()).toBe(before);
   });
 });

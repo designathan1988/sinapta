@@ -81,7 +81,20 @@ export function focusOverlayAnchor(closing = { isWhole: false }): void {
 // Notion's do; opened from the keyboard, it takes focus.
 function takesFocus(element: Element, source: Element | undefined): boolean {
   const isSubmenu = element.matches("[data-placement='beside']");
+  if (isSubmenu && isTypingElsewhere(element)) return false;
   return !isSubmenu || source?.matches(":hover") !== true;
+}
+
+// A field of another open overlay that has the focus: a submenu opening
+// beside it, as a new property's settings beside its name, leaves the
+// person typing there.
+function isTypingElsewhere(element: Element): boolean {
+  const active = document.activeElement;
+  return (
+    active instanceof HTMLInputElement &&
+    !element.contains(active) &&
+    active.closest("[data-overlay]") !== null
+  );
 }
 
 // Shows a popover element once it is in the document, and focuses its

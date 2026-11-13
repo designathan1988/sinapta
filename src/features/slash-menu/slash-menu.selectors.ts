@@ -158,9 +158,19 @@ export function selectSlashItems(state: AppState, query: string): SlashItem[] {
   const blocks = [PAGE_ITEM, ...blockItems(), ...DATABASE_ITEMS].filter(
     matches,
   );
-  // Sorted by group, keeping the order within each group.
-  const rank = (item: SlashItem): number => SLASH_GROUPS.indexOf(item.group);
+  // The closest matches first, as Notion's ("/toggle" gives Toggle list
+  // before the toggle headings); then by group, keeping each group's order.
+  const rank = (item: SlashItem): number =>
+    matchRank(fold(item.label), needle) * SLASH_GROUPS.length +
+    SLASH_GROUPS.indexOf(item.group);
   return [...blocks, ...pages, ...colors].toSorted((a, b) => rank(a) - rank(b));
+}
+
+// 0 for the whole name, 1 for its start, 2 for a word's start, 3 else.
+function matchRank(label: string, needle: string): number {
+  if (needle === "" || label === needle) return 0;
+  if (label.startsWith(needle)) return 1;
+  return label.includes(` ${needle}`) ? 2 : 3;
 }
 
 export interface OpenSlashMenu {

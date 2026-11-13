@@ -173,6 +173,9 @@ export interface PropertyType {
   readonly defaultConfig?: () => unknown;
   readonly startingSettings?: StartingSettings;
   readonly numbering?: RowNumbering;
+  // The value a new row starts with, as a status's first To-do option in
+  // Notion; absent, none.
+  readonly newRowValue?: (property: PropertyDefinition) => unknown;
   // A value worked out from the workspace, never stored, such as a
   // rollup's.
   readonly compute?: (

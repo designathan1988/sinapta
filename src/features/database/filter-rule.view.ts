@@ -67,7 +67,7 @@ function actions(context: TableContext, index: number) {
     toAdvanced: (): void => {
       moveToAdvanced(context, index);
     },
-    // A typed value is kept when its field is left, as in the editor.
+    // A typed value filters as it is typed, as Notion's.
     onChange: (event: Event): void => {
       const field = event.target;
       if (field instanceof HTMLInputElement && field.dataset.field === "value")
@@ -106,7 +106,7 @@ export function renderFilterRule(
     popover="manual"
     data-overlay
     ${ref(showPopoverWhenConnected)}
-    @change=${onChange}
+    @input=${onChange}
     @keydown=${onKeyDown}
   >
     ${renderRuleHead({ ...head, change, remove, toAdvanced }, select)}

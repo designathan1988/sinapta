@@ -5,6 +5,7 @@ import type { Command } from "../../state/index.ts";
 import { createDatabaseApp } from "./database-builder.ts";
 import { selectTableModel } from "./table-model.selectors.ts";
 import { renderTable } from "./table.view.ts";
+import { cellState } from "./table-cell.view.ts";
 
 // Renders the table of a small database and re-renders on every change,
 // as the app does, recording what is dispatched.
@@ -88,17 +89,55 @@ describe("table keys", () => {
     expect(editor(container).getAttribute("aria-invalid")).toBe("true");
   });
 
-  it("cancels with Escape without storing", () => {
-    const { commands, container, cell, press } = mount();
+  it("keeps what was typed on Escape, as Notion's", () => {
+    const { commands, container, cell, press, rowIds, propertyIds } = mount();
 
     press(cell(0, 1), "Enter");
     editor(container).value = "99";
+    press(editor(container), "Escape");
+
+    expect(commands).toContainEqual({
+      type: "row.setValue",
+      rowId: rowIds[0],
+      propertyId: propertyIds[0],
+      value: 99,
+    });
+    expect(container.querySelector(".database__input")).toBeNull();
+  });
+
+  it("lets go of text that does not fit on Escape", () => {
+    const { commands, container, cell, press } = mount();
+
+    press(cell(0, 1), "Enter");
+    editor(container).value = "abc";
     press(editor(container), "Escape");
 
     expect(commands.some((command) => command.type === "row.setValue")).toBe(
       false,
     );
     expect(container.querySelector(".database__input")).toBeNull();
+  });
+
+  it("asks for the focus only while no menu is open", () => {
+    const { store, rowIds } = mount();
+    const state = store.getState();
+    const model = selectTableModel(state, mount().databaseId);
+    const column = model?.columns[1];
+    const row = model?.rows[0];
+    if (column === undefined || row === undefined) throw new Error("no cell");
+    const activeCell = {
+      rowId: row.id,
+      propertyId: column.property.id,
+      isEditing: false,
+    };
+    const ui = { ...state.ui, activeCell };
+    const menu = { ...ui, overlay: { kind: "menu" } };
+
+    expect(rowIds).toHaveLength(2);
+    expect(cellState(row, column, { ...state, ui }).takesFocus).toBe(true);
+    expect(cellState(row, column, { ...state, ui: menu }).takesFocus).toBe(
+      false,
+    );
   });
 
   it("renames the row from the title cell", () => {

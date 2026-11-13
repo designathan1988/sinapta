@@ -35,4 +35,13 @@
   .database__group-add > .database__calc:first-child {
     text-align: start;
   }
+
+  /* A group's foot: "New page" at the start of the title column, as
+     Notion's, and the title column's calculation at its end. */
+  .database__group-lead {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    justify-content: space-between;
+  }
 }

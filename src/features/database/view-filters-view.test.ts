@@ -52,7 +52,9 @@ function change(control: Element | null, value: string): void {
     throw new Error("no control");
   }
   control.value = value;
-  control.dispatchEvent(new Event("change", { bubbles: true }));
+  // Typing fires input as each key goes in; a select fires change.
+  const type = control instanceof HTMLInputElement ? "input" : "change";
+  control.dispatchEvent(new Event(type, { bubbles: true }));
 }
 
 describe("the filter editor", () => {

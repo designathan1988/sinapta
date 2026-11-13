@@ -62,7 +62,8 @@ describe("grouping rows", () => {
     );
     groupBy(app, 0);
 
-    expect(groups(app).map((group) => group.titles)).toEqual([[], ["a"], []]);
+    // As Notion's status board: no empty "No Stage" column.
+    expect(groups(app).map((group) => group.titles)).toEqual([["a"], []]);
   });
 
   it("puts a row with several options in the group of each", () => {

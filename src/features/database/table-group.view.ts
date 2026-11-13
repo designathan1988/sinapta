@@ -52,8 +52,10 @@ function renderAddRow(group: RowGroup, context: TableContext): TemplateResult {
   }
   return html`<tr class="database__group-add" data-group-add=${group.key}>
     <td class="database__gutter"></td>
-    <td class="database__calc">
-      ${button} ${renderResult(group, first, context)}
+    <td class="database__calc" data-lead>
+      <span class="database__group-lead"
+        >${button}${renderResult(group, first, context)}</span
+      >
     </td>
     ${rest.map(
       (column) =>
