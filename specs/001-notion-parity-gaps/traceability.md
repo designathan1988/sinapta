@@ -58,9 +58,20 @@ below) rather than in files of their own.
   controls are there exactly as Pagecraft writes them; two were wrong and
   are corrected (T105): "Whole row" → "Entire row", "Search for a
   property" → "Search for a property…". The words whose menus load
-  apart (date conditions, "Show large counts as 99+", the cadence, the
-  button's actions, Move to tab, Manage in Notion Calendar) could not be
-  found that way and keep the audit's reading.
+  apart were then read by message id from Notion's own i18n
+  (`n57-catalog`, 22 220 English messages with their pt-BR text; study
+  item 39): the date conditions, Show large counts as 99+, the cadence,
+  the button's actions, Move to tab, Manage in Calendar and the rest.
+  20 differed and are corrected (T112), among them "Display as", "Only
+  applies to you", "Card background" on a board or gallery, "Select..."
+  in an empty rule value, "Starting", "Timezone", "2 Weeks", "12–3AM",
+  "Duplicate every..." (Notion drawn in English, `n57-cadence`) and
+  "Manage in Calendar". Not loaded by any menu opened, so unread by id:
+  "Date to filter by", "Related values to test", "The filter will update
+  with today's date", "How many", "Runs", "The button is clicked", the
+  next occurrence's "between 0:00 and 3:00" (its id,
+  `automations.recurrenceHelpers.dateBetweenMidnightAnd3AM`, is known),
+  and whether "Duplicate every..." ends in three dots or "…".
 - **FR-018 (keyboard)**: one pass per new control, keys only after the
   state is set, each step's focus read back and photographed:
 

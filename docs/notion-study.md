@@ -998,8 +998,8 @@ items above, found while photographing them:
     in a 356 × 28 px field, radius 6, with a magnifier; a ✋ skin tone
     button 28 × 28 px; group names 12 px, weight 500, grey; emoji 24 px in
     32 px cells, twelve to a row; at its foot "Jump to category" buttons
-    32 px: recent, People & Body, Animals & Nature, Food & Drink,
-    Activities, Travel & Places, Objects, Symbols, Flags, custom, add. Its
+    32 px: recent, People & Body, Animals & nature, Food & drink,
+    Activities, Travel & places, Objects, Symbols, Flags, custom, add. Its
     eight groups hold 518, 144, 132, 86, 218, 255, 221 and 269 emoji in
     the Unicode order; Pagecraft's list is read from it. "custom" and
     "add" (a workspace's own emoji) stay out: uploads of one's own emoji.
@@ -1043,6 +1043,45 @@ items above, found while photographing them:
     loaded (their menus load apart), so kept as the audit read them: the
     date conditions, Show large counts as 99+, the cadence words, the
     button's actions, Move to tab, Manage in Notion Calendar.
+39. **done** [T112, FR-017, `n57-catalog`, `n57-ctx`] Notion's English
+    i18n, read by message id (2026-11-13). The pt-BR catalog is
+    `window.LOCALE_SETUP.messages` (60 038 ids, from
+    `/_assets/localeSetup-pt-BR-*.js`); English has no catalog file
+    (`LOCALE_SETUP` is void for en-US): its text is the `defaultMessage`
+    of each `{id, defaultMessage}` descriptor in the code modules of
+    `window.rspackChunknotion_next`. `n57-catalog` opens the view tab,
+    settings, column, filter, New and Count menus, reads 22 220 such
+    descriptors and keeps them with their pt-BR text in
+    `.captures/notion-i18n.json` (not committed). The words item 38
+    could not find are there by id: Is relative to today, Is between,
+    Past / This / Next, day / week / month / year (lower case), Start
+    date, End date, Any / None / Every, Show large counts as 99+, This
+    improves performance for large databases., Count all … Count not
+    empty, Edit cadence, Every, At, Starting, Ending, Never, Number of
+    runs, Specific date, Timezone, Cancel recurrence, Next occurrence:,
+    Around midnight with "12–3AM", Day, Weekday, Week, 2 Weeks, Month, 3
+    Months, 6 Months, Year, Mo…Su, Edit automation, When, New action's
+    list (Add page to…, Edit pages in…, Show confirmation, Open page,
+    form, or URL, Define variables), Move to tab, Manage in Calendar,
+    Upcoming events, Display as, Only applies to you, Card background
+    (board and gallery; Page background elsewhere, read in the code),
+    Select... (an empty rule value), Select skin tone, Animals & nature,
+    Food & drink, Travel & places, You’re suggesting, Turn off
+    suggesting, New action, Edit property…. Notion once drew the page in
+    English (its locale is "pt-BR/autodetect"): the template strip's
+    button read "Duplicate every…" (`n57-cadence/03-repeat-failed`), its
+    pt-BR text "Duplicar a cada..." in three dots. Pagecraft differed in
+    20 of them; all are corrected (T112). Its list of times is
+    `maxHeight: 250` and opens at the panel's edge (T113). Still not in
+    the loaded modules, so unread by id: "Date to filter by", "Related
+    values to test", "The filter will update with today's date", the
+    cadence's "How many", "Runs", "Discard unsaved changes?" (id
+    `recurrence.confirmDiscardChanges.message`), the next occurrence's
+    words (`automations.recurrenceHelpers.dateBetweenMidnightAnd3AM`,
+    `dateFormatHelpers.text.nextDayOfTheWeek`), "The button is clicked".
+    Test data: opening a template from the list made a row (TSK-17); it
+    was moved to the trash and the test template deleted
+    (`n57-cleanup/13-check`: the list empty again, one row left).
 
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,
