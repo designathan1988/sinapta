@@ -12,10 +12,11 @@ const CHECK_EVERY_MS = 60_000;
 
 export function runTemplateRepeats(
   state: AppState,
-  today: string,
+  now: { readonly today: string; readonly time?: string },
   dispatch: Dispatch,
 ): void {
-  for (const due of selectDueRepeats(state, today)) {
+  const { today } = now;
+  for (const due of selectDueRepeats(state, today, now.time)) {
     if (due.template !== undefined) {
       const { databaseId, template } = due;
       dispatch(addRow.create({ databaseId, template, staysPut: true }));
@@ -29,9 +30,11 @@ export function startTemplateRepeats(
   dispatch: Dispatch,
 ): void {
   const check = (): void => {
-    // Today in the reader's own time zone.
-    const today = new Date().toLocaleDateString("en-CA");
-    runTemplateRepeats(store.getState(), today, dispatch);
+    // Today and the time in the reader's own time zone.
+    const date = new Date();
+    const today = date.toLocaleDateString("en-CA");
+    const time = date.toTimeString().slice(0, 5);
+    runTemplateRepeats(store.getState(), { today, time }, dispatch);
   };
   check();
   setInterval(check, CHECK_EVERY_MS);

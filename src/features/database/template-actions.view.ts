@@ -2,18 +2,9 @@
 // Notion's: Repeat, Set as default, Edit, Duplicate, and Delete, which
 // asks first.
 import { nothing, type TemplateResult } from "lit-html";
-import {
-  selectPage,
-  REPEAT_PERIODS,
-  type RepeatPeriod,
-} from "../../blocks/page/index.ts";
+import { selectPage } from "../../blocks/page/index.ts";
 import type { BlockId } from "../../model/index.ts";
-import {
-  closeChildOverlay,
-  openChildOverlay,
-  type AppState,
-  type Dispatch,
-} from "../../state/index.ts";
+import { closeChildOverlay, openChildOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderConfirm } from "../../ui/confirm/index.ts";
 import type { MenuEntry, MenuItem } from "../../ui/menu/index.ts";
@@ -26,7 +17,7 @@ import {
   selectRowTemplate,
 } from "./template.commands.ts";
 import { setDefaultTemplate } from "./template-default.commands.ts";
-import { setTemplateRepeat } from "./template-repeat.commands.ts";
+import { presetChoices, repeatSummary } from "./template-repeat.view.ts";
 
 const TEXT = COPY.database;
 
@@ -84,39 +75,19 @@ export function defaultItem(
   };
 }
 
-// How often a template repeats: off, or every day, week, month or year,
-// from the next one; also the strip's Repeat… list.
-export function repeatChoices(
-  state: AppState,
-  dispatch: Dispatch,
-  templateId: BlockId,
-): MenuEntry[] {
-  const every = selectPage(state, templateId)?.props.repeat?.every;
-  const choose = (period: RepeatPeriod | null) => (): void => {
-    const today = new Date().toLocaleDateString("en-CA");
-    dispatch(setTemplateRepeat.create({ templateId, every: period, today }));
-  };
-  return [null, ...REPEAT_PERIODS].map((period) => ({
-    label: TEXT.repeatPeriods[period ?? "off"],
-    check: "radio",
-    isChecked: (every ?? null) === period,
-    onSelect: choose(period),
-  }));
-}
-
 // "Repeat", with how often beside it.
 function repeatItem(context: TableContext, templateId: BlockId): MenuItem {
-  const { state, dispatch } = context;
-  const every = selectPage(state, templateId)?.props.repeat?.every;
+  const { state, dispatch, model } = context;
+  const repeat = selectPage(state, templateId)?.props.repeat;
   return {
     label: TEXT.templateRepeat,
     icon: "clock",
-    value: TEXT.repeatPeriods[every ?? "off"],
+    value: repeatSummary(repeat),
     submenu: {
       id: `template-repeat:${templateId}`,
       menu: () => ({
         label: TEXT.templateRepeat,
-        items: repeatChoices(state, dispatch, templateId),
+        items: presetChoices(dispatch, templateId, model.view.id),
       }),
     },
   };

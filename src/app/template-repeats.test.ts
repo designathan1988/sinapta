@@ -39,7 +39,7 @@ function state() {
 
 function run(today: string): Command[] {
   const sent: Command[] = [];
-  runTemplateRepeats(state(), today, (command) => {
+  runTemplateRepeats(state(), { today }, (command) => {
     sent.push(command);
     return { ok: true };
   });

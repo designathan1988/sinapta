@@ -4,72 +4,20 @@
 // a row of its own.
 import "./template-banner.css";
 import { html, nothing, type TemplateResult } from "lit-html";
-import { selectPage, selectPageTitle } from "../../blocks/page/index.ts";
+import { selectPageTitle } from "../../blocks/page/index.ts";
 import type { BlockId } from "../../model/index.ts";
 import {
-  closeOverlay,
-  openOverlay,
   setActivePage,
   type AppState,
   type Dispatch,
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
-import { renderMenu } from "../../ui/menu/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
-import { repeatChoices } from "./template-actions.view.ts";
+import { renderRepeatButton } from "./template-repeat.view.ts";
 import { selectTemplateDatabase } from "./template.commands.ts";
 
 const TEXT = COPY.database;
-
-export const TEMPLATE_REPEAT_OVERLAY = "template-repeat";
-
-// "Repeat…", or how often the template repeats.
-function repeatLabel(state: AppState, templateId: BlockId): string {
-  const every = selectPage(state, templateId)?.props.repeat?.every;
-  return every === undefined
-    ? TEXT.templateRepeatButton
-    : TEXT.templateRepeatEvery(TEXT.repeatPeriods[every]);
-}
-
-// Repeat…, or how often it repeats, and its list while open.
-function renderRepeat(
-  state: AppState,
-  dispatch: Dispatch,
-  templateId: BlockId,
-): TemplateResult {
-  const { overlay } = state.ui;
-  const isOpen =
-    overlay?.kind === TEMPLATE_REPEAT_OVERLAY &&
-    overlay.anchorId === templateId;
-  const label = repeatLabel(state, templateId);
-  const open = (): void => {
-    const next = { kind: TEMPLATE_REPEAT_OVERLAY, anchorId: templateId };
-    dispatch(
-      isOpen ? closeOverlay.create({}) : openOverlay.create({ overlay: next }),
-    );
-  };
-  return html`<button
-      type="button"
-      class="database__template-repeat"
-      data-overlay-anchor
-      aria-haspopup="menu"
-      aria-expanded=${String(isOpen)}
-      @click=${open}
-    >
-      <span>${label}</span>${renderIcon("chevron")}
-    </button>
-    ${
-      isOpen
-        ? renderMenu({
-            label: TEXT.templateRepeat,
-            items: repeatChoices(state, dispatch, templateId),
-            context: { overlay, dispatch },
-            onClose: () => dispatch(closeOverlay.create({})),
-          })
-        : nothing
-    }`;
-}
 
 export function renderTemplateBanner(
   state: AppState,
@@ -100,6 +48,6 @@ export function renderTemplateBanner(
       interestfor=${TOOLTIP_TARGET}
       >${renderIcon("help")}</span
     >
-    ${renderRepeat(state, dispatch, pageId)}
+    ${renderRepeatButton(state, dispatch, pageId)}
   </div>`;
 }

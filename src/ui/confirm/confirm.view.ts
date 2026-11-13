@@ -3,8 +3,9 @@
 // middle over a dimmed page, a red answer filling the width, then Cancel.
 // As a list of an open popover it keeps the popover under it.
 import "./confirm.css";
-import { html, type TemplateResult } from "lit-html";
+import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
+import { renderIcon, type IconName } from "../icon/index.ts";
 import { showPopoverWhenConnected } from "../overlay/index.ts";
 
 export interface Confirm {
@@ -14,27 +15,14 @@ export interface Confirm {
   readonly onAnswer: () => void;
   readonly onCancel: () => void;
   readonly isChild?: boolean;
+  // A mark over the question, as the trash over "Discard unsaved changes?".
+  readonly icon?: IconName;
 }
 
-export function renderConfirm(confirm: Confirm): TemplateResult {
+// The red answer, then Cancel.
+function renderAnswers(confirm: Confirm): TemplateResult {
   const { onAnswer, onCancel } = confirm;
-  return html`<div
-    class="confirm"
-    popover="manual"
-    data-overlay
-    ?data-child=${confirm.isChild === true}
-    role="alertdialog"
-    aria-label=${confirm.question}
-    ${ref(showPopoverWhenConnected)}
-    @keydown=${(event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
-      event.preventDefault();
-      event.stopPropagation();
-      onCancel();
-    }}
-  >
-    <p class="confirm__question">${confirm.question}</p>
-    <button
+  return html`<button
       type="button"
       class="button"
       data-variant="danger"
@@ -53,6 +41,32 @@ export function renderConfirm(confirm: Confirm): TemplateResult {
       @click=${onCancel}
     >
       <span>${confirm.cancel}</span>
-    </button>
+    </button>`;
+}
+
+export function renderConfirm(confirm: Confirm): TemplateResult {
+  const { onCancel } = confirm;
+  return html`<div
+    class="confirm"
+    popover="manual"
+    data-overlay
+    ?data-child=${confirm.isChild === true}
+    role="alertdialog"
+    aria-label=${confirm.question}
+    ${ref(showPopoverWhenConnected)}
+    @keydown=${(event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      event.stopPropagation();
+      onCancel();
+    }}
+  >
+    ${
+      confirm.icon === undefined
+        ? nothing
+        : html`<span class="confirm__icon">${renderIcon(confirm.icon)}</span>`
+    }
+    <p class="confirm__question">${confirm.question}</p>
+    ${renderAnswers(confirm)}
   </div>`;
 }

@@ -1,58 +1,23 @@
 // Repeating templates, as Notion's "Repeat": a template makes a row from
-// itself every day, week, month or year. The app checks which are due and
-// adds their rows; each then moves on to its next day after today.
+// itself on the days of its cadence (repeat-rule.ts). The app checks
+// which are due and adds their rows; each then moves on to its next day
+// after today, and stops after its last.
 import { selectDatabase } from "../../blocks/database/index.ts";
 import {
   selectPage,
   type PageBlock,
-  type RepeatPeriod,
+  type Repeat,
 } from "../../blocks/page/index.ts";
 import type { BlockId, Operation } from "../../model/index.ts";
 import { defineCommand, type AppState } from "../../state/index.ts";
+import { firstAfter, firstOnOrAfter } from "./repeat-rule.ts";
 import type { RowTemplate } from "./row.commands.ts";
 import {
   selectRowTemplate,
   selectTemplateDatabase,
 } from "./template.commands.ts";
 
-function at(day: string): Date {
-  return new Date(`${day}T00:00:00Z`);
-}
-
-function daysIn(year: number, month: number): number {
-  return new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
-}
-
-// The same day a month or a year on, or the month's last day when it has
-// fewer.
-function shiftMonths(day: string, months: number): string {
-  const date = at(day);
-  const total = date.getUTCMonth() + months;
-  const year = date.getUTCFullYear() + Math.floor(total / 12);
-  const month = ((total % 12) + 12) % 12;
-  const dayOfMonth = Math.min(date.getUTCDate(), daysIn(year, month));
-  return new Date(Date.UTC(year, month, dayOfMonth)).toISOString().slice(0, 10);
-}
-
-export function nextOccurrence(day: string, every: RepeatPeriod): string {
-  if (every === "month") return shiftMonths(day, 1);
-  if (every === "year") return shiftMonths(day, 12);
-  const date = at(day);
-  date.setUTCDate(date.getUTCDate() + (every === "week" ? 7 : 1));
-  return date.toISOString().slice(0, 10);
-}
-
-// The first of its days after today.
-function firstAfter(day: string, every: RepeatPeriod, today: string): string {
-  let next = day;
-  while (next <= today) next = nextOccurrence(next, every);
-  return next;
-}
-
-function repeatUpdate(
-  page: PageBlock,
-  repeat: { every: RepeatPeriod; next: string } | undefined,
-): Operation {
+function repeatUpdate(page: PageBlock, repeat: Repeat | undefined): Operation {
   const { repeat: _old, ...rest } = page.props;
   const props = repeat === undefined ? rest : { ...rest, repeat };
   return {
@@ -63,25 +28,47 @@ function repeatUpdate(
   };
 }
 
-// Sets how often a template repeats, from its next day after today, or
-// stops it.
+// What the cadence editor saves: all of a repeat but its next day and
+// the rows made so far.
+export type Cadence = Omit<Repeat, "next" | "made">;
+
+// The first day of a cadence after today, from its start.
+export function firstNext(cadence: Cadence, today: string): string {
+  const start = cadence.start ?? today;
+  const first = firstOnOrAfter(start, cadence);
+  return first > today ? first : firstAfter(first, cadence, today);
+}
+
+// Sets a template's cadence, from its first day after today, or stops it.
 export const setTemplateRepeat = defineCommand<{
   templateId: BlockId;
-  every: RepeatPeriod | null;
+  cadence: Cadence | null;
   today: string;
 }>({
   type: "template.setRepeat",
-  handle(state, { templateId, every, today }) {
+  handle(state, { templateId, cadence, today }) {
     const page = selectPage(state, templateId);
     if (page === undefined || !selectTemplateDatabase(state, templateId))
       return {};
     const repeat =
-      every === null
+      cadence === null
         ? undefined
-        : { every, next: nextOccurrence(today, every) };
+        : { ...cadence, next: firstNext(cadence, today) };
     return { operations: [repeatUpdate(page, repeat)] };
   },
 });
+
+// The repeat after one more row: its next day past today, or none after
+// its last row or its last day.
+function afterRow(repeat: Repeat, today: string): Repeat | undefined {
+  const made = (repeat.made ?? 0) + 1;
+  if (repeat.endsAfter !== undefined && made >= repeat.endsAfter) {
+    return undefined;
+  }
+  const next = firstAfter(repeat.next, repeat, today);
+  if (repeat.endsOn !== undefined && next > repeat.endsOn) return undefined;
+  return { ...repeat, next, made };
+}
 
 // After its row is made, a template's next day moves on past today.
 export const advanceRepeat = defineCommand<{
@@ -93,10 +80,15 @@ export const advanceRepeat = defineCommand<{
     const page = selectPage(state, templateId);
     const repeat = page?.props.repeat;
     if (page === undefined || repeat === undefined) return {};
-    const next = firstAfter(repeat.next, repeat.every, today);
-    return { operations: [repeatUpdate(page, { ...repeat, next })] };
+    return { operations: [repeatUpdate(page, afterRow(repeat, today))] };
   },
 });
+
+// Whether its day has come: a day gone by, or today at its time.
+function isDue(repeat: Repeat, today: string, time: string): boolean {
+  if (repeat.next < today) return true;
+  return repeat.next === today && (repeat.time ?? "00:00") <= time;
+}
 
 export interface DueRepeat {
   readonly templateId: BlockId;
@@ -104,14 +96,18 @@ export interface DueRepeat {
   readonly template: RowTemplate | undefined;
 }
 
-// The templates whose next day has come.
-export function selectDueRepeats(state: AppState, today: string): DueRepeat[] {
+// The templates whose next day, and time on it, has come.
+export function selectDueRepeats(
+  state: AppState,
+  today: string,
+  time = "23:59",
+): DueRepeat[] {
   return Object.values(state.workspace.blocks).flatMap((block) => {
     const database = selectDatabase(state, block.id);
     if (database === undefined) return [];
     return database.props.templateIds.flatMap((templateId) => {
-      const next = selectPage(state, templateId)?.props.repeat?.next;
-      if (next === undefined || next > today) return [];
+      const repeat = selectPage(state, templateId)?.props.repeat;
+      if (repeat === undefined || !isDue(repeat, today, time)) return [];
       const template = selectRowTemplate(state, templateId);
       return [{ templateId, databaseId: database.id, template }];
     });

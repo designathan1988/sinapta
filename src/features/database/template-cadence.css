@@ -1,0 +1,110 @@
+@layer features {
+  /* Notion's "Edit cadence": a panel under Repeat…, its title quiet with
+     a blue Save at its end, rows of a label and a value, round weekday
+     chips (the chosen ones blue), dividers, and the next occurrence in
+     small quiet words. */
+  .cadence {
+    display: grid;
+    gap: var(--space-stack-xs);
+    inline-size: var(--size-menu-width);
+    padding: var(--space-inset-sm) var(--space-inset-md);
+    font-weight: var(--font-weight-regular);
+  }
+
+  .cadence__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+  }
+
+  .cadence__save {
+    padding: var(--space-none);
+    border: none;
+    background: none;
+    color: var(--color-accent-default);
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+  }
+
+  .cadence__row {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    justify-content: space-between;
+    min-block-size: var(--size-control-sm);
+
+    &[data-select] > .select {
+      flex: 1;
+      margin-inline: calc(-1 * var(--space-inset-xs));
+    }
+  }
+
+  .cadence__label {
+    flex: 1;
+  }
+
+  .cadence__value {
+    color: var(--color-text-secondary);
+  }
+
+  .cadence__number {
+    inline-size: var(--size-control-md);
+    padding: var(--space-inset-xxs) var(--space-inset-xs);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-sm);
+    background: none;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  .cadence__weekdays {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .cadence__weekday {
+    inline-size: var(--size-control-md);
+    block-size: var(--size-control-md);
+    padding: var(--space-none);
+    border: none;
+    border-radius: 50%;
+    background-color: var(--color-bg-hover);
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: var(--font-size-xs);
+    cursor: pointer;
+
+    &[aria-pressed="true"] {
+      background-color: var(--color-accent-fill);
+      color: var(--color-text-on-accent);
+    }
+  }
+
+  .cadence__divider {
+    inline-size: 100%;
+    margin: var(--space-none);
+    border: none;
+    border-block-start: var(--size-border-thin) solid var(--color-border-subtle);
+  }
+
+  .cadence__cancel {
+    padding: var(--space-inset-xxs) var(--space-none);
+    border: none;
+    background: none;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .cadence__next {
+    margin: var(--space-none);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+  }
+}

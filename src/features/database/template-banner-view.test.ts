@@ -3,10 +3,8 @@ import { render } from "lit-html";
 import { describe, expect, it } from "vitest";
 import type { Command } from "../../state/index.ts";
 import { createDatabaseApp } from "./database-builder.ts";
-import {
-  renderTemplateBanner,
-  TEMPLATE_REPEAT_OVERLAY,
-} from "./template-banner.view.ts";
+import { renderTemplateBanner } from "./template-banner.view.ts";
+import { TEMPLATE_REPEAT_OVERLAY } from "./template-repeat.view.ts";
 import { addTemplate } from "./template.commands.ts";
 
 // A template's strip, with its Repeat… list open or not.
@@ -49,17 +47,17 @@ describe("the template strip", () => {
     ]);
   });
 
-  it("opens Repeat… and repeats the template weekly from it", () => {
+  it("opens Repeat…, and a choice there starts a cadence to edit", () => {
     const closed = rendered();
     closed.host
       .querySelector<HTMLElement>(".database__template-repeat")
       ?.click();
     const open = rendered(true);
-    const weekly = [
+    const week = [
       ...open.host.querySelectorAll<HTMLElement>("[role^=menuitem]"),
-    ].find((row) => row.textContent.trim() === "Weekly");
+    ].find((row) => row.textContent.trim() === "2 weeks");
 
-    weekly?.click();
+    week?.click();
 
     expect(closed.sent).toEqual([
       expect.objectContaining({
@@ -70,8 +68,11 @@ describe("the template strip", () => {
         },
       }),
     ]);
-    expect(open.sent).toContainEqual(
-      expect.objectContaining({ type: "template.setRepeat", every: "week" }),
+    expect(open.sent).toEqual([
+      expect.objectContaining({ type: "ui.setOverlayValues", name: "cadence" }),
+    ]);
+    expect(open.sent[0]?.values).toEqual(
+      expect.arrayContaining(["every=week", "interval=2"]),
     );
   });
 });

@@ -41,6 +41,15 @@
     }
   }
 
+  .confirm__icon {
+    justify-self: center;
+
+    & > .icon {
+      inline-size: var(--size-icon-md);
+      block-size: var(--size-icon-md);
+    }
+  }
+
   .confirm__question {
     margin: var(--space-none) var(--space-none) var(--space-stack-sm);
     color: var(--color-text-primary);

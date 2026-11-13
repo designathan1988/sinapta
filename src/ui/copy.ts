@@ -3,6 +3,7 @@
 // place the rest of the app reads it from.
 import {
   BLOCK_TEXT,
+  CADENCE_TEXT,
   DATABASE_MENU_TEXT,
   DATABASE_OPTIONS_TEXT,
   DATABASE_TEXT,
@@ -27,6 +28,7 @@ export const COPY = {
   ...TEMPLATE_TEXT,
   ...SETTINGS_TEXT,
   ...SIDEBAR_VIEWS_TEXT,
+  ...CADENCE_TEXT,
   database: {
     ...DATABASE_TEXT.database,
     ...DATABASE_MENU_TEXT,

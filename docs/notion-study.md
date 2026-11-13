@@ -907,7 +907,7 @@ items above, found while photographing them:
     first (as Notion does for numbers: "Sem Número" first) — now text
     lists it last and numbers and options first.
 
-25. **open** [T061–T064, FR-027] Database templates, as Notion's
+25. **done** [T061–T066, FR-027, FR-028] Database templates, as Notion's
     (`n48-template-probe`, `n48-template-measure`, `n48-repeat-probe`):
     - "Novo modelo" opens the template in a center peek (the row peek's
       center frame, 975 wide, only Expand at its top left), not as a full
@@ -922,7 +922,12 @@ items above, found while photographing them:
       [week ⌄]", the weekday chips Mon–Sun (one ticked, blue) for weeks,
       At "Around midnight" ›, Start "tomorrow" ›, Ending "Never" ›, Time
       zone ›, "Cancel recurrence", and "Next occurrence: next Mon between
-      0h and 3h". Escape leaves without saving.
+      0h and 3h". Escape leaves without saving: with a change it asks
+      "Discard unsaved changes?" (a trash mark, a red Discard, Cancel).
+      The unit lists day, week, month, year; At lists "Around midnight"
+      (0h–3h), then 3:15 to 23:45 every quarter hour; Start opens a month
+      calendar; Ending lists Never, Number of runs, Specific date
+      (`n49-cadence`).
     - A template's "…" lists Repeat… (Off ⌄), Set as default, Edit,
       Duplicate, Delete. Delete asks first in the window's middle over a
       dimmed page: "Delete this template?", a red Delete filling the

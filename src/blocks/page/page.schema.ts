@@ -60,14 +60,34 @@ export const discussionSchema = v.object({
 
 export type Discussion = v.InferOutput<typeof discussionSchema>;
 
-// How often a template makes a row, as Notion's "Repeat".
+// How often a template makes a row, as Notion's "Repeat": every
+// interval days, weeks (on some weekdays), months or years.
 export const REPEAT_PERIODS = ["day", "week", "month", "year"] as const;
+
+const daySchema = v.pipe(v.string(), v.regex(/^\d{4}-\d{2}-\d{2}$/));
+const countSchema = v.pipe(v.number(), v.integer(), v.minValue(1));
 
 const repeatSchema = v.object({
   every: v.picklist(REPEAT_PERIODS),
   // The next day it makes a row, "2026-11-12".
-  next: v.pipe(v.string(), v.regex(/^\d{4}-\d{2}-\d{2}$/)),
+  next: daySchema,
+  // Every this many units; one when missing.
+  interval: v.optional(v.pipe(countSchema, v.maxValue(99))),
+  // For weeks, the weekdays it makes a row on, 0 for Monday to 6.
+  weekdays: v.optional(
+    v.array(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(6))),
+  ),
+  // The time of day, "09:15"; around midnight when missing.
+  time: v.optional(v.pipe(v.string(), v.regex(/^\d{2}:\d{2}$/))),
+  // The first day it may make a row, which the weeks count from.
+  start: v.optional(daySchema),
+  // It stops after this many rows, counted in made, or after this day.
+  endsAfter: v.optional(countSchema),
+  made: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
+  endsOn: v.optional(daySchema),
 });
+
+export type Repeat = v.InferOutput<typeof repeatSchema>;
 
 export const pagePropsSchema = v.object({
   title: richTextSchema,

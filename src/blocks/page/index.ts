@@ -50,6 +50,7 @@ export {
   pagePropsSchema,
   REPEAT_PERIODS,
   type PageBlock,
+  type Repeat,
   type RepeatPeriod,
   type PageFont,
   type Discussion,

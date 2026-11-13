@@ -64,17 +64,21 @@ describe("the templates menu", () => {
     ]);
   });
 
-  it("repeats a template weekly from its Repeat list", () => {
-    const { sent, item, templateId } = rendered("template-repeat");
+  it("opens the template with a weekly cadence to edit from Repeat", () => {
+    const { app, sent, item, templateId } = rendered("template-repeat");
 
-    item("Weekly")?.click();
+    item("Week")?.click();
 
-    expect(sent).toContainEqual(
-      expect.objectContaining({
-        type: "template.setRepeat",
-        templateId,
-        every: "week",
-      }),
+    expect(sent.map((command) => command.type)).toEqual([
+      "ui.closeOverlay",
+      "template.edit",
+      "ui.openOverlay",
+      "ui.setOverlayValues",
+    ]);
+    expect(sent[1]).toMatchObject({ templateId, viewId: app.view().id });
+    expect(sent[3]).toMatchObject({ name: "cadence" });
+    expect(sent[3]?.values).toEqual(
+      expect.arrayContaining(["every=week", "interval=1"]),
     );
   });
 });
