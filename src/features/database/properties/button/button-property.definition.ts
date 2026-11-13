@@ -16,7 +16,9 @@ function renderButtonCell(
   _value: unknown,
   property: PropertyDefinition,
 ): TemplateResult {
-  return html`<span class="button-property">${buttonLabel(property)}</span>`;
+  return html`<span class="button-property" data-action="press"
+    >${buttonLabel(property)}</span
+  >`;
 }
 
 export const buttonProperty: PropertyType = {

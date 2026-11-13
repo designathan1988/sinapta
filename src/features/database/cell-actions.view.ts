@@ -107,13 +107,14 @@ function renderCommentButton(
 }
 
 // The bar, over the cell's start; it shows while the cell is pointed at,
-// and stays while one of its popovers is open.
+// and stays while one of its popovers is open. A button's cell has none:
+// a press there presses the button.
 export function renderCellActions(
   row: TableRow,
   column: TableColumn,
   context: TableContext,
 ): TemplateResult | typeof nothing {
-  if (column.isTitle) return nothing;
+  if (column.isTitle || column.property.type === "button") return nothing;
   const { state, dispatch } = context;
   const target = valueTarget(row.id, row.values, column.property);
   return html`<span class="database__cell-actions" data-cell-actions>

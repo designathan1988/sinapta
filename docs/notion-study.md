@@ -938,6 +938,27 @@ items above, found while photographing them:
     Each probe's template was deleted after (`n48-template-check`: the
     menu back to its line and New template).
 
+26. **done** [T067, FR-029] Files cell (`n50-files-probe`): the cell turns
+    to "+ Add file or image" and a 300-wide popover opens with the tabs
+    Upload and Link (the chosen one underlined); Upload is a blue "Upload
+    file" button filling the width (a folder mark beside it) over "or
+    Ctrl+V to paste an image"; Link is a "Paste https://…" field, focused,
+    over a blue "Link" button. Pagecraft drew the browser's own file
+    field ("Escolher arquivo"), now the tabs; a press on a button cell
+    presses it at once, and a button's cell has no comment/copy bar.
+27. **open** [T068–T071, FR-030] Button property (`n51-button`): its
+    column menu is Edit automation, Property access, Change type,
+    Freeze, Hide, Insert left, Insert right, Duplicate property, Delete
+    property (no filter, sort, calculation, wrap or move). Edit
+    automation opens a dialog in the window's middle titled with the
+    button's name: "When: The button is clicked", a connecting line,
+    "Do: + New action", a blue Save filling the width, a close ×. New
+    action lists Edit property…, Add page to…, Edit pages in…, Send
+    notification to… (people, out), Show confirmation, Open page, form
+    or URL, Send message to agent (AI, out), Define variables, and
+    "Available on Plus": Send email…, Send webhook, Send Slack
+    notification to… (out). Nothing was saved (Escape, then the menu).
+
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,
 `n45-history/04-updates`: "Há 4 horas", ID 1, Nome, the box ticked). A

@@ -68,4 +68,9 @@ export const DATABASE_OPTIONS_TEXT = {
   deleteColorRule: "Delete color setting",
   colorTargets: { background: "Background", text: "Text" },
   noColorRules: "No color settings yet.",
+  // The files popover's tabs, as Notion's.
+  pasteImage: "or Ctrl+V to paste an image",
+  pasteLink: "Paste https://…",
+  linkFile: "Link",
+  filesTabs: { upload: "Upload", link: "Link" },
 } as const;

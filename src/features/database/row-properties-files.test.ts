@@ -28,6 +28,9 @@ describe("files on the row's page", () => {
 
     link.value = "https://example.com/brief.pdf";
     link.dispatchEvent(new Event("change", { bubbles: true }));
+    link.form?.dispatchEvent(
+      new SubmitEvent("submit", { bubbles: true, cancelable: true }),
+    );
 
     const values = selectPage(app.store.getState(), rowId)?.props.values;
     expect(values?.[propertyId]).toEqual([

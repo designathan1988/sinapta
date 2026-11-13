@@ -1,0 +1,52 @@
+@layer features {
+  /* Notion's files popover: the files, then the tabs Upload and Link
+     underlined when chosen, and under them a blue button filling the
+     width, with a quiet hint or the link's field above it. */
+  .files__editor {
+    display: grid;
+    gap: var(--space-stack-xs);
+    inline-size: var(--size-menu-width);
+  }
+
+  .files__tabs {
+    display: flex;
+    gap: var(--space-inline-md);
+    padding: var(--space-none) var(--space-inset-xs);
+    border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
+  }
+
+  .files__tab {
+    padding: var(--space-inset-xs) var(--space-none);
+    border: none;
+    border-block-end: var(--size-border-thick) solid transparent;
+    background: none;
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+
+    &[aria-selected="true"] {
+      border-block-end-color: var(--color-text-primary);
+      color: var(--color-text-primary);
+    }
+  }
+
+  .files__panel {
+    display: grid;
+    gap: var(--space-stack-xs);
+    padding: var(--space-inset-xs);
+  }
+
+  .files__upload {
+    inline-size: 100%;
+    min-block-size: var(--size-control-action);
+    cursor: pointer;
+  }
+
+  .files__hint {
+    margin: var(--space-none);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    text-align: center;
+  }
+}

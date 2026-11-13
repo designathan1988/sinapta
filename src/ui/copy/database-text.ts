@@ -74,7 +74,7 @@ export const DATABASE_TEXT = {
     idPrefix: "Prefix",
     addLink: "Paste a link to a file",
     invalidLink: "Use a link that starts with https://.",
-    uploadFile: "Upload a file",
+    uploadFile: "Upload file",
     removeFile: "Remove",
     files: "Files",
     relatedTo: "Related to",

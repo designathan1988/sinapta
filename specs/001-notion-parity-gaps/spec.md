@@ -295,6 +295,19 @@ after reload and applies only to that view.
   rows MUST then be made on those days while the app is open, as the
   simple repeat was.
 
+- **FR-029**: A files cell MUST open Notion's popover: the tabs Upload
+  (a button that chooses a file, and Ctrl+V to paste an image) and Link
+  (a focused field and a Link button); a press on a button cell MUST
+  press it at once, with no comment or copy bar over it.
+
+- **FR-030**: A button property MUST be set up as Notion's automation:
+  its column menu MUST offer Edit automation, Change type, Freeze, Hide,
+  Insert left, Insert right, Duplicate property and Delete property;
+  Edit automation MUST open a dialog with "When: The button is clicked"
+  and "Do" with the actions Edit property, Add page to, Edit pages in,
+  Show confirmation, Open page or URL and Define variables, run in order
+  when the button is pressed, and Save.
+
 **Quality bar**
 
 - **FR-017**: Every interface text MUST use Notion's English words as

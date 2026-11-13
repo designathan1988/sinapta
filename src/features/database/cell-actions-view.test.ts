@@ -76,3 +76,53 @@ describe("a value cell's bar", () => {
     expect(title?.querySelector("[data-cell-actions]")).toBeNull();
   });
 });
+
+describe("a button's cell", () => {
+  it("has no bar over its button", () => {
+    const app = createDatabaseApp([{ name: "Go", type: "button" }], [["A"]]);
+    const [rowId] = app.rowIds;
+    const [go] = app.propertyIds;
+    if (rowId === undefined || go === undefined) throw new Error("setup");
+    const host = document.createElement("div");
+    document.body.replaceChildren(host);
+
+    render(
+      renderDatabase(app.store.getState(), () => ({ ok: true })),
+      host,
+    );
+
+    const cell = host.querySelector(`[data-cell="${rowId}:${go}"]`);
+    expect(cell).not.toBeNull();
+    expect(cell?.querySelector("[data-cell-actions]")).toBeNull();
+  });
+});
+
+describe("a press on a button's cell", () => {
+  it("presses the button at once, as Notion's", () => {
+    const app = createDatabaseApp([{ name: "Go", type: "button" }], [["A"]]);
+    const [rowId] = app.rowIds;
+    const [go] = app.propertyIds;
+    if (rowId === undefined || go === undefined) throw new Error("setup");
+    const sent: Command[] = [];
+    const host = document.createElement("div");
+    document.body.replaceChildren(host);
+    render(
+      renderDatabase(app.store.getState(), (command) => {
+        sent.push(command);
+        return { ok: true };
+      }),
+      host,
+    );
+
+    host
+      .querySelector<HTMLElement>(
+        `[data-cell="${rowId}:${go}"] [data-action=press]`,
+      )
+      ?.click();
+
+    expect(sent).toContainEqual(
+      expect.objectContaining({ rowId, propertyId: go }),
+    );
+    expect(sent.map((command) => command.type)).toContain("row.pressButton");
+  });
+});

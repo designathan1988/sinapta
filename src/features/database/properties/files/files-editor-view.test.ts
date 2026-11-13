@@ -42,7 +42,9 @@ describe("renderFilesEditor", () => {
     const link = field("link");
 
     link.value = "https://example.com/docs/report%20q3.pdf";
-    link.dispatchEvent(new Event("change", { bubbles: true }));
+    link.form?.dispatchEvent(
+      new SubmitEvent("submit", { bubbles: true, cancelable: true }),
+    );
 
     expect(changes).toEqual([
       [
@@ -59,7 +61,9 @@ describe("renderFilesEditor", () => {
     const link = field("link");
 
     link.value = "javascript:alert(1)";
-    link.dispatchEvent(new Event("change", { bubbles: true }));
+    link.form?.dispatchEvent(
+      new SubmitEvent("submit", { bubbles: true, cancelable: true }),
+    );
 
     expect(changes).toEqual([]);
     expect(link.getAttribute("aria-invalid")).toBe("true");

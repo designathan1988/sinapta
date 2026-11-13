@@ -200,6 +200,11 @@ export function onBodyClick(event: MouseEvent, context: TableContext): void {
     );
     return;
   }
+  // A button presses at once, as Notion's.
+  if (target.closest("[data-action=press]") !== null) {
+    startEditing(cell, context);
+    return;
+  }
   const wasActive = target.closest("[data-pressed-active]") !== null;
   // A press on the cell that was already active, or a double click, edits.
   if (wasActive || event.detail > 1) startEditing(cell, context);
