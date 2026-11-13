@@ -50,5 +50,9 @@ describe("renderTiles", () => {
     const { tiles } = draw("number");
 
     expect(tiles.every((tile) => tile.type === "button")).toBe(true);
+    // A menu's arrows stop on each tile.
+    expect(tiles.every((tile) => tile.hasAttribute("data-arrow-stop"))).toBe(
+      true,
+    );
   });
 });

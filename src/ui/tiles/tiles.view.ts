@@ -1,6 +1,7 @@
 // Pictured tiles: a choice drawn as tiles, each a picture over its name,
 // three to a row, the chosen one ringed in blue, as Notion's layout and
-// number "Show as" choices.
+// number "Show as" choices. Inside a menu each tile is a stop of the
+// arrows, as its rows are.
 import "./tiles.css";
 import { html, type TemplateResult } from "lit-html";
 
@@ -26,6 +27,7 @@ export function renderTiles<T extends string>(
         html`<button
           type="button"
           class="tiles__tile"
+          data-arrow-stop
           aria-pressed=${String(tile.value === props.current)}
           @click=${() => {
             props.onPick(tile.value);

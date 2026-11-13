@@ -11,17 +11,33 @@ import {
   closeOpenChild,
   hasSubmenu,
   isMoreOpen,
+  isSubmenuOpen,
   openSubmenu,
   toggleMore,
   type MenuContext,
 } from "./menu-submenu.ts";
 
-const ITEMS = "[data-index]:not(:disabled)";
+// The rows, and the controls drawn above or below them, as a layout
+// panel's tiles or a color rule's fields and buttons, in the order they
+// show; not the header's back and close, nor what sits inside a row.
+const STOPS =
+  "[data-index], [data-arrow-stop], button, input[type=text], textarea";
+const ROW_STOPS = "[data-index], [data-arrow-stop]";
+const NOT_STOPS = "[role=menu], [role=listbox], .menu__header, .menu__search";
 
-// The menu's own rows, not those of a submenu drawn inside it.
+// Whether a control sits inside this menu's own list, header or search:
+// a submenu drawn inside its parent's list is not inside that list.
+function isInsideOwnPart(stop: Element, menu: Element): boolean {
+  const part = stop.closest(NOT_STOPS);
+  return part !== null && menu.contains(part);
+}
+
 function ownRows(menu: Element): HTMLElement[] {
-  return [...menu.querySelectorAll<HTMLElement>(ITEMS)].filter(
-    (row) => row.closest(".menu") === menu,
+  return [...menu.querySelectorAll<HTMLElement>(STOPS)].filter(
+    (stop) =>
+      stop.closest(".menu") === menu &&
+      !stop.matches(":disabled") &&
+      (stop.matches(ROW_STOPS) || !isInsideOwnPart(stop, menu)),
   );
 }
 
@@ -103,7 +119,17 @@ function openBeside(
     return true;
   }
   if (!hasSubmenu(item)) return false;
+  if (isSubmenuOpen(item, choosing.context)) return focusOpenSubmenu(row);
   openSubmenu(item, choosing.context, row);
+  return true;
+}
+
+// A submenu already open, as a new property's settings, is drawn right
+// after its row; the right arrow takes the focus to its first stop.
+function focusOpenSubmenu(row: HTMLElement): boolean {
+  const submenu = row.nextElementSibling;
+  if (submenu?.matches(".menu") !== true) return false;
+  ownRows(submenu)[0]?.focus();
   return true;
 }
 
@@ -122,14 +148,22 @@ function isOwnField(target: EventTarget | null): boolean {
   return isField && target.closest(".menu__search") === null;
 }
 
-// A one-line text field at the menu's head, as a view's or a property's
-// name, keeps its typing keys; the arrows go on to the rows below it and
-// Tab closes the menu, as from a row, so the focus never leaves for the
-// page behind.
+// A text field in a menu, as a view's or a property's name or a
+// description, keeps its typing keys; the arrows go on to the next stop,
+// a longer text's only from its first or last character, and Tab closes
+// the menu, as from a row, so the focus never leaves for the page behind.
+function leavesByArrow(target: EventTarget | null, key: string): boolean {
+  if (target instanceof HTMLInputElement) return target.type === "text";
+  if (!(target instanceof HTMLTextAreaElement)) return false;
+  const { selectionStart, selectionEnd, value } = target;
+  if (key === "ArrowUp") return selectionEnd === 0;
+  return selectionStart === value.length;
+}
+
 function keepsKey(target: EventTarget | null, key: string): boolean {
   if (key === "Escape" || key === "Tab") return false;
-  const isLine = target instanceof HTMLInputElement && target.type === "text";
-  return !(isLine && (key === "ArrowDown" || key === "ArrowUp"));
+  const isArrow = key === "ArrowDown" || key === "ArrowUp";
+  return !(isArrow && leavesByArrow(target, key));
 }
 
 // Escape closes a submenu open beside the menu first, then the menu; Tab

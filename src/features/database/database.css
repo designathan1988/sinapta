@@ -138,6 +138,12 @@
       background-color: var(--color-bg-hover);
     }
 
+    /* The open field shows the focus ring of every other control. */
+    &:has(input:focus-visible) {
+      outline: var(--size-focus-width) solid var(--color-border-focus);
+      outline-offset: var(--size-focus-offset);
+    }
+
     @media (prefers-reduced-motion: reduce) {
       & input {
         transition: none;

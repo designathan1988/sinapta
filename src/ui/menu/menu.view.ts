@@ -180,8 +180,11 @@ function choosingOf(
   items: readonly MenuEntry[],
 ): Choosing {
   const { onDone } = options;
+  // A submenu gives the focus back to its row; a menu, to what opened it,
+  // even while one of its submenus is open.
+  const isWhole = options.placement !== "beside";
   const close = (): void => {
-    focusOverlayAnchor();
+    focusOverlayAnchor({ isWhole });
     options.onClose();
   };
   const done =

@@ -1,5 +1,7 @@
 import "./button.css";
 import { html, nothing, type TemplateResult } from "lit-html";
+import { ref } from "lit-html/directives/ref.js";
+import { focusOnce } from "../focus/index.ts";
 import { renderIcon, type IconName } from "../icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../tooltip/index.ts";
 
@@ -10,6 +12,8 @@ export interface ButtonOptions {
   // Show only the icon; the label stays as the accessible name.
   readonly isIconOnly?: boolean;
   readonly variant?: "quiet" | "primary" | "danger";
+  // Takes the focus when the menu or panel that holds it opens.
+  readonly takesFocus?: boolean;
 }
 
 export function renderButton(options: ButtonOptions): TemplateResult {
@@ -18,6 +22,8 @@ export function renderButton(options: ButtonOptions): TemplateResult {
     type="button"
     class="button"
     data-variant=${options.variant ?? "quiet"}
+    ?data-autofocus=${options.takesFocus === true}
+    ${options.takesFocus === true ? ref(focusOnce) : nothing}
     aria-label=${isIconOnly ? options.label : nothing}
     title=${isIconOnly ? tooltipTitle(options.label) : nothing}
     interestfor=${isIconOnly ? TOOLTIP_TARGET : nothing}

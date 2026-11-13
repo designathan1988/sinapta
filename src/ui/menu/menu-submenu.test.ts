@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import { render } from "lit-html";
+import { html, render } from "lit-html";
 import { describe, expect, it } from "vitest";
 import type { Command, OpenOverlay } from "../../state/index.ts";
 import { renderMenu, type MenuItem } from "./index.ts";
@@ -140,5 +140,109 @@ describe("a menu row with a submenu", () => {
     );
 
     expect(document.activeElement).toBe(row("Change type"));
+  });
+});
+
+describe("a row whose submenu is already open", () => {
+  it("takes the focus into it on the right arrow", () => {
+    const { host, row } = rendered(OPEN);
+    const change = row("Change type");
+    change.focus();
+
+    change.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true }),
+    );
+
+    const first = host.querySelector(".menu .menu [data-index]");
+    expect(document.activeElement).toBe(first);
+  });
+});
+
+describe("an open submenu drawn inside its parent's list", () => {
+  it("lets the arrows reach the controls above its rows", () => {
+    const sent: Command[] = [];
+    const dispatch = (command: Command) => {
+      sent.push(command);
+      return { ok: true } as const;
+    };
+    const items: MenuItem[] = [
+      {
+        label: "Edit property",
+        submenu: {
+          id: "p1-edit",
+          menu: () => ({
+            label: "Settings",
+            lead: html`<button type="button" class="format">
+                Number format
+              </button>
+              <button type="button" data-arrow-stop class="tile">Ring</button>`,
+            items: [],
+          }),
+        },
+      },
+    ];
+    const host = document.createElement("div");
+    document.body.replaceChildren(host);
+    const overlay = { ...COLUMN, children: [{ anchorId: "p1-edit" }] };
+    render(
+      renderMenu({
+        label: "Column",
+        items,
+        onClose: noop,
+        context: { overlay, dispatch },
+      }),
+      host,
+    );
+    const format = host.querySelector<HTMLElement>(".format");
+    const tile = host.querySelector<HTMLElement>(".tile");
+    tile?.focus();
+
+    tile?.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }),
+    );
+
+    expect(document.activeElement).toBe(format);
+  });
+});
+
+describe("a choice in a menu whose submenu is open", () => {
+  it("gives the focus back to the control that opened the menu", () => {
+    const sent: Command[] = [];
+    const dispatch = (command: Command) => {
+      sent.push(command);
+      return { ok: true } as const;
+    };
+    const items: MenuItem[] = [
+      {
+        label: "Edit property",
+        submenu: {
+          id: "p1-edit",
+          menu: () => ({ label: "Settings", items: [] }),
+        },
+      },
+      { label: "Freeze", onSelect: noop },
+    ];
+    const header = document.createElement("button");
+    header.setAttribute("data-overlay-anchor", "");
+    header.setAttribute("aria-expanded", "true");
+    const host = document.createElement("div");
+    document.body.replaceChildren(header, host);
+    const overlay = { ...COLUMN, children: [{ anchorId: "p1-edit" }] };
+    render(
+      renderMenu({
+        label: "Column",
+        items,
+        onClose: noop,
+        context: { overlay, dispatch },
+      }),
+      host,
+    );
+    const freeze = [...host.querySelectorAll<HTMLElement>("[data-index]")].find(
+      (row) => row.textContent.trim() === "Freeze",
+    );
+
+    freeze?.click();
+
+    expect(document.activeElement).toBe(header);
   });
 });

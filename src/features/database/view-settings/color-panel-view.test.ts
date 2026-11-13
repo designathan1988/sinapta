@@ -51,6 +51,10 @@ describe("the Conditional color panel", () => {
     const { host, sent, viewId, button } = rendered();
 
     expect(host.textContent).toContain("Customize page colors");
+    // With no rows, New color setting is what the panel focuses first.
+    expect(button("New color setting")?.hasAttribute("data-autofocus")).toBe(
+      true,
+    );
     button("New color setting")?.click();
 
     expect(sent).toEqual([
