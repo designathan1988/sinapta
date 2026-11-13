@@ -20,6 +20,9 @@
       "hoverStrong": {
         "$value": "{base.color.night.hoverStrong}"
       },
+      "change": {
+        "$value": "{base.color.night.changeWash}"
+      },
       "active": {
         "$value": "{base.color.night.active}"
       },

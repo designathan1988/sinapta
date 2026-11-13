@@ -96,7 +96,7 @@ export const WORKSPACE_TEXT = {
     open: "Trash",
     title: "Trash",
     close: "Close trash",
-    empty: "The trash is empty.",
+    empty: "No results",
     search: "Search pages in the trash",
     in: "In",
     anywhere: "In any page",

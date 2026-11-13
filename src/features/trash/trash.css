@@ -64,14 +64,18 @@
     font-size: var(--font-size-xs);
   }
 
+  /* The note stays at the panel's foot, as Notion's. */
   .trash__note {
-    margin: var(--space-none);
+    margin: auto var(--space-none) var(--space-none);
     color: var(--color-text-tertiary);
     font-size: var(--font-size-xs);
   }
 
+  /* "No results" in the middle of the panel, as Notion's. */
   .trash__empty {
-    color: var(--color-text-secondary);
+    margin-block: auto;
+    color: var(--color-text-tertiary);
+    text-align: center;
   }
 
   .trash__confirm {

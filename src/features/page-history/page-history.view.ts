@@ -19,6 +19,10 @@ import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderDialog } from "../../ui/dialog/index.ts";
 import { restorePageVersion } from "./page-history.commands.ts";
+import {
+  selectVersionChanges,
+  type BlockChange,
+} from "./page-history.selectors.ts";
 
 const TEXT = COPY.pageHistory;
 
@@ -29,14 +33,34 @@ const WHEN = new Intl.DateTimeFormat("en-US", {
   minute: "2-digit",
 });
 
-function renderLine(block: Block): TemplateResult | typeof nothing {
+// A line's text, with the words the version wrote marked.
+function renderText(
+  text: string,
+  change: BlockChange | undefined,
+): TemplateResult | string {
+  if (change === undefined) return text;
+  if (change.kind === "new")
+    return html`<mark class="page-history__change">${text}</mark>`;
+  return html`${text.slice(0, change.start)}<mark class="page-history__change"
+      >${text.slice(change.start, change.end)}</mark
+    >${text.slice(change.end)}`;
+}
+
+function renderLine(
+  block: Block,
+  changes: ReadonlyMap<BlockId, BlockChange>,
+): TemplateResult | typeof nothing {
   if (isPageLike(block)) return nothing;
+  const text = isTextBlock(block) ? textOf(block) : "";
   return html`<p class="page-history__line" data-type=${block.type}>
-    ${isTextBlock(block) ? textOf(block) : ""}
+    ${renderText(text, changes.get(block.id))}
   </p>`;
 }
 
-function renderPreview(version: PageVersion): TemplateResult {
+function renderPreview(
+  version: PageVersion,
+  changes: ReadonlyMap<BlockId, BlockChange>,
+): TemplateResult {
   const [page, ...blocks] = version.blocks;
   const title =
     page === undefined || !isPageLike(page) ? "" : selectPageTitle(page);
@@ -44,7 +68,7 @@ function renderPreview(version: PageVersion): TemplateResult {
     <h3 class="page-history__title">
       ${title === "" ? COPY.sidebar.untitled : title}
     </h3>
-    ${blocks.map(renderLine)}
+    ${blocks.map((block) => renderLine(block, changes))}
   </section>`;
 }
 
@@ -103,11 +127,12 @@ function renderBody(
     dispatch(closeOverlay.create({}));
     announce(TEXT.restored);
   };
-  return html`${renderPreview(chosen)}
-    <div class="page-history__side">
+  const changes = selectVersionChanges(versions, activeIndex);
+  return html`<div class="page-history__side">
       ${renderVersions(versions, activeIndex, choose)}
       ${renderButton({ label: TEXT.restore, variant: "primary", onClick: restore })}
-    </div>`;
+    </div>
+    ${renderPreview(chosen, changes)}`;
 }
 
 export function renderPageHistory(
@@ -120,9 +145,8 @@ export function renderPageHistory(
   return renderDialog({
     title: TEXT.title,
     closeLabel: TEXT.close,
-    variant: "search",
+    variant: "full",
     content: html`<div class="page-history">
-      <h2 class="page-history__heading">${TEXT.title}</h2>
       ${renderBody(state, pageId, dispatch)}
     </div>`,
     onClose: () => dispatch(closeOverlay.create({})),

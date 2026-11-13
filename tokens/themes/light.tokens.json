@@ -20,6 +20,9 @@
       "hoverStrong": {
         "$value": "{base.color.day.hoverStrong}"
       },
+      "change": {
+        "$value": "{base.color.day.changeWash}"
+      },
       "active": {
         "$value": "{base.color.day.active}"
       },

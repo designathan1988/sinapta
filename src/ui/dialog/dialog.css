@@ -54,6 +54,7 @@
      sidebar, over the page without dimming it. */
   .dialog[data-variant="panel"] {
     inline-size: min(var(--size-panel-width), 100% - var(--size-search-margin));
+    block-size: min(var(--size-panel-height), 100% - var(--size-search-margin));
     max-block-size: min(
       var(--size-menu-max-height),
       100% - var(--size-search-margin)
@@ -68,8 +69,39 @@
       background-color: transparent;
     }
 
+    /* Its parts in a column as tall as the panel, so that a note can
+       keep to its foot. */
     & > .dialog__panel {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-stack-xs);
+      block-size: 100%;
       padding: var(--space-inset-sm);
+    }
+  }
+
+  /* Notion's version history: the whole window, edge to edge. */
+  .dialog[data-variant="full"] {
+    inline-size: 100%;
+    max-inline-size: none;
+    block-size: 100%;
+    max-block-size: none;
+    margin: var(--space-none);
+    border: none;
+    border-radius: 0;
+    background-color: var(--color-bg-app);
+    box-shadow: none;
+
+    & > .dialog__panel {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      block-size: 100%;
+      padding: var(--space-none);
+    }
+
+    & .dialog__header {
+      padding: var(--space-inset-sm) var(--space-inset-md);
+      border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
     }
   }
 

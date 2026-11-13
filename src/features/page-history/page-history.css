@@ -1,20 +1,13 @@
 @layer features {
-  /* Notion's page history: the version shown as a page, read only, with
-     the versions down the side and Restore under them. */
+  /* Notion's version history: the versions down the left side, 320 px,
+     Restore under them, and the version shown as a page beside them, read
+     only, with what it wrote marked. */
   .page-history {
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    grid-template-columns: minmax(0, 1fr) minmax(0, var(--size-menu-narrow));
+    grid-template-columns: minmax(0, var(--size-history-list)) minmax(0, 1fr);
     gap: var(--space-inline-md);
     block-size: 100%;
-    padding: var(--space-inset-md);
-  }
-
-  .page-history__heading {
-    grid-column: 1 / -1;
-    margin: var(--space-none);
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-strong);
+    padding: var(--space-inset-md) var(--space-inset-md) var(--space-none);
   }
 
   .page-history__preview {
@@ -53,6 +46,8 @@
 
   .page-history__side {
     display: grid;
+    padding-inline-end: var(--space-inset-sm);
+    border-inline-end: var(--size-border-thin) solid var(--color-border-subtle);
     grid-template-rows: minmax(0, 1fr) auto;
     gap: var(--space-stack-sm);
     min-block-size: 0;
@@ -94,5 +89,12 @@
     grid-column: 1 / -1;
     margin: var(--space-none);
     color: var(--color-text-secondary);
+  }
+
+  /* What the version wrote, against the one before it. */
+  .page-history__change {
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-change);
+    color: var(--color-accent-default);
   }
 }

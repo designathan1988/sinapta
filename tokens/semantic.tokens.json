@@ -22,6 +22,10 @@
         "$description": "The stronger wash of the sidebar's icon buttons, as Notion's.",
         "$value": "{base.color.day.hoverStrong}"
       },
+      "change": {
+        "$description": "Words a version wrote, in its history, as Notion's.",
+        "$value": "{base.color.day.changeWash}"
+      },
       "active": {
         "$value": "{base.color.day.active}"
       },
@@ -662,10 +666,20 @@
         "$value": "{base.size.15x625}"
       }
     },
+    "history": {
+      "list": {
+        "$description": "The list of versions down the history's side, as Notion's: 320 px.",
+        "$value": "{base.size.20}"
+      }
+    },
     "panel": {
       "width": {
         "$description": "A panel beside the sidebar, as Notion's trash: 416 px.",
         "$value": "{base.size.26}"
+      },
+      "height": {
+        "$description": "Notion's trash keeps its height, results or none: 453 px.",
+        "$value": "{base.size.28x3125}"
       }
     },
     "settings": {

@@ -17,7 +17,7 @@ export interface DialogOptions {
   // "panel" is a smaller panel beside the sidebar's foot, as Notion's
   // trash, over the page without dimming it. "flyout" is as tall as the
   // window beside the sidebar, as Notion's inbox, and heads itself.
-  readonly variant?: "search" | "settings" | "panel" | "flyout";
+  readonly variant?: "search" | "settings" | "panel" | "flyout" | "full";
 }
 
 function showWhenConnected(element: Element | undefined): void {
@@ -53,7 +53,8 @@ function onClosed(event: Event, onClose: () => void): void {
 // means fires `close`, which the caller turns into a command.
 export function renderDialog(options: DialogOptions): TemplateResult {
   // A search or settings shows its own heading; the dialog's is read only.
-  const isBare = options.variant !== undefined;
+  // A full-window dialog shows the dialog's heading and close button.
+  const isBare = options.variant !== undefined && options.variant !== "full";
   const dialog = html`<dialog
     class="dialog"
     data-variant=${options.variant ?? nothing}

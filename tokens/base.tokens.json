@@ -555,6 +555,21 @@
             "alpha": 0.11
           }
         },
+        "changeWash": {
+          "$description": "Notion's version history marks the words a version wrote on rgb(35 131 226 / .14).",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.6058, 0.1674, 252.7],
+            "alpha": 0.14
+          }
+        },
+        "changeInk": {
+          "$description": "And writes them in rgb(35 131 226).",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.6058, 0.1674, 252.7]
+          }
+        },
         "todoBorder": {
           "$description": "Notion's --c-icoPri, #383836: the border of a to-do's box.",
           "$value": {
@@ -816,6 +831,21 @@
             "colorSpace": "oklch",
             "components": [0.9947, 0.0261, 106.9],
             "alpha": 0.102
+          }
+        },
+        "changeWash": {
+          "$description": "Notion's version history marks the words a version wrote on rgb(35 131 226 / .14).",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.6058, 0.1674, 252.7],
+            "alpha": 0.14
+          }
+        },
+        "changeInk": {
+          "$description": "And writes them in rgb(35 131 226).",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.6058, 0.1674, 252.7]
           }
         },
         "todoBorder": {
@@ -1465,6 +1495,12 @@
       "29x375": {
         "$value": {
           "value": 29.375,
+          "unit": "rem"
+        }
+      },
+      "28x3125": {
+        "$value": {
+          "value": 28.3125,
           "unit": "rem"
         }
       },
