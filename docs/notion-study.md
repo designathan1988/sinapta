@@ -609,6 +609,99 @@ the top, icons for home, chat, meetings, inbox and search, "Adicionar
 agentes", Biblioteca, Ajuda, Lixeira, "Novo chat Ctrl+O"): an experiment
 on the account, not a change to follow.
 
+### View options' submenus (photos `b4-view-options`, `b5-layout-options`)
+
+- Visualização do cartão: Nenhum, Capa, Propriedades da página, Conteúdo
+  ("Usa o primeiro bloco na página").
+- Tamanho do cartão: Pequeno, Médio, Grande.
+- Abrir páginas em: Modo lado a lado ("Abra as páginas na lateral.
+  Mantém a visualização de trás interativa.", marked "Padrão para
+  Quadro"), Modo centralizado ("Abra as páginas em uma janela
+  centralizada em destaque."), Página inteira ("Abra as páginas no modo
+  tela inteira.").
+- Carregar: 10, 25, 50, 100.
+- Agrupar (a board's group panel): Agrupar por › Status; Status por ›
+  Opção; Ordenar › Crescente; Ocultar grupos vazios; Colorir colunas;
+  "Grupos" with Ocultar tudo, then each group with an eye; "Saiba mais
+  sobre agrupamentos".
+- Calendar: Mostrar calendário como: Mês, Semana; Mostrar calendário
+  por: Criado em, Data, Última edição (the date properties). Timeline:
+  Mostrar cronograma por: the same.
+- Chart settings ("Editar gráfico" opens them in Ver configurações):
+  Layout › Gráfico; "Tipo de gráfico": five icon tiles (vertical bars,
+  horizontal bars, line, donut, number); "Eixo X": O que exibir ›
+  Selecionar, Ordenar por › Manual, Omitir valores zerados; "Eixo Y": O
+  que exibir › Contagem, Agrupar por › Nenhum, Intervalo › Auto, Linha de
+  referência › 1 linha; "Estilo": Cor › Auto, Mais opções de estilo;
+  Fonte, Filtrar; Salvar gráfico como…, Copiar link para a visualização,
+  Gerenciar fontes de dados, Bloquear base de dados. On a free plan a
+  second chart shows "Seu espaço de trabalho já usou seu gráfico
+  grátis." and "Fazer upgrade agora".
+- Choosing another layout tile changes the view itself (its tab takes
+  the layout's name when unnamed).
+
+### View tab menu (click the active tab)
+
+Renomear; Exibir como › (Texto e ícone, Apenas texto, Apenas ícone,
+"Válido apenas para você"); Editar visualização; Fonte › Nova base de
+dados; Copiar link para esta visualização; Adicionar visualização à barra
+lateral (dimmed); Abrir como página inteira; Ocultar títulos das fontes de
+dados; Duplicar visualização; Excluir visualização; Gerenciar no Notion
+Calendar.
+
+## Filters, sorts and groups by type (audit of 2026-11-13, photos `c1…c5`)
+
+### Filter conditions
+
+The filter popover's head reads "<Property> <condition> ⌄" with "…" (Mais
+ações: Excluir filtro, Adicionar ao filtro avançado); below it the value:
+a field, a list of options, or a calendar. A chip with a value is tinted
+blue ("Data: Este(a) semana ⌄").
+
+| Type | Conditions | Value |
+| --- | --- | --- |
+| Text, URL, Phone, Email | É, Não é, Contém, Não contém, Começa com, Termina com, Está vazio, Não está vazio | "Digite um valor…" |
+| Number, ID | =, ≠, >, <, ≥, ≤, Está vazio, Não está vazio | a number field |
+| Select | É, Não é, Está vazio, Não está vazio | "Selecione uma ou mais opções…" over the options ("Nenhum resultado" when none) |
+| Multi-select, Person, Relation | Contém, Não contém, Está vazio, Não está vazio | the options, people or pages |
+| Status | É, Não é | the options by group |
+| Checkbox | É, Não é | marked / unmarked |
+| Files & media | Está vazio, Não está vazio | none |
+| Date, Created time, Last edited time | É, Está antes de, Está depois de, Está em ou antes de, Está em ou depois de, Está entre, É relativo a hoje, Está vazio, Não está vazio | see below |
+| Rollup | Qualquer, Nenhuma, A cada, then the target's conditions | per target |
+
+- A date filter starts as "Data de início ⌄ é relativo a hoje ⌄": two
+  selects "Este(a) ⌄" (Últimos(as), Próximo(as), Este(a)) and "semana ⌄"
+  (dia, semana, mês, ano), the month with the matched days washed blue
+  (today in red), and "O filtro será atualizado com a data atual". A
+  range date has "Data de início | Data de término" to choose which end.
+- Advanced filter (view settings › Filtrar › Adicionar filtro avançado):
+  a "1 regra" chip; its panel: "Onde · Nome ⌄ · Contém ⌄ · Valor · …";
+  "+ Adicionar regra de filtro ⌄" (Adicionar regra de filtro, Adicionar
+  grupo de filtros "Um grupo para aninhar mais filtros"); Excluir
+  filtro. The settings' Filtrar page then lists "Filtros · 1 regra" and
+  "Novo filtro".
+
+### Sort directions (column menu › Ordenar)
+
+Text, Person: Ordenar A → Z, Ordenar Z → A. Select, Status, Number:
+Classificar em ordem crescente, Ordenar em ordem decrescente (number:
+baixo → alto, alto → baixo). Date: Ordenar antigo → novo, novo → antigo.
+Checkbox: não selecionado → selecionado, selecionado → não selecionado.
+
+### Group options (view settings › Agrupar › a property)
+
+- Date: "Data por" Relativo, Dia, Semana, Mês, Ano; Ordenar › Mais
+  antigo primeiro.
+- Number: "Número por" Únicos, Intervalo; Ordenar › Crescente.
+- Text: "Texto por" Exato, Alfabética; Ordenar › Alfabética.
+- Status: "Status por" Grupo, Opção; Ordenar › Crescente; groups listed
+  with eyes.
+- Checkbox: no "por"; the two groups.
+- Every one: Ocultar grupos vazios, "Grupos" with Ocultar tudo and an eye
+  per group (and "Sem <Property>"), Remover agrupamento, "Saiba mais
+  sobre agrupamentos".
+
 ## Controls
 
 **Now** says what the control is today: "native" (a browser `<select>`
