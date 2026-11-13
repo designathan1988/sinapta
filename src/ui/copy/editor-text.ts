@@ -24,7 +24,7 @@ export const EDITOR_TEXT = {
     menu: "Emoji",
     // Notion's picker for a reaction.
     filter: "Filter…",
-    skinTone: "Skin tone",
+    skinTone: "Select skin tone",
     recent: "Recent",
     jumpTo: (group: string) => `Jump to category: ${group}`,
   },

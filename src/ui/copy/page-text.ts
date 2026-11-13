@@ -34,8 +34,8 @@ export const PAGE_TEXT = {
   suggestions: {
     suggest: "Suggest edits",
     suggesting: "Suggesting",
-    youreSuggesting: "You're suggesting",
-    stop: "Stop suggesting",
+    youreSuggesting: "You’re suggesting",
+    stop: "Turn off suggesting",
     add: "Add:",
     delete: "Delete:",
     accept: "Accept",

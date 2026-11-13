@@ -53,6 +53,8 @@ export interface SelectProps {
   // What the control shows in place of the chosen option, such as the
   // chips of several options or a date.
   readonly display?: TemplateResult;
+  // A long list kept short and scrolled, as Notion's list of times.
+  readonly isShort?: boolean;
 }
 
 export interface SelectMenu {
@@ -161,6 +163,7 @@ function renderList(
     role: "listbox",
     isChild: state.isChild,
     ...(props.variant === "row" && { placement: "beside" as const }),
+    ...(props.isShort === true && { isShort: true }),
     items,
     ...(placeholder !== undefined && {
       search: {

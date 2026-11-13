@@ -5,7 +5,7 @@ export const DATABASE_OPTIONS_TEXT = {
   relativeToToday: "Is relative to today",
   isBetween: "Is between",
   relativeDirections: { past: "Past", next: "Next", this: "This" },
-  relativeUnits: { day: "Day", week: "Week", month: "Month", year: "Year" },
+  relativeUnits: { day: "day", week: "week", month: "month", year: "year" },
   relativeNote: "The filter will update with today's date",
   dateEnds: { start: "Start date", end: "End date" },
   dateEndChoice: "Date to filter by",
@@ -35,7 +35,8 @@ export const DATABASE_OPTIONS_TEXT = {
     text: "Text only",
     icon: "Icon only",
   },
-  onlyForYou: "Only for you",
+  onlyForYou: "Only applies to you",
+  displayAs: "Display as",
   tabMenu: "View actions",
   renameView: "Rename",
   editView: "Edit view",
@@ -61,7 +62,7 @@ export const DATABASE_OPTIONS_TEXT = {
   numberShowAsNote: "Changes apply to all views showing this property.",
   conditionalColor: "Conditional color",
   conditionalColorNote:
-    "Customize page colors to easily distinguish categories, highlight overdue events, and make your schedule clearer.",
+    "Customize page colors to easily distinguish categories, highlight overdue events, and bring clarity to your work.",
   // The sample table of Notion's conditional color picture.
   colorSample: {
     head: ["Name", "Office", "Units sold"],
@@ -76,6 +77,8 @@ export const DATABASE_OPTIONS_TEXT = {
   addColorCondition: "Add condition",
   // A color rule's rows, as Notion's.
   pageBackground: "Page background",
+  cardBackground: "Card background",
+  colorValuePlaceholder: "Select...",
   applyTo: "Apply to",
   applyTargets: { row: "Entire row", property: "This property" },
   addAnotherColor: "Add another",

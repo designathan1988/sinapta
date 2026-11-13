@@ -1,7 +1,6 @@
 // A menu in the top layer, drawn as Notion draws its menus: an optional
 // header with a back and a close button, an optional search field, then
-// rows, labels and lines. A listbox is the same panel for choosing one
-// value. It is rendered only while it is open.
+// rows, labels and lines; a listbox chooses one value. Rendered while open.
 import "./menu.css";
 import "./menu-field.css";
 import { html, nothing, type TemplateResult } from "lit-html";
@@ -58,6 +57,8 @@ export interface MenuOptions {
   readonly tail?: TemplateResult | typeof nothing;
   // A submenu as wide as a menu, for rows with long words.
   readonly isWide?: boolean;
+  // A long list kept short and scrolled, as Notion's list of times.
+  readonly isShort?: boolean;
   // A list opened from a control inside another overlay.
   readonly isChild?: boolean;
   // A submenu sits beside the row that opened it, not under it; an editor
@@ -218,6 +219,7 @@ export function renderMenu(options: MenuOptions): TemplateResult {
     data-overlay
     ?data-at-point=${options.point !== undefined}
     ?data-child=${options.isChild === true}
+    ?data-short=${options.isShort === true}
     data-placement=${options.placement ?? nothing}
     data-size=${
       isSubmenu && options.lead === undefined && options.isWide !== true

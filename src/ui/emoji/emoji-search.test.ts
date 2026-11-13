@@ -36,10 +36,10 @@ describe("emojiGroups", () => {
     // Notion's groups, in its order.
     expect(groups.map((group) => group.name)).toEqual([
       "People",
-      "Animals & Nature",
-      "Food & Drink",
+      "Animals & nature",
+      "Food & drink",
       "Activity",
-      "Travel & Places",
+      "Travel & places",
       "Objects",
       "Symbols",
       "Flags",

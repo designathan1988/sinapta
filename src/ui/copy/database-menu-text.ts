@@ -71,7 +71,7 @@ export const DATABASE_MENU_TEXT = {
   templateBannerLead: "You're editing a template in",
   templateHelp:
     "Edits to a template change the pages made from it from now on, not those made before.",
-  templateRepeatButton: "Repeat…",
+  templateRepeatButton: "Duplicate every...",
   templateRepeatEvery: (period: string) => `Repeat: ${period}`,
   showWeekends: "Show weekends",
   weekStartsMonday: "Start week on Monday",

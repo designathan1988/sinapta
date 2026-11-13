@@ -125,6 +125,17 @@ describe("renderSelect", () => {
     );
   });
 
+  it("caps a short list's height, as Notion's time list", () => {
+    const overlay = {
+      kind: "column-menu",
+      anchorId: "p1",
+      children: [{ anchorId: "edit" }, { anchorId: "join" }],
+    };
+    const { host } = rendered(overlay, { variant: "row", isShort: true }, true);
+
+    expect(host.querySelector(".menu")?.hasAttribute("data-short")).toBe(true);
+  });
+
   it("lists the options with the chosen one checked, and chooses one", () => {
     const { host, onChoose, sent } = rendered({
       kind: "filters",

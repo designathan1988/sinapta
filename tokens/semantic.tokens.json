@@ -546,6 +546,10 @@
       "width": {
         "$value": "{base.size.18x125}"
       },
+      "short": {
+        "$description": "A long list kept short and scrolled, as Notion's list of times (maxHeight 250 in its code).",
+        "$value": "{base.size.15x625}"
+      },
       "narrow": {
         "$description": "A submenu that is a short list, as Notion's Sort or Calculate: 200 px.",
         "$value": "{base.size.12x5}"

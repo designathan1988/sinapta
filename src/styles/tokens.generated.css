@@ -446,6 +446,7 @@
     --size-menu-min-width: var(--base-size-14);
     --size-menu-max-height: var(--base-size-40);
     --size-menu-width: var(--base-size-18x125);
+    --size-menu-short: var(--base-size-15x625);
     --size-menu-narrow: var(--base-size-12x5);
     --size-menu-row: var(--base-size-7);
     --size-dialog-width: var(--base-size-32);

@@ -20,10 +20,10 @@ const HAND = "✋";
 
 const GROUP_ICONS: Readonly<Record<string, IconName>> = {
   People: "smile",
-  "Animals & Nature": "leaf",
-  "Food & Drink": "food",
+  "Animals & nature": "leaf",
+  "Food & drink": "food",
   Activity: "ball",
-  "Travel & Places": "plane",
+  "Travel & places": "plane",
   Objects: "bulb",
   Symbols: "symbols",
   Flags: "flag",

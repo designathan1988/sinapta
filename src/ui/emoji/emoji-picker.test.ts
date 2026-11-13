@@ -104,10 +104,10 @@ describe("the emoji picker for a reaction", () => {
     expect(labels).toEqual([
       "Recent",
       "People",
-      "Animals & Nature",
-      "Food & Drink",
+      "Animals & nature",
+      "Food & drink",
       "Activity",
-      "Travel & Places",
+      "Travel & places",
       "Objects",
       "Symbols",
       "Flags",

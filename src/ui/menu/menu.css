@@ -1,6 +1,5 @@
 @layer ui {
-  /* A menu panel, measured on Notion's: 290 px wide, rows 28 px high
-     with a 6 px radius, values and chevrons muted at the row's end. */
+  /* A menu panel as Notion's: 290 px wide, 28 px rows, 6 px radius. */
   .menu {
     inline-size: var(--size-menu-width);
     min-inline-size: var(--size-menu-min-width);
@@ -10,6 +9,11 @@
     &:popover-open {
       display: flex;
       flex-direction: column;
+    }
+
+    /* data-short: a long list kept short, as Notion's times. */
+    &[data-short] {
+      max-block-size: var(--size-menu-short);
     }
 
     /* A submenu that is a short list is narrower, as Notion's Sort. */
@@ -64,8 +68,7 @@
       outline-offset: calc(var(--size-focus-offset) * -1);
     }
 
-    /* As Notion's, a destructive row turns red only when pointed at or
-       chosen. */
+    /* As Notion's, a destructive row is red only when pointed or chosen. */
     &[data-danger]:is(:hover, :focus-visible, [aria-selected="true"]) {
       color: var(--color-text-danger);
     }
