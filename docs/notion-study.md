@@ -1133,8 +1133,7 @@ items above, found while photographing them:
     248 px wide, the day field 224 × 28 at (12, 12), Today and ‹ › (20 px)
     centred at 62, weekdays at 81, day 1 at 108, a line 12 px in at 302,
     rows every 29 px from 307, Clear at 431; the empty cell stayed empty.
-    Notion's light-mode red, band and pill were not photographed; their
-    day tokens keep the earlier values.
+    Light mode in item 44.
 43. **done** [T133–T134, FR-017, `n72-date-formats`, `n73-relative-dates`,
     `n74-relative-code`] Date formats. Notion's code lists them as "ll",
     "MMM d", "MM/DD/YYYY", "DD/MM/YYYY", "YYYY/MM/DD", "relative" and the
@@ -1149,6 +1148,25 @@ items above, found while photographing them:
     today's (weeks from Monday) is "Next" or "Last" and its weekday; in
     today's week the weekday alone; else the full date. The cell was
     cleared and the format set back to Full date in the same run.
+44. **done** [T135–T136, FR-001, FR-003, `n76-light`, `n76-dark`] Light mode
+    and the pill at rest, read without touching the account: the capture
+    opens its own context with the colour scheme emulated, and Notion,
+    set to follow the system, draws light. In light the relative month
+    has the same parts: the start rgb(39, 131, 222), the band
+    rgb(208, 229, 249), the end rgb(133, 186, 238) (the accent at 43 %
+    over the band), today rgb(229, 100, 88), the days after the range
+    grey. The pill is 180 × 24 with no line around it: at rest and on
+    hover rgb(231, 243, 251) in light and rgb(35, 56, 80) in dark, open
+    rgb(219, 236, 249) and rgb(40, 72, 107). Its words are
+    rgb(39, 131, 222); Pagecraft keeps its own accent text, darker, for
+    4.5:1 on the light pill. Every filter made was deleted in its run.
+    Capture failures this session, by cause: Notion's language follows
+    "autodetect" and changes between loads, so a step that named a
+    control in one language failed in the other; every plan now names
+    both ("Mais ações" or "More actions"). A click by column index that
+    opened nothing once did not happen again (`n75-col-probe`: one cell,
+    off the window, scrolled in and opened both times); plans now find a
+    cell under its header.
 
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,
