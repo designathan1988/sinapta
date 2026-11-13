@@ -89,11 +89,7 @@ async function act(page: Page, step: CaptureStep): Promise<void> {
 
 // A step that fails leaves a photo of the window as it was, named
 // <step>-failed.png, so the reason can be seen.
-async function run(
-  page: Page,
-  step: CaptureStep,
-  path: string,
-): Promise<void> {
+async function run(page: Page, step: CaptureStep, path: string): Promise<void> {
   try {
     await actAndExpect(page, step);
   } catch (error) {
