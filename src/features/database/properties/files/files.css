@@ -37,4 +37,10 @@
       block-size: var(--size-icon-sm);
     }
   }
+
+  /* An image shows its picture, or its name once the picture fails. */
+  .files__image:not([data-broken]) > .files__name,
+  .files__image[data-broken] > .files__thumb {
+    display: none;
+  }
 }

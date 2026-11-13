@@ -64,6 +64,18 @@ function itemNamed(label: string): HTMLElement | undefined {
 }
 
 describe("a filter rule opened from its pill", () => {
+  it("puts the keys in its value, as Notion's, a text or a list", async () => {
+    const text = rendered(undefined, 0);
+    await Promise.resolve();
+    expect(document.activeElement).toBe(
+      text.rule?.querySelector('[data-field="value"]'),
+    );
+
+    const list = rendered(undefined, 1);
+    await Promise.resolve();
+    expect(document.activeElement?.closest(".database__rule")).toBe(list.rule);
+  });
+
   it("heads with the property's name and the condition as Notion writes it", () => {
     const { rule } = rendered();
     const head = rule?.querySelector(".database__rule-head");

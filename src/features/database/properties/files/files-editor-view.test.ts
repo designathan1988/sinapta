@@ -37,6 +37,27 @@ afterEach(() => {
 });
 
 describe("renderFilesEditor", () => {
+  it("is reached by the keys: its chosen tab takes them as it opens", () => {
+    const host = document.createElement("div");
+    render(
+      renderFilesEditor({
+        entries: [],
+        assetUrls: {},
+        onChange: () => undefined,
+        dispatch: () => ({ ok: true }),
+        tab: "upload",
+        onTab: () => undefined,
+      }),
+      host,
+    );
+    const tabs = [...host.querySelectorAll<HTMLElement>(".files__tab")];
+
+    expect(tabs.map((tab) => tab.hasAttribute("data-autofocus"))).toEqual([
+      true,
+      false,
+    ]);
+  });
+
   it("adds a link named after its last part", () => {
     const { changes, field } = rendered();
     const link = field("link");

@@ -6,6 +6,7 @@ import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import type { Filter, FilterGroup } from "../../model/index.ts";
 import { closeOverlay, openOverlay } from "../../state/index.ts";
+import { focusOnce, whenConnected } from "../../ui/focus/index.ts";
 import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
 import { removeAt, updateAt } from "./filter-edit.ts";
 import { changedFilter, filterProperties } from "./filter-fields.ts";
@@ -18,6 +19,23 @@ import type { FieldChange } from "./filter-row.view.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import { setViewFilter } from "./view.commands.ts";
 import { VIEW_FILTER_PILL_OVERLAY } from "./view-pills.view.ts";
+
+// The value's field: a text, a list, a day, or a span of days.
+const VALUE_FIELD = [
+  '[data-field="value"]',
+  '.select[id$="-value"]',
+  ".database__between input",
+  ".database__relative .select",
+].join(", ");
+
+// The rule takes the keys in its value once it opens, as Notion's.
+function focusValue(element: Element | undefined): void {
+  if (!(element instanceof HTMLElement)) return;
+  whenConnected(element, () => {
+    const field = element.querySelector<HTMLElement>(VALUE_FIELD);
+    if (field !== null) focusOnce(field);
+  });
+}
 
 interface OpenRule {
   readonly index: number;
@@ -106,6 +124,7 @@ export function renderFilterRule(
     popover="manual"
     data-overlay
     ${ref(showPopoverWhenConnected)}
+    ${ref(focusValue)}
     @input=${onChange}
     @keydown=${onKeyDown}
   >

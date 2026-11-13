@@ -55,6 +55,21 @@ describe("the files cell", () => {
     expect(host.textContent).toContain("plan.pdf");
   });
 
+  it("names an image that does not load, in place of a broken picture", () => {
+    const host = document.createElement("div");
+    const value = [{ name: "a.png", url: "https://example.com/a.png" }];
+    render(
+      propertyType("files").renderCell(value, property, { assetUrls: {} }),
+      host,
+    );
+    const image = host.querySelector("img");
+
+    image?.dispatchEvent(new Event("error"));
+
+    expect(image?.parentElement?.hasAttribute("data-broken")).toBe(true);
+    expect(host.querySelector(".files__name")?.textContent).toBe("a.png");
+  });
+
   it("is written as the names of its files", () => {
     const value = [
       { name: "a.pdf", assetId: "a1" },

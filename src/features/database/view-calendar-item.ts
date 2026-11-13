@@ -3,10 +3,21 @@
 // view's dated pages in the sidebar's Calendar tab, or stops.
 import "./view-calendar-item.css";
 import { html, type TemplateResult } from "lit-html";
-import { setCalendarView } from "../../state/index.ts";
+import {
+  setCalendarView,
+  setSidebarTab,
+  type Dispatch,
+} from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import type { MenuEntry } from "../../ui/menu/index.ts";
 import type { TableContext } from "./table-cell.view.ts";
+
+// Lists the view in the Calendar tab, or stops; listing it turns the
+// sidebar to that tab, where its pages now show.
+function manage(dispatch: Dispatch, viewId: string, isShown: boolean): void {
+  dispatch(setCalendarView.create({ viewId, isShown: !isShown }));
+  if (!isShown) dispatch(setSidebarTab.create({ tab: "calendar" }));
+}
 
 export function calendarItems(context: TableContext): MenuEntry[] {
   const { model, state, dispatch } = context;
@@ -25,7 +36,7 @@ export function calendarItems(context: TableContext): MenuEntry[] {
       check: "box",
       isChecked: isShown,
       onSelect: () => {
-        dispatch(setCalendarView.create({ viewId, isShown: !isShown }));
+        manage(dispatch, viewId, isShown);
       },
     },
   ];
@@ -45,7 +56,7 @@ export function renderManageInCalendar(context: TableContext): TemplateResult {
     data-variant="quiet"
     aria-pressed=${String(isShown)}
     @click=${() => {
-      dispatch(setCalendarView.create({ viewId, isShown: !isShown }));
+      manage(dispatch, viewId, isShown);
     }}
   >
     ${COPY.sidebarTabs.manageInCalendar}

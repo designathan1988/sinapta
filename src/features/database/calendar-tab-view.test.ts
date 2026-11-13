@@ -7,7 +7,7 @@ import { renderDatabase } from "./database.view.ts";
 import { setViewType } from "./view-layout.commands.ts";
 
 describe("a calendar's toolbar", () => {
-  it("lists the view in the Calendar tab from Manage in calendar", () => {
+  it("lists the view in the Calendar tab from Manage in calendar, and shows it", () => {
     const app = createDatabaseApp([{ name: "Due", type: "date" }], []);
     const viewId = app.view().id;
     app.dispatch(setViewType.create({ viewId, viewType: "calendar" }));
@@ -29,6 +29,11 @@ describe("a calendar's toolbar", () => {
         type: "settings.setCalendarView",
         viewId,
         isShown: true,
+      }),
+      // The sidebar turns to the Calendar tab, where the pages now show.
+      expect.objectContaining({
+        type: "settings.setSidebarTab",
+        tab: "calendar",
       }),
     ]);
   });

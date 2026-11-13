@@ -154,6 +154,7 @@ function renderTabs(editor: FilesEditor, tab: FilesTab): TemplateResult {
           class="files__tab"
           role="tab"
           aria-selected=${String(each === tab)}
+          ?data-autofocus=${each === tab}
           @click=${choose(each)}
         >
           ${TEXT.filesTabs[each]}
