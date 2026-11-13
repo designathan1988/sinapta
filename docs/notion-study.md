@@ -644,10 +644,25 @@ on the account, not a change to follow.
 
 Renomear; Exibir como › (Texto e ícone, Apenas texto, Apenas ícone,
 "Válido apenas para você"); Editar visualização; Fonte › Nova base de
-dados; Copiar link para esta visualização; Adicionar visualização à barra
-lateral (dimmed); Abrir como página inteira; Ocultar títulos das fontes de
-dados; Duplicar visualização; Excluir visualização; Gerenciar no Notion
-Calendar.
+dados (the name in grey after the label); Copiar link para esta
+visualização; Adicionar visualização à barra lateral; Abrir como página
+inteira (↗); Ocultar títulos das fontes de dados (an eye, no switch);
+Duplicar visualização; Excluir visualização; Gerenciar no Notion Calendar.
+An earlier photo showed "Adicionar visualização à barra lateral" dimmed;
+on 2026-11-13 (`n40-tab-source/04-source`) it was enabled.
+
+"Adicionar visualização à barra lateral" (`n40-sidebar/04-add-sidebar`)
+adds a sidebar section after Particular: the database's name as a grey
+heading, a ⌄ after it, and while pointed at ↗ (open), + (new page) and
+"…"; under it the view's pages, 5 by default. The "…" menu
+(`n40-section-fix/02-more`): Renomear ›; Abrir em › Modo lado a lado
+(Modo centralizado, Página inteira); Exibir › 5 (5, 10, 15, 20); Exibir
+ícone da página (switch, on); Fonte › the database; Visualizar › the
+database's views (Tabela); Modelo › Vazio; a rule; Mover para cima; Mover
+para a guia ›; Remover seção; a rule; Personalizar barra lateral. The
+menu item keeps its label after adding. Pagecraft builds all but Modelo,
+Mover para a guia and Personalizar barra lateral (its sidebar has no
+tabs and no customizing).
 
 ## Filters, sorts and groups by type (audit of 2026-11-13, photos `c1…c5`)
 
@@ -848,15 +863,23 @@ items above, found while photographing them:
     relation and property its settings show, before one is chosen.
 21. **out of scope** (spec: people, AI) The selection panel leaves out Notion's add-reaction and
     suggest-edit buttons and the AI skills (out of scope: people, AI).
-22. **out of scope** (spec: server, paid plan) The view tab menu leaves out Source, Add view to sidebar, Hide data
-    source titles and Manage in Notion Calendar (server or paid
-    features).
+22. **done** (`p25-tab-source`, `p25-section`; Notion `n40-tab-source`,
+    `n40-sidebar`, `n40-section-fix`) The view tab menu's Source (the
+    database's name in grey, a submenu), Add view to sidebar (enabled in
+    the 2026-11-13 photo: it adds a sidebar section) and Hide data source
+    titles (an action with an eye, no switch) are built; Manage in Notion
+    Calendar stays out (another product).
 23. **done** (`p24-converge/14-by-name`) Grouping by the title column (Notion's "Agrupar por › Nome") is not
     offered — now offered first, as Notion's list.
 24. **done** With text grouped by its exact value and sorted Alphabetical, Notion
     lists the "Sem Nome" group last; Pagecraft lists the empty group
     first (as Notion does for numbers: "Sem Número" first) — now text
     lists it last and numbers and options first.
+
+Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
+seleção" had been ticked by a probe that clicked cells by position; it
+was unticked (`n40-untick/03-untick`). The sidebar sections and the
+stray empty row made while probing "Add view to sidebar" were removed.
 
 ### Sample database (2026-11-13, SC-002)
 

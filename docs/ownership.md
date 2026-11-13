@@ -102,6 +102,10 @@ owner listed here exists.
 | Each layout's options in the stored view | `src/model/view-options.schema.ts` | 21 |
 | Conditional color: a view's color rules, the color a row takes from them and how it is drawn | `src/features/database/color-rules.commands.ts`, `row-color.selectors.ts`, `row-color.css`, `view-settings/color-panel.ts` | 21 |
 | The menu of the active view tab and how tabs show (text and icon, text, icon) | `src/features/database/view-tab-menu.view.ts` | 21 |
+| The tab menu's rows about the database a view reads: Source, Add view to sidebar, Hide data source titles | `src/features/database/view-tab-source.ts`, `source-title.commands.ts` | 21 |
+| The rows of any view, shown or not, filtered and sorted as it says | `src/features/database/view-rows.selectors.ts` | 21 |
+| Views kept in the sidebar: the stored list and its commands | `src/state/sidebar-views.commands.ts` | 21 |
+| Views kept in the sidebar: each section and its menu | `src/features/sidebar/sidebar-views.view.ts`, `sidebar-view-menu.view.ts`, `sidebar-views.selectors.ts`, `sidebar-view-choice.ts` | 21 |
 | A list view's and a feed view's options | `src/features/database/list-options.commands.ts`, `feed-options.commands.ts` | 21 |
 | The floating outline: a page's headings as dashes at its right edge | `src/features/page-outline/` | 21 |
 | Database columns | `src/features/database/database.commands.ts` | 5 |
