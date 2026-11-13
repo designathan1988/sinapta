@@ -108,8 +108,12 @@ below) rather than in files of their own.
   table.
 - **SC-002** (same rows as Notion): `src/features/database/notion-sample.test.ts`
   rebuilds the sample built in Notion's test workspace and checks the
-  rows each relative date filter kept and the groups Notion formed:
-  11 of 11 pass.
+  rows each relative date filter kept and the groups Notion formed
+  (first character, tens, unique values, exact names);
+  `notion-ranges.test.ts` the range rows kept by start and end date
+  (`n63-ranges`); `properties/rollup/rollup-notion.test.ts` the rows a
+  rollup's Any, None and Every kept (`n68-rollup-filters`): 18 of 18
+  pass.
 - **SC-003** (options take effect at once and survive a reload):
   `sc3-reload` sets compact cards on the board, Status shown as a
   checkbox, "Show large counts as 99+" and grouping by Name, reloads,
