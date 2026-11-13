@@ -842,20 +842,21 @@ integrations, upgrade cards.
 Left open after the 2026-11-13 work, each a Notion feature outside the
 items above, found while photographing them:
 
-19. Date filter "Is between" (two days) is not offered yet; Is on or
-    before and Is on or after are.
-20. A new rollup shows "Relation" as its relation without storing it;
-    the rollup works out nothing until a relation is chosen again.
-21. The selection panel leaves out Notion's add-reaction and
+19. **done** (`p24-between`) Date filter "Is between" (two days, both
+    included), beside Is on or before and Is on or after.
+20. **done** (`p8-rollup-default`) A new rollup works out from the
+    relation and property its settings show, before one is chosen.
+21. **out of scope** (spec: people, AI) The selection panel leaves out Notion's add-reaction and
     suggest-edit buttons and the AI skills (out of scope: people, AI).
-22. The view tab menu leaves out Source, Add view to sidebar, Hide data
+22. **out of scope** (spec: server, paid plan) The view tab menu leaves out Source, Add view to sidebar, Hide data
     source titles and Manage in Notion Calendar (server or paid
     features).
-23. Grouping by the title column (Notion's "Agrupar por › Nome") is not
-    offered; only the database's other properties group.
-24. With text grouped by its exact value and sorted Alphabetical, Notion
+23. **done** (`p24-converge/14-by-name`) Grouping by the title column (Notion's "Agrupar por › Nome") is not
+    offered — now offered first, as Notion's list.
+24. **done** With text grouped by its exact value and sorted Alphabetical, Notion
     lists the "Sem Nome" group last; Pagecraft lists the empty group
-    first (as Notion does for numbers: "Sem Número" first).
+    first (as Notion does for numbers: "Sem Número" first) — now text
+    lists it last and numbers and options first.
 
 ### Sample database (2026-11-13, SC-002)
 

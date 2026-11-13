@@ -164,3 +164,13 @@ Within a story: model/command → selector → view → photo (each control in i
 3. Add US3 (presentation options), item by item, each committed alone.
 4. Add US4 (conditional color).
 5. Polish once at the end: study, ownership, verify, final photos, push.
+
+---
+
+## Phase 8: Gaps found while photographing (converge)
+
+- [X] T041 [US1] Date filter "Is between" (two days, both included, testing the start or the chosen end) in `src/features/database/properties/date/date-filters.ts`, its two-day operand in `src/features/database/filter-between.view.ts` — test `date-filters.test.ts` and `filter-operand-view.test.ts`; photo `p24-between`.
+- [X] T042 [US1] A rollup works out from the relation and property its settings show: one effective config (first relation, title, show original) read by `rollup.selectors.ts` and `rollup-config.view.ts` — test `rollup-filters.test.ts`: a new rollup with no stored config offers Any/None/Every.
+- [X] T043 [US1] Group by the title column, as Notion's "Group by › Name", in `view-settings/group-panel.ts`, `group.commands.ts` and `row-groups.selectors.ts` — test `row-groups-by.test.ts`.
+- [X] T044 [US1] Text groups list the empty group last, as Notion's "No Name" (numbers and options keep it first), through `Grouping.emptyLast` — test `row-groups-by.test.ts`.
+- [X] T045 Full suite under 10 s (constitution V): measure alone, remove the cause of any slow file — check: `npx vitest run` reports under 10 s.
