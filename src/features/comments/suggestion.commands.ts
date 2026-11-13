@@ -31,6 +31,7 @@ export interface SuggestedEdit {
   // The id a new discussion takes.
   readonly newId: BlockId;
   readonly now: string;
+  readonly isForward?: boolean;
 }
 
 // The suggestion discussion of the span next to an offset, to extend.
@@ -42,7 +43,10 @@ function nextTo(
   let position = 0;
   for (const span of rich) {
     const end = position + span.text.length;
-    const touches = kind === "insert" ? end === offset : position === offset;
+    const touches =
+      kind === "insert"
+        ? end === offset
+        : position === offset || end === offset;
     if (touches && span.suggestion === kind) return span.comments?.at(-1);
     position = end;
   }
@@ -89,10 +93,19 @@ function editedText(rich: RichText, edit: SuggestedEdit, id: BlockId) {
     edit.start === edit.end
       ? rich
       : suggestDelete(rich, { start: edit.start, end: edit.end }, id);
-  if (edit.text === "") return { text: struck, caret: edit.start };
   const at = edit.end - (textLength(rich) - textLength(struck));
+  if (edit.text === "") {
+    return { text: struck, caret: edit.isForward === true ? at : edit.start };
+  }
   const text = suggestInsert(struck, at, { text: edit.text, discussionId: id });
   return { text, caret: at + edit.text.normalize("NFC").length };
+}
+
+// The suggestion an edit extends: the deletion it adjoins, or the
+// insertion it types on.
+function extended(rich: RichText, edit: SuggestedEdit): BlockId | undefined {
+  if (edit.text !== "") return nextTo(rich, edit.start, "insert");
+  return nextTo(rich, edit.end, "delete") ?? nextTo(rich, edit.start, "delete");
 }
 
 // What a replace does while the block's page suggests.
@@ -106,7 +119,7 @@ export function suggestReplace(
   if (page.id !== state.ui.suggestingPageId) return undefined;
   const isDelete = edit.text === "";
   const kind = isDelete ? "delete" : "insert";
-  const id = nextTo(rich, isDelete ? edit.end : edit.start, kind) ?? edit.newId;
+  const id = extended(rich, edit) ?? edit.newId;
   const { text, caret } = editedText(rich, edit, id);
   const discussion: Discussion = {
     id,
@@ -114,6 +127,7 @@ export function suggestReplace(
     isResolved: false,
     comments: [],
     suggestion: kind,
+    suggestedAt: edit.now,
   };
   return {
     operations: [

@@ -49,6 +49,8 @@ export interface ReplaceTextPayload {
   readonly start: number;
   readonly end: number;
   readonly text: string;
+  // A forward delete, which in Suggesting leaves the caret past the text.
+  readonly isForward?: boolean;
 }
 
 // Replaces a range of a block's text: typing, deleting and pasting are all
@@ -78,6 +80,7 @@ export const replaceText = defineCommand<ReplaceTextPayload>({
             text: command.text,
             newId,
             now: command.meta.now,
+            isForward: command.isForward === true,
           });
     if (suggested !== undefined) {
       return { ...suggested, mergeKey: `text:${block.id}` };

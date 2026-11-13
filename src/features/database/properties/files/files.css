@@ -23,4 +23,18 @@
     font-size: var(--font-size-sm);
     white-space: nowrap;
   }
+
+  /* "+ Add file or image" in a files cell while its popover is open. */
+  .files__add {
+    display: inline-flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+
+    & > .icon {
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+    }
+  }
 }

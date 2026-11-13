@@ -50,10 +50,26 @@ function renderChoices(
   </div>`;
 }
 
+// A date is typed as text, read as the date picker reads it: the
+// browser's own date field would show its own language.
 const INPUT_TYPES: Readonly<Partial<Record<string, string>>> = {
   toggle: "checkbox",
-  date: "date",
+  date: "text",
 };
+
+const PLACEHOLDERS: Readonly<Partial<Record<string, string>>> = {
+  date: COPY.database.formDate,
+};
+
+// How a question's field looks: its class, input type, keyboard and hint.
+function fieldLook(type: ReturnType<typeof propertyType>) {
+  return {
+    className: type.editor === "toggle" ? CHECKBOX_CLASS : "form__field",
+    type: INPUT_TYPES[type.editor] ?? type.input?.type ?? "text",
+    mode: type.input?.mode ?? nothing,
+    placeholder: PLACEHOLDERS[type.editor] ?? nothing,
+  };
+}
 
 function renderControl(
   property: PropertyDefinition,
@@ -62,12 +78,13 @@ function renderControl(
   const type = propertyType(property.type);
   const invalid = described.error === undefined ? nothing : "true";
   if (type.editor === "options") return renderChoices(property, invalid);
-  const isToggle = type.editor === "toggle";
+  const look = fieldLook(type);
   return html`<input
     id=${described.id}
-    class=${isToggle ? CHECKBOX_CLASS : "form__field"}
-    type=${INPUT_TYPES[type.editor] ?? type.input?.type ?? "text"}
-    inputmode=${type.input?.mode ?? nothing}
+    class=${look.className}
+    type=${look.type}
+    inputmode=${look.mode}
+    placeholder=${look.placeholder}
     name=${property.id}
     aria-invalid=${invalid}
     aria-describedby=${described.error ?? nothing}
@@ -152,6 +169,7 @@ function onSubmit(
       .filter((item) => !item.isTitle)
       .map((item) => item.property),
     required: model.view.form.requiredPropertyIds,
+    today: new Date().toLocaleDateString("en-CA"),
   });
   dispatch(setFormErrors.create({ viewId, propertyIds: answers.missing }));
   if (answers.missing.length > 0) return;

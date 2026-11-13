@@ -228,3 +228,11 @@ Within a story: model/command → selector → view → photo (each control in i
 - [X] T079 "Manage in calendar" in a date view's tab menu and toolbar, kept in settings (`calendarViewIds`) per FR-033 (missing) — test `calendar-tab.test.ts`.
 - [X] T080 The sidebar's Calendar tab listing the dated pages of those views under "Upcoming" per FR-033 (missing) — test `calendar-tab-view.test.ts`; photo `u19-tabs`.
 
+## Phase 15: Convergence (differences left after the photos of Phases 13–14)
+
+- [X] T081 A forward Delete in Suggesting strikes on and leaves the caret past the struck text, one suggestion (`editor-input.view.ts` `isForward`, `suggestion.commands.ts`) per FR-031 (partial) — tests `suggestion.test.ts`, `editor-input.test.ts`; photo `u18-suggest/11-bs-s` ("Delete: el").
+- [X] T082 A suggestion's card shows who suggested it and when, as Notion's card (`suggestedAt`, `suggestion.view.ts`) per FR-031 (partial) — test `suggestion-view.test.ts`; photo `u18-suggest/14-suggestion-card` against `n52-card`.
+- [X] T083 A files cell reads "+ Add file or image" while its popover is open, without the cell bar over it (`table-cell.view.ts`, `files.css`) per FR-029 (partial) — tests `cell-actions-view.test.ts`; photo `u13-props/18-files-popover` against `n50-files-probe/03-files-popover`.
+- [X] T084 "Edit automation" titled as Notion's: quiet title over a line (`ui/dialog` variant "form") per FR-030 (partial) — photo `u14-button/11-automation` against `n51-button/05-settings`.
+- [X] T085 A lone chart column keeps a bar's width, and a form's date question is an English text field read as the date picker reads typed days (`chart.css`, `form.view.ts`, `form-answers.ts`) — tests `form-answers.test.ts`, `form-view.test.ts`; photos `u20-chart/15-solo-chart`, `u20-chart/19-solo-form`.
+

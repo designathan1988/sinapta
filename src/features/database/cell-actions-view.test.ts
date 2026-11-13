@@ -5,6 +5,7 @@ import type { Command, Dispatch } from "../../state/index.ts";
 import { commentCommands, startDiscussion } from "../comments/index.ts";
 import { createDatabaseApp } from "./database-builder.ts";
 import { renderDatabase } from "./database.view.ts";
+import { CELL_FILES_OVERLAY } from "./table-cell.view.ts";
 
 function rendered(withDiscussion = false) {
   const app = createDatabaseApp(
@@ -124,5 +125,51 @@ describe("a press on a button's cell", () => {
       expect.objectContaining({ rowId, propertyId: go }),
     );
     expect(sent.map((command) => command.type)).toContain("row.pressButton");
+  });
+});
+
+describe("a files cell with its popover open", () => {
+  it("reads + Add file or image, as Notion's", () => {
+    const app = createDatabaseApp([{ name: "Files", type: "files" }], [["A"]]);
+    const [rowId] = app.rowIds;
+    const [files] = app.propertyIds;
+    if (rowId === undefined || files === undefined) throw new Error("setup");
+    const built = app.store.getState();
+    const overlay = { kind: CELL_FILES_OVERLAY, anchorId: `${rowId}:${files}` };
+    const host = document.createElement("div");
+    document.body.replaceChildren(host);
+
+    render(
+      renderDatabase({ ...built, ui: { ...built.ui, overlay } }, () => ({
+        ok: true,
+      })),
+      host,
+    );
+
+    const cell = host.querySelector(`[data-cell="${rowId}:${files}"]`);
+    expect(cell?.textContent).toContain("Add file or image");
+  });
+});
+
+describe("a files cell's bar while its popover is open", () => {
+  it("is not drawn over + Add file or image", () => {
+    const app = createDatabaseApp([{ name: "Files", type: "files" }], [["A"]]);
+    const [rowId] = app.rowIds;
+    const [files] = app.propertyIds;
+    if (rowId === undefined || files === undefined) throw new Error("setup");
+    const built = app.store.getState();
+    const overlay = { kind: CELL_FILES_OVERLAY, anchorId: `${rowId}:${files}` };
+    const host = document.createElement("div");
+    document.body.replaceChildren(host);
+
+    render(
+      renderDatabase({ ...built, ui: { ...built.ui, overlay } }, () => ({
+        ok: true,
+      })),
+      host,
+    );
+
+    const cell = host.querySelector(`[data-cell="${rowId}:${files}"]`);
+    expect(cell?.querySelector("[data-cell-actions]")).toBeNull();
   });
 });

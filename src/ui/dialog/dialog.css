@@ -32,6 +32,18 @@
     line-height: var(--font-line-height-tight);
   }
 
+  /* A dialog to fill in, as Notion's button automation: its title in the
+     page's text size and weight, over a line. */
+  .dialog[data-variant="form"] .dialog__header {
+    padding-block-end: var(--space-stack-sm);
+    border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
+  }
+
+  .dialog[data-variant="form"] .dialog__title {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-regular);
+  }
+
   /* Notion's search: wide, tall, rounded, near the top of the window. */
   .dialog[data-variant="search"] {
     inline-size: min(var(--size-search-width), 100%);

@@ -35,7 +35,7 @@ function takeText(event: SubmitEvent): string {
   return text;
 }
 
-function renderAvatar(): TemplateResult {
+export function renderAvatar(): TemplateResult {
   return html`<span class="comments__avatar" aria-hidden="true"
     >${TEXT.author.slice(0, 1)}</span
   >`;
@@ -175,7 +175,7 @@ export function renderDiscussion(
     ${
       discussion.suggestion === undefined
         ? renderHead(discussion, context)
-        : renderSuggestionHead(discussion, page, dispatch)
+        : renderSuggestionHead(discussion, { page, dispatch, now: context.now })
     }
     <ul class="comments__list">
       ${discussion.comments.map((comment) =>

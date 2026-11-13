@@ -71,10 +71,14 @@
   .chart__track {
     display: flex;
     align-items: flex-end;
+    justify-content: center;
   }
 
+  /* A column keeps to a bar's width, as Notion's: a lone one does not
+     fill the chart. */
   .chart__mark {
     inline-size: 100%;
+    max-inline-size: calc(var(--size-control-md) * 2);
     block-size: calc(var(--share) * 100%);
     border-radius: var(--radius-sm) var(--radius-sm) 0 0;
     background-color: var(--chart-color);
@@ -111,11 +115,13 @@
     & .chart__track {
       grid-row: 1;
       grid-column: 2;
+      justify-content: flex-start;
       block-size: var(--size-icon-md);
     }
 
     & .chart__mark {
       inline-size: calc(var(--share) * 100%);
+      max-inline-size: none;
       block-size: 100%;
       border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     }

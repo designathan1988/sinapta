@@ -980,6 +980,14 @@ items above, found while photographing them:
     own, so its equivalent shows the view's dated pages in the sidebar's
     calendar tab ("Upcoming").
 
+31. **done** [T081–T085] The differences left after the photos of items
+    26–28 closed: a forward Delete in Suggesting strikes on with the caret
+    past it; a suggestion's card shows "You · now" before "Add: “…”"; a
+    files cell reads "+ Add file or image" with no bar over it; the
+    automation dialog's title is quiet over a line; a lone chart column
+    keeps a bar's width; a form's date question is an English text field
+    ("Select a date") instead of the browser's own.
+
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,
 `n45-history/04-updates`: "Há 4 horas", ID 1, Nome, the box ticked). A

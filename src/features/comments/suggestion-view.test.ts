@@ -24,14 +24,19 @@ function rendered(suggestion: "insert" | "delete") {
     comments: [],
     quote: " zz",
     suggestion,
+    suggestedAt: "2026-11-13T10:00",
   };
   const sent: Command[] = [];
   const host = document.createElement("div");
   document.body.replaceChildren(host);
   render(
-    renderSuggestionHead(discussion, page, (command) => {
-      sent.push(command);
-      return { ok: true };
+    renderSuggestionHead(discussion, {
+      page,
+      now: "2026-11-13T10:00",
+      dispatch: (command) => {
+        sent.push(command);
+        return { ok: true };
+      },
     }),
     host,
   );
@@ -47,6 +52,7 @@ describe("a suggestion's card", () => {
     press("Accept");
 
     expect(host.textContent).toContain("Add:");
+    expect(host.querySelector("time")).not.toBeNull();
     expect(sent).toEqual([
       expect.objectContaining({
         type: "suggestion.accept",

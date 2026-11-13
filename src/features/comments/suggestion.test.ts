@@ -85,3 +85,30 @@ describe("Suggesting", () => {
     expect(discussions()).toEqual([]);
   });
 });
+
+describe("Delete in Suggesting", () => {
+  it("strikes on forward, one suggestion, the caret past what it struck", () => {
+    const { app, text, discussions } = createApp();
+    const forward = (at: number) =>
+      app.dispatch(
+        replaceText.create({
+          blockId: line,
+          start: at,
+          end: at + 1,
+          text: "",
+          isForward: true,
+        }),
+      );
+
+    forward(0);
+    const caret = app.store.getState().ui.selection?.focusOffset ?? -1;
+    forward(caret);
+
+    expect(caret).toBe(1);
+    expect(text()).toEqual([
+      expect.objectContaining({ text: "He", suggestion: "delete" }),
+      { text: "llo" },
+    ]);
+    expect(discussions()).toHaveLength(1);
+  });
+});

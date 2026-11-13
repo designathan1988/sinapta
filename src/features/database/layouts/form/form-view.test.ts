@@ -96,3 +96,24 @@ describe("the form", () => {
     expect(error?.textContent).toContain("required");
   });
 });
+
+describe("a form's date question", () => {
+  it("is a text field in English, not the browser's own date field", () => {
+    const app = createDatabaseApp([{ name: "Due", type: "date" }], []);
+    const viewId = app.view().id;
+    app.dispatch(setViewType.create({ viewId, viewType: "form" }));
+    const host = document.createElement("div");
+    document.body.replaceChildren(host);
+
+    render(
+      renderDatabase(app.store.getState(), () => ({ ok: true })),
+      host,
+    );
+
+    const date = host.querySelector<HTMLInputElement>(
+      ".form__field[placeholder]",
+    );
+    expect(date?.type).toBe("text");
+    expect(date?.placeholder).toBe("Select a date");
+  });
+});

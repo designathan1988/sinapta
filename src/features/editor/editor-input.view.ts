@@ -126,7 +126,8 @@ function remove(direction: -1 | 1): Handler {
         ? nextToCaret(target, direction, state)
         : target;
     if (range !== undefined) {
-      dispatch(replaceText.create({ ...range, text: "" }));
+      const isForward = direction === 1;
+      dispatch(replaceText.create({ ...range, text: "", isForward }));
       return;
     }
     // Nothing left to delete in this block: join with its neighbor.

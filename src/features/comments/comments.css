@@ -201,8 +201,14 @@
   /* A suggestion's card: "Add: “…”" in blue, as Notion's. */
   .comments__suggestion {
     flex: 1;
-    margin: var(--space-none);
-    color: var(--color-text-accent);
     font-size: var(--font-size-sm);
+
+    & > p {
+      margin: var(--space-none);
+    }
+
+    & > p:last-child {
+      color: var(--color-text-accent);
+    }
   }
 }

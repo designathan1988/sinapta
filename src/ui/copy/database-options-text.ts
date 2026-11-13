@@ -73,4 +73,6 @@ export const DATABASE_OPTIONS_TEXT = {
   pasteLink: "Paste https://…",
   linkFile: "Link",
   filesTabs: { upload: "Upload", link: "Link" },
+  addFileOrImage: "Add file or image",
+  formDate: "Select a date",
 } as const;

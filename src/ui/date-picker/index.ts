@@ -8,3 +8,4 @@ export {
   type Reminder,
 } from "./date-picker-value.ts";
 export { renderDatePicker } from "./date-picker.view.ts";
+export { parseTypedDate } from "./date-parse.ts";

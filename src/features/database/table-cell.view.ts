@@ -124,10 +124,30 @@ function renderValue(
 ): TemplateResult | string {
   if (column.isTitle) return renderTitle(row, context);
   const type = propertyType(column.property.type);
-  return type.renderCell(
+  const value = type.renderCell(
     type.read(row.values[column.property.id]),
     column.property,
     selectCellContext(context.state),
+  );
+  return isAddingFiles(row, column, context)
+    ? html`${value}<span class="files__add"
+          >${renderIcon("plus")}${COPY.database.addFileOrImage}</span
+        >`
+    : value;
+}
+
+// A files cell whose popover is open reads "+ Add file or image", as
+// Notion's.
+function isAddingFiles(
+  row: TableRow,
+  column: TableColumn,
+  context: TableContext,
+): boolean {
+  const { overlay } = context.state.ui;
+  return (
+    column.property.type === "files" &&
+    overlay?.kind === CELL_FILES_OVERLAY &&
+    overlay.anchorId === `${row.id}:${column.property.id}`
   );
 }
 
@@ -192,7 +212,7 @@ export function renderCell(
     ${
       isEditing
         ? renderEditor(editText(row, column), column)
-        : html`${renderCellActions(row, column, context)}${renderValue(
+        : html`${isAddingFiles(row, column, context) ? nothing : renderCellActions(row, column, context)}${renderValue(
             row,
             column,
             context,

@@ -147,6 +147,7 @@ export function renderButtonAutomation(
   return renderDialog({
     title: property.name,
     closeLabel: TEXT.close,
+    variant: "form",
     content: renderContent(context, draft, propertyId),
     onClose: () => dispatch(closeOverlay.create({})),
   });
