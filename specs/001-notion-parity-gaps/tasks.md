@@ -236,3 +236,9 @@ Within a story: model/command → selector → view → photo (each control in i
 - [X] T084 "Edit automation" titled as Notion's: quiet title over a line (`ui/dialog` variant "form") per FR-030 (partial) — photo `u14-button/11-automation` against `n51-button/05-settings`.
 - [X] T085 A lone chart column keeps a bar's width, and a form's date question is an English text field read as the date picker reads typed days (`chart.css`, `form.view.ts`, `form-answers.ts`) — tests `form-answers.test.ts`, `form-view.test.ts`; photos `u20-chart/15-solo-chart`, `u20-chart/19-solo-form`.
 
+
+## Phase 16: Convergence
+
+- [X] T086 Add "Manage in calendar" to the calendar and timeline toolbars beside the month, as Notion's "Manage in Notion Calendar" (`layouts/calendar/calendar-header.view.ts`, `layouts/timeline/timeline.view.ts`) per FR-033 (partial) — test `calendar-tab-view.test.ts`; photo `u21-manage` against the study's calendar and timeline photos.
+- [X] T087 Describe the session's data (repeat cadence fields, button actions, suggestion spans and discussions, `sidebarTab`, `sectionTabs`, `calendarViewIds`, `overlay.draft`) in `data-model.md` and their validation scenarios in `quickstart.md` per plan: data-model (partial).
+- [X] T088 Show a suggestion card's Accept and Reject while it is pointed at or has the focus, as Notion's (`comments.css`) per FR-031 (partial) — photo `u18-suggest`.

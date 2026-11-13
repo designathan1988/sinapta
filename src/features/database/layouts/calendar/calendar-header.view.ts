@@ -72,10 +72,12 @@ function stepsOf(shown: CalendarShown, dispatch: Dispatch): Steps {
 export function renderCalendarHeader(
   shown: CalendarShown,
   dispatch: Dispatch,
+  manage: TemplateResult,
 ): TemplateResult {
   const steps = stepsOf(shown, dispatch);
   return html`<header class="calendar__header">
     <h2 class="calendar__month" aria-live="polite">${steps.title}</h2>
+    ${manage}
     ${renderButton({
       label: steps.previous,
       icon: "back",

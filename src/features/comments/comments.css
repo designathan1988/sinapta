@@ -211,4 +211,12 @@
       color: var(--color-text-accent);
     }
   }
+
+  /* A suggestion's Accept and Reject show while its card is pointed at or
+     holds the focus, as Notion's; Tab still reaches them. */
+  .comments__discussion:not(:hover, :focus-within)
+    .comments__head:has(.comments__suggestion)
+    > .comments__resolve {
+    opacity: 0;
+  }
 }

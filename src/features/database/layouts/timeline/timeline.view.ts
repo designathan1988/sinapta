@@ -3,6 +3,7 @@
 // bar per dated row from its first day to its last. A bar opens its row,
 // moves with Alt and an arrow, stretches with Shift too, or is dragged.
 // Rows without a date are listed under the timeline.
+import { renderManageInCalendar } from "../../view-calendar-item.ts";
 import { openRow } from "../../row-open.commands.ts";
 import "./timeline.css";
 import { html, nothing, type TemplateResult } from "lit-html";
@@ -117,6 +118,7 @@ function renderHeader(context: TableContext): TemplateResult {
       centerChild(scroller, scroller.querySelector(".timeline__today"));
   };
   return html`<header class="timeline__header">
+    ${renderManageInCalendar(context)}
     ${renderSelect(
       {
         id: `timeline-zoom-${viewId}`,

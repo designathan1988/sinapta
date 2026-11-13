@@ -80,3 +80,60 @@ no option in `complete` the box cannot be ticked.
 No new store slice. The slash placeholder reads `ui.overlay` (kind
 `slash-menu`, `anchorId`, `start`); the selection panel reads the existing
 format range; the outline derives headings with `selectTableOfContents`.
+
+## Template repeat (`blocks/page/page.schema.ts` `repeatSchema`) — FR-028
+
+All new fields optional; stored repeats without them read as before.
+
+| Field | Type | Rule |
+|-------|------|------|
+| `every` | `"day" \| "week" \| "month" \| "year"` | the unit |
+| `next` | `YYYY-MM-DD` | the next day a row is made |
+| `interval` | integer 1–99 | every this many units; 1 when missing |
+| `weekdays` | integers 0 (Monday)–6 | weeks only; the weekday of the start when missing |
+| `time` | `HH:MM` | around midnight when missing; due from it on its day |
+| `start` | `YYYY-MM-DD` | the first day; weeks are counted from it |
+| `endsAfter`, `made` | integers | stops once `made` reaches `endsAfter` |
+| `endsOn` | `YYYY-MM-DD` | stops when the next day would be after it |
+
+The eight choices (Day, Weekday, Week, 2 weeks, Month, 3 months, 6 months,
+Year) are drafts of these fields, kept as "key=value" lines in the open
+overlay's values until Save.
+
+## Button automation (`properties/button/button-property.schema.ts`) — FR-030
+
+`actions` is an ordered list of variants, run in order on a press in one
+undo step:
+
+| `kind` | Fields | Effect |
+|--------|--------|--------|
+| `set-values` | `values` | Edit property: sets the row's values |
+| `add-page` | `databaseId`, `values` | adds a row to the database |
+| `edit-pages` | `databaseId`, `filter?`, `values` | sets the values of the rows passing the filter |
+| `confirm` | `message` | asked before the actions (the view's) |
+| `open-page` | `pageId?`, `url?` | opens the row, a page, or a web address (the view's) |
+| `define-variables` | `variables[{name, expression}]` | formulas reading the row; a value `{ variable }` takes one |
+
+A value `{ today: true }` is the day of the press. The draft lives in the
+open overlay's `draft` (state `OpenOverlay.draft`, not saved) until Save.
+
+## Suggestions (`model/rich-text.schema.ts`, `page.schema.ts`) — FR-031
+
+- A text span's optional `suggestion` is `"insert"` or `"delete"`; its
+  `comments` hold the discussion of the suggestion.
+- A discussion's optional `suggestion` (the kind), `suggestedAt` (when)
+  and `quote` (the text it suggests now).
+- Accept keeps an insertion and drops a deletion's text; Reject does the
+  opposite; either way the discussion goes.
+- `ui.suggestingPageId` (not saved) is the page in Suggesting.
+
+## Sidebar tabs and calendar (`settingsSchema`) — FR-032, FR-033
+
+| Field | Type | Rule |
+|-------|------|------|
+| `sidebarTab` | `"home" \| "calendar"` | the tab shown; Home when missing |
+| `sectionTabs` | section key → tab | a section moved to a tab; Home when missing |
+| `calendarViewIds` | view ids | views whose dated pages the Calendar tab lists from today on |
+
+All kept with the settings, outside undo.
+

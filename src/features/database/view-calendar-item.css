@@ -1,0 +1,12 @@
+@layer features {
+  /* "Manage in calendar" in a calendar's or timeline's toolbar: quiet,
+     at the start of the controls on the right; pressed while listed. */
+  .database__manage-calendar {
+    margin-inline-start: auto;
+
+    &[aria-pressed="true"] {
+      background-color: var(--color-bg-hover);
+      color: var(--color-text-primary);
+    }
+  }
+}

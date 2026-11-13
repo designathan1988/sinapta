@@ -1,6 +1,7 @@
 // A calendar: a month in weeks or a single week, with or without its
 // weekends, each row on the days of its date property. Rows move between
 // days by drag, or by Alt with an arrow key.
+import { renderManageInCalendar } from "../../view-calendar-item.ts";
 import { selectRowColor } from "../../row-color.selectors.ts";
 import { withDefaultTemplate } from "../../template-default.commands.ts";
 import { openRow } from "../../row-open.commands.ts";
@@ -225,6 +226,7 @@ export function renderCalendar(context: TableContext): TemplateResult {
     data-mode=${mode}
     ?data-wrap=${wrapTitles === true}
   >
-    ${renderCalendarHeader(shown, context.dispatch)} ${renderGrid(calendar)}
+    ${renderCalendarHeader(shown, context.dispatch, renderManageInCalendar(context))}
+    ${renderGrid(calendar)}
   </div>`;
 }
