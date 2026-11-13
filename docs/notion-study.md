@@ -1083,6 +1083,29 @@ items above, found while photographing them:
     was moved to the trash and the test template deleted
     (`n57-cleanup/13-check`: the list empty again, one row left).
 
+40. **done** [T114–T117, FR-017, FR-028, `n58-full`, `n58-braces`,
+    `n58-ctx`, `n58-banner`] Notion's whole English catalog. The loader
+    (`window.rspackChunknotion_next`, reached by pushing an entry whose
+    runtime callback receives it) names every code file in `req.u`: 2352
+    files besides icons and emoji, 96 MB, fetched as text and never run.
+    Their `{id, defaultMessage}` descriptors give 46 530 messages; those
+    with a placeholder were paired with their id from the code around
+    them (pairing by nearness put three recurrence helpers on their
+    neighbours' ids; corrected by reading `n58-ctx`): 51 228 in all, kept
+    with their pt-BR text in `.captures/notion-i18n-full.json` (not
+    committed). Read there: "Duplicate every…" (banner and template
+    menu, U+2026), "<b>Button</b> is clicked", "Filter will update with
+    the current date", "Date Options", "Comparator", "Operator", "View
+    options", "Link to view copied to clipboard", "Add a file or image",
+    "Paste in https://…", "No upcoming events", "More actions", "Move to
+    Trash", "Plain Text", "Search for an option...", "Reading List",
+    "You’re editing a template in", "{date} at {time}", "{date} between
+    12–3 AM", "Next {dayOfTheWeek}", "or {keyboardShortcut} to paste an
+    image". A saved weekly cadence makes the strip read "Duplicar a cada
+    semana" and the template menu "Duplicar a cada... Semana"
+    (`n58-banner`); the test template was deleted in the same run and the
+    list read empty afterwards (`n57-state`).
+
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,
 `n45-history/04-updates`: "Há 4 horas", ID 1, Nome, the box ticked). A
@@ -1265,6 +1288,11 @@ against the reference on every run.
   (`element.getAnimations({ subtree: true })`, then `finish()`).
 
 ## Open
+
+- (2026-11-13) The full suite runs 8.7–11.0 s while another project's
+  dev servers share the machine; SC-005's 10 s holds without them. The
+  DOM environments are 45 % of the time: fewer happy-dom files would
+  bring it under 10 s on any load.
 
 - Light theme measurements of the menu reference.
 - A board in Notion to measure its columns and cards with a real pointer

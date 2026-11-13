@@ -66,12 +66,17 @@ below) rather than in files of their own.
   applies to you", "Card background" on a board or gallery, "Select..."
   in an empty rule value, "Starting", "Timezone", "2 Weeks", "12–3AM",
   "Duplicate every..." (Notion drawn in English, `n57-cadence`) and
-  "Manage in Calendar". Not loaded by any menu opened, so unread by id:
-  "Date to filter by", "Related values to test", "The filter will update
-  with today's date", "How many", "Runs", "The button is clicked", the
-  next occurrence's "between 0:00 and 3:00" (its id,
-  `automations.recurrenceHelpers.dateBetweenMidnightAnd3AM`, is known),
-  and whether "Duplicate every..." ends in three dots or "…".
+  "Manage in Calendar". Then the whole catalog was read from every
+  code file Notion's loader lists (`n58-full`, `n58-braces`, 51 228
+  messages; study item 40), and the words no opened menu had loaded were
+  matched by id too (T115–T117): "Duplicate every…" ends in "…";
+  "Button is clicked" (Button in bold); "Filter will update with the
+  current date"; "Date Options"; the next occurrence "{date} at {time}" or
+  "{date} between 12–3 AM", the date as "Next Mon"; a saved cadence
+  "Duplicate every week". Every word of the new controls now has its
+  Notion id; the controls Notion leaves unnamed (the interval, the run
+  count, the quantifier) take the name of the Notion row or menu they sit
+  in ("Every", "Number of runs", "Operator").
 - **FR-018 (keyboard)**: one pass per new control, keys only after the
   state is set, each step's focus read back and photographed:
 
@@ -117,7 +122,14 @@ below) rather than in files of their own.
 - **SC-005** (verify under 30 s, tests under 10 s) and **SC-006** (no
   regression): `npm run verify` on 2026-11-13, after T111, passed type
   check, lint and formatting, then 326 test files and 2020 tests, every
-  one passing, in 8.90 s; 24.2 s in all.
+  one passing, in 8.90 s; 24.2 s in all. After T117: 2039 tests, every
+  one passing; `npm run verify` 28.5 s in all. The suite alone measured
+  8.7 s to 11.0 s over seven runs that hour, with another project's four
+  dev servers and four watchers running beside it: over the 10 s budget
+  in three of them. The worker share was measured again (50 % 9.0–10.0 s,
+  66 % 9.3–10.4 s, 80 % 10.3 s) and stays at 66 %; the budget holds only
+  on a machine without that load, which is recorded as open in
+  `docs/notion-study.md` ("Open").
 
 ## Assumptions, checked against the code
 
