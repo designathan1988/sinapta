@@ -702,6 +702,63 @@ Checkbox: não selecionado → selecionado, selecionado → não selecionado.
   per group (and "Sem <Property>"), Remover agrupamento, "Saiba mais
   sobre agrupamentos".
 
+## Blocks and the editor (audit of 2026-11-13, photos `d2…d5`)
+
+### Slash menu, as drawn now
+
+Typing "/" on an empty line washes the line and shows "/Type to search"
+in it; the menu opens under it, about 325 px wide and 320 px of list,
+sections headed in small grey type ("Suggested": Transcribe, "HTML ·
+Embeds" with a blue "New" badge; "Basic blocks"; "Media"; "Database";
+… "Inline"; "Embeds": Embed, HTML New), rows 33 px with an icon, the
+name and the markdown shortcut right-aligned in grey (#, ##, ###, ####,
+-, 1., [], >, ", ---, ```), the first row washed; "Close menu esc" fixed
+at the foot. The list loads more as it scrolls (about 5300 px in all).
+
+### Blocks (measured)
+
+Text 16 px / 400 / 24; Heading 2 24 px / 600 / 31.2 (block 67 px with
+its margins); Heading 3 20 px / 600 / 26; Heading 4 18 px / 600 / 23.4.
+Bulleted, numbered, to-do and toggle rows 30–35 px, their marker in a
+24 px column. Quote: a 3 px bar left of 16 px text. Divider: a 1 px
+rule. Callout: a rounded box (#2a2a2a), 💡 left of the text. Markdown
+shortcuts at line start turn the line (#, ##, ###, ####, -, 1., [], >,
+", ---). Enter after a toggle's title writes inside the toggle. A page
+with headings shows its outline as short dashes at the right edge, one
+per heading (a floating table of contents).
+
+### Block menu (the ⋮⋮ handle, "Arraste para mover, clique para abrir o menu")
+
+A search field "Pesquisar ações…" (focused), the block's type as a
+heading ("Lista com marcadores"), Transformar em ›, Cor ›, Formato da
+lista ›; rule; Link para o bloco Alt+⇧+L, Duplicar Ctrl+D, Mover para
+Ctrl+⇧+P, Excluir Del; rule; Comentário Ctrl+⇧+M, Sugerir edições
+Ctrl+⇧+Alt+X; rule; Peça à IA Ctrl+J, Habilidades ›; at the foot "Última
+edição", the author with avatar, "hoje às 02:56", "2 palavras, 13
+caracteres". The hovered block is washed blue while its menu is open.
+
+- Transformar em: Texto, Título 1–4, Página, Lista com marcadores, Lista
+  numerada, Lista de tarefas, Lista de alternantes, Código, Citação,
+  Frase de destaque, Equação em bloco, Bloco sincronizado, Título
+  alternante 1–4, 2/3/4/5 colunas.
+- Cor: "Usada por último" (Fundo amarelo Ctrl+⇧+H); "Cor do texto": an
+  "A" swatch for Texto padrão, cinza, marrom, laranja, amarelo, verde,
+  azul, roxo, rosa, vermelho; "Cor de fundo": Fundo padrão … vermelho.
+
+### Text selection toolbar (new design)
+
+Not a horizontal strip any more: a panel under the selection.
+- "Lista com marc… ›" (turn into);
+- two rows of 32 px icon buttons: A (color), B, I, U, Tx (clear
+  formatting) / link, strikethrough, </> code, √x equation, "…";
+- "Comentário", an add-reaction button, a suggest-edit button;
+- "Habilidades" (with a settings button): Melhorar escrita, Revisão,
+  Explicar, Reformatar …;
+- a field "Edite com a IA Alt+⇧+E".
+
+The top bar meanwhile offered "Traduzir para Português ×" (the page's
+words were English) and "Offline" when the connection dropped.
+
 ## Controls
 
 **Now** says what the control is today: "native" (a browser `<select>`
