@@ -908,9 +908,13 @@ items above, found while photographing them:
     lists it last and numbers and options first.
 
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
-seleção" had been ticked by a probe that clicked cells by position; it
-was unticked (`n40-untick/03-untick`). The sidebar sections and the
-stray empty row made while probing "Add view to sidebar" were removed.
+seleção" was ticked when the row was made (its "Atualizações" panel,
+`n45-history/04-updates`: "Há 4 horas", ID 1, Nome, the box ticked). A
+cleanup here unticked it by mistake; it was ticked again
+(`n45-retick/03-tick`). The sidebar sections, the stray empty row, the
+"Customize sidebar" mode and the "Sugerindo" mode opened while probing
+were all removed or left; a read afterwards (`n44-state`) showed one row,
+no section, no discussion mark, neither mode on.
 
 ### Sample database (2026-11-13, SC-002)
 
