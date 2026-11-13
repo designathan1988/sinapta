@@ -687,6 +687,20 @@
             "components": [0.9558, 0.0179, 245.4]
           }
         },
+        "accentRange": {
+          "$description": "The days of a range in a date picker; Notion's light one is not yet photographed.",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.9558, 0.0179, 245.4]
+          }
+        },
+        "accentPill": {
+          "$description": "A view's filter pill; Notion's light one is not yet photographed.",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.9558, 0.0179, 245.4]
+          }
+        },
         "focus": {
           "$value": {
             "colorSpace": "oklch",
@@ -706,6 +720,13 @@
           }
         },
         "dangerFill": {
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.55, 0.17, 26]
+          }
+        },
+        "today": {
+          "$description": "Today's circle in a date picker; Notion's light one is not yet photographed.",
           "$value": {
             "colorSpace": "oklch",
             "components": [0.55, 0.17, 26]
@@ -984,6 +1005,20 @@
             "components": [0.3165, 0.0436, 246.9]
           }
         },
+        "accentRange": {
+          "$description": "The days of a range in a date picker, as Notion's band (n69-date-cleanup): rgb(36, 57, 77).",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.3363, 0.0445, 248.1]
+          }
+        },
+        "accentPill": {
+          "$description": "A view's filter pill, as Notion's (n69-date-cleanup): rgb(40, 72, 107).",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.3942, 0.0708, 252.0]
+          }
+        },
         "focus": {
           "$value": {
             "colorSpace": "oklch",
@@ -1006,6 +1041,13 @@
           "$value": {
             "colorSpace": "oklch",
             "components": [0.55, 0.17, 26]
+          }
+        },
+        "today": {
+          "$description": "Today's circle in a date picker, as Notion's (n69-date-cleanup): rgb(229, 100, 88).",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.661, 0.1631, 27.7]
           }
         },
         "templateBg": {
@@ -1233,6 +1275,12 @@
           "unit": "rem"
         }
       },
+      "0x25": {
+        "$value": {
+          "value": 0.0625,
+          "unit": "rem"
+        }
+      },
       "0x5": {
         "$value": {
           "value": 0.125,
@@ -1365,6 +1413,18 @@
       "13x75": {
         "$value": {
           "value": 13.75,
+          "unit": "rem"
+        }
+      },
+      "16x25": {
+        "$value": {
+          "value": 16.25,
+          "unit": "rem"
+        }
+      },
+      "1x4375": {
+        "$value": {
+          "value": 1.4375,
           "unit": "rem"
         }
       },

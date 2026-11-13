@@ -112,6 +112,12 @@
       },
       "subtle": {
         "$value": "{base.color.day.accentSubtle}"
+      },
+      "range": {
+        "$value": "{base.color.day.accentRange}"
+      },
+      "pill": {
+        "$value": "{base.color.day.accentPill}"
       }
     },
     "status": {
@@ -120,6 +126,9 @@
       },
       "dangerFill": {
         "$value": "{base.color.day.dangerFill}"
+      },
+      "today": {
+        "$value": "{base.color.day.today}"
       }
     },
     "template": {
@@ -320,6 +329,10 @@
       }
     },
     "stack": {
+      "hair": {
+        "$description": "Between the rows of Notion's date menu, and under its day field (n71-date-cell): 1 px.",
+        "$value": "{base.space.0x25}"
+      },
       "xxs": {
         "$value": "{base.space.0x5}"
       },
@@ -546,9 +559,37 @@
       "width": {
         "$value": "{base.size.18x125}"
       },
-      "choices": {
-        "$description": "A filter whose values are listed, as Notion's checkbox filter: 220 px.",
+      "rule": {
+        "$description": "A filter rule's popover, as Notion's (n69-text-filter-measure): 220 px.",
         "$value": "{base.size.13x75}"
+      },
+      "ruleHead": {
+        "$description": "A filter rule's head row, as Notion's (n69-text-filter-measure): 18 px.",
+        "$value": "{base.size.1x125}"
+      },
+      "weekday": {
+        "$description": "The date picker's weekday names, as Notion's (n69-date-grid): 18 px.",
+        "$value": "{base.size.1x125}"
+      },
+      "weekdayRow": {
+        "$description": "The date picker's row of weekday names with the space under it, as Notion's (n69-date-cleanup): the first day 27 px under the names.",
+        "$value": "{base.size.1x4375}"
+      },
+      "noteLine": {
+        "$description": "The line of a note under a menu, as Notion's date filter note (n69-date-cleanup): 16 px.",
+        "$value": "{base.size.4}"
+      },
+      "day": {
+        "$description": "A day in the date picker, as Notion's (n69-date-filter-measure): 28 px.",
+        "$value": "{base.size.7}"
+      },
+      "date": {
+        "$description": "A menu led by a date picker, as Notion's date cell (n71-date-cell): 248 px.",
+        "$value": "{base.size.15x5}"
+      },
+      "dateRule": {
+        "$description": "A date filter rule's popover, with its calendar, as Notion's (n69-date-filter-measure): 260 px.",
+        "$value": "{base.size.16x25}"
       },
       "short": {
         "$description": "A long list kept short and scrolled, as Notion's list of times (maxHeight 250 in its code).",

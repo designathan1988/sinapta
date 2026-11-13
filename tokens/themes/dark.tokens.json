@@ -106,6 +106,12 @@
       },
       "subtle": {
         "$value": "{base.color.night.accentSubtle}"
+      },
+      "range": {
+        "$value": "{base.color.night.accentRange}"
+      },
+      "pill": {
+        "$value": "{base.color.night.accentPill}"
       }
     },
     "status": {
@@ -114,6 +120,9 @@
       },
       "dangerFill": {
         "$value": "{base.color.night.dangerFill}"
+      },
+      "today": {
+        "$value": "{base.color.night.today}"
       }
     },
     "template": {
