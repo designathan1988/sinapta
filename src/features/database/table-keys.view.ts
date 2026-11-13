@@ -5,9 +5,10 @@ import { openOverlay, type ActiveCell } from "../../state/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { pressRowButton } from "./properties/button/index.ts";
-import { setRowValue } from "./row.commands.ts";
+import { setRowValue, setStatusChecked } from "./row.commands.ts";
+import { isStatusChecked } from "./properties/status/index.ts";
 import type { PropertyType } from "./property-definition.ts";
-import { propertyType } from "./property-registry.ts";
+import { editorOf, propertyType } from "./property-registry.ts";
 import { CELL_POPOVERS, type TableContext } from "./table-cell.view.ts";
 import { cellOf, columnOf, type CellRef } from "./table-cell-ref.ts";
 import { setActiveCell, setTableFirstRow } from "./table.commands.ts";
@@ -26,7 +27,8 @@ function activate(
   );
 }
 
-// A checkbox cell is not opened: Enter turns it on or off.
+// A checkbox cell is not opened: Enter turns it on or off; a status shown
+// as a checkbox ticks Complete or To-do.
 function toggleCell(
   cell: CellRef,
   context: TableContext,
@@ -34,6 +36,14 @@ function toggleCell(
 ): void {
   if (cell.propertyId === null) return;
   const row = context.model.rows.find((item) => item.id === cell.rowId);
+  const property = columnOf(cell, context)?.property;
+  if (property?.type === "status") {
+    const { rowId, propertyId } = cell;
+    const value = type.read(row?.values[propertyId]);
+    const checked = !isStatusChecked(property, value);
+    context.dispatch(setStatusChecked.create({ rowId, propertyId, checked }));
+    return;
+  }
   const isChecked = type.read(row?.values[cell.propertyId]) === true;
   context.dispatch(
     setRowValue.create({
@@ -49,7 +59,7 @@ function startEditing(cell: CellRef, context: TableContext): void {
   const column = columnOf(cell, context);
   if (column === undefined) return;
   const type = propertyType(column.property.type);
-  const editor = column.isTitle ? "text" : type.editor;
+  const editor = column.isTitle ? "text" : editorOf(column.property);
   if (editor === "none") return;
   if (editor === "toggle") {
     toggleCell(cell, context, type);

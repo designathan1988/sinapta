@@ -3,7 +3,7 @@
 // Where the database is too narrow for tabs, the open view stands alone
 // as a switch listing them all.
 import { html, nothing, type TemplateResult } from "lit-html";
-import type { View, ViewId } from "../../model/index.ts";
+import type { View, ViewId, ViewTabStyle } from "../../model/index.ts";
 import { closeOverlay, openOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
@@ -15,6 +15,8 @@ import { NEW_VIEW_OVERLAY } from "./view-layout.view.ts";
 import { setActiveView } from "./view.commands.ts";
 
 export const VIEW_TABS_OVERLAY = "view-tabs";
+// The open view's own menu, from its tab.
+export const VIEW_TAB_MENU_OVERLAY = "view-tab-menu";
 // Every view, listed from the switch that stands for the tabs where they
 // do not fit.
 export const VIEW_LIST_OVERLAY = "view-list";
@@ -27,9 +29,20 @@ export type TabPlace = "page" | "inline";
 const TAB_ROOM: Readonly<Record<TabPlace, number>> = { page: 100, inline: 64 };
 const TAB_FRAME = 5;
 const MORE_WIDTH = 9;
+// A tab without its icon loses about two characters; one with only its
+// icon takes about three.
+const ICON_WIDTH = 2;
+const ICON_ONLY_WIDTH = 3;
 
-function tabWidth(view: View): number {
-  return view.name.length + TAB_FRAME;
+export interface TabLayout {
+  readonly place: TabPlace;
+  readonly style: ViewTabStyle;
+}
+
+function tabWidth(view: View, style: ViewTabStyle): number {
+  if (style === "icon") return ICON_ONLY_WIDTH;
+  const frame = style === "text" ? TAB_FRAME - ICON_WIDTH : TAB_FRAME;
+  return view.name.length + frame;
 }
 
 // The views shown as tabs, as Notion's: every one when they all fit;
@@ -38,19 +51,21 @@ function tabWidth(view: View): number {
 export function splitViews(
   views: readonly View[],
   activeId: ViewId,
-  place: TabPlace,
+  layout: TabLayout,
 ): { readonly shown: ViewId[]; readonly more: ViewId[] } {
+  const { place, style } = layout;
+  const width = (view: View): number => tabWidth(view, style);
   const ids = views.map((view) => view.id);
-  const total = views.reduce((sum, view) => sum + tabWidth(view), 0);
+  const total = views.reduce((sum, view) => sum + width(view), 0);
   if (total <= TAB_ROOM[place]) return { shown: ids, more: [] };
   const active = views.find((view) => view.id === activeId);
-  let room = TAB_ROOM[place] - MORE_WIDTH - (active ? tabWidth(active) : 0);
+  let room = TAB_ROOM[place] - MORE_WIDTH - (active ? width(active) : 0);
   const shown: ViewId[] = [];
   for (const view of views) {
     if (view.id === activeId) shown.push(view.id);
-    else if (tabWidth(view) > room) break;
+    else if (width(view) > room) break;
     else {
-      room -= tabWidth(view);
+      room -= width(view);
       shown.push(view.id);
     }
   }
@@ -62,6 +77,12 @@ export function splitViews(
 export function tabPlace(context: TableContext): TabPlace {
   const { model, state } = context;
   return model.holderId === state.ui.activePageId ? "page" : "inline";
+}
+
+// How tabs show, the owner's choice, and where they sit.
+export function tabLayout(context: TableContext): TabLayout {
+  const style = context.state.workspace.settings.viewTabStyle ?? "text-icon";
+  return { place: tabPlace(context), style };
 }
 
 interface ToggleButton {
@@ -98,24 +119,46 @@ function renderToggle(
   </button>`;
 }
 
+// A tab, as the owner chose to show tabs; the open view's tab opens its
+// menu, as Notion's.
 function renderTab(view: View, context: TableContext): TemplateResult {
-  const { model, dispatch } = context;
+  const { model, dispatch, state } = context;
   const databaseId = model.holderId;
+  const style = tabLayout(context).style;
+  const isActive = view.id === model.view.id;
+  const menu = { kind: VIEW_TAB_MENU_OVERLAY, anchorId: databaseId };
+  const isOpen = isActive && isOpenFor(state, menu);
+  const onClick = (): void => {
+    if (!isActive) {
+      dispatch(setActiveView.create({ databaseId, viewId: view.id }));
+      return;
+    }
+    dispatch(
+      isOpen ? closeOverlay.create({}) : openOverlay.create({ overlay: menu }),
+    );
+  };
   return html`<button
     type="button"
     class="database__tab"
-    aria-pressed=${String(view.id === model.view.id)}
-    @click=${() => dispatch(setActiveView.create({ databaseId, viewId: view.id }))}
+    aria-pressed=${String(isActive)}
+    aria-haspopup=${isActive ? "menu" : nothing}
+    aria-expanded=${isActive ? String(isOpen) : nothing}
+    aria-label=${style === "icon" ? view.name : nothing}
+    title=${style === "icon" ? tooltipTitle(view.name) : nothing}
+    interestfor=${style === "icon" ? TOOLTIP_TARGET : nothing}
+    ?data-overlay-anchor=${isActive}
+    data-style=${style}
+    @click=${onClick}
   >
-    ${renderIcon(LAYOUT_ICONS[view.type])}
-    <span>${view.name}</span>
+    ${style === "text" ? nothing : renderIcon(LAYOUT_ICONS[view.type])}
+    ${style === "icon" ? nothing : html`<span>${view.name}</span>`}
   </button>`;
 }
 
 export function renderViewTabs(context: TableContext): TemplateResult {
   const { model, state } = context;
   const all = model.viewIds.flatMap((id) => state.workspace.views[id] ?? []);
-  const { shown, more } = splitViews(all, model.view.id, tabPlace(context));
+  const { shown, more } = splitViews(all, model.view.id, tabLayout(context));
   const views = all.filter((view) => shown.includes(view.id));
   const moreLabel = COPY.database.moreViews(more.length);
   const view = model.view;

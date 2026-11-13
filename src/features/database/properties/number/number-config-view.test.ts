@@ -84,4 +84,19 @@ describe("renderNumberConfig", () => {
       { format: "number", display: "bar", divideBy: 250 },
     ]);
   });
+
+  it("shows a number as Ring from its pictured tile, with Notion's note", () => {
+    const { host, changes } = rendered();
+    const tiles = [...host.querySelectorAll<HTMLElement>(".tiles__tile")];
+
+    expect(
+      tiles.map((tile) => tile.textContent.replace(/\s+/g, " ").trim()),
+    ).toEqual(["42 Number", "Bar", "Ring"]);
+    tiles[2]?.click();
+
+    expect(changes).toEqual([{ format: "number", display: "ring" }]);
+    expect(host.textContent).toContain(
+      "Changes apply to all views showing this property.",
+    );
+  });
 });

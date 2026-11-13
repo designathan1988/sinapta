@@ -10,6 +10,8 @@ export interface SettingsPanel {
   readonly title: string;
   readonly items: readonly MenuEntry[];
   readonly lead?: TemplateResult;
+  // What sits under its rows.
+  readonly tail?: TemplateResult;
   // The panel the back button shows; undefined for the first panel.
   readonly back?: string | null;
   // A placeholder when the panel's rows can be searched.

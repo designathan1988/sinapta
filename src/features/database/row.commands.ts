@@ -22,6 +22,7 @@ import {
   type CommandMeta,
   type UiState,
 } from "../../state/index.ts";
+import { statusOptionFor } from "./properties/status/index.ts";
 import { numberNewRow } from "./row-numbering.ts";
 import { fromTemplate } from "./row-template.ts";
 
@@ -207,4 +208,26 @@ export const setRowValue = defineCommand<SetRowValuePayload>({
   },
 });
 
-export const rowCommands = [addRow, setRowValue];
+// Ticking or unticking a status shown as a checkbox: Complete's first
+// option, or To-do's; nothing when that group has no option.
+export const setStatusChecked = defineCommand<{
+  rowId: BlockId;
+  propertyId: PropertyId;
+  checked: boolean;
+}>({
+  type: "row.setStatusChecked",
+  handle(state, command) {
+    const row = selectRow(state, command.rowId);
+    const property = selectDatabase(
+      state,
+      row?.parentId ?? null,
+    )?.props.properties.find((item) => item.id === command.propertyId);
+    if (row === undefined || property === undefined) return {};
+    const value = statusOptionFor(property, command.checked);
+    if (value === undefined) return {};
+    const change = { ...command, value };
+    return { operations: [rowValueUpdate(row, change, command.meta.now)] };
+  },
+});
+
+export const rowCommands = [addRow, setRowValue, setStatusChecked];

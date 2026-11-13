@@ -3,7 +3,12 @@
 import { openRow } from "../../row-open.commands.ts";
 import "./row-card.css";
 import { html, nothing, type TemplateResult } from "lit-html";
-import type { PropertyId, ViewId } from "../../../../model/index.ts";
+import {
+  DEFAULT_CARD_OPTIONS,
+  type CardOptions,
+  type PropertyId,
+  type ViewId,
+} from "../../../../model/index.ts";
 import { type Dispatch } from "../../../../state/index.ts";
 import { COPY } from "../../../../ui/copy.ts";
 import type { CellContext } from "../../property-definition.ts";
@@ -25,6 +30,11 @@ export interface RowCardOptions {
   readonly description?: string;
   // The addresses of kept files, for values that show them.
   readonly cell?: CellContext;
+  // The view's card layout: values side by side or one under another,
+  // and pictures cut to fill or shown whole.
+  readonly card?: CardOptions;
+  // The color a conditional color rule gives the row.
+  readonly color?: string | undefined;
 }
 
 function renderValues(options: RowCardOptions): TemplateResult[] {
@@ -67,6 +77,9 @@ export function renderRowCard(options: RowCardOptions): TemplateResult {
     type="button"
     class="row-card"
     data-row-id=${row.id}
+    data-layout=${options.card?.layout ?? DEFAULT_CARD_OPTIONS.layout}
+    ?data-fit=${options.card?.fitMedia === true}
+    data-color=${options.color ?? nothing}
     aria-description=${options.description ?? nothing}
     @click=${() => dispatch(openRow.create({ rowId: row.id, viewId: options.viewId }))}
     @keydown=${options.onKeyDown ?? nothing}

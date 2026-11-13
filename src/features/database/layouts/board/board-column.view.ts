@@ -1,6 +1,8 @@
 // A column of a board: its header with the group's name, count and menu,
 // its cards and the button that adds a card to it; and the list of the
 // columns the view hides, each shown again by a press.
+import { selectRowColor } from "../../row-color.selectors.ts";
+import { DEFAULT_CARD_OPTIONS } from "../../../../model/index.ts";
 import { withDefaultTemplate } from "../../template-default.commands.ts";
 import { renderChip } from "../../../../ui/chip/index.ts";
 import { html, nothing, type TemplateResult } from "lit-html";
@@ -39,6 +41,8 @@ function renderCards(
         columns: model.columns,
         dispatch,
         omit: board.property.id,
+        card: model.view.card ?? DEFAULT_CARD_OPTIONS,
+        color: selectRowColor(model, row, state),
         cell: selectCellContext(state),
         picture: selectCardPicture(state, row.id, model.view.cardPreview),
         description: COPY.database.moveCardHint,

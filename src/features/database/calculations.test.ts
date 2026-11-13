@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { calculate, calculationsFor } from "./calculations.selectors.ts";
-import { setCalculation } from "./calculation.commands.ts";
+import {
+  calculate,
+  calculationsFor,
+  cappedCount,
+} from "./calculations.selectors.ts";
+import { setCalculation, setCountCap } from "./calculation.commands.ts";
 import { createDatabaseApp, type DatabaseApp } from "./database-builder.ts";
 import { setViewGroupBy } from "./group.commands.ts";
 import { selectRowGroups } from "./row-groups.selectors.ts";
@@ -123,5 +127,28 @@ describe("column calculations", () => {
       setCalculation.create({ viewId, propertyId: points, kind: null }),
     );
     expect(app.view().calculations).toEqual({});
+  });
+});
+
+describe("Show large counts as 99+", () => {
+  const rows = Array.from({ length: 150 }, (_, index): [string] => [
+    `row ${String(index)}`,
+  ]);
+
+  it("writes 99+ for a count above 99 with the switch on, the count without", () => {
+    const app = createDatabaseApp([{ name: "Points", type: "number" }], rows);
+    const viewId = app.view().id;
+    const points = property(app, 0);
+    const count = calculate(modelOf(app).rows, points, "count-all");
+
+    expect(cappedCount(count, "count-all", false)).toBe("150");
+    app.dispatch(setCountCap.create({ viewId, on: true }));
+    expect(app.view().countCap).toBe(true);
+    expect(cappedCount(count, "count-all", true)).toBe("99+");
+    expect(cappedCount("99", "count-all", true)).toBe("99");
+  });
+
+  it("leaves percents as they are", () => {
+    expect(cappedCount("100%", "percent-empty", true)).toBe("100%");
   });
 });

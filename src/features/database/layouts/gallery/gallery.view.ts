@@ -1,5 +1,7 @@
 // A gallery: rows as cards in a grid, each with the first image on its
 // page as a cover; a grouped gallery shows a grid for each group.
+import { selectRowColor } from "../../row-color.selectors.ts";
+import { DEFAULT_CARD_OPTIONS } from "../../../../model/index.ts";
 import { withDefaultTemplate } from "../../template-default.commands.ts";
 import "./gallery.css";
 import { html, nothing, type TemplateResult } from "lit-html";
@@ -34,6 +36,8 @@ function renderCards(
             dispatch,
             picture: selectCardPicture(state, row.id, model.view.cardPreview),
             cell: selectCellContext(state),
+            card: model.view.card ?? DEFAULT_CARD_OPTIONS,
+            color: selectRowColor(model, row, state),
           })}
         </li>`,
     )}

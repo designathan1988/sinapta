@@ -75,6 +75,18 @@ export function calculate(
   return result;
 }
 
+// A count above 99 written "99+", as Notion's "Show large counts as 99+".
+const COUNT_CAP = 99;
+
+export function cappedCount(
+  result: string,
+  kind: CalculationKind,
+  isCapped: boolean,
+): string {
+  if (!isCapped || !isCount(kind)) return result;
+  return Number(result) > COUNT_CAP ? COPY.database.countCapped : result;
+}
+
 export const NO_CALCULATION = "none";
 
 // The choices of a column's calculation: "None" first, then the

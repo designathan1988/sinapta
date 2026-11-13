@@ -101,6 +101,12 @@
     }
   }
 
+  /* "Wrap page titles": a title on as many lines as it takes. */
+  .calendar[data-wrap] .calendar__entry {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
   /* "+" at the cell's start, clear of the date. */
   .calendar__add {
     position: absolute;

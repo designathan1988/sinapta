@@ -162,13 +162,28 @@ interface Dated {
   readonly end: string;
 }
 
+// With "Separate start and end dates", a bar ends on the day another
+// date property holds, when that day is not before its start.
+function endOf(row: TableRow, start: string, endId: string | undefined) {
+  const other =
+    endId === undefined ? undefined : readDateValue(row.values[endId]);
+  const end = other?.end ?? other?.start;
+  return end !== undefined && end >= start ? end : undefined;
+}
+
 function datedRows(model: TableModel, propertyId: string) {
+  const { separateDates, endDatePropertyId } = model.view.timeline;
+  const endId = separateDates === true ? endDatePropertyId : undefined;
   const dated: Dated[] = [];
   const undated: TableRow[] = [];
   for (const row of model.rows) {
     const date = readDateValue(row.values[propertyId]);
-    if (date === undefined) undated.push(row);
-    else dated.push({ row, start: date.start, end: date.end ?? date.start });
+    if (date === undefined) {
+      undated.push(row);
+      continue;
+    }
+    const end = endId === undefined ? date.end : endOf(row, date.start, endId);
+    dated.push({ row, start: date.start, end: end ?? date.start });
   }
   return { dated, undated };
 }

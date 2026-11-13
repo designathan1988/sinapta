@@ -41,4 +41,53 @@
   .number__ring .number__fill {
     stroke: var(--color-accent-default);
   }
+
+  /* "Show as" in the property's settings, as Notion's: a heading over the
+     tiles, under a rule, and the note under them. */
+  .number-config__show-as {
+    margin-block-start: var(--space-stack-xs);
+    padding-block-start: var(--space-stack-xs);
+    border-block-start: var(--size-border-thin) solid
+      var(--color-border-default);
+  }
+
+  .number-config__heading {
+    margin: var(--space-none) var(--space-inset-sm) var(--space-stack-xs);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .number-config__note {
+    margin: var(--space-none) var(--space-inset-sm);
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+  }
+
+  /* The tiles' pictures: a bar part filled, and a ring part drawn. */
+  .number-config__bar {
+    display: block;
+    inline-size: var(--size-control-md);
+    block-size: var(--size-border-thick);
+    border-radius: var(--radius-full);
+    background-color: var(--color-border-default);
+
+    & > span {
+      display: block;
+      inline-size: 50%;
+      block-size: 100%;
+      border-radius: inherit;
+      background-color: currentcolor;
+    }
+  }
+
+  .number-config__ring {
+    display: block;
+    inline-size: var(--size-icon-md);
+    block-size: var(--size-icon-md);
+    border: var(--size-border-thick) solid var(--color-border-default);
+    border-block-start-color: currentcolor;
+    border-inline-end-color: currentcolor;
+    border-radius: var(--radius-full);
+  }
 }

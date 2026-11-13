@@ -40,3 +40,59 @@ export function keyDays(event: KeyboardEvent): number | undefined {
   if (event.key === "ArrowLeft") return -1;
   return event.key === "ArrowRight" ? 1 : undefined;
 }
+
+export interface BarDates {
+  readonly startId: string;
+  // The property holding the end, when the dates are separate.
+  readonly endId?: string | undefined;
+}
+
+export interface BarChange {
+  readonly propertyId: string;
+  readonly value: DateValue;
+}
+
+export interface BarMove {
+  readonly days: number;
+  readonly stretch: boolean;
+}
+
+// With separate dates: a move shifts both, a stretch the end only, never
+// to before the start.
+function separateChanges(
+  values: Readonly<Record<string, unknown>>,
+  ids: { readonly startId: string; readonly endId: string },
+  move: BarMove,
+): BarChange[] {
+  const { startId, endId } = ids;
+  const start = readDateValue(values[startId]);
+  const end = movedDate(values[endId] ?? values[startId], move.days);
+  const moved = move.stretch
+    ? undefined
+    : movedDate(values[startId], move.days);
+  const isBeforeStart =
+    move.stretch &&
+    start !== undefined &&
+    end !== undefined &&
+    end.start < start.start;
+  return [
+    ...(moved === undefined ? [] : [{ propertyId: startId, value: moved }]),
+    ...(end === undefined || isBeforeStart
+      ? []
+      : [{ propertyId: endId, value: end }]),
+  ];
+}
+
+// What moving or stretching a bar writes.
+export function barChanges(
+  values: Readonly<Record<string, unknown>>,
+  dates: BarDates,
+  move: BarMove,
+): BarChange[] {
+  const { startId, endId } = dates;
+  if (endId !== undefined)
+    return separateChanges(values, { startId, endId }, move);
+  const shift = move.stretch ? stretchedDate : movedDate;
+  const value = shift(values[startId], move.days);
+  return value === undefined ? [] : [{ propertyId: startId, value }];
+}

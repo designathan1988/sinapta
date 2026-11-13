@@ -46,4 +46,19 @@ export const setCalculation = defineCommand<SetCalculationPayload>({
   },
 });
 
-export const calculationCommands = [setCalculation];
+// "Show large counts as 99+": every count of the view above 99 reads
+// "99+".
+export const setCountCap = defineCommand<{ viewId: ViewId; on: boolean }>({
+  type: "view.setCountCap",
+  handle(state, command) {
+    const view = state.workspace.views[command.viewId];
+    if (view === undefined || (view.countCap === true) === command.on)
+      return {};
+    const patch = { countCap: command.on };
+    return {
+      operations: [{ type: "record.update", kind: "view", id: view.id, patch }],
+    };
+  },
+});
+
+export const calculationCommands = [setCalculation, setCountCap];

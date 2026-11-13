@@ -3,10 +3,11 @@
 import {
   databasePropsReader,
   type PropertyConfigSchemas,
+  type PropertyDefinition,
 } from "../../blocks/database/index.ts";
 import { DATABASE_TYPE } from "../../blocks/page/index.ts";
 import type { PropsSchemas } from "../../model/index.ts";
-import type { PropertyType } from "./property-definition.ts";
+import type { CellEditor, PropertyType } from "./property-definition.ts";
 import { checkboxProperty } from "./properties/checkbox/index.ts";
 import { createdTimeProperty } from "./properties/created-time/index.ts";
 import { dateProperty } from "./properties/date/index.ts";
@@ -54,6 +55,13 @@ const BY_TYPE: ReadonlyMap<string, PropertyType> = new Map(
 // An unknown type is read as text, so its values are still shown.
 export function propertyType(type: string): PropertyType {
   return BY_TYPE.get(type) ?? textProperty;
+}
+
+// How a property's cells are edited: by its settings when they decide,
+// otherwise by its type.
+export function editorOf(property: PropertyDefinition): CellEditor {
+  const type = propertyType(property.type);
+  return type.editorFor?.(property) ?? type.editor;
 }
 
 // Property type name to the schema of its config, for the types that have

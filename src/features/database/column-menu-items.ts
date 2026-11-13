@@ -1,22 +1,16 @@
 // The rows of a column's menu, as Notion's: filter, the Sort and
 // Calculate submenus, group, and how the table shows the column.
-import type { CalculationKind } from "../../model/index.ts";
 import { openOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import type { MenuItem } from "../../ui/menu/index.ts";
-import { setCalculation } from "./calculation.commands.ts";
-import {
-  calculationGroups,
-  type CalculationGroups,
-} from "./calculations.selectors.ts";
 import { addFilter } from "./filter-edit.ts";
-import { firstOperator } from "./filter-fields.ts";
+import { newCondition } from "./filter-fields.ts";
 import { setViewGroupBy } from "./group.commands.ts";
 import { isGroupable } from "./row-groups.selectors.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import { setFrozenCount, toggleWrapped } from "./table-layout.commands.ts";
 import type { TableColumn } from "./table-model.selectors.ts";
-import { FILTERS_OVERLAY } from "./view-filters.view.ts";
+import { openedRule } from "./filter-start.view.ts";
 import {
   setViewFilter,
   sortByProperty,
@@ -100,95 +94,18 @@ export function sortItem(column: TableColumn, context: TableContext): MenuItem {
   };
 }
 
-type GroupName = keyof CalculationGroups;
-
-const GROUP_NAMES: readonly GroupName[] = ["count", "percent", "more"];
-
-// One group of calculations, as a submenu of the Calculate submenu.
-function calculationGroup(
-  column: TableColumn,
-  context: TableContext,
-  group: {
-    readonly name: GroupName;
-    readonly kinds: readonly CalculationKind[];
-  },
-): MenuItem {
-  const { model, dispatch } = context;
-  const viewId = model.view.id;
-  const propertyId = column.property.id;
-  const current = model.view.calculations[propertyId];
-  const label = TEXT.calculationGroups[group.name];
-  const items = group.kinds.map((kind): MenuItem => ({
-    label: TEXT.rollupFunctions[kind],
-    check: "radio",
-    isChecked: kind === current,
-    onSelect: () =>
-      dispatch(setCalculation.create({ viewId, propertyId, kind })),
-  }));
-  return {
-    label,
-    submenu: {
-      id: `${propertyId}:calculate:${group.name}`,
-      menu: () => ({ label, items }),
-    },
-  };
-}
-
-// The calculations of a column, as Notion's column menu and footer list
-// them: none, then a submenu for each group.
-export function calculationItems(
-  column: TableColumn,
-  context: TableContext,
-): MenuItem[] {
-  const { model, dispatch } = context;
-  const viewId = model.view.id;
-  const propertyId = column.property.id;
-  const groups = calculationGroups(column.property);
-  const none: MenuItem = {
-    label: TEXT.noGrouping,
-    check: "radio",
-    isChecked: model.view.calculations[propertyId] === undefined,
-    onSelect: () =>
-      dispatch(setCalculation.create({ viewId, propertyId, kind: null })),
-  };
-  return [
-    none,
-    ...GROUP_NAMES.filter((name) => groups[name].length > 0).map((name) =>
-      calculationGroup(column, context, { name, kinds: groups[name] }),
-    ),
-  ];
-}
-
-export function calculateItem(
-  column: TableColumn,
-  context: TableContext,
-): MenuItem {
-  const items = calculationItems(column, context);
-  return {
-    label: TEXT.calculate,
-    icon: "sigma",
-    submenu: {
-      id: `${column.property.id}:calculate`,
-      menu: () => ({ label: TEXT.calculate, items }),
-    },
-  };
-}
-
-// Adds a condition on this column and opens the view's filter.
+// Adds a condition on this column and opens it by its pill, as Notion's;
+// in an advanced filter, the filter opens with the others.
 export function filterItem(
   column: TableColumn,
   context: TableContext,
 ): MenuItem {
   const { model, dispatch } = context;
   const onSelect = (): void => {
-    const filter = {
-      propertyId: column.property.id,
-      operator: firstOperator(column.property),
-      value: "",
-    };
+    const filter = newCondition(column.property, context.state);
     const next = addFilter(model.view.filter, [], filter);
     dispatch(setViewFilter.create({ viewId: model.view.id, filter: next }));
-    const overlay = { kind: FILTERS_OVERLAY, anchorId: model.holderId };
+    const overlay = openedRule(model.holderId, next);
     dispatch(openOverlay.create({ overlay }));
   };
   return { label: TEXT.filter, icon: "filter", onSelect };

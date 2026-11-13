@@ -10,16 +10,22 @@ import {
   renderMenu,
   renderMenuName,
   type MenuEntry,
+  type MenuItem,
 } from "../../ui/menu/index.ts";
 import {
-  calculateItem,
   filterItem,
   groupItems,
   showItems,
   sortItem,
 } from "./column-menu-items.ts";
+import { calculateItem } from "./column-calculate-items.ts";
 import { placeItems } from "./column-place-items.ts";
-import { addProperty, changeProperty } from "./database.commands.ts";
+import {
+  addProperty,
+  changeProperty,
+  setPropertyConfig,
+} from "./database.commands.ts";
+import { showsAsCheckbox } from "./properties/status/index.ts";
 import { changeTypeItem, editPropertyItem } from "./property-edit-menu.ts";
 import { PROPERTY_TYPES, propertyType } from "./property-registry.ts";
 import type { TableContext } from "./table-cell.view.ts";
@@ -41,6 +47,44 @@ function renderName(
         changeProperty.create({ databaseId, propertyId: property.id, name }),
       ),
   });
+}
+
+// A status column's "Show as", as Notion's: as a checkbox, or as its
+// options.
+function statusShowAsItems(
+  column: TableColumn,
+  context: TableContext,
+): MenuItem[] {
+  const { property } = column;
+  if (property.type !== "status") return [];
+  const databaseId = context.model.database.id;
+  const current = showsAsCheckbox(property) ? "checkbox" : "select";
+  const labels = COPY.database.statusShowAs;
+  const items = (["checkbox", "select"] as const).map((showAs): MenuItem => ({
+    label: labels[showAs],
+    icon: showAs === "checkbox" ? "checkbox" : "select",
+    check: "radio",
+    isChecked: showAs === current,
+    onSelect: () => {
+      const base = typeof property.config === "object" ? property.config : {};
+      const config = { ...base, showAs };
+      const propertyId = property.id;
+      context.dispatch(
+        setPropertyConfig.create({ databaseId, propertyId, config }),
+      );
+    },
+  }));
+  return [
+    {
+      label: COPY.database.showAs,
+      icon: "eye",
+      value: labels[current],
+      submenu: {
+        id: `${property.id}:show-as`,
+        menu: () => ({ label: COPY.database.showAs, items }),
+      },
+    },
+  ];
 }
 
 // The property's own settings; the title column keeps its type.
@@ -73,6 +117,7 @@ export function renderColumnMenu(
       ...groupItems(column, context),
       calculateItem(column, context),
       ...showItems(column, context),
+      ...statusShowAsItems(column, context),
       ...placeItems(column, context),
     ],
     context: { overlay: state.ui.overlay, dispatch },

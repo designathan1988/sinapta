@@ -34,6 +34,10 @@ import { groupCommands } from "./group.commands.ts";
 import { calculationCommands } from "./calculation.commands.ts";
 import { rowBulkCommands } from "./row-bulk.commands.ts";
 import { tableLayoutCommands } from "./table-layout.commands.ts";
+import { viewDuplicateCommands } from "./view-duplicate.commands.ts";
+import { listOptionCommands } from "./list-options.commands.ts";
+import { feedOptionCommands } from "./feed-options.commands.ts";
+import { colorRuleCommands } from "./color-rules.commands.ts";
 import { cardCommands } from "./card.commands.ts";
 import { calendarOptionCommands } from "./calendar-options.commands.ts";
 import { timelineOptionCommands } from "./timeline-options.commands.ts";
@@ -121,6 +125,10 @@ const DATABASE_TEST_COMMANDS = [
   ...calculationCommands,
   ...rowBulkCommands,
   ...tableLayoutCommands,
+  ...viewDuplicateCommands,
+  ...listOptionCommands,
+  ...feedOptionCommands,
+  ...colorRuleCommands,
   ...cardCommands,
   ...calendarOptionCommands,
   ...timelineOptionCommands,

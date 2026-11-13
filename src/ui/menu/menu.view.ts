@@ -54,6 +54,10 @@ export interface MenuOptions {
   readonly role?: "menu" | "listbox";
   // Content above the rows, such as a name field or layout tiles.
   readonly lead?: TemplateResult;
+  // Content under the rows, such as a card layout's tiles.
+  readonly tail?: TemplateResult;
+  // A submenu as wide as a menu, for rows with long words.
+  readonly isWide?: boolean;
   // A list opened from a control inside another overlay.
   readonly isChild?: boolean;
   // A submenu sits beside the row that opened it, not under it; an editor
@@ -212,7 +216,11 @@ export function renderMenu(options: MenuOptions): TemplateResult {
     ?data-at-point=${options.point !== undefined}
     ?data-child=${options.isChild === true}
     data-placement=${options.placement ?? nothing}
-    data-size=${isSubmenu && options.lead === undefined ? "narrow" : nothing}
+    data-size=${
+      isSubmenu && options.lead === undefined && options.isWide !== true
+        ? "narrow"
+        : nothing
+    }
     ${ref(placeAt(options.point))}
     ${ref(showPopoverWhenConnected)}
     @click=${(event: Event) => {
@@ -227,6 +235,7 @@ export function renderMenu(options: MenuOptions): TemplateResult {
   >
     ${renderHeader(options, choosing.close)} ${renderSearch(options.search)}
     ${options.lead ?? nothing} ${renderList(items, options)}
+    ${options.tail ?? nothing}
     ${
       options.footer === undefined
         ? nothing

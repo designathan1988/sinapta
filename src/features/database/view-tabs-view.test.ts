@@ -101,7 +101,10 @@ describe("the view tabs", () => {
     const first = all[0];
     if (first === undefined) throw new Error("setup");
 
-    const { shown } = splitViews(all, first.id, "inline");
+    const { shown } = splitViews(all, first.id, {
+      place: "inline",
+      style: "text-icon",
+    });
 
     expect(shown.map((id) => views[id]?.name)).toEqual([
       "Table",
@@ -109,6 +112,8 @@ describe("the view tabs", () => {
       "Calendar",
       "Timeline",
     ]);
+    const icons = splitViews(all, first.id, { place: "inline", style: "icon" });
+    expect(icons.shown.length).toBeGreaterThan(shown.length);
   });
 
   it("always shows the view that is open", () => {

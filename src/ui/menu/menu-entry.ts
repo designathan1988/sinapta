@@ -46,6 +46,8 @@ export interface SubmenuContent {
   readonly lead?: TemplateResult;
   readonly searchPlaceholder?: string;
   readonly role?: "menu" | "listbox";
+  // Full width, for rows with long words, as the counts' 99+ switch.
+  readonly isWide?: boolean;
 }
 
 // A menu the row opens beside its own, as Notion's "Change type".

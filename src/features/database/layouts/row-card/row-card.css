@@ -78,4 +78,15 @@
       display: none;
     }
   }
+
+  /* Notion's List card layout: each value on a line of its own. */
+  .row-card[data-layout="list"] .row-card__values {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Fit media: the picture shown whole, not cut to fill. */
+  .row-card[data-fit] img.row-card__cover {
+    object-fit: contain;
+  }
 }

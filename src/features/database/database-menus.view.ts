@@ -7,7 +7,12 @@ import {
   renderTemplatesMenu,
   TEMPLATES_OVERLAY,
 } from "./templates-menu.view.ts";
-import { VIEW_LIST_OVERLAY, VIEW_TABS_OVERLAY } from "./view-tabs.view.ts";
+import {
+  VIEW_LIST_OVERLAY,
+  VIEW_TAB_MENU_OVERLAY,
+  VIEW_TABS_OVERLAY,
+} from "./view-tabs.view.ts";
+import { renderViewTabMenu } from "./view-tab-menu.view.ts";
 import { renderCellFiles } from "./cell-files.view.ts";
 import { renderCellRelation } from "./cell-relation.view.ts";
 import { renderCellOptions } from "./cell-options.view.ts";
@@ -87,6 +92,7 @@ const OVERLAYS: Record<string, Render> = {
   [GROUP_MENU_OVERLAY]: renderGroupMenu,
   [VIEW_TABS_OVERLAY]: renderMoreViews,
   [VIEW_LIST_OVERLAY]: renderViewList,
+  [VIEW_TAB_MENU_OVERLAY]: renderViewTabMenu,
   [TEMPLATES_OVERLAY]: renderTemplatesMenu,
   [NEW_VIEW_OVERLAY]: renderNewViewMenu,
   [VALUE_COMPOSER_OVERLAY]: renderCellComments,
@@ -105,6 +111,7 @@ const DATABASE_OVERLAYS: ReadonlySet<string> = new Set([
   VIEW_FILTER_PILL_OVERLAY,
   VIEW_FILTER_ADD_OVERLAY,
   NEW_VIEW_OVERLAY,
+  VIEW_TAB_MENU_OVERLAY,
 ]);
 
 export function renderTableOverlay(

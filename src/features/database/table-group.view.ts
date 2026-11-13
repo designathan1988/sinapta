@@ -4,7 +4,7 @@
 import { html, nothing, type TemplateResult } from "lit-html";
 import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
-import { calculate } from "./calculations.selectors.ts";
+import { calculate, cappedCount } from "./calculations.selectors.ts";
 import { renderGroupHeader } from "./group-header.view.ts";
 import { addRowInGroup } from "./group-actions.ts";
 import type { RowGroup } from "./row-groups.selectors.ts";
@@ -25,7 +25,11 @@ function renderResult(
   const label = COPY.database.rollupFunctions[kind];
   return html`<span class="database__calc-label">${label}</span>
     <span class="database__calc-value" data-property-id=${property.id}
-      >${calculate(group.rows, property, kind)}</span
+      >${cappedCount(
+        calculate(group.rows, property, kind),
+        kind,
+        context.model.view.countCap === true,
+      )}</span
     >`;
 }
 

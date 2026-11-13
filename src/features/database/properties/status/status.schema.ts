@@ -10,6 +10,9 @@ export const statusConfigSchema = v.object({
       optionIds: v.array(v.string()),
     }),
   ),
+  // Notion's "Show as": options, or a checkbox ticked when the value is
+  // in the Complete group; absent, options.
+  showAs: v.optional(v.picklist(["select", "checkbox"])),
 });
 
 export type StatusGroupId = (typeof STATUS_GROUP_IDS)[number];

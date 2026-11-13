@@ -7,7 +7,7 @@ import { openRow } from "../../row-open.commands.ts";
 import "./timeline.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
-import type { PropertyId } from "../../../../model/index.ts";
+import { parsePropertyId, type PropertyId } from "../../../../model/index.ts";
 import { COPY } from "../../../../ui/copy.ts";
 import { centerChild, revealOnce } from "../../../../ui/focus/index.ts";
 import { renderSelect } from "../../../../ui/select/index.ts";
@@ -15,7 +15,7 @@ import { setRowValue } from "../../row.commands.ts";
 import type { TableContext } from "../../table-cell.view.ts";
 import type { TableRow } from "../../table-model.selectors.ts";
 import { setTimelineOptions } from "../../timeline-options.commands.ts";
-import { keyDays, movedDate, stretchedDate } from "./timeline-bar.ts";
+import { barChanges, keyDays, type BarMove } from "./timeline-bar.ts";
 import {
   selectTimeline,
   type Timeline,
@@ -51,12 +51,17 @@ function title(row: TableRow): string {
 interface BarContext {
   readonly context: TableContext;
   readonly propertyId: PropertyId;
+  readonly endId: PropertyId | undefined;
 }
 
-function setDate(bar: TimelineBar, at: BarContext, value: unknown): void {
-  if (value === undefined) return;
-  const change = { rowId: bar.row.id, propertyId: at.propertyId, value };
-  at.context.dispatch(setRowValue.create(change));
+function shiftBar(bar: TimelineBar, at: BarContext, move: BarMove): void {
+  const dates = { startId: at.propertyId, endId: at.endId };
+  for (const { propertyId, value } of barChanges(bar.row.values, dates, move)) {
+    const id = parsePropertyId(propertyId);
+    const rowId = bar.row.id;
+    if (id !== undefined)
+      at.context.dispatch(setRowValue.create({ rowId, propertyId: id, value }));
+  }
 }
 
 // A drag moves the bar by the whole days the pointer went.
@@ -70,23 +75,18 @@ function startDrag(event: PointerEvent, bar: TimelineBar, at: BarContext) {
     "pointerup",
     (up: PointerEvent) => {
       const days = Math.round((up.clientX - from) / dayWidth);
-      if (days !== 0)
-        setDate(bar, at, movedDate(bar.row.values[at.propertyId], days));
+      if (days !== 0) shiftBar(bar, at, { days, stretch: false });
     },
     { once: true },
   );
 }
 
 function renderBar(bar: TimelineBar, at: BarContext): TemplateResult {
-  const stored = bar.row.values[at.propertyId];
   const onKey = (event: KeyboardEvent): void => {
     const days = keyDays(event);
     if (days === undefined) return;
     event.preventDefault();
-    const next = event.shiftKey
-      ? stretchedDate(stored, days)
-      : movedDate(stored, days);
-    setDate(bar, at, next);
+    shiftBar(bar, at, { days, stretch: event.shiftKey });
   };
   return html`<div class="timeline__lane">
     <button
@@ -226,7 +226,9 @@ export function renderTimeline(context: TableContext): TemplateResult {
   if (timeline === undefined) {
     return html`<p class="timeline__empty">${TEXT.noDateProperty}</p>`;
   }
-  const at = { context, propertyId: timeline.propertyId };
+  const { separateDates, endDatePropertyId } = context.model.view.timeline;
+  const endId = separateDates === true ? endDatePropertyId : undefined;
+  const at = { context, propertyId: timeline.propertyId, endId };
   return html`<div
     class="timeline"
     data-zoom=${zoom}

@@ -5,8 +5,12 @@ import "./table-footer.css";
 import { html, type TemplateResult } from "lit-html";
 import { COPY } from "../../ui/copy.ts";
 import { renderSelect } from "../../ui/select/index.ts";
-import { calculationItems } from "./column-menu-items.ts";
-import { calculate, calculationChoices } from "./calculations.selectors.ts";
+import { calculationItems } from "./column-calculate-items.ts";
+import {
+  calculate,
+  calculationChoices,
+  cappedCount,
+} from "./calculations.selectors.ts";
 import { renderAddRowButton } from "./database-footer.view.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import type { TableColumn } from "./table-model.selectors.ts";
@@ -18,8 +22,11 @@ function renderCalculation(
   const { property } = column;
   const { model, state, dispatch } = context;
   const kind = model.view.calculations[property.id];
+  const isCapped = model.view.countCap === true;
   const result =
-    kind === undefined ? "" : calculate(model.rows, property, kind);
+    kind === undefined
+      ? ""
+      : cappedCount(calculate(model.rows, property, kind), kind, isCapped);
 
   return html`<td
     class="database__calc"

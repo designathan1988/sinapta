@@ -7,7 +7,9 @@ import type {
   FilterOperator,
   PropertyType,
 } from "../../property-definition.ts";
+import { checkboxProperty } from "../checkbox/index.ts";
 import { selectProperty } from "../select/index.ts";
+import { isStatusChecked, showsAsCheckbox } from "./status-checkbox.ts";
 import {
   readStatusConfig,
   STATUS_GROUP_IDS,
@@ -56,6 +58,15 @@ export const statusProperty: PropertyType = {
   type: "status",
   label: TEXT.statusName,
   icon: "status",
+  editorFor: (property) => (showsAsCheckbox(property) ? "toggle" : "options"),
+  renderCell(value, property, cell) {
+    if (!showsAsCheckbox(property))
+      return selectProperty.renderCell(value, property, cell);
+    return checkboxProperty.renderCell(
+      isStatusChecked(property, value),
+      property,
+    );
+  },
   filterOperators: [...selectProperty.filterOperators, IN_GROUP],
   configSchema: statusConfigSchema,
   defaultConfig,

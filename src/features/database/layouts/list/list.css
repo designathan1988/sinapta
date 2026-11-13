@@ -68,4 +68,32 @@
     color: var(--color-text-secondary);
     font-size: var(--font-size-xs);
   }
+
+  /* "Directly edit page name": the title a field that reads as text, the
+     page opened by "Open", which shows while the row is pointed at. */
+  .list__row[data-edit] {
+    cursor: default;
+
+    & > .button {
+      opacity: 0;
+    }
+
+    &:hover > .button,
+    &:focus-within > .button {
+      opacity: 1;
+    }
+  }
+
+  .list__title-field {
+    flex: 1;
+    min-inline-size: 0;
+    padding: var(--space-none);
+    border: none;
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: var(--font-weight-medium);
+    cursor: text;
+  }
 }

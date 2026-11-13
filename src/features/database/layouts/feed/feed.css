@@ -79,4 +79,21 @@
     margin: var(--space-none);
     color: var(--color-text-tertiary);
   }
+
+  /* A post's values on one line, cut at its end; with "Wrap properties"
+     on as many lines as they take. */
+  .feed__values {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    overflow: hidden;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    white-space: nowrap;
+  }
+
+  .feed[data-wrap] .feed__values {
+    flex-wrap: wrap;
+    white-space: normal;
+  }
 }

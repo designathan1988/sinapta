@@ -9,7 +9,7 @@ import { renderIcon } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { renderCellActions } from "./cell-actions.view.ts";
 import { selectCellContext } from "./cell-context.selectors.ts";
-import { propertyType } from "./property-registry.ts";
+import { editorOf, propertyType } from "./property-registry.ts";
 import { setFrozenStart } from "./table-column-style.ts";
 import type {
   TableColumn,
@@ -142,7 +142,7 @@ function editText(row: TableRow, column: TableColumn): string {
 }
 
 function usesInput(column: TableColumn): boolean {
-  const { editor } = propertyType(column.property.type);
+  const editor = editorOf(column.property);
   return (
     column.isTitle ||
     (editor !== "toggle" &&

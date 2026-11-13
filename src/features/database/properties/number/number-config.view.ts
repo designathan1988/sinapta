@@ -3,6 +3,7 @@
 import { html, nothing, type TemplateResult } from "lit-html";
 import type { PropertyDefinition } from "../../../../blocks/database/index.ts";
 import { COPY } from "../../../../ui/copy.ts";
+import { renderTiles } from "../../../../ui/tiles/index.ts";
 import type { ConfigContext } from "../../property-definition.ts";
 import { renderConfigChoice } from "../config-choice.view.ts";
 import { currencyChoices } from "./number-format.ts";
@@ -11,6 +12,7 @@ import {
   NUMBER_FORMATS,
   readNumberConfig,
   type NumberConfig,
+  type NumberDisplay,
 } from "./number.schema.ts";
 
 const TEXT = COPY.database;
@@ -145,27 +147,34 @@ function renderDecimals(
   );
 }
 
+const PICTURES: Readonly<Record<NumberDisplay, TemplateResult | string>> = {
+  number: "42",
+  bar: html`<span class="number-config__bar"><span></span></span>`,
+  ring: html`<span class="number-config__ring"></span>`,
+};
+
+// Notion's "Show as": three pictured tiles, 42 Number, Bar and Ring, and
+// the note that the choice holds for every view.
 function renderDisplay(
   config: NumberConfig,
   onChange: (config: NumberConfig) => void,
-  editing: Editing,
 ): TemplateResult {
-  return renderChoice(
-    {
-      name: "display",
+  return html`<div class="number-config__show-as">
+    <p class="number-config__heading">${TEXT.showAs}</p>
+    ${renderTiles({
       label: TEXT.showAs,
-      choices: NUMBER_DISPLAYS.map((value) => [
+      tiles: NUMBER_DISPLAYS.map((value) => ({
         value,
-        TEXT.numberDisplays[value],
-      ]),
+        picture: PICTURES[value],
+        label: TEXT.numberDisplays[value],
+      })),
       current: config.display,
-      onPick: (value) => {
-        if (isOneOf(NUMBER_DISPLAYS, value))
-          onChange({ ...config, display: value });
+      onPick: (display) => {
+        onChange({ ...config, display });
       },
-    },
-    editing,
-  );
+    })}
+    <p class="number-config__note">${TEXT.numberShowAsNote}</p>
+  </div>`;
 }
 
 export function renderNumberConfig(
@@ -181,6 +190,6 @@ export function renderNumberConfig(
       : nothing;
   return html`${renderFormat(config, onChange, editing)} ${currency}
   ${renderDecimals(config, onChange, editing)}
-  ${renderDisplay(config, onChange, editing)}
+  ${renderDisplay(config, onChange)}
   ${config.display === "number" ? nothing : renderDivisor(config, onChange)}`;
 }
