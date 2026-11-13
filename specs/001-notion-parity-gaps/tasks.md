@@ -185,3 +185,10 @@ Within a story: model/command → selector → view → photo (each control in i
 - [X] T051 Amend `spec.md` to Notion's measured grouping (digits own group, "Other", range 0–1000 step 100, "Out of range"), add FR-020 to FR-024 for audit items 19–24, and record each Notion row left out with its reason per SC-002 and the analyze findings I1, I2, C1, C2 (contradicts).
 - [X] T052 Add photo scenarios for FR-020 to FR-024 to `quickstart.md`, the later touch-points to `plan.md`, and task links to every gap in `docs/notion-study.md` per FR-019 (partial).
 
+## Phase 10: Convergence (Customize sidebar)
+
+- [X] T053 Study Notion's "Customize sidebar" read-only (edit mode, row menus, Add shortcut, Add section, Done) and record it in `docs/notion-study.md` — photos `n41-customize`, `n42-customize`, `n42-customize2`; Notion left as found.
+- [X] T054 Store the arrangement: `sidebarShortcuts`, `sidebarSections`, `favoritesLimit` in `src/model/workspace.schema.ts`, commands in `src/state/sidebar-layout.commands.ts`, order and defaults in `src/features/sidebar/sidebar-layout.selectors.ts` per FR-025 (missing) — tests `src/state/sidebar-layout.test.ts`, `src/features/sidebar/sidebar-layout.test.ts`.
+- [X] T055 Draw the mode and the arranged sidebar: `sidebar-customize.view.ts`, `sidebar-customize-menus.view.ts`, `sidebar-customize-choices.ts`, `sidebar-section-look.ts`, `sidebar-shortcuts.view.ts`, `sidebar-customize.css`, `sidebar.view.ts` per FR-025 (missing) — test `sidebar-customize-view.test.ts`; photos `p27-customize`, `p27-customize-add` against Notion `n42-customize2`.
+- [X] T056 Check the arrangement after a reload (New database removed, Private above Favorites kept) per SC-003 — `p27-customize/20-after`.
+

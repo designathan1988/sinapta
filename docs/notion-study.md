@@ -660,9 +660,27 @@ heading, a ⌄ after it, and while pointed at ↗ (open), + (new page) and
 ícone da página (switch, on); Fonte › the database; Visualizar › the
 database's views (Tabela); Modelo › Vazio; a rule; Mover para cima; Mover
 para a guia ›; Remover seção; a rule; Personalizar barra lateral. The
-menu item keeps its label after adding. Pagecraft builds all but Modelo,
-Mover para a guia and Personalizar barra lateral (its sidebar has no
-tabs and no customizing).
+menu item keeps its label after adding. Pagecraft builds all but Mover
+para a guia (the sidebar's tabs are Notion's AI chat and Calendar).
+
+"Personalizar barra lateral" (`n42-customize2`), at the sidebar's foot,
+turns the sidebar into an edit mode: each shortcut (Nova página, Novo
+chat, Biblioteca, Conexões, Agentes externos) and, under a rule, each
+section (Próximos eventos, Recentes, Favoritos, Compartilhado,
+Particular) is a row with a ⠿ grip, its icon and name, and while pointed
+at a sliders button (shortcut: Mover para cima, Mover para baixo, Mover
+para a guia; section: Exibir › 10, the same moves) and × "Remover da
+barra lateral". "+ Adicionar atalho" opens "Buscar atalhos…" over Criar
+(Nova página ›, Nova anotação de reunião, Nova base de dados) and Ir para
+(Página ›, Thread de chat ›, Configurações, Anotações de reunião,
+Habilidades, Notion Calendar); "+ Adicionar seção" opens "Pesquisar
+seções…" over Páginas (Visualização da base de dados ›), Chats, Reuniões,
+Apps and Avançado. A full-width blue "Concluído" ends the mode; a reload
+ends it too. Pagecraft (`p27-customize`, `p27-customize-add`) builds the
+mode for its own items — New page, New database, Settings and pinned
+pages; Favorites (with Show), Private and kept views — and leaves out
+the AI, calendar, meeting, sharing and integration rows (spec.md
+Assumptions).
 
 ## Filters, sorts and groups by type (audit of 2026-11-13, photos `c1…c5`)
 
@@ -872,8 +890,8 @@ items above, found while photographing them:
     the 2026-11-13 photo: it adds a sidebar section) and Hide data source
     titles (an action with an eye, no switch) are built, and the sidebar
     section's menu with Template (`p26-section-reload`, kept after a
-    reload); Manage in Notion Calendar, Move to tab and Customize sidebar
-    stay out (spec.md Assumptions).
+    reload) and "Customize sidebar" (T053–T056, `p27-customize`); Manage
+    in Notion Calendar and Move to tab stay out (spec.md Assumptions).
 23. **done** [T043, FR-022 in specs/001-notion-parity-gaps/tasks.md] (`p24-converge/14-by-name`) Grouping by the title column (Notion's "Agrupar por › Nome") is not
     offered — now offered first, as Notion's list.
 24. **done** [T044, FR-022 in specs/001-notion-parity-gaps/tasks.md] With text grouped by its exact value and sorted Alphabetical, Notion

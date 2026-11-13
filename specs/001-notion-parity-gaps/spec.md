@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-13
 
-**Status**: Implemented (T001–T052; amended 2026-11-13 after the converge and analyze passes)
+**Status**: Implemented (T001–T056; amended 2026-11-13 after the converge and analyze passes)
 
 **Input**: User description: "Notion parity, remaining gaps found by the 2026-11-13 audit (docs/notion-study.md, section 'Gaps found by the audit'). Pagecraft must match Notion's layout, behavior and words for: view tab shown as text and icon, text only or icon only; a date filter relative to today and the start or end of a range; grouping text by exact value or first letter and numbers by unique value or interval; count calculations shown as 99+; rollup filters with any / none / every; a status shown as a checkbox; card layout compact or list, gallery fit media, calendar wrap page titles, timeline separate start and end dates, list directly edit page name, feed wrap properties; conditional color; a floating outline; the text selection toolbar in Notion's new panel form; the slash menu washing its line with '/Type to search'; the filter popover in Notion's simple form; the number 'Show as' choice as three pictured tiles. Out of scope: AI, sharing, people, automations, paid-plan features. Every item checked with a photo against Notion at 1440x900 2x, and the full suite stays green."
 
@@ -263,6 +263,15 @@ after reload and applies only to that view.
   Source, View, Template, Move up / Move down and Remove section; the
   section is the owner's own and survives a reload.
 
+- **FR-025**: "Customize sidebar", at the sidebar's foot, MUST turn the
+  sidebar into Notion's edit mode: every shortcut, then every section, a
+  row with a grip to drag it, its icon and name, and while pointed at its
+  menu (Move up, Move down; Show 5/10/15/20 for a section that lists
+  pages) and "Remove from sidebar"; "Add shortcut" (search; Create: New
+  page, New database; Go to: Page, Settings) and "Add section" (search;
+  Pages: Database view; a section left out); a full-width "Done" ends
+  it. The arrangement is the owner's own and survives a reload.
+
 **Quality bar**
 
 - **FR-017**: Every interface text MUST use Notion's English words as
@@ -324,8 +333,13 @@ after reload and applies only to that view.
 - Map view, dashboard view, people, sharing and AI stay out of scope.
 - Left out of Notion's menus for the reasons above: the selection panel's
   add reaction and suggest edits (people) and AI skills (AI); the view tab
-  menu's Manage in Notion Calendar (another product); the sidebar
-  section's Move to tab (the sidebar tabs are Notion's AI chat and Notion
-  Calendar) and Customize sidebar (an edit mode for the whole sidebar —
-  shortcuts, Upcoming events, Recents, Shared — a feature of its own,
-  outside this audit's gaps).
+  menu's Manage in Notion Calendar (another product); Move to tab, in the
+  sidebar section's and Customize sidebar's menus (the sidebar tabs are
+  Notion's AI chat and Notion Calendar); in Customize sidebar, the
+  shortcuts New chat, New meeting note, Chat thread, Meeting notes,
+  Skills, Notion Calendar, Library, Connections and External agents (AI,
+  integrations or other products) and the sections Upcoming events,
+  Recents, Shared, Chats, Agents, AI notes, Notion apps and Developer
+  (Notion Calendar, sharing, AI or integrations). Reactions and suggest
+  edits stay out wherever Notion shows them (selection panel, comments,
+  feed cards): they are for people working together.

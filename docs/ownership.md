@@ -105,6 +105,8 @@ owner listed here exists.
 | The tab menu's rows about the database a view reads: Source, Add view to sidebar, Hide data source titles | `src/features/database/view-tab-source.ts`, `source-title.commands.ts` | 21 |
 | The rows of any view, shown or not, filtered and sorted as it says | `src/features/database/view-rows.selectors.ts` | 21 |
 | Views kept in the sidebar: the stored list and its commands | `src/state/sidebar-views.commands.ts` | 21 |
+| The sidebar's arrangement from "Customize sidebar": stored order, hidden items, favorites shown | `src/state/sidebar-layout.commands.ts`, `src/features/sidebar/sidebar-layout.selectors.ts` | 21 |
+| "Customize sidebar": the edit mode, its menus and the shortcuts | `src/features/sidebar/sidebar-customize.view.ts`, `sidebar-customize-menus.view.ts`, `sidebar-customize-choices.ts`, `sidebar-section-look.ts`, `sidebar-shortcuts.view.ts` | 21 |
 | Views kept in the sidebar: each section and its menu | `src/features/sidebar/sidebar-views.view.ts`, `sidebar-view-menu.view.ts`, `sidebar-views.selectors.ts`, `sidebar-view-choice.ts` | 21 |
 | A list view's and a feed view's options | `src/features/database/list-options.commands.ts`, `feed-options.commands.ts` | 21 |
 | The floating outline: a page's headings as dashes at its right edge | `src/features/page-outline/` | 21 |
