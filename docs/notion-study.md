@@ -796,6 +796,43 @@ words were English) and "Offline" when the connection dropped.
   Biblioteca, Ajuda, Lixeira, "Novo chat Ctrl+O" and a new-page button
   at the foot. Pagecraft keeps design A.
 
+## Gaps found by the audit (2026-11-13)
+
+What the audit saw in Notion and Pagecraft does not have yet, in the
+order it is being built. Not counted (n/a for a local app for one
+person): AI (autofill, skills, "Ask AI", "Edit with AI", formula AI),
+sharing and publishing, people and person properties, Created/Last
+edited by, Place and the map view, the dashboard view (paid),
+automations, linked events and calendars, property access, connections,
+integrations, upgrade cards.
+
+1. Number property: "Casas decimais" (Padrão, 0–5).
+2. URL property: "Mostrar URL completo" switch.
+3. Sort directions named per type: A → Z / Z → A (text, person),
+   antigo → novo / novo → antigo (dates), não selecionado → selecionado
+   (checkbox), crescente / decrescente (select, status, number).
+4. Table layout switches: Mostrar linhas verticais, Exibir ícone da
+   página, Envolver todo o conteúdo.
+5. View tab "Exibir como": Texto e ícone, Apenas texto, Apenas ícone.
+6. Date filter "É relativo a hoje": Últimos(as) / Próximo(as) / Este(a)
+   × dia / semana / mês / ano; and Data de início / Data de término for
+   a range.
+7. Group by text "Exato | Alfabética" (first letter) and number "Únicos |
+   Intervalo".
+8. Count calculations: "Exibir contagens grandes como 99+".
+9. Rollup filter: Qualquer / Nenhuma / A cada.
+10. Status "Exibir como": Caixa de seleção (done when in the last group).
+11. Card layout "Compacto | Lista" (board, gallery); gallery "Ajustar
+    mídia"; calendar "Ajustar títulos das páginas"; timeline "Separar
+    datas de início e fim"; list "Directly edit page name"; feed
+    "Quebrar linhas nas propriedades".
+12. Conditional color (Cor condicional): rules that tint a view's pages.
+13. Floating outline: dashes at the page's right edge, one per heading.
+14. Selection toolbar in Notion's new panel form (turn into, two rows of
+    formatting buttons, comment).
+15. Slash menu: the line washed with "/Type to search" while the menu is
+    open.
+
 ## Controls
 
 **Now** says what the control is today: "native" (a browser `<select>`
