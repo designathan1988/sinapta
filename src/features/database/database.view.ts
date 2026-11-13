@@ -92,7 +92,10 @@ function renderSearch(context: TableContext): TemplateResult {
   </label>`;
 }
 
-function renderToolbar(context: TableContext): TemplateResult {
+function renderToolbar(
+  context: TableContext,
+  parts: Pick<SectionOptions, "header" | "opener">,
+): TemplateResult {
   const { model } = context;
   const filters = {
     kind: FILTERS_OVERLAY,
@@ -112,11 +115,12 @@ function renderToolbar(context: TableContext): TemplateResult {
     icon: "more",
   } as const;
   return html`<div class="database__toolbar">
-    ${renderViewTabs(context)}
+    ${parts.header ?? nothing} ${renderViewTabs(context)}
     <span class="database__spacer"></span>
     ${renderPopoverButton(filters, context)}
     ${renderPopoverButton(sorts, context)} ${renderSearch(context)}
-    ${renderPopoverButton(settings, context)} ${renderNewButton(context)}
+    ${parts.opener ?? nothing} ${renderPopoverButton(settings, context)}
+    ${renderNewButton(context)}
   </div>`;
 }
 
@@ -160,19 +164,22 @@ function renderNewButton(context: TableContext): TemplateResult {
   </span>`;
 }
 
-// A database page: its views as tabs, the view's tools and its table.
 // A database's views as tabs, the view's tools and its rows; a header
-// such as an inline database's title goes above them.
+// such as an inline database's title leads the tabs' row, as Notion's.
+interface SectionOptions {
+  // The database, or the linked view, whose views are shown; a page's
+  // body holds the inline ones.
+  readonly holderId: BlockId | null;
+  readonly header?: TemplateResult;
+  // A tool before the view's settings, such as "Open as page".
+  readonly opener?: TemplateResult;
+  readonly isInline?: boolean;
+}
+
 export function renderDatabaseSection(
   state: AppState,
   dispatch: Dispatch,
-  // The database, or the linked view, whose views are shown; a page's
-  // body holds the inline ones.
-  options: {
-    holderId: BlockId | null;
-    header?: TemplateResult;
-    isInline?: boolean;
-  },
+  options: SectionOptions,
 ): TemplateResult | typeof nothing {
   // Today in the reader's own time zone, for filters relative to it.
   const today = new Date().toLocaleDateString("en-CA");
@@ -186,8 +193,8 @@ export function renderDatabaseSection(
     class="database"
     ?data-inline=${options.isInline === true}
   >
-    ${options.header ?? nothing} ${renderToolbar(context)}
-    ${renderViewPills(context)} ${renderLayout(context)}
+    ${renderToolbar(context, options)} ${renderViewPills(context)}
+    ${renderLayout(context)}
     ${LISTED_LAYOUTS.has(model.view.type) ? renderFooter(context) : nothing}
     ${renderTableOverlay(context)}
   </section>`;

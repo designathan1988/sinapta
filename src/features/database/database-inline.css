@@ -1,0 +1,32 @@
+@layer features {
+  /* A database inside a page, as Notion's: its title, sized to its text,
+     leads the row of its views and tools. */
+  .database__inline-title {
+    field-sizing: content;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    padding: var(--space-none);
+    border: none;
+    background-color: transparent;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+
+    &::placeholder {
+      color: var(--color-text-tertiary);
+    }
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  /* The view's tools show while the database is pointed at or has focus,
+     as Notion's; one that applies, such as a filter, stays. */
+  .database[data-inline]:not(:hover, :focus-within)
+    .database__toolbar
+    > .database__spacer
+    ~ :not([data-active], :has([data-active])) {
+    opacity: 0;
+  }
+}

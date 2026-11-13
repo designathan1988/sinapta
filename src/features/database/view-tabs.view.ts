@@ -119,6 +119,10 @@ export function renderViewTabs(context: TableContext): TemplateResult {
   const views = all.filter((view) => shown.includes(view.id));
   const moreLabel = COPY.database.moreViews(more.length);
   const view = model.view;
+  // Inside a page, one view shows no tab, only "+", as Notion's.
+  if (all.length === 1 && tabPlace(context) === "inline") {
+    return renderNewView(context);
+  }
   return html`${renderToggle(context, {
       kind: VIEW_LIST_OVERLAY,
       label: view.name,
@@ -137,10 +141,14 @@ export function renderViewTabs(context: TableContext): TemplateResult {
               content: html`${moreLabel}`,
             })
       }
-      ${renderToggle(context, {
-        kind: NEW_VIEW_OVERLAY,
-        label: COPY.database.newView,
-        content: renderIcon("plus"),
-      })}
+      ${renderNewView(context)}
     </div>`;
+}
+
+function renderNewView(context: TableContext): TemplateResult {
+  return renderToggle(context, {
+    kind: NEW_VIEW_OVERLAY,
+    label: COPY.database.newView,
+    content: renderIcon("plus"),
+  });
 }

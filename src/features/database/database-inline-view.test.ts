@@ -14,10 +14,10 @@ function rendered() {
   };
   const host = document.createElement("div");
   document.body.replaceChildren(host);
-  render(
-    renderInlineDatabase(app.store.getState(), dispatch, app.databaseId),
-    host,
-  );
+  // Inside another page: the database is not the page that is open.
+  const state = app.store.getState();
+  const inPage = { ...state, ui: { ...state.ui, activePageId: null } };
+  render(renderInlineDatabase(inPage, dispatch, app.databaseId), host);
   return { app, host, sent };
 }
 
@@ -41,11 +41,20 @@ describe("renderInlineDatabase", () => {
     ]);
   });
 
+  it("keeps its title, add-view and tools in one row, as Notion's", () => {
+    const { host } = rendered();
+    const toolbar = host.querySelector(".database__toolbar");
+
+    expect(toolbar?.querySelector(".database__inline-title")).not.toBeNull();
+    expect(toolbar?.querySelectorAll(".database__tab")).toHaveLength(0);
+    expect(toolbar?.querySelector('[aria-label="New view"]')).not.toBeNull();
+  });
+
   it("opens as a full page", () => {
     const { app, host, sent } = rendered();
 
     host
-      .querySelector<HTMLButtonElement>(".database__inline-open button")
+      .querySelector<HTMLButtonElement>('[aria-label="Open as page"]')
       ?.click();
 
     expect(sent).toEqual([
