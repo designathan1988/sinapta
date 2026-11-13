@@ -68,6 +68,7 @@ export {
   type PropsSchema,
   type PropsSchemas,
   type Settings,
+  type SidebarView,
   type Theme,
   type ViewTabStyle,
   type Workspace,

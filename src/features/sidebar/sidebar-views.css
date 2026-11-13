@@ -1,0 +1,56 @@
+@layer features {
+  /* A view kept in the sidebar, as Notion's: the database's name as a
+     heading with a chevron, and Open, Add a page and "…" at the end of
+     the heading while it is pointed at. */
+  .sidebar__view-head {
+    display: flex;
+    align-items: center;
+    border-radius: var(--radius-md);
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
+  .sidebar__view-name {
+    flex: 1;
+    gap: var(--space-inline-xs);
+    min-inline-size: 0;
+    border: none;
+    background-color: transparent;
+    font-family: inherit;
+    text-align: start;
+    cursor: pointer;
+
+    & > .sidebar__title {
+      flex: none;
+      max-inline-size: 100%;
+    }
+  }
+
+  .sidebar__view-chevron {
+    display: inline-grid;
+    place-items: center;
+    opacity: 0;
+
+    & > svg {
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+    }
+  }
+
+  .sidebar__view-name[aria-expanded="false"] > .sidebar__view-chevron {
+    rotate: -90deg;
+  }
+
+  .sidebar__view-tools {
+    display: flex;
+    opacity: 0;
+  }
+
+  .sidebar__view-head:is(:hover, :focus-within)
+    :is(.sidebar__view-tools, .sidebar__view-chevron),
+  .sidebar__view-tools:has([aria-expanded="true"]) {
+    opacity: 1;
+  }
+}

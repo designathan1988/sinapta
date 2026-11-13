@@ -1,16 +1,36 @@
 import * as v from "valibot";
 import { blockSchema, type Block, type BlockProps } from "./block.schema.ts";
-import { blockIdSchema, type BlockId, type ViewId } from "./id.schema.ts";
+import {
+  blockIdSchema,
+  viewIdSchema,
+  type BlockId,
+  type ViewId,
+} from "./id.schema.ts";
 import type { RecordError, WorkspaceFileError } from "./parse-error.ts";
 import { viewSchema, type View } from "./view.schema.ts";
 
 export const SCHEMA_VERSION = 28;
+
+// A view kept in the sidebar, as Notion's "Add view to sidebar": a section
+// under the database's name listing the view's first pages.
+const sidebarViewSchema = v.object({
+  viewId: viewIdSchema,
+  // The section's own name; absent, the database's.
+  name: v.optional(v.string()),
+  // How many pages it lists; absent, 5.
+  limit: v.optional(v.picklist([5, 10, 15, 20])),
+  isIconHidden: v.optional(v.boolean()),
+  // Where its pages open; absent, beside the page.
+  openMode: v.optional(v.picklist(["side", "center", "full"])),
+  isCollapsed: v.optional(v.boolean()),
+});
 
 export const settingsSchema = v.object({
   theme: v.picklist(["system", "light", "dark"]),
   // How a database's view tabs show: icon and name, name only, or icon
   // only; absent, both. Notion keeps it for one person, outside undo.
   viewTabStyle: v.optional(v.picklist(["text-icon", "text", "icon"])),
+  sidebarViews: v.optional(v.array(sidebarViewSchema)),
 });
 
 const workspaceFileSchema = v.object({
@@ -24,6 +44,7 @@ const workspaceFileSchema = v.object({
 export type Settings = v.InferOutput<typeof settingsSchema>;
 export type Theme = Settings["theme"];
 export type ViewTabStyle = NonNullable<Settings["viewTabStyle"]>;
+export type SidebarView = v.InferOutput<typeof sidebarViewSchema>;
 
 export interface Workspace {
   readonly blocks: Readonly<Record<BlockId, Block>>;

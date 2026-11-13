@@ -15,6 +15,7 @@ import { renderSidebarFooter } from "./sidebar-footer.view.ts";
 import { renderSidebarTop } from "./sidebar-top.view.ts";
 import { renderTree } from "./sidebar-tree.view.ts";
 import { selectTreeRows } from "./sidebar.selectors.ts";
+import { renderSidebarViews } from "./sidebar-views.view.ts";
 
 interface QuickItem {
   readonly label: string;
@@ -86,7 +87,7 @@ export function renderSidebar(
     ${renderSidebarTop(state, dispatch)}
     <div class="sidebar__scroll">
       ${renderQuickItems(state, dispatch)} ${renderFavorites(state, dispatch)}
-      ${renderPrivate(state, dispatch)}
+      ${renderPrivate(state, dispatch)} ${renderSidebarViews(state, dispatch)}
     </div>
     ${renderSidebarFooter(state, dispatch)}
   </div>`;

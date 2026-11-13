@@ -8,5 +8,6 @@ export { ONBOARDING_TEXT } from "./onboarding-text.ts";
 export { PAGE_TEXT } from "./page-text.ts";
 export { pluralize } from "./pluralize.ts";
 export { SETTINGS_TEXT } from "./settings-text.ts";
+export { SIDEBAR_VIEWS_TEXT } from "./sidebar-views-text.ts";
 export { WORKSPACE_TEXT } from "./workspace-text.ts";
 export { TEMPLATE_TEXT } from "./template-text.ts";

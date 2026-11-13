@@ -63,6 +63,13 @@ export {
   toggleTheme,
 } from "./settings.commands.ts";
 export {
+  addSidebarView,
+  moveSidebarView,
+  removeSidebarView,
+  setSidebarView,
+  type SidebarViewChanges,
+} from "./sidebar-views.commands.ts";
+export {
   finishImport,
   persistenceCommands,
   requestExport,

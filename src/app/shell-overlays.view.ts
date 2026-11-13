@@ -54,6 +54,8 @@ import {
 import {
   renderSidebarMenu,
   SIDEBAR_APPS_OVERLAY,
+  SIDEBAR_VIEW_OVERLAY,
+  renderSidebarViewMenu,
   SIDEBAR_WORKSPACE_OVERLAY,
 } from "../features/sidebar/index.ts";
 import {
@@ -89,6 +91,7 @@ const OVERLAYS: Readonly<Record<string, OverlayView>> = {
   [TONE_OVERLAY]: renderTonePicker,
   [SIDEBAR_WORKSPACE_OVERLAY]: renderSidebarMenu,
   [SIDEBAR_APPS_OVERLAY]: renderSidebarMenu,
+  [SIDEBAR_VIEW_OVERLAY]: renderSidebarViewMenu,
   [SHORTCUT_HELP_OVERLAY_KIND]: (_state, dispatch) =>
     renderShortcutHelp(dispatch),
 };

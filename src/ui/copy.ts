@@ -11,6 +11,7 @@ import {
   ONBOARDING_TEXT,
   PAGE_TEXT,
   SETTINGS_TEXT,
+  SIDEBAR_VIEWS_TEXT,
   TEMPLATE_TEXT,
   WORKSPACE_TEXT,
 } from "./copy/index.ts";
@@ -25,6 +26,7 @@ export const COPY = {
   ...BLOCK_TEXT,
   ...TEMPLATE_TEXT,
   ...SETTINGS_TEXT,
+  ...SIDEBAR_VIEWS_TEXT,
   database: {
     ...DATABASE_TEXT.database,
     ...DATABASE_MENU_TEXT,
