@@ -16,7 +16,8 @@ export function filterProperties(context: TableContext): PropertyDefinition[] {
 export function firstOperator(
   property: PropertyDefinition | undefined,
 ): string {
-  return propertyType(property?.type ?? "text").filterOperators[0]?.id ?? "";
+  const type = propertyType(property?.type ?? "text");
+  return type.defaultFilter ?? type.filterOperators[0]?.id ?? "";
 }
 
 export function newFilter(context: TableContext): Filter | undefined {

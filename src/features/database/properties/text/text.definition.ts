@@ -1,10 +1,5 @@
-import {
-  compareText,
-  containsText,
-  IS_EMPTY,
-  IS_NOT_EMPTY,
-  type PropertyType,
-} from "../../property-definition.ts";
+import { compareText, type PropertyType } from "../../property-definition.ts";
+import { TEXT_FILTERS } from "../../text-filters.ts";
 
 function readText(stored: unknown): string | undefined {
   return typeof stored === "string" && stored !== "" ? stored : undefined;
@@ -19,6 +14,7 @@ export const textProperty: PropertyType = {
   parse: (text) => readText(text.normalize("NFC")),
   format: (value) => readText(value) ?? "",
   compare: compareText,
-  filterOperators: [containsText(), IS_EMPTY, IS_NOT_EMPTY],
+  filterOperators: TEXT_FILTERS,
+  defaultFilter: "contains",
   renderCell: (value) => readText(value) ?? "",
 };

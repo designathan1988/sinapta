@@ -1,12 +1,7 @@
 import { html } from "lit-html";
 import { safeHref } from "../../../../model/index.ts";
-import {
-  compareText,
-  containsText,
-  IS_EMPTY,
-  IS_NOT_EMPTY,
-  type PropertyType,
-} from "../../property-definition.ts";
+import { compareText, type PropertyType } from "../../property-definition.ts";
+import { TEXT_FILTERS } from "../../text-filters.ts";
 
 // One address: something, an @, and a domain with a dot.
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -25,7 +20,8 @@ export const emailProperty: PropertyType = {
   parse: (text) => readEmail(text.trim()),
   format: (value) => readEmail(value) ?? "",
   compare: compareText,
-  filterOperators: [containsText(), IS_EMPTY, IS_NOT_EMPTY],
+  filterOperators: TEXT_FILTERS,
+  defaultFilter: "contains",
   renderCell(value) {
     const email = readEmail(value);
     const href = email === undefined ? undefined : safeHref(`mailto:${email}`);

@@ -130,6 +130,9 @@ export interface PropertyType {
   // Ascending order of two values that `read` returned.
   readonly compare: (a: unknown, b: unknown) => number;
   readonly filterOperators: readonly FilterOperator[];
+  // The condition a new filter on this type starts with, when not the
+  // first; a text filter starts with Contains, as Notion's.
+  readonly defaultFilter?: string;
   readonly renderCell: (
     value: unknown,
     property: PropertyDefinition,

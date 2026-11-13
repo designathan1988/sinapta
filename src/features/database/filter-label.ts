@@ -6,6 +6,7 @@ import type { PropertyDefinition } from "../../blocks/database/index.ts";
 import type { Filter } from "../../model/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import type { FilterOperator } from "./property-definition.ts";
+import { firstOperator } from "./filter-fields.ts";
 import { propertyType } from "./property-registry.ts";
 
 function operandLabel(
@@ -31,7 +32,7 @@ export function filterLabel(
   if (!operator.needsOperand) return rulePill(property.name, operator.label);
   const operand = operandLabel(filter, property, operator);
   if (operand === "") return property.name;
-  return operator === operators[0]
+  return operator.id === firstOperator(property)
     ? rulePill(property.name, operand)
     : rulePill(property.name, ruleWithOperator(operator.label, operand));
 }

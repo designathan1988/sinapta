@@ -89,6 +89,7 @@ owner listed here exists.
 | A value's discussion count on a row's page | `src/features/database/row-value-comments.view.ts` | 20 |
 | A column's menu and its submenus (Edit property, Change type, Sort, Calculate) | `src/features/database/column-menu.view.ts`, `column-menu-items.ts`, `column-place-items.ts`, `property-edit-menu.ts` | 16 |
 | What a property type declares | `src/features/database/property-definition.ts` | 5 |
+| The conditions text, URL, email and phone are filtered by | `src/features/database/text-filters.ts` | 21 |
 | Database columns | `src/features/database/database.commands.ts` | 5 |
 | Database rows: adding and setting values | `src/features/database/row.commands.ts` | 5 |
 | A row's values as views read them, stored and kept by the app | `src/features/database/row-values.selectors.ts` | 9 |

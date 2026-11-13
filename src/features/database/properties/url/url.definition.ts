@@ -1,12 +1,7 @@
 import { html } from "lit-html";
 import { safeHref } from "../../../../model/index.ts";
-import {
-  compareText,
-  containsText,
-  IS_EMPTY,
-  IS_NOT_EMPTY,
-  type PropertyType,
-} from "../../property-definition.ts";
+import { compareText, type PropertyType } from "../../property-definition.ts";
+import { TEXT_FILTERS } from "../../text-filters.ts";
 
 // Only http, https and mailto addresses are stored.
 function readUrl(stored: unknown): string | undefined {
@@ -30,7 +25,8 @@ export const urlProperty: PropertyType = {
   parse: parseUrl,
   format: (value) => readUrl(value) ?? "",
   compare: compareText,
-  filterOperators: [containsText(), IS_EMPTY, IS_NOT_EMPTY],
+  filterOperators: TEXT_FILTERS,
+  defaultFilter: "contains",
   renderCell(value) {
     const href = readUrl(value);
     if (href === undefined) return "";
