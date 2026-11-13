@@ -148,12 +148,13 @@ export default defineConfig({
     include: ["src/**/*.test.ts", "scripts/**/*.test.ts"],
     setupFiles: ["src/dom-test-setup.ts"],
     environment: "node",
-    pool: "threads",
-    // About two workers for every three cores: one per core spends more
-    // time building DOM environments than it saves (10.6 s against 8.4 s
-    // on 24 cores, 2026-11-13).
+    // A VM context per worker and a fresh window per file: building 140
+    // happy-dom environments one per file was half the run (10.2–11.0 s
+    // in "threads" against 7.3–7.8 s here, 8.0–8.2 s in "vmForks", on 24
+    // cores beside another project's servers, 2026-11-13).
+    pool: "vmThreads",
+    // Two workers for every three cores: 7.3 s, against 8.2 s at 100 %.
     maxWorkers: "66%",
-    isolate: false,
     css: false,
     restoreMocks: true,
     unstubGlobals: true,
