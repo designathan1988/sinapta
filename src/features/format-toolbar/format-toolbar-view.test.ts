@@ -62,13 +62,13 @@ describe("the selection panel", () => {
       "Turn into: Text",
       "Color",
       "Bold",
-      "Italic",
+      "Italicize",
       "Underline",
-      "Clear formatting",
-      "Link",
-      "Strikethrough",
-      "Inline code",
-      "Equation",
+      "Clear format",
+      "Add link",
+      "Strike-through",
+      "Mark as code",
+      "Mark as equation",
       "More",
       "Comment",
       "Add reaction",
@@ -80,8 +80,8 @@ describe("the selection panel", () => {
     const { sent, button } = rendered();
 
     button("Bold")?.click();
-    button("Clear formatting")?.click();
-    button("Equation")?.click();
+    button("Clear format")?.click();
+    button("Mark as equation")?.click();
 
     expect(sent).toEqual([
       expect.objectContaining({
@@ -117,7 +117,9 @@ describe("the selection panel", () => {
     const { button } = rendered();
 
     expect(button("Bold")?.dataset.tooltip).toBe("Bold Ctrl+B");
-    expect(button("Link")?.getAttribute("aria-keyshortcuts")).toBe("Ctrl+K");
+    expect(button("Add link")?.getAttribute("aria-keyshortcuts")).toBe(
+      "Ctrl+K",
+    );
   });
 });
 

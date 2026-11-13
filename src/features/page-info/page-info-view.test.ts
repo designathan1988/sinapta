@@ -81,4 +81,43 @@ describe("renderPageInfo", () => {
   it("says when the page was last edited", () => {
     expect(rendered(false).host.textContent).toContain("Edited");
   });
+
+  it("shows Suggesting while the page suggests, and turns it off", () => {
+    const props = {
+      title: [],
+      icon: null,
+      isFavorite: false,
+      isTrashed: false,
+    };
+    const initial = createInitialState();
+    const page = toBlockId("page");
+    const state = {
+      ...initial,
+      workspace: buildWorkspace([{ id: "page", props }]),
+      ui: { ...initial.ui, activePageId: page, suggestingPageId: page },
+    };
+    const commands: Command[] = [];
+    const host = document.createElement("div");
+    render(
+      renderPageInfo(state, (command) => {
+        commands.push(command);
+        return { ok: true };
+      }),
+      host,
+    );
+    const pill = host.querySelector<HTMLElement>(".page-info__suggesting");
+
+    expect(pill?.textContent.trim()).toBe("Suggesting");
+    pill?.click();
+
+    expect(commands).toEqual([
+      expect.objectContaining({ type: "ui.setSuggesting", pageId: null }),
+    ]);
+  });
+
+  it("starts without Suggesting, as after a reload", () => {
+    const { host } = rendered(false);
+
+    expect(host.querySelector(".page-info__suggesting")).toBeNull();
+  });
 });
