@@ -806,12 +806,12 @@ edited by, Place and the map view, the dashboard view (paid),
 automations, linked events and calendars, property access, connections,
 integrations, upgrade cards.
 
-1. Number property: "Casas decimais" (Padrão, 0–5).
-2. URL property: "Mostrar URL completo" switch.
-3. Sort directions named per type: A → Z / Z → A (text, person),
+1. **done** Number property: "Casas decimais" (Default, 0–5).
+2. **done** URL property: "Show full URL" switch.
+3. **done** Sort directions named per type: A → Z / Z → A (text, person),
    antigo → novo / novo → antigo (dates), não selecionado → selecionado
    (checkbox), crescente / decrescente (select, status, number).
-4. Table layout switches: Mostrar linhas verticais, Exibir ícone da
+4. **done** Table layout switches: Mostrar linhas verticais, Exibir ícone da
    página, Envolver todo o conteúdo.
 5. View tab "Exibir como": Texto e ícone, Apenas texto, Apenas ícone.
 6. Date filter "É relativo a hoje": Últimos(as) / Próximo(as) / Este(a)
@@ -832,6 +832,12 @@ integrations, upgrade cards.
     formatting buttons, comment).
 15. Slash menu: the line washed with "/Type to search" while the menu is
     open.
+16. **done** Text, URL, email and phone filters: Is, Is not, Contains,
+    Does not contain, Starts with, Ends with, Is empty, Is not empty;
+    a new one starts with Contains.
+17. The filter popover in Notion's simple form ("<Property> <condition> ⌄
+    …" over the value) where Pagecraft shows the advanced "Where" rows.
+18. Number "Show as" as three pictured tiles (42 Number, Bar, Ring).
 
 ## Controls
 

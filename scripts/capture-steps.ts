@@ -75,22 +75,26 @@ async function actAndExpect(page: Page, step: CaptureStep): Promise<void> {
   }
 }
 
-async function act(page: Page, step: CaptureStep): Promise<void> {
-  if (step.eval !== undefined) await page.evaluate(step.eval);
-  const timeout = 10000;
+// Clicks by selector or at a point, then types or presses a key.
+async function press(page: Page, step: CaptureStep): Promise<void> {
   if (step.click !== undefined) {
-    await page.locator(step.click).first().click({ timeout });
+    await page.locator(step.click).first().click({ timeout: 10000 });
   }
   if (step.clickAt !== undefined) {
-    const [x = 0, y = 0] = step.clickAt;
+    const [x, y] = step.clickAt;
     await page.mouse.click(x, y);
   }
   if (step.type !== undefined) await page.keyboard.type(step.type);
   if (step.press !== undefined) await page.keyboard.press(step.press);
+}
+
+async function act(page: Page, step: CaptureStep): Promise<void> {
+  if (step.eval !== undefined) await page.evaluate(step.eval);
+  await press(page, step);
   // After a click the mouse stays on what it clicked: submenus that open
   // on hover close when it leaves. Otherwise it rests in a corner.
   if (step.hover !== undefined) {
-    await page.locator(step.hover).first().hover({ timeout });
+    await page.locator(step.hover).first().hover({ timeout: 10000 });
   } else if (step.click === undefined && step.clickAt === undefined) {
     await page.mouse.move(2, 2);
   }

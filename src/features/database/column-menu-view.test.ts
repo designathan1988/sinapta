@@ -137,7 +137,7 @@ describe("the column menu", () => {
     const sort = rendered(["{id}:sort"]);
     const calculate = rendered(["{id}:calculate", "{id}:calculate:count"]);
 
-    sort.row("Sort high → low", 1).click();
+    sort.row("Sort new → old", 1).click();
     calculate.row("Count all", 2).click();
 
     expect(calculate.labels(1)).toEqual([

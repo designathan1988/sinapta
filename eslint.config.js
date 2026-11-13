@@ -101,7 +101,13 @@ function layerConfigs(layer) {
 }
 
 export default defineConfig([
-  globalIgnores(["dist/", "src/styles/tokens.generated.css", ".specify/"]),
+  // .captures holds photos and the Chrome profile kept for them.
+  globalIgnores([
+    "dist/",
+    "src/styles/tokens.generated.css",
+    ".specify/",
+    ".captures/",
+  ]),
   js.configs.recommended,
   tseslint.configs.strictTypeChecked,
   tseslint.configs.stylisticTypeChecked,

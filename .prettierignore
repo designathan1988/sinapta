@@ -6,3 +6,5 @@ package-lock.json
 *.md
 # Spec Kit keeps its own files as it writes them.
 .specify/
+# Photos and the Chrome profile kept for them.
+.captures/
