@@ -1,6 +1,6 @@
 // The steps of a capture, read from a JSON file:
 // { "url"?, "theme"?: "dark" | "light", "steps": [ { "name", "eval"?,
-//   "click"?, "type"?, "press"?, "hover"?, "expect"?, "clip"?, "pad"?,
+//   "click"?, "clickAt"?: [x, y], "type"?, "press"?, "hover"?, "expect"?, "clip"?, "pad"?,
 //   "wait"?, "read"? } ] }. Selectors are Playwright's (CSS, or
 // text=Label). The url defaults to the review server; click, type and
 // press act, hover points with the real mouse, expect names what must
@@ -13,6 +13,7 @@ const stepSchema = v.object({
   name: v.pipe(v.string(), v.regex(/^[a-z0-9-]+$/)),
   eval: v.optional(v.string()),
   click: v.optional(v.string()),
+  clickAt: v.optional(v.tuple([v.number(), v.number()])),
   type: v.optional(v.string()),
   press: v.optional(v.string()),
   hover: v.optional(v.string()),

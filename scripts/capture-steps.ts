@@ -81,10 +81,19 @@ async function act(page: Page, step: CaptureStep): Promise<void> {
   if (step.click !== undefined) {
     await page.locator(step.click).first().click({ timeout });
   }
+  if (step.clickAt !== undefined) {
+    const [x = 0, y = 0] = step.clickAt;
+    await page.mouse.click(x, y);
+  }
   if (step.type !== undefined) await page.keyboard.type(step.type);
   if (step.press !== undefined) await page.keyboard.press(step.press);
-  if (step.hover === undefined) await page.mouse.move(2, 2);
-  else await page.locator(step.hover).first().hover({ timeout });
+  // After a click the mouse stays on what it clicked: submenus that open
+  // on hover close when it leaves. Otherwise it rests in a corner.
+  if (step.hover !== undefined) {
+    await page.locator(step.hover).first().hover({ timeout });
+  } else if (step.click === undefined && step.clickAt === undefined) {
+    await page.mouse.move(2, 2);
+  }
 }
 
 // A step that fails leaves a photo of the window as it was, named
@@ -115,7 +124,7 @@ export async function takePhotos(
   const session =
     target === "notion" ? await notionSession(plan) : await headless(plan);
   const { page } = session;
-  await page.goto(plan.url ?? REVIEW_URL, { waitUntil: "load" });
+  await page.goto(plan.url ?? REVIEW_URL, { waitUntil: "domcontentloaded" });
   // Notion draws its page well after load: wait for its blocks.
   if (target === "notion") {
     await page.locator("[data-block-id]").first().waitFor({ timeout: 20000 });

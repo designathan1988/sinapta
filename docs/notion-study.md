@@ -8,20 +8,22 @@ carry them.
 
 ## How Notion is studied
 
-- Notion runs in the built-in browser pane (a test account the owner set
-  up; interacting with it is allowed). The pane renders only while the
-  Claude window and the pane are visible.
-- Read Notion with JavaScript in the page: `getBoundingClientRect()`,
-  `getComputedStyle()`, the element's inline `style` (Notion sets most
-  values inline) and `aria-label`. Its colors are custom properties such
-  as `--c-bacEle`, `--c-texPri`, `--c-shaOutMd`.
-- Hover states: the pane's pointer coordinates are in a scaled frame
-  (800 px wide for a 1338 px viewport). Hover is reached reliably by
-  dispatching `pointerover`, `mouseover`, `pointermove` and `mousemove`
-  on the element from JavaScript; React's handlers answer them.
-- Clicks: dispatch `pointerdown`, `mousedown`, `pointerup`, `mouseup`,
-  `click` on the element. Typing: focus the field, then the pane's type
-  and key actions.
+- Notion is photographed only with `npm run capture -- notion <url |
+  steps.json>` (`scripts/capture.ts`): headless, 1440 × 900 at 2x, in a
+  context carrying the sign-in of the test account's Chrome window
+  (port 9333, never closed). Interacting with the test account is
+  allowed.
+- A plan's steps click, type, press, hover and read like a person: the
+  mouse stays on what it clicked, so submenus that open on hover stay
+  open. Each action names what it expects to appear; Escape at the start
+  closes a panel Notion leaves open after loading.
+- Every menu is entered, and every row with a chevron opened, before it
+  is written down; each photo is opened and looked at.
+- Read Notion with `read` steps in the page: `innerText` of
+  `.notion-overlay-container` for a menu's words, `getBoundingClientRect()`
+  and `getComputedStyle()` for sizes and colors (custom properties such
+  as `--c-bacEle`, `--c-texPri`).
+- Photos: `.captures/notion/<plan>/NN-step.png`.
 - Undo every change made in Notion during a study.
 
 ## Interaction states (measured with a real pointer, 2026-11-13)
@@ -278,6 +280,334 @@ scrolls, "Close menu  esc" at its foot; typing filters it.
 | A short break | Brew | n/a |
 | Text color | Default and 9 colors | **yes** |
 | Background color | Default and 9 colors | **yes** |
+
+## Properties (audit of 2026-11-13, photos in `.captures/notion/a1…a5`)
+
+### Adding a property
+
+- "+ Adicionar propriedade" ends the header row; once a column exists it
+  becomes a bare "+" followed by "…". Clicking it turns the header cell
+  into a field "Digite o nome da propriedade…" (emoji button at its left)
+  over a 415 × 450 menu, background #252525, that scrolls (707 px tall).
+- Menu sections: "Preenchedor Automático da IA" (Resumir, Traduzir, each
+  with a "Básico" badge and a chevron); "Selecionar tipo" with a search
+  icon; then the types in two columns, groups split by rules:
+  - Texto, Número, Selecionar, Seleção múltipla, Status, Data, Pessoa,
+    Arquivos e mídia, Caixa de seleção, URL, Telefone, E-mail;
+  - Relação, Rollup, Fórmula, Botão, ID, Local;
+  - Criado em, Última edição, Criado por, Última edição por;
+  - "Habilidades": Description, Files;
+  - integrations (blue upload badge): Google Drive Arquivo, Figma
+    Arquivo, Pull Requests do GitHub, Zendesk Ticket.
+- A row pointed at gets the hover wash and a "?" at its right.
+- Choosing a type adds the column at once, named as the type; no
+  settings open (Relação is the exception, below).
+
+### Column menu (click a header)
+
+- Top: the type's icon in a 32 px box, then the name in a field with an
+  "i" at its end.
+- Rows, as Notion shows them for a text column: Acesso à propriedade;
+  Alterar tipo ›; Preenchimento automático com IA ("Agora com agentes"
+  badge) ›; rule; Filtrar; Ordenar ›; Agrupar; Calcular ›; Congelar;
+  Ocultar; Desfazer encapsulamento de conteúdo; rule; Inserir à
+  esquerda; Inserir à direita; Duplicar propriedade; Excluir propriedade.
+- Per type: "Editar propriedade ›" heads the rows for Número,
+  Selecionar, Seleção múltipla, Status, Data, Pessoa, Rollup, Fórmula,
+  ID, Criado em, Última edição ("Editar automação" for Botão). Status
+  adds "Exibir como › Selecionar"; URL adds "Mostrar URL completo";
+  Arquivos e mídia has no AI and no Agrupar; Caixa de seleção has no
+  wrap row; Rollup and Fórmula have no AI and no Agrupar; Botão keeps
+  only Acesso, Alterar tipo, Congelar, Ocultar, insert, duplicate,
+  delete; ID has no Acesso, Alterar tipo or Duplicar; the automatic
+  types (Criado/Última edição …) have no Acesso; Criado por and Última
+  edição por have no Editar propriedade. Congelar is dimmed on a column
+  that cannot freeze.
+- "Editar propriedade ›" opens a submenu beside the menu (to its left
+  when there is no room), held open while pointed at:
+  - Número: Formato de número › Número; Casas decimais › Padrão;
+    "Mostrar como" tiles 42 Número / Barra / Anel (chosen tile outlined
+    blue); note "As alterações se aplicam a todas as visualizações que
+    mostram essa propriedade."
+  - Selecionar, Seleção múltipla: Ordenar › Manual; "Opções" with
+    "Adicionar uma opção" and "Gerar com a IA".
+  - Status: groups A fazer, Em andamento, Concluídos, each with a "+";
+    options as chips with a grip and a chevron (Não iniciada marked
+    PADRÃO; Em andamento blue; Concluído green).
+  - Data, Criado em, Última edição: Formato de data › Data completa;
+    Formato de hora › 12 horas; Data adds Notificações › Nenhum.
+  - Pessoa: Limite › Sem limite; Padrão › Nenhum padrão; Notificações ›
+    Apenas pessoas.
+  - Rollup: Relação › Selecionar; Propriedade de destino › Selecionar;
+    Calcular.
+  - Fórmula: Editar fórmula.
+  - ID: Prefixo, "TSK-1, TSK-2, TSK-3, …", Adicionar prefixo de ID.
+  - Botão: "Editar automação" opens a centered dialog "Botão": Quando ·
+    "O botão é clicado"; Fazer · "+ Nova ação"; a blue Salvar.
+
+### Inside "Editar propriedade" (third level, photos `a6-submenus`)
+
+Each row with a value opens a list beside it; the chosen value carries a
+check.
+
+- Número › Formato de número: a list headed by a focused "Filtrar
+  formatos…" field: Número, Número com separadores, Percentual, then 38
+  currencies (Dólar dos EUA (USD) … Real (BRL) … Peso uruguaio …).
+  Casas decimais: Padrão, 0, 1, 2, 3, 4, 5.
+- Selecionar › Ordenar: Manual, Alfabética, Alfabética reversa.
+  "Adicionar uma opção" turns into a field to type the new option.
+- Status: an option's chevron opens its menu: its name in a focused
+  field with "i"; Excluir; Definir como padrão; Agrupar › A fazer (the
+  group it sits in); "Cores": Padrão, Cinza, Marrom, Laranja, Amarelo,
+  Verde, Azul, Roxo, Rosa, Vermelho (swatch squares). "Exibir como ›"
+  in the column menu: Caixa de seleção, Selecionar.
+- Data › Formato de data: Data completa, Data curta, Mês/Dia/Ano,
+  Dia/Mês/Ano, Ano/Mês/Dia, Relativo. Formato de hora: Oculto, 12 horas,
+  24 horas. Notificações: Nenhum, No dia do evento (09:00), 1 dia antes
+  de (09:00), 2 dias antes de (09:00), 1 semana antes de (09:00).
+- Pessoa › Limite: 1 Pessoa, Sem limite. Padrão: Nenhum padrão, Criada
+  por. Notificações: Pessoas e grupos, Apenas pessoas, Nenhuma.
+- Rollup › Relação: the relation properties; Propriedade de destino
+  (empty until a relation is chosen); Calcular: Nenhum, Contagem ›,
+  Percentual ›.
+- Fórmula › Editar fórmula: a wide panel "Editar fórmula (?)" with a
+  close ×: an AI field "Escreva, corrija ou explique uma fórmula…" with a
+  send arrow; "Sua fórmula" editor outlined blue; "Pré-visualizar com
+  Selecione uma página ⌄"; "Modo de depuração" switch; "Válido" in green
+  and a "Tipo:desconhecido" chip; below, a list (Propriedades, each
+  with its icon; Incorporações not/true/false; Geral if() ifs() and()
+  or() not() empty() length() format() equal() unequal() let() lets();
+  Texto substring() contains() test() match() replace() replaceAll()
+  lower() upper() trim() repeat() padStart() padEnd() link() style()
+  unstyle() concat() join() split(); Número formatNumber() add()
+  subtract() multiply() mod() pow() divide() min() max() sum() median()
+  mean() abs() …) beside a help pane for the item pointed at: its name,
+  a line of description, examples in code each with a copy button.
+- ID › Prefixo: "TSK-1, TSK-2, TSK-3, …", "Adicionar prefixo de ID".
+
+### Column menu submenus
+
+- Alterar tipo: the 22 types with icons (Texto … ID), no groups.
+- Preenchimento automático com IA: Básico (dimmed: "Indisponível para
+  este tipo de propriedade"), Agente personalizado (Novo) with its
+  description.
+- Ordenar (number): Ordenar baixo → alto, Ordenar alto → baixo.
+- Acesso à propriedade: a centered dialog "Acesso à propriedade · Para
+  # Número ⌄", an upgrade card (Business plan), "Acesso padrão" with
+  "Herdar da base de dados ⌄", Exceções, Saiba mais, Apagar, Salvar. n/a
+  for one person.
+- Calcular: Nenhum, Contagem ›, Percentual › for every type; Número adds
+  "Mais opções ›"; Data adds "Data ›".
+
+### Words in English (the account switched language during the audit)
+
+Types: Text, Number, Select, Multi-select, Status, Date, Person, Files &
+media, Checkbox, URL, Phone, Email, Relation, Rollup, Formula, Button, ID,
+Place, Created time, Last edited time, Created by, Last edited by;
+"Skills": Description, Files; "AI Autofill": Summarize, Translate (Basic).
+Column menu: Edit property, Property access, Change type, AI Autofill,
+Filter, Sort, Group, Calculate, Freeze, Hide, Unwrap content, Insert
+left, Insert right, Duplicate property, Delete property.
+
+### Calculations (fourth level, photos `a7-deeper`)
+
+- Count ›: "Exibir contagens grandes como 99+" (note: "Isso melhora o
+  desempenho para bases de dados grandes."), Contar tudo, Contar
+  valores, Contar valores únicos, Contagem de vazias, Contagem de não
+  vazias. A checkbox counts: Contar tudo, Marcadas, Desmarcadas.
+- Percent ›: % de vazias, % de não vazias (a checkbox: marked and
+  unmarked).
+- More options › (number): Soma, Média, Mediana, Mín., Máx., Intervalo.
+- Date › (date): Data mais antiga, Data mais recente, Intervalo de datas.
+
+### What the plain rows do
+
+- Filter: adds a filter on the column; a filter bar appears under the
+  view header (a rule above it), with a chip "Texto ⌄" and "+ Filtrar",
+  and the chip's popover opens: "Texto contém ⌄", "…" (Mais ações:
+  Excluir filtro, Adicionar ao filtro avançado), a focused field
+  "Digite um valor…". Text conditions: É, Não é, Contém, Não contém,
+  Começa com, Termina com, Está vazio, Não está vazio. The toolbar's
+  filter button shows and hides the bar (tinted while it shows).
+- Group: groups the view by the column; an empty grouped table shows
+  only "Editar grupos" and "+ Adicionar página" buttons. The group
+  panel: Agrupar por › Texto; Texto por › Exato; Ordenar › Alfabética;
+  Ocultar grupos vazios; Grupos › Mostrar tudo; "Sem Texto"; Remover
+  agrupamento; "Saiba mais sobre agrupamentos".
+- Freeze: a stronger divider right of the column, running up through
+  the header; the columns up to it stay while the rest scrolls.
+- Insert left/right: opens the add-property menu ("Select type").
+- Delete property: a dialog "Delete this property from New database? It
+  will be removed from all views." with Delete (red) and Cancel.
+
+### Cell editors (click a cell of a row, photos `a10-cell-editors`)
+
+Each editor opens over the cell, starting at the cell's top left, at
+least the cell's width; background #252525, radius 10, the outer shadow.
+
+- Text, URL, Phone, Email, Number: the cell itself turns into an editing
+  box a little wider than the cell (here 405 px), no menu.
+- Select, Multi-select: a field "Search for an option…" at the top, then
+  "Select an option or create one" and the options as chips; typing a
+  new name offers to create it.
+- Status: the current value as a chip at the top, then the groups
+  To-do, In progress, Complete with their options as chips (colored
+  dots), a rule, then "Edit property".
+- Date: a field with the date selected ("Nov 13, 2026"); "Nov 2026",
+  Today, ‹ ›; Su Mo Tu We Th Fr Sa; six weeks, days outside the month
+  dimmed, today filled blue; End date switch; Date format › Full date;
+  Include time switch; Remind › None; Clear; "Learn about reminders".
+- Person: "Select as many as you like", then the people ("Jonathan
+  (You)").
+- Files & media: "+ Add a file or image" over a panel with tabs Upload |
+  Link, a blue "Upload file" with a folder button, "or Ctrl+V to paste an
+  image".
+- Checkbox: the click ticks it; no editor.
+- Place: "Current Location" (n/a in a browser without location).
+- Created/Last edited time and by, ID, Button: nothing opens (read only;
+  the button cell runs its action).
+- Formula: the "Edit formula" panel, with "Preview with" set to the row.
+- Rollup without settings: Relation "Select an existing relation…",
+  Property "Select a property…", Calculate "Show original".
+- Relation: a field "Link or create a page…" with "In ▣ New database"
+  at its right; "Select a page" with "…"; the pages, each with a "+".
+
+### Relação
+
+- Choosing it opens "Relacionado a": "Fontes de dados existentes", each
+  database with its page under it.
+- Then a panel "Nova relação" docked at the view's right, with a close
+  ×: the name field (focused, "Base de dados sem título relacionado"),
+  Relacionado a › Esta base de dados, Limite › Sem limite (a dropdown:
+  1 página, Sem limite ✓), "Adicionar propriedade relacionada" switch
+  (on, a field "Nome da propriedade relacionada" appears), a blue
+  "Adicionar relação", "Saiba mais sobre relações".
+- Once added the panel becomes "Editar propriedade" with a back arrow:
+  name with icon box and "i"; Tipo › Relação; Acesso à propriedade;
+  Relacionado a (dimmed); Limite ›; Adicionar propriedade relacionada
+  (Ativado); Encapsular conteúdo switch; Excluir propriedade; help. A
+  relation to its own database adds two columns ("… relacionado",
+  "Relacionado inversamente …").
+
+## Views (audit of 2026-11-13, photos in `.captures/notion/b1…`)
+
+### Add a view ("+" right of the database title)
+
+A 270 px wide grid "Adicionar uma nova visualização": tiles of icon over
+label, four per row: Tabela, Quadro, Galeria, Lista / Gráfico, Painel,
+Cronograma, Feed / Mapa, Calendário, Formulário; a rule; "Nova fonte de
+dados". Pointing a tile washes it. The title also gains "…" on hover.
+
+### View settings (the sliders button in the view toolbar)
+
+A panel docked at the view's right (about 290 px, radius 12, full
+height of its rows, close ×), "Ver configurações":
+
+- the view's icon in a box and a "Nome da visualização" field with "i";
+- Layout › Tabela; Visibilidade da propriedade › 24; Filtrar ›;
+  Ordenar ›; Agrupar ›; Cor condicional ›; Copiar link para a
+  visualização;
+- "Configurações da fonte de dados": Fonte · Nova base de dados
+  (dimmed); Editar propriedades ›; Automações ›; Preenchedor Automático
+  da IA ›; Transformar em ›; Eventos vinculados ›; Mais configurações ›;
+- a rule; Gerenciar fontes de dados ›; Bloquear base de dados;
+  Gerenciar no Notion Calendar ↗.
+
+Each row replaces the panel with its own page, a back arrow and close ×
+in its header:
+
+- Layout: tiles three per row (chosen tile outlined blue, label blue):
+  Tabela, Quadro, Cronograma / Calendário, Lista, Galeria / Gráfico,
+  Feed, Mapa; then switches Mostrar título da fonte de dados (on),
+  Mostrar linhas verticais (on), Exibir ícone da página (on), Envolver
+  todo o conteúdo (off); Abrir páginas em › Modo lado a lado; Carregar
+  › 50.
+- Visibilidade da propriedade: a focused "Procurar uma propriedade…"
+  field; "Mostradas na tabela" with a blue "Ocultar tudo"; each
+  property a row with a grip, its type icon, name and an eye.
+- Filtrar: "Novo filtro" list of the properties A–Z with icons, then
+  "Adicionar filtro avançado". Ordenar: "Nova ordenação", the same list.
+- Agrupar: "Agrupar por", Nenhum, then the groupable properties.
+- Cor condicional: a note ("Personalize as cores da página para
+  distinguir facilmente as categorias, destacar eventos atrasados…")
+  and "Nova configuração de cor".
+- Editar propriedades: "Propriedades" listing all with icons, "Nova
+  propriedade", "Saiba mais sobre propriedades".
+- Automações: an upgrade card (paid plan). n/a.
+- Preenchedor Automático da IA: AI. n/a.
+- Transformar em ›: Transformar em base de dados de Tarefas, de
+  Reuniões, de habilidades.
+- Eventos vinculados: "Conecte seu calendário". n/a.
+- Mais configurações ›: Subitens, Dependências, Conexões, Personalizar
+  layout de página.
+- Gerenciar fontes de dados: Fonte · Nova base de dados · 1
+  visualização; Adicionar fonte de dados; Vinculado; Vincular fonte de
+  dados existente; "Saiba mais sobre fontes de dados".
+
+### Each view type (created from "+", photos `b3-view-types`)
+
+Creating a view adds a tab (icon and name; the active tab a filled pill,
+radius 16) and opens a panel "Nova visualização" docked at the right: the
+type's icon in a box and a focused "Nome da visualização" field, the
+layout tiles three per row (Tabela, Quadro, Cronograma / Calendário,
+Lista, Galeria / Gráfico, Feed, Mapa / Painel), the type's options, then
+Fonte › Nova base de dados and a blue "Concluído". Tabs that do not fit
+fold into "Mais N", whose list holds the views, "Nova visualização" and
+"Nova fonte de dados"; with tabs the "+" shows only while pointed at.
+
+- Quadro (board): grouped by Status at once (columns tinted per option,
+  count beside the chip, "+ Nova página" in each column). Options:
+  Mostrar títulos das fontes de dados, Exibir ícone da página,
+  Encapsular todo o conteúdo (on), Agrupar por › Status, Colorir colunas
+  (on), Abrir páginas em › Modo lado a lado, Carregar › 25, Visualização
+  do cartão › Nenhum, Tamanho do cartão › Médio, "Layout do cartão" with
+  two pictured tiles Compacto | Lista (Lista chosen).
+- Galeria: cards with a cover area (empty grey) over the title, a dashed
+  "+ Nova página" card. Options: the three switches, Abrir páginas em ›
+  Modo centralizado, Carregar › 50, Visualização do cartão › Conteúdo,
+  Tamanho do cartão › Médio, Ajustar mídia (off), Layout do cartão
+  Compacto | Lista.
+- Lista: rows of icon and title, a property (the creator's avatar "J")
+  at the right end, "+ Nova página". Options: the switches, "Directly
+  edit page name", Abrir páginas em › Modo lado a lado, Carregar › 50.
+- Gráfico: a vertical bar chart (axis 0–4, one bar "Sem Selecionar" with
+  its value over it), dotted grid lines. Options: Mostrar títulos das
+  fontes de dados, Carregar › 50, Fonte, a blue "Editar gráfico", "Saiba
+  mais sobre gráficos".
+- Painel: an upgrade page "Visualize seu trabalho com painéis de
+  controle" (Business plan). n/a.
+- Cronograma: "novembro de 2026" with a "»" to open the table, "Gerenciar
+  no Notion Calendar", Mês ⌄, ‹ Hoje ›; day numbers across, today a red
+  dot and a red vertical line, weekends shaded, "+ Novo"; "Sem data (1)"
+  in the toolbar. Options: Mostrar cronograma por › Data, Separar datas
+  de início e fim (off), Mostrar tabela (off), Abrir páginas em ›,
+  Carregar › 50.
+- Feed: each page a card: avatar, author, "8min (editado)", the title in
+  large type, a reaction button, "Adicionar um comentário…" with the
+  avatar; a wide "+ Nova página". Options: Quebrar linhas nas
+  propriedades (off), Mostrar assinatura do autor (on), Abrir páginas em
+  › Modo centralizado, Carregar › 10.
+- Mapa: "Sem local (1)"; options Mapear por › Local, Abrir páginas em,
+  Carregar. n/a without maps.
+- Calendário: "novembro de 2026", "Gerenciar no Notion Calendar", ‹ Hoje
+  ›; weekday names (dom. seg. …), month grid with day numbers top right,
+  "1 de nov." on the first, today in a red circle. Options: Ajustar
+  títulos das páginas (off), Mostrar calendário por › Data, Mostrar
+  calendário como › Mês, Exibir fins de semana (on), Abrir páginas em ›
+  Modo centralizado.
+- Formulário: the view becomes "Criador de formulário ⌄" with Prévia and
+  a blue "Compartilhar formulário"; a dialog first asks "Criar
+  automaticamente perguntas de formulário com base nas propriedades
+  existentes?" ("Somente tipos de propriedades compatíveis criarão novas
+  perguntas."), a blue "Criar 14 perguntas" and "Começar do zero"; below,
+  the form: icon, cover, a note that only the workspace may answer
+  (Alterar), the "Nome" question with "Resposta do participante" and a
+  "+" to add one.
+
+Notion also showed a second sidebar design mid-audit (workspace name at
+the top, icons for home, chat, meetings, inbox and search, "Adicionar
+agentes", Biblioteca, Ajuda, Lixeira, "Novo chat Ctrl+O"): an experiment
+on the account, not a change to follow.
 
 ## Controls
 
