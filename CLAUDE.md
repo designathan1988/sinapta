@@ -50,6 +50,10 @@ No UI framework. Full specification: docs/specification.md.
 - One small vertical slice at a time; show the running result after each.
 - Never run a command that hides output or blocks for more than 10 seconds;
   run it in the background and continue.
+- Coding comes first. Do not keep running tests or processes while
+  coding. At most one check of a few seconds (npx tsc --noEmit) to see
+  that it compiles and nothing broke. Run npm run verify once, at the end,
+  before committing. Nothing may take long.
 - Budgets: full tests under 10 s, npm run verify under 30 s.
 - Commit after each task with Conventional Commits; scope = folder name.
 - If a rule blocks the task, stop and ask. Do not work around it.
@@ -59,13 +63,15 @@ No UI framework. Full specification: docs/specification.md.
   take a screenshot in the built-in browser pane, of any site: it is
   about 800 px wide and shrinks every frame. Measure Notion there with
   JavaScript (sizes and colors) only.
-- Tool: superpowers-chrome use_browser. First hide_browser (headless; never
-  pop a window in the owner's face), then set_viewport
-  {width: 1440, height: 900, deviceScaleFactor: 2}, then
-  navigate to the review server, http://localhost:5190.
-- Each action writes NNN-action.png (1440x900) to the session folder it
-  prints; open it with Read. Crop one element with screenshot
-  {path, selector}.
+- Tool: npm run capture -- <steps.json> (scripts/capture.ts): headless
+  Chrome, never a window, 1440x900 at 2x, against the review server,
+  http://localhost:5190. Each step can click, point at an element with
+  the real mouse, photograph the window or a region, and print a value
+  read from the page. Open every PNG with Read and look at it.
+- Check every control in each of its states: at rest, pointed at,
+  pressed, open, focused. Point at the same control in Notion with the
+  real pointer and read its computed styles; record the numbers in
+  docs/notion-study.md, the one file for Notion findings.
 - Capture each changed surface whole, then each region and every open
   menu state, and inspect them before calling UI work done.
 - Every check takes seconds, not minutes. Point at the changed control

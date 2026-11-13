@@ -1,23 +1,63 @@
-# Interface inventory
+# Notion study
 
-Every control a person can open, press or type into, by surface: what it
-is today, what Notion has, and how it is tested. Every change to the
-interface ends with this list run in the browser, every item opened and
-photographed. An item is done when its row reads "Notion" in **Now** and
-its test passed on the last run.
+The one source of truth for what Notion looks like and does, and how far
+Pagecraft matches it. Every study of Notion lands here: measures, the
+behavior seen, what Pagecraft does today, and what is left. No other file
+holds Notion findings; `docs/design-system.md` holds only the tokens that
+carry them.
 
-## How each item is tested
+## How Notion is studied
+
+- Notion runs in the built-in browser pane (a test account the owner set
+  up; interacting with it is allowed). The pane renders only while the
+  Claude window and the pane are visible.
+- Read Notion with JavaScript in the page: `getBoundingClientRect()`,
+  `getComputedStyle()`, the element's inline `style` (Notion sets most
+  values inline) and `aria-label`. Its colors are custom properties such
+  as `--c-bacEle`, `--c-texPri`, `--c-shaOutMd`.
+- Hover states: the pane's pointer coordinates are in a scaled frame
+  (800 px wide for a 1338 px viewport). Hover is reached reliably by
+  dispatching `pointerover`, `mouseover`, `pointermove` and `mousemove`
+  on the element from JavaScript; React's handlers answer them.
+- Clicks: dispatch `pointerdown`, `mousedown`, `pointerup`, `mouseup`,
+  `click` on the element. Typing: focus the field, then the pane's type
+  and key actions.
+- Undo every change made in Notion during a study.
+
+## Interaction states (measured with a real pointer, 2026-11-13)
+
+Static measures missed a black square behind the page icon on hover, so
+every control is now checked in its states: rest, pointed at, pressed,
+open, focused, by a real pointer, in Notion and in Pagecraft.
+
+| Control | Notion when pointed at |
+| --- | --- |
+| Most buttons, rows, chips, menu rows, toolbar tools, table header, "New page", calculations, block "+" and grip | a wash `--ca-bacIntTra`: `#ffffff0e` by night, `#211b170d` by day; pressed or open doubles it |
+| Sidebar's top icon buttons (hide, inbox, new page) | a stronger wash `--ca-borPriTra`: `#ffffeb1a` by night, `#1c13011c` by day |
+| Page icon, database icon | nothing; only the pointer cursor |
+| "Edited 5h ago" in the top bar | nothing |
+| Table cells | nothing (the value bar appears instead) |
+| "New" | its blue fill turns `rgb(61 144 225)` |
+| To-do box | a light wash (`--ca-bacSecTra` × 1.5); box 16 px, radius 1.5 px, border `#e6e5e3` by night, `#383836` by day; ticked `#2783de` |
+| Row tick box | radius 3 px, border `#fffceb4e` by night, `#1b150030` by day |
+| Raised bars (cell actions, peek) | `--c-shaOutMd`: by night `0 0 0 1px #383836, 0 4px 12px -2px #19191914`; by day `0 8px 12px #19191907, 0 2px 6px #19191907, 0 0 0 1px #2a1c0012` |
+
+Notion's washes are translucent, so they read the same on the page, the
+sidebar, a cover or a menu. Pagecraft's were opaque, which drew a dark
+box wherever the surface under them differed: fixed at the token
+(`color.bg.hover`, `color.bg.active`, `color.bg.hoverStrong`).
+
+## How Pagecraft is checked against it
 
 1. Open the review server (`npm run dev -- --port 5190`, launch config
    "review"), never the owner's workspace.
-2. Set the viewport to 820 × 640, so a screenshot is one image pixel per
-   CSS pixel. Reset it to the desktop size afterwards.
+2. Capture it headless at 1440 × 900 at 2x: Chrome driven by the
+   project's `playwright-core`, a real mouse pointing at each control,
+   each region photographed at native pixels and looked at.
 3. Open the control with the pointer, then again with the keyboard:
    arrows move, Enter chooses, Escape closes and gives focus back.
-4. Photograph it open, with one option hovered, in light and in dark.
-5. Compare with the same control in Notion, measured with computed
-   styles, not by eye (reference below).
-6. Choose a value and check that the view shows it at once and that undo
+4. Compare with the same control in Notion by the numbers below.
+5. Choose a value and check that the view shows it at once and that undo
    brings the old value back.
 
 ## Notion reference (measured)
@@ -40,6 +80,146 @@ Measured in the owner's workspace, dark theme, read-only.
 | Search dialog | 1006 × 676 px at 1280 × 760, 68 px from the top, radius 20 px, ring and two shadows; field 16 px; filter chips 24 px pills; rows 36 px, radius 12 px, icon, title, "— path"; the active page previewed on the right |
 | Side peek | docked at the window's right, 640 px of 1280; full height; ring `0 0 0 1px #383836` and `0 4px 12px -2px`; bar of 24 px buttons: Close, Open as full page, then the peek mode switch, then Previous and Next (dimmed at the ends), the page's actions at the end; title 32 px bold; text inset 76 px |
 | Table Open button | on hover of the title cell: the open mode's icon and OPEN in 12 px capitals on a raised pill; the peeked row is ringed in blue |
+
+## Blocks (measured, light theme, full-width page 1440 px)
+
+Text color `rgb(44 44 43)`; font stack `ui-sans-serif, -apple-system,
+BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica,
+… Arial, sans-serif`.
+
+| Block | Box | Text |
+| --- | --- | --- |
+| Page title | 48 px high | 40 px, weight 700, line 48 px |
+| Heading 1 | 55 px high | 30 px, weight 600, line 39 px |
+| Heading 2 | 47 px high | 24 px, weight 600, line 31.2 px |
+| Paragraph | 40 px high (24 px line plus block padding) | 16 px, weight 400, line 24 px, text 6 px in from the column |
+| Quote | 40 px, padding 8 px | 16 px, line 24 px, text 25 px in (bar and gap) |
+| Callout | padding 8 px | text 21 px in |
+| Divider | 13 px high | |
+| Image | padding 8 px | |
+
+## Database (measured, dark theme)
+
+### Inline database header
+
+One 40 px row: the database's icon in a 22 px box, the title in 24 px
+weight 600 (line 31.2 px), then a 24 × 24 "+" (add a view) right after the
+title. A single view shows no tabs. At the row's end the tools, 28 × 28,
+radius 6, no gap: Filter, Sort, Automations, AI autofill, Search, then
+Settings; 6 px later the blue "New" (49 × 28, corners 6 0 0 6) and its
+24 × 28 arrow (more ways to add). Pagecraft has every tool but
+Automations and AI autofill, which need a server.
+
+### Rows
+
+- Row 37 px (36 px and a 1 px border); cell text 14 px, line 1.5,
+  padding 7.5 px × 8 px; numbers right-aligned.
+- The gutter sits in the page margin, cells start under the title:
+  "+" (24 px, adds a row below; Alt adds above), the grip (18 px), then
+  the tick box in a 36 × 36 label; it fades in over 200 ms.
+- The title cell shows the Open pill on hover of any cell of the row
+  ("Abrir no modo lado a lado" in side peek mode).
+
+### Cell quick actions (hover on a value cell)
+
+- Every non-title value cell shows, on hover, a bar at its start: inside
+  an absolutely placed strip (`top: 6px`, `inset-inline: 0`,
+  `margin: 0 4px`, `justify-content: start`, `pointer-events: none`), a
+  sticky pill (`inset-inline-end: 4px`), background `--c-bacEle`
+  (`rgb(32 32 32)`), padding 2 px, 24 px high, radius 6 px, shadow
+  `0 0 0 1px rgb(56 56 54), 0 4px 12px -2px rgb(25 25 25 / .08)`.
+  The bar covers the value; it stays left even for right-aligned numbers.
+- In it, two 24 × 20 buttons (radius 4 px, 16 px icons in the secondary
+  icon color): "Comment on property value" (speech bubble) and "Copy to
+  clipboard".
+- "Comment" opens the comment composer as a popover centered under the
+  cell: 470 px wide, radius 10, the menu panel's ring and shadows;
+  padding 9 px 8 px 8 px 12 px; avatar 24 px; the field "Add a
+  comment…" 14 px on a 20 px line, focused at once; on its right
+  Attach file, Mention, Send (24 × 24 each). Enter posts.
+- Once a value has a discussion, its bar's first button becomes "Open
+  discussion": the bubble and the count (12 px, weight 600, tertiary
+  text), padding 0 6 px; the bar shows while the cell is hovered.
+- On the row's page the property row with a discussion carries, just
+  past its end in the right margin (absolute, `top: 6px`), a 24 px
+  button: the bubble and the count, named "1 comment". It opens the
+  discussions popover (480 px, radius 10): each comment shows the
+  author, the time, then the value it is about as a quoted line in 13 px
+  secondary text (`rgb(173 169 163)`) — the property name, ":", then the
+  value as it read when the discussion began — indented 32 px under the
+  name, then the comment. Hovering a comment shows Add reaction, Resolve,
+  More actions (Mark as unread, Edit, Copy link, Mute replies, Delete).
+  Delete asks "Delete this comment?" with Delete and Cancel.
+- Value discussions are not listed under the page's own discussions;
+  they live by their property.
+- Pagecraft (2026-11-13): the bar, its two buttons, the composer and the
+  discussions popovers (470 and 480 px), the count by the property on
+  the row's page, the value quoted under the first comment, and the
+  delete question are built to these numbers
+  (`cell-actions.view.ts`, `row-value-comments.view.ts`,
+  `features/comments/`). Reactions, Mark as unread, Edit, Copy link and
+  Mute replies are not built (one person, no notifications).
+
+## Search (measured, dark theme, 2026-11-13)
+
+- Opened from the sidebar's "Search or ask" field (8 px radius, a 1 px
+  border) or Ctrl+K: a 1006 × 700 px dialog, radius 20 px.
+- Under the field a row of filter chips, each 24 px, radius 32 px,
+  padding 0 8 px, gap 6 px, 14 px secondary text (`rgb(173 169 163)`),
+  no fill: "Title only", "Created by", "In page", then "Filter" (dimmer,
+  `rgb(125 122 117)`, padding 0 9 0 5 px, radius 12 px).
+- Each chip leads with a 16 px icon (Aa, a person, a page) and ends with
+  a small chevron down; no border, no shadow.
+- A chip with a value turns blue (`rgb(39 131 222)`) on a translucent
+  blue fill and reads "In page: Budget, Salary". The filters stay set
+  when the search is closed and opened again.
+- With a filter set the list reads "Search results", with a sort choice
+  "Best matches ⌄" at its right.
+- "In page" opens a 250 px popover (min 180, at most 40 % of the window
+  high): a field holding the chosen pages as 18 px tokens (icon, name,
+  a remove ×) with a blue focus ring, placeholder "Search pages"; under
+  it the other pages as 28 px options (a row page shows its path in
+  12 px tertiary text, "Budget / Income"). Choosing keeps it open; it
+  is a multiple choice.
+- "Filter" lists "Date"; choosing it adds a "Date" chip and opens its
+  248 px popover: a header with the field it reads ("Last edited", a
+  list of "Created" and "Last edited") and "Clear"; 28 px rows Today,
+  Last 7 days, Last 30 days; a month calendar to pick a day or a range;
+  "Remove" at the foot, which takes the chip away.
+- With no query the results group recent pages by when they were opened:
+  "Today", "Yesterday", then older; with a query or a filter, "Best
+  matches". The foot reads "Ctrl+Enter Open in new tab".
+- Pagecraft has one person, so "Created by" has nothing to choose; it is
+  left out.
+- Pagecraft (2026-11-13): Title only, In page (tokens, search, Backspace)
+  and Filter › Date (field, Clear, presets, month, Remove) are built and
+  kept while the search is closed (`features/command-palette/search-*`).
+  Not built: grouping recents by Today and Yesterday (visit times are not
+  kept) and the "Best matches" sort choice.
+
+## Page menu (measured, dark theme, 2026-11-13)
+
+- The "…" at the top bar's end ("Actions") opens a 256 px menu with a
+  search field ("Search actions…") and 28 px options, in groups: Copy
+  link (Ctrl+Alt+L on the web), Copy page contents, Duplicate (Ctrl+D),
+  Move to (Ctrl+Shift+P); Version history, Updates and analytics;
+  Appearance and layout ›, Use with AI ›, Suggest edits, Get notified ›
+  (its value, "Comments"); Lock page (a switch), Move to trash; More ›.
+  The foot: "Last edited", the person, "yesterday at 19:08", then the
+  word count.
+- Appearance and layout opens a 300 px submenu beside it: "Font style"
+  with three 92 × 61 tiles (Ag, Default, Serif, Mono), then the section
+  "Appearance" with switches Small text, Full width, Table of contents,
+  Page discussions, and "Inline comments ›".
+- More › holds Translate, Import, Export, Turn into wiki, Connections
+  (None), Open in the Windows app.
+- Backlinks are no longer a row of this menu.
+- Pagecraft (2026-11-13): the groups above in that order, without the
+  rows that need a server, AI or other people; Appearance and layout
+  holds the font tiles, Small text, Full width and Backlinks; More holds
+  Export › (Markdown, HTML, print). Copy link keeps Ctrl+L, and Duplicate
+  and Move to show no keys, since only working keys are shown. The
+  submenus never opened before: the menu was drawn without its context.
 
 ## Controls
 

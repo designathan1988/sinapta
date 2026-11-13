@@ -2,7 +2,7 @@
   /* Where a block's first line sits, for its handles to stand level with it, as
      Notion's: the space the block opens above that line, as a heading's
      margin or a callout's padding, and the line's height. The values copy
-     the block's own tokens; `npm run audit:ui` measures every block. */
+     the block's own tokens. */
   .editor__block {
     --editor-line-start: var(--space-none);
     --editor-line-size: var(--size-target-min);
