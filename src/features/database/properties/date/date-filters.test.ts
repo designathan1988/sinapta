@@ -120,3 +120,13 @@ describe("a date filter relative to today", () => {
     expect(passes({ start: "1999-01-01" }, "2026-11-10..", between)).toBe(true);
   });
 });
+
+describe("Is between's words on its pill", () => {
+  it("writes its days as the app writes dates, and nothing while one is missing", () => {
+    const between = date.filterOperators.find((item) => item.id === "between");
+    expect(between?.describe?.("2026-11-10..2026-11-14")).toBe(
+      "Nov 10, 2026 → Nov 14, 2026",
+    );
+    expect(between?.describe?.("2026-11-10..")).toBe("");
+  });
+});

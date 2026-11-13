@@ -111,13 +111,16 @@ describe("the operand of a date filter relative to today", () => {
     );
   });
 
-  it("takes Is between's two days from its fields", () => {
+  it("takes Is between's two days as typed in its fields", () => {
     const { host, sent, rule } = rendered("2026-11-10..", undefined, "between");
-    const [, last] = host.querySelectorAll<HTMLInputElement>(
+    const [first, last] = host.querySelectorAll<HTMLInputElement>(
       ".database__between input",
     );
 
-    if (last !== undefined) last.value = "2026-11-12";
+    // The days read as the rest of the app writes them, not the browser's.
+    expect(first?.type).toBe("text");
+    expect(first?.value).toBe("Nov 10, 2026");
+    if (last !== undefined) last.value = "Nov 12, 2026";
     last?.dispatchEvent(new Event("change", { bubbles: true }));
 
     expect(sent).toContainEqual(

@@ -15,6 +15,7 @@ import {
   relativeSpan,
 } from "./date-relative.ts";
 import {
+  formatDateValue,
   isDay,
   overlaps,
   readDateValue,
@@ -109,10 +110,15 @@ export function readBetween(operand: string): [string, string] | undefined {
 
 const BETWEEN: FilterOperator = {
   id: "between",
-  label: "Is between",
+  label: COPY.database.isBetween,
   needsOperand: true,
   operandEditor: "between",
-  describe: (operand) => operand.split(BETWEEN_SEPARATOR).join(" → "),
+  // "Nov 10, 2026 → Nov 14, 2026", nothing while a day is missing.
+  describe: (operand) => {
+    const days = readBetween(operand);
+    if (days === undefined) return "";
+    return formatDateValue({ start: days[0], end: days[1] });
+  },
   test(value, operand, context) {
     const days = readBetween(operand);
     if (days === undefined) return true;

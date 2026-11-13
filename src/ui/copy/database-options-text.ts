@@ -3,6 +3,7 @@
 // switches, the view tab's menu and conditional color.
 export const DATABASE_OPTIONS_TEXT = {
   relativeToToday: "Is relative to today",
+  isBetween: "Is between",
   relativeDirections: { past: "Past", next: "Next", this: "This" },
   relativeUnits: { day: "Day", week: "Week", month: "Month", year: "Year" },
   relativeNote: "The filter will update with today's date",
@@ -61,6 +62,17 @@ export const DATABASE_OPTIONS_TEXT = {
   conditionalColor: "Conditional color",
   conditionalColorNote:
     "Customize page colors to easily distinguish categories, highlight overdue events, and make your schedule clearer.",
+  // The sample table of Notion's conditional color picture.
+  colorSample: {
+    head: ["Name", "Office", "Units sold"],
+    rows: [
+      ["Keesha", "Miami", "160"],
+      ["Rahul", "Orlando", "120"],
+      ["Jackson", "Tampa", "140"],
+      ["Marcus", "Tampa", "100"],
+      ["John", "Miami", "100"],
+    ],
+  },
   addColorCondition: "Add condition",
   colorTarget: "Color applies to",
   newColorSetting: "New color setting",

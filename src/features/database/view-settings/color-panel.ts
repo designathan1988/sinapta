@@ -165,15 +165,24 @@ function renderRule(context: TableContext, rule: ColorRule): TemplateResult {
   </section>`;
 }
 
-// Notion's picture of colored rows over the note.
+// Notion's picture over the note: a sample table, its rows tinted as
+// rules would tint them.
+const SAMPLE_COLORS = ["green", "", "green", "orange", "red"];
+
+function renderSampleRow(cells: readonly string[], color: string) {
+  return html`<span class="view-settings__color-row" data-color=${color}
+    >${cells.map((cell) => html`<span>${cell}</span>`)}</span
+  >`;
+}
+
 function renderPicture(): TemplateResult {
-  const rows = ["green", "", "green", "orange", "red"];
+  const { head, rows } = TEXT.colorSample;
   return html`<div class="view-settings__color-picture" aria-hidden="true">
-    ${rows.map(
-      (color) =>
-        html`<span class="view-settings__color-row" data-color=${color}
-          ><span></span><span></span><span></span
-        ></span>`,
+    <span class="view-settings__color-row" data-head
+      >${head.map((cell) => html`<span>${cell}</span>`)}</span
+    >
+    ${rows.map((cells, index) =>
+      renderSampleRow(cells, SAMPLE_COLORS[index] ?? ""),
     )}
   </div>`;
 }
@@ -188,6 +197,8 @@ function renderLead(context: TableContext): TemplateResult {
       label: TEXT.newColorSetting,
       icon: "plus",
       variant: "primary",
+      // A panel without rows: its button takes the keys.
+      takesFocus: true,
       onClick: () => context.dispatch(addColorRule.create({ viewId })),
     })}
   </div>`;

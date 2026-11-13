@@ -173,13 +173,15 @@
     }
   }
 
-  /* Notion's picture: a small table, its rows tinted as rules would. */
+  /* Notion's picture: a small sample table, its words tiny, its rows
+     tinted as rules would. */
   .view-settings__color-picture {
     display: grid;
     gap: var(--size-border-thin);
     padding: var(--space-inset-sm);
     border-radius: var(--radius-md);
     box-shadow: inset 0 0 0 var(--size-border-thin) var(--color-border-default);
+    font-size: var(--font-size-picture);
   }
 
   .view-settings__color-row {
@@ -188,11 +190,14 @@
     gap: var(--space-inline-xs);
     padding: var(--space-inset-xxs) var(--space-inset-xs);
     border-radius: var(--radius-sm);
+    color: var(--color-text-primary);
 
-    & > span {
-      block-size: var(--size-border-thick);
-      border-radius: var(--radius-sm);
-      background-color: var(--color-text-tertiary);
+    & > span:last-child {
+      text-align: end;
+    }
+
+    &[data-head] {
+      color: var(--color-text-tertiary);
     }
 
     &[data-color="green"] {
