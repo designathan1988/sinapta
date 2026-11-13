@@ -1,6 +1,7 @@
 // Linked views: a view of a database placed in another page, with views
 // of its own. It is made empty from the slash menu, then shown a
 // database, which gives it its first view.
+import { SELECT_OVERLAY } from "../../ui/select/index.ts";
 import { selectDatabase } from "../../blocks/database/index.ts";
 import { LINKED_VIEW_TYPE } from "../../blocks/linked-view/index.ts";
 import { listOf, type Block, type BlockId } from "../../model/index.ts";
@@ -33,7 +34,12 @@ export const createLinkedView = defineCommand<{ blockId: BlockId }>({
         { type: "record.create", kind: "block", record },
         { type: "list.insert", list, id, index: place.index },
       ],
-      ui: { ...state.ui, selection: null },
+      // Its chooser of databases opens at once, as Notion's.
+      ui: {
+        ...state.ui,
+        selection: null,
+        overlay: { kind: SELECT_OVERLAY, anchorId: `linked-${id}` },
+      },
     };
   },
 });

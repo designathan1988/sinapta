@@ -120,3 +120,26 @@ describe("linked views", () => {
     expect(sourceViews()).toEqual(["source-view"]);
   });
 });
+
+describe("a new linked view", () => {
+  it("opens its database chooser at once, as Notion's", () => {
+    const blocks = buildWorkspace([
+      {
+        id: "page",
+        props: { title: [], icon: null, isFavorite: false, isTrashed: false },
+        children: [{ id: "a", type: "paragraph", props: { text: [] } }],
+      },
+    ]);
+    const app = createTestApp({
+      workspace: blocks,
+      commands: [...linkedViewCommands],
+    });
+
+    app.dispatch(createLinkedView.create({ blockId: toBlockId("a") }));
+
+    expect(app.store.getState().ui.overlay).toEqual({
+      kind: "select",
+      anchorId: `linked-${LINKED}`,
+    });
+  });
+});
