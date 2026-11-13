@@ -48,16 +48,30 @@ function createDraft(workspace: Workspace): Draft {
   };
 }
 
+// The values a patch replaces; a key the record lacked comes back as
+// undefined, which removes it again when the inverse is applied.
 function previousValues<TRecord extends object>(
   record: TRecord,
   patch: Partial<TRecord>,
 ): Partial<TRecord> {
   const previous: Partial<TRecord> = {};
   for (const key of Object.keys(patch)) {
-    if (key in record)
-      Object.assign(previous, { [key]: Reflect.get(record, key) });
+    Object.assign(previous, { [key]: Reflect.get(record, key) });
   }
   return previous;
+}
+
+// The record with the patch applied; a key patched to undefined is left
+// out, as a record that never had it.
+function patched<TRecord extends object>(
+  record: TRecord,
+  patch: object,
+): TRecord {
+  const next = { ...record, ...patch };
+  for (const [key, value] of Object.entries(patch)) {
+    if (value === undefined) Reflect.deleteProperty(next, key);
+  }
+  return next;
 }
 
 function createRecord(
@@ -97,7 +111,7 @@ function updateRecord(
 ): Step {
   if (operation.kind === "settings") {
     const patch = previousValues(draft.settings, operation.patch);
-    draft.settings = { ...draft.settings, ...operation.patch };
+    draft.settings = patched(draft.settings, operation.patch);
     draft.hasMetaChange = true;
     draft.inverse.push({ type: "record.update", kind: "settings", patch });
     return undefined;
@@ -107,7 +121,7 @@ function updateRecord(
     if (block === undefined)
       return { kind: "missing-record", id: operation.id };
     const patch = previousValues(block, operation.patch);
-    draft.blocks[operation.id] = { ...block, ...operation.patch };
+    draft.blocks[operation.id] = patched(block, operation.patch);
     draft.blockIds.add(operation.id);
     draft.inverse.push({ ...operation, patch });
     return undefined;
@@ -115,7 +129,7 @@ function updateRecord(
   const view = draft.views[operation.id];
   if (view === undefined) return { kind: "missing-record", id: operation.id };
   const patch = previousValues(view, operation.patch);
-  draft.views[operation.id] = { ...view, ...operation.patch };
+  draft.views[operation.id] = patched(view, operation.patch);
   draft.viewIds.add(operation.id);
   draft.inverse.push({ ...operation, patch });
   return undefined;

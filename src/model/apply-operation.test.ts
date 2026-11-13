@@ -114,6 +114,23 @@ describe("applyOperations", () => {
     expect(backward.workspace).toEqual(workspace);
   });
 
+  it("removes again on undo a field the update added", () => {
+    const workspace = buildWorkspace([{ id: "a" }]);
+    const forward = apply(workspace, [
+      { type: "record.update", kind: "block", id: A, patch: { type: "x" } },
+      {
+        type: "record.update",
+        kind: "settings",
+        patch: { viewTabStyle: "icon" },
+      },
+    ]);
+
+    const backward = apply(forward.workspace, [...forward.inverse]);
+
+    expect("viewTabStyle" in backward.workspace.settings).toBe(false);
+    expect(backward.workspace).toStrictEqual(workspace);
+  });
+
   it("does not mutate the workspace it is given", () => {
     const workspace = buildWorkspace([{ id: "a" }]);
     const before = structuredClone(workspace);
