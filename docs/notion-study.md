@@ -987,6 +987,12 @@ items above, found while photographing them:
     automation dialog's title is quiet over a line; a lone chart column
     keeps a bar's width; a form's date question is an English text field
     ("Select a date") instead of the browser's own.
+32. **done** [T093, FR-022, photos `p9-group-title`, `p9-title-icon`
+    against `n39-groups/03-group-by`] "Agrupar por" lists "Nenhum" first,
+    flush with the icons' edge and no icon, then the title column with
+    its "Aa" icon (as its header), then the other properties by name in
+    character order ("URL" before "Última edição"). The title's "Aa" also
+    leads it in the filter, sort and sub-group lists.
 
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,
