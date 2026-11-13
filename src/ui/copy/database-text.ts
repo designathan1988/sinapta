@@ -58,7 +58,7 @@ export const DATABASE_TEXT = {
     moveLeft: "Move left",
     moveRight: "Move right",
     columnMoved: "Column moved.",
-    hide: "Hide in this view",
+    hide: "Hide",
     resizeColumn: "Resize column",
     open: "Open",
     openIn: {
@@ -196,10 +196,10 @@ export const DATABASE_TEXT = {
     addRowBelow: "Click to add below. Alt+click to add above",
     moveRowHint:
       "Drag to move the row. From the keyboard, Alt+Shift with Up or Down moves it.",
-    wrapText: "Wrap text",
-    unwrapText: "Unwrap text",
-    freezeColumns: "Freeze up to this column",
-    unfreezeColumns: "Unfreeze columns",
+    wrapText: "Wrap content",
+    unwrapText: "Unwrap content",
+    freezeColumns: "Freeze",
+    unfreezeColumns: "Unfreeze",
     hideGroup: "Hide",
     showGroup: "Show",
     hiddenGroups: "Hidden groups",

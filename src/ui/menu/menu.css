@@ -64,7 +64,9 @@
       outline-offset: calc(var(--size-focus-offset) * -1);
     }
 
-    &[data-danger] {
+    /* As Notion's, a destructive row turns red only when pointed at or
+       chosen. */
+    &[data-danger]:is(:hover, :focus-visible, [aria-selected="true"]) {
       color: var(--color-text-danger);
     }
 
