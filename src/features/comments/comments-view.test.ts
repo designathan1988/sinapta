@@ -6,8 +6,10 @@ import { buildWorkspace, toBlockId } from "../../model/index.ts";
 import { createInitialState, type Command } from "../../state/index.ts";
 import {
   COMMENT_COMPOSER_OVERLAY,
+  DISCUSSIONS_OVERLAY,
   renderBlockComments,
   renderComposerPopover,
+  renderDiscussionsPopover,
   renderPageDiscussions,
 } from "./comment-popovers.view.ts";
 import {
@@ -127,6 +129,36 @@ describe("a block's comment count", () => {
     const button = host.querySelector(".comments__count");
     expect(button?.textContent.trim()).toBe("2");
     expect(button?.getAttribute("aria-label")).toBe("2 comments");
+  });
+});
+
+describe("a block's discussions, opened from its count", () => {
+  it("put the keys in the reply field, as Notion's", async () => {
+    const workspace = buildWorkspace([
+      {
+        id: "page",
+        props: {
+          title: [],
+          icon: null,
+          isFavorite: false,
+          isTrashed: false,
+          discussions: [{ ...discussion, blockId: toBlockId("a") }],
+        },
+        children: [{ id: "a", type: "paragraph", props: { text: [] } }],
+      },
+    ]);
+    const initial = createInitialState();
+    const overlay = { kind: DISCUSSIONS_OVERLAY, anchorId: "a" };
+    const state = { ...initial, workspace, ui: { ...initial.ui, overlay } };
+    const host = document.createElement("div");
+    document.body.replaceChildren(host);
+    render(
+      renderDiscussionsPopover(state, () => ({ ok: true })),
+      host,
+    );
+    await Promise.resolve();
+
+    expect(document.activeElement?.getAttribute("aria-label")).toBe("Reply…");
   });
 });
 

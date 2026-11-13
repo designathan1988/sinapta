@@ -12,7 +12,11 @@ import {
 } from "../../state/index.ts";
 import { COPY, pluralize } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
-import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
+import { focusOnce, whenConnected } from "../../ui/focus/index.ts";
+import {
+  focusOverlayAnchor,
+  showPopoverWhenConnected,
+} from "../../ui/overlay/index.ts";
 import { ref } from "lit-html/directives/ref.js";
 import { selectOpenDiscussions, selectPageOf } from "./comments.selectors.ts";
 import { startDiscussion } from "./comment.commands.ts";
@@ -99,6 +103,7 @@ export function renderBlockComments(
   return html`<button
     type="button"
     class="comments__count"
+    data-overlay-anchor
     aria-label=${`${String(count)} ${pluralize(count, TEXT.count)}`}
     aria-expanded=${String(isOpen)}
     @click=${() =>
@@ -117,8 +122,19 @@ export function closeOnEscape(dispatch: Dispatch) {
     if (event.key !== "Escape") return;
     event.preventDefault();
     event.stopPropagation();
+    focusOverlayAnchor();
     dispatch(closeOverlay.create({}));
   };
+}
+
+// Opened from a block's count, the discussions take the keys in their
+// first reply field, as Notion's.
+function focusReply(element: Element | undefined): void {
+  if (!(element instanceof HTMLElement)) return;
+  whenConnected(element, () => {
+    const field = element.querySelector<HTMLElement>(".comments__field input");
+    if (field !== null) focusOnce(field);
+  });
 }
 
 // A block's open discussions, in a popover by the block.
@@ -142,6 +158,7 @@ export function renderDiscussionsPopover(
     data-overlay
     aria-label=${TEXT.label}
     ${ref(showPopoverWhenConnected)}
+    ${ref(focusReply)}
     @keydown=${closeOnEscape(dispatch)}
   >
     ${found.discussions.map((item) => renderDiscussion(item, context))}
