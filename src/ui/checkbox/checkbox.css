@@ -1,6 +1,7 @@
 @layer ui {
-  /* A tick box drawn as Notion draws it: a small rounded square with a
-     light border, filled with the accent and ticked white when checked.
+  /* A tick box drawn as Notion draws it: a 16 px square with a 3 px
+     radius and a translucent border, filled with the accent and ticked
+     white when checked.
      The real checkbox stays, so it keeps its keyboard and its state. */
   .checkbox {
     display: inline-grid;
@@ -9,8 +10,8 @@
     inline-size: var(--size-icon-sm);
     block-size: var(--size-icon-sm);
     margin: var(--space-none);
-    border: var(--size-border-thin) solid var(--color-border-strong);
-    border-radius: var(--radius-sm);
+    border: var(--size-border-thin) solid var(--color-border-check);
+    border-radius: var(--radius-check);
     background-color: transparent;
     cursor: pointer;
     appearance: none;
@@ -26,6 +27,13 @@
 
     &:hover {
       background-color: var(--color-bg-hover);
+    }
+
+    /* A to-do's box, as Notion's: sharper, and outlined in the primary
+       icon color. */
+    &[data-variant="todo"] {
+      border-color: var(--color-border-todo);
+      border-radius: var(--radius-todo);
     }
 
     &:checked,

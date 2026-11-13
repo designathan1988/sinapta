@@ -1,6 +1,6 @@
 @layer features {
   /* "Edited 5m ago", as Notion's: a quiet 28 px button that opens the
-     page's history. */
+     page's history; pointed at, it shows no wash, only the pointer. */
   .page-info__edited {
     min-block-size: var(--size-control-action);
     padding: var(--space-none) var(--space-inset-sm);
@@ -12,10 +12,6 @@
     font-size: var(--font-size-sm);
     white-space: nowrap;
     cursor: pointer;
-
-    &:hover {
-      background-color: var(--color-bg-hover);
-    }
   }
 
   /* Notion's lock chip: a lock and "Locked", muted, that unlocks. */

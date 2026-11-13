@@ -12,6 +12,12 @@
       border-radius: var(--radius-md);
       color: var(--color-text-tertiary);
 
+      /* Notion's sidebar icons take a stronger wash than other buttons. */
+      &:hover,
+      &[aria-expanded="true"] {
+        background-color: var(--color-bg-hover-strong);
+      }
+
       & > .icon {
         inline-size: var(--size-icon-md);
         block-size: var(--size-icon-md);

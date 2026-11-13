@@ -11,8 +11,16 @@
       "raised": {
         "$value": "{base.color.day.raised}"
       },
+      "elevated": {
+        "$description": "A small bar raised over content, as Notion's cell actions.",
+        "$value": "{base.color.day.elevated}"
+      },
       "hover": {
         "$value": "{base.color.day.hover}"
+      },
+      "hoverStrong": {
+        "$description": "The stronger wash of the sidebar's icon buttons, as Notion's.",
+        "$value": "{base.color.day.hoverStrong}"
       },
       "active": {
         "$value": "{base.color.day.active}"
@@ -73,6 +81,14 @@
       "strong": {
         "$value": "{base.color.day.borderStrong}"
       },
+      "todo": {
+        "$description": "A to-do's box, as Notion's: the primary icon color.",
+        "$value": "{base.color.day.todoBorder}"
+      },
+      "check": {
+        "$description": "A row's or a setting's tick box, as Notion's.",
+        "$value": "{base.color.day.checkBorder}"
+      },
       "focus": {
         "$value": "{base.color.day.focus}"
       }
@@ -111,6 +127,15 @@
       },
       "soft": {
         "$value": "{base.color.day.shadowSoft}"
+      },
+      "raisedRing": {
+        "$value": "{base.color.day.raisedRing}"
+      },
+      "raisedNear": {
+        "$value": "{base.color.day.raisedNear}"
+      },
+      "raisedFar": {
+        "$value": "{base.color.day.raisedFar}"
       }
     },
     "chip": {
@@ -451,6 +476,16 @@
         "$value": "{base.size.2x75}"
       }
     },
+    "comment": {
+      "composer": {
+        "$description": "The popover that starts a discussion, as Notion's: 470 px.",
+        "$value": "{base.size.29x375}"
+      },
+      "discussions": {
+        "$description": "The popover that lists a value's or block's discussions, as Notion's: 480 px.",
+        "$value": "{base.size.30}"
+      }
+    },
     "menu": {
       "minWidth": {
         "$value": "{base.size.14}"
@@ -617,6 +652,14 @@
       "list": {
         "$description": "Its list of results, beside the preview.",
         "$value": "{base.size.35x75}"
+      },
+      "date": {
+        "$description": "The date filter's popover, as Notion's: 248 px.",
+        "$value": "{base.size.15x5}"
+      },
+      "inPage": {
+        "$description": "The In page filter's list, as Notion's: 250 px.",
+        "$value": "{base.size.15x625}"
       }
     },
     "panel": {
@@ -692,6 +735,14 @@
     "field": {
       "$description": "The sidebar's search field, as Notion's: 8 px.",
       "$value": "{base.radius.2x5}"
+    },
+    "todo": {
+      "$description": "A to-do's box, as Notion's: 1.5 px.",
+      "$value": "{base.radius.0x09375}"
+    },
+    "check": {
+      "$description": "A row's tick box, as Notion's: 3 px.",
+      "$value": "{base.radius.0x1875}"
     }
   },
   "shadow": {
@@ -861,10 +912,10 @@
       ]
     },
     "peek": {
-      "$description": "A side peek's edge: a hairline and a soft shade.",
+      "$description": "Notion's --c-shaOutMd, on a side peek and a cell's bar: a ring and, by night, one near shade, by day two far ones.",
       "$value": [
         {
-          "color": "{color.shadow.ring}",
+          "color": "{color.shadow.raisedRing}",
           "offsetX": {
             "value": 0,
             "unit": "px"
@@ -883,7 +934,7 @@
           }
         },
         {
-          "color": "{color.shadow.soft}",
+          "color": "{color.shadow.raisedNear}",
           "offsetX": {
             "value": 0,
             "unit": "px"
@@ -898,6 +949,44 @@
           },
           "spread": {
             "value": -2,
+            "unit": "px"
+          }
+        },
+        {
+          "color": "{color.shadow.raisedFar}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 8,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 12,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": "{color.shadow.raisedFar}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 2,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 6,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
             "unit": "px"
           }
         }
@@ -947,6 +1036,10 @@
       "peekTitle": {
         "$description": "A page's title in a peek, smaller than on its own page.",
         "$value": "{base.font.size.6x5}"
+      },
+      "note": {
+        "$description": "What a comment is about, quoted over it, as Notion's: 13 px.",
+        "$value": "{base.font.size.0x8125}"
       },
       "key": {
         "$description": "A key in a shortcut hint, as Notion's: 11 px.",

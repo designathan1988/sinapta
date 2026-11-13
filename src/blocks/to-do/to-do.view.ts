@@ -15,6 +15,7 @@ export function renderToDo(
   return html`<div class="to-do" ?data-checked=${isChecked}>
     <input
       class="to-do__check ${CHECKBOX_CLASS}"
+      data-variant="todo"
       type="checkbox"
       aria-label=${COPY.blocks.toDoCheck}
       .checked=${isChecked}

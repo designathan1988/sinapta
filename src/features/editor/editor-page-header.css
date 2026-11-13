@@ -113,16 +113,14 @@
     block-size: var(--font-size-page-icon);
     padding: var(--space-none);
     border: none;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-sm);
+
+    /* As Notion's, the icon shows no wash when pointed at or open: only
+       the pointer says it can be pressed. */
     background-color: transparent;
     font-size: var(--font-size-page-icon);
     line-height: 1;
     cursor: pointer;
-
-    &:hover,
-    &[aria-expanded="true"] {
-      background-color: var(--color-bg-hover);
-    }
   }
 
   .editor__icon-popover:popover-open {

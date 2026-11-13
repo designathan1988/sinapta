@@ -524,16 +524,50 @@
             "components": [1.0, 0.0, 0]
           }
         },
-        "hover": {
+        "elevated": {
+          "$description": "Notion's --c-bacEle: a small bar raised over content, white in the day theme.",
           "$value": {
             "colorSpace": "oklch",
-            "components": [0.9496, 0.0017, 67.8]
+            "components": [1.0, 0.0, 0]
+          }
+        },
+        "hover": {
+          "$description": "Notion's --ca-bacIntTra, #211b170d: a wash that darkens whatever it lies on.",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.2278, 0.0121, 55.7],
+            "alpha": 0.051
           }
         },
         "active": {
+          "$description": "Pressed or open: Notion doubles the hover wash.",
           "$value": {
             "colorSpace": "oklch",
-            "components": [0.9282, 0.0029, 84.6]
+            "components": [0.2278, 0.0121, 55.7],
+            "alpha": 0.102
+          }
+        },
+        "hoverStrong": {
+          "$description": "Notion's --ca-borPriTra, #1c13011c: the wash of the sidebar's icon buttons.",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.1933, 0.0373, 85.6],
+            "alpha": 0.11
+          }
+        },
+        "todoBorder": {
+          "$description": "Notion's --c-icoPri, #383836: the border of a to-do's box.",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.34, 0.0034, 106.6]
+          }
+        },
+        "checkBorder": {
+          "$description": "Notion's --ca-borStrTra, #1b150030: the border of a row's tick box.",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.1973, 0.0405, 95.6],
+            "alpha": 0.188
           }
         },
         "selected": {
@@ -695,6 +729,30 @@
             "alpha": 0.06
           }
         },
+        "raisedRing": {
+          "$description": "Notion's --c-shaOutMd ring, #2a1c0012.",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.2378, 0.0489, 82.5],
+            "alpha": 0.0706
+          }
+        },
+        "raisedNear": {
+          "$description": "Unused by day: Notion's day shade has two far layers.",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.0, 0.0, 0],
+            "alpha": 0
+          }
+        },
+        "raisedFar": {
+          "$description": "Notion's --c-shaOutMd shades, #19191907.",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.2134, 0.0, 89.9],
+            "alpha": 0.0275
+          }
+        },
         "field": {
           "$value": {
             "colorSpace": "oklch",
@@ -729,16 +787,50 @@
             "components": [0.2645, 0.0, 0]
           }
         },
-        "hover": {
+        "elevated": {
+          "$description": "Notion's --c-bacEle in the night theme, rgb(32 32 32).",
           "$value": {
             "colorSpace": "oklch",
-            "components": [0.2928, 0.0018, 106.5]
+            "components": [0.2435, 0.0, 0]
+          }
+        },
+        "hover": {
+          "$description": "Notion's --ca-bacIntTra, #ffffff0e: a wash that lightens whatever it lies on.",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [1.0, 0.0, 0],
+            "alpha": 0.055
           }
         },
         "active": {
+          "$description": "Pressed or open: Notion doubles the hover wash.",
           "$value": {
             "colorSpace": "oklch",
-            "components": [0.3368, 0.0, 0]
+            "components": [1.0, 0.0, 0],
+            "alpha": 0.11
+          }
+        },
+        "hoverStrong": {
+          "$description": "Notion's --ca-borPriTra, #ffffeb1a: the wash of the sidebar's icon buttons.",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.9947, 0.0261, 106.9],
+            "alpha": 0.102
+          }
+        },
+        "todoBorder": {
+          "$description": "Notion's --c-icoPri, #e6e5e3: the border of a to-do's box.",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.9221, 0.0029, 84.6]
+          }
+        },
+        "checkBorder": {
+          "$description": "Notion's --ca-borStrTra, #fffceb4e: the border of a row's tick box.",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.9888, 0.0225, 98.6],
+            "alpha": 0.306
           }
         },
         "selected": {
@@ -780,7 +872,7 @@
         "textAccent": {
           "$value": {
             "colorSpace": "oklch",
-            "components": [0.664, 0.1008, 238.1]
+            "components": [0.684, 0.1008, 238.1]
           }
         },
         "onAccent": {
@@ -822,7 +914,7 @@
         "accentHover": {
           "$value": {
             "colorSpace": "oklch",
-            "components": [0.664, 0.1008, 238.1]
+            "components": [0.684, 0.1008, 238.1]
           }
         },
         "accentFill": {
@@ -846,13 +938,13 @@
         "focus": {
           "$value": {
             "colorSpace": "oklch",
-            "components": [0.664, 0.1008, 238.1]
+            "components": [0.684, 0.1008, 238.1]
           }
         },
         "danger": {
           "$value": {
             "colorSpace": "oklch",
-            "components": [0.69, 0.1605, 26.5]
+            "components": [0.705, 0.1605, 26.5]
           }
         },
         "dangerBg": {
@@ -897,6 +989,29 @@
             "colorSpace": "oklch",
             "components": [0.2134, 0.0, 0],
             "alpha": 0.118
+          }
+        },
+        "raisedRing": {
+          "$description": "Notion's --c-shaOutMd ring, #383836.",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.34, 0.0034, 106.6]
+          }
+        },
+        "raisedNear": {
+          "$description": "Notion's --c-shaOutMd shade, #19191914.",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.2134, 0.0, 89.9],
+            "alpha": 0.0784
+          }
+        },
+        "raisedFar": {
+          "$description": "Unused by night: Notion's night shade has one near layer.",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.0, 0.0, 0],
+            "alpha": 0
           }
         },
         "field": {
@@ -1305,6 +1420,18 @@
           "unit": "rem"
         }
       },
+      "15x5": {
+        "$value": {
+          "value": 15.5,
+          "unit": "rem"
+        }
+      },
+      "15x625": {
+        "$value": {
+          "value": 15.625,
+          "unit": "rem"
+        }
+      },
       "16x875": {
         "$value": {
           "value": 16.875,
@@ -1332,6 +1459,12 @@
       "18x125": {
         "$value": {
           "value": 18.125,
+          "unit": "rem"
+        }
+      },
+      "29x375": {
+        "$value": {
+          "value": 29.375,
           "unit": "rem"
         }
       },
@@ -1482,6 +1615,18 @@
           "unit": "px"
         }
       },
+      "0x09375": {
+        "$value": {
+          "value": 0.09375,
+          "unit": "rem"
+        }
+      },
+      "0x1875": {
+        "$value": {
+          "value": 0.1875,
+          "unit": "rem"
+        }
+      },
       "3": {
         "$value": {
           "value": 0.625,
@@ -1537,6 +1682,12 @@
         "0x6875": {
           "$value": {
             "value": 0.6875,
+            "unit": "rem"
+          }
+        },
+        "0x8125": {
+          "$value": {
+            "value": 0.8125,
             "unit": "rem"
           }
         },

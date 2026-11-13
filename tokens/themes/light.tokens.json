@@ -11,8 +11,14 @@
       "raised": {
         "$value": "{base.color.day.raised}"
       },
+      "elevated": {
+        "$value": "{base.color.day.elevated}"
+      },
       "hover": {
         "$value": "{base.color.day.hover}"
+      },
+      "hoverStrong": {
+        "$value": "{base.color.day.hoverStrong}"
       },
       "active": {
         "$value": "{base.color.day.active}"
@@ -72,6 +78,12 @@
       "strong": {
         "$value": "{base.color.day.borderStrong}"
       },
+      "todo": {
+        "$value": "{base.color.day.todoBorder}"
+      },
+      "check": {
+        "$value": "{base.color.day.checkBorder}"
+      },
       "focus": {
         "$value": "{base.color.day.focus}"
       }
@@ -110,6 +122,15 @@
       },
       "soft": {
         "$value": "{base.color.day.shadowSoft}"
+      },
+      "raisedRing": {
+        "$value": "{base.color.day.raisedRing}"
+      },
+      "raisedNear": {
+        "$value": "{base.color.day.raisedNear}"
+      },
+      "raisedFar": {
+        "$value": "{base.color.day.raisedFar}"
       }
     },
     "chip": {
