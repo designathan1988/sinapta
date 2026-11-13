@@ -4,6 +4,7 @@
 import {
   BLOCK_TEXT,
   DATABASE_MENU_TEXT,
+  DATABASE_OPTIONS_TEXT,
   DATABASE_TEXT,
   DATE_TEXT,
   EDITOR_TEXT,
@@ -24,7 +25,11 @@ export const COPY = {
   ...BLOCK_TEXT,
   ...TEMPLATE_TEXT,
   ...SETTINGS_TEXT,
-  database: { ...DATABASE_TEXT.database, ...DATABASE_MENU_TEXT },
+  database: {
+    ...DATABASE_TEXT.database,
+    ...DATABASE_MENU_TEXT,
+    ...DATABASE_OPTIONS_TEXT,
+  },
   onboarding: ONBOARDING_TEXT.onboarding,
 } as const;
 

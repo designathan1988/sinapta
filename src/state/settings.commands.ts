@@ -1,4 +1,4 @@
-import type { Theme } from "../model/index.ts";
+import type { Theme, ViewTabStyle } from "../model/index.ts";
 import type { AppState } from "./app-state.ts";
 import {
   defineCommand,
@@ -29,4 +29,18 @@ export const toggleTheme = defineCommand<NoPayload>({
     ),
 });
 
-export const settingsCommands = [setTheme, toggleTheme];
+// How view tabs show, for the owner alone: kept with the settings, so
+// outside undo, as Notion's "Only for you".
+export const setViewTabStyle = defineCommand<{ style: ViewTabStyle }>({
+  type: "settings.setViewTabStyle",
+  handle: (state, command) => {
+    const current = state.workspace.settings.viewTabStyle ?? "text-icon";
+    if (command.style === current) return {};
+    const patch = { viewTabStyle: command.style };
+    return {
+      operations: [{ type: "record.update", kind: "settings", patch }],
+    };
+  },
+});
+
+export const settingsCommands = [setTheme, toggleTheme, setViewTabStyle];

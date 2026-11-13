@@ -58,6 +58,7 @@ export { setNarrow } from "./viewport.commands.ts";
 export { applyUpdate, dismissUpdate, updateReady } from "./update.commands.ts";
 export {
   setTheme,
+  setViewTabStyle,
   settingsCommands,
   toggleTheme,
 } from "./settings.commands.ts";

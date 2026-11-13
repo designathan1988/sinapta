@@ -15,6 +15,8 @@ export const SETTINGS_TEXT = {
     themeSystem: "Use system setting",
     themeLight: "Light",
     themeDark: "Dark",
+    viewTabs: "View tabs",
+    viewTabsHint: "Show a database's view tabs with their icon, name or both.",
     export: "Export workspace",
     exportHint: "Save everything in this browser as one file.",
     exportButton: "Export",

@@ -12,6 +12,8 @@ export const EDITOR_TEXT = {
       pages: "Pages",
       colors: "Colors",
     },
+    // Written after the "/" on its line while the menu is open.
+    placeholder: "Type to search",
   },
   emoji: {
     search: "Search emoji",
@@ -65,6 +67,26 @@ export const EDITOR_TEXT = {
     highlight: "Highlight",
     defaultColor: "Default",
     noHighlight: "No highlight",
+    turnInto: "Turn into",
+    // Each button's keys, shown with its name while it is pointed at.
+    keys: {
+      bold: "Ctrl+B",
+      italic: "Ctrl+I",
+      underline: "Ctrl+U",
+      strikethrough: "Ctrl+Shift+S",
+      code: "Ctrl+E",
+      link: "Ctrl+K",
+      equation: "Ctrl+Shift+E",
+      comment: "Ctrl+Shift+M",
+    },
+    clearFormat: "Clear formatting",
+    equation: "Equation",
+    more: "More",
+    comment: "Comment",
+  },
+  pageOutline: {
+    label: "Page outline",
+    jumpTo: (heading: string) => `Go to ${heading}`,
   },
   tones: {
     // An option's color only: text and highlights have no "default".

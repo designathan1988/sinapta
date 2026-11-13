@@ -87,9 +87,22 @@ owner listed here exists.
 | A group's menu rows (name, hide, delete, colors), for a table's group and a board's column | `src/features/database/group-menu-entries.ts` | 20 |
 | A value cell's bar (comment, copy) and its comment popovers | `src/features/database/cell-actions.view.ts` | 20 |
 | A value's discussion count on a row's page | `src/features/database/row-value-comments.view.ts` | 20 |
-| A column's menu and its submenus (Edit property, Change type, Sort, Calculate) | `src/features/database/column-menu.view.ts`, `column-menu-items.ts`, `column-place-items.ts`, `property-edit-menu.ts` | 16 |
+| A column's menu and its submenus (Edit property, Change type, Sort, Calculate) | `src/features/database/column-menu.view.ts`, `column-menu-items.ts`, `column-calculate-items.ts`, `column-place-items.ts`, `property-edit-menu.ts` | 16 |
 | What a property type declares | `src/features/database/property-definition.ts` | 5 |
 | The conditions text, URL, email and phone are filtered by | `src/features/database/text-filters.ts` | 21 |
+| The filter conditions a property offers (its type's, or ones built from its settings, as a rollup's) | `src/features/database/filter-operators.ts` | 21 |
+| A rollup's quantified condition ids (any, none, every) and the choices drawn from them | `src/features/database/filter-quantifier.ts`, `filter-condition.view.ts` | 21 |
+| A filter rule's popover in Notion's simple form: its head, its "…" menu, and the operand of "Is relative to today" | `src/features/database/filter-rule.view.ts`, `filter-rule-head.view.ts`, `filter-relative.view.ts` | 21 |
+| Duplicating a view | `src/features/database/view-duplicate.commands.ts` | 21 |
+| Each layout's own rows in the layout panel, the card layout's tiles and a timeline's end date | `src/features/database/view-settings/layout-items.ts` | 21 |
+| How a view groups text and numbers (Text by, Number by) | `src/features/database/view-settings/group-by-panels.ts`, `properties/text/text-grouping.ts`, `properties/number/number-grouping.ts` | 21 |
+| A column's Calculate submenu and the counts' 99+ switch | `src/features/database/column-calculate-items.ts` | 21 |
+| A status shown as a checkbox | `src/features/database/properties/status/status-checkbox.ts` | 21 |
+| Each layout's options in the stored view | `src/model/view-options.schema.ts` | 21 |
+| Conditional color: a view's color rules, the color a row takes from them and how it is drawn | `src/features/database/color-rules.commands.ts`, `row-color.selectors.ts`, `row-color.css`, `view-settings/color-panel.ts` | 21 |
+| The menu of the active view tab and how tabs show (text and icon, text, icon) | `src/features/database/view-tab-menu.view.ts` | 21 |
+| A list view's and a feed view's options | `src/features/database/list-options.commands.ts`, `feed-options.commands.ts` | 21 |
+| The floating outline: a page's headings as dashes at its right edge | `src/features/page-outline/` | 21 |
 | Database columns | `src/features/database/database.commands.ts` | 5 |
 | Database rows: adding and setting values | `src/features/database/row.commands.ts` | 5 |
 | A row's values as views read them, stored and kept by the app | `src/features/database/row-values.selectors.ts` | 9 |
@@ -134,7 +147,8 @@ owner listed here exists.
 | The pages a first visit starts with | `src/features/onboarding/` | 10 |
 | The keyboard shortcut reference | `src/features/shortcut-help/` | 10 |
 | Finding pages by the text of their blocks | `src/features/command-palette/command-palette-text.selectors.ts` | 10 |
-| Focusing and showing elements once they are in the page, and the only deferral views use (`afterRender`) | `src/ui/focus/` | 5 |
+| Focusing and showing elements once they are in the page, revealing a block (scroll and flash), and the only deferral views use (`afterRender`) | `src/ui/focus/` | 5 |
+| Pictured tiles: a choice drawn as a row of tiles with a picture and a name | `src/ui/tiles/` | 21 |
 | Table row models (sort, filter, order through the table engine) | `src/features/database/table-model.selectors.ts` | 5 |
 | Keyboard shortcuts | `src/ui/shortcuts/shortcut-registry.ts` | 1 |
 | Keys that apply only while one part is active (slash menu, Alt+F10), and the one capture listener for them | `src/ui/shortcuts/scoped-keys.ts` | 11 |
@@ -161,6 +175,7 @@ owner listed here exists.
 | Pasted Markdown becoming typed, nested blocks | `src/features/editor/editor-paste-blocks.commands.ts` | 8 |
 | Link field | `src/features/editor/editor-link.view.ts` | 4 |
 | Slash menu | `src/features/slash-menu/` | 4 |
+| The line the slash menu is open on, and the slash menu's overlay kind | `src/features/editor/editor-slash.selectors.ts` | 21 |
 | Adding a block below another and duplicating a block | `src/features/editor/editor-insert.commands.ts` | 8 |
 | Writing a page as Markdown and saving it | `src/features/markdown-export/` | 8 |
 | A page's cover and width | `src/blocks/page/page-cover.commands.ts`, `src/features/editor/editor-cover.view.ts` | 10 |

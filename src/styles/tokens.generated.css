@@ -419,6 +419,11 @@
     --size-sidebar-footer: var(--base-size-2x75);
     --size-sidebar-key: var(--base-size-1x125);
     --size-content-max: var(--base-size-44);
+    --size-outline-dash-long: var(--base-size-4);
+    --size-outline-dash-mid: var(--base-size-3);
+    --size-outline-dash-short: var(--base-size-0x5);
+    --size-outline-gap: var(--base-size-0x875);
+    --size-outline-edge: var(--base-size-2x25);
     --size-label-width: var(--base-size-12);
     --size-home-card-width: var(--base-size-9);
     --size-home-card-cover: var(--base-size-2x75);

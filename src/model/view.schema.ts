@@ -1,10 +1,23 @@
 import * as v from "valibot";
 import { blockIdSchema, propertyIdSchema, viewIdSchema } from "./id.schema.ts";
+import { toneSchema } from "./rich-text.schema.ts";
+import {
+  calendarOptionsSchema,
+  cardOptionsSchema,
+  chartOptionsSchema,
+  feedOptionsSchema,
+  formOptionsSchema,
+  listOptionsSchema,
+  tableOptionsSchema,
+  timelineOptionsSchema,
+} from "./view-options.schema.ts";
 
 export const filterSchema = v.object({
   propertyId: propertyIdSchema,
   operator: v.string(),
   value: v.unknown(),
+  // Which end of a date range a date condition tests; absent, the start.
+  dateEnd: v.optional(v.picklist(["start", "end"])),
 });
 
 export const conjunctionSchema = v.picklist(["and", "or"]);
@@ -51,6 +64,31 @@ export const groupBySchema = v.object({
   order: v.array(v.string()),
   // Group keys not shown.
   hidden: v.array(v.string()),
+  // Text by its whole value or its first letter; absent, the whole value.
+  textBy: v.optional(v.picklist(["exact", "alphabetical"])),
+  // Numbers by each value or by intervals of a size; absent, each value.
+  numberBy: v.optional(
+    v.variant("kind", [
+      v.object({ kind: v.literal("unique") }),
+      v.object({
+        kind: v.literal("interval"),
+        size: v.pipe(v.number(), v.gtValue(0)),
+        // The range the groups cover, as Notion's "Group by interval"
+        // from and to; absent, 0 to 1000. Others are out of range.
+        from: v.optional(v.number()),
+        to: v.optional(v.number()),
+      }),
+    ]),
+  ),
+});
+
+// Conditional color: the rows a filter keeps take a color, on their
+// background or their title's text; the first rule a row matches wins.
+export const colorRuleSchema = v.object({
+  id: v.string(),
+  filter: filterGroupSchema,
+  color: v.union([v.literal("default"), toneSchema]),
+  target: v.picklist(["background", "text"]),
 });
 
 // What a column's footer works out from the rows a view shows. A rollup
@@ -79,56 +117,6 @@ export const CALCULATION_KINDS = [
 ] as const;
 
 export const calculationSchema = v.picklist(CALCULATION_KINDS);
-
-// How a calendar shows its rows (version 22): a month or a week, with or
-// without Saturdays and Sundays, its weeks starting on Sunday (0) or
-// Monday (1).
-// How a table draws itself, as Notion's layout switches: lines between
-// columns, each row's page icon, and every column's text wrapped.
-export const tableOptionsSchema = v.object({
-  verticalLines: v.boolean(),
-  pageIcons: v.boolean(),
-  wrapAll: v.boolean(),
-});
-
-export type TableOptions = v.InferOutput<typeof tableOptionsSchema>;
-
-export const DEFAULT_TABLE_OPTIONS: TableOptions = {
-  verticalLines: true,
-  pageIcons: true,
-  wrapAll: false,
-};
-
-export const calendarOptionsSchema = v.object({
-  mode: v.picklist(["month", "week"]),
-  showWeekends: v.boolean(),
-  weekStartsOn: v.picklist([0, 1]),
-});
-
-// How a timeline shows its rows (version 23): by which date property, how
-// much time a screen holds, and whether the table of rows sits beside it.
-export const timelineOptionsSchema = v.object({
-  datePropertyId: v.optional(propertyIdSchema),
-  zoom: v.picklist(["day", "week", "month", "quarter", "year"]),
-  showTable: v.boolean(),
-});
-
-// What a chart shows (version 24): its kind, the property whose values
-// make its groups, and what each group measures — its rows, or a number
-// property summed, averaged or at its least or most.
-export const chartOptionsSchema = v.object({
-  kind: v.picklist(["column", "bar", "line", "donut"]),
-  groupByPropertyId: v.optional(propertyIdSchema),
-  aggregate: v.picklist(["count", "sum", "average", "min", "max"]),
-  valuePropertyId: v.optional(propertyIdSchema),
-});
-
-// What a form asks (version 25): which questions must be answered, and
-// the words above them.
-export const formOptionsSchema = v.object({
-  requiredPropertyIds: v.array(propertyIdSchema),
-  description: v.string(),
-});
 
 export const viewSchema = v.object({
   id: viewIdSchema,
@@ -161,6 +149,13 @@ export const viewSchema = v.object({
   frozenCount: v.pipe(v.number(), v.integer(), v.minValue(0)),
   // A table's layout switches; absent, Notion's defaults.
   table: v.optional(tableOptionsSchema),
+  // A board's and a gallery's card layout; absent, Notion's defaults.
+  card: v.optional(cardOptionsSchema),
+  list: v.optional(listOptionsSchema),
+  feed: v.optional(feedOptionsSchema),
+  // Counts above 99 written "99+" in the footer.
+  countCap: v.optional(v.boolean()),
+  colorRules: v.optional(v.array(colorRuleSchema)),
   // How a board or a gallery shows its cards: how wide, what picture
   // above the title, and whether a board tints each column.
   cardSize: v.picklist(["small", "medium", "large"]),
@@ -189,10 +184,7 @@ export type InnerFilterGroup = v.InferOutput<typeof innerFilterGroupSchema>;
 export type FilterItem = FilterGroup["items"][number];
 export type Conjunction = FilterGroup["conjunction"];
 export type GroupBy = v.InferOutput<typeof groupBySchema>;
+export type ColorRule = v.InferOutput<typeof colorRuleSchema>;
 export type CalculationKind = v.InferOutput<typeof calculationSchema>;
 export type View = v.InferOutput<typeof viewSchema>;
 export type ViewType = v.InferOutput<typeof viewTypeSchema>;
-export type CalendarOptions = v.InferOutput<typeof calendarOptionsSchema>;
-export type TimelineOptions = v.InferOutput<typeof timelineOptionsSchema>;
-export type ChartOptions = v.InferOutput<typeof chartOptionsSchema>;
-export type FormOptions = v.InferOutput<typeof formOptionsSchema>;

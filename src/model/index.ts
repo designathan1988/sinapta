@@ -36,12 +36,7 @@ export {
   viewTypeSchema,
   VIEW_TYPES,
   type CalculationKind,
-  type CalendarOptions,
-  type TimelineOptions,
-  type TableOptions,
-  DEFAULT_TABLE_OPTIONS,
-  type ChartOptions,
-  type FormOptions,
+  type ColorRule,
   type Conjunction,
   type Filter,
   type FilterGroup,
@@ -51,6 +46,18 @@ export {
   type View,
   type ViewType,
 } from "./view.schema.ts";
+export {
+  type CalendarOptions,
+  type CardOptions,
+  type TimelineOptions,
+  type TableOptions,
+  DEFAULT_CARD_OPTIONS,
+  DEFAULT_TABLE_OPTIONS,
+  type ChartOptions,
+  type FeedOptions,
+  type FormOptions,
+  type ListOptions,
+} from "./view-options.schema.ts";
 export {
   SCHEMA_VERSION,
   parseWorkspaceFile,
@@ -62,6 +69,7 @@ export {
   type PropsSchemas,
   type Settings,
   type Theme,
+  type ViewTabStyle,
   type Workspace,
 } from "./workspace.schema.ts";
 export { parseJsonText, type ParseJsonResult } from "./json-text.schema.ts";
@@ -108,6 +116,7 @@ export {
   plainText,
   setLink,
   setTone,
+  clearFormat,
   splitRichText,
   toggleMark,
   type LinkRange,

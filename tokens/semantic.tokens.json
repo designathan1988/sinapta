@@ -465,6 +465,28 @@
         "$value": "{base.size.44}"
       }
     },
+    "outline": {
+      "dashLong": {
+        "$description": "A floating outline's dash for a first-level heading, as Notion's: 16 px.",
+        "$value": "{base.size.4}"
+      },
+      "dashMid": {
+        "$description": "A floating outline's dash for a second-level heading: 12 px.",
+        "$value": "{base.size.3}"
+      },
+      "dashShort": {
+        "$description": "A floating outline's dash for a deeper heading: 8 px.",
+        "$value": "{base.size.0x5}"
+      },
+      "gap": {
+        "$description": "Between two dashes of the floating outline, as Notion's: 14 px.",
+        "$value": "{base.size.0x875}"
+      },
+      "edge": {
+        "$description": "From the window's right edge to the outline's dashes, as Notion's: 36 px.",
+        "$value": "{base.size.2x25}"
+      }
+    },
     "label": {
       "width": {
         "$value": "{base.size.12}"

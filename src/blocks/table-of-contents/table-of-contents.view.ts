@@ -7,16 +7,16 @@ import {
   type Dispatch,
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { revealBlock } from "../../ui/focus/index.ts";
 import {
   selectTableOfContents,
   type TocEntry,
 } from "./table-of-contents.selectors.ts";
 
-// Moves to a heading: the page scrolls to it and the caret goes into it.
+// Moves to a heading: the page scrolls to it, flashes it, and the caret
+// goes into it.
 function goTo(blockId: BlockId, dispatch: Dispatch): void {
-  document
-    .querySelector(`[data-block-id="${blockId}"]`)
-    ?.scrollIntoView({ block: "start" });
+  revealBlock(blockId, "start");
   const selection = { blockId, anchorOffset: 0, focusOffset: 0 };
   dispatch(setSelection.create({ selection }));
 }

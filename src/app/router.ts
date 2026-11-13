@@ -17,7 +17,7 @@ import {
   hashForPeek,
   parsePageHash,
 } from "../ui/address/index.ts";
-import { afterRender } from "../ui/focus/index.ts";
+import { revealBlock } from "../ui/focus/index.ts";
 
 const HOME_HASH = "#/home";
 
@@ -63,24 +63,6 @@ export function openFromHash(
   const selection = { blockId, anchorOffset: 0, focusOffset: 0 };
   dispatch(setSelection.create({ selection }));
   return blockId;
-}
-
-// Scrolls the linked block into view and flashes it once.
-function revealBlock(blockId: BlockId): void {
-  afterRender(() => {
-    const selector = `[data-block-id="${CSS.escape(blockId)}"]`;
-    const block = document.querySelector<HTMLElement>(selector);
-    if (block === null) return;
-    block.scrollIntoView({ block: "center" });
-    block.setAttribute("data-flash", "");
-    block.addEventListener(
-      "animationend",
-      () => {
-        block.removeAttribute("data-flash");
-      },
-      { once: true },
-    );
-  });
 }
 
 // The row a URL has open in a peek, or null.

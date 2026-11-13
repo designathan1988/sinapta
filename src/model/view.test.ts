@@ -1,6 +1,7 @@
 import * as v from "valibot";
 import { describe, expect, it } from "vitest";
 import { viewSchema } from "./view.schema.ts";
+import { SCHEMA_VERSION } from "./workspace.schema.ts";
 
 const TABLE = {
   id: "v-1",
@@ -127,5 +128,65 @@ describe("viewSchema", () => {
     expect(v.safeParse(viewSchema, { ...TABLE, type: "map" }).success).toBe(
       false,
     );
+  });
+
+  it("reads a view with every option added for Notion's finer settings", () => {
+    const filter = {
+      propertyId: "p-2",
+      operator: "relative",
+      value: "this:week",
+      dateEnd: "end",
+    };
+    const view = {
+      ...TABLE,
+      filter: { conjunction: "and", items: [filter] },
+      groupBy: {
+        ...GROUP_BY,
+        textBy: "alphabetical",
+        numberBy: { kind: "interval", size: 10 },
+      },
+      card: { layout: "compact", fitMedia: true },
+      list: { editTitle: true },
+      feed: { wrapProperties: true },
+      countCap: true,
+      colorRules: [
+        {
+          id: "r-1",
+          filter: { conjunction: "and", items: [filter] },
+          color: "red",
+          target: "background",
+        },
+      ],
+      calendar: { ...TABLE.calendar, wrapTitles: true },
+      timeline: {
+        ...TABLE.timeline,
+        separateDates: true,
+        endDatePropertyId: "p-3",
+      },
+    };
+
+    expect(v.safeParse(viewSchema, view).success).toBe(true);
+  });
+
+  it("refuses an interval of no size and a color it does not know", () => {
+    const zero = {
+      ...TABLE,
+      groupBy: { ...GROUP_BY, numberBy: { kind: "interval", size: 0 } },
+    };
+    const rule = {
+      id: "r",
+      filter: { conjunction: "and", items: [] },
+      color: "teal",
+      target: "text",
+    };
+
+    expect(v.safeParse(viewSchema, zero).success).toBe(false);
+    expect(
+      v.safeParse(viewSchema, { ...TABLE, colorRules: [rule] }).success,
+    ).toBe(false);
+  });
+
+  it("keeps the stored format's version", () => {
+    expect(SCHEMA_VERSION).toBe(28);
   });
 });

@@ -1,5 +1,6 @@
 export { BLOCK_TEXT } from "./block-text.ts";
 export { DATABASE_MENU_TEXT } from "./database-menu-text.ts";
+export { DATABASE_OPTIONS_TEXT } from "./database-options-text.ts";
 export { DATABASE_TEXT } from "./database-text.ts";
 export { DATE_TEXT } from "./date-text.ts";
 export { EDITOR_TEXT } from "./editor-text.ts";

@@ -214,3 +214,26 @@ function withTone(
   else delete plain.highlight;
   return tone === undefined ? plain : { ...plain, [key]: tone };
 }
+
+export interface TextRange {
+  readonly start: number;
+  readonly end: number;
+}
+
+// Notion's Clear formatting: the range keeps its words, mentions and
+// equations, and loses every mark, link, color and highlight.
+export function clearFormat(rich: RichText, range: TextRange): RichText {
+  const { start, end } = range;
+  if (start === end) return rich;
+  const [before, rest] = splitRichText(rich, Math.min(start, end));
+  const [middle, after] = splitRichText(rest, Math.abs(end - start));
+  const changed = middle.map((span) => {
+    const plain: TextSpan = { ...span };
+    delete plain.marks;
+    delete plain.href;
+    delete plain.color;
+    delete plain.highlight;
+    return plain;
+  });
+  return normalize([...before, ...changed, ...after]);
+}

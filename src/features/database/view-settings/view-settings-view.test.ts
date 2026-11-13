@@ -33,9 +33,9 @@ describe("the view settings", () => {
 
   it("changes the layout from its tiles", () => {
     const { host, sent } = rendered({ panel: "layout" });
-    const tile = [
-      ...host.querySelectorAll<HTMLElement>(".view-settings__tile"),
-    ].find((item) => item.textContent.trim() === "Board");
+    const tile = [...host.querySelectorAll<HTMLElement>(".tiles__tile")].find(
+      (item) => item.textContent.trim() === "Board",
+    );
 
     tile?.click();
 

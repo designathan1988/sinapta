@@ -8,6 +8,9 @@ export const SCHEMA_VERSION = 28;
 
 export const settingsSchema = v.object({
   theme: v.picklist(["system", "light", "dark"]),
+  // How a database's view tabs show: icon and name, name only, or icon
+  // only; absent, both. Notion keeps it for one person, outside undo.
+  viewTabStyle: v.optional(v.picklist(["text-icon", "text", "icon"])),
 });
 
 const workspaceFileSchema = v.object({
@@ -20,6 +23,7 @@ const workspaceFileSchema = v.object({
 
 export type Settings = v.InferOutput<typeof settingsSchema>;
 export type Theme = Settings["theme"];
+export type ViewTabStyle = NonNullable<Settings["viewTabStyle"]>;
 
 export interface Workspace {
   readonly blocks: Readonly<Record<BlockId, Block>>;
