@@ -5,7 +5,7 @@ export const SIDEBAR_VIEWS_TEXT = {
     label: "Sidebar tabs",
     home: "Home",
     calendar: "Calendar",
-    upcoming: "Upcoming",
+    upcoming: "Upcoming events",
     empty:
       "Choose “Manage in calendar” in a date view's menu to list its pages here.",
     moveToTab: "Move to tab",

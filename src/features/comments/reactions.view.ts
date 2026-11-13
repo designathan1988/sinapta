@@ -43,7 +43,7 @@ export function renderAddReaction(target: ReactionTarget): TemplateResult {
     title=${TEXT.addReaction}
     @click=${() => dispatch(openOverlay.create({ overlay: next }))}
   >
-    ${renderIcon("smile")}
+    ${renderIcon("add-reaction")}
   </button>`;
 }
 

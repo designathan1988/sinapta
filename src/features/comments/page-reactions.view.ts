@@ -94,7 +94,7 @@ export function renderPageReactions(
       title=${TEXT.addReaction}
       @click=${() => dispatch(openOverlay.create({ overlay: next }))}
     >
-      ${renderIcon("smile")}
+      ${renderIcon("add-reaction")}
     </button>
   </div>`;
 }

@@ -753,6 +753,20 @@
       "$description": "An inline database's title row, as Notion's, measured: 40 px.",
       "$value": "{base.size.2x5}"
     },
+    "emojiPicker": {
+      "width": {
+        "$description": "Notion's emoji picker for a reaction, measured: 408 px wide.",
+        "$value": "{base.size.25x5}"
+      },
+      "height": {
+        "$description": "Notion's emoji picker for a reaction: 356 px high, its grid scrolling.",
+        "$value": "{base.size.22x25}"
+      },
+      "cell": {
+        "$description": "One emoji of the picker, 32 px square as Notion's, twelve to a row.",
+        "$value": "{base.size.8}"
+      }
+    },
     "slashMenu": {
       "width": {
         "$description": "Notion's slash menu, measured: 324 px wide.",
@@ -1099,6 +1113,10 @@
       "note": {
         "$description": "What a comment is about, quoted over it, as Notion's: 13 px.",
         "$value": "{base.font.size.0x8125}"
+      },
+      "picture": {
+        "$description": "The words in a panel's picture, as Notion's conditional color sample table: 9 px.",
+        "$value": "{base.font.size.0x5625}"
       },
       "key": {
         "$description": "A key in a shortcut hint, as Notion's: 11 px.",

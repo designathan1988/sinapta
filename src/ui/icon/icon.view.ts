@@ -2,6 +2,7 @@ import "./icon.css";
 import { html, svg, type TemplateResult } from "lit-html";
 import { BLOCK_PATHS, isBlockIcon, type BlockIconName } from "./block-icons.ts";
 import { DATA_PATHS, isDataIcon, type DataIconName } from "./data-icons.ts";
+import { EMOJI_PATHS, isEmojiIcon, type EmojiIconName } from "./emoji-icons.ts";
 
 export type BaseIconName =
   | "sidebar"
@@ -46,7 +47,8 @@ export type BaseIconName =
   | "monitor"
   | "redo";
 
-export type IconName = BaseIconName | DataIconName | BlockIconName;
+export type IconName =
+  BaseIconName | DataIconName | BlockIconName | EmojiIconName;
 
 // 16-unit outline icons, drawn with the current text color.
 // Fragments use the `svg` tag so that they are parsed as SVG, not HTML.
@@ -125,6 +127,7 @@ const PATHS: Record<BaseIconName, TemplateResult<2>> = {
 
 function pathsOf(name: IconName): TemplateResult<2> {
   if (isDataIcon(name)) return DATA_PATHS[name];
+  if (isEmojiIcon(name)) return EMOJI_PATHS[name];
   return isBlockIcon(name) ? BLOCK_PATHS[name] : PATHS[name];
 }
 

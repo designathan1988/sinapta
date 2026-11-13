@@ -1632,6 +1632,18 @@
           "unit": "rem"
         }
       },
+      "25x5": {
+        "$value": {
+          "value": 25.5,
+          "unit": "rem"
+        }
+      },
+      "22x25": {
+        "$value": {
+          "value": 22.25,
+          "unit": "rem"
+        }
+      },
       "20x25": {
         "$value": {
           "value": 20.25,
@@ -1753,6 +1765,12 @@
       },
       "size": {
         "$type": "dimension",
+        "0x5625": {
+          "$value": {
+            "value": 0.5625,
+            "unit": "rem"
+          }
+        },
         "0x6875": {
           "$value": {
             "value": 0.6875,

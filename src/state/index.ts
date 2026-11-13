@@ -57,6 +57,7 @@ export {
 export { setNarrow } from "./viewport.commands.ts";
 export { applyUpdate, dismissUpdate, updateReady } from "./update.commands.ts";
 export {
+  setEmojiSkinTone,
   setTheme,
   setViewTabStyle,
   settingsCommands,

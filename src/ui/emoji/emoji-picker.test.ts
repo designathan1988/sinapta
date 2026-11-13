@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 import { render } from "lit-html";
 import { beforeAll, describe, expect, it } from "vitest";
+import type { SkinTone } from "../../model/index.ts";
 import {
   renderEmojiPicker,
   type EmojiPickerOptions,
@@ -59,5 +60,80 @@ describe("renderEmojiPicker", () => {
     expect(host.querySelector<HTMLElement>("[data-emoji]")?.dataset.emoji).toBe(
       "🦊",
     );
+  });
+});
+
+// Notion's picker for a reaction, its tones open when asked; a query keeps
+// the grid short where the whole list is not the point.
+function reactionPicker(
+  isChoosingTone = false,
+  tone: SkinTone = "default",
+  query = "",
+) {
+  const sent: string[] = [];
+  const host = document.createElement("div");
+  render(
+    renderEmojiPicker({
+      query,
+      onQuery: () => undefined,
+      onChoose: (emoji) => sent.push(`choose ${emoji}`),
+      reaction: {
+        tone,
+        isChoosingTone,
+        onToggleTones: () => sent.push("toggle"),
+        onTone: (chosen) => sent.push(`tone ${chosen}`),
+      },
+    }),
+    host,
+  );
+  return { host, sent };
+}
+
+describe("the emoji picker for a reaction", () => {
+  it("shows Filter…, the hand, twelve to a row and the categories", () => {
+    const { host } = reactionPicker();
+    const labels = [...host.querySelectorAll(".emoji__category")].map(
+      (button) => button.getAttribute("title"),
+    );
+
+    expect(host.querySelector("input")?.placeholder).toBe("Filter…");
+    expect(host.querySelector(".emoji__tone")?.textContent.trim()).toBe("✋");
+    expect(
+      host.querySelector(".emoji__grid")?.getAttribute("data-columns"),
+    ).toBe("12");
+    expect(labels).toEqual([
+      "Recent",
+      "People",
+      "Animals & Nature",
+      "Food & Drink",
+      "Activity",
+      "Travel & Places",
+      "Objects",
+      "Symbols",
+      "Flags",
+    ]);
+  });
+
+  it("opens the hand's tones and chooses one", () => {
+    const closed = reactionPicker(false, "default", "rocket");
+    closed.host.querySelector<HTMLElement>(".emoji__tone")?.click();
+    expect(closed.sent).toEqual(["toggle"]);
+
+    const open = reactionPicker(true, "default", "rocket");
+    const tones = [
+      ...open.host.querySelectorAll<HTMLElement>(".emoji__tones button"),
+    ];
+    tones[3]?.click();
+    expect(tones).toHaveLength(6);
+    expect(open.sent).toEqual(["tone medium"]);
+  });
+
+  it("draws people in the chosen tone and reacts with it", () => {
+    const { host, sent } = reactionPicker(false, "dark", "thumbs up");
+    const thumbs = host.querySelector<HTMLElement>('[data-emoji="👍🏿"]');
+
+    thumbs?.click();
+
+    expect(sent).toEqual(["choose 👍🏿"]);
   });
 });

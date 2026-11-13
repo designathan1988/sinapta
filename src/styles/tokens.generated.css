@@ -254,6 +254,8 @@
     --base-size-0x05: 0.05rem;
     --base-size-0x625: 0.625rem;
     --base-size-0x5: 0.5rem;
+    --base-size-25x5: 25.5rem;
+    --base-size-22x25: 22.25rem;
     --base-size-20x25: 20.25rem;
     --base-size-22x5: 22.5rem;
     --base-size-2x5: 2.5rem;
@@ -278,6 +280,7 @@
     --base-font-size-6: 1.875rem;
     --base-font-size-7: 2.5rem;
     --base-font-size-8: 4.25rem;
+    --base-font-size-0x5625: 0.5625rem;
     --base-font-size-0x6875: 0.6875rem;
     --base-font-size-0x8125: 0.8125rem;
     --base-font-size-6x5: 2rem;
@@ -489,6 +492,9 @@
     --size-scrollbar: var(--base-size-0x625);
     --size-scrollbar-thin: var(--base-size-0x375);
     --size-database-header: var(--base-size-2x5);
+    --size-emoji-picker-width: var(--base-size-25x5);
+    --size-emoji-picker-height: var(--base-size-22x25);
+    --size-emoji-picker-cell: var(--base-size-8);
     --size-slash-menu-width: var(--base-size-20x25);
     --size-slash-menu-max-height: var(--base-size-22x5);
     --size-slash-menu-row: var(--base-size-8);
@@ -518,6 +524,7 @@
     --font-size-page-icon: var(--base-font-size-4x875);
     --font-size-peek-title: var(--base-font-size-6x5);
     --font-size-note: var(--base-font-size-0x8125);
+    --font-size-picture: var(--base-font-size-0x5625);
     --font-size-key: var(--base-font-size-0x6875);
     --font-weight-regular: var(--base-font-weight-400);
     --font-weight-medium: var(--base-font-weight-500);

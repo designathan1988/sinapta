@@ -3,10 +3,12 @@
 // comment it is added to the comment.
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
-import { parseBlockId } from "../../model/index.ts";
+import { parseBlockId, type SkinTone } from "../../model/index.ts";
 import {
   closeOverlay,
   openOverlay,
+  setEmojiSkinTone,
+  setOverlayValues,
   type AppState,
   type Dispatch,
   type OpenOverlay,
@@ -109,6 +111,28 @@ function react(state: AppState, dispatch: Dispatch, emoji: string): void {
   reactToText(state, dispatch, emoji);
 }
 
+const TONES = "tones";
+
+// The skin tone, kept for the owner, and the hand's six tones while open.
+function reactionParts(state: AppState, dispatch: Dispatch) {
+  const isChoosingTone = state.ui.overlay?.values?.[TONES] !== undefined;
+  const closeTones = setOverlayValues.create({ name: TONES, values: null });
+  return {
+    tone: state.workspace.settings.emojiSkinTone ?? "default",
+    isChoosingTone,
+    onToggleTones: () =>
+      dispatch(
+        isChoosingTone
+          ? closeTones
+          : setOverlayValues.create({ name: TONES, values: ["open"] }),
+      ),
+    onTone: (tone: SkinTone) => {
+      dispatch(setEmojiSkinTone.create({ tone }));
+      dispatch(closeTones);
+    },
+  };
+}
+
 export function renderReactionPicker(
   state: AppState,
   dispatch: Dispatch,
@@ -131,6 +155,7 @@ export function renderReactionPicker(
         react(state, dispatch, emoji);
         dispatch(closeOverlay.create({}));
       },
+      reaction: reactionParts(state, dispatch),
     })}
   </div>`;
 }

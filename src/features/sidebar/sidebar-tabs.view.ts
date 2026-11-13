@@ -18,8 +18,8 @@ import { selectSidebarTab, selectUpcoming } from "./sidebar-tabs.selectors.ts";
 const TEXT = COPY.sidebarTabs;
 
 const TABS: readonly (readonly [SidebarTab, IconName])[] = [
-  ["home", "home"],
-  ["calendar", "calendar"],
+  ["home", "home-solid"],
+  ["calendar", "calendar-solid"],
 ];
 
 export function renderSidebarTabs(

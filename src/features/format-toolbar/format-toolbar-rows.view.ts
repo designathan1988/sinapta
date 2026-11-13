@@ -213,7 +213,7 @@ export function renderCommentRow(context: PanelContext): TemplateResult {
       data-tooltip=${COPY.comments.addReaction}
       @click=${open(context, REACTION_OVERLAY)}
     >
-      ${renderIcon("smile")}
+      ${renderIcon("add-reaction")}
     </button>
     ${renderSuggestButton(context)}
   </div>`;

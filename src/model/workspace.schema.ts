@@ -30,11 +30,24 @@ const sidebarViewSchema = v.object({
 
 const sidebarTabSchema = v.picklist(["home", "calendar"]);
 
+// The skin tones of Notion's emoji picker, the default yellow first.
+export const SKIN_TONES = [
+  "default",
+  "light",
+  "medium-light",
+  "medium",
+  "medium-dark",
+  "dark",
+] as const;
+
 export const settingsSchema = v.object({
   theme: v.picklist(["system", "light", "dark"]),
   // How a database's view tabs show: icon and name, name only, or icon
   // only; absent, both. Notion keeps it for one person, outside undo.
   viewTabStyle: v.optional(v.picklist(["text-icon", "text", "icon"])),
+  // The skin tone the emoji picker draws people in; absent, the default
+  // yellow. Notion keeps it for one person, outside undo.
+  emojiSkinTone: v.optional(v.picklist(SKIN_TONES)),
   sidebarViews: v.optional(v.array(sidebarViewSchema)),
   // The sidebar as the owner arranged it in "Customize sidebar": its
   // shortcuts and its sections, in order, those left out hidden; absent,
@@ -64,6 +77,7 @@ const workspaceFileSchema = v.object({
 export type Settings = v.InferOutput<typeof settingsSchema>;
 export type Theme = Settings["theme"];
 export type ViewTabStyle = NonNullable<Settings["viewTabStyle"]>;
+export type SkinTone = (typeof SKIN_TONES)[number];
 export type SidebarView = v.InferOutput<typeof sidebarViewSchema>;
 
 export interface Workspace {

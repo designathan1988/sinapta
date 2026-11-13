@@ -72,6 +72,8 @@ export {
   type SidebarView,
   type Theme,
   type ViewTabStyle,
+  type SkinTone,
+  SKIN_TONES,
   type Workspace,
 } from "./workspace.schema.ts";
 export { parseJsonText, type ParseJsonResult } from "./json-text.schema.ts";

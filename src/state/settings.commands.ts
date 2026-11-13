@@ -1,5 +1,5 @@
 import { sidebarTabCommands } from "./sidebar-tabs.commands.ts";
-import type { Theme, ViewTabStyle } from "../model/index.ts";
+import type { SkinTone, Theme, ViewTabStyle } from "../model/index.ts";
 import type { AppState } from "./app-state.ts";
 import { sidebarViewCommands } from "./sidebar-views.commands.ts";
 import { sidebarLayoutCommands } from "./sidebar-layout.commands.ts";
@@ -46,10 +46,25 @@ export const setViewTabStyle = defineCommand<{ style: ViewTabStyle }>({
   },
 });
 
+// The skin tone the emoji picker draws people in, for the owner alone,
+// kept with the settings, so outside undo.
+export const setEmojiSkinTone = defineCommand<{ tone: SkinTone }>({
+  type: "settings.setEmojiSkinTone",
+  handle: (state, command) => {
+    const current = state.workspace.settings.emojiSkinTone ?? "default";
+    if (command.tone === current) return {};
+    const patch = { emojiSkinTone: command.tone };
+    return {
+      operations: [{ type: "record.update", kind: "settings", patch }],
+    };
+  },
+});
+
 export const settingsCommands = [
   setTheme,
   toggleTheme,
   setViewTabStyle,
+  setEmojiSkinTone,
   ...sidebarViewCommands,
   ...sidebarLayoutCommands,
   ...sidebarTabCommands,

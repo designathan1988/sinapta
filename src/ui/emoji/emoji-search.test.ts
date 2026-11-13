@@ -33,7 +33,20 @@ describe("emojiGroups", () => {
   it("reads every group with its emoji", () => {
     const groups = emojiGroups();
 
-    expect(groups.map((group) => group.name)).toContain("Faces");
+    // Notion's groups, in its order.
+    expect(groups.map((group) => group.name)).toEqual([
+      "People",
+      "Animals & Nature",
+      "Food & Drink",
+      "Activity",
+      "Travel & Places",
+      "Objects",
+      "Symbols",
+      "Flags",
+    ]);
+    // A medal is an activity, not a person.
+    const people = groups[0]?.emoji.map((emoji) => emoji.char) ?? [];
+    expect(people).not.toContain("🥇");
     expect(groups.flatMap((group) => group.emoji).length).toBeGreaterThan(1000);
   });
 });

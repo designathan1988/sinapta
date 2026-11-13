@@ -22,6 +22,11 @@ export const EDITOR_TEXT = {
     random: "Random",
     remove: "Remove",
     menu: "Emoji",
+    // Notion's picker for a reaction.
+    filter: "Filter…",
+    skinTone: "Skin tone",
+    recent: "Recent",
+    jumpTo: (group: string) => `Jump to category: ${group}`,
   },
   mentionMenu: {
     label: "Mention a page or a date",
