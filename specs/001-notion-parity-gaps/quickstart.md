@@ -43,12 +43,12 @@
 | Customize sidebar (FR-025) | sidebar foot › Customize sidebar; point at a row; its menu; Add shortcut; Add section; Done | `n42-customize2/03-shortcut-menu.png`, `08-add-shortcut.png`, `10-add-section.png` |
 | Reactions (FR-026) | select text › Add reaction › an emoji; open the block's comments; a feed card's smiley | `n43-reaction/03-select.png`, `n43-reaction2/04-reaction-tip.png` |
 | Template in the center peek (FR-027) | Tasks › New ⌄ › New template; the strip; a template's "…" › Delete | `u12-template/05-template-peek.png`, `15-confirm.png` against `n48-template-measure/03-banner.png`, `n48-template-cleanup/04-delete.png` |
-| Repeat cadence (FR-028) | the strip's Repeat… › Week; a weekday; At; Ending; Save; reopen; Escape after a change | `u12-cadence/14-panel-edited.png`, `20-discard-ask.png` against `n48-repeat-probe/05-week-panel.png`, `n49-cadence` |
+| Repeat cadence (FR-028) | the strip's Duplicate every… › Week; a weekday; At; Ending; Save; reopen; Escape after a change | `u12-cadence/14-panel-edited.png`, `20-discard-ask.png` against `n48-repeat-probe/05-week-panel.png`, `n49-cadence` |
 | Files popover, button press (FR-029) | a files cell › Enter; Link tab; a link; a button cell press | `u13-props/18-files-popover.png` against `n50-files-probe/03-files-popover.png`, `05-embed-shot.png` |
 | Button automation (FR-030) | a button column's menu › Edit automation › New action › Edit property…, Show confirmation; Save; press a row's button | `u14-button/11-automation.png`, `24-automation-filled.png`, `27-confirm-press.png` against `n51-button/05-settings.png`, `07-actions.png` |
 | Suggesting (FR-031) | select text › Suggest edits; type; Delete forward; the block's comments › Accept | `u18-suggest/12-suggesting.png`, `14-suggestion-card.png` against `n52-suggest/08-typed-shot.png`, `n52-card` |
 | Sidebar tabs, Move to tab (FR-032) | the Calendar tab; Customize sidebar › Favorites' menu › Move to tab › Calendar | `u19-tabs/04-calendar-tab.png`, `09-move-to-tab.png`, `13-calendar-with-favorites.png` against `n53-tabs/02-calendar-shot.png` |
-| Manage in calendar (FR-033) | the tab menu's last row; a calendar's or timeline's toolbar; then the Calendar tab | `u19-tabs/03-cal-tab.png`, `u21-manage` |
+| Manage in Calendar (FR-033) | the tab menu's last row; a calendar's or timeline's toolbar; then the Calendar tab | `u19-tabs/03-cal-tab.png`, `u21-manage` |
 
 ## Once, at the end
 

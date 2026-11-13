@@ -1289,10 +1289,11 @@ against the reference on every run.
 
 ## Open
 
-- (2026-11-13) The full suite runs 8.7–11.0 s while another project's
-  dev servers share the machine; SC-005's 10 s holds without them. The
-  DOM environments are 45 % of the time: fewer happy-dom files would
-  bring it under 10 s on any load.
+- (2026-11-13) Notion filters a checkbox with "Is" or "Is not"
+  (`collectionFilterMenuHelpers.operator.checkboxIs`, `.checkboxIsNot`)
+  and a Checked or Unchecked value; Pagecraft offers "Is checked" and "Is
+  not checked" with no value. Stored filters hold the ids "is-checked" and
+  "is-not-checked", so matching Notion means a migration of saved views.
 
 - Light theme measurements of the menu reference.
 - A board in Notion to measure its columns and cards with a real pointer

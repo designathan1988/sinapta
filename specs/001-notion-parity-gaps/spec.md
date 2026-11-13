@@ -74,8 +74,9 @@ Notion in the audit.
 
 1. **Given** a selected word, **When** the selection settles, **Then** a
    panel opens under it with: the block's type and a chevron (turn into),
-   a row Color, Bold, Italic, Underline, Clear formatting, a row Link,
-   Strikethrough, Code, Equation, More, and a row Comment; each button
+   a row Text color, Bold, Italicize, Underline, Clear format, a row Add
+   link, Strike-through, Mark as code, Mark as equation, More, and a row
+   Comment; each button
    applies its format and shows its keyboard shortcut on hover.
 2. **Given** an empty line, **When** the owner types "/", **Then** the
    line shows "/Type to search" on a washed background while the menu is
@@ -210,9 +211,9 @@ after reload and applies only to that view.
 **Editor**
 
 - **FR-006**: Selecting text MUST open a panel in Notion's form: turn
-  into row, two rows of formatting buttons (Color, Bold, Italic,
-  Underline, Clear formatting / Link, Strikethrough, Code, Equation,
-  More), and Comment; AI rows are left out.
+  into row, two rows of formatting buttons (Text color, Bold, Italicize,
+  Underline, Clear format / Add link, Strike-through, Mark as code, Mark
+  as equation, More), and Comment; AI rows are left out.
 - **FR-007**: While the slash menu is open its line MUST show "/Type to
   search" on a washed background.
 - **FR-008**: A page with at least three headings MUST show an outline of
@@ -221,9 +222,9 @@ after reload and applies only to that view.
 
 **View presentation**
 
-- **FR-009**: A view tab MUST offer Show as: Text and icon, Text only,
-  Icon only; the choice MUST apply to the owner's own display only and
-  persist.
+- **FR-009**: A view tab MUST offer Display as: Text and icon, Text only,
+  Icon only, under "Only applies to you"; the choice MUST apply to the
+  owner's own display only and persist.
 - **FR-010**: Board and gallery MUST offer Card layout Compact or List.
 - **FR-011**: Gallery MUST offer Fit media; calendar Wrap page titles;
   timeline Separate start and end dates; list Directly edit page name;
@@ -240,7 +241,9 @@ after reload and applies only to that view.
 **Conditional color**
 
 - **FR-015**: Each view MUST hold an ordered list of color rules, each a
-  filter and a text or background color from Notion's ten colors.
+  filter and a background color from Notion's ten colors ("Page
+  background", "Card background" on a board or gallery); in a table a rule
+  MUST apply to the entire row or to its own property.
 - **FR-016**: Rows and cards matching a rule MUST show its color in every
   layout that draws rows; the first matching rule wins.
 
@@ -281,17 +284,21 @@ after reload and applies only to that view.
 
 - **FR-027**: A new database template, and a template's Edit, MUST open in
   the center peek, without the peek's mode switch or row steps; a strip
-  edge to edge under its bar MUST read "You're editing a template in" with
-  the database's name as a link to it, a help mark and a "Repeat…" button;
+  edge to edge under its bar MUST read "You’re editing a template in" with
+  the database's name as a link to it, a help mark and a "Duplicate every…"
+  button, reading "Duplicate every week" once a cadence is saved; the
+  window MUST have only Expand at its top left;
   a template's Delete MUST ask "Delete this template?" (Delete, Cancel) in
   the window's middle first; with no template the templates menu MUST show
   "Create a reusable page template for this database." and no empty-page
   row.
 
-- **FR-028**: Repeat MUST offer Day, Weekday, Week, 2 weeks, Month,
-  3 months, 6 months and Year, and a choice MUST open "Edit cadence":
-  every N units, the weekdays for weeks, the start day, an ending (never
-  or on a day), "Cancel recurrence", the next occurrence, and Save; the
+- **FR-028**: "Duplicate every…" MUST offer Day, Weekday, Week, 2 Weeks,
+  Month, 3 Months, 6 Months and Year, and a choice MUST open "Edit
+  cadence": Every N units, the weekdays for weeks, At, Starting, an Ending
+  (Never, Number of runs or Specific date), Timezone, "Cancel
+  recurrence", "Next occurrence:" in Notion's words ("Next Mon between
+  12–3 AM"), and Save; the
   rows MUST then be made on those days while the app is open, as the
   simple repeat was.
 
@@ -303,9 +310,9 @@ after reload and applies only to that view.
 - **FR-030**: A button property MUST be set up as Notion's automation:
   its column menu MUST offer Edit automation, Change type, Freeze, Hide,
   Insert left, Insert right, Duplicate property and Delete property;
-  Edit automation MUST open a dialog with "When: The button is clicked"
-  and "Do" with the actions Edit property, Add page to, Edit pages in,
-  Show confirmation, Open page or URL and Define variables, run in order
+  Edit automation MUST open a dialog with "When: **Button** is clicked"
+  and "Do" with the actions Edit property…, Add page to…, Edit pages in…,
+  Show confirmation, Open page, form, or URL and Define variables, run in order
   when the button is pressed, and Save.
 
 - **FR-031**: The selection panel's "Suggest edits" MUST turn the page to
@@ -319,9 +326,10 @@ after reload and applies only to that view.
   a section's menu and Customize sidebar MUST offer "Move to tab", which
   shows the section under the chosen tab.
 
-- **FR-033**: A date view's "Manage in calendar" (Notion's "Manage in
-  Notion Calendar") MUST show the view's dated pages in the sidebar's
-  Calendar tab, under "Upcoming", until turned off.
+- **FR-033**: A date view's "Manage in Calendar" (Notion's
+  `manageInNotionCalendarButton.label`) MUST show the view's dated pages in
+  the sidebar's Calendar tab, under "Upcoming events" ("No upcoming
+  events" when there are none), until turned off.
 
 **Quality bar**
 
@@ -367,6 +375,12 @@ after reload and applies only to that view.
   passes.
 
 ## Assumptions
+
+- Every word the user sees in these controls is Notion's own English, read
+  by message id from Notion's i18n (its code's `{id, defaultMessage}`
+  descriptors, 51 228 read on 2026-11-13; `docs/notion-study.md` items
+  39–40). Where this spec first quoted a word from the Portuguese screens,
+  the word above is now the one Notion's catalog holds (2026-11-13).
 
 - Notion's English words are used even though the audit sometimes read
   Portuguese; both are recorded in the study.

@@ -96,7 +96,7 @@ All new fields optional; stored repeats without them read as before.
 | `endsAfter`, `made` | integers | stops once `made` reaches `endsAfter` |
 | `endsOn` | `YYYY-MM-DD` | stops when the next day would be after it |
 
-The eight choices (Day, Weekday, Week, 2 weeks, Month, 3 months, 6 months,
+The eight choices (Day, Weekday, Week, 2 Weeks, Month, 3 Months, 6 Months,
 Year) are drafts of these fields, kept as "key=value" lines in the open
 overlay's values until Save.
 
