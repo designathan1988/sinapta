@@ -1133,13 +1133,22 @@ items above, found while photographing them:
     248 px wide, the day field 224 × 28 at (12, 12), Today and ‹ › (20 px)
     centred at 62, weekdays at 81, day 1 at 108, a line 12 px in at 302,
     rows every 29 px from 307, Clear at 431; the empty cell stayed empty.
-    Open: Notion's date formats are Full date (the default), Short date,
-    Month/Day/Year, Day/Month/Year, Year/Month/Day and Relative
-    (`dateHelpers.dateFormat.*`), its Date format row shows the chosen
-    one, and a "Learn more about reminders" row closes the menu;
-    Pagecraft's list starts with "Nov 10, 2026" and has no Short date or
-    Relative (T133). Notion's light-mode red, band and pill were not
-    photographed; their day tokens keep the earlier values.
+    Notion's light-mode red, band and pill were not photographed; their
+    day tokens keep the earlier values.
+43. **done** [T133–T134, FR-017, `n72-date-formats`, `n73-relative-dates`,
+    `n74-relative-code`] Date formats. Notion's code lists them as "ll",
+    "MMM d", "MM/DD/YYYY", "DD/MM/YYYY", "YYYY/MM/DD", "relative" and the
+    times as "hidden", "12h", "24h"; "ll" and the old "MMM DD, YYYY" are
+    written with Luxon's DDD ("November 13, 2026"). Read in a cell of
+    "Linha teste" on Nov 13 (pt-BR): Full date "13 de novembro de
+    2026", Short date "nov. 13" (2025 too), 11/13/2026, 13/11/2026,
+    2026/11/13; Relative "hoje", "amanhã", "ontem", Mon Nov 16
+    "próximo(a) segunda-feira", Tue Nov 10 "terça-feira", Nov 25, Nov 1,
+    Dec 25 and 2025 as the full date. The rule in its code: 0, 1 and −1
+    days are Today, Tomorrow, Yesterday; a day in the week beside
+    today's (weeks from Monday) is "Next" or "Last" and its weekday; in
+    today's week the weekday alone; else the full date. The cell was
+    cleared and the format set back to Full date in the same run.
 
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,
