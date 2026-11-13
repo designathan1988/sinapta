@@ -49,6 +49,16 @@ function option(label: string): HTMLElement | undefined {
   );
 }
 
+describe("a date filter's popover", () => {
+  it("is Notion's wider date popover (260 px, n69-date-filter-measure)", () => {
+    const { host } = rendered("this:week");
+
+    expect(
+      host.querySelector(".database__rule")?.getAttribute("data-size"),
+    ).toBe("date");
+  });
+});
+
 describe("the operand of a date filter relative to today", () => {
   it("draws Start date, the condition, two selects, the month and the note", () => {
     const { host } = rendered("this:week");
@@ -195,7 +205,8 @@ describe("the operand of a checkbox filter", () => {
     const popover = host.querySelector(".database__rule");
     await Promise.resolve();
 
-    expect(popover?.hasAttribute("data-narrow")).toBe(true);
+    expect(popover?.hasAttribute("data-listed")).toBe(true);
+    expect(popover?.hasAttribute("data-size")).toBe(false);
     expect(document.activeElement?.textContent.trim()).toBe("Unchecked");
   });
 });

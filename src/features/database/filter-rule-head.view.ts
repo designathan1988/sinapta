@@ -11,6 +11,7 @@ import { renderIcon } from "../../ui/icon/index.ts";
 import { renderSelect, type SelectContext } from "../../ui/select/index.ts";
 import type { FieldChange } from "./filter-row.view.ts";
 import {
+  inSentence,
   offeredConditions,
   renderQuantifierChoice,
 } from "./filter-condition.view.ts";
@@ -26,11 +27,6 @@ export interface RuleHead {
   readonly toAdvanced: () => void;
   // What ends the head in place of the "…", as a color rule's Delete.
   readonly trailing?: TemplateResult;
-}
-
-// "Contains" reads "contains" after the property's name, as in Notion.
-export function inSentence(label: string): string {
-  return label.charAt(0).toLocaleLowerCase("en-US") + label.slice(1);
 }
 
 function renderDateEnd(head: RuleHead, select: SelectContext): TemplateResult {
@@ -61,14 +57,18 @@ function renderName(head: RuleHead, select: SelectContext) {
 }
 
 function renderCondition(head: RuleHead, select: SelectContext) {
+  const current = head.operators.find(
+    (item) => item.id === head.filter.operator,
+  );
   return renderSelect(
     {
       id: `${head.id}-operator`,
       label: COPY.database.filterOperator,
       value: head.filter.operator,
       variant: "quiet",
+      display: html`${inSentence(current?.label ?? "")}`,
       options: offeredConditions(head.operators, head.filter.operator).map(
-        (item) => ({ value: item.id, label: inSentence(item.label) }),
+        (item) => ({ value: item.id, label: item.label }),
       ),
       onChoose: (value) => {
         head.change({ field: "operator", value });

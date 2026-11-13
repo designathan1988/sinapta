@@ -41,10 +41,12 @@ function holderOf(state: AppState, propertyId: string): BlockId | undefined {
   return parseBlockId(found.get(propertyId) ?? "") ?? undefined;
 }
 
+// As Notion's (n68-rollup-filters): a row with no related value passes
+// None and fails Every.
 function asks(quantifier: Quantifier, results: readonly boolean[]): boolean {
   if (quantifier === "any") return results.some(Boolean);
   if (quantifier === "none") return !results.some(Boolean);
-  return results.every(Boolean);
+  return results.length > 0 && results.every(Boolean);
 }
 
 interface Built {

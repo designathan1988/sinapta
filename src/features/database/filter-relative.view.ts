@@ -87,6 +87,7 @@ function renderMonth(relative: Relative, context: TableContext) {
       month,
       today,
       hasFields: false,
+      isShownOnly: true,
       onChange: () => undefined,
       onMonth: (next) =>
         context.dispatch(

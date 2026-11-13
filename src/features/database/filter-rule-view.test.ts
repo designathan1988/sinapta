@@ -207,8 +207,10 @@ describe("a rollup rule's head", () => {
       item.textContent.trim(),
     );
 
-    expect(texts[0]).toContain("Any");
-    expect(texts[1]).toContain("is");
+    // Lower case in the head, as Notion's "Rollup 1 qualquer = " (n67).
+    // (Each select also carries its name for screen readers.)
+    expect(texts[0]).toMatch(/\sany$/);
+    expect(texts[1]).toMatch(/\sis$/);
   });
 
   it("keeps the condition when Any becomes Every", () => {
@@ -228,6 +230,7 @@ describe("a rollup rule's head", () => {
       ...document.querySelectorAll<HTMLElement>("[role=option]"),
     ].map((item) => item.textContent.trim());
 
-    expect(labels).toEqual(["is", "is not"]);
+    // The menu keeps Notion's capitals ("É", "Não é").
+    expect(labels).toEqual(["Is", "Is not"]);
   });
 });

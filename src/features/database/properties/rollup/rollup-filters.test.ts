@@ -127,7 +127,8 @@ describe("a rollup's filter conditions", () => {
     const app = createApp();
     app.rollTo(app.stage);
 
-    expect(app.kept("every:is", "done")).toEqual(["Alpha", "Gamma"]);
+    // Gamma relates to nothing, so it fails Every, as in Notion.
+    expect(app.kept("every:is", "done")).toEqual(["Alpha"]);
     expect(app.kept("any:is", "todo")).toEqual(["Beta"]);
   });
 

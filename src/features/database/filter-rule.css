@@ -1,19 +1,27 @@
 @layer features {
-  /* Notion's rule popover: a head with the property's name in grey, the
-     condition in bold with its chevron and the "…" at the end; the value
-     under it. */
+  /* Notion's rule popover (n69-text-filter-measure): 220 px, the head's
+     words and the value's field 12 px in; a date's, with its calendar,
+     260 px and 16 px in. */
   .database__rule:popover-open {
-    gap: var(--space-stack-xs);
+    gap: var(--space-stack-sm);
+    inline-size: var(--size-menu-rule);
+    min-inline-size: var(--size-menu-rule);
     padding: var(--space-inset-sm);
+
+    & > .database__field {
+      margin-inline: var(--space-inset-xs);
+    }
   }
 
   /* Measured on Notion's (n59-measure): 12 px, the name in its faintest
      grey, the condition a step brighter at weight 500; here the faintest
-     grey the contrast floor allows. */
+     grey the contrast floor allows. The row stays 18 px with its 20 px
+     "…" in it (n69-date-cleanup: the selects 8 px under it, at 34). */
   .database__rule-head {
     display: flex;
     gap: var(--space-none);
     align-items: center;
+    block-size: var(--size-menu-rule-head);
     color: var(--color-text-tertiary);
     font-size: var(--font-size-xs);
 
@@ -21,10 +29,27 @@
       flex: 1;
     }
 
+    /* Notion's head row is 18 px, its "…" 20 px. */
+    & > .select {
+      min-block-size: var(--size-menu-rule-head);
+    }
+
+    & > .select[data-variant="icon"] {
+      inline-size: var(--size-icon-md);
+      block-size: var(--size-icon-md);
+    }
+
     & > .select[data-variant="quiet"] {
       color: var(--color-text-secondary);
       font-size: var(--font-size-xs);
       font-weight: var(--font-weight-medium);
+    }
+
+    /* A rollup's "any" reads with the name, as Notion's "Rollup 1
+       qualquer"; the condition after it stands out. */
+    & > .select[id$="-quantifier"] {
+      color: var(--color-text-tertiary);
+      font-weight: var(--font-weight-regular);
     }
 
     /* A date's "Start date" stands where the name stands: grey, as
@@ -40,10 +65,20 @@
     color: var(--color-text-tertiary);
   }
 
-  /* A rule whose values are listed is narrow, as Notion's checkbox one. */
-  .database__rule[data-narrow]:popover-open {
-    inline-size: var(--size-menu-choices);
-    min-inline-size: var(--size-menu-choices);
+  .database__rule[data-size="date"]:popover-open {
+    inline-size: var(--size-menu-date-rule);
+    min-inline-size: var(--size-menu-date-rule);
+    padding-inline: var(--space-inset-lg);
+
+    /* "Start date" keeps its words 16 px in, as the selects under it. */
+    & > .database__rule-head {
+      margin-inline-start: calc(var(--space-inset-xs) * -1);
+    }
+  }
+
+  /* A rule whose values are listed has them 4 px in, as Notion's checkbox
+     one (n59-measure). */
+  .database__rule[data-listed]:popover-open {
     padding: var(--space-inset-xs);
 
     /* The name lines up with the values' words, as Notion's. */
@@ -69,13 +104,21 @@
     }
   }
 
+  /* Notion's note (n69-date-cleanup): its line 14 px under the last
+     week and 4 px wider on each side, the words 8 px under the line. */
+  .database__relative > .date-picker {
+    margin-block-end: var(--space-stack-xxs);
+  }
+
   .database__relative-note {
-    margin: var(--space-none);
-    padding-block-start: var(--space-stack-xs);
+    margin: var(--space-stack-sm) calc(var(--space-inset-xs) * -1)
+      var(--space-none);
+    padding-block: var(--space-stack-sm) var(--space-stack-xs);
     border-block-start: var(--size-border-thin) solid
       var(--color-border-default);
     color: var(--color-text-tertiary);
     font-size: var(--font-size-xs);
+    line-height: var(--size-menu-note-line);
   }
 
   /* "Is between": two day fields with an arrow between them. */

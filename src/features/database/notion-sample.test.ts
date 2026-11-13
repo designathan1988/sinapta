@@ -138,4 +138,82 @@ describe("the 2026-11-13 sample, as Notion filtered and grouped it", () => {
       "Out of range: álvaro",
     ]);
   });
+
+  it("groups numbers by unique value as Notion did, the empty group first", () => {
+    const app = sample();
+    const viewId = app.view().id;
+    const [number] = app.propertyIds;
+    if (number === undefined) throw new Error("setup");
+    app.dispatch(setViewGroupBy.create({ viewId, propertyId: number }));
+    const options = {
+      numberBy: { kind: "unique" },
+      sort: "ascending",
+    } as const;
+    app.dispatch(setGroupOptions.create({ viewId, options }));
+
+    const groups = selectRowGroups(model(app))?.groups ?? [];
+
+    // n60-groups2/06-unique-value and 09-unique-esc2.
+    expect(
+      groups.map(
+        (group) =>
+          `${group.label}: ${group.rows.map((row) => row.title).join(",")}`,
+      ),
+    ).toEqual([
+      "No Number: Linha teste",
+      "-5: álvaro",
+      "0: Bia",
+      "5: Ana",
+      "9: 3D",
+      "10: Carlos",
+      "12: Zeca",
+      "19: Ébano",
+      "20: Duda",
+      "30: Marta",
+      "35: Nina",
+    ]);
+  });
+
+  it("groups names by exact value as Notion did, accents set aside", () => {
+    const names = [
+      "Linha teste",
+      "Ana",
+      "álvaro",
+      "Bia",
+      "3D",
+      "Carlos",
+      "Zeca",
+      "Ébano",
+      "Duda",
+      "Marta",
+      "Nina",
+    ];
+    const app = createDatabaseApp(
+      [{ name: "Label", type: "text" }],
+      names.map((name) => [name, name]),
+    );
+    const viewId = app.view().id;
+    const [label] = app.propertyIds;
+    if (label === undefined) throw new Error("setup");
+    app.dispatch(setViewGroupBy.create({ viewId, propertyId: label }));
+    const options = { textBy: "exact", sort: "ascending" } as const;
+    app.dispatch(setGroupOptions.create({ viewId, options }));
+
+    const groups = selectRowGroups(model(app))?.groups ?? [];
+
+    // n60-groups2/16-exact-value and 19-exact-esc2: "Alfabética".
+    expect(groups.map((group) => group.label)).toEqual([
+      "3D",
+      "álvaro",
+      "Ana",
+      "Bia",
+      "Carlos",
+      "Duda",
+      "Ébano",
+      "Linha teste",
+      "Marta",
+      "Nina",
+      "Zeca",
+    ]);
+  });
 });

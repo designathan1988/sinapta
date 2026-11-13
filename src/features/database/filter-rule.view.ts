@@ -107,7 +107,8 @@ export function renderFilterRule(
   const property = filterProperties(context).find(
     (item) => item.id === rule.propertyId,
   );
-  const operators = operatorsOf(property, context.state);
+  const { state, dispatch } = context;
+  const operators = operatorsOf(property, state);
   const operator = operators.find((item) => item.id === rule.operator);
   const { change, remove, toAdvanced, onChange, onKeyDown } = actions(
     context,
@@ -115,16 +116,14 @@ export function renderFilterRule(
   );
   const id = `filter-rule-${String(index)}`;
   const head = { id, filter: rule, property, operators };
-  const select = {
-    overlay: context.state.ui.overlay,
-    dispatch: context.dispatch,
-  };
+  const select = { overlay: state.ui.overlay, dispatch };
   const operand = { filter: rule, path: [index], property, operator };
   return html`<div
     class="database__popover database__rule"
     popover="manual"
     data-overlay
-    ?data-narrow=${operator?.listsChoices === true}
+    ?data-listed=${operator?.listsChoices === true}
+    data-size=${property?.type === "date" ? "date" : nothing}
     ${ref(showPopoverWhenConnected)}
     ${ref(focusValue)}
     @input=${onChange}

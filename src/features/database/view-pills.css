@@ -36,6 +36,11 @@
       );
       background-color: var(--color-accent-subtle);
       color: var(--color-text-accent);
+
+      /* Open, as Notion's (n69-date-cleanup): rgb(40, 72, 107). */
+      &[aria-expanded="true"] {
+        background-color: var(--color-accent-pill);
+      }
     }
 
     & > .icon {
