@@ -42,7 +42,7 @@ export const WORKSPACE_TEXT = {
     moveUp: "Move up",
     moveDown: "Move down",
     addSubpage: "Add a page inside",
-    trash: "Move to trash",
+    trash: "Move to Trash",
     duplicate: "Duplicate",
     copySuffix: "(copy)",
     fonts: { default: "Default", serif: "Serif", mono: "Mono" },

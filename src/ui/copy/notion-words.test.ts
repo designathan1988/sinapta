@@ -43,10 +43,10 @@ describe("the copy of the new controls", () => {
     expect(cadence.presets.twoWeeks).toBe("2 Weeks");
     expect(cadence.presets.threeMonths).toBe("3 Months");
     expect(cadence.presets.sixMonths).toBe("6 Months");
-    // The template strip's button, as Notion's English draws it (its
-    // pt-BR text, pageViewBlock.templatePageBanner.duplicateEveryLabel,
-    // ends in three dots: "Duplicar a cada...").
-    expect(COPY.database.templateRepeatButton).toBe("Duplicate every...");
+    // pageViewBlock.templatePageBanner.duplicateEveryLabel,
+    // database.templatePickerItem.actionMenu.repeat
+    expect(COPY.database.templateRepeatButton).toBe("Duplicate every…");
+    expect(COPY.database.templateRepeat).toBe("Duplicate every…");
   });
 
   it("names Manage in Calendar as Notion's", () => {
@@ -60,5 +60,72 @@ describe("the copy of the new controls", () => {
     // topbarStopSuggestModeButton.tooltip, inlineSuggestButton.tooltipDisable
     expect(COPY.suggestions.youreSuggesting).toBe("You’re suggesting");
     expect(COPY.suggestions.stop).toBe("Turn off suggesting");
+  });
+
+  it("names the button's trigger and the filters' words as Notion's", () => {
+    // automations.trigger.button.clicked: "<b>Button</b> is clicked"
+    expect(COPY.automation.clicked).toBe("Button is clicked");
+    expect(COPY.automation.clickedBold).toBe("Button");
+    // collectionFilterMenu.dateFilter.relativeDateFilter.description
+    expect(COPY.database.relativeNote).toBe(
+      "Filter will update with the current date",
+    );
+    // database.filterMenu.dateFilterModeMenu.label
+    expect(COPY.database.dateEndChoice).toBe("Date Options");
+  });
+
+  it("names the view's menu, its link and a file cell as Notion's", () => {
+    // database.viewSettings.viewActionMenu.title
+    expect(COPY.database.tabMenu).toBe("View options");
+    // database.viewSettings.copyLinkSnackBarItem.title
+    expect(COPY.database.viewLinkCopied).toBe(
+      "Link to view copied to clipboard",
+    );
+    // database.fileProperty.focusedLabel, mediaPicker.embedPlaceholder.text
+    expect(COPY.database.addFileOrImage).toBe("Add a file or image");
+    expect(COPY.database.pasteLink).toBe("Paste in https://…");
+  });
+
+  it("names the sidebar's empty Calendar tab and menus as Notion's", () => {
+    // sidebar.simplification.upcomingEvents.noEvents
+    expect(COPY.sidebarTabs.empty).toBe("No upcoming events");
+    // sidebar.simplification.databaseView.openMenu.ariaLabel,
+    // sidebar.simplification.shortcut.openMenu.ariaLabel
+    expect(COPY.sidebarViews.menu).toBe("Open menu");
+    expect(COPY.sidebarCustomize.shortcutMenu).toBe("Open shortcut menu");
+  });
+
+  it("names the controls without words of their own after Notion's", () => {
+    // automations.RecurrenceEditor.frequencyLabel, .endConditionMenu.numberOfRuns
+    expect(COPY.cadence.interval).toBe("Every");
+    expect(COPY.cadence.runs).toBe("Number of runs");
+    // automations.actionContextMenu.deleteMenuItemLabel
+    expect(COPY.automation.remove).toBe("Delete");
+    // database.filterMenu.comparatorMenuDropdownButton.label,
+    // database.filterMenu.filterOperatorMenu.title (Any, None, Every are
+    // collectionFilterMenuHelpers.operator.*)
+    expect(COPY.database.filterOperator).toBe("Comparator");
+    expect(COPY.database.quantifierChoice).toBe("Operator");
+  });
+
+  it("names Move to Trash, Plain Text, an option search and Reading List", () => {
+    // action.moveToTrash.name, action.languageMode.plaintext
+    expect(COPY.pageMenu.trash).toBe("Move to Trash");
+    expect(COPY.codeBlock.languages.plain).toBe("Plain Text");
+    // database.selectPropertyEditMenu.searchPlaceholder
+    expect(COPY.database.optionSearch).toBe("Search for an option...");
+    // templateHelpers.templates.readingList
+    expect(COPY.templates.readingList.name).toBe("Reading List");
+  });
+
+  it("names a template's banner and its saved cadence as Notion's", () => {
+    // pageViewBlock.templatePageBanner.editTemplateLabel
+    expect(COPY.database.templateBannerLead).toBe(
+      "You’re editing a template in",
+    );
+    // database.templatePickerItem.duplicateMenuLabel.duplicateEvery with
+    // its unit, as Notion's banner reads once saved ("Duplicar a cada
+    // semana", n58-banner)
+    expect(COPY.cadence.repeating("week")).toBe("Duplicate every week");
   });
 });

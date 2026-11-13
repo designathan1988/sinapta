@@ -43,7 +43,7 @@ export const DATABASE_TEXT = {
     conjunctionOr: "Or",
     filterGroup: "Filter group",
     filterProperty: "Property",
-    filterOperator: "Condition",
+    filterOperator: "Comparator",
     filterValue: "Value",
     propertyName: "Property name",
     propertyType: "Property type",

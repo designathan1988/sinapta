@@ -4,7 +4,7 @@ export const CADENCE_TEXT = {
     title: "Edit cadence",
     save: "Save",
     every: "Every",
-    interval: "How many",
+    interval: "Every",
     unit: "Unit",
     units: { day: "day", week: "week", month: "month", year: "year" },
     unitsPlural: {
@@ -34,13 +34,17 @@ export const CADENCE_TEXT = {
       count: "Number of runs",
       date: "Specific date",
     },
-    runs: "Runs",
+    runs: "Number of runs",
     endsOn: "On",
     timeZone: "Timezone",
     cancel: "Cancel recurrence",
     next: "Next occurrence:",
-    nextAt: (day: string, time: string) => `${day} ${time}`,
-    nextMidnight: "between 0:00 and 3:00",
+    // automations.recurrenceHelpers.dateAtTime, .dateBetweenMidnightAnd3AM
+    nextAt: (day: string, time: string) => `${day} at ${time}`,
+    nextMidnight: (day: string) => `${day} between 12–3 AM`,
+    // dateFormatHelpers.text.today, .nextDayOfTheWeek
+    today: "Today",
+    nextWeekday: (weekday: string) => `Next ${weekday}`,
     nextNone: "None",
     presets: {
       day: "Day",
@@ -55,6 +59,6 @@ export const CADENCE_TEXT = {
     discardQuestion: "Discard unsaved changes?",
     discard: "Discard",
     discardCancel: "Cancel",
-    repeating: (period: string) => `Every ${period}`,
+    repeating: (period: string) => `Duplicate every ${period}`,
   },
 } as const;

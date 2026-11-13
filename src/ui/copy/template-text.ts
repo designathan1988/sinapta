@@ -43,7 +43,7 @@ export const TEMPLATE_TEXT = {
       days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
     },
     readingList: {
-      name: "Reading list",
+      name: "Reading List",
       description: "What you read now, next and have finished.",
       tip: "Add a book or an article as a to-do; tick it once read.",
       now: "Reading now",

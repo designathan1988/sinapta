@@ -117,7 +117,7 @@ export const BLOCK_TEXT = {
     caption: "Caption",
     captionPlaceholder: "Add a caption",
     languages: {
-      plain: "Plain text",
+      plain: "Plain Text",
       javascript: "JavaScript",
       typescript: "TypeScript",
       json: "JSON",
