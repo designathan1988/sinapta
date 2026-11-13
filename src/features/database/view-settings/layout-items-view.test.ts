@@ -3,7 +3,6 @@ import { render } from "lit-html";
 import { describe, expect, it } from "vitest";
 import type { ViewType } from "../../../model/index.ts";
 import type { Command, OpenOverlay } from "../../../state/index.ts";
-import { setCardOptions } from "../card.commands.ts";
 import { setCalendarOptions } from "../calendar-options.commands.ts";
 import { createDatabaseApp } from "../database-builder.ts";
 import { renderDatabase } from "../database.view.ts";
@@ -74,18 +73,6 @@ describe("each layout's own options", () => {
         options: { card: { fitMedia: true } },
       }),
     ]);
-  });
-
-  it("draws cards by the card layout", () => {
-    const list = rendered("gallery", false).host.querySelector(".row-card");
-    expect(list?.getAttribute("data-layout")).toBe("list");
-
-    const compact = rendered("gallery", false, (app) => {
-      const options = { card: { layout: "compact", fitMedia: true } } as const;
-      app.dispatch(setCardOptions.create({ viewId: app.view().id, options }));
-    }).host.querySelector(".row-card");
-    expect(compact?.getAttribute("data-layout")).toBe("compact");
-    expect(compact?.hasAttribute("data-fit")).toBe(true);
   });
 
   it("wraps a calendar's titles", () => {

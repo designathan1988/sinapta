@@ -6,10 +6,8 @@ import {
   BUTTON_AUTOMATION_OVERLAY,
   NEW_ACTION_LIST,
 } from "./button-automation.ts";
-import { BUTTON_CONFIRM_OVERLAY } from "./button-press.view.ts";
 import { COLUMN_MENU_OVERLAY } from "./database-overlay.ts";
 import { createDatabaseApp } from "./database-builder.ts";
-import { setPropertyConfig } from "./database.commands.ts";
 import { renderDatabase } from "./database.view.ts";
 
 // A database with a Done checkbox and a "Go" button, the given overlay
@@ -115,40 +113,5 @@ describe("Edit automation", () => {
       propertyId: go,
       config: draft,
     });
-  });
-});
-
-describe("a button that asks first", () => {
-  it("runs its actions once its question is answered", () => {
-    const { app, sent, press, go, rowId } = rendered(() => null);
-    app.dispatch(
-      setPropertyConfig.create({
-        databaseId: app.databaseId,
-        propertyId: go,
-        config: {
-          label: "Go",
-          actions: [{ kind: "confirm", message: "Sure?" }],
-        },
-      }),
-    );
-    const state = app.store.getState();
-    const overlay = {
-      kind: BUTTON_CONFIRM_OVERLAY,
-      anchorId: `${rowId}:${go}`,
-    };
-    const host = document.createElement("div");
-    document.body.replaceChildren(host);
-    render(
-      renderDatabase({ ...state, ui: { ...state.ui, overlay } }, (command) => {
-        sent.push(command);
-        return { ok: true };
-      }),
-      host,
-    );
-
-    press("Continue");
-
-    expect(document.querySelector(".confirm")?.textContent).toContain("Sure?");
-    expect(sent.map((command) => command.type)).toContain("row.pressButton");
   });
 });

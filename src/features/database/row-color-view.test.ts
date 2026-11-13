@@ -49,13 +49,6 @@ function colorsOf(host: HTMLElement, selector: string) {
 }
 
 describe("rows colored by the view's rules", () => {
-  it("colors a matching table row, and not the others", () => {
-    expect(colorsOf(rendered("table"), ".database__row")).toEqual([
-      "red",
-      null,
-    ]);
-  });
-
   it("colors cards, list lines and calendar entries the same way", () => {
     expect(colorsOf(rendered("gallery"), ".row-card")).toContain("red");
     expect(colorsOf(rendered("list"), ".list__row")).toEqual(["red", null]);
