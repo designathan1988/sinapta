@@ -27,6 +27,17 @@ export const EMOJI_PATHS = {
     />
     <path d="M5 1.5V4M11 1.5V4" />`,
   "plus-circle": svg`<circle cx="8" cy="8" r="5.5" /><path d="M8 5.5v5M5.5 8h5" />`,
+  // A view's menu, as Notion's: Rename's pencil over a line, Display as's
+  // brush, Source's path, and Manage in Calendar's dated sheet.
+  pencil: svg`<path d="M3 13.5h10M4.5 10.5l6.5-6.5 1.5 1.5-6.5 6.5-2.2.7z" />`,
+  brush: svg`<path d="M9.5 2l4.5 4.5-3.5 3.5-4.5-4.5zM6.5 6.5l3 3-2 2v2a1 1 0 0 1-1 1h-1.5a1 1 0 0 1-1-1v-1.5a1 1 0 0 1 1-1h2" />`,
+  source: svg`<circle cx="12" cy="3.5" r="1.5" />
+    <circle cx="3.5" cy="12.5" r="1" fill="currentColor" />
+    <path d="M10.5 3.5H5.25a2.25 2.25 0 0 0 0 4.5h5.5a2.25 2.25 0 0 1 0 4.5H4.5" />`,
+  "calendar-date": svg`<path d="M2 11V3.5A1.5 1.5 0 0 1 3.5 2H11" />
+    <rect x="4.5" y="4.5" width="9.5" height="9.5" rx="1.5" />
+    <path d="M4.5 7h9.5" />
+    <text x="9.25" y="12.6" font-size="5" text-anchor="middle" fill="currentColor" stroke="none">13</text>`,
 } satisfies Record<string, TemplateResult<2>>;
 
 export type EmojiIconName = keyof typeof EMOJI_PATHS;

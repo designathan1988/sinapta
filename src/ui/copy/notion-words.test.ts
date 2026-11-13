@@ -128,4 +128,30 @@ describe("the copy of the new controls", () => {
     // semana", n58-banner)
     expect(COPY.cadence.repeating("week")).toBe("Duplicate every week");
   });
+
+  it("names the selection toolbar's buttons as Notion's tooltips", () => {
+    const { formatToolbar } = COPY;
+    // richTextMenu.italicsButton, .strikeThroughButton, .markAsCodeButton,
+    // .clearFormatButton, .equationButton; selectionLinkButton.addLink;
+    // highlightSelectionButton.backgroundSection
+    expect(formatToolbar.italic).toBe("Italicize");
+    expect(formatToolbar.strikethrough).toBe("Strike-through");
+    expect(formatToolbar.code).toBe("Mark as code");
+    expect(formatToolbar.clearFormat).toBe("Clear format");
+    expect(formatToolbar.equation).toBe("Mark as equation");
+    expect(formatToolbar.link).toBe("Add link");
+    expect(formatToolbar.highlight).toBe("Background color");
+  });
+
+  it("names property types and filter conditions as Notion's", () => {
+    // database.propertyTypeName.multi_select, .file, .auto_increment_id
+    expect(COPY.propertyTypes.multiSelect).toBe("Multi-select");
+    expect(COPY.propertyTypes.files).toBe("Files & media");
+    expect(COPY.propertyTypes.uniqueId).toBe("ID");
+    // collectionFilterMenuHelpers.operator.dateIsOnOrBefore, .stringEndsWith,
+    // .numberGreaterThanOrEqualTo
+    expect(COPY.operators.onOrBefore).toBe("Is on or before");
+    expect(COPY.operators.endsWith).toBe("Ends with");
+    expect(COPY.operators.atLeast).toBe("≥");
+  });
 });

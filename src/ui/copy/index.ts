@@ -8,6 +8,7 @@ export { DATE_TEXT } from "./date-text.ts";
 export { EDITOR_TEXT } from "./editor-text.ts";
 export { ONBOARDING_TEXT } from "./onboarding-text.ts";
 export { PAGE_TEXT } from "./page-text.ts";
+export { PROPERTY_TEXT } from "./property-text.ts";
 export { pluralize } from "./pluralize.ts";
 export { SETTINGS_TEXT } from "./settings-text.ts";
 export { SIDEBAR_VIEWS_TEXT } from "./sidebar-views-text.ts";
