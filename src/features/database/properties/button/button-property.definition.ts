@@ -1,5 +1,6 @@
 // A button in each row: pressing it sets some of the row's values or
 // opens the row, as its settings say. It holds no value of its own.
+import { COPY } from "../../../../ui/copy.ts";
 import { html, type TemplateResult } from "lit-html";
 import type { PropertyDefinition } from "../../../../blocks/database/index.ts";
 import { IS_EMPTY, type PropertyType } from "../../property-definition.ts";
@@ -23,7 +24,7 @@ function renderButtonCell(
 
 export const buttonProperty: PropertyType = {
   type: "button",
-  label: "Button",
+  label: COPY.propertyTypes.button,
   icon: "button",
   editor: "button",
   read: () => undefined,

@@ -1,5 +1,6 @@
 // A formula works a value out for each row from its other properties.
 // The cell shows the result, or the formula's mistake.
+import { COPY } from "../../../../ui/copy.ts";
 import { html, type TemplateResult } from "lit-html";
 import { renderIcon } from "../../../../ui/icon/index.ts";
 import {
@@ -68,7 +69,7 @@ function read(stored: unknown): unknown {
 
 export const formulaProperty: PropertyType = {
   type: "formula",
-  label: "Formula",
+  label: COPY.propertyTypes.formula,
   icon: "formula",
   editor: "none",
   read,

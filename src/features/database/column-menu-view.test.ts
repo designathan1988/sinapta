@@ -172,3 +172,41 @@ describe("the column menu", () => {
     ]);
   });
 });
+
+describe("a status column's menu", () => {
+  it("shows the status as a checkbox from Show as, as Notion's", () => {
+    const app = createDatabaseApp([{ name: "Stage", type: "status" }], []);
+    const [stage] = app.propertyIds;
+    if (stage === undefined) throw new Error("setup");
+    const built = app.store.getState();
+    const overlay = {
+      kind: COLUMN_MENU_OVERLAY,
+      anchorId: stage,
+      children: [{ anchorId: `${stage}:show-as` }],
+    };
+    const sent: Command[] = [];
+    const host = document.createElement("div");
+    document.body.replaceChildren(host);
+    render(
+      renderDatabase({ ...built, ui: { ...built.ui, overlay } }, (command) => {
+        sent.push(command);
+        return { ok: true };
+      }),
+      host,
+    );
+    const rows = [...host.querySelectorAll<HTMLElement>("[data-index]")];
+    const label = (row: HTMLElement) =>
+      row.querySelector(".menu__label")?.textContent.trim();
+
+    expect(rows.map(label)).toEqual(
+      expect.arrayContaining(["Show as", "Checkbox", "Select"]),
+    );
+    rows.find((row) => label(row) === "Checkbox")?.click();
+
+    expect(sent.at(-1)).toMatchObject({
+      type: "property.setConfig",
+      propertyId: stage,
+      config: { showAs: "checkbox" },
+    });
+  });
+});

@@ -1,3 +1,4 @@
+import { COPY } from "../../../../ui/copy.ts";
 import { renderChip as chipOf } from "../../../../ui/chip/index.ts";
 import type { TemplateResult } from "lit-html";
 import type { PropertyDefinition } from "../../../../blocks/database/index.ts";
@@ -50,21 +51,21 @@ export const OPTION_GROUPING: Grouping = {
 // Filters compare with the option's id, which the filter editor supplies.
 const IS: FilterOperator = {
   id: "is",
-  label: "Is",
+  label: COPY.operators.is,
   needsOperand: true,
   test: (value, operand) => readOption(value) === operand,
 };
 
 const IS_NOT: FilterOperator = {
   id: "is-not",
-  label: "Is not",
+  label: COPY.operators.isNot,
   needsOperand: true,
   test: (value, operand) => readOption(value) !== operand,
 };
 
 export const selectProperty: PropertyType = {
   type: "select",
-  label: "Select",
+  label: COPY.propertyTypes.select,
   icon: "select",
   editor: "options",
   read: readOption,

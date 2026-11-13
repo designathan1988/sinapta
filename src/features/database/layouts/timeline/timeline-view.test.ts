@@ -6,6 +6,7 @@ import { createDatabaseApp } from "../../database-builder.ts";
 import { renderDatabase } from "../../database.view.ts";
 import { setTimelineOptions } from "../../timeline-options.commands.ts";
 import { setViewType } from "../../view-layout.commands.ts";
+import { addColorRule } from "../../color-rules.commands.ts";
 
 // A timeline of two dated rows and one without a date.
 function rendered(showTable = true) {
@@ -103,5 +104,30 @@ describe("the timeline", () => {
       expect(item.querySelector("button")?.hasAttribute("role")).toBe(false);
     });
     expect(host.querySelector(".timeline__undated h2")).not.toBeNull();
+  });
+});
+
+describe("a timeline's conditional color", () => {
+  it("colors the bars of rows a rule matches, as every layout", () => {
+    const app = createDatabaseApp(
+      [{ name: "When", type: "date" }],
+      [["Plan", { start: "2026-11-10" }]],
+    );
+    const viewId = app.view().id;
+    const [when] = app.propertyIds;
+    if (when === undefined) throw new Error("setup");
+    app.dispatch(setViewType.create({ viewId, viewType: "timeline" }));
+    const condition = { propertyId: when, operator: "is-not-empty", value: "" };
+    app.dispatch(addColorRule.create({ viewId, condition }));
+    const host = document.createElement("div");
+    document.body.replaceChildren(host);
+    render(
+      renderDatabase(app.store.getState(), () => ({ ok: true })),
+      host,
+    );
+
+    expect(
+      host.querySelector(".timeline__bar")?.getAttribute("data-color"),
+    ).toBe("green");
   });
 });

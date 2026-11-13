@@ -1,5 +1,6 @@
 // A rollup shows something worked out from the rows a relation holds: a
 // count, a sum, the earliest date, or the related values themselves.
+import { COPY } from "../../../../ui/copy.ts";
 import {
   containsText,
   IS_EMPTY,
@@ -37,7 +38,7 @@ const TEXT_CONDITIONS = [
 
 export const rollupProperty: PropertyType = {
   type: "rollup",
-  label: "Rollup",
+  label: COPY.propertyTypes.rollup,
   icon: "rollup",
   editor: "none",
   read: readRollupResult,

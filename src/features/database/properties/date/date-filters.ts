@@ -154,11 +154,11 @@ export const RELATIVE: FilterOperator = {
 };
 
 export const DATE_FILTERS: readonly FilterOperator[] = [
-  comparison("is", "Is", (order) => order === 0),
-  comparison("before", "Is before", (order) => order < 0),
-  comparison("after", "Is after", (order) => order > 0),
-  comparison("on-or-before", "Is on or before", (order) => order <= 0),
-  comparison("on-or-after", "Is on or after", (order) => order >= 0),
+  comparison("is", COPY.operators.is, (order) => order === 0),
+  comparison("before", COPY.operators.before, (order) => order < 0),
+  comparison("after", COPY.operators.after, (order) => order > 0),
+  comparison("on-or-before", COPY.operators.onOrBefore, (order) => order <= 0),
+  comparison("on-or-after", COPY.operators.onOrAfter, (order) => order >= 0),
   BETWEEN,
   RELATIVE,
   WITHIN,

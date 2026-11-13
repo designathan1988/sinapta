@@ -6,6 +6,7 @@ import type { AppState, Command } from "../../../../state/index.ts";
 import { createDatabaseApp } from "../../database-builder.ts";
 import { renderDatabase } from "../../database.view.ts";
 import { setViewType } from "../../view-layout.commands.ts";
+import { addColorRule } from "../../color-rules.commands.ts";
 
 function newId(): BlockId {
   const id = parseBlockId(crypto.randomUUID());
@@ -79,5 +80,30 @@ describe("the feed", () => {
     expect(sent).toEqual([
       expect.objectContaining({ type: "row.open", rowId }),
     ]);
+  });
+});
+
+describe("a feed's conditional color", () => {
+  it("colors the posts of rows a rule matches, as every layout", () => {
+    const app = createDatabaseApp(
+      [{ name: "Done", type: "checkbox" }],
+      [["Weekly notes", true]],
+    );
+    const viewId = app.view().id;
+    const [done] = app.propertyIds;
+    if (done === undefined) throw new Error("setup");
+    app.dispatch(setViewType.create({ viewId, viewType: "feed" }));
+    const condition = { propertyId: done, operator: "is-checked", value: "" };
+    app.dispatch(addColorRule.create({ viewId, condition }));
+    const host = document.createElement("div");
+    document.body.replaceChildren(host);
+    render(
+      renderDatabase(app.store.getState(), () => ({ ok: true })),
+      host,
+    );
+
+    expect(host.querySelector(".feed__post")?.getAttribute("data-color")).toBe(
+      "green",
+    );
   });
 });

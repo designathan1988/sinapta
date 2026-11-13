@@ -1,3 +1,4 @@
+import { COPY } from "../../../../ui/copy.ts";
 import { compareText, type PropertyType } from "../../property-definition.ts";
 import { TEXT_FILTERS } from "../../text-filters.ts";
 import { TEXT_GROUPING } from "../text/index.ts";
@@ -11,7 +12,7 @@ function readPhone(stored: unknown): string | undefined {
 
 export const phoneProperty: PropertyType = {
   type: "phone",
-  label: "Phone",
+  label: COPY.propertyTypes.phone,
   icon: "phone",
   editor: "text",
   input: { type: "tel", mode: "tel" },

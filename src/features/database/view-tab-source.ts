@@ -54,7 +54,7 @@ export function sourceItem(context: TableContext): MenuItem {
   const name = selectPageTitle(model.database);
   return {
     label: TEXT.viewSource,
-    icon: "database",
+    icon: "source",
     value: name === "" ? TEXT.untitled : name,
     submenu: {
       id: "view-tab-source",

@@ -92,6 +92,16 @@ describe("the open view's tab menu", () => {
     ]);
   });
 
+  it("draws Notion's icons beside Rename, Display as and Source", () => {
+    const { item } = rendered({ isOpen: true });
+    const icon = (label: string) =>
+      item(label)?.querySelector(".icon")?.getAttribute("data-icon");
+
+    expect(icon("Rename")).toBe("pencil");
+    expect(icon("Display as")).toBe("brush");
+    expect(icon("Source")).toBe("source");
+  });
+
   it("shows tabs as text only from Show as, for the owner alone", () => {
     const { item, sent } = rendered({
       isOpen: true,

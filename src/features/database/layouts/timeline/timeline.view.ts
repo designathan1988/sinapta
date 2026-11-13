@@ -3,6 +3,7 @@
 // bar per dated row from its first day to its last. A bar opens its row,
 // moves with Alt and an arrow, stretches with Shift too, or is dragged.
 // Rows without a date are listed under the timeline.
+import { selectRowColor } from "../../row-color.selectors.ts";
 import { renderManageInCalendar } from "../../view-calendar-item.ts";
 import { openRow } from "../../row-open.commands.ts";
 import "./timeline.css";
@@ -94,6 +95,7 @@ function renderBar(bar: TimelineBar, at: BarContext): TemplateResult {
       type="button"
       class="timeline__bar"
       data-row-id=${bar.row.id}
+      data-color=${selectRowColor(at.context.model, bar.row, at.context.state) ?? nothing}
       aria-description=${TEXT.moveBarHint}
       ${ref(place(bar.offset, bar.span))}
       @click=${() => at.context.dispatch(openRow.create({ rowId: bar.row.id, viewId: at.context.model.view.id }))}

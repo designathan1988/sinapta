@@ -1,5 +1,6 @@
 // A feed, as Notion's: a column of posts, one per row, each with its icon
 // and title, which open the row, and the first blocks of its page.
+import { selectRowColor } from "../../row-color.selectors.ts";
 import { openRow } from "../../row-open.commands.ts";
 import "./feed.css";
 import { renderPageReactions } from "../../../comments/index.ts";
@@ -49,7 +50,12 @@ function renderPost(post: FeedPost, context: TableContext): TemplateResult {
       openRow.create({ rowId: row.id, viewId: context.model.view.id }),
     );
   };
-  return html`<article class="feed__post" data-row-id=${row.id}>
+  const color = selectRowColor(context.model, row, context.state);
+  return html`<article
+    class="feed__post"
+    data-row-id=${row.id}
+    data-color=${color ?? nothing}
+  >
     <button type="button" class="feed__title" @click=${open}>
       ${post.icon === null ? nothing : html`<span class="feed__icon">${post.icon}</span>`}
       ${row.title === "" ? COPY.sidebar.untitled : row.title}

@@ -1,4 +1,5 @@
 // A date property holds a day, or a range of days, with an optional time.
+import { COPY } from "../../../../ui/copy.ts";
 import type { PropertyType } from "../../property-definition.ts";
 import { renderDateConfig } from "./date-config.view.ts";
 import { DATE_FILTERS } from "./date-filters.ts";
@@ -39,7 +40,7 @@ function compareDates(a: unknown, b: unknown): number {
 
 export const dateProperty: PropertyType = {
   type: "date",
-  label: "Date",
+  label: COPY.propertyTypes.date,
   icon: "calendar",
   editor: "date",
   input: { type: "date" },

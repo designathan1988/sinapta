@@ -1,5 +1,6 @@
 // A files property: files kept with the workspace and links to files on
 // the web, shown as thumbnails and names.
+import { COPY } from "../../../../ui/copy.ts";
 import {
   containsText,
   IS_EMPTY,
@@ -15,7 +16,7 @@ function names(value: unknown): string {
 
 export const filesProperty: PropertyType = {
   type: "files",
-  label: "Files & media",
+  label: COPY.propertyTypes.files,
   icon: "file",
   editor: "files",
   read: readFiles,

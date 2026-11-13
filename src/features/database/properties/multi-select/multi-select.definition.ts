@@ -1,3 +1,4 @@
+import { COPY } from "../../../../ui/copy.ts";
 import { html } from "lit-html";
 import {
   IS_EMPTY,
@@ -17,14 +18,14 @@ function readOptions(stored: unknown): string[] | undefined {
 
 const CONTAINS: FilterOperator = {
   id: "contains",
-  label: "Contains",
+  label: COPY.operators.contains,
   needsOperand: true,
   test: (value, operand) => readOptions(value)?.includes(operand) === true,
 };
 
 const DOES_NOT_CONTAIN: FilterOperator = {
   id: "does-not-contain",
-  label: "Does not contain",
+  label: COPY.operators.doesNotContain,
   needsOperand: true,
   test: (value, operand) => readOptions(value)?.includes(operand) !== true,
 };
@@ -40,7 +41,7 @@ const GROUPING: Grouping = {
 
 export const multiSelectProperty: PropertyType = {
   type: "multi-select",
-  label: "Multi-select",
+  label: COPY.propertyTypes.multiSelect,
   icon: "multi-select",
   editor: "options",
   read: readOptions,

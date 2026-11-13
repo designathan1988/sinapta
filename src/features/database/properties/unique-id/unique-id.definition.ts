@@ -1,6 +1,7 @@
 // A unique ID numbers each row of a database: 1, 2, 3 and so on, after an
 // optional prefix such as "TASK-". The app gives the numbers; nobody
 // edits them, and a deleted row's number is not given again.
+import { COPY } from "../../../../ui/copy.ts";
 import type { PropertyDefinition } from "../../../../blocks/database/index.ts";
 import {
   IS_EMPTY,
@@ -51,12 +52,12 @@ function comparison(
 }
 
 const ID_FILTERS = [
-  comparison("equals", "=", (a, b) => a === b),
-  comparison("not-equals", "≠", (a, b) => a !== b),
-  comparison("greater-than", ">", (a, b) => a > b),
-  comparison("less-than", "<", (a, b) => a < b),
-  comparison("at-least", "≥", (a, b) => a >= b),
-  comparison("at-most", "≤", (a, b) => a <= b),
+  comparison("equals", COPY.operators.equals, (a, b) => a === b),
+  comparison("not-equals", COPY.operators.notEquals, (a, b) => a !== b),
+  comparison("greater-than", COPY.operators.greaterThan, (a, b) => a > b),
+  comparison("less-than", COPY.operators.lessThan, (a, b) => a < b),
+  comparison("at-least", COPY.operators.atLeast, (a, b) => a >= b),
+  comparison("at-most", COPY.operators.atMost, (a, b) => a <= b),
   IS_EMPTY,
   IS_NOT_EMPTY,
 ];
@@ -68,7 +69,7 @@ function withNext(property: PropertyDefinition, next: number) {
 
 export const uniqueIdProperty: PropertyType = {
   type: "unique-id",
-  label: "ID",
+  label: COPY.propertyTypes.uniqueId,
   icon: "id",
   editor: "none",
   read: readId,

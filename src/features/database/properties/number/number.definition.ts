@@ -1,3 +1,4 @@
+import { COPY } from "../../../../ui/copy.ts";
 import {
   IS_EMPTY,
   IS_NOT_EMPTY,
@@ -41,7 +42,7 @@ function comparison(
 
 export const numberProperty: PropertyType = {
   type: "number",
-  label: "Number",
+  label: COPY.propertyTypes.number,
   icon: "number",
   editor: "number",
   input: { mode: "decimal" },
@@ -51,12 +52,12 @@ export const numberProperty: PropertyType = {
   compare: (a, b) => (readNumber(a) ?? 0) - (readNumber(b) ?? 0),
   filterOperators: [
     // Notion writes a number's conditions as signs.
-    comparison("equals", "=", (a, b) => a === b),
-    comparison("not-equals", "≠", (a, b) => a !== b),
-    comparison("greater-than", ">", (a, b) => a > b),
-    comparison("less-than", "<", (a, b) => a < b),
-    comparison("at-least", "≥", (a, b) => a >= b),
-    comparison("at-most", "≤", (a, b) => a <= b),
+    comparison("equals", COPY.operators.equals, (a, b) => a === b),
+    comparison("not-equals", COPY.operators.notEquals, (a, b) => a !== b),
+    comparison("greater-than", COPY.operators.greaterThan, (a, b) => a > b),
+    comparison("less-than", COPY.operators.lessThan, (a, b) => a < b),
+    comparison("at-least", COPY.operators.atLeast, (a, b) => a >= b),
+    comparison("at-most", COPY.operators.atMost, (a, b) => a <= b),
     IS_EMPTY,
     IS_NOT_EMPTY,
   ],

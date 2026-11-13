@@ -8,7 +8,9 @@
     .database__cell,
     .row-card,
     .list__row,
-    .calendar__entry
+    .calendar__entry,
+    .timeline__bar,
+    .feed__post
   )[data-color="gray"] {
     background-color: var(--color-chip-gray-bg);
   }
@@ -18,7 +20,9 @@
     .database__cell,
     .row-card,
     .list__row,
-    .calendar__entry
+    .calendar__entry,
+    .timeline__bar,
+    .feed__post
   )[data-color="brown"] {
     background-color: var(--color-chip-brown-bg);
   }
@@ -28,7 +32,9 @@
     .database__cell,
     .row-card,
     .list__row,
-    .calendar__entry
+    .calendar__entry,
+    .timeline__bar,
+    .feed__post
   )[data-color="orange"] {
     background-color: var(--color-chip-orange-bg);
   }
@@ -38,7 +44,9 @@
     .database__cell,
     .row-card,
     .list__row,
-    .calendar__entry
+    .calendar__entry,
+    .timeline__bar,
+    .feed__post
   )[data-color="yellow"] {
     background-color: var(--color-chip-yellow-bg);
   }
@@ -48,7 +56,9 @@
     .database__cell,
     .row-card,
     .list__row,
-    .calendar__entry
+    .calendar__entry,
+    .timeline__bar,
+    .feed__post
   )[data-color="green"] {
     background-color: var(--color-chip-green-bg);
   }
@@ -58,7 +68,9 @@
     .database__cell,
     .row-card,
     .list__row,
-    .calendar__entry
+    .calendar__entry,
+    .timeline__bar,
+    .feed__post
   )[data-color="blue"] {
     background-color: var(--color-chip-blue-bg);
   }
@@ -68,7 +80,9 @@
     .database__cell,
     .row-card,
     .list__row,
-    .calendar__entry
+    .calendar__entry,
+    .timeline__bar,
+    .feed__post
   )[data-color="purple"] {
     background-color: var(--color-chip-purple-bg);
   }
@@ -78,7 +92,9 @@
     .database__cell,
     .row-card,
     .list__row,
-    .calendar__entry
+    .calendar__entry,
+    .timeline__bar,
+    .feed__post
   )[data-color="pink"] {
     background-color: var(--color-chip-pink-bg);
   }
@@ -88,7 +104,9 @@
     .database__cell,
     .row-card,
     .list__row,
-    .calendar__entry
+    .calendar__entry,
+    .timeline__bar,
+    .feed__post
   )[data-color="red"] {
     background-color: var(--color-chip-red-bg);
   }

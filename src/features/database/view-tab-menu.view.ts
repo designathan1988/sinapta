@@ -51,7 +51,7 @@ function showAsItem(context: TableContext): MenuItem {
   ];
   return {
     label: COPY.database.displayAs,
-    icon: "eye",
+    icon: "brush",
     submenu: {
       id: "view-tab-show-as",
       menu: () => ({ label: COPY.database.displayAs, items }),
@@ -113,7 +113,7 @@ function viewItems(context: TableContext): MenuEntry[] {
   return [
     {
       label: COPY.database.renameView,
-      icon: "compose",
+      icon: "pencil",
       keepsOpen: true,
       onSelect: () =>
         dispatch(openOverlayPanel.create({ panel: RENAME_PANEL })),

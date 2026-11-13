@@ -1,3 +1,4 @@
+import { COPY } from "../../../../ui/copy.ts";
 import { html } from "lit-html";
 import { safeHref } from "../../../../model/index.ts";
 import { compareText, type PropertyType } from "../../property-definition.ts";
@@ -13,7 +14,7 @@ function readEmail(stored: unknown): string | undefined {
 
 export const emailProperty: PropertyType = {
   type: "email",
-  label: "Email",
+  label: COPY.propertyTypes.email,
   icon: "email",
   editor: "text",
   input: { type: "email", mode: "email" },

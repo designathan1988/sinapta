@@ -32,7 +32,7 @@ export function calendarItems(context: TableContext): MenuEntry[] {
     { kind: "divider" },
     {
       label: COPY.sidebarTabs.manageInCalendar,
-      icon: "calendar",
+      icon: "calendar-date",
       check: "box",
       isChecked: isShown,
       onSelect: () => {

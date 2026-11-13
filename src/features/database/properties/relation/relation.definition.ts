@@ -36,7 +36,7 @@ function renderRelationCell(
 
 export const relationProperty: PropertyType = {
   type: RELATION_TYPE,
-  label: "Relation",
+  label: COPY.propertyTypes.relation,
   icon: "relation",
   editor: "relation",
   read: readRelation,

@@ -1,5 +1,6 @@
 // What a property type tells the table about itself: how its values are
 // read, compared, filtered, shown and edited.
+import { COPY } from "../../ui/copy.ts";
 import type { TemplateResult } from "lit-html";
 import type {
   PropertyConfigSchema,
@@ -196,14 +197,14 @@ export interface PropertyType {
 
 export const IS_EMPTY: FilterOperator = {
   id: "is-empty",
-  label: "Is empty",
+  label: COPY.operators.isEmpty,
   needsOperand: false,
   test: (value) => value === undefined,
 };
 
 export const IS_NOT_EMPTY: FilterOperator = {
   id: "is-not-empty",
-  label: "Is not empty",
+  label: COPY.operators.isNotEmpty,
   needsOperand: false,
   test: (value) => value !== undefined,
 };
@@ -213,7 +214,9 @@ export function foldText(text: string): string {
   return text.normalize("NFKC").toLocaleLowerCase("en-US");
 }
 
-export function containsText(label = "Contains"): FilterOperator {
+export function containsText(
+  label: string = COPY.operators.contains,
+): FilterOperator {
   return {
     id: "contains",
     label,

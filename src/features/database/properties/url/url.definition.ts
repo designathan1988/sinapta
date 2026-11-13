@@ -1,3 +1,4 @@
+import { COPY } from "../../../../ui/copy.ts";
 import { html } from "lit-html";
 import { safeHref } from "../../../../model/index.ts";
 import { compareText, type PropertyType } from "../../property-definition.ts";
@@ -24,7 +25,7 @@ function parseUrl(text: string): string | undefined {
 
 export const urlProperty: PropertyType = {
   type: "url",
-  label: "URL",
+  label: COPY.propertyTypes.url,
   icon: "link",
   editor: "url",
   input: { mode: "url" },

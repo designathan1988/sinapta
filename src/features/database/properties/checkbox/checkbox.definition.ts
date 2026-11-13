@@ -14,14 +14,14 @@ function readChecked(stored: unknown): boolean {
 
 const IS_CHECKED: FilterOperator = {
   id: "is-checked",
-  label: "Is checked",
+  label: COPY.operators.isChecked,
   needsOperand: false,
   test: readChecked,
 };
 
 const IS_NOT_CHECKED: FilterOperator = {
   id: "is-not-checked",
-  label: "Is not checked",
+  label: COPY.operators.isNotChecked,
   needsOperand: false,
   test: (value) => !readChecked(value),
 };
@@ -38,7 +38,7 @@ const GROUPING: Grouping = {
 
 export const checkboxProperty: PropertyType = {
   type: "checkbox",
-  label: "Checkbox",
+  label: COPY.propertyTypes.checkbox,
   icon: "checkbox",
   editor: "toggle",
   read: readChecked,
