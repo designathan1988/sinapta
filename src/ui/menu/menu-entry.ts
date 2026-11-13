@@ -36,6 +36,9 @@ interface ItemLook {
   // Leaves the menu open after the choice, as when a choice goes back to
   // the panel it came from.
   readonly keepsOpen?: boolean;
+  // Starts at the icons' edge, keeping no icon's room, as Notion's "None"
+  // over a list of properties.
+  readonly isFlush?: boolean;
 }
 
 // What a submenu shows: a menu of its own beside the row, without the

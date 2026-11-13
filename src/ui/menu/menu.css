@@ -84,9 +84,12 @@
 
   /* When some rows have icons, the others keep an icon's room, so every
      label starts at the same place; a color's swatch stands in that room
-     itself, centered in it. */
+     itself, centered in it. A flush row keeps no room. */
   .menu:has(.menu__item > .icon:first-child)
-    .menu__item:not(:has(> :is(.icon, .chip__swatch):first-child))::before {
+    .menu__item:not(
+      [data-flush],
+      :has(> :is(.icon, .chip__swatch):first-child)
+    )::before {
     content: "";
     flex: none;
     inline-size: var(--size-icon-md);

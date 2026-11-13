@@ -30,7 +30,11 @@ function moveFocus(menu: Element, key: string): boolean {
   const current = items.findIndex((item) => item === document.activeElement);
   const targets: Record<string, number> = {
     ArrowDown: (current + 1) % items.length,
-    ArrowUp: (current - 1 + items.length) % items.length,
+    // From a field above the rows, up goes round to the last row.
+    ArrowUp:
+      current < 0
+        ? items.length - 1
+        : (current - 1 + items.length) % items.length,
     Home: 0,
     End: items.length - 1,
   };
@@ -118,6 +122,16 @@ function isOwnField(target: EventTarget | null): boolean {
   return isField && target.closest(".menu__search") === null;
 }
 
+// A one-line text field at the menu's head, as a view's or a property's
+// name, keeps its typing keys; the arrows go on to the rows below it and
+// Tab closes the menu, as from a row, so the focus never leaves for the
+// page behind.
+function keepsKey(target: EventTarget | null, key: string): boolean {
+  if (key === "Escape" || key === "Tab") return false;
+  const isLine = target instanceof HTMLInputElement && target.type === "text";
+  return !(isLine && (key === "ArrowDown" || key === "ArrowUp"));
+}
+
 // Escape closes a submenu open beside the menu first, then the menu; Tab
 // closes the menu. True when the key was one of them.
 function onLeaveKey(key: string, choosing: Choosing): boolean {
@@ -135,7 +149,7 @@ export function onMenuKey(
 ): void {
   const menu = event.currentTarget;
   if (!(menu instanceof Element)) return;
-  if (event.key !== "Escape" && isOwnField(event.target)) return;
+  if (isOwnField(event.target) && keepsKey(event.target, event.key)) return;
   const isSearch = event.target instanceof HTMLInputElement;
   if (onLeaveKey(event.key, choosing)) {
     // Handled: the key stays in the menu.

@@ -124,6 +124,7 @@ function renderItem(entry: MenuItem, place: EntryPlace): TemplateResult {
     ?data-overlay-child-anchor=${entry.submenu !== undefined}
     ?data-autofocus=${place.isFirst}
     ?data-danger=${entry.isDanger === true}
+    ?data-flush=${entry.isFlush === true}
     ?disabled=${entry.isDisabled === true}
   >
     ${renderLead(entry)} ${renderText(entry)}
