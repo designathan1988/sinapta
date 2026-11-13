@@ -1158,8 +1158,12 @@ items above, found while photographing them:
     grey. The pill is 180 × 24 with no line around it: at rest and on
     hover rgb(231, 243, 251) in light and rgb(35, 56, 80) in dark, open
     rgb(219, 236, 249) and rgb(40, 72, 107). Its words are
-    rgb(39, 131, 222); Pagecraft keeps its own accent text, darker, for
-    4.5:1 on the light pill. Every filter made was deleted in its run.
+    rgb(39, 131, 222). By ADR-0012 Pagecraft keeps Notion's surfaces and
+    hues and moves only lightness where text would fall under 4.5:1:
+    today's circle oklch(0.585 0.1631 27.7), rgb(202, 75, 65), under its
+    white number (Notion's 3.3:1), and a pill's words in dark oklch(0.77
+    0.1008 238.1) on Notion's open pill; in light the accent text gives
+    4.58:1. Every filter made was deleted in its run.
     Capture failures this session, by cause: Notion's language follows
     "autodetect" and changes between loads, so a step that named a
     control in one language failed in the other; every plan now names
