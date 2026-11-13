@@ -32,7 +32,7 @@
        rest and on hover, a deeper one while its rule is open. */
     &[data-rule] {
       background-color: var(--color-accent-pill);
-      color: var(--color-text-accent);
+      color: var(--color-text-pill);
 
       &[aria-expanded="true"] {
         background-color: var(--color-accent-pill-open);
