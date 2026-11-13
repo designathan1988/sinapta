@@ -63,4 +63,4 @@ is inserted as HTML. Link targets pass `src/model/link-href.ts`.
 
 ## Action items
 
-1. [ ] Milestone 3 tasks for the read-back path, emoji and IME checks.
+1. [x] Milestone 3 tasks for the read-back path, emoji and IME checks (`caret.test.ts`, `selection-sync.test.ts`, `emoji-search.test.ts`).

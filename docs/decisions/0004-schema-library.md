@@ -56,4 +56,4 @@ stands.
 
 ## Action items
 
-1. [ ] Update the id type snippet in specification section 4 on approval.
+1. [x] Update the id type snippet in specification section 4 on approval.

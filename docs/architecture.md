@@ -49,7 +49,7 @@ One command, step by step:
 | Slice | Holds | Saved | In history |
 | --- | --- | --- | --- |
 | `workspace` | `blocks`, `views`, `rootIds`, `settings` (theme) | Yes, per record | Yes, except `settings` |
-| `ui` | Active page, expanded pages, text selection, block selection, sidebar, open overlay, active view per database, active table cell, calendar month, search text per view | The lasting part, as one `meta` value | No |
+| `ui` | Active page, expanded pages, text selection, block selection, sidebar, open overlay, active view per database, active table cell, calendar month, search text per view, the search's filters | The lasting part, as one `meta` value | No |
 | `history` | Undo and redo stacks of inverse transactions | No | Is the history |
 | `persistence` | Save status, skipped record count, export and import requests | No | No |
 
@@ -133,8 +133,8 @@ so the starting pages are saved like any change.
 ## Overlays
 
 `ui.overlay` holds at most one open overlay: its kind, the element it is
-anchored to and, where needed, a text range, a highlighted option or a
-search query. The shell renders the overlay that matches the kind. Dialogs
+anchored to and, where needed, a text range, a highlighted option, a
+search query, the lists open inside it, or values chosen in it. The shell renders the overlay that matches the kind. Dialogs
 use `<dialog>` with `showModal()`; menus and popovers use the Popover API
 in manual mode, with dismissal owned by `src/ui/overlay/`.
 

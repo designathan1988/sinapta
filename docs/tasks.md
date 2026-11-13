@@ -703,6 +703,62 @@ reports it instead.
 Checks after milestone 15: 1265 tests pass; `npm run verify` green; each
 surface compared with Notion in the running app, light and dark.
 
+### Milestone 16: Database views
+
+| Task | Status | Commit |
+| --- | --- | --- |
+| 16.1 Inline databases and linked views | done | `701b18f`, `27b8ba5`, `7e214d9` |
+| 16.2 Filter groups | done | `2e9d35e`, `7eb4e1c` |
+| 16.3 Grouping in every layout | done | `6ac13ec`, `8c40f28` |
+| 16.4 Calculations | done | `11b7a35`, `eef139f` |
+| 16.5 Selecting, bulk editing and ordering rows | done | `f258fde`, `407d9fb` |
+| 16.6 Board cards and columns; sub-groups | done | `52766b2`, `17482a7` |
+| 16.7 Calendar week view and options | done | `3899018`, `b830ad8` |
+| 16.8 Timeline view | done | `ce07238`, `c06528f` |
+| 16.9 Chart view | done | `80f882e` |
+| 16.10 Form view | done | `108a898` |
+| 16.11 Feed view | done | `958440a` |
+| 16.12 Side and center peek | done | `9495e56`, `b65ccc3` |
+| 16.13 Row templates | done | `59d7504` |
+| 16.14 CSV import and export | done | `d1603b6` |
+| 16.15 Locks | done | `eb27fcf` |
+
+### Milestone 17: Workspace tools
+
+| Task | Status | Commit |
+| --- | --- | --- |
+| 17.1 Search with recents, block results, Title only | done | `eb042dd` |
+| 17.2 Template gallery | done | `4dff19d` |
+| 17.3 Page history | done | see the parity plan |
+| 17.4 Comments | done | `1233082` |
+| 17.5 Backlinks and page options | done | see the parity plan |
+| 17.6 Markdown and HTML export, Markdown and ZIP import | done | `9fab2dc` |
+| 17.7 Navigation keys | done | see the parity plan |
+| 17.8 Reminders and inbox | done | see the parity plan |
+| 17.9 Trash search and 30-day emptying | done | see the parity plan |
+
+### Milestone 19: Small screens and offline install
+
+| Task | Status | Commit |
+| --- | --- | --- |
+| 19.1 Layouts under 768 px | done | `a8ef415` |
+| 19.2 Installable and offline | done | `d951ad5` |
+
+### Notion parity pass, 2026-11-13
+
+Studied in Notion with a real pointer; numbers in `docs/notion-study.md`.
+
+| Change | Tests |
+| --- | --- |
+| A value cell's bar: comment on the value, copy it; composer and discussions under the cell; the count by the property on the row's page; deleting a comment asks first | `value-comments.test.ts`, `cell-actions-view.test.ts`, `comment.test.ts`, `comment-delete-view.test.ts` |
+| Search filters: Title only, In page, Date (field, presets, days), kept while closed | `search-filters.test.ts`, `ui-overlay.test.ts` |
+| The page menu in Notion's groups, Appearance and layout and More beside their rows (which never opened before) | `page-menu-view.test.ts` |
+| Translucent hover and pressed washes; no wash on the page icon or "Edited"; the sidebar's stronger wash; to-do and row tick boxes; the raised shadow in both themes | `token-contrast.test.ts` (laid over the real surface) |
+| The trash panel's height and empty state | photographed |
+| Version history: full window, the versions on the left, what each version wrote marked | `page-history-changes.test.ts` |
+| A board's sub-group options: property, order, hiding empty lanes, removing | photographed |
+| A board column's menu as Notion's group menu; color swatches aligned in every menu | photographed |
+
 ### Milestone 18: Performance and audits
 
 | Task | Status | Tests |

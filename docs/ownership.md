@@ -18,7 +18,7 @@ owner listed here exists.
 | Command handler registration and lookup | `src/state/command-registry.ts` | 1 |
 | Undo and redo | `src/state/history.ts` | 1 |
 | `ui` slice commands that belong to no feature (sidebar, overlay, selection) | `src/state/ui.commands.ts` | 1 |
-| Inside the open overlay: its panel, the lists and submenus open in it (outermost first), its search | `src/state/ui-overlay.commands.ts` | 16 |
+| Inside the open overlay: its panel, the lists and submenus open in it (outermost first), its search, its chosen values | `src/state/ui-overlay.commands.ts` | 16 |
 | Settings commands (theme) | `src/state/settings.commands.ts` | 1 |
 | Save status, export and import request commands | `src/state/persistence.commands.ts` | 1 |
 | Cross-feature selectors over `AppState` | `src/state/app-state.selectors.ts` | 1 |
@@ -75,15 +75,18 @@ owner listed here exists.
 | A new version: its state, the watch that offers it, and the prompt | `src/state/update.commands.ts`, `src/app/offline.ts`, `src/app/update-prompt.view.ts` | 19 |
 | Installing as an app: the manifest and icons | `public/` | 19 |
 | Open page: title and icon | `src/features/editor/` | 2 |
-| Page actions menu | `src/features/page-menu/` | 2 |
+| Page actions menu, in Notion's groups | `src/features/page-menu/` (`page-menu-entries.ts` for the open page) | 2 |
 | Breadcrumbs | `src/features/breadcrumbs/` | 2 |
-| Trash dialog | `src/features/trash/` | 2 |
+| Trash panel beside the sidebar | `src/features/trash/` | 2 |
 | Move-to dialog | `src/features/move-to/` | 2 |
 | Settings dialog | `src/features/settings/` | 1 |
 | Property type definitions | `src/features/database/property-registry.ts` plus one folder per type | 5 |
 | Changing a property's type and carrying its values over | `src/features/database/property-type.commands.ts`, `property-convert.ts`, `property-type.selectors.ts` | 16 |
 | New columns beside a column: duplicate, insert left and right | `src/features/database/property-copy.commands.ts` | 16 |
 | A group's header actions and menu: new row in the group, hide | `src/features/database/group-actions.ts`, `group-header.view.ts`, `group-menu.view.ts` | 16 |
+| A group's menu rows (name, hide, delete, colors), for a table's group and a board's column | `src/features/database/group-menu-entries.ts` | 20 |
+| A value cell's bar (comment, copy) and its comment popovers | `src/features/database/cell-actions.view.ts` | 20 |
+| A value's discussion count on a row's page | `src/features/database/row-value-comments.view.ts` | 20 |
 | A column's menu and its submenus (Edit property, Change type, Sort, Calculate) | `src/features/database/column-menu.view.ts`, `column-menu-items.ts`, `column-place-items.ts`, `property-edit-menu.ts` | 16 |
 | What a property type declares | `src/features/database/property-definition.ts` | 5 |
 | Database columns | `src/features/database/database.commands.ts` | 5 |
@@ -113,18 +116,20 @@ owner listed here exists.
 | Backlinks: the pages that link to a page, and showing them under its title | `src/features/backlinks/` | 17 |
 | Seeds: block trees that become pages with new ids | `src/features/onboarding/seed.ts` | 17 |
 | The template gallery and its built-in page templates | `src/features/templates/` | 17 |
-| Comments: discussions on a page, a block or its text; replies, resolving, deleting | `src/features/comments/` | 17 |
+| Comments: discussions on a page, a block, its text or a row's property value; replies, resolving, deleting after a question | `src/features/comments/` | 17 |
+| Value discussions leaving with their property | `src/features/comments/value-discussion-tidy.ts` | 20 |
 | Keeping page versions in storage | `src/persistence/snapshot-store.ts` | 17 |
 | The inbox: due reminders, read state, the dialog and the sidebar's count | `src/features/inbox/` | 17 |
 | Reminder notifications while the app is open | `src/app/reminder-notices.ts` | 17 |
-| A page's history: its content, restoring a version, the dialog | `src/features/page-history/` | 17 |
+| A page's history: its content, restoring a version, the full-window view, what each version changed | `src/features/page-history/` | 17 |
 | Marking commented text | `src/model/rich-text-comments.ts`, `src/ui/rich-text/rich-text-projection.ts` | 17 |
-| A board's sub-groups: the setting and its lanes | `src/features/database/sub-group.commands.ts`, `layouts/board/board-lanes.view.ts` | 16 |
+| A board's sub-groups: the setting, its options and its lanes | `src/features/database/sub-group.commands.ts`, `view-settings/sub-group-panel.ts`, `layouts/board/board-lanes.view.ts` | 16 |
 | CSV import: column types, the new database; CSV export of a view | `src/features/database/csv-import.ts`, `csv-import.commands.ts`, `csv-export.selectors.ts`, `csv-file.view.ts` | 16 |
 | Table markup, headers, cells and their events | `src/features/database/table*.view.ts` | 5 |
 | Table menus and popovers | `src/features/database/*-menu.view.ts`, `view-*.view.ts`, `cell-options.view.ts` | 6 |
 | The database block type | `src/blocks/database/` | 5 |
 | Command palette and search | `src/features/command-palette/` | 7 |
+| The search's filters (title only, in page, date), kept while it is closed | `src/state/search-filters.ts` (shape), `src/features/command-palette/search-*.ts` | 20 |
 | The pages a first visit starts with | `src/features/onboarding/` | 10 |
 | The keyboard shortcut reference | `src/features/shortcut-help/` | 10 |
 | Finding pages by the text of their blocks | `src/features/command-palette/command-palette-text.selectors.ts` | 10 |
@@ -189,5 +194,6 @@ owner listed here exists.
 | --- | --- | --- |
 | Import direction, file and function limits, banned names | `eslint.config.js` | 1 |
 | Native-resolution captures of the running app, each control pointed at | `scripts/capture.ts` | 20 |
+| What Notion looks like and does, and how far Pagecraft matches it | `docs/notion-study.md` | 20 |
 | Raw-value ban and class naming in CSS | `stylelint.config.js` | 1 |
 | Content Security Policy | `vite.config.ts` (added to the built page) | 1 |

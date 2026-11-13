@@ -221,6 +221,36 @@ Automations and AI autofill, which need a server.
   and Move to show no keys, since only working keys are shown. The
   submenus never opened before: the menu was drawn without its context.
 
+## Trash (measured, dark theme, 2026-11-13)
+
+- Reached from the sidebar foot's "Library, Trash, more…" menu (240 px:
+  Library, AI notes, Skills, My tasks, Marketplace, Trash).
+- A floating panel 414 × 453 px over the sidebar's edge near its foot,
+  radius 10, the menu panel's color, ring and shadows; its height stays
+  the same with no results.
+- A search field ("Search pages in Trash", 20 px text line), then 24 px
+  chips: Last edited by, In, Teamspaces; "No results" in the middle;
+  at the foot "After a page has been in Trash for 30 days, it will be
+  deleted automatically" and a Help button.
+- Pagecraft (2026-11-13): a panel beside the sidebar's foot, 416 × 453,
+  the search, the "In" choice, the rows with Restore and Delete, "No
+  results" centered and the note at the foot. "Last edited by" and
+  "Teamspaces" need other people.
+
+## Version history (measured, dark theme, 2026-11-13)
+
+- Page menu › Version history fills the window: the versions down the
+  left in a 320 px column (`#191919`, a 1 px `#2c2c2b` border on its
+  right), "Group by" a span of time, each version with its time and
+  author; "Current version"; "Start restore".
+- The chosen version shows beside it as the page, read only; the words
+  that version wrote are in `rgb(35 131 226)` on
+  `rgb(35 131 226 / .14)`.
+- Pagecraft (2026-11-13): the versions in a 320 px column on the left
+  with Restore, the version beside them with the words it wrote (and the
+  blocks it added) marked in Notion's colors against the version before.
+  "Group by" and authors are not built (one person).
+
 ## Controls
 
 **Now** says what the control is today: "native" (a browser `<select>`
@@ -251,7 +281,7 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Column menu | `column-menu.view.ts` | Notion | name with its type's icon in a box; Edit property ›, Change type ›, Filter, Sort ›, Group, Calculate ›, Freeze, Hide, Wrap, Insert left and right, Duplicate, Delete; submenus open on hover beside the row |
 | Change type | `property-edit-menu.ts` | Notion | list of types with icons, the current one checked; values carry over |
 | Calculate | `column-menu-items.ts` | Notion | None, then Count ›, Percent ›, More options › |
-| Board column menu | `board-column-menu.view.ts` | menu | menu |
+| Board column menu | `board-column-menu.view.ts`, `group-menu-entries.ts` | Notion (and Move left and right, the keyboard's way to drag) | the group menu: the option's name, Hide, Delete, its colors |
 | Row tick box | `table-gutter.view.ts` | Notion | Notion checkbox |
 | Group header | `group-header.view.ts`, `group-menu.view.ts` | Notion | caret, chip, count; hover shows "…" (the group's menu: name, Hide, Delete, Colors for an option's group) and "+" (a new row in the group) |
 
@@ -264,14 +294,14 @@ or checkbox), "custom" (our own, not yet measured against Notion) or
 | Export as CSV | `view-settings/root-panel.view.ts` | Notion (the view only, no Markdown pages) | the view's columns and rows as a UTF-8 CSV file |
 | Lock page, Lock database | `features/page-menu/page-menu.view.ts` | Notion | a switch in the page's menu; a locked page shows "Locked" in the top bar, which unlocks it; typing does nothing and says why |
 | Lock view | `view-settings/root-panel.view.ts` | Notion | a switch in the view settings; filters, sorts and layout stay as they are |
-| Backlinks | `features/backlinks/`, `features/page-menu/page-menu-style.view.ts` | Notion (no popover; a disclosure under the title) | "↗ N backlinks" under the title opening the linking pages; the page menu's Backlinks: Show expanded, Show as a count, Off |
-| Comments | `features/comments/`, `format-toolbar.view.ts`, `editor-block-menu.view.ts` | Notion (one author, "You"; no mentions in comments) | "Add comment" over the title and the page's discussions under it; "Comment" in the text toolbar, the block menu and Ctrl+Shift+M; commented text washed and underlined in yellow; a speech bubble and count by the block opening its discussions with the quote, each comment's initial, name, time and text, Reply, Resolve, Delete; "Resolved comments" in the page's actions, with their count, lists them to read or Reopen |
+| Backlinks | `features/backlinks/`, `features/page-menu/page-menu-style.view.ts` | Notion (kept: Notion no longer lists Backlinks in its page menu; ours sits in Appearance and layout) | "↗ N backlinks" under the title opening the linking pages |
+| Comments | `features/comments/`, `format-toolbar.view.ts`, `editor-block-menu.view.ts` | Notion (one author, "You"; no mentions in comments) | "Add comment" over the title and the page's discussions under it; "Comment" in the text toolbar, the block menu and Ctrl+Shift+M; commented text washed and underlined in yellow; a speech bubble and count by the block opening its discussions with the quote, each comment's initial, name, time and text, Reply, Resolve, Delete; "Resolved comments" in the page's actions, with their count, lists them to read or Reopen; a value cell's bar comments on the value, counted by its property on the row's page; Delete asks "Delete this comment?" |
 | Inbox and reminders | `features/inbox/`, `features/mention-menu/`, `app/reminder-notices.ts` | Notion (reminders only; no mentions or comment notices from others, one person) | "@remind" offers Remind me today, tomorrow, next week, a ⏰ date mention; Inbox under Home with a red count; the due reminders with a bell, page and day, a blue dot until read, Mark all as read; a browser notice from 9:00 on the day while the app is open |
-| Page history | `features/page-history/`, `features/page-menu/page-menu.view.ts` | Notion (no highlighting of what changed) | "Page history" in the page menu; the chosen version shown read only beside the versions, newest first, with Restore version |
-| Template gallery | `features/templates/` | Notion (built-in page templates only; no categories, no "Save as template") | Templates in the sidebar's foot opens a wide dialog: the templates with icon, name and description down the side, the chosen one previewed as a page, "Use this template" making a new page of it |
-| Trash | `features/trash/` | Notion (a dialog, not a popover beside the sidebar; no Last edited by filter) | a search, an "In" filter of the pages trashed pages were in, rows with icon, title and place, Restore and Delete; pages kept over 30 days are deleted as the app opens |
-| Search (Ctrl+K, Ctrl+P) | `features/command-palette/` | Notion (no Created by, In page, Date filters; no Ask AI) | wide dialog 1006 × 676 px, radius 20; the field, a "Title only" chip, Recent pages or Best matches with each page's place and the text around a match, marked; the active page's preview beside the list; a page found by its text opens at the block, flashed |
-| Sub-group | `view-settings/group-panel.ts`, `layouts/board/board-lanes.view.ts` | Notion (boards; the sub-groups' own sort and hide settings not shown) | Sub-group row in a board's Group panel; lanes with a toggle, chip and count, the column headers once on top; a card dragged to another lane takes its value |
+| Version history | `features/page-history/`, `features/page-menu/page-menu-entries.ts` | Notion (no "Group by", no authors) | page menu › Version history fills the window: the versions in a 320 px column on the left, Restore, the version beside them with what it wrote marked in blue |
+| Template gallery | `features/templates/` | Notion (built-in page templates, grouped by kind) | Templates in the sidebar's foot opens a wide dialog: the templates by kind down the side, the chosen one previewed, "Use this template" |
+| Trash | `features/trash/` | Notion (no Last edited by or Teamspaces filters: one person) | a 414 × 453 panel by the sidebar's foot: a search, an "In" filter, rows with icon, title and place, Restore and Delete, "No results", the 30-day note at its foot |
+| Search (Ctrl+K, Ctrl+P) | `features/command-palette/` | Notion (no Created by: one person; no Ask AI; no grouping of recents by day) | wide dialog 1006 × 676 px, radius 20; the field, chips Title only, In page, Filter › Date; Recent pages or Best matches with each page's place and the text around a match; the active page's preview beside the list |
+| Sub-group | `view-settings/sub-group-panel.ts`, `layouts/board/board-lanes.view.ts` | Notion | Sub-group row in a board's Group panel; once chosen, Sub-group by, Sort, Hide empty groups, Remove sub-grouping; lanes with a toggle, chip and count |
 | Date cell and date value | `ui/date-picker/`, `date-menu.ts`, `cell-date.view.ts` | Notion (no time zone: days have none) | the chosen days in fields that take a typed day ("Dec 3", "12/3/2026", "tomorrow"), the month with Today and arrows, six weeks of days; End date, Date format › (date and time formats), Include time, Remind › (none, on the day, 1 or 2 days or a week before; due reminders reach the inbox), Clear |
 
 ### Property settings
@@ -347,3 +377,5 @@ against the reference on every run.
 ## Open
 
 - Light theme measurements of the menu reference.
+- A board in Notion to measure its columns and cards with a real pointer
+  (the test workspace has none).

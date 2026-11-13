@@ -54,6 +54,10 @@ No UI framework. Full specification: docs/specification.md.
   coding. At most one check of a few seconds (npx tsc --noEmit) to see
   that it compiles and nothing broke. Run npm run verify once, at the end,
   before committing. Nothing may take long.
+- Every implementation gets a photo, whatever it is: after each change,
+  capture it in the running app (npm run capture, seconds) and look at
+  the image before moving on. That is the quick check; the test suite
+  waits for the end.
 - Budgets: full tests under 10 s, npm run verify under 30 s.
 - Commit after each task with Conventional Commits; scope = folder name.
 - If a rule blocks the task, stop and ask. Do not work around it.

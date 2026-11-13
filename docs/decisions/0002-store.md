@@ -57,5 +57,5 @@ store is used.
 
 ## Action items
 
-1. [ ] Lint rule: `setState` may be imported only by `src/state/dispatch.ts`.
-2. [ ] Test: a dispatch during notification throws.
+1. [x] Lint rule: `setState` may be imported only by `src/state/dispatch.ts` (`eslint.config.js`).
+2. [x] Test: a dispatch during notification throws (`dispatch.test.ts`).

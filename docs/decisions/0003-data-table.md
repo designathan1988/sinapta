@@ -71,4 +71,4 @@ simpler than routing them through the engine and back.
 
 ## Action items
 
-1. [ ] Windowing task in milestone 5, measured at 5,000 rows in milestone 6.
+1. [x] Windowing task in milestone 5, measured at 5,000 rows (`table-model-speed.test.ts`).

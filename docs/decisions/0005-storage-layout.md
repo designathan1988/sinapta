@@ -54,5 +54,5 @@ sees content in the wrong theme.
 
 ## Action items
 
-1. [ ] Milestone 1: repository, adapter, in-memory adapter, migration
+1. [x] Milestone 1: repository, adapter, in-memory adapter, migration
    runner with `0001` as the baseline.

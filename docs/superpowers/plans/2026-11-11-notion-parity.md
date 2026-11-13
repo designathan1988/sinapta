@@ -135,26 +135,26 @@ Closes audit findings C1 to C7 and C9 before any feature work.
 
 **Interfaces:** none (documents).
 
-- [ ] **Step 1: Write ADR-0011** with status Accepted, context from design
+- [x] **Step 1: Write ADR-0011** with status Accepted, context from design
   section 1, decision D1 to D15 as a table, consequences: scope list of
   specification section 1 replaced; formulas, relations and rollups move in.
-- [ ] **Step 2: Amend specification section 1** "Out of scope" to the
+- [x] **Step 2: Amend specification section 1** "Out of scope" to the
   design's non-goals list; add the parity table reference.
-- [ ] **Step 3: Amend section 2.2 and `.claude/rules/state.md`**: a handler
+- [x] **Step 3: Amend section 2.2 and `.claude/rules/state.md`**: a handler
   is `(state, command) => CommandEffect`; an effect holds `operations`, or a
   whole `workspace` (load, import, seed: not recorded in history, still
   checked against the invariants), plus optional `ui`, `persistence`,
   `mergeKey`.
-- [ ] **Step 4: Amend section 2.4**: "A child folder may import its
+- [x] **Step 4: Amend section 2.4**: "A child folder may import its
   parent's modules (a block type its `block-definition.ts`, a layout its
   database feature); a parent imports a child only through the child's
   `index.ts`."
-- [ ] **Step 5: Amend section 6**: role suffixes mark the six roles; any
+- [x] **Step 5: Amend section 6**: role suffixes mark the six roles; any
   other module is named for its concept with no suffix; test fixtures end in
   `-builder.ts`; a feature's `index.ts` may hold exactly one gathered
   `xCommands` array besides re-exports.
-- [ ] **Step 6: Run** `npx prettier --check docs` → all files pass.
-- [ ] **Step 7: Commit** `docs: widen the scope to Notion parity and clarify the contract`
+- [x] **Step 6: Run** `npx prettier --check docs` → all files pass.
+- [x] **Step 7: Commit** `docs: widen the scope to Notion parity and clarify the contract`
 
 ### Task 11.2: `src/blocks/index.ts` and the import rule
 
@@ -172,13 +172,13 @@ Closes audit findings C1 to C7 and C9 before any feature work.
   `block-registry.ts` and `isTextBlock`, `textOf`, `type TextBlock` (and
   every other symbol those 30 files use) from `text-block.ts`.
 
-- [ ] **Step 1: Add a lint pattern** in the `features` and `app` blocks of
+- [x] **Step 1: Add a lint pattern** in the `features` and `app` blocks of
   `no-restricted-imports`: group `["**/blocks/*.ts", "!**/blocks/index.ts"]`
   with message "Import blocks through src/blocks/index.ts".
-- [ ] **Step 2: Run** `npx eslint src/app src/features` → 30 errors.
-- [ ] **Step 3: Create `src/blocks/index.ts`** and point the 30 imports at it.
-- [ ] **Step 4: Run** `npx eslint src` → 0 problems; `npm run verify` → exit 0.
-- [ ] **Step 5: Commit** `refactor(blocks): import the registry through an index`
+- [x] **Step 2: Run** `npx eslint src/app src/features` → 30 errors.
+- [x] **Step 3: Create `src/blocks/index.ts`** and point the 30 imports at it.
+- [x] **Step 4: Run** `npx eslint src` → 0 problems; `npm run verify` → exit 0.
+- [x] **Step 5: Commit** `refactor(blocks): import the registry through an index`
 
 ### Task 11.3: `afterRender` owner, no timers in views
 
@@ -193,7 +193,7 @@ Closes audit findings C1 to C7 and C9 before any feature work.
   the current render task has finished (a microtask), the only place a view
   may defer work.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 describe("afterRender", () => {
@@ -207,11 +207,11 @@ describe("afterRender", () => {
 });
 ```
 
-- [ ] **Step 2: Run** `npx vitest run src/ui/focus/after-render.test.ts` → FAIL (not exported).
-- [ ] **Step 3: Implement** with `queueMicrotask`; replace both view call sites.
-- [ ] **Step 4: Run** the test → PASS; `grep -rn "queueMicrotask\|setTimeout" src --include=*.view.ts` → no output.
-- [ ] **Step 5: Verify in the app**: editing a table cell and pressing Enter keeps focus in the grid; selecting text shows the toolbar above it.
-- [ ] **Step 6: Commit** `refactor(ui): defer view work through afterRender`
+- [x] **Step 2: Run** `npx vitest run src/ui/focus/after-render.test.ts` → FAIL (not exported).
+- [x] **Step 3: Implement** with `queueMicrotask`; replace both view call sites.
+- [x] **Step 4: Run** the test → PASS; `grep -rn "queueMicrotask\|setTimeout" src --include=*.view.ts` → no output.
+- [x] **Step 5: Verify in the app**: editing a table cell and pressing Enter keeps focus in the grid; selecting text shows the toolbar above it.
+- [x] **Step 6: Commit** `refactor(ui): defer view work through afterRender`
 
 ### Task 11.4: Scoped keys owned by the shortcuts folder
 
@@ -252,19 +252,19 @@ export function installScopedKeys(
 ): void; // one capture-phase keydown listener on document
 ```
 
-- [ ] **Step 1: Write failing tests**: `matchScopedKey` returns the handler
+- [x] **Step 1: Write failing tests**: `matchScopedKey` returns the handler
   of the first active scope for "ArrowDown"; returns undefined when no scope
   is active; returns undefined while `isComposing`; "Alt+F10" matches only
   with `altKey`.
-- [ ] **Step 2: Run** → FAIL. **Step 3: Implement** and move the slash menu
+- [x] **Step 2: Run** → FAIL. **Step 3: Implement** and move the slash menu
   and Alt+F10 handlers into `ScopedKeys` values; bootstrap calls
   `installScopedKeys(store, dispatch, [slashMenuKeys, formatToolbarKeys])`.
-- [ ] **Step 4: Run** → PASS; `grep -rn 'document.addEventListener("keydown"' src`
+- [x] **Step 4: Run** → PASS; `grep -rn 'document.addEventListener("keydown"' src`
   → only `src/app/bootstrap.ts` and `src/ui/shortcuts/scoped-keys.ts` (and
   the drag owner's Escape in `src/ui/drag/pointer-drag.ts`).
-- [ ] **Step 5: Verify in the app**: "/" opens the menu, arrows and Enter
+- [x] **Step 5: Verify in the app**: "/" opens the menu, arrows and Enter
   insert; Alt+F10 focuses the toolbar.
-- [ ] **Step 6: Commit** `refactor(ui): own scoped keys in the shortcuts folder`
+- [x] **Step 6: Commit** `refactor(ui): own scoped keys in the shortcuts folder`
 
 ### Task 11.5: One writer across tabs; persistent storage
 
@@ -289,18 +289,18 @@ export function installScopedKeys(
   - `requestPersistentStorage(): Promise<boolean>` calling
     `navigator.storage.persist()` once after the first save.
 
-- [ ] **Step 1: Write failing tests**: with a fake lock manager that is
+- [x] **Step 1: Write failing tests**: with a fake lock manager that is
   already held, `acquireWriterLock` resolves "reader"; with a free one,
   "writer"; a dispatch of `page.create` while read-only returns
   `{ ok: false, error: { kind: "read-only" } }` and leaves the state
   unchanged; ui-only commands still work while read-only.
-- [ ] **Step 2: Run** → FAIL. **Step 3: Implement**; the shell shows the
+- [x] **Step 2: Run** → FAIL. **Step 3: Implement**; the shell shows the
   notice `COPY.workspace.readOnlyTab` ("This workspace is open in another
   tab. Close it to edit here.") in the top bar.
-- [ ] **Step 4: Run** → PASS. **Step 5: Verify** with two tabs on
+- [x] **Step 4: Run** → PASS. **Step 5: Verify** with two tabs on
   localhost:5173: the second shows the notice and follows edits from the
   first after each save.
-- [ ] **Step 6: Commit** `feat(persistence): keep one writer across tabs`
+- [x] **Step 6: Commit** `feat(persistence): keep one writer across tabs`
 
 ### Task 11.6: Invariants on every returned workspace
 
@@ -315,14 +315,14 @@ export function installScopedKeys(
   the new workspace; a violation returns `{ kind: "invariant-broken" }` and
   changes nothing.
 
-- [ ] **Step 1: Write the failing test** "rejects a returned workspace whose
+- [x] **Step 1: Write the failing test** "rejects a returned workspace whose
   child lists disagree with parent ids": a test command returns a workspace
   where block `b` has `parentId: "a"` but `a.childIds` is empty; expect
   `ok: false`, `error.kind === "invariant-broken"`, store unchanged.
-- [ ] **Step 2: Run** `npx vitest run src/state/dispatch.test.ts` → FAIL.
-- [ ] **Step 3: Implement** the check in `applyEffect`.
-- [ ] **Step 4: Run** → PASS; seed, load and import tests still pass.
-- [ ] **Step 5: Commit** `fix(state): check invariants on replaced workspaces`
+- [x] **Step 2: Run** `npx vitest run src/state/dispatch.test.ts` → FAIL.
+- [x] **Step 3: Implement** the check in `applyEffect`.
+- [x] **Step 4: Run** → PASS; seed, load and import tests still pass.
+- [x] **Step 5: Commit** `fix(state): check invariants on replaced workspaces`
 
 ### Task 11.7: Architecture fitness tests
 
@@ -332,16 +332,16 @@ export function installScopedKeys(
 
 **Interfaces:** none.
 
-- [ ] **Step 1: Write tests** that fail on a deliberate violation: every
+- [x] **Step 1: Write tests** that fail on a deliberate violation: every
   `*.view.ts` is free of `setTimeout`, `setInterval`, `queueMicrotask`,
   `requestAnimationFrame`; `document.addEventListener("keydown"` appears
   only in the files listed in task 11.4; every file under `src/features/`,
   `src/blocks/`, `src/ui/` is kebab-case; no file or folder uses a banned
   name; every non-index import into another top-level folder ends in
   `index.ts` or `ui/copy.ts`.
-- [ ] **Step 2: Run** with one violation planted, expect FAIL; remove it,
+- [x] **Step 2: Run** with one violation planted, expect FAIL; remove it,
   expect PASS; total test time stays under 10 s.
-- [ ] **Step 3: Commit** `test(app): add architecture fitness tests`
+- [x] **Step 3: Commit** `test(app): add architecture fitness tests`
 
 ---
 
@@ -360,9 +360,9 @@ Test: `src/features/editor/editor.test.ts`.
 (0 to 100, vertical focus of the image) in `src/blocks/page/page-cover.commands.ts`;
 page props gain optional `coverPosition` (fold into version 5, task 12.2).
 
-- [ ] Tests: "renders the cover outside the page column", "sets the cover
+- [x] Tests: "renders the cover outside the page column", "sets the cover
   position from Reposition", "the icon overlaps the cover when both exist".
-- [ ] Standard cycle; commit `feat(editor): lay pages out like a document column`
+- [x] Standard cycle; commit `feat(editor): lay pages out like a document column`
 
 ### Task 12.2: Page style and small text (format version 5)
 
@@ -377,9 +377,9 @@ Test: `src/blocks/page/page.test.ts`, `src/persistence/migrations/run-migrations
 `page.toggleSmallText` `{ pageId }`; the editor sets `data-font` and
 `data-small-text` on the page root.
 
-- [ ] Tests: "a version 4 file loads as version 5 with the default font",
+- [x] Tests: "a version 4 file loads as version 5 with the default font",
   "setFont is undoable", "toggleSmallText flips the flag".
-- [ ] Standard cycle; commit `feat(page): choose the page font and small text`
+- [x] Standard cycle; commit `feat(page): choose the page font and small text`
 
 ### Task 12.3: Top bar parity
 
@@ -395,9 +395,9 @@ using `Intl.Segmenter` word granularity; a favorite star button dispatching
 `page.toggleFavorite`; shortcut Ctrl+Shift+L → `settings.setTheme` toggling
 light and dark (registry entry).
 
-- [ ] Tests: edited label buckets at 0 s, 59 s, 5 min, 2 days; word count
+- [x] Tests: edited label buckets at 0 s, 59 s, 5 min, 2 days; word count
   of "Hello, world 👋" is 2 words, 14 characters; Ctrl+Shift+L matches.
-- [ ] Standard cycle; commit `feat(page-info): show edit time, word count and favorite in the top bar`
+- [x] Standard cycle; commit `feat(page-info): show edit time, word count and favorite in the top bar`
 
 ### Task 12.4: Sidebar parity
 
@@ -411,10 +411,10 @@ Search (opens palette), Home, Settings; section "Favorites"; section
 "Private" with the tree; footer New page, New database, Templates, Trash.
 Rows without an icon show the `page` glyph (or a database glyph).
 
-- [ ] Tests: "shows the page glyph for a page without an icon", "the Search
+- [x] Tests: "shows the page glyph for a page without an icon", "the Search
   item opens the command palette", "section titles are headings for screen
   readers".
-- [ ] Standard cycle; commit `feat(sidebar): add the header, quick items and sections`
+- [x] Standard cycle; commit `feat(sidebar): add the header, quick items and sections`
 
 ### Task 12.5: Context menus
 
@@ -429,9 +429,9 @@ Test: `src/ui/menu/context-menu.test.ts`, feature view tests.
 with `anchorId` and `ui.overlay.point` `{ x: number; y: number }` (add to
 `OpenOverlay`).
 
-- [ ] Tests: "contextmenu on a block opens the block menu at the pointer",
+- [x] Tests: "contextmenu on a block opens the block menu at the pointer",
   "Shift+F10 opens it at the block", "Escape returns focus to the block".
-- [ ] Standard cycle; commit `feat(ui): open block, page and row menus on right click`
+- [x] Standard cycle; commit `feat(ui): open block, page and row menus on right click`
 
 ### Task 12.6: Empty page start and block placeholders
 
@@ -444,9 +444,9 @@ for commands"; an empty page body lists Empty page, Table, Board, List,
 Calendar, Templates; choosing a database kind dispatches `database.create`
 inline (after 16.1, a full-page database before it).
 
-- [ ] Tests: "placeholder only on the focused empty block", "choosing Board
+- [x] Tests: "placeholder only on the focused empty block", "choosing Board
   creates a database with a board view under this page".
-- [ ] Standard cycle; commit `feat(editor): offer a start list on empty pages`
+- [x] Standard cycle; commit `feat(editor): offer a start list on empty pages`
 
 ### Task 12.7: Home
 
@@ -461,9 +461,9 @@ skips trashed), `selectUpcoming(state, today: string): { pageId; date }[]`
 from date properties in the next 7 days; `ui.setActivePage` records
 recents.
 
-- [ ] Tests: recents dedupe and cap at 20; trashed pages are skipped;
+- [x] Tests: recents dedupe and cap at 20; trashed pages are skipped;
   upcoming lists dates from today to today + 7 inclusive, sorted.
-- [ ] Standard cycle; commit `feat(home): add a home page with recents and upcoming dates`
+- [x] Standard cycle; commit `feat(home): add a home page with recents and upcoming dates`
 
 ---
 
@@ -478,9 +478,9 @@ Test: `src/features/editor/editor-convert.test.ts`.
 numbered, `"\""` quote, `">"` toggle (design D13), triple backtick code,
 `"[x]"` checked to-do, `"####"` heading 4 (after 13.5).
 
-- [ ] Tests: one per prefix, each followed by a space, each converting and
+- [x] Tests: one per prefix, each followed by a space, each converting and
   removing the prefix; `">"` now makes a toggle.
-- [ ] Standard cycle; commit `feat(editor): accept every Notion block prefix`
+- [x] Standard cycle; commit `feat(editor): accept every Notion block prefix`
 
 ### Task 13.2: Inline Markdown while typing
 
@@ -493,10 +493,10 @@ for `**x**` bold, `*x*` and `_x_` italic, `` `x` `` code, `~x~` and `~~x~~`
 strikethrough, checked when the closing marker is typed; the edit becomes
 one `text.replace` plus `text.toggleMark`, undone in one step.
 
-- [ ] Tests: "**bold** becomes bold without the stars", "a lone * does
+- [x] Tests: "**bold** becomes bold without the stars", "a lone * does
   nothing", "markers inside code are left alone", "nothing happens while
   composing" (Review Focus), "one undo restores the typed stars".
-- [ ] Standard cycle; commit `feat(editor): format inline Markdown as you type`
+- [x] Standard cycle; commit `feat(editor): format inline Markdown as you type`
 
 ### Task 13.3: Block keyboard parity
 
@@ -516,9 +516,9 @@ into text, H1, H2, H3, to-do, bulleted, numbered, toggle, code, page
 (design D14); Ctrl+Shift+H applies the last used color
 (`ui.lastTone`).
 
-- [ ] Tests: one per key, each asserting the command dispatched or the
+- [x] Tests: one per key, each asserting the command dispatched or the
   selection state.
-- [ ] Standard cycle; update the shortcut reference (`src/features/shortcut-help/`);
+- [x] Standard cycle; update the shortcut reference (`src/features/shortcut-help/`);
   commit `feat(editor): add Notion's block keyboard shortcuts`
 
 ### Task 13.4: Block color (format version 6)
@@ -532,9 +532,9 @@ Test: `src/features/editor/editor-convert.test.ts`, `src/features/slash-menu/sla
 
 **Interfaces:** command `block.setColor` `{ blockIds: BlockId[]; color: BlockColor | null }`.
 
-- [ ] Tests: color survives convert between text types; `/blue background`
+- [x] Tests: color survives convert between text types; `/blue background`
   sets the background tone; a version 5 file loads.
-- [ ] Standard cycle; commit `feat(editor): color whole blocks`
+- [x] Standard cycle; commit `feat(editor): color whole blocks`
 
 ### Task 13.5: Heading 4 and toggle headings (format version 7)
 
@@ -546,9 +546,9 @@ Test: `src/blocks/heading/heading.test.ts`.
 **Interfaces:** heading props `level: 1 | 2 | 3 | 4`, `isToggleable?: boolean`,
 `isOpen?: boolean`; reuse `toggle.setOpen`.
 
-- [ ] Tests: Tab under a toggle heading nests; closing hides children;
+- [x] Tests: Tab under a toggle heading nests; closing hides children;
   table of contents lists level 4.
-- [ ] Standard cycle; commit `feat(heading): add heading 4 and toggle headings`
+- [x] Standard cycle; commit `feat(heading): add heading 4 and toggle headings`
 
 ### Task 13.6: Subpages inside the page
 
@@ -561,9 +561,9 @@ Test: `src/features/editor/editor.test.ts`.
 `index` at the caret's block; deleting the row moves the page to trash
 (`page.trash`); dragging the row moves it like a block.
 
-- [ ] Tests: subpages appear at their `childIds` position; Enter on the row
+- [x] Tests: subpages appear at their `childIds` position; Enter on the row
   opens the page; Backspace on a selected row trashes it and undo restores it.
-- [ ] Standard cycle; commit `feat(editor): show subpages where they sit in the page`
+- [x] Standard cycle; commit `feat(editor): show subpages where they sit in the page`
 
 ### Task 13.7: Mentions and page links (format version 8)
 
@@ -581,10 +581,10 @@ title and icon; `selectBacklinks(state, pageId): BlockId[]` lists blocks
 that mention or link to the page (used in 17.5). A mention is one
 indivisible character for caret math.
 
-- [ ] Tests: renaming a page updates every mention; Backspace after a
+- [x] Tests: renaming a page updates every mention; Backspace after a
   mention removes it whole; `@` while composing does nothing (Review Focus);
   Escape leaves a literal `@`.
-- [ ] Standard cycle; commit `feat(mention-menu): mention pages and dates`
+- [x] Standard cycle; commit `feat(mention-menu): mention pages and dates`
 
 ### Task 13.8: Emoji
 
@@ -599,10 +599,10 @@ Test: `src/ui/emoji/emoji-search.test.ts`.
 name and keywords; `:name` in text opens an inline list after two letters;
 the picker has search, categories, "Random" and "Remove".
 
-- [ ] Tests: ":smi" finds "😄"; ":" alone does nothing; nothing while
+- [x] Tests: ":smi" finds "😄"; ":" alone does nothing; nothing while
   composing (Review Focus); the generated module is under 250 lines per file
   or split by category.
-- [ ] Standard cycle; commit `feat(ui): pick emoji by name and from a picker`
+- [x] Standard cycle; commit `feat(ui): pick emoji by name and from a picker`
 
 ### Task 13.9: Structured copy and rich paste
 
@@ -619,11 +619,11 @@ h1 to h4, p, ul, ol (nested), li with checkbox, blockquote, pre, hr, img,
 table, a; pasting a URL over selected text sets a link; pasting a URL into
 an empty block opens a small menu: Link, Bookmark, Embed (after 14.7).
 
-- [ ] Tests: copy then paste of a nested list keeps nesting and types; a
+- [x] Tests: copy then paste of a nested list keeps nesting and types; a
   pasted HTML table becomes a simple table (after 14.1, a list of lines
   before); script and style content never appear; 5,000 pasted lines finish
   in under 500 ms.
-- [ ] Standard cycle; commit `feat(editor): copy blocks with their structure and paste web pages as blocks`
+- [x] Standard cycle; commit `feat(editor): copy blocks with their structure and paste web pages as blocks`
 
 ### Task 13.10: Moving blocks between pages
 
@@ -639,9 +639,9 @@ Test: `src/features/editor/editor-move.test.ts`.
 block's text as title and its children as content; links to a block are
 `#/page/<pageId>?block=<blockId>`; the router scrolls to and flashes it.
 
-- [ ] Tests: moving keeps children; Alt-drop duplicates; turning into a
+- [x] Tests: moving keeps children; Alt-drop duplicates; turning into a
   page keeps undo in one step; the router focuses the linked block.
-- [ ] Standard cycle; commit `feat(editor): move blocks to other pages`
+- [x] Standard cycle; commit `feat(editor): move blocks to other pages`
 
 ### Task 13.11: Code block parity (format version 9)
 
@@ -659,10 +659,10 @@ one `Highlight` per `TokenKind` in `CSS.highlights` with names
 `code-function`, `code-punctuation` (design D5), styled in `code.css` with
 tokens; copy button writes the text.
 
-- [ ] Tests: tokenizer cases per language (keyword, string with escaped
+- [x] Tests: tokenizer cases per language (keyword, string with escaped
   quote, line and block comment, number); highlighting does not change the
   block's DOM text; typing in a 300-line code block stays under 16 ms.
-- [ ] Standard cycle; commit `feat(code): highlight code by language`
+- [x] Standard cycle; commit `feat(code): highlight code by language`
 
 ### Task 13.12: Callout, image and list details (format version 10)
 
@@ -674,9 +674,9 @@ arrow keys, `align` left, center, right, full screen view in a `<dialog>`),
 `0010-display-options.ts`.
 Test: each block's test file.
 
-- [ ] Tests: nested numbering shows "a." at depth 2 and "i." at depth 3;
+- [x] Tests: nested numbering shows "a." at depth 2 and "i." at depth 3;
   image width clamps to 10 to 100; full screen opens and Escape closes.
-- [ ] Standard cycle; commit `feat(blocks): add callout colors, image sizing and list styles`
+- [x] Standard cycle; commit `feat(blocks): add callout colors, image sizing and list styles`
 
 ---
 
@@ -694,9 +694,9 @@ Test: each block's test file.
 `simpleTable.removeColumn`, `simpleTable.toggleHeader`; Tab and Shift+Tab
 move between cells, Enter adds a row at the end.
 
-- [ ] Tests: insert and remove keep a rectangle; Tab past the last cell
+- [x] Tests: insert and remove keep a rectangle; Tab past the last cell
   adds a row; Markdown export writes a pipe table.
-- [ ] Standard cycle; commit `feat(simple-table): add the simple table block`
+- [x] Standard cycle; commit `feat(simple-table): add the simple table block`
 
 ### Task 14.2: Columns
 
@@ -709,9 +709,9 @@ modify `src/ui/drag/pointer-drag.ts` (left and right drop zones),
 both in a column list; a column left with no blocks is removed in the same
 transaction; keyboard path: block menu "Move to new column".
 
-- [ ] Tests: drop on the right makes two columns; emptying one column
+- [x] Tests: drop on the right makes two columns; emptying one column
   unwraps the list; ratios stay summed to 1 after resize.
-- [ ] Standard cycle; commit `feat(blocks): add columns`
+- [x] Standard cycle; commit `feat(blocks): add columns`
 
 ### Task 14.3: Equations (format version 11)
 
@@ -728,16 +728,16 @@ covering `\frac`, `^`, `_`, `\sqrt`, Greek letters, `\sum`, `\int`,
 and relations; unknown commands render as red source text; inline equation
 from `/equation` or Ctrl+Shift+E on selected text.
 
-- [ ] Tests: `\frac{a}{b}` → mfrac; `x^2_i` → msubsup; an unclosed brace
+- [x] Tests: `\frac{a}{b}` → mfrac; `x^2_i` → msubsup; an unclosed brace
   reports its offset; rendering produces `<math>` with no innerHTML.
-- [ ] Standard cycle; commit `feat(equation): render TeX equations with MathML`
+- [x] Standard cycle; commit `feat(equation): render TeX equations with MathML`
 
 ### Task 14.4: Breadcrumb block
 
 **Files:** Create `src/blocks/breadcrumb/`; reuse `selectBreadcrumbs`.
 
-- [ ] Tests: shows the trail of the page it sits in; updates on rename.
-- [ ] Standard cycle; commit `feat(breadcrumb): add the breadcrumb block`
+- [x] Tests: shows the trail of the page it sits in; updates on rename.
+- [x] Standard cycle; commit `feat(breadcrumb): add the breadcrumb block`
 
 ### Task 14.5: Asset store (format version 12)
 
@@ -754,10 +754,10 @@ Test: `src/persistence/asset-store.test.ts`, `src/persistence/workspace-file.tes
 (limit 50 MB, design D6); `assetUrl(id): string` (object URL cache owned by
 `src/ui/asset/`); CSP `img-src`, `media-src`, `frame-src` gain `blob:`.
 
-- [ ] Tests: export then import round-trips bytes; a version 11 file with a
+- [x] Tests: export then import round-trips bytes; a version 11 file with a
   data address image becomes an asset; quota error leaves no block and
   shows `COPY.editor.assetQuota` (Review Focus).
-- [ ] Standard cycle; commit `feat(persistence): store files as assets`
+- [x] Standard cycle; commit `feat(persistence): store files as assets`
 
 ### Task 14.6: File, PDF, video and audio blocks
 
@@ -767,9 +767,9 @@ Test: `src/persistence/asset-store.test.ts`, `src/persistence/workspace-file.tes
 sandboxed `<iframe>` of a blob URL; file shows name, size and a download
 button through `src/ui/download/`.
 
-- [ ] Tests: each block renders from an asset and from a URL; a non-https
+- [x] Tests: each block renders from an asset and from a URL; a non-https
   URL is refused; captions edit.
-- [ ] Standard cycle; commit `feat(blocks): add file, PDF, video and audio blocks`
+- [x] Standard cycle; commit `feat(blocks): add file, PDF, video and audio blocks`
 
 ### Task 14.7: Embed block
 
@@ -784,9 +784,9 @@ Test: `src/blocks/embed/embed.test.ts`.
 watch URL into its embed URL; iframes carry `sandbox="allow-scripts allow-same-origin allow-popups"`,
 `referrerpolicy="strict-origin-when-cross-origin"`, `loading="lazy"`.
 
-- [ ] Tests: a YouTube watch URL maps to `youtube-nocookie.com/embed/<id>`;
+- [x] Tests: a YouTube watch URL maps to `youtube-nocookie.com/embed/<id>`;
   a host off the list is refused with a message; resizable height.
-- [ ] Standard cycle; commit `feat(embed): embed pages from allowed hosts`
+- [x] Standard cycle; commit `feat(embed): embed pages from allowed hosts`
 
 ### Task 14.8: Synced block
 
@@ -799,19 +799,19 @@ place).
 the original turns references into unsynced copies in the same
 transaction.
 
-- [ ] Tests: an edit through a reference changes the original; unsync
+- [x] Tests: an edit through a reference changes the original; unsync
   keeps the content; deleting the original keeps references' content.
-- [ ] Standard cycle; commit `feat(synced-block): add synced blocks`
+- [x] Standard cycle; commit `feat(synced-block): add synced blocks`
 
 ### Task 14.9: Button block
 
 **Files:** Create `src/blocks/button/` (props `label`, `actions:
 ButtonAction[]` where `ButtonAction` is `{ kind: "insert-blocks"; blocks: BlockTemplate[] } | { kind: "add-row"; databaseId; values } | { kind: "open-page"; pageId }`).
 
-- [ ] Tests: pressing inserts a copy of the template blocks below; add-row
+- [x] Tests: pressing inserts a copy of the template blocks below; add-row
   creates a row with the values; actions run in one transaction and one
   undo.
-- [ ] Standard cycle; commit `feat(button): add the button block`
+- [x] Standard cycle; commit `feat(button): add the button block`
 
 ---
 
@@ -825,9 +825,9 @@ ButtonAction[]` where `ButtonAction` is `{ kind: "insert-blocks"; blocks: BlockT
 `defaultConfig`, `renderConfigEditor`), migration `0013-property-config.ts`.
 Test: `src/features/database/property-registry.test.ts`.
 
-- [ ] Tests: a property with an invalid config for its type is skipped and
+- [x] Tests: a property with an invalid config for its type is skipped and
   counted, never crashes; a version 12 file loads.
-- [ ] Standard cycle; commit `feat(database): give each property type its own config`
+- [x] Standard cycle; commit `feat(database): give each property type its own config`
 
 ### Task 15.2: Status property
 
@@ -836,9 +836,9 @@ Test: `src/features/database/property-registry.test.ts`.
 **Interfaces:** config `{ groups: { id; name: "To-do" | "In progress" | "Complete"; optionIds: string[] }[] }`;
 options as select; board groups by status by default.
 
-- [ ] Tests: a new status property has Not started, In progress, Done in
+- [x] Tests: a new status property has Not started, In progress, Done in
   the three groups; filter "is in group Complete".
-- [ ] Standard cycle; commit `feat(database): add the status property`
+- [x] Standard cycle; commit `feat(database): add the status property`
 
 ### Task 15.3: Options, number formats and dates (format version 14)
 
@@ -851,11 +851,11 @@ percent, currency code from `Intl.supportedValuesOf("currency")` subset,
 migration `0014-date-ranges.ts` turns each `"YYYY-MM-DD"` string into
 `{ start }`), property `description`.
 
-- [ ] Tests: 0.256 shows "25.6%"; 1234.5 in BRL for locale pt-BR shows
+- [x] Tests: 0.256 shows "25.6%"; 1234.5 in BRL for locale pt-BR shows
   "R$ 1.234,50" (a no-break space, as `Intl.NumberFormat` writes it);
   a version 13 date string loads as `{ start }`; deleting an option clears it from rows; a date range filter
   "is within the past week".
-- [ ] Standard cycle; commit `feat(database): edit options and format numbers and dates`
+- [x] Standard cycle; commit `feat(database): edit options and format numbers and dates`
 
 ### Task 15.4: Files and media, unique ID
 
@@ -863,9 +863,9 @@ migration `0014-date-ranges.ts` turns each `"YYYY-MM-DD"` string into
 `properties/unique-id/` (config `{ prefix: string; next: number }`; ids
 assigned by `row.add` from `next`, never reused).
 
-- [ ] Tests: unique ids increase across adds and survive deletes; files
+- [x] Tests: unique ids increase across adds and survive deletes; files
   cell shows thumbnails for images.
-- [ ] Standard cycle; commit `feat(database): add files and unique ID properties`
+- [x] Standard cycle; commit `feat(database): add files and unique ID properties`
 
 ### Task 15.5: Relation
 
@@ -873,11 +873,11 @@ assigned by `row.add` from `next`, never reused).
 value `BlockId[]`), `relation.commands.ts` (`relation.setValue` updates
 both sides in one transaction, design D8).
 
-- [ ] Tests: adding a relation on A shows it on B's inverse; removing a
+- [x] Tests: adding a relation on A shows it on B's inverse; removing a
   page drops it from both; a trashed related page is hidden and a deleted
   one removed (Review Focus); a deleted related database turns the
   property into text with the titles.
-- [ ] Standard cycle; commit `feat(database): add the relation property`
+- [x] Standard cycle; commit `feat(database): add the relation property`
 
 ### Task 15.6: Rollup
 
@@ -889,9 +889,9 @@ values, count unique, count empty, count not empty, percent empty, percent
 not empty, sum, average, median, min, max, range, earliest date, latest
 date, date range, checked, unchecked, percent checked, percent unchecked.
 
-- [ ] Tests: one per function on a fixture of 5 related rows; missing
+- [x] Tests: one per function on a fixture of 5 related rows; missing
   related rows ignored (Review Focus).
-- [ ] Standard cycle; commit `feat(database): add the rollup property`
+- [x] Standard cycle; commit `feat(database): add the rollup property`
 
 ### Task 15.7: Formula
 
@@ -910,18 +910,18 @@ functions: `prop`, `if`, `ifs`, `and`, `or`, `not`, `empty`, `length`,
 `filter`, `at`, `first`, `last`; operators `+ - * / % ^ == != < <= > >=`,
 `&&`, `||`, `!`, ternary through `if`.
 
-- [ ] Tests: precedence of `1 + 2 * 3 ^ 2`; `prop("Due")` date math;
+- [x] Tests: precedence of `1 + 2 * 3 ^ 2`; `prop("Due")` date math;
   self reference and a two-formula cycle give "Circular reference";
   `1 / 0` gives an error value; text plus number concatenates as Notion
   does; evaluation of 5,000 rows under 50 ms (Review Focus).
-- [ ] Standard cycle; commit `feat(database): add the formula property`
+- [x] Standard cycle; commit `feat(database): add the formula property`
 
 ### Task 15.8: Button property
 
 **Files:** Create `properties/button/` (config `actions: { kind: "set-values"; values } | { kind: "open-page" }[]`).
 
-- [ ] Tests: pressing sets the values on its row in one undo step.
-- [ ] Standard cycle; commit `feat(database): add the button property`
+- [x] Tests: pressing sets the values on its row in one undo step.
+- [x] Standard cycle; commit `feat(database): add the button property`
 
 ---
 
@@ -934,10 +934,10 @@ renders inside the parent page body), create `src/blocks/linked-view/`
 (props `{ databaseId; viewIds }`, its own views over another database),
 `src/features/database/database.view.ts` (compact header for inline use).
 
-- [ ] Tests: `/table` inline creates a database child at the caret;
+- [x] Tests: `/table` inline creates a database child at the caret;
   a linked view filters without changing the source's views; deleting the
   source shows "Database not found".
-- [ ] Standard cycle; commit `feat(database): place databases inline and link views`
+- [x] Standard cycle; commit `feat(database): place databases inline and link views`
 
 ### Task 16.2: Filter groups (format version 16)
 
@@ -947,10 +947,10 @@ depth at most 2; `operator` a picklist per property type), migration
 `0016-filter-groups.ts` (moves `filters` into an `and` group),
 `src/features/database/view-filters.view.ts`, `table-model.selectors.ts`.
 
-- [ ] Tests: a version 15 view with two filters loads as an `and` group of
+- [x] Tests: a version 15 view with two filters loads as an `and` group of
   two; `or` group matches either; unknown operator fails parse and is
   skipped.
-- [ ] Standard cycle; commit `feat(database): group filters with and and or`
+- [x] Standard cycle; commit `feat(database): group filters with and and or`
 
 ### Task 16.3: Grouping (format version 17)
 
@@ -958,10 +958,10 @@ depth at most 2; `operator` a picklist per property type), migration
 `subGroupBy?` for board), `table.view.ts`, `layouts/list`,
 `layouts/gallery`, `layouts/board`.
 
-- [ ] Tests: group by select, status, multi-select (row in each group),
+- [x] Tests: group by select, status, multi-select (row in each group),
   checkbox, date (by day, week, month); collapse persists; 5,000 grouped
   rows render under the table budget.
-- [ ] Standard cycle; commit `feat(database): group rows in every layout`
+- [x] Standard cycle; commit `feat(database): group rows in every layout`
 
 ### Task 16.4: Calculations (format version 18)
 
@@ -970,9 +970,9 @@ create `src/features/database/calculations.selectors.ts` (reuses the
 rollup function set from 15.6), footer row in `table.view.ts`, group
 headers.
 
-- [ ] Tests: sum, average, median, percent checked on a fixture; respects
+- [x] Tests: sum, average, median, percent checked on a fixture; respects
   filters; per group in grouped tables.
-- [ ] Standard cycle; commit `feat(database): calculate columns in the footer`
+- [x] Standard cycle; commit `feat(database): calculate columns in the footer`
 
 ### Task 16.5: Table power features (format version 19)
 
@@ -981,10 +981,10 @@ headers.
 for manual order when no sort), `view.schema.ts` (`wrappedPropertyIds`,
 `frozenCount`).
 
-- [ ] Tests: selection checkbox and Shift+click range; bulk edit sets a
+- [x] Tests: selection checkbox and Shift+click range; bulk edit sets a
   value on all selected rows in one undo step; Ctrl+D fills down; frozen
   columns stay with `position: sticky`; drag reorder only without sorts.
-- [ ] Standard cycle; commit `feat(database): select, bulk edit and order rows`
+- [x] Standard cycle; commit `feat(database): select, bulk edit and order rows`
 
 ### Task 16.6: Board and cards (format version 20)
 
@@ -992,17 +992,17 @@ for manual order when no sort), `view.schema.ts` (`wrappedPropertyIds`,
 (`groupOrder`, `hiddenGroups`, `groupColors`, `cardSize: "small" | "medium" | "large"`,
 `cardPreview: "none" | "cover" | "content" | PropertyId`, `cardPropertyIds`).
 
-- [ ] Tests: reorder cards within a column (manual order) by drag and
+- [x] Tests: reorder cards within a column (manual order) by drag and
   Alt+Up/Down; move a column; hide a column; group by checkbox and date.
-- [ ] Standard cycle; commit `feat(board): order cards and style columns`
+- [x] Standard cycle; commit `feat(board): order cards and style columns`
 
 ### Task 16.7: Calendar options (format version 21)
 
 **Files:** `layouts/calendar/*`, `view.schema.ts` (`calendarMode: "month" | "week"`,
 `showWeekends`, `weekStartsOn: 0 | 1`).
 
-- [ ] Tests: week view shows 7 days; ranges span days; weekends hidden.
-- [ ] Standard cycle; commit `feat(calendar): add week view and calendar options`
+- [x] Tests: week view shows 7 days; ranges span days; weekends hidden.
+- [x] Standard cycle; commit `feat(calendar): add week view and calendar options`
 
 ### Task 16.8: Timeline view (format version 22)
 
@@ -1010,35 +1010,35 @@ for manual order when no sort), `view.schema.ts` (`wrappedPropertyIds`,
 `timeline.view.ts`, `timeline.css`), `view.schema.ts` view type
 `timeline` with `timeline: { startPropertyId; endPropertyId?; zoom: "day" | "week" | "month" | "quarter" | "year"; showTable: boolean }`.
 
-- [ ] Tests: bar position and width from dates at each zoom; drag and
+- [x] Tests: bar position and width from dates at each zoom; drag and
   Alt+Arrow move and resize; rows without dates listed apart.
-- [ ] Standard cycle; commit `feat(timeline): add the timeline view`
+- [x] Standard cycle; commit `feat(timeline): add the timeline view`
 
 ### Task 16.9: Chart view (format version 23)
 
 **Files:** Create `layouts/chart/` (SVG through lit `svg`), options
 `chart: { kind: "bar" | "column" | "line" | "donut"; groupBy; aggregate; propertyId? }`.
 
-- [ ] Tests: aggregates per group; a data table alternative for screen
+- [x] Tests: aggregates per group; a data table alternative for screen
   readers; colors from tokens only.
-- [ ] Standard cycle; commit `feat(chart): add the chart view`
+- [x] Standard cycle; commit `feat(chart): add the chart view`
 
 ### Task 16.10: Form view (format version 24)
 
 **Files:** Create `layouts/form/` (questions from visible properties,
 required flags in `form: { requiredPropertyIds; description }`).
 
-- [ ] Tests: submit creates a row with the answers; a required empty
+- [x] Tests: submit creates a row with the answers; a required empty
   answer blocks submit with an error tied to the field.
-- [ ] Standard cycle; commit `feat(form): add the form view`
+- [x] Standard cycle; commit `feat(form): add the form view`
 
 ### Task 16.11: Feed view (format version 25)
 
 **Files:** Create `layouts/feed/` (each row as a page preview with its
 first blocks).
 
-- [ ] Tests: shows the first 5 blocks of each row page; opens the row.
-- [ ] Standard cycle; commit `feat(feed): add the feed view`
+- [x] Tests: shows the first 5 blocks of each row page; opens the row.
+- [x] Standard cycle; commit `feat(feed): add the feed view`
 
 ### Task 16.12: Peek (format version 26)
 
@@ -1046,10 +1046,10 @@ first blocks).
 (`openMode: "side" | "center" | "full"`); shortcuts Ctrl+J and Ctrl+K
 inside a peek go to the next and previous row (scoped keys, task 11.4).
 
-- [ ] Tests: opening a row in side peek keeps the database visible; focus
+- [x] Tests: opening a row in side peek keeps the database visible; focus
   moves into the peek and returns on close; next and previous follow the
   view's order.
-- [ ] Standard cycle; commit `feat(row-peek): open rows in side and center peek`
+- [x] Standard cycle; commit `feat(row-peek): open rows in side and center peek`
 
 ### Task 16.13: Row templates (format version 27)
 
@@ -1057,9 +1057,9 @@ inside a peek go to the next and previous row (scoped keys, task 11.4).
 templates are pages under the database flagged `isTemplate`), `row.add`
 applies a template by copying with `copyBlockTree`.
 
-- [ ] Tests: new rows use the default template; templates are hidden from
+- [x] Tests: new rows use the default template; templates are hidden from
   views; duplicating a template.
-- [ ] Standard cycle; commit `feat(database): add row templates`
+- [x] Standard cycle; commit `feat(database): add row templates`
 
 ### Task 16.14: CSV import and export
 
@@ -1067,18 +1067,18 @@ applies a template by copying with `copyBlockTree`.
 `src/model/csv-import.schema.ts`, features in `src/features/database/`
 (import into a new database, export the current view).
 
-- [ ] Tests: quoted commas and newlines round-trip; column types guessed
+- [x] Tests: quoted commas and newlines round-trip; column types guessed
   (number, date, checkbox, select under 20 distinct values, else text).
-- [ ] Standard cycle; commit `feat(database): import and export CSV`
+- [x] Standard cycle; commit `feat(database): import and export CSV`
 
 ### Task 16.15: Locks (format version 28)
 
 **Files:** page props `isLocked`, view `isLocked`; editor and database
 views read-only while locked.
 
-- [ ] Tests: typing in a locked page does nothing and announces why;
+- [x] Tests: typing in a locked page does nothing and announces why;
   unlocking restores editing; a locked view refuses filter changes.
-- [ ] Standard cycle; commit `feat(page): lock pages and views`
+- [x] Standard cycle; commit `feat(page): lock pages and views`
 
 ---
 
@@ -1179,40 +1179,40 @@ deletion after 30 days as a setting, on load).
 
 ### Task 18.1: Performance
 
-- [ ] Re-run the typing benchmark on 1,000 mixed blocks including code,
+- [x] Re-run the typing benchmark on 1,000 mixed blocks including code,
   tables, columns and equations; under 16 ms median.
-- [ ] 5,000-row table with grouping, calculations, two formulas and a
+- [x] 5,000-row table with grouping, calculations, two formulas and a
   rollup: sort and filter under 100 ms.
-- [ ] Bundle under 400 kB script before compression; lazy-load the emoji
+- [x] Bundle under 400 kB script before compression; lazy-load the emoji
   data and the TeX module with dynamic `import()`.
-- [ ] Commit `perf: hold the budgets at the new scale`
+- [x] Commit `perf: hold the budgets at the new scale`
 
 ### Task 18.2: Accessibility and audits
 
-- [ ] axe-core run (installed with `--no-save`, then `npm prune`) on every
+- [x] axe-core run (installed with `--no-save`, then `npm prune`) on every
   new surface in both themes: zero violations.
-- [ ] Keyboard-only walk through every new feature; record in `docs/tasks.md`.
-- [ ] Commit `fix: close audit findings for version 2`
+- [x] Keyboard-only walk through every new feature; record in `docs/tasks.md`.
+- [x] Commit `fix: close audit findings for version 2`
 
 ## Milestone 19: Small screens and offline install
 
 ### Task 19.1: Layouts under 768 px
 
-- [ ] Sidebar becomes an overlay drawer; page column has 16 px gutters;
+- [x] Sidebar becomes an overlay drawer; page column has 16 px gutters;
   tables scroll horizontally inside their block; tests for the drawer's
   focus trap.
-- [ ] Commit `feat(app): support small screens`
+- [x] Commit `feat(app): support small screens`
 
 ### Task 19.2: Installable and offline
 
-- [ ] `public/manifest.webmanifest`, `src/app/service-worker.ts` built by
+- [x] `public/manifest.webmanifest`, `src/app/service-worker.ts` built by
   Vite as a separate entry, cache-first for the app shell, CSP
   `worker-src 'self'`; update prompt when a new version is ready.
-- [ ] Commit `feat(app): install as an app that works offline`
+- [x] Commit `feat(app): install as an app that works offline`
 
 ## Milestone 20: Release
 
-- [ ] Specification, architecture, ownership, README, design system and
+- [x] Specification, architecture, ownership, README, design system and
   `docs/tasks.md` brought in line with the code; ADR status updated.
 - [ ] Final `npm run verify`, build, audits; push the branch.
 - [ ] Commit `docs: describe version 2`

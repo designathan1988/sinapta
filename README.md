@@ -26,41 +26,38 @@ keyboard shortcut.
 
 ## What it does
 
-- **Pages.** Nested pages in a sidebar tree: create, rename, give an icon
-  and a cover (six color presets or an image address), use the full width,
-  favorite, duplicate with everything inside, move (drag, Alt and the arrow
-  keys, or "Move to"), trash and restore. A page exports as Markdown from
-  its menu.
-- **Blocks.** Paragraph, three heading levels, bulleted and numbered lists,
-  to-do, toggle, quote, callout, divider, code, page link, image (from an
-  address or a file), web bookmark and table of contents. Type `/` for the
-  block menu, press the `+` beside a block, or type a shortcut at the start
-  of a line: `#`, `##`, `###`, `-`, `1.`, `[]`, `>`, `---`, then a space.
-  The block menu also duplicates, moves and deletes.
-- **Text.** Select text for the formatting toolbar: bold (Ctrl+B), italic
-  (Ctrl+I), underline (Ctrl+U), strikethrough (Ctrl+Shift+S), inline code
-  (Ctrl+E), link (Ctrl+K), text color and highlight. Alt+F10 moves to the
-  toolbar from the keyboard. Pasted Markdown becomes headings, nested lists,
-  to-dos, quotes and code blocks with their marks; other pasted text keeps
-  its marks, one block per line. Tab and Shift+Tab indent and outdent.
-  Shift with Up or Down past the end of a block, or a drag from one block
-  into another, selects whole blocks: delete, copy, cut, indent or move
-  them (Alt and Up or Down).
-- **Databases.** A page whose rows are pages, with eleven property types:
-  text, number, select, multi-select, date, checkbox, URL, email, phone,
-  created time and last edited time. Edit cells in place with Enter, move
-  with the arrow keys. A row opens as a page that shows and edits its
-  property values.
-- **Views.** Each database has saved views, each a table, a board grouped by
-  a select property, a gallery of cards with the first image of each row, a
-  list, or a month calendar placed by a date property. Cards and calendar
-  rows move by drag or by Alt and the arrow keys. Every view keeps its own
-  name, sort (by one property or several: Shift and a header), filters,
-  column order, widths and hidden columns, and a search field narrows its
-  rows.
-- **Tools.** Search pages by title or by their text, and run commands, on
-  Ctrl+K. Undo and redo, light and dark themes, export and import of the
-  whole workspace in Settings.
+Pagecraft follows Notion's layout, keys and behavior for everything one
+person can use offline.
+
+- **Pages.** Nested pages in a sidebar with favorites and sections; icon,
+  cover (presets, an image, repositioned), font, small text, full width,
+  lock; duplicate, move ("Move to", drag, Alt and the arrows), trash and
+  restore, with the trash emptied after 30 days. The page menu holds Copy
+  link, Copy page contents, Duplicate, Move to, Version history,
+  Appearance and layout, Lock page, Move to trash and More (export).
+- **Blocks.** Text, four heading levels and toggle headings, lists, to-do,
+  toggle, quote, callout, divider, code with highlighting, equations,
+  simple tables, columns, images, files, PDF, video, audio, embeds,
+  bookmarks, synced blocks, buttons, breadcrumbs, table of contents,
+  subpages, linked and inline databases. Every Notion prefix and inline
+  Markdown while typing; `/`, `@` mentions and dates, `:` emoji, the block
+  menu and colors; structured copy and rich paste.
+- **Databases.** Text, number (with formats), select, multi-select,
+  status, date (ranges, times, reminders), created and last edited
+  times, checkbox, URL, email, phone, files, relation, rollup, formula,
+  button and unique ID properties. Table, board (with sub-groups), gallery,
+  list, calendar (month and week), timeline, chart, form and feed views,
+  each with its own filters (rules and groups), sorts, grouping,
+  calculations, frozen and wrapped columns. Rows open as pages, in a side
+  or center peek, from templates; CSV import and export.
+- **Comments.** Discussions on a page, on selected text, or on a row's
+  property value from its cell's bar; replies, resolving, and deleting
+  after a question.
+- **Tools.** Search on Ctrl+K with Title only, In page and Date filters;
+  Home with recents; inbox reminders; version history marking what each
+  version wrote; backlinks; Markdown, HTML and ZIP export and import; undo
+  and redo; light and dark themes; keyboard shortcuts for every action.
+  Installs as an app and works offline.
 
 On macOS, use Command where this file says Ctrl.
 
@@ -72,6 +69,7 @@ On macOS, use Command where this file says Ctrl.
 | `npm run check:watch` | Type check in watch mode |
 | `npm run test:watch` | Tests in watch mode |
 | `npm run tokens` | Rebuild `src/styles/tokens.generated.css` from `tokens/` |
+| `npm run capture -- <steps.json>` | Photograph the running app headless at 1440 × 900 @2x |
 | `npm run lint` | ESLint, Stylelint and a Prettier check |
 | `npm run test` | Full test suite |
 | `npm run verify` | Type check, lint and tests; run before every commit |
@@ -128,6 +126,8 @@ The latest two versions of Chrome, Edge, Firefox and Safari. Layouts below
 - `docs/specification.md`: scope, architecture, naming and workflow.
 - `docs/architecture.md`: data flow and layers.
 - `docs/ownership.md`: the one owner of each concern.
+- `docs/notion-study.md`: what Notion looks like and does, measured, and
+  how far Pagecraft matches it.
 - `docs/design-system.md`: tokens, primitives, states and interface text.
 - `docs/decisions/`: decisions and their reasons.
 - `docs/research/`: notes behind the decisions.

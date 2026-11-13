@@ -74,5 +74,5 @@ render stays; unchanged text is skipped by reference in
 
 ## Action items
 
-1. [ ] Add a 1,000-block typing benchmark task to milestone 3.
-2. [ ] Own rich text projection in `src/ui/rich-text/`.
+1. [x] Add a 1,000-block typing benchmark task to milestone 3 (`editor-redraw.test.ts`, task 18.1).
+2. [x] Own rich text projection in `src/ui/rich-text/`.

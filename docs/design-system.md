@@ -18,7 +18,7 @@ Three tiers. CSS uses the semantic tier only.
 
 | Group | Tokens | Use |
 | --- | --- | --- |
-| `color.bg` | `app`, `sidebar`, `raised`, `hover`, `active`, `selected`, `code`, `scrim` | Surfaces and their interaction states |
+| `color.bg` | `app`, `sidebar`, `raised`, `elevated`, `hover`, `hoverStrong`, `active`, `selected`, `change`, `code`, `scrim` | Surfaces and their interaction states; `hover`, `hoverStrong`, `active` and `change` are translucent washes |
 | `color.text` | `primary`, `secondary`, `tertiary`, `onAccent`, `link`, `danger`, `success`, `warning` | Text and icons |
 | `color.border` | `subtle`, `default`, `strong`, `focus` | Hairlines, control borders, focus ring |
 | `color.accent` | `default`, `hover`, `subtle` | Primary action, active item |
@@ -69,8 +69,8 @@ attributes, never modifier classes.
 | State | Selector | Treatment |
 | --- | --- | --- |
 | Rest | none | Transparent background for quiet controls |
-| Hover | `:hover` | `color.bg.hover` |
-| Pressed | `:active` | `color.bg.active` |
+| Hover | `:hover` | `color.bg.hover`, Notion's translucent wash, so it reads the same on any surface; the sidebar's top icons take `color.bg.hoverStrong`; the page and database icons and "Edited" take none |
+| Pressed | `:active` | `color.bg.active`, the wash doubled |
 | Focus | `:focus-visible` | Ring: `size.focus.width` solid `color.border.focus`, offset `size.focus.offset`. Same on every control |
 | Selected or current | `[aria-current]`, `[aria-selected="true"]`, `[aria-pressed="true"]` | `color.bg.selected` and `font.weight.medium` |
 | Expanded | `[aria-expanded="true"]` | Chevron rotated; panel visible |

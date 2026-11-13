@@ -57,4 +57,4 @@ the plan review:
 
 ## Action items
 
-1. [ ] Record the support line in `README.md`.
+1. [x] Record the support line in `README.md` ("Browser support").
