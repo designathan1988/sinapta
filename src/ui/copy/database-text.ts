@@ -193,6 +193,7 @@ export const DATABASE_TEXT = {
     deleteRows: "Delete",
     clearSelection: "Clear selection",
     clear: "Clear",
+    addRowBelow: "Click to add below. Alt+click to add above",
     moveRowHint:
       "Drag to move the row. From the keyboard, Alt+Shift with Up or Down moves it.",
     wrapText: "Wrap text",

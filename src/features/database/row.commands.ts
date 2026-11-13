@@ -38,6 +38,10 @@ export interface AddRowPayload {
   readonly staysPut?: boolean;
   // The template the row starts from: its values, icon and blocks.
   readonly template?: RowTemplate;
+  // The row it goes right below, or above with `above`, as Notion's +
+  // beside a row adds it; else it goes last.
+  readonly besideId?: BlockId;
+  readonly above?: boolean;
   // The view the row was added from: an opened row opens as it opens
   // rows, in its peek or as a page.
   readonly viewId?: ViewId;
@@ -98,6 +102,13 @@ function plainRow(row: PlainRow): Block {
   };
 }
 
+function placeOf(rowIds: readonly BlockId[], command: AddRowPayload): number {
+  const at =
+    command.besideId === undefined ? -1 : rowIds.indexOf(command.besideId);
+  if (at === -1) return rowIds.length;
+  return command.above === true ? at : at + 1;
+}
+
 // Adds a row, which is a page inside the database.
 export const addRow = defineCommand<AddRowPayload>({
   type: "row.add",
@@ -121,7 +132,7 @@ export const addRow = defineCommand<AddRowPayload>({
           type: "list.insert",
           list: listOf(database.id),
           id,
-          index: database.childIds.length,
+          index: placeOf(database.childIds, command),
         },
         ...numbered.operations,
       ],

@@ -8,7 +8,9 @@ import { html, nothing, type TemplateResult } from "lit-html";
 import { COPY } from "../../ui/copy.ts";
 import { startPointerDrag } from "../../ui/drag/index.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
+import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { moveRow, selectRows } from "./row-bulk.commands.ts";
+import { addRow } from "./row.commands.ts";
 import { selectVisibleRows } from "./row-groups.selectors.ts";
 import {
   selectCanReorder,
@@ -31,6 +33,32 @@ function onTick(event: MouseEvent, row: TableRow, context: TableContext) {
   dispatch(selectRows.create({ rowIds }));
 }
 
+// Notion's + beside a row: a new row right below it, above with Alt.
+function renderAddBelow(row: TableRow, context: TableContext): TemplateResult {
+  const { model, dispatch } = context;
+  const add = (event: MouseEvent): void => {
+    dispatch(
+      addRow.create({
+        databaseId: model.database.id,
+        viewId: model.view.id,
+        besideId: row.id,
+        ...(event.altKey && { above: true }),
+      }),
+    );
+  };
+  return html`<button
+    type="button"
+    class="database__row-add-below"
+    tabindex="-1"
+    aria-label=${COPY.database.addRowBelow}
+    title=${tooltipTitle(COPY.database.addRowBelow)}
+    interestfor=${TOOLTIP_TARGET}
+    @click=${add}
+  >
+    ${renderIcon("plus")}
+  </button>`;
+}
+
 export function renderRowGutter(
   row: TableRow,
   context: TableContext,
@@ -38,26 +66,29 @@ export function renderRowGutter(
   const isTicked = context.state.ui.selectedRowIds.includes(row.id);
   const title = row.title === "" ? COPY.sidebar.untitled : row.title;
   return html`<td class="database__gutter">
-    ${
-      selectCanReorder(context.model)
-        ? html`<span
-            class="database__row-handle"
-            title=${COPY.database.moveRowHint}
-            aria-hidden="true"
-            >${renderIcon("grip")}</span
-          >`
-        : nothing
-    }
-    <input
-      type="checkbox"
-      class="database__row-check ${CHECKBOX_CLASS}"
-      tabindex="-1"
-      aria-label=${`${COPY.database.selectRow} ${title}`}
-      .checked=${isTicked}
-      @click=${(event: MouseEvent) => {
-        onTick(event, row, context);
-      }}
-    />
+    <span class="database__gutter-tools">
+      ${renderAddBelow(row, context)}
+      ${
+        selectCanReorder(context.model)
+          ? html`<span
+              class="database__row-handle"
+              title=${COPY.database.moveRowHint}
+              aria-hidden="true"
+              >${renderIcon("grip")}</span
+            >`
+          : nothing
+      }
+      <input
+        type="checkbox"
+        class="database__row-check ${CHECKBOX_CLASS}"
+        tabindex="-1"
+        aria-label=${`${COPY.database.selectRow} ${title}`}
+        .checked=${isTicked}
+        @click=${(event: MouseEvent) => {
+          onTick(event, row, context);
+        }}
+      />
+    </span>
   </td>`;
 }
 

@@ -157,7 +157,8 @@
     translate: 0 -50%;
   }
 
-  .database__cell:is(:hover, :focus-visible) .database__open {
+  /* As Notion's, it shows while any cell of the row is pointed at. */
+  .database__row:is(:hover, :focus-within) .database__open {
     opacity: 1;
   }
 

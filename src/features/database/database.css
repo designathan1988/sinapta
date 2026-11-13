@@ -88,8 +88,7 @@
     font-size: var(--font-size-sm);
     cursor: pointer;
 
-    /* Every tab, the open one too, lights up when pointed at, as
-       Notion's. */
+    /* Every tab, the open one too, lights up when pointed at. */
     &:hover {
       background-color: var(--color-bg-hover);
       color: var(--color-text-primary);
@@ -127,10 +126,12 @@
     }
   }
 
-  /* The table scrolls inside this box, so its header can stay in view. */
+  /* The table scrolls inside this box, so its header can stay in view;
+     the rows' gutter lies in the page's margin, as Notion's. */
   .database__scroll {
     flex: 0 1 auto;
     min-block-size: 0;
+    margin-inline-start: calc(var(--size-table-gutter) * -1);
     overflow: auto;
   }
 

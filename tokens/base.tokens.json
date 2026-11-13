@@ -1442,6 +1442,12 @@
           "value": 2.625,
           "unit": "rem"
         }
+      },
+      "5x375": {
+        "$value": {
+          "value": 5.375,
+          "unit": "rem"
+        }
       }
     },
     "radius": {

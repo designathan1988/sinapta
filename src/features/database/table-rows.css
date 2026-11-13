@@ -14,20 +14,53 @@
     white-space: nowrap;
   }
 
+  .database__gutter-tools {
+    display: inline-flex;
+    align-items: center;
+  }
+
   /* The gutter is outside the table's lines, as Notion's handles are. */
   thead .database__gutter {
     inset-block-start: 0;
   }
 
+  /* As Notion's: + then the grip, 8 px apart from the tick box, which
+     sits in a 36 px square. */
+  .database__row-add-below {
+    display: inline-grid;
+    place-items: center;
+    inline-size: var(--size-target-min);
+    block-size: var(--size-target-min);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-tertiary);
+    vertical-align: middle;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    & > .icon {
+      inline-size: var(--size-icon-md);
+      block-size: var(--size-icon-md);
+    }
+  }
+
   .database__row-handle {
     display: inline-flex;
+    justify-content: center;
+    inline-size: var(--size-grip-width);
     color: var(--color-text-tertiary);
     vertical-align: middle;
     cursor: grab;
   }
 
   .database__row-check {
-    margin: var(--space-none) var(--space-inset-xs);
+    margin-block: var(--space-none);
+    margin-inline: var(--space-inline-lg) var(--space-inline-md);
     vertical-align: middle;
     cursor: pointer;
   }
@@ -35,7 +68,7 @@
   /* The handle and the box show while their row is pointed at or has
      focus, and stay once rows are ticked. */
   .database__row:not(:hover, :focus-within, [data-ticked])
-    .database__gutter
+    .database__gutter-tools
     > *,
   .database__table:not(
       :has([data-ticked]),

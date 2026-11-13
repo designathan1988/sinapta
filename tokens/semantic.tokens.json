@@ -513,8 +513,8 @@
         "$value": "{base.size.10}"
       },
       "gutter": {
-        "$description": "The space before a table's rows for the drag handle and the tick box.",
-        "$value": "{base.size.2x75}"
+        "$description": "The row gutter in the page's margin, as Notion's: + (24), grip (18), 8 apart, then the tick box's 36 px.",
+        "$value": "{base.size.5x375}"
       },
       "row": {
         "$description": "A database table's row and header, as Notion's: 36 px.",

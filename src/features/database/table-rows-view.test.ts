@@ -117,6 +117,27 @@ describe("selecting rows in a table", () => {
     ]);
   });
 
+  it("adds a row below one from the + beside it, above with Alt, as Notion's", () => {
+    const { host, sent, rowId } = rendered();
+    const adds = [
+      ...host.querySelectorAll<HTMLElement>(".database__row-add-below"),
+    ];
+
+    adds[1]?.click();
+    adds[1]?.dispatchEvent(
+      new MouseEvent("click", { bubbles: true, altKey: true }),
+    );
+
+    expect(sent).toEqual([
+      expect.objectContaining({ type: "row.add", besideId: rowId(1) }),
+      expect.objectContaining({
+        type: "row.add",
+        besideId: rowId(1),
+        above: true,
+      }),
+    ]);
+  });
+
   it("gives the ticked rows a button per property, as Notion's bar", () => {
     const { host, sent, notes } = rendered({ ticked: [0] });
     const bar = host.querySelector<HTMLElement>(".database__bulk");
