@@ -308,6 +308,21 @@ after reload and applies only to that view.
   Show confirmation, Open page or URL and Define variables, run in order
   when the button is pressed, and Save.
 
+- **FR-031**: The selection panel's "Suggest edits" MUST turn the page to
+  Suggesting, shown by a blue "Suggesting ×" in the top bar that turns
+  it off; while on, typed text MUST be kept as a suggested insertion
+  (blue, underlined) and deleted text as a suggested deletion (struck
+  through), each with a discussion card "Add: “…”" or "Delete: “…”"
+  that Accept keeps and Reject undoes. Suggesting is off after a reload.
+
+- **FR-032**: The sidebar MUST show tabs at its top (Home and Calendar);
+  a section's menu and Customize sidebar MUST offer "Move to tab", which
+  shows the section under the chosen tab.
+
+- **FR-033**: A date view's "Manage in calendar" (Notion's "Manage in
+  Notion Calendar") MUST show the view's dated pages in the sidebar's
+  Calendar tab, under "Upcoming", until turned off.
+
 **Quality bar**
 
 - **FR-017**: Every interface text MUST use Notion's English words as
@@ -368,15 +383,15 @@ after reload and applies only to that view.
   background colors already used in Pagecraft.
 - Map view, dashboard view, people, sharing and AI stay out of scope.
 - Left out of Notion's menus for the reasons above: the selection panel's
-  add reaction and suggest edits (people) and AI skills (AI); the view tab
-  menu's Manage in Notion Calendar (another product); Move to tab, in the
-  sidebar section's and Customize sidebar's menus (the sidebar tabs are
-  Notion's AI chat and Notion Calendar); in Customize sidebar, the
+  AI skills (AI); the view tab
+  menu's Manage in Notion Calendar is built as its local equivalent
+  (FR-033), and Move to tab with the sidebar's Home and Calendar tabs
+  (FR-032), the AI chat tab left out; in Customize sidebar, the
   shortcuts New chat, New meeting note, Chat thread, Meeting notes,
   Skills, Notion Calendar, Library, Connections and External agents (AI,
   integrations or other products) and the sections Upcoming events,
   Recents, Shared, Chats, Agents, AI notes, Notion apps and Developer
   (Notion Calendar, sharing, AI or integrations). The selection panel's
-  suggest edits stays out: in Notion it turns the page to "Suggesting"
-  (`n43-suggest`), edits others review and accept — work between people;
-  its AI skills and "Edit with AI" stay out (AI).
+  suggest edits is built (FR-031): one person can still draft changes and
+  accept or reject them later; its AI skills and "Edit with AI" stay out
+  (AI).

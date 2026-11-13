@@ -149,6 +149,22 @@
     background-color: var(--color-chip-yellow-bg);
   }
 
+  /* A suggested edit, as Notion's Suggesting: an insertion blue on a
+     light blue wash over a blue line, a deletion struck through. */
+  .comment-mark[data-suggestion] {
+    border-block-end-color: var(--color-accent-subtle);
+    background-color: color-mix(
+      in oklch,
+      var(--color-accent-subtle) 40%,
+      transparent
+    );
+    color: var(--color-text-accent);
+  }
+
+  .comment-mark[data-suggestion="delete"] {
+    text-decoration: line-through;
+  }
+
   /* A reminder: a date mention with an alarm clock before it. */
   .mention[data-reminder]::before {
     content: "⏰ ";

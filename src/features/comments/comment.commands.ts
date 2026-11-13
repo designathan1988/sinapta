@@ -19,7 +19,7 @@ import {
 } from "../../model/index.ts";
 import { defineCommand, type AppState } from "../../state/index.ts";
 
-function discussionsUpdate(
+export function discussionsUpdate(
   page: PageBlock,
   discussions: readonly Discussion[],
 ): Operation {

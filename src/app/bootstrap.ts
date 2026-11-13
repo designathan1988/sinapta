@@ -36,6 +36,7 @@ import {
 import {
   commentCommands,
   reactionCommands,
+  suggestionCommands,
   discussionTidier,
   valueDiscussionTidier,
 } from "../features/comments/index.ts";
@@ -110,6 +111,7 @@ const COMMANDS = [
   ...templateCommands,
   ...commentCommands,
   ...reactionCommands,
+  ...suggestionCommands,
   ...pageHistoryCommands,
   ...inboxCommands,
   ...markdownImportCommands,

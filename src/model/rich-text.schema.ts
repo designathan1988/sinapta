@@ -48,6 +48,9 @@ export const textSpanSchema = v.object({
   equation: v.optional(v.string()),
   // The discussions about this text, by id, which the editor marks.
   comments: v.optional(v.array(blockIdSchema)),
+  // A suggested edit, held by one of its discussions: text to add, or
+  // text to delete, until accepted or rejected.
+  suggestion: v.optional(v.picklist(["insert", "delete"])),
 });
 
 export const richTextSchema = v.array(textSpanSchema);

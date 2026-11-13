@@ -42,6 +42,7 @@ function hasSameStyle(a: TextSpan, b: TextSpan): boolean {
     a.href === b.href &&
     a.color === b.color &&
     a.highlight === b.highlight &&
+    a.suggestion === b.suggestion &&
     hasSameLists(a, b)
   );
 }
@@ -106,6 +107,7 @@ export function insertText(
     mention: _mention,
     equation: _equation,
     comments: _comments,
+    suggestion: _suggestion,
     ...style
   } = before.at(-1) ?? { text: "" };
   const inserted = withText(style, text.normalize("NFC"));

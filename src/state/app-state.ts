@@ -93,8 +93,7 @@ export interface UiState {
   readonly selectedRowIds: readonly BlockId[];
   // The month calendar views show, as "2026-11"; null for the current one.
   readonly calendarMonth: string | null;
-  // The first day of the week a calendar shows in week mode; null for
-  // the current week.
+  // The first day a calendar shows in week mode; null for this week.
   readonly calendarWeek: string | null;
   // The row open in a peek beside or over the page, and the view whose
   // order its next and previous rows follow; null while none is.
@@ -134,6 +133,7 @@ export interface UiState {
   // Blocks copied with Ctrl+C, and the text put on the system clipboard
   // for them: a paste of that text rebuilds the blocks.
   readonly clipboard: CopiedBlocks | null;
+  readonly suggestingPageId?: BlockId; // the page in Suggesting, unsaved
 }
 
 export interface CopiedBlocks {

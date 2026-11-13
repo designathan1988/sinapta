@@ -193,3 +193,11 @@ export {
   type ZipEntry,
   type ZipFile,
 } from "./zip.ts";
+export {
+  acceptSuggestion,
+  rejectSuggestion,
+  suggestDelete,
+  suggestedText,
+  suggestInsert,
+  type SuggestionKind,
+} from "./rich-text-suggestions.ts";

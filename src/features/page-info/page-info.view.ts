@@ -1,6 +1,7 @@
 // The top bar's page details, as Notion's: when the open page was last
 // edited, which opens its history, a button that copies its link, and a
 // star that adds it to or removes it from the favorites.
+import { renderSuggesting } from "./page-info-suggesting.view.ts";
 import "./page-info.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import {
@@ -69,7 +70,7 @@ export function renderPageInfo(
   // The label is worked out at each render; the next change updates it.
   const edited = selectEditedLabel(state, pageId, new Date().toISOString());
   const history = { kind: PAGE_HISTORY_OVERLAY, anchorId: pageId };
-  return html`${renderLocked(page, dispatch)}
+  return html`${renderSuggesting(state, dispatch, pageId)}${renderLocked(page, dispatch)}
     <button
       type="button"
       class="page-info__edited"

@@ -197,4 +197,12 @@
   .comments__reopen {
     margin-inline-start: auto;
   }
+
+  /* A suggestion's card: "Add: “…”" in blue, as Notion's. */
+  .comments__suggestion {
+    flex: 1;
+    margin: var(--space-none);
+    color: var(--color-text-accent);
+    font-size: var(--font-size-sm);
+  }
 }

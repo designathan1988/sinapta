@@ -11,6 +11,7 @@ export {
 } from "./reaction-picker.view.ts";
 export {
   selectBlockDiscussionCount,
+  selectPageOf,
   selectResolvedDiscussions,
   selectValueDiscussionCount,
 } from "./comments.selectors.ts";
@@ -35,3 +36,10 @@ export {
   renderPageDiscussions,
   renderRowDiscussions,
 } from "./comment-popovers.view.ts";
+export {
+  suggestionCommands,
+  suggestReplace,
+  acceptSuggestionCommand,
+  rejectSuggestionCommand,
+  setSuggesting,
+} from "./suggestion.commands.ts";

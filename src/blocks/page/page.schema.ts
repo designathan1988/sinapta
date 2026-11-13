@@ -56,6 +56,8 @@ export const discussionSchema = v.object({
   quote: v.optional(v.string()),
   isResolved: v.boolean(),
   comments: v.array(pageCommentSchema),
+  // A suggested edit it holds, as Notion's "Add: …" or "Delete: …".
+  suggestion: v.optional(v.picklist(["insert", "delete"])),
 });
 
 export type Discussion = v.InferOutput<typeof discussionSchema>;

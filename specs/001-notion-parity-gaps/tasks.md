@@ -216,3 +216,15 @@ Within a story: model/command → selector → view → photo (each control in i
 - [X] T070 "Edit automation" dialog: When, Do, New action list, each action's settings, Save (`button-automation.view.ts`) per FR-030 (missing) — test `button-automation-view.test.ts`; photo `u14-button` against `n51-button/05-settings`, `07-actions`.
 - [X] T071 Show confirmation before the actions, and Open page or URL after them, when the button is pressed per FR-030 (missing) — test `button-press-view.test.ts`.
 
+## Phase 14: Convergence (suggesting, sidebar tabs, calendar — asked by the owner)
+
+- [X] T072 Study Notion's Suggesting and record item 28 in `docs/notion-study.md` — photos `n52-suggest`, `n52-card`; the probe's text rejected, `n52-cleanup`.
+- [X] T073 Suggestion marks in the model: a span's `suggestion` ("insert" or "delete") with its discussion, and a discussion's `suggestion` (`src/model/rich-text.schema.ts`, `src/blocks/page/page.schema.ts`) per FR-031 (missing) — test `rich-text-suggestions.test.ts`.
+- [X] T074 `ui.isSuggesting` and `text.replace` keeping typed and deleted text as suggestions; `suggestion.accept` and `suggestion.reject` (`src/features/comments/suggestion.commands.ts`) per FR-031 (missing) — tests `suggestion.test.ts`.
+- [X] T075 The interface: "Suggest edits" in the selection panel, "Suggesting ×" in the top bar, the marks drawn, and the card's "Add/Delete: “…”" with Accept and Reject per FR-031 (missing) — tests `suggestion-view.test.ts`; photo `u18-suggest` against `n52-suggest/08-typed-shot`.
+- [ ] T076 Sidebar tabs (Home, Calendar) and a section's tab in settings (`sidebarTabs`) per FR-032 (missing) — test `sidebar-tabs.test.ts`.
+- [ ] T077 "Move to tab" in a section's menu and in Customize sidebar per FR-032 (missing) — test `sidebar-tabs-view.test.ts`; photo `u19-tabs`.
+- [ ] T078 Record items 29 and 30 as done with their photos in `docs/notion-study.md` per FR-032, FR-033.
+- [ ] T079 "Manage in calendar" in a date view's tab menu and toolbar, kept in settings (`calendarViewIds`) per FR-033 (missing) — test `calendar-tab.test.ts`.
+- [ ] T080 The sidebar's Calendar tab listing the dated pages of those views under "Upcoming" per FR-033 (missing) — test `calendar-tab-view.test.ts`; photo `u19-tabs`.
+

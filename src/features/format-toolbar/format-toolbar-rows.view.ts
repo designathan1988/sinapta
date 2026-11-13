@@ -28,6 +28,7 @@ import {
   TURN_INTO_OVERLAY,
 } from "../editor/index.ts";
 import { headingLook, lookOf } from "../slash-menu/index.ts";
+import { renderSuggestButton } from "./format-toolbar-suggest.view.ts";
 import {
   TONE_OVERLAY,
   type FormatRange,
@@ -214,5 +215,6 @@ export function renderCommentRow(context: PanelContext): TemplateResult {
     >
       ${renderIcon("smile")}
     </button>
+    ${renderSuggestButton(context)}
   </div>`;
 }

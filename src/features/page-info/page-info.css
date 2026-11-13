@@ -1,4 +1,25 @@
 @layer features {
+  /* Notion's "Suggesting ×": a blue pill in the top bar. */
+  .page-info__suggesting {
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    min-block-size: var(--size-control-sm);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: none;
+    border-radius: var(--radius-md);
+    background-color: var(--color-accent-fill);
+    color: var(--color-text-on-accent);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+
+    & > .icon {
+      inline-size: var(--size-icon-xs);
+      block-size: var(--size-icon-xs);
+    }
+  }
+
   /* "Edited 5m ago", as Notion's: a quiet 28 px button that opens the
      page's history; pointed at, it shows no wash, only the pointer. */
   .page-info__edited {

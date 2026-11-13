@@ -1,6 +1,7 @@
 // A discussion, as Notion shows it: what it is about, each comment with
 // its author, time and text, a reply field, and its resolve button; and a
 // field that starts one.
+import { renderSuggestionHead } from "./suggestion.view.ts";
 import "./comments.css";
 import "./reactions.css";
 import { html, nothing, type TemplateResult } from "lit-html";
@@ -138,6 +139,29 @@ function renderComment(
   </li>`;
 }
 
+// The quote and Resolve.
+function renderHead(
+  discussion: Discussion,
+  context: DiscussionContext,
+): TemplateResult {
+  const target = { pageId: context.page.id, discussionId: discussion.id };
+  return html`<div class="comments__head">
+    ${discussion.propertyId === undefined ? renderQuote(discussion, context) : nothing}
+    <button
+      type="button"
+      class="comments__resolve"
+      aria-label=${TEXT.resolve}
+      title=${TEXT.resolve}
+      @click=${() =>
+        context.dispatch(
+          resolveDiscussion.create({ ...target, isResolved: true }),
+        )}
+    >
+      ${renderIcon("check")}
+    </button>
+  </div>`;
+}
+
 export function renderDiscussion(
   discussion: Discussion,
   context: DiscussionContext,
@@ -148,19 +172,11 @@ export function renderDiscussion(
     class="comments__discussion"
     data-discussion-id=${discussion.id}
   >
-    <div class="comments__head">
-      ${discussion.propertyId === undefined ? renderQuote(discussion, context) : nothing}
-      <button
-        type="button"
-        class="comments__resolve"
-        aria-label=${TEXT.resolve}
-        title=${TEXT.resolve}
-        @click=${() =>
-          dispatch(resolveDiscussion.create({ ...target, isResolved: true }))}
-      >
-        ${renderIcon("check")}
-      </button>
-    </div>
+    ${
+      discussion.suggestion === undefined
+        ? renderHead(discussion, context)
+        : renderSuggestionHead(discussion, page, dispatch)
+    }
     <ul class="comments__list">
       ${discussion.comments.map((comment) =>
         renderComment(comment, context, discussion),

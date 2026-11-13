@@ -19,6 +19,7 @@ import {
   type RichText,
   type Tone,
 } from "../../model/index.ts";
+import { suggestReplace } from "../comments/index.ts";
 import {
   defineCommand,
   type AppState,
@@ -54,6 +55,8 @@ export interface ReplaceTextPayload {
 // this one command. The range is widened to whole characters.
 export const replaceText = defineCommand<ReplaceTextPayload>({
   type: "text.replace",
+  // A page in Suggesting keeps the edit as a new discussion's suggestion.
+  newIds: { blocks: 1 },
   handle(state, command) {
     const block = state.workspace.blocks[command.blockId];
     if (!isTextBlock(block)) return {};
@@ -64,6 +67,21 @@ export const replaceText = defineCommand<ReplaceTextPayload>({
       Math.max(command.start, command.end),
     );
     if (start === end && command.text === "") return {};
+    const newId = command.meta.blockIds[0];
+    const suggested =
+      newId === undefined
+        ? undefined
+        : suggestReplace(state, {
+            blockId: block.id,
+            start,
+            end,
+            text: command.text,
+            newId,
+            now: command.meta.now,
+          });
+    if (suggested !== undefined) {
+      return { ...suggested, mergeKey: `text:${block.id}` };
+    }
     const kept = deleteRange(block.props.text, start, end);
     const text = insertText(kept, start, command.text);
     const caret = start + command.text.normalize("NFC").length;

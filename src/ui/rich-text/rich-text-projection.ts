@@ -60,6 +60,17 @@ function equationNode(span: TextSpan, source: string): Node {
   return element;
 }
 
+// Text a discussion is about, and a suggested edit, marked.
+function commentMarked(node: Node, span: TextSpan): Node {
+  if (span.comments === undefined || span.comments.length === 0) return node;
+  const marked = wrap(node, "span");
+  marked.className = "comment-mark";
+  marked.dataset.discussions = span.comments.join(" ");
+  if (span.suggestion !== undefined)
+    marked.dataset.suggestion = span.suggestion;
+  return marked;
+}
+
 function spanNode(span: TextSpan): Node {
   if (span.mention !== undefined) return mentionNode(span, span.mention);
   if (span.equation !== undefined) return equationNode(span, span.equation);
@@ -68,12 +79,7 @@ function spanNode(span: TextSpan): Node {
     if (span.marks?.includes(mark) === true) node = wrap(node, tag);
   }
   node = toned(node, span);
-  if (span.comments !== undefined && span.comments.length > 0) {
-    const marked = wrap(node, "span");
-    marked.className = "comment-mark";
-    marked.dataset.discussions = span.comments.join(" ");
-    node = marked;
-  }
+  node = commentMarked(node, span);
   const href = span.href === undefined ? undefined : safeHref(span.href);
   if (href === undefined) return node;
   const link = wrap(node, "a");

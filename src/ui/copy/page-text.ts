@@ -31,6 +31,16 @@ export const PAGE_TEXT = {
       "No versions yet. While you edit, a version is kept every 10 minutes.",
     restored: "The page was restored to the version.",
   },
+  suggestions: {
+    suggest: "Suggest edits",
+    suggesting: "Suggesting",
+    youreSuggesting: "You're suggesting",
+    stop: "Stop suggesting",
+    add: "Add:",
+    delete: "Delete:",
+    accept: "Accept",
+    reject: "Reject",
+  },
   comments: {
     label: "Comments",
     author: "You",

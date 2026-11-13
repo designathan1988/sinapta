@@ -959,6 +959,27 @@ items above, found while photographing them:
     "Available on Plus": Send email…, Send webhook, Send Slack
     notification to… (out). Nothing was saved (Escape, then the menu).
 
+28. **done** [T072–T075, FR-031, photo `u18-suggest`] Suggesting (`n52-suggest`, `n52-card`):
+    the selection panel's suggest-edit button turns the page to
+    Suggesting ("You're suggesting", a blue "Suggesting ×" in the top
+    bar, off after a reload). Text typed then shows blue on a light blue
+    wash with a blue underline (rgba(35,131,226,.054) background, a 2 px
+    rgba(35,131,226,.15) underline), and a discussion card in the margin
+    reads the author, the time and "Add: “ zz”" in blue, with a reply
+    field; pointed at, the card shows Accept, Reject, Add reaction and
+    More actions. Reject took the text away; deleted text shows struck
+    through until accepted. The probe's text was rejected and a stray
+    " zz" removed by hand (`n52-cleanup`: "/# Heading one", "Bulleted
+    item").
+29. **open** [T076–T078, FR-032] Sidebar tabs and Move to tab: the
+    sidebar's top row holds tabs (Home, chat, calendar); a section's menu
+    and Customize sidebar offer "Move to tab", which moves the section
+    under another tab.
+30. **open** [T079–T080, FR-033] "Manage in Notion Calendar" in a date
+    view's menus and toolbars: Pagecraft has no calendar product of its
+    own, so its equivalent shows the view's dated pages in the sidebar's
+    calendar tab ("Upcoming").
+
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,
 `n45-history/04-updates`: "Há 4 horas", ID 1, Nome, the box ticked). A
