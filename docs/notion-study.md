@@ -759,6 +759,43 @@ Not a horizontal strip any more: a panel under the selection.
 The top bar meanwhile offered "Traduzir para Português ×" (the page's
 words were English) and "Offline" when the connection dropped.
 
+## Page, sharing and sidebar (audit of 2026-11-13, photos `e1-page`, `e2-sidebar`)
+
+- Top bar: the page's breadcrumb ("Teste blocos"), a lock and "Particular
+  ⌄" (opens "Sugerido": recent pages, and the workspace, to move the
+  page), then at the right "Editada há …" (or a translate chip
+  "Traduzir para Português ×" when the page's language differs, or
+  "Offline"), "🔒 Compartilhar", Copiar link (chain icon), Marcar como
+  Favorito (star), "…".
+- "…" page menu, as drawn now: a focused "Pesquisar ações…"; Copiar link
+  Ctrl+Alt+L; Copiar conteúdo da página; Duplicar Ctrl+D; Mover para
+  Ctrl+⇧+P; Histórico de versão; Atualizações e métricas; rule; Aparência
+  e layout ›; rule; Usar com a IA ›; rule; Sugerir edições; Receber
+  notificações › Comentários; rule; Bloquear página (switch); Mover para a
+  lixeira; rule; Mais ›; foot "Última edição", author, "hoje às 02:56",
+  "23 palavras".
+- Compartilhar: a panel with tabs Compartilhar | Publicar; an invite
+  field; the owner "(Você)" with "Acesso completo"; "Acesso geral ·
+  Somente pessoas convidadas"; Avançado; Copiar link; "Saiba mais sobre
+  compartilhamento". n/a for one person, except Copiar link.
+- Title hover: "Adicionar ícone", "Adicionar capa", "Adicionar
+  comentário" in a row above the title (y 138 at 1440 px).
+- Sidebar page row hover: a chevron "Abrir" over the icon, then at the
+  row's right "…" ("Exclua, duplique e mais...") and "+" ("Adicione uma
+  página").
+- Workspace switcher (the workspace name): the name, "Plano Free - 1
+  membro", Fazer upgrade, Configurações, Convidar membros; Adicionar
+  conta; the account's workspaces; Novo espaço de trabalho; Sair.
+- The sidebar came in two designs between loads (a test on the account):
+  A, search field "Busque ou peça Ctrl+K", Página inicial with chat and
+  calendar icons, Nova página, Novo chat, Biblioteca, Conexões, Agentes
+  externos, sections Compartilhado and Particular, Personalizar barra
+  lateral, a promo card, the workspace and help at the foot; B, the
+  workspace name at the top, a row of icons (home, chat, meetings,
+  inbox, search), Particular, then Adicionar agentes, Anotações IA,
+  Biblioteca, Ajuda, Lixeira, "Novo chat Ctrl+O" and a new-page button
+  at the foot. Pagecraft keeps design A.
+
 ## Controls
 
 **Now** says what the control is today: "native" (a browser `<select>`
