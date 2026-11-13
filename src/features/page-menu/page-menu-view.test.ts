@@ -11,7 +11,7 @@ import {
 import { PAGE_RENAME_OVERLAY } from "./page-rename.view.ts";
 
 // The page's menu, opened from the top bar or from another place.
-function rendered(isResolved: boolean, place = "bar") {
+function rendered(isResolved: boolean, place = "bar", openSubmenu?: string) {
   const discussion = {
     id: toBlockId("d1"),
     blockId: null,
@@ -34,7 +34,13 @@ function rendered(isResolved: boolean, place = "bar") {
   ]);
   const initial = createInitialState();
   const anchorId = pageMenuAnchorId(place, toBlockId("page"));
-  const overlay = { kind: PAGE_MENU_OVERLAY, anchorId };
+  const overlay = {
+    kind: PAGE_MENU_OVERLAY,
+    anchorId,
+    ...(openSubmenu !== undefined && {
+      children: [{ anchorId: openSubmenu }],
+    }),
+  };
   const state = { ...initial, workspace, ui: { ...initial.ui, overlay } };
   const sent: Command[] = [];
   const host = document.createElement("div");
@@ -88,8 +94,34 @@ describe("the page menu, as Notion's", () => {
     expect(host.querySelector("input")?.placeholder).toBe("Search actions…");
   });
 
-  it("chooses the page's style from three tiles", () => {
-    const { host, sent } = rendered(false);
+  it("holds Notion's groups today, with More at the end", () => {
+    const { rows } = rendered(false);
+
+    const labels = rows.map((row) => row.textContent.trim());
+
+    expect(labels).toEqual([
+      expect.stringContaining("Copy link"),
+      expect.stringContaining("Copy page contents"),
+      expect.stringContaining("Duplicate"),
+      expect.stringContaining("Move to"),
+      expect.stringContaining("Version history"),
+      expect.stringContaining("Appearance and layout"),
+      expect.stringContaining("Lock page"),
+      expect.stringContaining("Move to trash"),
+      expect.stringContaining("More"),
+    ]);
+  });
+
+  it("ends with the last edit over the word count", () => {
+    const { host } = rendered(false);
+
+    const foot = host.querySelector(".menu__footer")?.textContent ?? "";
+
+    expect(foot).toMatch(/^Edited .+\n.*word/s);
+  });
+
+  it("chooses the page's style from three tiles in Appearance and layout", () => {
+    const { host, sent } = rendered(false, "bar", "appearance:page");
     const tiles = [
       ...host.querySelectorAll<HTMLButtonElement>(".page-menu__font"),
     ];
@@ -107,10 +139,27 @@ describe("the page menu, as Notion's", () => {
   });
 
   it("turns small text and full width on and off with switches", () => {
-    const { row } = rendered(false);
+    const { host } = rendered(false, "bar", "appearance:page");
+    const row = (label: string) =>
+      [...host.querySelectorAll("[role=menuitemcheckbox], [data-index]")].find(
+        (element) => element.textContent.includes(label),
+      );
 
     expect(row("Small text")?.querySelector(".switch")).not.toBeNull();
     expect(row("Full width")?.querySelector(".switch")).not.toBeNull();
+  });
+
+  it("opens Appearance and layout beside its row", () => {
+    const { sent, row } = rendered(false);
+
+    row("Appearance and layout")?.click();
+
+    expect(sent).toContainEqual(
+      expect.objectContaining({
+        type: "ui.openChildOverlay",
+        anchorId: "appearance:page",
+      }),
+    );
   });
 
   it("copies the link and moves the page, and leaves moving up to keys", () => {

@@ -215,6 +215,9 @@
       var(--color-border-default);
     color: var(--color-text-tertiary);
     font-size: var(--font-size-xs);
+
+    /* Several lines, as Notion's last edit over the word count. */
+    white-space: pre-line;
   }
 
   /* A menu opened by a right click shows where the pointer was. */
