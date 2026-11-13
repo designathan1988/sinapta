@@ -86,6 +86,7 @@ export function renderAtRow(context: CadenceContext): TemplateResult {
         label: TEXT.at,
         value: draft.time,
         variant: "row",
+        isShort: true,
         options: timeOptions(),
         onChoose: (time) => {
           changeDraft(context, { time });

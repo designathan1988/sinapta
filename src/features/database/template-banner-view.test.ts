@@ -55,7 +55,7 @@ describe("the template strip", () => {
     const open = rendered(true);
     const week = [
       ...open.host.querySelectorAll<HTMLElement>("[role^=menuitem]"),
-    ].find((row) => row.textContent.trim() === "2 weeks");
+    ].find((row) => row.textContent.trim() === "2 Weeks");
 
     week?.click();
 

@@ -27,6 +27,8 @@ export interface OperandProps {
   readonly isCompact?: boolean;
   // What the controls are named from; by default the condition's path.
   readonly idBase?: string;
+  // What an empty choice shows; by default "Value".
+  readonly placeholder?: string;
 }
 
 function idOf(props: OperandProps): string {
@@ -102,7 +104,7 @@ export function renderFilterOperand(
         label: COPY.database.filterValue,
         value: current === "" ? undefined : current,
         options,
-        placeholder: COPY.database.filterValue,
+        placeholder: props.placeholder ?? COPY.database.filterValue,
         onChoose: (value) => {
           onChange({ field: "value", value });
         },

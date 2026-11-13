@@ -56,7 +56,7 @@ describe("a view inside a page", () => {
 
     expect(labels).toEqual([
       "Rename",
-      "Show as",
+      "Display as",
       "Edit view",
       "Source",
       "Copy link to view",

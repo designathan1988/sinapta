@@ -9,6 +9,19 @@
     inline-size: var(--size-menu-width);
     padding: var(--space-inset-sm) var(--space-inset-md);
     font-weight: var(--font-weight-regular);
+    anchor-name: --cadence;
+  }
+
+  /* A list a row opens, as Notion's times: at the panel's edge, never
+     over it, its top at the row's. */
+  @supports (position-area: block-end) {
+    .cadence [data-overlay][data-placement="beside"][popover] {
+      position-area: none;
+      position-try-fallbacks: none;
+      inset-block-start: anchor(start);
+      inset-inline-start: anchor(--cadence end);
+      align-self: auto;
+    }
   }
 
   .cadence__head {

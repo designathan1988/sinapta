@@ -82,7 +82,7 @@ describe("the open view's tab menu", () => {
 
     expect(labels).toEqual([
       "Rename",
-      "Show as",
+      "Display as",
       "Edit view",
       "Source",
       "Copy link to view",
@@ -106,7 +106,7 @@ describe("the open view's tab menu", () => {
         style: "text",
       }),
     );
-    expect(document.body.textContent).toContain("Only for you");
+    expect(document.body.textContent).toContain("Only applies to you");
   });
 
   it("keeps the view in the sidebar", () => {

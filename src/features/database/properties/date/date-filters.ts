@@ -139,7 +139,7 @@ export const RELATIVE: FilterOperator = {
     const relative = readRelative(operand);
     if (relative === undefined) return operand;
     const { relativeDirections, relativeUnits } = COPY.database;
-    const unit = relativeUnits[relative.unit].toLocaleLowerCase("en-US");
+    const unit = relativeUnits[relative.unit];
     return `${relativeDirections[relative.direction]} ${unit}`;
   },
   test(value, operand, context) {

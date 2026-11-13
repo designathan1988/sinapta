@@ -5,16 +5,37 @@ import type { Command, OpenOverlay } from "../../../state/index.ts";
 import { addColorRule } from "../color-rules.commands.ts";
 import { createDatabaseApp } from "../database-builder.ts";
 import { renderDatabase } from "../database.view.ts";
+import { setViewType } from "../view-layout.commands.ts";
 import { VIEW_SETTINGS_OVERLAY } from "./index.ts";
 
-// A table with its Conditional color panel open, with one rule when asked.
-function rendered(withRule = false, panel = "color") {
-  const app = createDatabaseApp([{ name: "Due", type: "date" }], [["Ship"]]);
+// A table, or a board when asked, with its Conditional color panel open
+// and one rule when asked: on Due, or on Stage with no value chosen yet.
+function rendered(
+  withRule: boolean | "stage" = false,
+  panel = "color",
+  isBoard = false,
+) {
+  const app = createDatabaseApp(
+    [
+      { name: "Due", type: "date" },
+      {
+        name: "Stage",
+        type: "select",
+        options: [{ id: "open", name: "Open", color: "gray" }],
+      },
+    ],
+    [["Ship"]],
+  );
   const viewId = app.view().id;
-  const [due] = app.propertyIds;
-  if (due === undefined) throw new Error("setup");
-  const condition = { propertyId: due, operator: "is-not-empty", value: "" };
-  if (withRule) app.dispatch(addColorRule.create({ viewId, condition }));
+  const [due, stage] = app.propertyIds;
+  if (due === undefined || stage === undefined) throw new Error("setup");
+  if (isBoard) app.dispatch(setViewType.create({ viewId, viewType: "board" }));
+  const condition =
+    withRule === "stage"
+      ? { propertyId: stage, operator: "is", value: "" }
+      : { propertyId: due, operator: "is-not-empty", value: "" };
+  if (withRule !== false)
+    app.dispatch(addColorRule.create({ viewId, condition }));
   const built = app.store.getState();
   const overlay: OpenOverlay = {
     kind: VIEW_SETTINGS_OVERLAY,
@@ -72,7 +93,11 @@ describe("the Conditional color panel", () => {
     const { host, sent, viewId } = rendered(false, "color-property");
     const rows = [...host.querySelectorAll<HTMLElement>(".menu [data-index]")];
 
-    expect(rows.map((row) => row.textContent.trim())).toEqual(["Name", "Due"]);
+    expect(rows.map((row) => row.textContent.trim())).toEqual([
+      "Name",
+      "Due",
+      "Stage",
+    ]);
     rows[1]?.click();
 
     expect(sent[0]).toMatchObject({ type: "view.addColorRule", viewId });
@@ -96,5 +121,20 @@ describe("the Conditional color panel", () => {
     expect(sent.map((command) => command.type)).toEqual([
       "view.deleteColorRule",
     ]);
+  });
+
+  it("names a card's color Card background on a board, as Notion's", () => {
+    const { host } = rendered(true, "color", true);
+    const rule = host.querySelector(".view-settings__rule")?.textContent ?? "";
+
+    expect(rule).toContain("Card background");
+    expect(rule).not.toContain("Page background");
+  });
+
+  it("asks Select... while the rule has no value, as Notion's", () => {
+    const { host } = rendered("stage");
+    const rule = host.querySelector(".view-settings__rule")?.textContent ?? "";
+
+    expect(rule).toContain("Select...");
   });
 });

@@ -57,6 +57,15 @@ function renderSwatches(context: TableContext, rule: ColorRule) {
   </div>`;
 }
 
+// A card's color is its background on a board or a gallery; elsewhere, the
+// page's, as Notion's.
+function backgroundLabel(context: TableContext): string {
+  const { type } = context.model.view;
+  return type === "board" || type === "gallery"
+    ? TEXT.cardBackground
+    : TEXT.pageBackground;
+}
+
 function renderColorRow(
   context: TableContext,
   rule: ColorRule,
@@ -65,7 +74,7 @@ function renderColorRow(
   return renderSelect(
     {
       id: `color-rule-${rule.id}-color`,
-      label: TEXT.pageBackground,
+      label: backgroundLabel(context),
       value: rule.color,
       variant: "row",
       options: [],
@@ -140,7 +149,13 @@ function renderCondition(
   const trailing = renderDelete(context, rule);
   const head = { id: `color-rule-${rule.id}`, filter: condition, property };
   const noop = (): void => undefined;
-  const operand = { filter: condition, path: [0], property, operator };
+  const operand = {
+    filter: condition,
+    path: [0],
+    property,
+    operator,
+    placeholder: TEXT.colorValuePlaceholder,
+  };
   return html`${renderRuleHead(
     { ...head, operators, change, remove: noop, toAdvanced: noop, trailing },
     select,

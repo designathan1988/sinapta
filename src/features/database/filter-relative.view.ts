@@ -39,7 +39,7 @@ function partOptions(part: Part) {
       }))
     : RELATIVE_UNITS.map((value) => ({
         value,
-        label: relativeUnits[value].toLocaleLowerCase("en-US"),
+        label: relativeUnits[value],
       }));
 }
 

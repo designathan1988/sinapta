@@ -50,11 +50,11 @@ function showAsItem(context: TableContext): MenuItem {
     { kind: "section", label: COPY.database.onlyForYou },
   ];
   return {
-    label: COPY.database.showAs,
+    label: COPY.database.displayAs,
     icon: "eye",
     submenu: {
       id: "view-tab-show-as",
-      menu: () => ({ label: COPY.database.showAs, items }),
+      menu: () => ({ label: COPY.database.displayAs, items }),
     },
   };
 }
