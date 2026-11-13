@@ -120,14 +120,16 @@ function renderBar(
 ): TemplateResult {
   const place = selectPeekPlace(state);
   const button = (item: BarButton) => renderBarButton(item, dispatch);
-  // A template has no rows to step through, nor a view's open mode.
+  // A template has no rows to step through, nor a view's open mode; its
+  // window has only Expand at its top left, as Notion's.
   const isTemplate = selectTemplateDatabase(state, pageId) !== undefined;
+  const close = { label: TEXT.close, icon: "peek-close" as const };
   return html`<div class="peek__bar">
-    ${button({ label: TEXT.close, icon: "peek-close", command: closePeek.create({}) })}
+    ${isTemplate ? nothing : button({ ...close, command: closePeek.create({}) })}
     ${button({ label: TEXT.expand, icon: "expand", command: expandPeek.create({}) })}
     ${isTemplate ? nothing : renderSteps(state, dispatch, place)}
     <span class="peek__end">
-      ${renderPeekActions(state, dispatch, pageId)}
+      ${renderPeekActions(state, dispatch, { pageId, isTemplate })}
       ${renderPageMenuButton({ place: "peek", pageId, state, dispatch })}
     </span>
   </div>`;

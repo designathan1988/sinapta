@@ -40,18 +40,24 @@ function renderAction(action: Action): TemplateResult {
   </button>`;
 }
 
+// A template's window has no comment, as Notion's.
 export function renderPeekActions(
   state: AppState,
   dispatch: Dispatch,
-  pageId: BlockId,
+  page: { readonly pageId: BlockId; readonly isTemplate: boolean },
 ): TemplateResult {
+  const { pageId } = page;
   const isFavorite = selectPage(state, pageId)?.props.isFavorite === true;
   const overlay = { kind: COMMENT_COMPOSER_OVERLAY, anchorId: pageId };
-  return html`${renderAction({
-    label: TEXT.comment,
-    icon: "comment",
-    onClick: () => dispatch(openOverlay.create({ overlay })),
-  })}
+  return html`${
+    page.isTemplate
+      ? nothing
+      : renderAction({
+          label: TEXT.comment,
+          icon: "comment",
+          onClick: () => dispatch(openOverlay.create({ overlay })),
+        })
+  }
   ${renderAction({
     label: TEXT.copyLink,
     icon: "link",

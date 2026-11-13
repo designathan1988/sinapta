@@ -170,5 +170,14 @@ describe("a template in the peek", () => {
     expect(host.querySelector(".database__template-banner")).not.toBeNull();
     expect(host.querySelector(`[aria-label="${COPY.peek.next}"]`)).toBeNull();
     expect(host.querySelector(`[aria-label="${COPY.peek.mode}"]`)).toBeNull();
+    // Only Expand at its top left, and no comment, as Notion's template
+    // window (study item 25, n58-banner/06-saved).
+    expect(
+      host.querySelector(`[aria-label="${COPY.peek.expand}"]`),
+    ).not.toBeNull();
+    expect(host.querySelector(`[aria-label="${COPY.peek.close}"]`)).toBeNull();
+    expect(
+      host.querySelector(`[aria-label="${COPY.peek.comment}"]`),
+    ).toBeNull();
   });
 });
