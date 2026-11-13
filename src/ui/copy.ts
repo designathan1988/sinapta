@@ -2,6 +2,7 @@
 // The text is kept in parts by area in src/ui/copy/; this file is the one
 // place the rest of the app reads it from.
 import {
+  AUTOMATION_TEXT,
   BLOCK_TEXT,
   CADENCE_TEXT,
   DATABASE_MENU_TEXT,
@@ -29,6 +30,7 @@ export const COPY = {
   ...SETTINGS_TEXT,
   ...SIDEBAR_VIEWS_TEXT,
   ...CADENCE_TEXT,
+  ...AUTOMATION_TEXT,
   database: {
     ...DATABASE_TEXT.database,
     ...DATABASE_MENU_TEXT,

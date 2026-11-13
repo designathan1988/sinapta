@@ -58,6 +58,7 @@ export interface OpenOverlay {
   // The panel shown of an overlay that moves between panels, such as a
   // view's settings; absent for its first panel.
   readonly panel?: string;
+  readonly draft?: unknown; // settings changed before Save
   // The lists and submenus opened from inside the overlay, outermost
   // first, such as a select in a popover or a column menu's "Edit
   // property": each closes alone with the ones opened from it, and the

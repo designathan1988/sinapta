@@ -4,7 +4,8 @@ import type { PropertyDefinition } from "../../blocks/database/index.ts";
 import type { PageBlock } from "../../blocks/page/index.ts";
 import type { AppState, Dispatch } from "../../state/index.ts";
 import { parseBlockId } from "../../model/index.ts";
-import { buttonLabel, pressRowButton } from "./properties/button/index.ts";
+import { pressButton } from "./button-press.view.ts";
+import { buttonLabel } from "./properties/button/index.ts";
 import { readFiles, renderFilesEditor } from "./properties/files/index.ts";
 import {
   readRelation,
@@ -57,7 +58,9 @@ export function renderRowButton(
     <button
       type="button"
       class="button-property"
-      @click=${() => page.dispatch(pressRowButton.create({ rowId, propertyId }))}
+      @click=${() => {
+        pressButton(page.state, page.dispatch, { rowId, propertyId });
+      }}
     >
       ${buttonLabel(property)}
     </button>

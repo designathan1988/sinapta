@@ -211,8 +211,8 @@ Within a story: model/command → selector → view → photo (each control in i
 ## Phase 13: Convergence (files and button properties, found by the journey)
 
 - [X] T067 Files popover with Upload and Link tabs (`properties/files/files-editor.view.ts`, `files-editor.css`, `cell-files.view.ts`), a button cell pressed at once (`table-keys.view.ts`, `button-property.definition.ts`) and without the cell bar (`cell-actions.view.ts`) per FR-029 (contradicts) — tests `files-editor-view.test.ts`, `cell-actions-view.test.ts`; photo `u13-props` against `n50-files-probe`.
-- [ ] T068 Button actions model: an ordered list of actions (edit property, add page to, edit pages in, show confirmation, open page or URL, define variables) in `button-property.schema.ts`, run by `row.pressButton` per FR-030 (missing) — test `button-property.test.ts`.
-- [ ] T069 The button's column menu as Notion's (`column-menu` items for a button) per FR-030 (contradicts) — test `column-menu-view.test.ts`.
-- [ ] T070 "Edit automation" dialog: When, Do, New action list, each action's settings, Save (`button-automation.view.ts`) per FR-030 (missing) — test `button-automation-view.test.ts`; photo `u14-button` against `n51-button/05-settings`, `07-actions`.
-- [ ] T071 Show confirmation before the actions, and Open page or URL after them, when the button is pressed per FR-030 (missing) — test `button-press-view.test.ts`.
+- [X] T068 Button actions model: an ordered list of actions (edit property, add page to, edit pages in, show confirmation, open page or URL, define variables) in `button-property.schema.ts`, run by `row.pressButton` per FR-030 (missing) — test `button-property.test.ts`.
+- [X] T069 The button's column menu as Notion's (`column-menu` items for a button) per FR-030 (contradicts) — test `column-menu-view.test.ts`.
+- [X] T070 "Edit automation" dialog: When, Do, New action list, each action's settings, Save (`button-automation.view.ts`) per FR-030 (missing) — test `button-automation-view.test.ts`; photo `u14-button` against `n51-button/05-settings`, `07-actions`.
+- [X] T071 Show confirmation before the actions, and Open page or URL after them, when the button is pressed per FR-030 (missing) — test `button-press-view.test.ts`.
 

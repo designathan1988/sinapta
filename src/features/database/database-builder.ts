@@ -19,7 +19,7 @@ import {
 import { optionCommands } from "./option.commands.ts";
 import { propertyCopyCommands } from "./property-copy.commands.ts";
 import { propertyTypeCommands } from "./property-type.commands.ts";
-import { buttonPropertyCommands } from "./properties/button/index.ts";
+import { buttonPressCommands } from "./button-press.commands.ts";
 import {
   relationCommands,
   relationTidier,
@@ -156,7 +156,7 @@ const DATABASE_TEST_COMMANDS = [
   ...propertyTypeCommands,
   ...propertyCopyCommands,
   ...relationCommands,
-  ...buttonPropertyCommands,
+  ...buttonPressCommands,
 ];
 
 // Commands and tidiers of other features a test needs beside the table's.

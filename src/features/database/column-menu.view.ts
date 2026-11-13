@@ -2,6 +2,7 @@
 // with its type's icon, then "Edit property" and "Change type", filter,
 // sort, group and calculate, how the table shows the column, and new
 // columns beside it; and the menu of property types to add.
+import { editAutomationItem } from "./button-automation-item.ts";
 import { nothing, type TemplateResult } from "lit-html";
 import type { BlockId } from "../../model/index.ts";
 import { closeOverlay, type Dispatch } from "../../state/index.ts";
@@ -100,6 +101,40 @@ function propertyItems(
   ];
 }
 
+// A button's column, as Notion's: Edit automation and Change type, then
+// Freeze, Hide and the places, without filter, sort, calculation, wrap
+// or moves.
+function buttonItems(column: TableColumn, context: TableContext): MenuEntry[] {
+  const left = new Set<string>([
+    COPY.database.wrapText,
+    COPY.database.moveLeft,
+    COPY.database.moveRight,
+  ]);
+  const keep = (entry: MenuEntry): boolean =>
+    !("label" in entry) || !left.has(entry.label);
+  return [
+    editAutomationItem(column.property, context),
+    changeTypeItem(column.property, context),
+    { kind: "divider" },
+    ...showItems(column, context).filter(keep),
+    ...placeItems(column, context).filter(keep),
+  ];
+}
+
+function columnItems(column: TableColumn, context: TableContext): MenuEntry[] {
+  if (column.property.type === "button") return buttonItems(column, context);
+  return [
+    ...propertyItems(column, context),
+    filterItem(column, context),
+    sortItem(column, context),
+    ...groupItems(column, context),
+    calculateItem(column, context),
+    ...showItems(column, context),
+    ...statusShowAsItems(column, context),
+    ...placeItems(column, context),
+  ];
+}
+
 export function renderColumnMenu(
   context: TableContext,
 ): TemplateResult | typeof nothing {
@@ -110,16 +145,7 @@ export function renderColumnMenu(
   return renderMenu({
     label: COPY.database.columnActions,
     ...(column.isTitle ? {} : { lead: renderName(column, context) }),
-    items: [
-      ...propertyItems(column, context),
-      filterItem(column, context),
-      sortItem(column, context),
-      ...groupItems(column, context),
-      calculateItem(column, context),
-      ...showItems(column, context),
-      ...statusShowAsItems(column, context),
-      ...placeItems(column, context),
-    ],
+    items: columnItems(column, context),
     context: { overlay: state.ui.overlay, dispatch },
     onClose: () => dispatch(closeOverlay.create({})),
   });

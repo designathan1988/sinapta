@@ -1,0 +1,88 @@
+@layer features {
+  /* Notion's button automation: small quiet labels over outlined boxes,
+     "When" joined to "Do" by a short line down the middle, each action a
+     card, and a blue Save filling the width at the foot. */
+  .automation {
+    display: grid;
+    gap: var(--space-stack-xs);
+    padding: var(--space-inset-md);
+  }
+
+  .automation__label {
+    margin: var(--space-none);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+  }
+
+  .automation__box {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    min-block-size: var(--size-banner-height);
+    padding: var(--space-none) var(--space-inset-md);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-md);
+    background: none;
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+    text-align: start;
+  }
+
+  .automation__new {
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
+  .automation__line {
+    justify-self: center;
+    inline-size: var(--size-border-thin);
+    block-size: var(--size-control-md);
+    margin-block: var(--space-stack-xs);
+    background-color: var(--color-border-strong);
+  }
+
+  .automation__card {
+    display: grid;
+    gap: var(--space-stack-xs);
+    padding: var(--space-inset-sm) var(--space-inset-md);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-md);
+  }
+
+  .automation__card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .automation__value,
+  .automation__where,
+  .automation__variable {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-inline-sm);
+    align-items: center;
+  }
+
+  .automation__property {
+    min-inline-size: var(--size-control-md);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+  }
+
+  .automation__field {
+    flex: 1;
+  }
+
+  .automation__save {
+    inline-size: 100%;
+    min-block-size: var(--size-control-md);
+    margin-block-start: var(--space-stack-md);
+  }
+}

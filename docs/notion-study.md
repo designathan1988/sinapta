@@ -946,7 +946,7 @@ items above, found while photographing them:
     over a blue "Link" button. Pagecraft drew the browser's own file
     field ("Escolher arquivo"), now the tabs; a press on a button cell
     presses it at once, and a button's cell has no comment/copy bar.
-27. **open** [T068–T071, FR-030] Button property (`n51-button`): its
+27. **done** [T068–T071, FR-030] Button property (`n51-button`): its
     column menu is Edit automation, Property access, Change type,
     Freeze, Hide, Insert left, Insert right, Duplicate property, Delete
     property (no filter, sort, calculation, wrap or move). Edit

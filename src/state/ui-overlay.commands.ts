@@ -102,7 +102,15 @@ export const setOverlayValues = defineCommand<{
     }),
 });
 
+// Keeps the settings being changed in the open overlay, until Save.
+export const setOverlayDraft = defineCommand<{ draft: unknown }>({
+  type: "ui.setOverlayDraft",
+  handle: (state, command) =>
+    withOverlay(state.ui, (overlay) => ({ ...overlay, draft: command.draft })),
+});
+
 export const uiOverlayCommands = [
+  setOverlayDraft,
   openOverlayPanel,
   openChildOverlay,
   closeChildOverlay,

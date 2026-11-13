@@ -1,32 +1,35 @@
 // @vitest-environment happy-dom
 import { render } from "lit-html";
 import { describe, expect, it } from "vitest";
+import type { Command } from "../../../../state/index.ts";
 import { createDatabaseApp } from "../../database-builder.ts";
 import { renderButtonPropertyConfig } from "./button-property-config.view.ts";
 
 describe("a button property's settings", () => {
-  it("turns opening the row on with a switch, as Notion's", () => {
+  it("opens Edit automation with the button's config", () => {
     const app = createDatabaseApp([{ name: "Go", type: "button" }], []);
     const property = app.database().props.properties[0];
     if (property === undefined) throw new Error("no property");
-    const changes: unknown[] = [];
+    const sent: Command[] = [];
     const host = document.createElement("div");
     document.body.replaceChildren(host);
     render(
-      renderButtonPropertyConfig(property, (config) => changes.push(config), {
+      renderButtonPropertyConfig(property, () => undefined, {
         databaseId: app.databaseId,
         state: app.store.getState(),
-        dispatch: () => ({ ok: true }),
+        dispatch: (command) => {
+          sent.push(command);
+          return { ok: true };
+        },
       }),
       host,
     );
-    const toggle = host.querySelector<HTMLElement>('[role="switch"]');
 
-    toggle?.click();
+    host.querySelector<HTMLElement>(".database__switch-row")?.click();
 
-    expect(toggle?.getAttribute("aria-checked")).toBe("false");
-    expect(changes).toEqual([
-      expect.objectContaining({ actions: [{ kind: "open-page" }] }),
+    expect(sent.map((command) => command.type)).toEqual([
+      "ui.openOverlay",
+      "ui.setOverlayDraft",
     ]);
   });
 });

@@ -4,7 +4,7 @@ import { renamePage } from "../../blocks/page/index.ts";
 import { openOverlay, type ActiveCell } from "../../state/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
-import { pressRowButton } from "./properties/button/index.ts";
+import { pressButton } from "./button-press.view.ts";
 import { setRowValue } from "./row.commands.ts";
 import { editorOf, propertyType } from "./property-registry.ts";
 import { CELL_POPOVERS, type TableContext } from "./table-cell.view.ts";
@@ -37,7 +37,7 @@ function startEditing(cell: CellRef, context: TableContext): void {
     toggleCell(cell, context, type);
   } else if (editor === "button" && cell.propertyId !== null) {
     const { rowId, propertyId } = cell;
-    context.dispatch(pressRowButton.create({ rowId, propertyId }));
+    pressButton(context.state, context.dispatch, { rowId, propertyId });
   } else if (CELL_POPOVERS[editor] !== undefined) {
     const overlay = { kind: CELL_POPOVERS[editor], anchorId: cell.key };
     context.dispatch(openOverlay.create({ overlay }));

@@ -1,3 +1,4 @@
+export { AUTOMATION_TEXT } from "./automation-text.ts";
 export { CADENCE_TEXT } from "./cadence-text.ts";
 export { BLOCK_TEXT } from "./block-text.ts";
 export { DATABASE_MENU_TEXT } from "./database-menu-text.ts";

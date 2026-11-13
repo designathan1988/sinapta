@@ -115,6 +115,7 @@ export { selectAssetUrl } from "./asset.selectors.ts";
 export {
   closeChildOverlay,
   openChildOverlay,
+  setOverlayDraft,
   setOverlayValues,
   openOverlayPanel,
   setOverlayQuery,

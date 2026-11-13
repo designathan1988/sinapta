@@ -4,6 +4,7 @@ import {
   closeChildOverlay,
   openChildOverlay,
   openOverlayPanel,
+  setOverlayDraft,
   setOverlayQuery,
   setOverlayValues,
 } from "./ui-overlay.commands.ts";
@@ -120,5 +121,19 @@ describe("an overlay's chosen values", () => {
     app.dispatch(setOverlayValues.create({ name: "in", values: null }));
     app.dispatch(setOverlayValues.create({ name: "date", values: null }));
     expect(app.overlay()?.values).toBeUndefined();
+  });
+});
+
+describe("an overlay's draft", () => {
+  it("keeps the settings being changed until the overlay closes", () => {
+    const { store, dispatch } = createTestApp({ commands: uiCommands });
+    dispatch(openOverlay.create({ overlay: { kind: "automation" } }));
+
+    dispatch(setOverlayDraft.create({ draft: { label: "Go", actions: [] } }));
+
+    expect(store.getState().ui.overlay?.draft).toEqual({
+      label: "Go",
+      actions: [],
+    });
   });
 });

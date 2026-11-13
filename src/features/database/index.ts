@@ -74,7 +74,7 @@ import { propertyCopyCommands } from "./property-copy.commands.ts";
 import { propertyTypeCommands } from "./property-type.commands.ts";
 import { createInlineDatabase } from "./inline-database.commands.ts";
 import { linkedViewCommands } from "./linked-view.commands.ts";
-import { buttonPropertyCommands } from "./properties/button/index.ts";
+import { buttonPressCommands } from "./button-press.commands.ts";
 import {
   relationCommands,
   relationTidier,
@@ -119,7 +119,7 @@ export const databaseCommands = [
   createInlineDatabase,
   ...linkedViewCommands,
   ...relationCommands,
-  ...buttonPropertyCommands,
+  ...buttonPressCommands,
 ];
 
 // The rules that keep database data whole after any command.

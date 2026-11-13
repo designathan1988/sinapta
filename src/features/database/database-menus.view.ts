@@ -1,4 +1,12 @@
 // Chooses which of the table's menus and popovers is open.
+import {
+  BUTTON_CONFIRM_OVERLAY,
+  renderButtonConfirm,
+} from "./button-press.view.ts";
+import {
+  BUTTON_AUTOMATION_OVERLAY,
+  renderButtonAutomation,
+} from "./button-automation.view.ts";
 import "./database-menus.css";
 import { nothing, type TemplateResult } from "lit-html";
 import { renderCellDate } from "./cell-date.view.ts";
@@ -94,6 +102,8 @@ const OVERLAYS: Record<string, Render> = {
   [VIEW_LIST_OVERLAY]: renderViewList,
   [VIEW_TAB_MENU_OVERLAY]: renderViewTabMenu,
   [TEMPLATES_OVERLAY]: renderTemplatesMenu,
+  [BUTTON_AUTOMATION_OVERLAY]: renderButtonAutomation,
+  [BUTTON_CONFIRM_OVERLAY]: renderButtonConfirm,
   [NEW_VIEW_OVERLAY]: renderNewViewMenu,
   [VALUE_COMPOSER_OVERLAY]: renderCellComments,
   [VALUE_DISCUSSIONS_OVERLAY]: renderCellComments,

@@ -33,6 +33,7 @@ export {
 } from "./block.schema.ts";
 export {
   CALCULATION_KINDS,
+  filterGroupSchema,
   viewTypeSchema,
   VIEW_TYPES,
   type CalculationKind,
