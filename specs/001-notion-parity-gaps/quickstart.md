@@ -41,6 +41,7 @@
 | Tab menu rows (FR-023) | a database inside a page, two views; click the active tab | `n40-tab-source/04-source.png` |
 | Sidebar section (FR-024) | tab menu › Add view to sidebar; point at the section; its "…" | `n40-sidebar/04-add-sidebar.png`, `n40-section-fix/02-more.png` |
 | Customize sidebar (FR-025) | sidebar foot › Customize sidebar; point at a row; its menu; Add shortcut; Add section; Done | `n42-customize2/03-shortcut-menu.png`, `08-add-shortcut.png`, `10-add-section.png` |
+| Reactions (FR-026) | select text › Add reaction › an emoji; open the block's comments; a feed card's smiley | `n43-reaction/03-select.png`, `n43-reaction2/04-reaction-tip.png` |
 
 ## Once, at the end
 

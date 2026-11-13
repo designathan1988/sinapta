@@ -882,8 +882,16 @@ items above, found while photographing them:
     included), beside Is on or before and Is on or after.
 20. **done** [T042, FR-021 in specs/001-notion-parity-gaps/tasks.md] (`p8-rollup-default`) A new rollup works out from the
     relation and property its settings show, before one is chosen.
-21. **out of scope** (spec.md Assumptions: people, AI) The selection panel leaves out Notion's add-reaction and
-    suggest-edit buttons and the AI skills (out of scope: people, AI).
+21. **done** [T057–T060, FR-026 in specs/001-notion-parity-gaps/tasks.md]
+    (`p28-reaction`, `p28-feed-reaction`; Notion `n43-reaction`,
+    `n43-reaction2`, `n43-suggest`) The selection panel's "Add reaction"
+    (a smiley with +, beside Comentário) opens Notion's emoji picker
+    ("Filtrar…", Pessoas…) and marks the text as a discussion: built, with
+    reactions on comments (chips, "Add reaction" while pointed at) and on
+    feed cards. Its suggest-edit button turns the page to "Sugerindo"
+    ("Você está sugerindo", a blue "Sugerindo ×" in the top bar; a reload
+    turns it off) and its AI skills (Melhorar escrita, Revisão, Explicar,
+    Reformatar, Editar com IA) stay out (spec.md Assumptions: people, AI).
 22. **done** [T046, T047, T049, FR-023, FR-024 in specs/001-notion-parity-gaps/tasks.md] (`p25-tab-source`, `p25-section`; Notion `n40-tab-source`,
     `n40-sidebar`, `n40-section-fix`) The view tab menu's Source (the
     database's name in grey, a submenu), Add view to sidebar (enabled in

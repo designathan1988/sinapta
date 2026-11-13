@@ -192,3 +192,10 @@ Within a story: model/command → selector → view → photo (each control in i
 - [X] T055 Draw the mode and the arranged sidebar: `sidebar-customize.view.ts`, `sidebar-customize-menus.view.ts`, `sidebar-customize-choices.ts`, `sidebar-section-look.ts`, `sidebar-shortcuts.view.ts`, `sidebar-customize.css`, `sidebar.view.ts` per FR-025 (missing) — test `sidebar-customize-view.test.ts`; photos `p27-customize`, `p27-customize-add` against Notion `n42-customize2`.
 - [X] T056 Check the arrangement after a reload (New database removed, Private above Favorites kept) per SC-003 — `p27-customize/20-after`.
 
+## Phase 11: Convergence (selection panel reactions)
+
+- [X] T057 Re-photograph Notion's selection panel (Comment, Add reaction, Suggest edits, AI skills), open Add reaction's emoji picker and the suggest-edit mode without keeping either — photos `n43-reaction/03-select`, `n43-reaction2/04-reaction-tip`, `n43-suggest/04-suggest`; a reload shows "Suggesting" off.
+- [X] T058 Reactions on comments: `reactions` in `pageCommentSchema` (`src/blocks/page/page.schema.ts`), `startDiscussion` with a `reaction`, `comment.toggleReaction` in `src/features/comments/reaction.commands.ts` per FR-026 (missing) — test `reaction.test.ts`.
+- [X] T059 "Add reaction" in the selection panel (`format-toolbar-rows.view.ts`), the emoji picker overlay (`reaction-picker.view.ts`), chips and the hover button on comments (`reactions.view.ts`, `reactions.css`), and a feed card's page reactions (`page-reactions.view.ts`, `layouts/feed/feed.view.ts`) per FR-026 (missing) — tests `reactions-view.test.ts`, `format-toolbar-view.test.ts`; photos `p28-reaction`, `p28-feed-reaction`.
+- [X] T060 Record item 21 in `docs/notion-study.md`: reactions built; suggest edits and AI skills out per spec.md Assumptions, with the photos of T057.
+

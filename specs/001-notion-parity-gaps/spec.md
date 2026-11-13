@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-13
 
-**Status**: Implemented (T001–T056; amended 2026-11-13 after the converge and analyze passes)
+**Status**: Implemented (T001–T060; amended 2026-11-13 after the converge and analyze passes)
 
 **Input**: User description: "Notion parity, remaining gaps found by the 2026-11-13 audit (docs/notion-study.md, section 'Gaps found by the audit'). Pagecraft must match Notion's layout, behavior and words for: view tab shown as text and icon, text only or icon only; a date filter relative to today and the start or end of a range; grouping text by exact value or first letter and numbers by unique value or interval; count calculations shown as 99+; rollup filters with any / none / every; a status shown as a checkbox; card layout compact or list, gallery fit media, calendar wrap page titles, timeline separate start and end dates, list directly edit page name, feed wrap properties; conditional color; a floating outline; the text selection toolbar in Notion's new panel form; the slash menu washing its line with '/Type to search'; the filter popover in Notion's simple form; the number 'Show as' choice as three pictured tiles. Out of scope: AI, sharing, people, automations, paid-plan features. Every item checked with a photo against Notion at 1440x900 2x, and the full suite stays green."
 
@@ -272,6 +272,13 @@ after reload and applies only to that view.
   Pages: Database view; a section left out); a full-width "Done" ends
   it. The arrangement is the owner's own and survives a reload.
 
+- **FR-026**: "Add reaction", beside Comment in the selection panel, on a
+  comment while it is pointed at, and on a feed card, MUST open the emoji
+  picker; a reaction on selected text MUST start a discussion that is
+  the reaction alone, marking the text; each reaction MUST show as a chip
+  under its comment (or on the card) that takes it away, and a
+  reaction-only discussion MUST go with its last reaction.
+
 **Quality bar**
 
 - **FR-017**: Every interface text MUST use Notion's English words as
@@ -340,6 +347,7 @@ after reload and applies only to that view.
   Skills, Notion Calendar, Library, Connections and External agents (AI,
   integrations or other products) and the sections Upcoming events,
   Recents, Shared, Chats, Agents, AI notes, Notion apps and Developer
-  (Notion Calendar, sharing, AI or integrations). Reactions and suggest
-  edits stay out wherever Notion shows them (selection panel, comments,
-  feed cards): they are for people working together.
+  (Notion Calendar, sharing, AI or integrations). The selection panel's
+  suggest edits stays out: in Notion it turns the page to "Suggesting"
+  (`n43-suggest`), edits others review and accept — work between people;
+  its AI skills and "Edit with AI" stay out (AI).
