@@ -42,6 +42,7 @@ export interface Choice<TValue extends string> {
   readonly value: TValue;
   readonly label: string;
   readonly icon?: MenuItem["icon"];
+  readonly isFlush?: boolean;
 }
 
 export interface Setting<TValue extends string> {
@@ -61,6 +62,7 @@ export function choiceItems<TValue extends string>(
   return setting.choices.map((choice) => ({
     label: choice.label,
     ...(choice.icon !== undefined && { icon: choice.icon }),
+    ...(choice.isFlush === true && { isFlush: true }),
     check: "radio",
     isChecked: choice.value === setting.value,
     keepsOpen: true,

@@ -8,9 +8,8 @@ import { startPointerDrag, type DragPosition } from "../../../ui/drag/index.ts";
 import { renderIcon } from "../../../ui/icon/index.ts";
 import type { MenuItem } from "../../../ui/menu/index.ts";
 import { renderSelect } from "../../../ui/select/index.ts";
-import { propertyType } from "../property-registry.ts";
 import type { TableContext } from "../table-cell.view.ts";
-import { titleProperty } from "../table-model.selectors.ts";
+import { titleProperty, propertyIcon } from "../table-model.selectors.ts";
 import { setViewSorts, sortByProperty, type Sort } from "../view.commands.ts";
 import { goTo, type SettingsPanel } from "./settings-panel.ts";
 
@@ -52,7 +51,7 @@ function renderProperty(at: SortAt, context: TableContext): TemplateResult {
       options: properties.map((property) => ({
         value: property.id,
         label: property.name,
-        icon: propertyType(property.type).icon,
+        icon: propertyIcon(property),
       })),
       variant: "quiet",
       onChoose: (value) => {
@@ -202,7 +201,7 @@ export function sortAddPanel(context: TableContext): SettingsPanel {
     .filter((property) => !sorted.has(property.id))
     .map((property): MenuItem => ({
       label: property.name,
-      icon: propertyType(property.type).icon,
+      icon: propertyIcon(property),
       keepsOpen: true,
       onSelect: () => {
         const sort = { viewId: view.id, propertyId: property.id };

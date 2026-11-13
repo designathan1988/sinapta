@@ -11,6 +11,7 @@ import { isGroupable } from "../row-groups.selectors.ts";
 import type { TableContext } from "../table-cell.view.ts";
 import { choiceItems, panelRow, type SettingsPanel } from "./settings-panel.ts";
 
+import { propertyIcon } from "../table-model.selectors.ts";
 const TEXT = COPY.database;
 const KINDS = ["column", "bar", "line", "donut"] as const;
 const AGGREGATES = ["sum", "average", "min", "max"] as const;
@@ -87,7 +88,7 @@ export function chartXPanel(context: TableContext): SettingsPanel {
       choices: properties.map((property) => ({
         value: property.id,
         label: property.name,
-        icon: propertyType(property.type).icon,
+        icon: propertyIcon(property),
       })),
       value: chartAxisProperty(database, view)?.id,
       back: "layout",

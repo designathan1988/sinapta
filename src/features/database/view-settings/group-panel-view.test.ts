@@ -99,3 +99,25 @@ describe("the group panel's Text by and Number by", () => {
     );
   });
 });
+
+describe("the Group by list", () => {
+  it("lists None, the title column, then the others by name", () => {
+    const { host } = rendered("Owner", "group-by");
+    const labels = [...host.querySelectorAll(".menu [data-index]")].map(
+      (item) => item.querySelector(".menu__label")?.textContent.trim(),
+    );
+    expect(labels).toEqual(["None", "Name", "Owner", "Points"]);
+  });
+
+  it("removes the grouping when None is chosen", () => {
+    const { row, sent, viewId } = rendered("Points", "group-by");
+    row("None")?.click();
+    expect(sent).toContainEqual(
+      expect.objectContaining({
+        type: "view.setGroupBy",
+        viewId,
+        propertyId: null,
+      }),
+    );
+  });
+});

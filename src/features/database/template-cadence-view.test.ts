@@ -101,3 +101,19 @@ describe("Edit cadence", () => {
     );
   });
 });
+
+describe("Edit cadence, once closed", () => {
+  it("gives the focus back to its Repeat button", () => {
+    for (const label of ["Save", "Cancel recurrence"]) {
+      const { button } = rendered();
+      const repeat = document.createElement("button");
+      repeat.setAttribute("data-overlay-anchor", "");
+      repeat.setAttribute("aria-expanded", "true");
+      document.body.append(repeat);
+
+      button(label)?.click();
+
+      expect(document.activeElement).toBe(repeat);
+    }
+  });
+});

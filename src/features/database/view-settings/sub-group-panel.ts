@@ -4,7 +4,6 @@
 import type { GroupBy } from "../../../model/index.ts";
 import { COPY } from "../../../ui/copy.ts";
 import type { MenuEntry, MenuItem } from "../../../ui/menu/index.ts";
-import { propertyType } from "../property-registry.ts";
 import { isGroupable } from "../row-groups.selectors.ts";
 import {
   setSubGroupOptions,
@@ -14,6 +13,7 @@ import type { TableContext } from "../table-cell.view.ts";
 import { GROUP_SORTS } from "./choice-panels.ts";
 import { choiceItems, panelRow, type SettingsPanel } from "./settings-panel.ts";
 
+import { propertyIcon } from "../table-model.selectors.ts";
 const TEXT = COPY.database;
 
 // The properties a board can sub-group by: groupable, not its grouping.
@@ -27,7 +27,7 @@ function subGroupChoices(context: TableContext) {
     .map((property) => ({
       value: property.id,
       label: property.name,
-      icon: propertyType(property.type).icon,
+      icon: propertyIcon(property),
     }));
 }
 
@@ -84,8 +84,7 @@ function subGroupedItems(
   const property = context.model.database.props.properties.find(
     (item) => item.id === subGroupBy.propertyId,
   );
-  const icon =
-    property === undefined ? "group" : propertyType(property.type).icon;
+  const icon = property === undefined ? "group" : propertyIcon(property);
   return [
     panelRow(
       context,

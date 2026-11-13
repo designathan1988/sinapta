@@ -5,7 +5,6 @@ import type { GroupBy } from "../../../model/index.ts";
 import { COPY } from "../../../ui/copy.ts";
 import type { MenuEntry, MenuItem } from "../../../ui/menu/index.ts";
 import { setGroupOptions, setViewGroupBy } from "../group.commands.ts";
-import { propertyType } from "../property-registry.ts";
 import {
   groupableProperties,
   groupPropertyOf,
@@ -14,24 +13,44 @@ import type { TableContext } from "../table-cell.view.ts";
 import { groupByKindRows } from "./group-by-panels.ts";
 import { choiceItems, panelRow, type SettingsPanel } from "./settings-panel.ts";
 
-// The properties to group by, the current one checked; choosing one
+import { propertyIcon, TITLE_PROPERTY_ID } from "../table-model.selectors.ts";
+const NO_GROUP = "";
+
+// Names in the order Notion lists them: by character code, so "URL"
+// comes before "Última edição".
+function byName(a: PropertyDefinition, b: PropertyDefinition): number {
+  if (a.name === b.name) return 0;
+  return a.name < b.name ? -1 : 1;
+}
+
+// The properties to group by as Notion lists them: None, the title
+// column, then the others by name, the current one checked; choosing one
 // shows the group panel with its settings.
 export function groupByItems(context: TableContext): MenuItem[] {
   const { model, dispatch } = context;
   const groupable = groupableProperties(model.database);
+  const isTitle = (property: PropertyDefinition) =>
+    property.id === TITLE_PROPERTY_ID;
+  const ordered = [
+    ...groupable.filter(isTitle),
+    ...groupable.filter((property) => !isTitle(property)).sort(byName),
+  ];
   return choiceItems(context, {
-    choices: groupable.map((property) => ({
-      value: property.id,
-      label: property.name,
-      icon: propertyType(property.type).icon,
-    })),
-    value: model.view.groupBy?.propertyId,
+    choices: [
+      { value: NO_GROUP, label: COPY.database.noGrouping, isFlush: true },
+      ...ordered.map((property) => ({
+        value: property.id,
+        label: property.name,
+        icon: propertyIcon(property),
+      })),
+    ],
+    value: model.view.groupBy?.propertyId ?? NO_GROUP,
     back: "group",
     choose: (id) => {
       const property = groupable.find((item) => item.id === id);
-      if (property === undefined) return;
-      const viewId = model.view.id;
-      dispatch(setViewGroupBy.create({ viewId, propertyId: property.id }));
+      if (id !== NO_GROUP && property === undefined) return;
+      const propertyId = property?.id ?? null;
+      dispatch(setViewGroupBy.create({ viewId: model.view.id, propertyId }));
     },
   });
 }
@@ -92,7 +111,7 @@ function groupedItems(
   const { groupBy } = context.model.view;
   if (groupBy === undefined) return [];
   const { dateSteps, groupSorts } = COPY.database;
-  const icon = propertyType(property.type).icon;
+  const icon = propertyIcon(property);
   const dateStep = dateSteps[groupBy.dateBy];
   const dateRow = panelRow(
     context,

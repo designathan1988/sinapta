@@ -8,7 +8,10 @@ import { selectPage, REPEAT_PERIODS } from "../../blocks/page/index.ts";
 import { closeOverlay, setOverlayValues } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderConfirm } from "../../ui/confirm/index.ts";
-import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
+import {
+  focusOverlayAnchor,
+  showPopoverWhenConnected,
+} from "../../ui/overlay/index.ts";
 import { renderSelect } from "../../ui/select/index.ts";
 import {
   changeDraft,
@@ -109,17 +112,24 @@ function isChanged(context: CadenceContext): boolean {
   return now !== before.join();
 }
 
+// Closes the panel and gives the focus back to its Repeat button, so the
+// keys reach the template's window again.
+function close(context: CadenceContext): void {
+  focusOverlayAnchor();
+  context.dispatch(closeOverlay.create({}));
+}
+
 function save(context: CadenceContext): void {
   const { dispatch, templateId, today } = context;
   const cadence = draftCadence(context.draft);
   dispatch(setTemplateRepeat.create({ templateId, cadence, today }));
-  dispatch(closeOverlay.create({}));
+  close(context);
 }
 
 function stop(context: CadenceContext): void {
   const { dispatch, templateId, today } = context;
   dispatch(setTemplateRepeat.create({ templateId, cadence: null, today }));
-  dispatch(closeOverlay.create({}));
+  close(context);
 }
 
 function renderDiscard(
@@ -132,7 +142,9 @@ function renderDiscard(
     answer: TEXT.discard,
     cancel: TEXT.discardCancel,
     icon: "trash",
-    onAnswer: () => dispatch(closeOverlay.create({})),
+    onAnswer: () => {
+      close(context);
+    },
     onCancel: () =>
       dispatch(setOverlayValues.create({ name: ASKING, values: null })),
   });
@@ -142,11 +154,12 @@ function onKey(event: KeyboardEvent, context: CadenceContext): void {
   if (event.key !== "Escape" || event.defaultPrevented) return;
   event.preventDefault();
   event.stopPropagation();
-  const { dispatch } = context;
-  dispatch(
-    isChanged(context)
-      ? setOverlayValues.create({ name: ASKING, values: ["discard"] })
-      : closeOverlay.create({}),
+  if (!isChanged(context)) {
+    close(context);
+    return;
+  }
+  context.dispatch(
+    setOverlayValues.create({ name: ASKING, values: ["discard"] }),
   );
 }
 

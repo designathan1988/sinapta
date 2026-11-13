@@ -3,7 +3,9 @@ import { trashPage } from "../../blocks/page/index.ts";
 import { createDatabaseApp, type DatabaseApp } from "./database-builder.ts";
 import { removeProperty } from "./database.commands.ts";
 import {
+  propertyIcon,
   selectTableModel,
+  titleProperty,
   TITLE_PROPERTY_ID,
 } from "./table-model.selectors.ts";
 import {
@@ -208,5 +210,18 @@ describe("selectTableModel", () => {
     app.dispatch(trashPage.create({ pageId: rowId }));
 
     expect(titles(app)).toEqual(["Keep"]);
+  });
+});
+
+describe("propertyIcon", () => {
+  it("shows the title column as its header does, and others by type", () => {
+    const title = titleProperty();
+    if (title === undefined) throw new Error("no title");
+    const app = createDatabaseApp([{ name: "Notes", type: "text" }], []);
+    const [notes] = app.database().props.properties;
+    if (notes === undefined) throw new Error("setup");
+
+    expect(propertyIcon(title)).toBe("title");
+    expect(propertyIcon(notes)).toBe("text");
   });
 });

@@ -9,7 +9,6 @@ import type { GroupBy, View } from "../../../model/index.ts";
 import { COPY } from "../../../ui/copy.ts";
 import { setCardOptions, type CardOptions } from "../card.commands.ts";
 import { setGroupOptions, type GroupOptions } from "../group.commands.ts";
-import { propertyType } from "../property-registry.ts";
 import type { TableContext } from "../table-cell.view.ts";
 import {
   DATE_PROPERTY_TYPES,
@@ -20,6 +19,7 @@ import { togglePropertyHidden } from "../view.commands.ts";
 import { groupByItems } from "./group-panel.ts";
 import { choiceItems, type SettingsPanel } from "./settings-panel.ts";
 
+import { propertyIcon } from "../table-model.selectors.ts";
 export const GROUP_SORTS: readonly GroupBy["sort"][] = [
   "manual",
   "ascending",
@@ -220,7 +220,7 @@ export function propertiesPanel(context: TableContext): SettingsPanel {
     const isHidden = model.view.hiddenPropertyIds.includes(property.id);
     return {
       label: property.name,
-      icon: propertyType(property.type).icon,
+      icon: propertyIcon(property),
       endIcon: isHidden ? ("eye-off" as const) : ("eye" as const),
       keepsOpen: true,
       onSelect: () =>

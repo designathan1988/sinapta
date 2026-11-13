@@ -18,9 +18,8 @@ import {
   ruleAnchorId,
   VIEW_FILTER_RULE_OVERLAY,
 } from "./filter-rule-anchor.ts";
-import { propertyType } from "./property-registry.ts";
 import type { TableContext } from "./table-cell.view.ts";
-import { titleProperty } from "./table-model.selectors.ts";
+import { titleProperty, propertyIcon } from "./table-model.selectors.ts";
 import { setViewFilter } from "./view.commands.ts";
 import { VIEW_FILTER_PILL_OVERLAY } from "./view-pills.view.ts";
 
@@ -43,7 +42,7 @@ export function renderFilterStart(context: TableContext): TemplateResult {
   const all = title === undefined ? properties : [title, ...properties];
   const items = all.map((property): MenuItem => ({
     label: property.name,
-    icon: propertyType(property.type).icon,
+    icon: propertyIcon(property),
     keepsOpen: true,
     onSelect: () => {
       const condition = newCondition(property, state);

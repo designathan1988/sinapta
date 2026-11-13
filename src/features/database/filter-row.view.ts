@@ -16,9 +16,9 @@ import { renderFilterOperand } from "./filter-operand.view.ts";
 import type { FilterPath } from "./filter-edit.ts";
 import type { FilterOperator } from "./property-definition.ts";
 import { operatorsOf } from "./filter-operators.ts";
-import { propertyType } from "./property-registry.ts";
 import type { TableContext } from "./table-cell.view.ts";
 
+import { propertyIcon } from "./table-model.selectors.ts";
 export interface FieldChange {
   readonly field: "property" | "operator" | "value" | "dateEnd";
   readonly value: string;
@@ -58,7 +58,7 @@ function renderPropertyChoice(
       options: filterProperties(context).map((item) => ({
         value: item.id,
         label: item.name,
-        icon: propertyType(item.type).icon,
+        icon: propertyIcon(item),
       })),
       searchPlaceholder: COPY.database.searchProperty,
       onChoose: (value) => {

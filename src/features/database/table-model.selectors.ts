@@ -24,6 +24,7 @@ import {
   type ViewId,
 } from "../../model/index.ts";
 import type { AppState } from "../../state/index.ts";
+import type { IconName } from "../../ui/icon/index.ts";
 import { cellValue, matchesGroup } from "./filter-match.ts";
 import { propertyType } from "./property-registry.ts";
 import { selectActiveView, selectViewHolder } from "./view-holder.selectors.ts";
@@ -82,6 +83,12 @@ type Features = typeof features;
 export function titleProperty(): PropertyDefinition | undefined {
   if (TITLE_PROPERTY_ID === undefined) return undefined;
   return { id: TITLE_PROPERTY_ID, name: "Name", type: "text" };
+}
+
+// A property's icon in lists: the title column's "Aa", as its header.
+export function propertyIcon(property: PropertyDefinition): IconName {
+  if (property.id === TITLE_PROPERTY_ID) return "title";
+  return propertyType(property.type).icon;
 }
 
 function columnDefs(

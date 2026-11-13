@@ -16,9 +16,8 @@ import {
   VIEW_FILTER_RULE_OVERLAY,
 } from "./filter-rule-anchor.ts";
 import { filterCount, isFilterGroup } from "./filter-match.ts";
-import { propertyType } from "./property-registry.ts";
 import type { TableContext } from "./table-cell.view.ts";
-import { titleProperty } from "./table-model.selectors.ts";
+import { titleProperty, propertyIcon } from "./table-model.selectors.ts";
 
 // Each pill opens its popover by its own kind, so that the popover sits
 // by the pill that opened it, not by the toolbar's button.
@@ -113,8 +112,7 @@ function filterPills(context: TableContext): Pill[] {
             ? ""
             : filterLabel(rule, property, context.state),
         // The property's own icon, as Notion's rule pills show.
-        icon:
-          property === undefined ? "filter" : propertyType(property.type).icon,
+        icon: property === undefined ? "filter" : propertyIcon(property),
         isRule: true,
       },
     ];
