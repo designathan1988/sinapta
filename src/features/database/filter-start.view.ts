@@ -12,7 +12,7 @@ import {
 import { COPY } from "../../ui/copy.ts";
 import { renderMenu, type MenuItem } from "../../ui/menu/index.ts";
 import { addFilter } from "./filter-edit.ts";
-import { firstOperator } from "./filter-fields.ts";
+import { newCondition } from "./filter-fields.ts";
 import {
   isSimpleFilter,
   ruleAnchorId,
@@ -26,8 +26,7 @@ import { VIEW_FILTER_PILL_OVERLAY } from "./view-pills.view.ts";
 
 // The new rule opens by its pill, as Notion's; a rule added to an
 // advanced filter opens with the others.
-function openedRule(context: TableContext, filter: FilterGroup): OpenOverlay {
-  const { holderId } = context.model;
+export function openedRule(holderId: string, filter: FilterGroup): OpenOverlay {
   if (!isSimpleFilter(filter))
     return { kind: VIEW_FILTER_PILL_OVERLAY, anchorId: holderId };
   const index = filter.items.length - 1;
@@ -47,14 +46,12 @@ export function renderFilterStart(context: TableContext): TemplateResult {
     icon: propertyType(property.type).icon,
     keepsOpen: true,
     onSelect: () => {
-      const condition = {
-        propertyId: property.id,
-        operator: firstOperator(property),
-        value: "",
-      };
+      const condition = newCondition(property, state);
       const filter = addFilter(model.view.filter, [], condition);
       dispatch(setViewFilter.create({ viewId: model.view.id, filter }));
-      dispatch(openOverlay.create({ overlay: openedRule(context, filter) }));
+      dispatch(
+        openOverlay.create({ overlay: openedRule(model.holderId, filter) }),
+      );
     },
   }));
   return renderMenu({

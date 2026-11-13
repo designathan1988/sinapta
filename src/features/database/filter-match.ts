@@ -3,15 +3,20 @@
 // passes every row. A condition on a property that is gone, with an
 // operator its type does not know, or without its value yet, passes too.
 import type { PropertyDefinition } from "../../blocks/database/index.ts";
-import type {
-  Filter,
-  FilterGroup,
-  FilterItem,
-  InnerFilterGroup,
+import {
+  parseBlockId,
+  type Filter,
+  type FilterGroup,
+  type FilterItem,
+  type InnerFilterGroup,
 } from "../../model/index.ts";
+import type { AppState } from "../../state/index.ts";
+import { operatorOf } from "./filter-operators.ts";
 import { propertyType } from "./property-registry.ts";
 
 export interface RowValues {
+  // The row's page, for conditions on values worked out from other rows.
+  readonly id?: string;
   readonly title: string;
   readonly values: Readonly<Record<string, unknown>>;
 }
@@ -21,6 +26,8 @@ export interface MatchContext {
   readonly properties: readonly PropertyDefinition[];
   readonly titleId: string | undefined;
   readonly today: string;
+  readonly weekStartsOn?: 0 | 1 | undefined;
+  readonly state?: AppState | undefined;
 }
 
 // A cell's value as its property's type reads it; the title column reads
@@ -43,15 +50,20 @@ function matchesFilter(
     (item) => item.id === filter.propertyId,
   );
   if (property === undefined) return true;
-  const operator = propertyType(property.type).filterOperators.find(
-    (item) => item.id === filter.operator,
-  );
+  const operator = operatorOf(property, filter.operator, context.state);
   if (operator === undefined) return true;
   const operand = typeof filter.value === "string" ? filter.value : "";
   // A condition still waiting for its value keeps every row, as in Notion.
   if (operator.needsOperand && operand.trim() === "") return true;
   const value = cellValue(row, property, context.titleId);
-  return operator.test(value, operand, { property, today: context.today });
+  return operator.test(value, operand, {
+    property,
+    today: context.today,
+    weekStartsOn: context.weekStartsOn,
+    filter,
+    rowId: parseBlockId(row.id ?? "") ?? undefined,
+    state: context.state,
+  });
 }
 
 export function isFilterGroup(item: FilterItem): item is InnerFilterGroup {

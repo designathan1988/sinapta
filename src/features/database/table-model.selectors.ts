@@ -64,6 +64,9 @@ export interface TableModel {
   // Rows after the view's filters and sorts.
   readonly rows: readonly TableRow[];
   readonly totalRowCount: number;
+  // Today as "YYYY-MM-DD" (empty when unknown), which the model's filters
+  // and its rows' colors were worked out against.
+  readonly today?: string;
 }
 
 const features = tableFeatures({
@@ -119,11 +122,14 @@ interface Query {
   readonly view: View;
   readonly properties: readonly PropertyDefinition[];
   readonly today: string;
+  readonly state: AppState;
 }
 
 function sortedAndFiltered(data: TableRow[], query: Query): TableRow[] {
-  const { view, properties, today } = query;
-  const context = { properties, titleId: TITLE_PROPERTY_ID, today };
+  const { view, properties, today, state } = query;
+  const weekStartsOn = view.calendar.weekStartsOn;
+  const titleId = TITLE_PROPERTY_ID;
+  const context = { properties, titleId, today, weekStartsOn, state };
   const shown = data.filter((row) => matchesGroup(row, view.filter, context));
   const table = constructTable({
     features,
@@ -224,8 +230,9 @@ export function selectTableModel(
       [title, ...others].map((property) => toColumn(view, property)),
       view.frozenCount,
     ),
-    rows: sortedAndFiltered(data, { view, properties: all, today }),
+    rows: sortedAndFiltered(data, { view, properties: all, today, state }),
     totalRowCount: data.length,
+    today,
   };
   cache.set(holderId, { blocks, view, today, model });
   return model;

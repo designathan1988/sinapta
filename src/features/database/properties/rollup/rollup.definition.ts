@@ -7,6 +7,7 @@ import {
   type PropertyType,
 } from "../../property-definition.ts";
 import { renderRollupConfig } from "./rollup-config.view.ts";
+import { rollupFilterOperators } from "./rollup-filters.ts";
 import { readRollupResult, writeRollupResult } from "./rollup-math.ts";
 import { rollupConfigSchema } from "./rollup.schema.ts";
 import { selectRollup } from "./rollup.selectors.ts";
@@ -22,6 +23,18 @@ function compareResults(a: unknown, b: unknown): number {
   });
 }
 
+// Conditions on the rollup's written text, from before rollups asked
+// their target's conditions of the related values.
+const TEXT_CONDITIONS = [
+  {
+    ...containsText(),
+    test: (value: unknown, operand: string) =>
+      containsText().test(writeRollupResult(value), operand),
+  },
+  IS_EMPTY,
+  IS_NOT_EMPTY,
+];
+
 export const rollupProperty: PropertyType = {
   type: "rollup",
   label: "Rollup",
@@ -31,15 +44,9 @@ export const rollupProperty: PropertyType = {
   parse: () => undefined,
   format: writeRollupResult,
   compare: compareResults,
-  filterOperators: [
-    {
-      ...containsText(),
-      test: (value, operand) =>
-        containsText().test(writeRollupResult(value), operand),
-    },
-    IS_EMPTY,
-    IS_NOT_EMPTY,
-  ],
+  filterOperators: TEXT_CONDITIONS,
+  filterOperatorsFor: (property, state) =>
+    rollupFilterOperators(property, TEXT_CONDITIONS, state),
   renderCell: writeRollupResult,
   configSchema: rollupConfigSchema,
   renderConfigEditor: renderRollupConfig,

@@ -51,8 +51,9 @@ const GROUP_OF: Readonly<Record<DateStep, (day: string) => GroupKey>> = {
 };
 
 export const DATE_GROUPING: Grouping = {
-  keysOf: (value, _property, step) => {
+  keysOf: (value, _property, groupBy) => {
     const date = readDateValue(value);
+    const step: DateStep = groupBy?.dateBy ?? "month";
     return date === undefined ? [] : [GROUP_OF[step](date.start)];
   },
 };

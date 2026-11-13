@@ -12,7 +12,11 @@ import {
   selectPageTitle,
   type PageBlock,
 } from "../../../../blocks/page/index.ts";
-import { parseBlockId, type BlockId } from "../../../../model/index.ts";
+import {
+  parseBlockId,
+  parsePropertyId,
+  type BlockId,
+} from "../../../../model/index.ts";
 import type { AppState } from "../../../../state/index.ts";
 import { propertyType } from "../../property-registry.ts";
 import { selectRowValues } from "../../row-values.selectors.ts";
@@ -84,4 +88,62 @@ export function selectRollup(
   if (target === undefined) return undefined;
   const cells = related.rows.map((page) => cellOf(page, target));
   return applyRollup(config.function, cells);
+}
+
+// What a rollup reads, for its filter: the related database's property
+// (or a title column), and per row the value of each related row.
+export interface RollupTarget {
+  readonly target: PropertyDefinition;
+  readonly database: DatabaseBlock;
+}
+
+const TITLE_COLUMN = { name: "Name", type: "text" } as const;
+
+function titleTarget(): PropertyDefinition | undefined {
+  const id = parsePropertyId(TITLE_TARGET);
+  return id === undefined ? undefined : { id, ...TITLE_COLUMN };
+}
+
+export function selectRollupTarget(
+  state: AppState,
+  holderId: BlockId,
+  property: PropertyDefinition,
+): RollupTarget | undefined {
+  const config = readRollupConfig(property.config);
+  const holder = selectDatabase(state, holderId);
+  if (config === undefined || holder === undefined) return undefined;
+  const relation = holder.props.properties.find(
+    (item) => item.id === config.relationPropertyId,
+  );
+  const targetId = readRelationConfig(relation?.config)?.databaseId;
+  const database = selectDatabase(state, targetId ?? null);
+  if (database === undefined) return undefined;
+  const target =
+    config.targetPropertyId === TITLE_TARGET
+      ? titleTarget()
+      : database.props.properties.find(
+          (item) => item.id === config.targetPropertyId,
+        );
+  return target === undefined ? undefined : { target, database };
+}
+
+// The value of each related row, as the target's type reads it.
+export function selectRollupValues(
+  state: AppState,
+  rowId: BlockId,
+  property: PropertyDefinition,
+): readonly unknown[] | undefined {
+  const config = readRollupConfig(property.config);
+  const row = selectPage(state, rowId);
+  if (config === undefined || row === undefined) return undefined;
+  const related = selectRelated(state, row, config);
+  if (related === undefined) return undefined;
+  if (config.targetPropertyId === TITLE_TARGET) {
+    return related.rows.map((page) => titleCell(page).value);
+  }
+  const target = related.database.props.properties.find(
+    (item) => item.id === config.targetPropertyId,
+  );
+  if (target === undefined) return undefined;
+  return related.rows.map((page) => cellOf(page, target).value);
 }

@@ -1,6 +1,7 @@
 @layer features {
-  /* Notion's rule popover: the property and its operator on one line,
-     the delete button at its end, the value under them. */
+  /* Notion's rule popover: a head with the property's name in grey, the
+     condition in bold with its chevron and the "…" at the end; the value
+     under it. */
   .database__rule:popover-open {
     gap: var(--space-stack-xs);
     padding: var(--space-inset-sm);
@@ -8,7 +9,7 @@
 
   .database__rule-head {
     display: flex;
-    gap: var(--space-inline-xs);
+    gap: var(--space-none);
     align-items: center;
     color: var(--color-text-secondary);
     font-size: var(--font-size-sm);
@@ -16,9 +17,41 @@
     & > .database__spacer {
       flex: 1;
     }
+
+    & > .select[data-variant="quiet"] {
+      color: var(--color-text-primary);
+      font-weight: var(--font-weight-medium);
+    }
   }
 
   .database__rule-name {
+    padding-inline: var(--space-inset-xs) var(--space-none);
     color: var(--color-text-secondary);
+  }
+
+  /* "Is relative to today": its two selects side by side, the month
+     under them, and the note under a line. */
+  .database__relative {
+    display: grid;
+    gap: var(--space-stack-xs);
+  }
+
+  .database__relative-parts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-inline-xs);
+
+    & > .select {
+      justify-content: space-between;
+    }
+  }
+
+  .database__relative-note {
+    margin: var(--space-none);
+    padding-block-start: var(--space-stack-xs);
+    border-block-start: var(--size-border-thin) solid
+      var(--color-border-default);
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
   }
 }

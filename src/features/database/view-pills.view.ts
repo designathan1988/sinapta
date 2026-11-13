@@ -16,6 +16,7 @@ import {
   VIEW_FILTER_RULE_OVERLAY,
 } from "./filter-rule-anchor.ts";
 import { filterCount, isFilterGroup } from "./filter-match.ts";
+import { propertyType } from "./property-registry.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import { titleProperty } from "./table-model.selectors.ts";
 
@@ -107,8 +108,13 @@ function filterPills(context: TableContext): Pill[] {
       {
         kind: VIEW_FILTER_RULE_OVERLAY,
         anchorId: ruleAnchorId(holderId, index),
-        label: property === undefined ? "" : filterLabel(rule, property),
-        icon: "filter",
+        label:
+          property === undefined
+            ? ""
+            : filterLabel(rule, property, context.state),
+        // The property's own icon, as Notion's rule pills show.
+        icon:
+          property === undefined ? "filter" : propertyType(property.type).icon,
         isRule: true,
       },
     ];

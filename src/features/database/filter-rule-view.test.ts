@@ -2,17 +2,19 @@
 import { render } from "lit-html";
 import { describe, expect, it } from "vitest";
 import type { Command } from "../../state/index.ts";
-import { createDatabaseApp } from "./database-builder.ts";
+import { createDatabaseApp, toPropertyId } from "./database-builder.ts";
 import { renderDatabase } from "./database.view.ts";
 import {
   ruleAnchorId,
   VIEW_FILTER_RULE_OVERLAY,
 } from "./filter-rule-anchor.ts";
+import { renderRuleHead } from "./filter-rule-head.view.ts";
+import type { FieldChange } from "./filter-row.view.ts";
 import { setViewFilter } from "./view.commands.ts";
 
 // A view filtered by Notes contains "x" and Stage is Done, with the
-// second rule's popover open.
-function rendered() {
+// second rule's popover open (and, when asked, one of its lists).
+function rendered(child?: string) {
   const app = createDatabaseApp(
     [
       { name: "Notes", type: "text" },
@@ -38,6 +40,7 @@ function rendered() {
   const overlay = {
     kind: VIEW_FILTER_RULE_OVERLAY,
     anchorId: ruleAnchorId(app.databaseId, 1),
+    ...(child !== undefined && { children: [{ anchorId: child }] }),
   };
   const state = { ...built, ui: { ...built.ui, overlay } };
   const sent: Command[] = [];
@@ -54,31 +57,147 @@ function rendered() {
   return { rule, sent, first, second };
 }
 
-describe("a filter rule opened from its pill", () => {
-  it("names its property and shows its operator and value", () => {
-    const { rule } = rendered();
+function itemNamed(label: string): HTMLElement | undefined {
+  return [...document.querySelectorAll<HTMLElement>("[role=menuitem]")].find(
+    (item) => item.textContent.includes(label),
+  );
+}
 
-    expect(rule?.querySelector(".database__rule-name")?.textContent).toBe(
+describe("a filter rule opened from its pill", () => {
+  it("heads with the property's name and the condition as Notion writes it", () => {
+    const { rule } = rendered();
+    const head = rule?.querySelector(".database__rule-head");
+
+    expect(head?.querySelector(".database__rule-name")?.textContent).toBe(
       "Stage",
     );
-    expect(rule?.textContent).toContain("Is");
+    expect(head?.textContent).toContain("is");
+    expect(head?.textContent).not.toContain("Is");
     expect(rule?.textContent).toContain("Done");
+    expect(
+      head?.querySelector("#select-filter-rule-1-more")?.textContent,
+    ).toContain("More filter actions");
   });
 
-  it("deletes the rule and closes", () => {
-    const { rule, sent, first } = rendered();
-    const remove = rule?.querySelector<HTMLElement>(
-      'button[aria-label="Remove filter"]',
+  it("lists Delete filter and Add to advanced filter behind its …", () => {
+    rendered("filter-rule-1-more");
+
+    expect(itemNamed("Delete filter")).toBeDefined();
+    expect(itemNamed("Add to advanced filter")).toBeDefined();
+  });
+
+  it("deletes the rule from Delete filter, and closes", () => {
+    const { sent, first } = rendered("filter-rule-1-more");
+
+    itemNamed("Delete filter")?.click();
+
+    expect(sent).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "view.setFilter",
+          filter: { conjunction: "and", items: [first] },
+        }),
+        expect.objectContaining({ type: "ui.closeOverlay" }),
+      ]),
+    );
+  });
+
+  it("moves the rule into the advanced filter, kept, and opens it", () => {
+    const { sent, first, second } = rendered("filter-rule-1-more");
+
+    itemNamed("Add to advanced filter")?.click();
+
+    expect(sent).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "view.setFilter",
+          filter: {
+            conjunction: "and",
+            items: [first, { conjunction: "and", items: [second] }],
+          },
+        }),
+      ]),
+    );
+    const opened = sent.find((command) => command.type === "ui.openOverlay");
+    expect(JSON.stringify(opened)).toContain('"kind":"view-filter-pill"');
+  });
+});
+
+describe("a rollup rule's head", () => {
+  const property = {
+    id: toPropertyId("p-roll"),
+    name: "Stages",
+    type: "rollup",
+  };
+  const operator = (id: string, label: string) => ({
+    id,
+    label,
+    needsOperand: true,
+    test: () => true,
+  });
+  const operators = ["any", "none", "every"].flatMap((quantifier) => [
+    operator(`${quantifier}:is`, "Is"),
+    operator(`${quantifier}:is-not`, "Is not"),
+  ]);
+
+  function head(child?: string) {
+    const changes: FieldChange[] = [];
+    const host = document.createElement("div");
+    document.body.replaceChildren(host);
+    const overlay = {
+      kind: VIEW_FILTER_RULE_OVERLAY,
+      anchorId: "rule",
+      ...(child !== undefined && { children: [{ anchorId: child }] }),
+    };
+    render(
+      renderRuleHead(
+        {
+          id: "rule",
+          filter: {
+            propertyId: property.id,
+            operator: "any:is",
+            value: "done",
+          },
+          property,
+          operators,
+          change: (change) => changes.push(change),
+          remove: () => undefined,
+          toAdvanced: () => undefined,
+        },
+        { overlay, dispatch: () => ({ ok: true }) },
+      ),
+      host,
+    );
+    return { host, changes };
+  }
+
+  it("chooses Any first, then the condition among the target's", () => {
+    const { host } = head();
+    const texts = [...host.querySelectorAll(".select")].map((item) =>
+      item.textContent.trim(),
     );
 
-    remove?.click();
+    expect(texts[0]).toContain("Any");
+    expect(texts[1]).toContain("is");
+  });
 
-    expect(sent).toEqual([
-      expect.objectContaining({
-        type: "view.setFilter",
-        filter: { conjunction: "and", items: [first] },
-      }),
-      expect.objectContaining({ type: "ui.closeOverlay" }),
-    ]);
+  it("keeps the condition when Any becomes Every", () => {
+    const { changes } = head("rule-quantifier");
+
+    [...document.querySelectorAll<HTMLElement>("[role=option]")]
+      .find((item) => item.textContent.trim() === "Every")
+      ?.click();
+
+    expect(changes).toEqual([{ field: "operator", value: "every:is" }]);
+  });
+
+  it("lists only the conditions under the chosen quantifier", () => {
+    head("rule-operator");
+
+    const labels = [
+      ...document.querySelectorAll<HTMLElement>("[role=option]"),
+    ].map((item) => item.textContent.trim());
+
+    expect(labels).toEqual(["is", "is not"]);
   });
 });

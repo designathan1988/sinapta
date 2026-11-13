@@ -2,6 +2,7 @@ import { html } from "lit-html";
 import { safeHref } from "../../../../model/index.ts";
 import { compareText, type PropertyType } from "../../property-definition.ts";
 import { TEXT_FILTERS } from "../../text-filters.ts";
+import { TEXT_GROUPING } from "../text/index.ts";
 import { renderUrlConfig } from "./url-config.view.ts";
 import {
   DEFAULT_URL_CONFIG,
@@ -32,6 +33,7 @@ export const urlProperty: PropertyType = {
   format: (value) => readUrl(value) ?? "",
   compare: compareText,
   filterOperators: TEXT_FILTERS,
+  grouping: TEXT_GROUPING,
   defaultFilter: "contains",
   configSchema: urlConfigSchema,
   defaultConfig: () => DEFAULT_URL_CONFIG,

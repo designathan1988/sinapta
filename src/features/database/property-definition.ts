@@ -6,7 +6,7 @@ import type {
   PropertyDefinition,
 } from "../../blocks/database/index.ts";
 import type { PageBlock } from "../../blocks/page/index.ts";
-import type { BlockId } from "../../model/index.ts";
+import type { BlockId, Filter } from "../../model/index.ts";
 import type { AppState, Dispatch } from "../../state/index.ts";
 import type { IconName } from "../../ui/icon/index.ts";
 import type { Grouping } from "./grouping-definition.ts";
@@ -17,6 +17,15 @@ export interface FilterContext {
   // Today as "YYYY-MM-DD", for filters relative to it; absent or empty
   // when unknown, and then such filters match nothing.
   readonly today?: string;
+  // The day weeks start on, 0 Sunday or 1 Monday, for "this week".
+  readonly weekStartsOn?: 0 | 1 | undefined;
+  // The whole condition, for settings beside its operand, such as which
+  // end of a date range it tests.
+  readonly filter?: Filter | undefined;
+  // The row and the workspace, for conditions on values worked out from
+  // other rows, such as a rollup's.
+  readonly rowId?: BlockId | undefined;
+  readonly state?: AppState | undefined;
 }
 
 // One value a filter's operand may take, such as a status group.
@@ -37,6 +46,15 @@ export interface FilterOperator {
   ) => boolean;
   // The operands to choose from, when not the property's options.
   readonly choices?: (property: PropertyDefinition) => readonly OperandChoice[];
+  // How the operand is chosen when not typed or picked from choices:
+  // "relative" draws Notion's two selects (Past/Next/This, Day…Year).
+  readonly operandEditor?: "relative";
+  // The operand in words, for a filter's pill, as "This week".
+  readonly describe?: (operand: string) => string;
+  // The operand a new condition starts with, as "this:week".
+  readonly defaultOperand?: string;
+  // Kept for conditions saved before Notion dropped it, never offered.
+  readonly isRetired?: boolean;
 }
 
 // The options and config a new property of a type starts with, such as a
@@ -111,6 +129,9 @@ export interface PropertyType {
   // Shown before the property's name in headers and menus.
   readonly icon: IconName;
   readonly editor: CellEditor;
+  // How a cell is edited when it depends on the property's settings, as
+  // a status shown as a checkbox is toggled.
+  readonly editorFor?: (property: PropertyDefinition) => CellEditor;
   readonly input?: InputKind;
   // A value that is not stored but read from the row's own record.
   readonly computedFrom?: "createdAt" | "updatedAt";
@@ -130,6 +151,12 @@ export interface PropertyType {
   // Ascending order of two values that `read` returned.
   readonly compare: (a: unknown, b: unknown) => number;
   readonly filterOperators: readonly FilterOperator[];
+  // Conditions built from the property's settings, when they depend on
+  // them, such as a rollup's on the property it reads.
+  readonly filterOperatorsFor?: (
+    property: PropertyDefinition,
+    state?: AppState,
+  ) => readonly FilterOperator[];
   // The condition a new filter on this type starts with, when not the
   // first; a text filter starts with Contains, as Notion's.
   readonly defaultFilter?: string;

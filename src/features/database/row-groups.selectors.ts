@@ -76,9 +76,7 @@ function bucketRows(
   for (const row of model.rows) {
     const value = type.read(row.values[property.id]);
     const keys =
-      value === undefined
-        ? []
-        : grouping.keysOf(value, property, groupBy.dateBy);
+      value === undefined ? [] : grouping.keysOf(value, property, groupBy);
     if (keys.length === 0) add(empty, row);
     for (const key of keys) add(key, row);
   }

@@ -49,6 +49,8 @@ export const dateProperty: PropertyType = {
   format: (value) => readDateValue(value)?.start ?? "",
   compare: compareDates,
   filterOperators: DATE_FILTERS,
+  // A date filter starts as "is relative to today: this week", as Notion's.
+  defaultFilter: "relative",
   grouping: DATE_GROUPING,
   renderCell(value, property) {
     const date = readDateValue(value);

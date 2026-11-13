@@ -8,6 +8,7 @@ import { setGroupOptions, setViewGroupBy } from "../group.commands.ts";
 import { propertyType } from "../property-registry.ts";
 import { isGroupable } from "../row-groups.selectors.ts";
 import type { TableContext } from "../table-cell.view.ts";
+import { groupByKindRows } from "./group-by-panels.ts";
 import { choiceItems, panelRow, type SettingsPanel } from "./settings-panel.ts";
 
 // The properties to group by, the current one checked; choosing one
@@ -103,6 +104,7 @@ function groupedItems(
       "group-by",
     ),
     ...(property.type === "date" ? [dateRow] : []),
+    ...groupByKindRows(context, property, groupBy),
     panelRow(
       context,
       { label: COPY.database.sortRow, icon: "sort", value: sort },

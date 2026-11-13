@@ -27,15 +27,39 @@ function display(value: unknown, property: PropertyDefinition): string {
   return prefix === "" ? String(id) : `${prefix}-${String(id)}`;
 }
 
-// Compares the number, so "TASK-7" and "7" both find row 7.
-const EQUALS: FilterOperator = {
-  id: "equals",
-  label: "Equals",
-  needsOperand: true,
-  test: (value, operand) =>
-    readId(value) !== undefined &&
-    readId(value) === Number(/\d+$/.exec(operand.trim())?.[0]),
-};
+// Compares the number, so "TASK-7" and "7" both find row 7; Notion
+// writes the conditions as signs, as a number's.
+function comparison(
+  id: string,
+  label: string,
+  test: (a: number, b: number) => boolean,
+): FilterOperator {
+  return {
+    id,
+    label,
+    needsOperand: true,
+    test: (value, operand) => {
+      const number = readId(value);
+      const digits = /\d+$/.exec(operand.trim())?.[0];
+      return (
+        number !== undefined &&
+        digits !== undefined &&
+        test(number, Number(digits))
+      );
+    },
+  };
+}
+
+const ID_FILTERS = [
+  comparison("equals", "=", (a, b) => a === b),
+  comparison("not-equals", "≠", (a, b) => a !== b),
+  comparison("greater-than", ">", (a, b) => a > b),
+  comparison("less-than", "<", (a, b) => a < b),
+  comparison("at-least", "≥", (a, b) => a >= b),
+  comparison("at-most", "≤", (a, b) => a <= b),
+  IS_EMPTY,
+  IS_NOT_EMPTY,
+];
 
 function withNext(property: PropertyDefinition, next: number) {
   const { prefix } = readUniqueIdConfig(property.config);
@@ -51,7 +75,7 @@ export const uniqueIdProperty: PropertyType = {
   parse: () => undefined,
   format: display,
   compare: (a, b) => (readId(a) ?? 0) - (readId(b) ?? 0),
-  filterOperators: [EQUALS, IS_EMPTY, IS_NOT_EMPTY],
+  filterOperators: ID_FILTERS,
   renderCell: display,
   configSchema: uniqueIdConfigSchema,
   defaultConfig: () => ({ prefix: "", next: 1 }),

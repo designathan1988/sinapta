@@ -1,40 +1,17 @@
 @layer features {
-  /* A tile per layout, three to a row; the chosen one ringed in blue. */
-  .view-settings__tiles {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+  /* A setting typed in, as an interval's size: its name, then the field. */
+  .view-settings__field {
+    display: flex;
     gap: var(--space-inline-sm);
-    margin: var(--space-none) var(--space-inset-xs) var(--space-stack-sm);
-  }
+    align-items: center;
+    justify-content: space-between;
+    margin: var(--space-none) var(--space-inset-xs) var(--space-stack-xs);
+    padding-inline: var(--space-inset-sm) var(--space-none);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
 
-  .view-settings__tile {
-    display: grid;
-    gap: var(--space-stack-xxs);
-    justify-items: center;
-    padding: var(--space-inset-sm) var(--space-inset-xs);
-    border: none;
-    border-radius: var(--radius-md);
-    background: none;
-    box-shadow: inset 0 0 0 var(--size-border-thin) var(--color-border-default);
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-xs);
-    cursor: pointer;
-    transition: background-color var(--duration-hover) ease-in;
-
-    & > .icon {
-      inline-size: var(--size-icon-md);
-      block-size: var(--size-icon-md);
-    }
-
-    &:hover {
-      background-color: var(--color-bg-hover);
-    }
-
-    &[aria-pressed="true"] {
-      box-shadow: inset 0 0 0 var(--size-border-thick)
-        var(--color-accent-default);
-      color: var(--color-text-accent);
-      font-weight: var(--font-weight-medium);
+    & > input {
+      inline-size: 40%;
     }
   }
 
@@ -92,6 +69,142 @@
 
     &:hover {
       background-color: var(--color-bg-hover);
+    }
+  }
+
+  /* Notion's "Card layout": a shaded box under the rows, its title
+     centered over two pictured tiles. */
+  .view-settings__box {
+    margin: var(--space-stack-xs) var(--space-inset-xs) var(--space-none);
+    padding: var(--space-inset-sm) var(--space-none) var(--space-none);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-hover);
+
+    & > .tiles {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .view-settings__box-title {
+    margin: var(--space-none) var(--space-none) var(--space-stack-xs);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    text-align: center;
+  }
+
+  /* A card in miniature: a dot, then dashes side by side (compact) or
+     lines one under another (list). */
+  .view-settings__card {
+    display: grid;
+    gap: var(--space-stack-xxs);
+    inline-size: var(--size-control-md);
+    padding: var(--space-inset-xxs);
+
+    & > .view-settings__card-dot {
+      inline-size: var(--space-inset-sm);
+      block-size: var(--space-inset-sm);
+      border-radius: var(--radius-full);
+      background-color: currentcolor;
+    }
+  }
+
+  .view-settings__card-line {
+    display: flex;
+    gap: var(--space-inline-xxs);
+
+    & > span {
+      flex: 1;
+      block-size: var(--size-border-thick);
+      border-radius: var(--radius-sm);
+      background-color: currentcolor;
+      opacity: 0.6;
+    }
+  }
+
+  /* "Conditional color": the rules, each a box, or the picture and the
+     note while there is none; "New color setting" under them. */
+  .view-settings__colors {
+    display: grid;
+    gap: var(--space-stack-sm);
+    margin: var(--space-none) var(--space-inset-xs) var(--space-stack-xs);
+
+    & > .button[data-variant="primary"] {
+      justify-content: center;
+    }
+  }
+
+  .view-settings__note {
+    margin: var(--space-none);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+  }
+
+  .view-settings__rule {
+    display: grid;
+    gap: var(--space-stack-xs);
+    padding: var(--space-inset-sm);
+    border-radius: var(--radius-md);
+    box-shadow: inset 0 0 0 var(--size-border-thin) var(--color-border-default);
+  }
+
+  /* A rule's conditions wrap inside the panel, as the panel is narrow. */
+  .view-settings__rule .database__filters {
+    margin: var(--space-none);
+    padding: var(--space-none);
+    list-style: none;
+  }
+
+  .view-settings__rule .database__filter {
+    flex-wrap: wrap;
+
+    & > .database__filter-lead {
+      inline-size: auto;
+    }
+  }
+
+  .view-settings__rule-head {
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+
+    & > .button {
+      margin-inline-start: auto;
+    }
+  }
+
+  /* Notion's picture: a small table, its rows tinted as rules would. */
+  .view-settings__color-picture {
+    display: grid;
+    gap: var(--size-border-thin);
+    padding: var(--space-inset-sm);
+    border-radius: var(--radius-md);
+    box-shadow: inset 0 0 0 var(--size-border-thin) var(--color-border-default);
+  }
+
+  .view-settings__color-row {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr;
+    gap: var(--space-inline-xs);
+    padding: var(--space-inset-xxs) var(--space-inset-xs);
+    border-radius: var(--radius-sm);
+
+    & > span {
+      block-size: var(--size-border-thick);
+      border-radius: var(--radius-sm);
+      background-color: var(--color-text-tertiary);
+    }
+
+    &[data-color="green"] {
+      background-color: var(--color-chip-green-bg);
+    }
+
+    &[data-color="orange"] {
+      background-color: var(--color-chip-orange-bg);
+    }
+
+    &[data-color="red"] {
+      background-color: var(--color-chip-red-bg);
     }
   }
 }

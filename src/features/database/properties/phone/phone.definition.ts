@@ -1,5 +1,6 @@
 import { compareText, type PropertyType } from "../../property-definition.ts";
 import { TEXT_FILTERS } from "../../text-filters.ts";
+import { TEXT_GROUPING } from "../text/index.ts";
 
 // Digits with the signs people write numbers with; kept as written.
 const PHONE = /^\+?[\d\s().-]*\d[\d\s().-]*$/;
@@ -19,6 +20,7 @@ export const phoneProperty: PropertyType = {
   format: (value) => readPhone(value) ?? "",
   compare: compareText,
   filterOperators: TEXT_FILTERS,
+  grouping: TEXT_GROUPING,
   defaultFilter: "contains",
   renderCell: (value) => readPhone(value) ?? "",
 };

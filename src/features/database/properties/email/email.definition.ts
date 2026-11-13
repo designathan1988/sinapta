@@ -2,6 +2,7 @@ import { html } from "lit-html";
 import { safeHref } from "../../../../model/index.ts";
 import { compareText, type PropertyType } from "../../property-definition.ts";
 import { TEXT_FILTERS } from "../../text-filters.ts";
+import { TEXT_GROUPING } from "../text/index.ts";
 
 // One address: something, an @, and a domain with a dot.
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -21,6 +22,7 @@ export const emailProperty: PropertyType = {
   format: (value) => readEmail(value) ?? "",
   compare: compareText,
   filterOperators: TEXT_FILTERS,
+  grouping: TEXT_GROUPING,
   defaultFilter: "contains",
   renderCell(value) {
     const email = readEmail(value);

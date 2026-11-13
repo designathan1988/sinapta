@@ -1,6 +1,7 @@
 // The value a filter rule compares with: one of the options for a select
 // property, or the operator's own choices such as a status group, as
-// Notion's option lists; free text or a date for the others. A typed
+// Notion's option lists; a span relative to today; free text or a date
+// for the others. A typed
 // value is a field whose holder carries the rule's path.
 import { html, type TemplateResult } from "lit-html";
 import type { PropertyDefinition } from "../../blocks/database/index.ts";
@@ -8,6 +9,7 @@ import type { Filter } from "../../model/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderSelect, type SelectOption } from "../../ui/select/index.ts";
 import type { FilterPath } from "./filter-edit.ts";
+import { renderRelativeOperand } from "./filter-relative.view.ts";
 import type { FilterOperator } from "./property-definition.ts";
 import type { TableContext } from "./table-cell.view.ts";
 
@@ -20,6 +22,30 @@ export interface OperandProps {
     readonly field: "value";
     readonly value: string;
   }) => void;
+  // True in a row of the advanced filter, where operands stay on one line.
+  readonly isCompact?: boolean;
+  // What the controls are named from; by default the condition's path.
+  readonly idBase?: string;
+}
+
+function idOf(props: OperandProps): string {
+  return props.idBase ?? `filter-${props.path.join(".")}`;
+}
+
+function renderRelative(props: OperandProps, context: TableContext) {
+  const operand =
+    typeof props.filter.value === "string" ? props.filter.value : "";
+  return renderRelativeOperand(
+    {
+      id: idOf(props),
+      operand,
+      isCompact: props.isCompact === true,
+      onChange: (value) => {
+        props.onChange({ field: "value", value });
+      },
+    },
+    context,
+  );
 }
 
 function operandOptions(
@@ -44,13 +70,16 @@ export function renderFilterOperand(
   props: OperandProps,
   context: TableContext,
 ): TemplateResult {
-  const { filter, path, property, onChange } = props;
+  const { filter, property, onChange } = props;
   const current = typeof filter.value === "string" ? filter.value : "";
+  if (props.operator?.operandEditor === "relative") {
+    return renderRelative(props, context);
+  }
   const options = operandOptions(property, props.operator);
   if (options !== undefined) {
     return renderSelect(
       {
-        id: `filter-${path.join(".")}-value`,
+        id: `${idOf(props)}-value`,
         label: COPY.database.filterValue,
         value: current === "" ? undefined : current,
         options,
@@ -67,7 +96,7 @@ export function renderFilterOperand(
     type=${property?.type === "date" ? "date" : "text"}
     data-field="value"
     aria-label=${COPY.database.filterValue}
-    placeholder=${COPY.database.filterValue}
+    placeholder=${COPY.database.typeValue}
     .value=${current}
   />`;
 }

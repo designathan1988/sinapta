@@ -62,7 +62,7 @@ export const setViewGroupBy = defineCommand<{
 });
 
 export type GroupOptions = Partial<
-  Pick<GroupBy, "sort" | "hideEmpty" | "dateBy">
+  Pick<GroupBy, "sort" | "hideEmpty" | "dateBy" | "textBy" | "numberBy">
 >;
 
 export const setGroupOptions = defineCommand<{

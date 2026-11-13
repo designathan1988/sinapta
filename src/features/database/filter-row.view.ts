@@ -8,14 +8,19 @@ import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderSelect } from "../../ui/select/index.ts";
 import { filterProperties } from "./filter-fields.ts";
+import {
+  offeredConditions,
+  renderQuantifierChoice,
+} from "./filter-condition.view.ts";
 import { renderFilterOperand } from "./filter-operand.view.ts";
 import type { FilterPath } from "./filter-edit.ts";
 import type { FilterOperator } from "./property-definition.ts";
+import { operatorsOf } from "./filter-operators.ts";
 import { propertyType } from "./property-registry.ts";
 import type { TableContext } from "./table-cell.view.ts";
 
 export interface FieldChange {
-  readonly field: "property" | "operator" | "value";
+  readonly field: "property" | "operator" | "value" | "dateEnd";
   readonly value: string;
 }
 
@@ -26,6 +31,13 @@ export interface FilterRowProps {
   readonly lead: TemplateResult;
   readonly onRemove: () => void;
   readonly onChange: (change: FieldChange) => void;
+  // What the condition's controls are named from, when several filters
+  // show at once, as a view's color rules; by default its path.
+  readonly idBase?: string;
+}
+
+function idOf(props: FilterRowProps): string {
+  return props.idBase ?? `filter-${props.path.join(".")}`;
 }
 
 interface Parts {
@@ -40,7 +52,7 @@ function renderPropertyChoice(
 ): TemplateResult {
   return renderSelect(
     {
-      id: `filter-${props.path.join(".")}-property`,
+      id: `${idOf(props)}-property`,
       label: COPY.database.filterProperty,
       value: property?.id,
       options: filterProperties(context).map((item) => ({
@@ -64,13 +76,12 @@ function renderOperatorChoice(
 ): TemplateResult {
   return renderSelect(
     {
-      id: `filter-${props.path.join(".")}-operator`,
+      id: `${idOf(props)}-operator`,
       label: COPY.database.filterOperator,
       value: parts.operator?.id,
-      options: parts.operators.map((item) => ({
-        value: item.id,
-        label: item.label,
-      })),
+      options: offeredConditions(parts.operators, props.filter.operator).map(
+        (item) => ({ value: item.id, label: item.label }),
+      ),
       variant: "quiet",
       onChoose: (value) => {
         props.onChange({ field: "operator", value });
@@ -87,15 +98,25 @@ export function renderFilterRow(
   const { filter, path, lead, onRemove } = props;
   const properties = filterProperties(context);
   const property = properties.find((item) => item.id === filter.propertyId);
-  const operators = propertyType(property?.type ?? "text").filterOperators;
+  const operators = operatorsOf(property, context.state);
   const operator = operators.find((item) => item.id === filter.operator);
   const parts = { property, operator };
   return html`<li class="database__filter" data-path=${path.join(".")}>
     ${lead} ${renderPropertyChoice(props, property, context)}
+    ${renderQuantifierChoice(
+      {
+        id: idOf(props),
+        operator: filter.operator,
+        onChange: (value) => {
+          props.onChange({ field: "operator", value });
+        },
+      },
+      { overlay: context.state.ui.overlay, dispatch: context.dispatch },
+    )}
     ${renderOperatorChoice(props, { ...parts, operators }, context)}
     ${
       operator?.needsOperand === true
-        ? renderFilterOperand({ ...props, ...parts }, context)
+        ? renderFilterOperand({ ...props, ...parts, isCompact: true }, context)
         : nothing
     }
     ${renderButton({

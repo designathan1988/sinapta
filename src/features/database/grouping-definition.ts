@@ -19,10 +19,12 @@ export interface GroupKey {
 export interface Grouping {
   // The groups a value that `read` returned falls in; more than one for
   // a value that holds several options.
+  // The view's grouping says how, such as a date's span or text by its
+  // first letter; absent, each type's default.
   readonly keysOf: (
     value: unknown,
     property: PropertyDefinition,
-    step: DateStep,
+    groupBy?: GroupBy,
   ) => readonly GroupKey[];
   // The groups shown even without rows, in the property's own order.
   readonly known?: (property: PropertyDefinition) => readonly GroupKey[];

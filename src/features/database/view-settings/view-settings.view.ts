@@ -20,12 +20,15 @@ import {
   propertiesPanel,
 } from "./choice-panels.ts";
 import { chartKindPanel, chartXPanel, chartYPanel } from "./chart-panels.ts";
+import { groupNumberPanel, groupTextPanel } from "./group-by-panels.ts";
 import { groupPanel } from "./group-panel.ts";
 import {
   subGroupByPanel,
   subGroupPanel,
   subGroupSortPanel,
 } from "./sub-group-panel.ts";
+import { colorPanel } from "./color-panel.ts";
+import { timelineEndPanel } from "./layout-items.ts";
 import { layoutPanel } from "./layout-panel.view.ts";
 import { rootPanel } from "./root-panel.view.ts";
 import { sortAddPanel, sortPanel } from "./sort-panel.view.ts";
@@ -55,12 +58,16 @@ const PANELS: Readonly<
   "group-by": groupByPanel,
   "group-sort": groupSortPanel,
   "group-date": groupDatePanel,
+  "group-text": groupTextPanel,
+  "group-number": groupNumberPanel,
   "card-preview": cardPreviewPanel,
   "card-size": cardSizePanel,
   "calendar-date": calendarDatePanel,
   "calendar-mode": calendarModePanel,
   "open-mode": openModePanel,
   "timeline-date": timelineDatePanel,
+  "timeline-end": timelineEndPanel,
+  color: colorPanel,
   "chart-kind": chartKindPanel,
   "chart-x": chartXPanel,
   "chart-y": chartYPanel,
@@ -108,13 +115,14 @@ export function renderViewSettings(context: TableContext): TemplateResult {
   const name = panelName(context);
   const build = name === undefined ? undefined : PANELS[name];
   const panel = build?.(context) ?? rootPanel(context);
-  const { lead } = panel;
+  const { lead, tail } = panel;
   const back = backTo(context, panel, name);
   return renderMenu({
     label: COPY.database.viewSettings,
     title: panel.title,
     items: panel.items,
     ...(lead !== undefined && { lead }),
+    ...(tail !== undefined && { tail }),
     ...(back !== undefined && {
       onBack: () => {
         goTo(context, back);
