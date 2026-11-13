@@ -688,17 +688,24 @@
           }
         },
         "accentRange": {
-          "$description": "The days of a range in a date picker; Notion's light one is not yet photographed.",
+          "$description": "The days of a range in a date picker, as Notion's light band (n76-light): rgb(208, 229, 249).",
           "$value": {
             "colorSpace": "oklch",
-            "components": [0.9558, 0.0179, 245.4]
+            "components": [0.9125, 0.0354, 246.9]
           }
         },
         "accentPill": {
-          "$description": "A view's filter pill; Notion's light one is not yet photographed.",
+          "$description": "A view's filter pill at rest, as Notion's light one (n76-light): rgb(231, 243, 251).",
           "$value": {
             "colorSpace": "oklch",
-            "components": [0.9558, 0.0179, 245.4]
+            "components": [0.9575, 0.0167, 236.7]
+          }
+        },
+        "accentPillOpen": {
+          "$description": "A view's filter pill with its rule open, as Notion's light one (n76-light): rgb(219, 236, 249).",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.9343, 0.0253, 240.7]
           }
         },
         "focus": {
@@ -726,10 +733,10 @@
           }
         },
         "today": {
-          "$description": "Today's circle in a date picker; Notion's light one is not yet photographed.",
+          "$description": "Today's circle in a date picker, as Notion's light one (n76-light): rgb(229, 100, 88).",
           "$value": {
             "colorSpace": "oklch",
-            "components": [0.55, 0.17, 26]
+            "components": [0.661, 0.1631, 27.7]
           }
         },
         "templateBg": {
@@ -1013,7 +1020,14 @@
           }
         },
         "accentPill": {
-          "$description": "A view's filter pill, as Notion's (n69-date-cleanup): rgb(40, 72, 107).",
+          "$description": "A view's filter pill at rest, as Notion's (n76-dark): rgb(35, 56, 80).",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.3347, 0.0504, 252.6]
+          }
+        },
+        "accentPillOpen": {
+          "$description": "A view's filter pill with its rule open, as Notion's (n69-date-cleanup): rgb(40, 72, 107).",
           "$value": {
             "colorSpace": "oklch",
             "components": [0.3942, 0.0708, 252.0]

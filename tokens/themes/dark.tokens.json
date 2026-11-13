@@ -112,6 +112,9 @@
       },
       "pill": {
         "$value": "{base.color.night.accentPill}"
+      },
+      "pillOpen": {
+        "$value": "{base.color.night.accentPillOpen}"
       }
     },
     "status": {

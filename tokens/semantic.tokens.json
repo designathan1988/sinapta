@@ -118,6 +118,9 @@
       },
       "pill": {
         "$value": "{base.color.day.accentPill}"
+      },
+      "pillOpen": {
+        "$value": "{base.color.day.accentPillOpen}"
       }
     },
     "status": {
