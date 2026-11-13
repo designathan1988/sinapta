@@ -31,6 +31,9 @@ export interface Grouping {
   // True when rows with no value have a group even while it is empty,
   // such as the board column a card goes to when its option is removed.
   readonly keepsEmptyGroup?: boolean;
+  // True when the group of empty values comes after the others, as
+  // Notion lists a text property's "No <name>".
+  readonly isEmptyLast?: boolean;
   // The value a row takes when it moves into a group; absent when rows
   // cannot move between this type's groups.
   readonly valueFor?: (key: string) => unknown;

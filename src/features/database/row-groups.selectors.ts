@@ -1,7 +1,10 @@
 // The groups of a grouped view: the rows the view shows, put in the
 // groups of their value of the grouping property. Every layout reads
 // them, and the table also moves through rows in their order.
-import type { PropertyDefinition } from "../../blocks/database/index.ts";
+import type {
+  DatabaseBlock,
+  PropertyDefinition,
+} from "../../blocks/database/index.ts";
 import type { GroupBy } from "../../model/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import {
@@ -15,7 +18,13 @@ import {
   type PropertyType,
 } from "./property-definition.ts";
 import { propertyType } from "./property-registry.ts";
-import type { TableModel, TableRow } from "./table-model.selectors.ts";
+import { cellValue } from "./filter-match.ts";
+import {
+  TITLE_PROPERTY_ID,
+  titleProperty,
+  type TableModel,
+  type TableRow,
+} from "./table-model.selectors.ts";
 
 export interface RowGroup {
   readonly key: string;
@@ -39,6 +48,24 @@ const UNGROUPABLE = new Set<CellEditor>(["files", "relation", "button"]);
 export function isGroupable(property: PropertyDefinition): boolean {
   const type = propertyType(property.type);
   return type.grouping !== undefined || !UNGROUPABLE.has(type.editor);
+}
+
+// What a view can group by, as Notion's: the title column first, then
+// the database's properties that can group.
+export function groupableProperties(
+  database: DatabaseBlock,
+): PropertyDefinition[] {
+  const title = titleProperty();
+  const all = title === undefined ? [] : [title];
+  return [...all, ...database.props.properties].filter(isGroupable);
+}
+
+// The property a grouping names, the title column included.
+export function groupPropertyOf(
+  database: DatabaseBlock,
+  propertyId: string | undefined,
+): PropertyDefinition | undefined {
+  return groupableProperties(database).find((item) => item.id === propertyId);
 }
 
 // Without a grouping of its own, a type groups by its value's text.
@@ -74,7 +101,7 @@ function bucketRows(
   if (grouping.keepsEmptyGroup === true) add(empty);
   for (const known of grouping.known?.(property) ?? []) add(known);
   for (const row of model.rows) {
-    const value = type.read(row.values[property.id]);
+    const value = cellValue(row, property, TITLE_PROPERTY_ID);
     const keys =
       value === undefined ? [] : grouping.keysOf(value, property, groupBy);
     if (keys.length === 0) add(empty, row);
@@ -92,20 +119,26 @@ function byName(a: Bucket, b: Bucket): number {
 
 // The group of empty values first; the others in the property's order,
 // then by name, unless sorted by name both ways.
-function orderBuckets(
-  buckets: Map<string, Bucket>,
-  knownCount: number,
-  sort: GroupBy["sort"],
-): Bucket[] {
+interface Order {
+  readonly knownCount: number;
+  readonly sort: GroupBy["sort"];
+  // Text puts its empty group last, as Notion's "No Name".
+  readonly isEmptyLast: boolean;
+}
+
+function sortedRest(rest: Bucket[], order: Order): Bucket[] {
+  if (order.sort === "ascending") return rest.sort(byName);
+  if (order.sort === "descending") return rest.sort(byName).reverse();
+  const known = rest.slice(0, order.knownCount);
+  return [...known, ...rest.slice(order.knownCount).sort(byName)];
+}
+
+function orderBuckets(buckets: Map<string, Bucket>, order: Order): Bucket[] {
   const all = [...buckets.values()];
   const empty = all.filter((bucket) => bucket.group.key === EMPTY_GROUP_KEY);
   const rest = all.filter((bucket) => bucket.group.key !== EMPTY_GROUP_KEY);
-  if (sort === "ascending") return [...empty, ...rest.sort(byName)];
-  if (sort === "descending") {
-    return [...empty, ...rest.sort(byName).reverse()];
-  }
-  const known = rest.slice(0, knownCount);
-  return [...empty, ...known, ...rest.slice(knownCount).sort(byName)];
+  const sorted = sortedRest(rest, order);
+  return order.isEmptyLast ? [...sorted, ...empty] : [...empty, ...sorted];
 }
 
 // Groups placed by hand come first, in that order; the others keep theirs.
@@ -132,14 +165,14 @@ export function groupRowsBy(
   model: TableModel,
   groupBy: GroupBy | undefined,
 ): GroupedRows | undefined {
-  const property = model.database.props.properties.find(
-    (item) => item.id === groupBy?.propertyId,
-  );
+  const property = groupPropertyOf(model.database, groupBy?.propertyId);
   if (groupBy === undefined || property === undefined) return undefined;
   const grouping = groupingOf(propertyType(property.type));
   const buckets = bucketRows(model, property, groupBy);
   const knownCount = grouping.known?.(property).length ?? 0;
-  const ordered = orderBuckets(buckets, knownCount, groupBy.sort);
+  const isEmptyLast = grouping.isEmptyLast === true;
+  const order = { knownCount, sort: groupBy.sort, isEmptyLast };
+  const ordered = orderBuckets(buckets, order);
   const placed =
     groupBy.sort === "manual" ? placeByHand(ordered, groupBy.order) : ordered;
   const groups = placed

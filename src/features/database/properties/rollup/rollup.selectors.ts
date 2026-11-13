@@ -26,7 +26,8 @@ import {
   type RollupCell,
   type RollupResult,
 } from "./rollup-math.ts";
-import { readRollupConfig, type RollupConfig } from "./rollup.schema.ts";
+import { effectiveRollupConfig } from "./rollup-effective.ts";
+import type { RollupConfig } from "./rollup.schema.ts";
 
 export const TITLE_TARGET = "title";
 
@@ -69,13 +70,23 @@ function titleCell(page: PageBlock): RollupCell {
   return { value: title === "" ? undefined : title, text: title };
 }
 
+// The settings a row's rollup works out from, by its database.
+function configFor(
+  state: AppState,
+  row: PageBlock | undefined,
+  property: PropertyDefinition,
+): RollupConfig | undefined {
+  const holder = selectDatabase(state, row?.parentId ?? null);
+  return effectiveRollupConfig(property, holder);
+}
+
 export function selectRollup(
   state: AppState,
   rowId: BlockId,
   property: PropertyDefinition,
 ): RollupResult | undefined {
-  const config = readRollupConfig(property.config);
   const row = selectPage(state, rowId);
+  const config = configFor(state, row, property);
   if (config === undefined || row === undefined) return undefined;
   const related = selectRelated(state, row, config);
   if (related === undefined) return undefined;
@@ -109,8 +120,8 @@ export function selectRollupTarget(
   holderId: BlockId,
   property: PropertyDefinition,
 ): RollupTarget | undefined {
-  const config = readRollupConfig(property.config);
   const holder = selectDatabase(state, holderId);
+  const config = effectiveRollupConfig(property, holder);
   if (config === undefined || holder === undefined) return undefined;
   const relation = holder.props.properties.find(
     (item) => item.id === config.relationPropertyId,
@@ -133,8 +144,8 @@ export function selectRollupValues(
   rowId: BlockId,
   property: PropertyDefinition,
 ): readonly unknown[] | undefined {
-  const config = readRollupConfig(property.config);
   const row = selectPage(state, rowId);
+  const config = configFor(state, row, property);
   if (config === undefined || row === undefined) return undefined;
   const related = selectRelated(state, row, config);
   if (related === undefined) return undefined;

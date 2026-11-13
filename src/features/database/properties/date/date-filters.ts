@@ -98,6 +98,30 @@ const WITHIN: FilterOperator = {
     ),
 };
 
+// "Is between" two days, both included, written "start..end"; an
+// operand without both days lets every row through, as a blank one.
+export const BETWEEN_SEPARATOR = "..";
+
+export function readBetween(operand: string): [string, string] | undefined {
+  const [from = "", to = ""] = operand.split(BETWEEN_SEPARATOR);
+  return isDay(from) && isDay(to) ? [from, to] : undefined;
+}
+
+const BETWEEN: FilterOperator = {
+  id: "between",
+  label: "Is between",
+  needsOperand: true,
+  operandEditor: "between",
+  describe: (operand) => operand.split(BETWEEN_SEPARATOR).join(" → "),
+  test(value, operand, context) {
+    const days = readBetween(operand);
+    if (days === undefined) return true;
+    const date = testedDay(value, context);
+    const [from, to] = days[0] <= days[1] ? days : [days[1], days[0]];
+    return date !== undefined && overlaps(date, from, to);
+  },
+};
+
 // An operand Notion cannot read lets every row through, as a blank one.
 export const RELATIVE: FilterOperator = {
   id: "relative",
@@ -129,6 +153,7 @@ export const DATE_FILTERS: readonly FilterOperator[] = [
   comparison("after", "Is after", (order) => order > 0),
   comparison("on-or-before", "Is on or before", (order) => order <= 0),
   comparison("on-or-after", "Is on or after", (order) => order >= 0),
+  BETWEEN,
   RELATIVE,
   WITHIN,
   IS_EMPTY,

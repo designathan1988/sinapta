@@ -7,7 +7,7 @@ import {
   type AppState,
   type CommandEffect,
 } from "../../state/index.ts";
-import { isGroupable } from "./row-groups.selectors.ts";
+import { groupPropertyOf } from "./row-groups.selectors.ts";
 
 export function groupByProperty(propertyId: PropertyId): GroupBy {
   return {
@@ -32,11 +32,10 @@ function groupedBy(
   view: View,
   propertyId: PropertyId,
 ): GroupBy | undefined {
-  const property = selectDatabase(
-    state,
-    view.databaseId,
-  )?.props.properties.find((item) => item.id === propertyId);
-  if (property === undefined || !isGroupable(property)) return undefined;
+  const database = selectDatabase(state, view.databaseId);
+  const property =
+    database === undefined ? undefined : groupPropertyOf(database, propertyId);
+  if (property === undefined) return undefined;
   if (view.groupBy === undefined) return groupByProperty(propertyId);
   return { ...view.groupBy, propertyId, collapsed: [], order: [], hidden: [] };
 }

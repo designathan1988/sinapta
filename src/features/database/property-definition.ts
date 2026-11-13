@@ -48,7 +48,8 @@ export interface FilterOperator {
   readonly choices?: (property: PropertyDefinition) => readonly OperandChoice[];
   // How the operand is chosen when not typed or picked from choices:
   // "relative" draws Notion's two selects (Past/Next/This, Day…Year).
-  readonly operandEditor?: "relative";
+  // "between" draws two day fields, the operand "start..end".
+  readonly operandEditor?: "relative" | "between";
   // The operand in words, for a filter's pill, as "This week".
   readonly describe?: (operand: string) => string;
   // The operand a new condition starts with, as "this:week".

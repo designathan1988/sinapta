@@ -54,4 +54,17 @@
     color: var(--color-text-tertiary);
     font-size: var(--font-size-xs);
   }
+
+  /* "Is between": two day fields with an arrow between them. */
+  .database__between {
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    color: var(--color-text-tertiary);
+
+    & > input {
+      flex: 1;
+      min-inline-size: 0;
+    }
+  }
 }

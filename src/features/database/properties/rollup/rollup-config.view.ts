@@ -7,13 +7,10 @@ import {
 } from "../../../../blocks/database/index.ts";
 import { COPY } from "../../../../ui/copy.ts";
 import type { ConfigContext } from "../../property-definition.ts";
+import { effectiveRollupConfig } from "./rollup-effective.ts";
 import { renderConfigChoice } from "../config-choice.view.ts";
 import { readRelationConfig } from "../relation/index.ts";
-import {
-  readRollupConfig,
-  ROLLUP_FUNCTIONS,
-  type RollupConfig,
-} from "./rollup.schema.ts";
+import { ROLLUP_FUNCTIONS, type RollupConfig } from "./rollup.schema.ts";
 
 const TEXT = COPY.database;
 
@@ -68,12 +65,12 @@ export function renderRollupConfig(
   onChange: (config: unknown) => void,
   context: ConfigContext,
 ): TemplateResult {
-  const config = readRollupConfig(property.config) ?? {
+  const database = selectDatabase(context.state, context.databaseId);
+  const config = effectiveRollupConfig(property, database) ?? {
     relationPropertyId: "",
     targetPropertyId: "title",
     function: "show-original",
   };
-  const database = selectDatabase(context.state, context.databaseId);
   const relations = (database?.props.properties ?? []).filter(
     (item) => item.type === "relation",
   );

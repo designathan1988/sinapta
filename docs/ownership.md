@@ -92,7 +92,8 @@ owner listed here exists.
 | The conditions text, URL, email and phone are filtered by | `src/features/database/text-filters.ts` | 21 |
 | The filter conditions a property offers (its type's, or ones built from its settings, as a rollup's) | `src/features/database/filter-operators.ts` | 21 |
 | A rollup's quantified condition ids (any, none, every) and the choices drawn from them | `src/features/database/filter-quantifier.ts`, `filter-condition.view.ts` | 21 |
-| A filter rule's popover in Notion's simple form: its head, its "…" menu, and the operand of "Is relative to today" | `src/features/database/filter-rule.view.ts`, `filter-rule-head.view.ts`, `filter-relative.view.ts` | 21 |
+| A filter rule's popover in Notion's simple form: its head, its "…" menu, and the operands of "Is relative to today" and "Is between" | `src/features/database/filter-rule.view.ts`, `filter-rule-head.view.ts`, `filter-relative.view.ts`, `filter-between.view.ts` | 21 |
+| The settings a rollup works out from, those shown before any is chosen | `src/features/database/properties/rollup/rollup-effective.ts` | 21 |
 | Duplicating a view | `src/features/database/view-duplicate.commands.ts` | 21 |
 | Each layout's own rows in the layout panel, the card layout's tiles and a timeline's end date | `src/features/database/view-settings/layout-items.ts` | 21 |
 | How a view groups text and numbers (Text by, Number by) | `src/features/database/view-settings/group-by-panels.ts`, `properties/text/text-grouping.ts`, `properties/number/number-grouping.ts` | 21 |

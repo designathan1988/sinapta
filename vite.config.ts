@@ -149,6 +149,10 @@ export default defineConfig({
     setupFiles: ["src/dom-test-setup.ts"],
     environment: "node",
     pool: "threads",
+    // About two workers for every three cores: one per core spends more
+    // time building DOM environments than it saves (10.6 s against 8.4 s
+    // on 24 cores, 2026-11-13).
+    maxWorkers: "66%",
     isolate: false,
     css: false,
     restoreMocks: true,

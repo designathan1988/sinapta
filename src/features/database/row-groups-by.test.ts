@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { createDatabaseApp, type DatabaseApp } from "./database-builder.ts";
+import {
+  createDatabaseApp,
+  toPropertyId,
+  type DatabaseApp,
+} from "./database-builder.ts";
 import {
   setGroupOptions,
   setViewGroupBy,
@@ -39,11 +43,11 @@ describe("grouping text and numbers as Notion's Text by and Number by", () => {
     expect(
       groupedBy(app, { textBy: "alphabetical", sort: "ascending" }),
     ).toEqual([
-      { label: "No Owner", titles: ["r6"] },
       { label: "3", titles: ["r4"] },
       { label: "A", titles: ["r1"] },
       { label: "B", titles: ["r3"] },
       { label: "Other", titles: ["r2", "r5"] },
+      { label: "No Owner", titles: ["r6"] },
     ]);
   });
 
@@ -115,5 +119,24 @@ describe("grouping text and numbers as Notion's Text by and Number by", () => {
         hideEmpty: true,
       }).map((group) => group.label),
     ).toEqual(["-2", "9", "10"]);
+  });
+
+  it("groups by the title column, its empty group last, as Notion's No Name", () => {
+    const app = createDatabaseApp([], [["Bia"], ["Ana"], [""]]);
+    const viewId = app.view().id;
+    const title = toPropertyId("title");
+    app.dispatch(setViewGroupBy.create({ viewId, propertyId: title }));
+    app.dispatch(
+      setGroupOptions.create({ viewId, options: { sort: "ascending" } }),
+    );
+    const model = selectTableModel(app.store.getState(), app.databaseId);
+    const groups =
+      model === undefined ? [] : (selectRowGroups(model)?.groups ?? []);
+
+    expect(groups.map((group) => group.label)).toEqual([
+      "Ana",
+      "Bia",
+      "No Name",
+    ]);
   });
 });

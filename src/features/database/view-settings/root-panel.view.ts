@@ -11,6 +11,7 @@ import type { TableContext } from "../table-cell.view.ts";
 import { FILTERS_OVERLAY } from "../view-filters.view.ts";
 import { setViewLocked } from "../view-lock.commands.ts";
 import { deleteView, renameView } from "../view.commands.ts";
+import { groupPropertyOf } from "../row-groups.selectors.ts";
 import { panelRow, type SettingsPanel } from "./settings-panel.ts";
 
 function renderName(context: TableContext): TemplateResult {
@@ -80,9 +81,7 @@ function filterRow(context: TableContext): MenuEntry {
 function groupRows(context: TableContext): MenuEntry[] {
   const { view, database } = context.model;
   if (view.type === "calendar") return [];
-  const grouped = database.props.properties.find(
-    (property) => property.id === view.groupBy?.propertyId,
-  );
+  const grouped = groupPropertyOf(database, view.groupBy?.propertyId);
   const group = {
     label: COPY.database.group,
     icon: "group" as const,

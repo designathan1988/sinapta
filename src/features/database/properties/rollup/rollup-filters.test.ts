@@ -139,13 +139,28 @@ describe("a rollup's filter conditions", () => {
     expect(app.kept("any:contains", "ship")).toEqual(["Alpha", "Beta"]);
   });
 
-  it("offers no condition while it follows no relation", () => {
+  it("works out from the relation its settings show before one is chosen", () => {
     const app = createApp();
 
-    const offered = operatorsOf(
-      app.rollupProperty(),
-      app.store.getState(),
-    ).filter((item) => item.isRetired !== true);
+    const ids = operatorsOf(app.rollupProperty(), app.store.getState())
+      .filter((item) => item.isRetired !== true)
+      .map((item) => item.id);
+
+    expect(ids[0]).toBe("any:is");
+    // The related pages' titles, T1 to T3.
+    expect(app.kept("any:is", "T3")).toEqual(["Beta"]);
+  });
+
+  it("offers no condition in a database without a relation", () => {
+    const app = createDatabaseApp(
+      [{ name: "Total", type: "rollup" }],
+      [["Row"]],
+    );
+    const property = app.database().props.properties[0];
+
+    const offered = operatorsOf(property, app.store.getState()).filter(
+      (item) => item.isRetired !== true,
+    );
 
     expect(offered).toEqual([]);
   });

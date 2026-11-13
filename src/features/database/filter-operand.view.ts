@@ -9,6 +9,7 @@ import type { Filter } from "../../model/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderSelect, type SelectOption } from "../../ui/select/index.ts";
 import type { FilterPath } from "./filter-edit.ts";
+import { renderBetweenOperand } from "./filter-between.view.ts";
 import { renderRelativeOperand } from "./filter-relative.view.ts";
 import type { FilterOperator } from "./property-definition.ts";
 import type { TableContext } from "./table-cell.view.ts";
@@ -66,15 +67,33 @@ function operandOptions(
   }));
 }
 
+// The operands an operator draws its own way: relative to today, or
+// between two days.
+function renderOwnEditor(
+  props: OperandProps,
+  context: TableContext,
+): TemplateResult | undefined {
+  const editor = props.operator?.operandEditor;
+  if (editor === "relative") return renderRelative(props, context);
+  if (editor !== "between") return undefined;
+  const operand =
+    typeof props.filter.value === "string" ? props.filter.value : "";
+  return renderBetweenOperand({
+    operand,
+    onChange: (value) => {
+      props.onChange({ field: "value", value });
+    },
+  });
+}
+
 export function renderFilterOperand(
   props: OperandProps,
   context: TableContext,
 ): TemplateResult {
   const { filter, property, onChange } = props;
   const current = typeof filter.value === "string" ? filter.value : "";
-  if (props.operator?.operandEditor === "relative") {
-    return renderRelative(props, context);
-  }
+  const own = renderOwnEditor(props, context);
+  if (own !== undefined) return own;
   const options = operandOptions(property, props.operator);
   if (options !== undefined) {
     return renderSelect(

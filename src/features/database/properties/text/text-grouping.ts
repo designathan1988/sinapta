@@ -23,6 +23,7 @@ function firstGroup(text: string): GroupKey {
 }
 
 export const TEXT_GROUPING: Grouping = {
+  isEmptyLast: true,
   keysOf(value, _property, groupBy) {
     if (typeof value !== "string" || value.trim() === "") return [];
     if (groupBy?.textBy === "alphabetical") return [firstGroup(value)];

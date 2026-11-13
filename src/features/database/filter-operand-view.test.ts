@@ -12,11 +12,11 @@ import { setViewFilter } from "./view.commands.ts";
 
 // A view filtered by Due relative to today, its rule open, with one of
 // its lists open when asked.
-function rendered(operand: string, child?: string) {
+function rendered(operand: string, child?: string, operator = "relative") {
   const app = createDatabaseApp([{ name: "Due", type: "date" }], [["A"]]);
   const [due] = app.propertyIds;
   if (due === undefined) throw new Error("none");
-  const rule = { propertyId: due, operator: "relative", value: operand };
+  const rule = { propertyId: due, operator, value: operand };
   app.dispatch(
     setViewFilter.create({
       viewId: app.view().id,
@@ -107,6 +107,25 @@ describe("the operand of a date filter relative to today", () => {
     expect(sent).toContainEqual(
       expect.objectContaining({
         filter: { conjunction: "and", items: [{ ...rule, dateEnd: "end" }] },
+      }),
+    );
+  });
+
+  it("takes Is between's two days from its fields", () => {
+    const { host, sent, rule } = rendered("2026-11-10..", undefined, "between");
+    const [, last] = host.querySelectorAll<HTMLInputElement>(
+      ".database__between input",
+    );
+
+    if (last !== undefined) last.value = "2026-11-12";
+    last?.dispatchEvent(new Event("change", { bubbles: true }));
+
+    expect(sent).toContainEqual(
+      expect.objectContaining({
+        filter: {
+          conjunction: "and",
+          items: [{ ...rule, value: "2026-11-10..2026-11-12" }],
+        },
       }),
     );
   });

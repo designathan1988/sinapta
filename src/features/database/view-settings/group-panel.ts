@@ -6,7 +6,10 @@ import { COPY } from "../../../ui/copy.ts";
 import type { MenuEntry, MenuItem } from "../../../ui/menu/index.ts";
 import { setGroupOptions, setViewGroupBy } from "../group.commands.ts";
 import { propertyType } from "../property-registry.ts";
-import { isGroupable } from "../row-groups.selectors.ts";
+import {
+  groupableProperties,
+  groupPropertyOf,
+} from "../row-groups.selectors.ts";
 import type { TableContext } from "../table-cell.view.ts";
 import { groupByKindRows } from "./group-by-panels.ts";
 import { choiceItems, panelRow, type SettingsPanel } from "./settings-panel.ts";
@@ -15,7 +18,7 @@ import { choiceItems, panelRow, type SettingsPanel } from "./settings-panel.ts";
 // shows the group panel with its settings.
 export function groupByItems(context: TableContext): MenuItem[] {
   const { model, dispatch } = context;
-  const groupable = model.database.props.properties.filter(isGroupable);
+  const groupable = groupableProperties(model.database);
   return choiceItems(context, {
     choices: groupable.map((property) => ({
       value: property.id,
@@ -118,9 +121,7 @@ function groupedItems(
 
 export function groupPanel(context: TableContext): SettingsPanel {
   const { view, database } = context.model;
-  const property = database.props.properties.find(
-    (item) => item.id === view.groupBy?.propertyId,
-  );
+  const property = groupPropertyOf(database, view.groupBy?.propertyId);
   if (property === undefined) {
     return {
       title: COPY.database.groupBy,

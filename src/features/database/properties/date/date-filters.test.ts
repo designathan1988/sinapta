@@ -99,9 +99,24 @@ describe("a date filter relative to today", () => {
       "Is after",
       "Is on or before",
       "Is on or after",
+      "Is between",
       "Is relative to today",
       "Is empty",
       "Is not empty",
     ]);
+  });
+
+  it("keeps the days between two days, both included, in either order", () => {
+    const between = { operator: "between" } as const;
+    expect(
+      passes({ start: "2026-11-10" }, "2026-11-10..2026-11-12", between),
+    ).toBe(true);
+    expect(
+      passes({ start: "2026-11-12" }, "2026-11-12..2026-11-10", between),
+    ).toBe(true);
+    expect(
+      passes({ start: "2026-11-13" }, "2026-11-10..2026-11-12", between),
+    ).toBe(false);
+    expect(passes({ start: "1999-01-01" }, "2026-11-10..", between)).toBe(true);
   });
 });
