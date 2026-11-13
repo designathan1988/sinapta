@@ -83,12 +83,17 @@
   }
 
   /* When some rows have icons, the others keep an icon's room, so every
-     label starts at the same place. */
+     label starts at the same place; a color's swatch stands in that room
+     itself, centered in it. */
   .menu:has(.menu__item > .icon:first-child)
-    .menu__item:not(:has(> .icon:first-child))::before {
+    .menu__item:not(:has(> :is(.icon, .chip__swatch):first-child))::before {
     content: "";
     flex: none;
     inline-size: var(--size-icon-md);
+  }
+
+  .menu__item > .chip__swatch:first-child {
+    margin-inline: calc((var(--size-icon-md) - var(--size-icon-sm)) / 2);
   }
 
   .menu__text {

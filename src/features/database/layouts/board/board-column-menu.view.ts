@@ -1,11 +1,13 @@
-// The menu of a board's column: moving it left or right among the shown
-// columns, and hiding it. Its anchor names the board and the column, as
-// two boards on one page may share column keys.
+// The menu of a board's column, as Notion's group menu: the option's name,
+// Hide, Delete and its colors; then moving it left or right among the
+// shown columns, the keyboard's way to do what dragging does. Its anchor
+// names the board and the column, as two boards may share column keys.
 import { nothing, type TemplateResult } from "lit-html";
 import { closeOverlay } from "../../../../state/index.ts";
 import { COPY } from "../../../../ui/copy.ts";
-import { renderMenu, type MenuItem } from "../../../../ui/menu/index.ts";
-import { setGroupOrder, toggleGroupHidden } from "../../group.commands.ts";
+import { renderMenu, type MenuEntry } from "../../../../ui/menu/index.ts";
+import { setGroupOrder } from "../../group.commands.ts";
+import { groupMenuParts } from "../../group-menu-entries.ts";
 import type { TableContext } from "../../table-cell.view.ts";
 import { selectBoard, type BoardColumn } from "./board.selectors.ts";
 
@@ -29,7 +31,7 @@ interface ColumnPlace {
   readonly keys: readonly string[];
 }
 
-function columnItems(context: TableContext, place: ColumnPlace): MenuItem[] {
+function moveItems(context: TableContext, place: ColumnPlace): MenuEntry[] {
   const { key, index, shown, keys } = place;
   const viewId = context.model.view.id;
   const move = (offset: number) => (): void => {
@@ -39,20 +41,18 @@ function columnItems(context: TableContext, place: ColumnPlace): MenuItem[] {
     context.dispatch(setGroupOrder.create({ viewId, order }));
   };
   return [
+    { kind: "divider" },
     {
       label: COPY.database.moveLeft,
+      icon: "arrow-left",
       onSelect: move(-1),
       isDisabled: index === 0,
     },
     {
       label: COPY.database.moveRight,
+      icon: "arrow-right",
       onSelect: move(1),
       isDisabled: index === shown.length - 1,
-    },
-    {
-      label: COPY.database.hideGroup,
-      onSelect: () =>
-        context.dispatch(toggleGroupHidden.create({ viewId, key })),
     },
   ];
 }
@@ -71,9 +71,11 @@ export function renderBoardColumnMenu(
   const column = shown[index];
   if (column === undefined) return nothing;
   const keys = board.columns.map((item) => item.key);
+  const parts = groupMenuParts(context, key);
   return renderMenu({
-    label: column.label,
-    items: columnItems(context, { key, index, shown, keys }),
+    label: COPY.database.groupActions(column.label),
+    ...parts,
+    items: [...parts.items, ...moveItems(context, { key, index, shown, keys })],
     onClose: () => dispatch(closeOverlay.create({})),
   });
 }

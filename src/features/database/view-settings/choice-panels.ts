@@ -20,7 +20,11 @@ import { togglePropertyHidden } from "../view.commands.ts";
 import { groupByItems } from "./group-panel.ts";
 import { choiceItems, type SettingsPanel } from "./settings-panel.ts";
 
-const SORTS: readonly GroupBy["sort"][] = ["manual", "ascending", "descending"];
+export const GROUP_SORTS: readonly GroupBy["sort"][] = [
+  "manual",
+  "ascending",
+  "descending",
+];
 const STEPS: readonly GroupBy["dateBy"][] = ["day", "week", "month", "year"];
 const PREVIEWS: readonly View["cardPreview"][] = ["none", "cover", "content"];
 const SIZES: readonly View["cardSize"][] = ["small", "medium", "large"];
@@ -50,7 +54,7 @@ export function groupByPanel(context: TableContext): SettingsPanel {
 
 export function groupSortPanel(context: TableContext): SettingsPanel {
   const labels = COPY.database.groupSorts;
-  const choices = SORTS.map((value) => ({ value, label: labels[value] }));
+  const choices = GROUP_SORTS.map((value) => ({ value, label: labels[value] }));
   const set = groupOptions(context);
   return {
     title: COPY.database.sortRow,

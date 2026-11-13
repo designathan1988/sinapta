@@ -29,6 +29,8 @@ export const DATABASE_MENU_TEXT = {
   lockView: "Lock view",
   subGroup: "Sub-group",
   noSubGroup: "None",
+  subGroupBy: "Sub-group by",
+  removeSubGroup: "Remove sub-grouping",
   exportedCsv: "Exported the view as CSV.",
   importCsv: "Import CSV",
   importedCsv: "Imported the CSV file as a database.",

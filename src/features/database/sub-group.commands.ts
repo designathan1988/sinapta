@@ -1,7 +1,7 @@
 // A board's sub-groups, as Notion's: a second property sorts the cards
 // into lanes across the board, each lane holding every column.
 import { selectDatabase } from "../../blocks/database/index.ts";
-import type { PropertyId, View, ViewId } from "../../model/index.ts";
+import type { GroupBy, PropertyId, View, ViewId } from "../../model/index.ts";
 import {
   defineCommand,
   type AppState,
@@ -69,4 +69,23 @@ export const toggleSubGroupCollapsed = defineCommand<{
   },
 });
 
-export const subGroupCommands = [setViewSubGroupBy, toggleSubGroupCollapsed];
+// How a board's lanes are ordered, and whether empty ones show.
+export const setSubGroupOptions = defineCommand<{
+  viewId: ViewId;
+  options: Partial<Pick<GroupBy, "sort" | "hideEmpty">>;
+}>({
+  type: "view.setSubGroupOptions",
+  handle(state, command) {
+    const view = state.workspace.views[command.viewId];
+    if (view?.subGroupBy === undefined) return {};
+    return patchView(view.id, {
+      subGroupBy: { ...view.subGroupBy, ...command.options },
+    });
+  },
+});
+
+export const subGroupCommands = [
+  setViewSubGroupBy,
+  toggleSubGroupCollapsed,
+  setSubGroupOptions,
+];
