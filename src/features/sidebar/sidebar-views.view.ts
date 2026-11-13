@@ -203,23 +203,30 @@ function renderRows(
   </ul>`;
 }
 
+// The section of one view kept in the sidebar.
+export function renderSidebarView(
+  state: AppState,
+  dispatch: Dispatch,
+  viewId: string,
+): TemplateResult | typeof nothing {
+  const context = { state, dispatch };
+  const entry = (state.workspace.settings.sidebarViews ?? []).find(
+    (one) => one.viewId === viewId,
+  );
+  const section = entry === undefined ? undefined : selectSection(state, entry);
+  if (entry === undefined || section === undefined) return nothing;
+  return html`<section class="sidebar__section sidebar__view">
+    ${renderHead(section, context)}
+    ${entry.isCollapsed === true ? nothing : renderRows(section, entry, context)}
+  </section>`;
+}
+
+// Every view kept in the sidebar, in the order they were added.
 export function renderSidebarViews(
   state: AppState,
   dispatch: Dispatch,
-): TemplateResult[] {
-  const context = { state, dispatch };
-  return (state.workspace.settings.sidebarViews ?? []).flatMap((entry) => {
-    const section = selectSection(state, entry);
-    if (section === undefined) return [];
-    return [
-      html`<section class="sidebar__section sidebar__view">
-        ${renderHead(section, context)}
-        ${
-          entry.isCollapsed === true
-            ? nothing
-            : renderRows(section, entry, context)
-        }
-      </section>`,
-    ];
-  });
+): (TemplateResult | typeof nothing)[] {
+  return (state.workspace.settings.sidebarViews ?? []).map((entry) =>
+    renderSidebarView(state, dispatch, entry.viewId),
+  );
 }

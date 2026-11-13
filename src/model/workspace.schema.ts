@@ -34,6 +34,14 @@ export const settingsSchema = v.object({
   // only; absent, both. Notion keeps it for one person, outside undo.
   viewTabStyle: v.optional(v.picklist(["text-icon", "text", "icon"])),
   sidebarViews: v.optional(v.array(sidebarViewSchema)),
+  // The sidebar as the owner arranged it in "Customize sidebar": its
+  // shortcuts and its sections, in order, those left out hidden; absent,
+  // Notion's defaults. A page shortcut is "page:<id>", a view's section
+  // "view:<id>".
+  sidebarShortcuts: v.optional(v.array(v.string())),
+  sidebarSections: v.optional(v.array(v.string())),
+  // How many favorites the Favorites section lists; absent, all.
+  favoritesLimit: v.optional(v.picklist([5, 10, 15, 20])),
 });
 
 const workspaceFileSchema = v.object({

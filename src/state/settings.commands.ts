@@ -1,6 +1,7 @@
 import type { Theme, ViewTabStyle } from "../model/index.ts";
 import type { AppState } from "./app-state.ts";
 import { sidebarViewCommands } from "./sidebar-views.commands.ts";
+import { sidebarLayoutCommands } from "./sidebar-layout.commands.ts";
 import {
   defineCommand,
   type CommandEffect,
@@ -49,4 +50,5 @@ export const settingsCommands = [
   toggleTheme,
   setViewTabStyle,
   ...sidebarViewCommands,
+  ...sidebarLayoutCommands,
 ];

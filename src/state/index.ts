@@ -70,6 +70,11 @@ export {
   type SidebarViewChanges,
 } from "./sidebar-views.commands.ts";
 export {
+  setFavoritesLimit,
+  setSidebarSections,
+  setSidebarShortcuts,
+} from "./sidebar-layout.commands.ts";
+export {
   finishImport,
   persistenceCommands,
   requestExport,

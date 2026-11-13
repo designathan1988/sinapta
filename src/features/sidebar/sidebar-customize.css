@@ -1,0 +1,99 @@
+@layer features {
+  /* "Customize sidebar", measured on Notion's at 1440x900: rows as the
+     sidebar's, a grip before the icon, the row's menu and × at its end
+     while pointed at, grey "Add" rows, a rule, and a full-width "Done". */
+  .sidebar__edit {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xs);
+  }
+
+  .sidebar__edit-list {
+    display: flex;
+    flex-direction: column;
+    margin: var(--space-none);
+    padding: var(--space-none);
+    list-style: none;
+  }
+
+  .sidebar__edit-row {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    min-block-size: var(--size-sidebar-row);
+    padding-inline: var(--space-inset-xs) var(--space-inset-xs);
+    border-radius: var(--radius-md);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+
+    &:hover,
+    &:focus-within {
+      background-color: var(--color-bg-hover);
+    }
+
+    & > .sidebar__title {
+      flex: 1;
+    }
+  }
+
+  .sidebar__grip {
+    display: inline-grid;
+    place-items: center;
+    color: var(--color-text-tertiary);
+    cursor: grab;
+  }
+
+  .sidebar__edit-tools {
+    display: flex;
+    opacity: 0;
+  }
+
+  .sidebar__edit-row:is(:hover, :focus-within, :has([aria-expanded="true"]))
+    > .sidebar__edit-tools {
+    opacity: 1;
+  }
+
+  .sidebar__edit-control {
+    display: inline-flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    min-block-size: var(--size-target-min);
+    padding: var(--space-none) var(--space-inset-xs);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-tertiary);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-active);
+      color: var(--color-text-primary);
+    }
+  }
+
+  .sidebar__edit-add > .sidebar__edit-control {
+    inline-size: 100%;
+    min-block-size: var(--size-sidebar-row);
+    padding-inline: var(--space-inset-sm);
+  }
+
+  .sidebar__edit-rule {
+    margin: var(--space-stack-xs) var(--space-inset-sm);
+    border: none;
+    border-block-start: var(--size-border-thin) solid
+      var(--color-border-default);
+  }
+
+  .sidebar__edit-done {
+    justify-content: center;
+    inline-size: 100%;
+    margin-block-start: var(--space-stack-section);
+  }
+
+  .sidebar__customize-open {
+    margin-block-start: auto;
+    color: var(--color-text-tertiary);
+  }
+}

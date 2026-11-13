@@ -11,12 +11,14 @@ import {
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 
-// Favorite pages, listed above the tree for quick access.
+// Favorite pages, listed above the tree for quick access; as many as
+// "Customize sidebar" › Show says.
 export function renderFavorites(
   state: AppState,
   dispatch: Dispatch,
 ): TemplateResult | typeof nothing {
-  const pages = selectFavoritePages(state);
+  const limit = state.workspace.settings.favoritesLimit;
+  const pages = selectFavoritePages(state).slice(0, limit);
   if (pages.length === 0) return nothing;
   const items = pages.map((page) => {
     const title = selectPageTitle(page);
