@@ -15,7 +15,12 @@ import {
 } from "./sidebar-customize.view.ts";
 import { renderFavorites } from "./sidebar-favorites.view.ts";
 import { renderSidebarFooter } from "./sidebar-footer.view.ts";
-import { sectionViewId, selectSections } from "./sidebar-layout.selectors.ts";
+import { sectionViewId } from "./sidebar-layout.selectors.ts";
+import {
+  selectSidebarTab,
+  selectTabSections,
+} from "./sidebar-tabs.selectors.ts";
+import { renderSidebarTabs, renderUpcoming } from "./sidebar-tabs.view.ts";
 import { renderShortcuts } from "./sidebar-shortcuts.view.ts";
 import { renderSidebarTop } from "./sidebar-top.view.ts";
 import { renderTree } from "./sidebar-tree.view.ts";
@@ -58,7 +63,8 @@ function renderSections(
   state: AppState,
   dispatch: Dispatch,
 ): (TemplateResult | typeof nothing)[] {
-  return selectSections(state).map((key) => {
+  const tab = selectSidebarTab(state);
+  return selectTabSections(state, tab).map((key) => {
     if (key === "favorites") return renderFavorites(state, dispatch);
     if (key === "private") return renderPrivate(state, dispatch);
     const viewId = sectionViewId(state, key);
@@ -87,7 +93,10 @@ function renderBody(state: AppState, dispatch: Dispatch): TemplateResult {
     return html`${renderHome(state, dispatch)}
     ${renderSidebarCustomize(state, dispatch)}`;
   }
-  return html`${renderHome(state, dispatch)} ${renderShortcuts(state, dispatch)}
+  const isCalendar = selectSidebarTab(state) === "calendar";
+  return html`${renderSidebarTabs(state, dispatch)}
+  ${isCalendar ? renderUpcoming(state, dispatch) : renderHome(state, dispatch)}
+  ${isCalendar ? nothing : renderShortcuts(state, dispatch)}
   ${renderSections(state, dispatch)} ${renderCustomizeOpen(dispatch)}`;
 }
 

@@ -2,6 +2,7 @@
 // (Text and icon, Text only, Icon only, for the owner alone); Edit view;
 // Source; Copy link to view; Add view to sidebar; Open as full page; Hide
 // data source titles; Duplicate view; Delete view.
+import { calendarItems } from "./view-calendar-item.ts";
 import { html, type TemplateResult } from "lit-html";
 import type { ViewTabStyle } from "../../model/index.ts";
 import {
@@ -133,6 +134,7 @@ function viewItems(context: TableContext): MenuEntry[] {
       onSelect: () => dispatch(duplicateView.create({ viewId })),
     },
     ...(model.viewIds.length > 1 ? [remove] : []),
+    ...calendarItems(context),
   ];
 }
 

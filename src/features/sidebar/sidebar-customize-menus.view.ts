@@ -2,6 +2,7 @@
 // down, and Show for a section that lists pages), "Add shortcut" (Create:
 // New page, New database; Go to: Page, Settings) and "Add section" (a
 // database view, or a section left out).
+import { moveToTabItem } from "./sidebar-move-tab.ts";
 import { type TemplateResult } from "lit-html";
 import {
   closeChildOverlay,
@@ -152,7 +153,11 @@ export function renderSectionMenu(
     context.dispatch(setSidebarSections.create({ keys: next }));
   return childMenu(context, {
     label: TEXT.sectionMenu,
-    items: [...showItem(context, key), ...moveItems(keys, key, apply)],
+    items: [
+      ...showItem(context, key),
+      moveToTabItem(context.state, context.dispatch, key),
+      ...moveItems(keys, key, apply),
+    ],
   });
 }
 

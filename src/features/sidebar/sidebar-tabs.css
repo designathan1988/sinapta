@@ -1,0 +1,41 @@
+@layer features {
+  /* Notion's sidebar tabs: a row under the search field; the tab shown is
+     a pill with its icon and name, the others only their icon. */
+  .sidebar__tabs {
+    display: flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+  }
+
+  .sidebar__tab {
+    display: inline-flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    min-block-size: var(--size-control-md);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: none;
+    border-radius: var(--radius-md);
+    background: none;
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    &[aria-selected="true"] {
+      background-color: var(--color-bg-hover);
+      color: var(--color-text-primary);
+    }
+  }
+
+  .sidebar__date {
+    margin-inline-start: auto;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+  }
+}

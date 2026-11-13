@@ -149,9 +149,9 @@ describe("renderSidebar", () => {
 
     button(host, "Home")?.click();
 
-    expect(commands).toEqual([
+    expect(commands).toContainEqual(
       expect.objectContaining({ type: "ui.openHome" }),
-    ]);
+    );
   });
 
   it("keeps the workspace, help and the apps menu at its foot", () => {

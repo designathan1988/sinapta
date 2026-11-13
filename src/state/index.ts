@@ -126,3 +126,9 @@ export {
   setPageVersions,
   type PageVersion,
 } from "./page-versions.commands.ts";
+export {
+  setCalendarView,
+  setSectionTab,
+  setSidebarTab,
+  type SidebarTab,
+} from "./sidebar-tabs.commands.ts";

@@ -138,6 +138,7 @@ describe("a view kept in the sidebar", () => {
       "Source",
       "View",
       "Template",
+      "Move to tab",
       "Remove section",
     ]);
   });

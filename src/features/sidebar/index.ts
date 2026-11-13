@@ -7,3 +7,4 @@ export {
 } from "./sidebar-footer.view.ts";
 export { SIDEBAR_VIEW_OVERLAY } from "./sidebar-views.view.ts";
 export { renderSidebarViewMenu } from "./sidebar-view-menu.view.ts";
+export { selectUpcoming } from "./sidebar-tabs.selectors.ts";

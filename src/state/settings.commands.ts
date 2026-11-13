@@ -1,3 +1,4 @@
+import { sidebarTabCommands } from "./sidebar-tabs.commands.ts";
 import type { Theme, ViewTabStyle } from "../model/index.ts";
 import type { AppState } from "./app-state.ts";
 import { sidebarViewCommands } from "./sidebar-views.commands.ts";
@@ -51,4 +52,5 @@ export const settingsCommands = [
   setViewTabStyle,
   ...sidebarViewCommands,
   ...sidebarLayoutCommands,
+  ...sidebarTabCommands,
 ];

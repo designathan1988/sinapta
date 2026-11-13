@@ -28,6 +28,8 @@ const sidebarViewSchema = v.object({
   templateId: v.optional(v.nullable(blockIdSchema)),
 });
 
+const sidebarTabSchema = v.picklist(["home", "calendar"]);
+
 export const settingsSchema = v.object({
   theme: v.picklist(["system", "light", "dark"]),
   // How a database's view tabs show: icon and name, name only, or icon
@@ -42,6 +44,13 @@ export const settingsSchema = v.object({
   sidebarSections: v.optional(v.array(v.string())),
   // How many favorites the Favorites section lists; absent, all.
   favoritesLimit: v.optional(v.picklist([5, 10, 15, 20])),
+  // The sidebar tab shown, and the tab each section was moved to ("Move
+  // to tab"); absent, Home.
+  sidebarTab: v.optional(sidebarTabSchema),
+  sectionTabs: v.optional(v.record(v.string(), sidebarTabSchema)),
+  // The views whose dated pages the Calendar tab lists ("Manage in
+  // calendar").
+  calendarViewIds: v.optional(v.array(v.string())),
 });
 
 const workspaceFileSchema = v.object({

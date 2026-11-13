@@ -1,6 +1,16 @@
 // A view kept in the sidebar: its section's buttons and menu, in Notion's
 // words.
 export const SIDEBAR_VIEWS_TEXT = {
+  sidebarTabs: {
+    label: "Sidebar tabs",
+    home: "Home",
+    calendar: "Calendar",
+    upcoming: "Upcoming",
+    empty:
+      "Choose “Manage in calendar” in a date view's menu to list its pages here.",
+    moveToTab: "Move to tab",
+    manageInCalendar: "Manage in calendar",
+  },
   sidebarViews: {
     open: "Open",
     addPage: "Add a page",

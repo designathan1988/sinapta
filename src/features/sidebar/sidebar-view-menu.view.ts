@@ -1,6 +1,8 @@
 // The menu of a view kept in the sidebar, as Notion's: Rename; Open in;
 // Show (5, 10, 15 or 20 pages); Show page icon; Source; View; then Move
 // up, Move down and Remove section.
+import { viewSectionKey } from "./sidebar-layout.selectors.ts";
+import { moveToTabItem } from "./sidebar-move-tab.ts";
 import { type TemplateResult, nothing } from "lit-html";
 import type { SidebarView } from "../../model/index.ts";
 import {
@@ -215,7 +217,12 @@ export function renderSidebarViewMenu(
   };
   return renderMenu({
     label: TEXT.menu,
-    items: [rename, ...settingItems(context), ...placeItems(context, entries)],
+    items: [
+      rename,
+      ...settingItems(context),
+      moveToTabItem(state, dispatch, viewSectionKey(section.entry.viewId)),
+      ...placeItems(context, entries),
+    ],
     onClose: () => dispatch(closeOverlay.create({})),
     context: { overlay, dispatch },
     ...(overlay.panel === RENAME_PANEL && { lead: renameLead(context) }),

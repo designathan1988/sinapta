@@ -971,11 +971,11 @@ items above, found while photographing them:
     through until accepted. The probe's text was rejected and a stray
     " zz" removed by hand (`n52-cleanup`: "/# Heading one", "Bulleted
     item").
-29. **open** [T076–T078, FR-032] Sidebar tabs and Move to tab: the
+29. **done** [T076–T078, FR-032, photo `u19-tabs`] Sidebar tabs and Move to tab: the
     sidebar's top row holds tabs (Home, chat, calendar); a section's menu
     and Customize sidebar offer "Move to tab", which moves the section
     under another tab.
-30. **open** [T079–T080, FR-033] "Manage in Notion Calendar" in a date
+30. **done** [T079–T080, FR-033, photo `u19-tabs`] "Manage in Notion Calendar" in a date
     view's menus and toolbars: Pagecraft has no calendar product of its
     own, so its equivalent shows the view's dated pages in the sidebar's
     calendar tab ("Upcoming").
