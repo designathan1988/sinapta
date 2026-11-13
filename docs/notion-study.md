@@ -993,6 +993,24 @@ items above, found while photographing them:
     its "Aa" icon (as its header), then the other properties by name in
     character order ("URL" before "Última edição"). The title's "Aa" also
     leads it in the filter, sort and sub-group lists.
+33. **done** [T099, FR-026, `n54-emoji-list`, `n54-emoji-measure`] Notion's emoji
+    picker for a reaction, measured: 408 × 356 px; "Filtrar…" (Filter…)
+    in a 356 × 28 px field, radius 6, with a magnifier; a ✋ skin tone
+    button 28 × 28 px; group names 12 px, weight 500, grey; emoji 24 px in
+    32 px cells, twelve to a row; at its foot "Jump to category" buttons
+    32 px: recent, People & Body, Animals & Nature, Food & Drink,
+    Activities, Travel & Places, Objects, Symbols, Flags, custom, add. Its
+    eight groups hold 518, 144, 132, 86, 218, 255, 221 and 269 emoji in
+    the Unicode order; Pagecraft's list is read from it. "custom" and
+    "add" (a workspace's own emoji) stay out: uploads of one's own emoji.
+34. **done** [T100, FR-032, `n53-tabs`] The sidebar's tab row draws its icons
+    filled (house, bubble, calendar); the calendar tab's section reads
+    "Próximos eventos" (Upcoming events). Notion names that tab
+    "Reuniões" (Meetings) for its AI meeting notes; Pagecraft's tab holds
+    the dated pages alone and keeps the name "Calendar".
+35. **done** [T101, FR-020] "Is between" read in the app's own date words
+    ("Nov 10, 2026"), not the browser's date field, whose day order
+    follows the system's language.
 
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,

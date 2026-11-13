@@ -382,6 +382,11 @@ after reload and applies only to that view.
 - Conditional color offers the same ten colors as Notion's text and
   background colors already used in Pagecraft.
 - Map view, dashboard view, people, sharing and AI stay out of scope.
+- The sidebar's calendar tab keeps the name "Calendar": Notion's
+  "Meetings" names its AI meeting notes, which stay out; the tab holds
+  the dated pages under Notion's "Upcoming events".
+- The reaction picker leaves out Notion's "custom" and "add" categories:
+  a workspace's own uploaded emoji.
 - Left out of Notion's menus for the reasons above: the selection panel's
   AI skills (AI); the view tab
   menu's Manage in Notion Calendar is built as its local equivalent

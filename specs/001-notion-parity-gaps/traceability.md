@@ -3,7 +3,7 @@
 Every functional requirement of [spec.md](spec.md), with the tasks that
 built it, the code they name, the tests that prove it, the Pagecraft
 photo (`.captures/pagecraft/`) and the Notion photo (`.captures/notion/`)
-it was compared with. Built on 2026-11-13 from `tasks.md` T001–T096 and
+it was compared with. Built on 2026-11-13 from `tasks.md` T001–T102 and
 checked mechanically: every file named exists under `src/`, every photo
 folder or file exists under `.captures/`, no task is open, and every
 requirement outside the quality bar has a test, a Pagecraft photo and a
@@ -25,24 +25,24 @@ Notion photo. That check reported 0 problems.
 | FR-012 | T027 | `src/features/database/properties/number/number-config.view.ts` | `src/features/database/properties/number/number-config-view.test.ts` | `p19-number-tiles` | `a5-edit-property/03-b00-edit.png` |
 | FR-013 | T028 | `src/features/database/column-menu-items.ts`, `src/features/database/properties/status/status.schema.ts`, `src/features/database/row.commands.ts`, `status.definition.ts`, `table-cell.view.ts`, `table-keys.view.ts` | `src/features/database/properties/status/status.test.ts` | `p20-status-checkbox` | `a6-submenus/110-b17-item.png` |
 | FR-014 | T029 | `calculations.selectors.ts`, `column-menu-items.ts`, `src/features/database/calculation.commands.ts` | `src/features/database/calculations.test.ts` | `p21-count-cap` | `a7-deeper` |
-| FR-015 | T030, T033 | `src/features/database/color-rules.commands.ts`, `src/features/database/view-settings/color-panel.ts`, `view-settings/root-panel.view.ts` | `src/features/database/color-rules.test.ts`, `src/features/database/view-settings/color-panel-view.test.ts` | `p22-conditional-color` | `b2-view-settings/35-b05-row.png` |
+| FR-015 | T030, T033, T102 | `src/features/database/color-rules.commands.ts`, `src/features/database/view-settings/color-panel.ts`, `view-settings/color-panel.ts`, `view-settings/root-panel.view.ts` | `color-panel-view.test.ts`, `src/features/database/color-rules.test.ts`, `src/features/database/view-settings/color-panel-view.test.ts` | `p22-conditional-color`, `p22-conditional-color/02-panel` | `b2-view-settings/35-b05-row.png` |
 | FR-016 | T031, T032, T091, T096 | `filter-match.ts`, `layouts/calendar/calendar.view.ts`, `layouts/list/list.view.ts`, `layouts/row-card/row-card.view.ts`, `src/features/database/database.css`, `src/features/database/row-color.selectors.ts`, `src/features/database/table.view.ts` | `src/features/database/row-color.test.ts`, `src/features/database/table-view.test.ts`, `table-view.test.ts` | `p22-conditional-color/07-red-rows` | `b2-view-settings/35-b05-row.png`, `c1-filters`, `c1-filters/50-b04-filter.png`, `n40-tab-source/04-source`, `n43-reaction`, `n43-reaction2`, `n46-tabs/01-hover-tabs`, `n53-tabs/01-calendar-tab` |
 | FR-017 | T002 | `src/ui/copy/database-menu-text.ts`, `src/ui/copy/editor-text.ts`, `src/ui/copy/settings-text.ts` | `src/ui/copy.test.ts` | — | — |
-| FR-018 | T038, T095 | `src/ui/menu/menu-keys.ts` | `src/ui/menu/menu-lead-keys.test.ts` | — | — |
+| FR-018 | T038, T095, T097, T098 | `src/features/database/database.css`, `src/ui/button/button.view.ts`, `src/ui/menu/menu-keys.ts`, `src/ui/menu/menu.view.ts`, `src/ui/tiles/tiles.view.ts`, `view-settings/color-panel.ts` | `color-panel-view.test.ts`, `menu-lead-keys.test.ts`, `menu-submenu.test.ts`, `src/ui/menu/menu-lead-keys.test.ts`, `tiles-view.test.ts` | — | — |
 | FR-019 | T037, T052 | — | — | — | — |
-| FR-020 | T041, T051, T052, T096 | `src/features/database/filter-between.view.ts`, `src/features/database/properties/date/date-filters.ts` | `date-filters.test.ts`, `filter-operand-view.test.ts` | `p24-between` | `b2-view-settings/35-b05-row.png`, `c1-filters`, `c1-filters/50-b04-filter.png`, `n40-tab-source/04-source`, `n43-reaction`, `n43-reaction2`, `n46-tabs/01-hover-tabs`, `n53-tabs/01-calendar-tab` |
+| FR-020 | T041, T051, T052, T096, T101 | `filter-rule.css`, `properties/date/date-filters.ts`, `src/features/database/filter-between.view.ts`, `src/features/database/properties/date/date-filters.ts` | `date-filters.test.ts`, `filter-operand-view.test.ts` | `p24-between`, `p24-between/10-kept` | `b2-view-settings/35-b05-row.png`, `c1-filters`, `c1-filters/50-b04-filter.png`, `c1-filters/51-b04-conditions`, `n40-tab-source/04-source`, `n43-reaction`, `n43-reaction2`, `n46-tabs/01-hover-tabs`, `n53-tabs/01-calendar-tab` |
 | FR-021 | T042, T092, T096 | `rollup-config.view.ts`, `rollup.selectors.ts` | `rollup-filters.test.ts` | `p8-rollup-default/14-quantifier` | `b2-view-settings/35-b05-row.png`, `c1-filters`, `c1-filters/50-b04-filter.png`, `n40-tab-source/04-source`, `n43-reaction`, `n43-reaction2`, `n46-tabs/01-hover-tabs`, `n53-tabs/01-calendar-tab` |
 | FR-022 | T043, T044, T093 | `group.commands.ts`, `row-groups.selectors.ts`, `src/features/database/table-model.selectors.ts`, `ui/menu/menu.css`, `view-settings/group-panel.ts` | `group-panel-view.test.ts`, `row-groups-by.test.ts`, `table-model.test.ts` | `p9-group-title`, `p9-title-icon/03-group-menu` | `n39-groups/03-group-by` |
 | FR-023 | T046 | `source-title.commands.ts`, `src/features/database/view-tab-source.ts`, `view.schema.ts` | `view-tab-menu-view.test.ts`, `view-tab-source-view.test.ts` | `p25-tab-source/08-menu` | `n40-tab-source/04-source` |
 | FR-024 | T049, T051, T052 | `sidebar-views.selectors.ts`, `sidebar-views.view.ts`, `src/features/sidebar/sidebar-view-template.ts`, `src/model/workspace.schema.ts` | `sidebar-views-view.test.ts` | `p26-section-reload/14-template` | `n40-section-fix/02-more` |
 | FR-025 | T054, T055 | `sidebar-customize-choices.ts`, `sidebar-customize-menus.view.ts`, `sidebar-customize.css`, `sidebar-customize.view.ts`, `sidebar-section-look.ts`, `sidebar-shortcuts.view.ts`, `sidebar.view.ts`, `src/features/sidebar/sidebar-layout.selectors.ts`, `src/model/workspace.schema.ts`, `src/state/sidebar-layout.commands.ts` | `sidebar-customize-view.test.ts`, `src/features/sidebar/sidebar-layout.test.ts`, `src/state/sidebar-layout.test.ts` | `p27-customize`, `p27-customize-add` | `n42-customize2` |
-| FR-026 | T058, T059, T096 | `format-toolbar-rows.view.ts`, `layouts/feed/feed.view.ts`, `page-reactions.view.ts`, `reaction-picker.view.ts`, `reactions.css`, `reactions.view.ts`, `src/blocks/page/page.schema.ts`, `src/features/comments/reaction.commands.ts` | `format-toolbar-view.test.ts`, `reaction.test.ts`, `reactions-view.test.ts` | `p28-feed-reaction`, `p28-reaction` | `b2-view-settings/35-b05-row.png`, `c1-filters`, `c1-filters/50-b04-filter.png`, `n40-tab-source/04-source`, `n43-reaction`, `n43-reaction2`, `n46-tabs/01-hover-tabs`, `n53-tabs/01-calendar-tab` |
+| FR-026 | T058, T059, T096, T099 | `format-toolbar-rows.view.ts`, `layouts/feed/feed.view.ts`, `page-reactions.view.ts`, `reaction-picker.view.ts`, `reactions.css`, `reactions.view.ts`, `src/blocks/page/page.schema.ts`, `src/features/comments/reaction.commands.ts`, `src/state/settings.commands.ts`, `src/ui/emoji/emoji-data.ts`, `src/ui/emoji/emoji-reaction.view.ts`, `src/ui/emoji/emoji-tone.ts` | `emoji-picker.test.ts`, `emoji-search.test.ts`, `emoji-tone.test.ts`, `format-toolbar-view.test.ts`, `reaction.test.ts`, `reactions-view.test.ts` | `p28-feed-reaction`, `p28-reaction`, `p28-reaction/02-select`, `p28-reaction/03-picker` | `b2-view-settings/35-b05-row.png`, `c1-filters`, `c1-filters/50-b04-filter.png`, `n40-tab-source/04-source`, `n43-reaction`, `n43-reaction2`, `n43-reaction2/04-reaction-tip`, `n46-tabs/01-hover-tabs`, `n53-tabs/01-calendar-tab`, `n54-emoji-measure` |
 | FR-027 | T062, T063, T064 | `src/features/database/template.commands.ts`, `src/features/row-peek/peek.view.ts`, `template-banner.css`, `template-banner.view.ts`, `templates-menu.view.ts` | `confirm-view.test.ts`, `peek-view.test.ts`, `template-banner-view.test.ts`, `template.test.ts`, `templates-menu-view.test.ts` | `u12-template`, `u12-template-delete` | `n48-template-cleanup/04-delete`, `n48-template-measure/03-banner` |
 | FR-028 | T065, T066 | `page.schema.ts`, `template-cadence.view.ts`, `template-repeat.commands.ts` | `template-cadence-view.test.ts`, `template-repeat.test.ts` | `u12-cadence` | `n48-repeat-probe/05-week-panel` |
 | FR-029 | T067, T083 | `button-property.definition.ts`, `cell-actions.view.ts`, `cell-files.view.ts`, `files-editor.css`, `files.css`, `properties/files/files-editor.view.ts`, `table-cell.view.ts`, `table-keys.view.ts` | `cell-actions-view.test.ts`, `files-editor-view.test.ts` | `u13-props`, `u13-props/18-files-popover` | `n50-files-probe`, `n50-files-probe/03-files-popover` |
 | FR-030 | T068, T069, T070, T071, T084, T090 | `button-automation.view.ts`, `button-property.schema.ts` | `button-automation-view.test.ts`, `button-press-view.test.ts`, `button-property.test.ts`, `column-menu-view.test.ts`, `layout-items-view.test.ts`, `row-color-view.test.ts`, `src/features/database/button-press-view.test.ts`, `src/features/database/layouts/row-card/row-card-view.test.ts`, `src/features/database/properties/button/button-property.test.ts`, `src/features/database/table-view.test.ts` | `u14-button`, `u14-button/11-automation` | `n51-button/05-settings` |
 | FR-031 | T073, T074, T075, T081, T082, T088 | `comments.css`, `editor-input.view.ts`, `src/blocks/page/page.schema.ts`, `src/features/comments/suggestion.commands.ts`, `src/model/rich-text.schema.ts`, `suggestion.commands.ts`, `suggestion.view.ts` | `editor-input.test.ts`, `rich-text-suggestions.test.ts`, `suggestion-view.test.ts`, `suggestion.test.ts` | `u18-suggest`, `u18-suggest/11-bs-s`, `u18-suggest/14-suggestion-card` | `n52-card`, `n52-suggest/08-typed-shot` |
-| FR-032 | T076, T077, T078, T096 | — | `sidebar-tabs-view.test.ts`, `sidebar-tabs.test.ts` | `u19-tabs` | `b2-view-settings/35-b05-row.png`, `c1-filters`, `c1-filters/50-b04-filter.png`, `n40-tab-source/04-source`, `n43-reaction`, `n43-reaction2`, `n46-tabs/01-hover-tabs`, `n53-tabs/01-calendar-tab` |
+| FR-032 | T076, T077, T078, T096, T100 | `src/features/sidebar/sidebar-tabs.view.ts` | `sidebar-tabs-view.test.ts`, `sidebar-tabs.test.ts` | `u19-tabs`, `u19-tabs/04-calendar-tab` | `b2-view-settings/35-b05-row.png`, `c1-filters`, `c1-filters/50-b04-filter.png`, `n40-tab-source/04-source`, `n43-reaction`, `n43-reaction2`, `n46-tabs/01-hover-tabs`, `n53-tabs/01-calendar-tab` |
 | FR-033 | T078, T079, T080, T086, T096 | `layouts/calendar/calendar-header.view.ts`, `layouts/timeline/timeline.view.ts` | `calendar-tab-view.test.ts`, `calendar-tab.test.ts` | `u19-tabs`, `u21-manage` | `b2-view-settings/35-b05-row.png`, `c1-filters`, `c1-filters/50-b04-filter.png`, `n40-tab-source/04-source`, `n43-reaction`, `n43-reaction2`, `n46-tabs/01-hover-tabs`, `n53-tabs/01-calendar-tab` |
 
 FR-017 to FR-019 are the quality bar; they hold across the table (see
@@ -54,14 +54,23 @@ below) rather than in files of their own.
   comes from `src/ui/copy/`; each audit item in `docs/notion-study.md`
   records Notion's Portuguese reading beside the English word used
   (items 5–32).
-- **FR-018 (keyboard)**: `sc4-keyboard` reaches View settings by Tab with
-  a focus ring, opens it with Enter, walks its rows with the arrows,
-  chooses Group › Name and closes with Escape, the focus back on View
-  settings. The pass found two defects, both fixed with a test first:
-  a menu's name field let Tab leave for the page behind (T095,
-  `menu-lead-keys.test.ts`), and "Edit cadence" left the focus nowhere
-  once saved, so Escape could not close the template (T094,
-  `template-cadence-view.test.ts`).
+- **FR-018 (keyboard)**: one keyboard pass per new control, each
+  read back and photographed: `kb-search` (Tab to the search field, its
+  ring), `kb-tab-menu` (Enter on the tab, Show as › Text only), `kb-layout`
+  (View settings › Layout, down to Card layout › Compact with Enter, up
+  to the layout tiles), `kb-color` (Conditional color, New color setting,
+  then the rule's color, target, delete and Add condition), `kb-number`
+  (a new number's settings: the right arrow into them, Description,
+  Number format, Decimal places, then the 42 / Bar / Ring tiles, Ring
+  with Enter), `kb-column` and `kb-add-freeze` (a choice gives the focus
+  back to the column's header), `sc4-keyboard` (Group › Name). The
+  passes found defects, each fixed with a test first: a menu's name field
+  let Tab leave for the page behind (T095), tiles and a panel's own
+  fields and buttons were never reached by the arrows, a submenu already
+  open could not be entered, a panel without rows lost the focus, a
+  choice with a submenu open lost the focus (T098), the search field
+  showed no ring (T097), and "Edit cadence" left the focus nowhere once
+  saved (T094).
 - **FR-019 (photos)**: each row above names its Pagecraft and Notion
   photos, all taken by `scripts/capture.ts` at 1440×900 and 2× and
   opened before the task was ticked.
@@ -83,12 +92,11 @@ below) rather than in files of their own.
   sidebar's Calendar tab, reloads, and reads both back (`12-after-tab`,
   `17-more`). Earlier: `p23-reload`, `p26-section-reload/19-after`,
   `p27-customize/20-after`.
-- **SC-004** (keyboard alone): `sc4-keyboard`, T038's view tests, and the
-  fixes T094 and T095 above.
+- **SC-004** (keyboard alone): the passes under FR-018 above.
 - **SC-005** (verify under 30 s, tests under 10 s) and **SC-006** (no
-  regression): `npm run verify` on 2026-11-13 passed type check, lint and
-  formatting, then 325 test files and 2001 tests, every one passing, in
-  9.87 s; 22.3 s in all.
+  regression): `npm run verify` on 2026-11-13, after T102, passed type
+  check, lint and formatting, then 326 test files and 2014 tests, every
+  one passing, in 9.91 s; 24.5 s in all.
 
 ## Assumptions, checked against the code
 
@@ -107,3 +115,19 @@ below) rather than in files of their own.
   Calendar and its sidebar sections): no such entries exist in the
   menus built; Manage in calendar (FR-033), Move to tab (FR-032) and
   Suggesting (FR-031) are built as the spec now says.
+
+## Corrections
+
+- An earlier report said every fix had a photo from before and after.
+  Before photos exist for the Group by list (`p9-group-title/11-group-menu`:
+  no None, the title with a text icon), "Edit cadence"
+  (`sc3-reload-session` with Escape not closing the window, read back as
+  text), the keyboard passes (their first runs read the focus lost to
+  "Skip to content", as text) and the reaction picker
+  (`p28-reaction/03-picker` before T099, kept in this record only as
+  described here: eight columns, Random, groups by code range). The
+  other fixes have photos after only.
+- The photos for FR-016, FR-020, FR-021, FR-026, FR-032 and FR-033 were
+  opened again beside Notion's on 2026-11-13; FR-020, FR-026 and FR-032
+  then showed differences, fixed in T099–T101, and FR-015's picture in
+  T102.
