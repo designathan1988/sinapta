@@ -14,6 +14,7 @@ import { renderBreadcrumbs } from "../features/breadcrumbs/index.ts";
 import { renderHome } from "../features/home/index.ts";
 import { renderPageInfo } from "../features/page-info/index.ts";
 import { renderPageMenuButton } from "../features/page-menu/index.ts";
+import { renderPageOutline } from "../features/page-outline/index.ts";
 import { renderPeek } from "../features/row-peek/index.ts";
 import { renderButton } from "../ui/button/index.ts";
 import { COPY } from "../ui/copy.ts";
@@ -102,6 +103,7 @@ export function renderShell(
             ? renderHome(state, dispatch)
             : renderEditor(state, dispatch)
         }
+        ${selectIsHomeShown(state) ? nothing : renderPageOutline(state, dispatch)}
       </div>
       ${renderFormatToolbar(state, dispatch)} ${renderOverlay(state, dispatch)}
     </main>

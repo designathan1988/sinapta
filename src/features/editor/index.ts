@@ -17,7 +17,18 @@ export { convertBlock } from "./editor-convert.commands.ts";
 export { moveBlocksToPage } from "./editor-move.commands.ts";
 export { propsFor as pastedBlockProps } from "./editor-paste-blocks.commands.ts";
 export { selectPageIdOf } from "./editor.selectors.ts";
-export { replaceText, setTextTone, toggleTextMark } from "./editor.commands.ts";
+export {
+  clearTextFormat,
+  replaceText,
+  setTextTone,
+  toggleTextMark,
+} from "./editor.commands.ts";
+export { makeInlineEquation } from "./editor-equation.commands.ts";
+export {
+  blockTypeName,
+  TURN_INTO_OVERLAY,
+} from "./editor-block-actions.view.ts";
+export { BLOCK_MENU_OVERLAY } from "./editor-block-menu.view.ts";
 export { openLinkField } from "./editor-link.view.ts";
 export { renderEditor, renderEditorOverlay } from "./editor.view.ts";
 
@@ -35,3 +46,4 @@ export const editorCommands = [
   ...editorSelectionCommands,
   ...editorEquationCommands,
 ];
+export { SLASH_MENU_OVERLAY } from "./editor-slash.selectors.ts";

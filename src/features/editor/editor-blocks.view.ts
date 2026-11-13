@@ -21,6 +21,7 @@ import { onEquationClick } from "./editor-equation.view.ts";
 import { renderStartList } from "./editor-start.view.ts";
 import { caretAt } from "./editor.commands.ts";
 import { selectBlockDrawKey } from "./editor-redraw.selectors.ts";
+import { selectSlashLine } from "./editor-slash.selectors.ts";
 import {
   onBeforeInput,
   reconcileText,
@@ -81,13 +82,25 @@ function renderContent(block: Block, context: BlockContext): unknown {
   return blockDefinition(block.type)?.render?.(block, dispatch, state);
 }
 
+// "Type to search", written after the slash by the line's style; the
+// words come from the copy, handed to the style through the CSSOM.
+function slashHint(element: Element | undefined): void {
+  if (!(element instanceof HTMLElement)) return;
+  const hint = JSON.stringify(COPY.slashMenu.placeholder);
+  element.style.setProperty("--editor-slash-hint", hint);
+}
+
 function renderBlock(block: Block, context: BlockContext): TemplateResult {
   const { state } = context;
   const content = renderContent(block, context);
   const isAnchor = state.ui.overlay?.anchorId === block.id;
+  const slash = selectSlashLine(state, block);
   return html`<div
     class="editor__block"
     ${customProperties(block)}
+    ${ref(slashHint)}
+    ?data-slash=${slash !== undefined}
+    ?data-slash-empty=${slash?.isEmpty === true}
     data-block-id=${block.id}
     data-type=${block.type}
     data-color=${isBlockColor(block.props.color) ? block.props.color : nothing}

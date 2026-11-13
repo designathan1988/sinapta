@@ -194,4 +194,26 @@
       caret-color: transparent;
     }
   }
+
+  /* The line the slash menu was opened on, as Notion's: its text washed
+     as a box that fits it, and "Type to search" after the "/" until a
+     word follows. */
+  .editor__block[data-slash]
+    [data-text]:not(.editor__block[data-slash] .editor__children *) {
+    flex: 0 1 auto;
+    inline-size: fit-content;
+    padding: var(--space-inset-xxs) var(--space-inset-xs);
+
+    /* The box reaches past the text, which stays where it was. */
+    margin-inline-start: calc(var(--space-inset-xs) * -1);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-hover);
+  }
+
+  .editor__block[data-slash-empty]
+    [data-text]:not(.editor__block[data-slash] .editor__children *)::after {
+    content: var(--editor-slash-hint);
+    color: var(--color-text-tertiary);
+    pointer-events: none;
+  }
 }

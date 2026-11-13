@@ -10,8 +10,13 @@ import {
   type Tone,
 } from "../../model/index.ts";
 import type { AppState } from "../../state/index.ts";
+import { TURN_INTO_OVERLAY } from "../editor/index.ts";
 
 export const TONE_OVERLAY = "text-tone";
+
+// The overlays the panel stays under: its colors, and the types the
+// block can turn into.
+const KEPT_OVER = new Set([TONE_OVERLAY, TURN_INTO_OVERLAY]);
 
 // The marks the toolbar offers, in the order its buttons show them.
 export const TOOLBAR_MARKS: readonly Mark[] = [
@@ -42,7 +47,7 @@ export interface RangeStyle {
 export function selectFormatRange(state: AppState): FormatRange | undefined {
   const { selection, blockSelection, overlay } = state.ui;
   if (selection === null || blockSelection !== null) return undefined;
-  if (overlay !== null && overlay.kind !== TONE_OVERLAY) return undefined;
+  if (overlay !== null && !KEPT_OVER.has(overlay.kind)) return undefined;
   const start = Math.min(selection.anchorOffset, selection.focusOffset);
   const end = Math.max(selection.anchorOffset, selection.focusOffset);
   if (start === end) return undefined;

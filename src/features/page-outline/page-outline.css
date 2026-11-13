@@ -1,0 +1,84 @@
+@layer features {
+  /* The dashes at the page's right edge, near its top, as Notion's: one
+     per heading, longer for the page's higher levels, ending in a line. */
+  .page-outline {
+    position: fixed;
+    inset-block-start: calc(var(--size-control-md) * 5);
+    inset-inline-end: var(--size-outline-edge);
+    z-index: var(--layer-sticky);
+  }
+
+  .page-outline__dashes {
+    display: grid;
+    gap: var(--size-outline-gap);
+    justify-items: end;
+    padding: var(--space-inset-xs);
+    border: none;
+    border-radius: var(--radius-sm);
+    background: none;
+    cursor: pointer;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
+  .page-outline__dash {
+    display: block;
+    block-size: var(--size-border-thick);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-text-tertiary);
+
+    &[data-size="long"] {
+      inline-size: var(--size-outline-dash-long);
+    }
+
+    &[data-size="mid"] {
+      inline-size: var(--size-outline-dash-mid);
+    }
+
+    &[data-size="short"] {
+      inline-size: var(--size-outline-dash-short);
+    }
+  }
+
+  /* The headings, each a row indented by its level. */
+  .page-outline__list:popover-open {
+    display: grid;
+
+    /* No gap to the dashes, so the pointer reaches the list. */
+    margin: var(--space-none);
+    min-inline-size: var(--size-menu-width);
+    max-block-size: var(--size-menu-max-height);
+    overflow-y: auto;
+  }
+
+  .page-outline__entry {
+    min-block-size: var(--size-menu-row);
+    padding: var(--space-none) var(--space-inset-sm);
+    overflow: hidden;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    text-align: start;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+      color: var(--color-text-primary);
+    }
+
+    &[data-level="mid"] {
+      padding-inline-start: var(--space-inset-lg);
+    }
+
+    &[data-level="short"] {
+      padding-inline-start: calc(var(--space-inset-lg) * 2);
+    }
+  }
+}

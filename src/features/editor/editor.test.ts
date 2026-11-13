@@ -3,6 +3,7 @@ import { toBlockId } from "../../model/index.ts";
 import { createApp, text } from "./editor-builder.ts";
 import {
   applyInlineMarkdown,
+  clearTextFormat,
   replaceText,
   setTextLink,
   setTextTone,
@@ -151,6 +152,24 @@ describe("text.setTone", () => {
 
     expect(store.getState().workspace.blocks[A]?.props.text).toEqual([
       { text: "Hello" },
+    ]);
+  });
+});
+
+describe("text.clearFormat", () => {
+  it("clears marks, links and colors over the range, undone in one step", () => {
+    const { store, dispatch } = createApp([text("a", "Hello")]);
+    const textOfA = () => store.getState().workspace.blocks[A]?.props.text;
+    const range = { blockId: A, start: 0, end: 5 } as const;
+    dispatch(toggleTextMark.create({ ...range, mark: "bold" }));
+    dispatch(setTextTone.create({ ...range, key: "color", tone: "red" }));
+
+    dispatch(clearTextFormat.create(range));
+    expect(textOfA()).toEqual([{ text: "Hello" }]);
+
+    dispatch({ type: UNDO_COMMAND });
+    expect(textOfA()).toEqual([
+      { text: "Hello", marks: ["bold"], color: "red" },
     ]);
   });
 });

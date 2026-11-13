@@ -1,6 +1,7 @@
-// The keyboard path to the formatting toolbar: Alt+F10 from the text moves
-// focus to its first button, the arrow keys move between buttons, and
-// Escape goes back to the text with the selection as it was.
+// The keyboard path to the selection panel: Alt+F10 from the text moves
+// focus to its first control, the arrow keys move between its controls
+// row by row (Tab too), and Escape goes back to the text with the
+// selection as it was.
 import type { ScopedKeys } from "../../ui/shortcuts/index.ts";
 import { selectFormatRange } from "./format-toolbar.selectors.ts";
 
@@ -15,7 +16,9 @@ export function toolbarStep(
 ): number | undefined {
   const steps: Readonly<Record<string, number>> = {
     ArrowRight: (current + 1) % count,
+    ArrowDown: (current + 1) % count,
     ArrowLeft: (current - 1 + count) % count,
+    ArrowUp: (current - 1 + count) % count,
     Home: 0,
     End: count - 1,
   };

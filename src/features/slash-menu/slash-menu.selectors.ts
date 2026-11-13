@@ -17,7 +17,9 @@ import {
   type SlashLook,
 } from "./slash-menu-catalog.ts";
 
-export const SLASH_MENU_OVERLAY = "slash-menu";
+import { SLASH_MENU_OVERLAY } from "../editor/index.ts";
+
+export { SLASH_MENU_OVERLAY };
 const PAGE_LINK_LIMIT = 5;
 
 // One thing the slash menu can turn the block into.

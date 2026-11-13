@@ -8,6 +8,11 @@ describe("toolbarStep", () => {
     expect(toolbarStep("ArrowLeft", 0, 7)).toBe(6);
   });
 
+  it("moves down and up through the panel's rows the same way", () => {
+    expect(toolbarStep("ArrowDown", 5, 12)).toBe(6);
+    expect(toolbarStep("ArrowUp", 0, 12)).toBe(11);
+  });
+
   it("jumps to the first and last button", () => {
     expect(toolbarStep("Home", 4, 7)).toBe(0);
     expect(toolbarStep("End", 1, 7)).toBe(6);

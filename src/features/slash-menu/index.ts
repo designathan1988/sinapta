@@ -5,3 +5,4 @@ export {
   type SlashItem,
 } from "./slash-menu.selectors.ts";
 export { renderSlashMenu, slashMenuKeys } from "./slash-menu.view.ts";
+export { headingLook, lookOf } from "./slash-menu-catalog.ts";

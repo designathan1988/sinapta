@@ -8,6 +8,7 @@ import {
   safeHref,
   setLink,
   setTone,
+  clearFormat,
   snapToBoundary,
   snapToBoundaryAfter,
   toggleMark,
@@ -181,10 +182,35 @@ export const setTextTone = defineCommand<SetTonePayload>({
   },
 });
 
+export interface ClearFormatPayload {
+  readonly blockId: BlockId;
+  readonly start: number;
+  readonly end: number;
+}
+
+// Notion's Clear formatting over the selected text.
+export const clearTextFormat = defineCommand<ClearFormatPayload>({
+  type: "text.clearFormat",
+  handle(state, command) {
+    const block = state.workspace.blocks[command.blockId];
+    if (!isTextBlock(block)) return {};
+    const text = clearFormat(block.props.text, command);
+    if (text === block.props.text) return {};
+    return {
+      operations: setText(state, {
+        blockId: block.id,
+        text,
+        now: command.meta.now,
+      }),
+    };
+  },
+});
+
 export const editorCommands = [
   replaceText,
   toggleTextMark,
   applyInlineMarkdown,
   setTextLink,
   setTextTone,
+  clearTextFormat,
 ];

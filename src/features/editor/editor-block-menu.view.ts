@@ -125,6 +125,24 @@ function typeItems(
   });
 }
 
+interface TurnIntoAt {
+  readonly blockId: BlockId;
+  readonly overlay: OpenOverlay;
+  readonly dispatch: Dispatch;
+}
+
+// The types a block can turn into; from the selection panel's type row
+// they open beside it, as Notion's.
+function renderTurnInto(at: TurnIntoAt, onClose: () => void): TemplateResult {
+  const fromPanel = at.overlay.start !== undefined;
+  return renderMenu({
+    label: COPY.blockMenu.turnInto,
+    items: typeItems(at.blockId, at.overlay, at.dispatch),
+    onClose,
+    ...(fromPanel && { placement: "beside" as const }),
+  });
+}
+
 // The open block menu, if any.
 export function renderBlockMenu(
   state: AppState,
@@ -156,8 +174,7 @@ export function renderBlockMenu(
     });
   }
   if (overlay.kind === TURN_INTO_OVERLAY) {
-    const items = typeItems(block.id, overlay, dispatch);
-    return renderMenu({ label: COPY.blockMenu.turnInto, items, onClose });
+    return renderTurnInto({ blockId: block.id, overlay, dispatch }, onClose);
   }
   return nothing;
 }

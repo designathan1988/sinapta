@@ -1,5 +1,6 @@
 // The colors for selected text: a text color and a highlight, each from
 // the eight tones of the chip palette, or none.
+import "./tone-picker.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import { TONES, type Tone } from "../../model/index.ts";

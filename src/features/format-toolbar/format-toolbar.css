@@ -1,21 +1,20 @@
 @layer features {
-  /* Above the selected text: the position comes from the selection. */
+  /* Notion's selection panel: under the selected text, its place worked
+     out from the selection and the window. */
   .format-toolbar:popover-open {
-    display: flex;
-    gap: var(--space-inline-xs);
-    align-items: center;
+    display: grid;
+    gap: var(--space-stack-xxs);
     inset: auto;
     inset-block-start: var(--format-toolbar-y, 0);
     inset-inline-start: var(--format-toolbar-x, 0);
     margin: var(--space-none);
     padding: var(--space-inset-xs);
     border: var(--size-border-thin) solid var(--color-border-default);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     background-color: var(--color-bg-raised);
     box-shadow: var(--shadow-overlay);
     color: var(--color-text-primary);
     font-size: var(--font-size-sm);
-    translate: -50% calc(-100% - var(--space-stack-xs));
 
     @media (prefers-reduced-motion: no-preference) {
       transition: opacity var(--duration-fast) var(--easing-standard);
@@ -26,18 +25,73 @@
     }
   }
 
-  .format-toolbar__button {
-    display: inline-flex;
-    gap: var(--space-inline-xs);
+  .format-toolbar__rule {
+    margin: var(--space-none) var(--space-inset-xs);
+    border: none;
+    border-block-start: var(--size-border-thin) solid
+      var(--color-border-default);
+  }
+
+  /* A row of the panel: the block's type with its chevron, or Comment. */
+  .format-toolbar__row {
+    display: flex;
+    gap: var(--space-inline-sm);
     align-items: center;
-    justify-content: center;
-    min-inline-size: var(--size-control-sm);
     min-block-size: var(--size-control-sm);
     padding: var(--space-none) var(--space-inset-xs);
     border: none;
     border-radius: var(--radius-sm);
     background-color: transparent;
     color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    text-align: start;
+    cursor: pointer;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: var(--color-bg-hover);
+    }
+
+    & > .icon {
+      flex: none;
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+      color: var(--color-text-secondary);
+    }
+
+    & > [data-icon="chevron"] {
+      color: var(--color-text-tertiary);
+    }
+  }
+
+  .format-toolbar__row-label {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Five buttons to a row, as Notion's two rows of tools. */
+  .format-toolbar__tools {
+    display: grid;
+    grid-template-columns: repeat(5, var(--size-control-action));
+    gap: var(--space-inline-xs);
+  }
+
+  .format-toolbar__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--size-control-action);
+    block-size: var(--size-control-action);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
     cursor: pointer;
 
     &:hover,
@@ -47,6 +101,11 @@
 
     &[aria-pressed="true"] {
       color: var(--color-text-accent);
+    }
+
+    & > .icon {
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
     }
 
     &[data-mark="bold"] {
@@ -69,130 +128,9 @@
       font-family: var(--font-family-mono);
       font-size: var(--font-size-xs);
     }
-  }
 
-  .format-toolbar__picker:popover-open {
-    display: grid;
-    gap: var(--space-stack-sm);
-    padding: var(--space-inset-sm);
-  }
-
-  .format-toolbar__tones {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-inline-xs);
-    margin: var(--space-none);
-    padding: var(--space-none);
-    border: none;
-
-    & > legend {
-      margin-block-end: var(--space-stack-xs);
-      padding: var(--space-none);
-      color: var(--color-text-secondary);
+    & > sub {
       font-size: var(--font-size-xs);
     }
-  }
-
-  .format-toolbar__tone {
-    display: flex;
-    gap: var(--space-inline-xs);
-    align-items: center;
-    min-block-size: var(--size-control-sm);
-    padding: var(--space-none) var(--space-inset-xs);
-    border: none;
-    border-radius: var(--radius-sm);
-    background-color: transparent;
-    color: inherit;
-    cursor: pointer;
-
-    &:hover {
-      background-color: var(--color-bg-hover);
-    }
-
-    &[aria-pressed="true"] {
-      outline: var(--size-border-thin) solid var(--color-accent-default);
-    }
-  }
-
-  .format-toolbar__swatch {
-    display: inline-grid;
-    place-items: center;
-    inline-size: var(--size-icon-md);
-    block-size: var(--size-icon-md);
-    border: var(--size-border-thin) solid var(--color-border-default);
-    border-radius: var(--radius-sm);
-    font-weight: var(--font-weight-medium);
-  }
-
-  .format-toolbar__swatch[data-key="color"][data-tone="gray"] {
-    color: var(--color-tone-gray);
-  }
-
-  .format-toolbar__swatch[data-key="color"][data-tone="brown"] {
-    color: var(--color-tone-brown);
-  }
-
-  .format-toolbar__swatch[data-key="color"][data-tone="orange"] {
-    color: var(--color-tone-orange);
-  }
-
-  .format-toolbar__swatch[data-key="color"][data-tone="yellow"] {
-    color: var(--color-tone-yellow);
-  }
-
-  .format-toolbar__swatch[data-key="color"][data-tone="green"] {
-    color: var(--color-tone-green);
-  }
-
-  .format-toolbar__swatch[data-key="color"][data-tone="blue"] {
-    color: var(--color-tone-blue);
-  }
-
-  .format-toolbar__swatch[data-key="color"][data-tone="purple"] {
-    color: var(--color-tone-purple);
-  }
-
-  .format-toolbar__swatch[data-key="color"][data-tone="pink"] {
-    color: var(--color-tone-pink);
-  }
-
-  .format-toolbar__swatch[data-key="color"][data-tone="red"] {
-    color: var(--color-tone-red);
-  }
-
-  .format-toolbar__swatch[data-key="highlight"][data-tone="gray"] {
-    background-color: var(--color-chip-gray-bg);
-  }
-
-  .format-toolbar__swatch[data-key="highlight"][data-tone="brown"] {
-    background-color: var(--color-chip-brown-bg);
-  }
-
-  .format-toolbar__swatch[data-key="highlight"][data-tone="orange"] {
-    background-color: var(--color-chip-orange-bg);
-  }
-
-  .format-toolbar__swatch[data-key="highlight"][data-tone="yellow"] {
-    background-color: var(--color-chip-yellow-bg);
-  }
-
-  .format-toolbar__swatch[data-key="highlight"][data-tone="green"] {
-    background-color: var(--color-chip-green-bg);
-  }
-
-  .format-toolbar__swatch[data-key="highlight"][data-tone="blue"] {
-    background-color: var(--color-chip-blue-bg);
-  }
-
-  .format-toolbar__swatch[data-key="highlight"][data-tone="purple"] {
-    background-color: var(--color-chip-purple-bg);
-  }
-
-  .format-toolbar__swatch[data-key="highlight"][data-tone="pink"] {
-    background-color: var(--color-chip-pink-bg);
-  }
-
-  .format-toolbar__swatch[data-key="highlight"][data-tone="red"] {
-    background-color: var(--color-chip-red-bg);
   }
 }
