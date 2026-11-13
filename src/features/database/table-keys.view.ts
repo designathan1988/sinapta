@@ -207,6 +207,8 @@ export function onBodyClick(event: MouseEvent, context: TableContext): void {
   ) {
     return;
   }
+  // The value bar's buttons act on their own.
+  if (target.closest("[data-cell-actions]") !== null) return;
   if (target.closest("[data-action=open]") !== null) {
     context.dispatch(
       openRow.create({ rowId: cell.rowId, viewId: context.model.view.id }),

@@ -46,6 +46,11 @@ import {
 } from "./layouts/board/index.ts";
 import { BULK_EDIT_OVERLAY, renderBulkEdit } from "./table-bulk-edit.view.ts";
 import { NEW_VIEW_OVERLAY, renderNewViewMenu } from "./view-layout.view.ts";
+import {
+  VALUE_COMPOSER_OVERLAY,
+  VALUE_DISCUSSIONS_OVERLAY,
+} from "../comments/index.ts";
+import { renderCellComments } from "./cell-actions.view.ts";
 
 export { FILTERS_OVERLAY } from "./view-filters.view.ts";
 export {
@@ -84,6 +89,8 @@ const OVERLAYS: Record<string, Render> = {
   [VIEW_LIST_OVERLAY]: renderViewList,
   [TEMPLATES_OVERLAY]: renderTemplatesMenu,
   [NEW_VIEW_OVERLAY]: renderNewViewMenu,
+  [VALUE_COMPOSER_OVERLAY]: renderCellComments,
+  [VALUE_DISCUSSIONS_OVERLAY]: renderCellComments,
 };
 
 // Overlays of a whole database, opened from its toolbar or header; they

@@ -116,4 +116,9 @@ export const DATABASE_MENU_TEXT = {
   newInGroup: (group: string) => `New row in ${group}`,
   ascending: "Ascending",
   descending: "Descending",
+  // The bar on a pointed-at value cell, as Notion's.
+  commentOnValue: "Comment on property value",
+  openValueDiscussion: "Open discussion",
+  copyValue: "Copy to clipboard",
+  valueCopied: "Copied to clipboard.",
 } as const;

@@ -14,6 +14,7 @@ import {
   type BlockId,
   type CommentRange,
   type Operation,
+  type PropertyId,
   type RichText,
 } from "../../model/index.ts";
 import { defineCommand, type AppState } from "../../state/index.ts";
@@ -57,7 +58,28 @@ export interface StartDiscussionPayload {
   readonly blockId: BlockId | null;
   // The text it is about, in the block.
   readonly range?: CommentRange;
+  // On a database row: the property value it is about, as it reads now.
+  readonly value?: ValueAbout;
   readonly text: string;
+}
+
+export interface ValueAbout {
+  readonly propertyId: PropertyId;
+  readonly quote: string;
+}
+
+// What a new discussion quotes and is about: the selected text of its
+// block, or a row's property value.
+function aboutOf(
+  state: AppState,
+  command: StartDiscussionPayload,
+): Pick<Discussion, "quote" | "propertyId"> {
+  const { blockId, range, value } = command;
+  if (value !== undefined && blockId === null)
+    return { propertyId: value.propertyId, quote: value.quote };
+  const rich = textOfBlock(state, blockId);
+  if (range === undefined || rich === undefined) return {};
+  return { quote: textOfRange(rich, range) };
 }
 
 export const startDiscussion = defineCommand<StartDiscussionPayload>({
@@ -71,16 +93,11 @@ export const startDiscussion = defineCommand<StartDiscussionPayload>({
       return {};
     if (text === "") return {};
     const { blockId, range } = command;
-    const rich = textOfBlock(state, blockId);
-    const quote =
-      range === undefined || rich === undefined
-        ? undefined
-        : textOfRange(rich, range);
     const comment = { id: commentId, text, createdAt: command.meta.now };
     const discussion: Discussion = {
       id,
       blockId,
-      ...(quote !== undefined && { quote }),
+      ...aboutOf(state, command),
       isResolved: false,
       comments: [comment],
     };

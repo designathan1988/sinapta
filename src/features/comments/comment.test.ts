@@ -4,6 +4,7 @@ import {
   buildWorkspace,
   TEST_TIME,
   toBlockId,
+  toPropertyId,
   type Workspace,
 } from "../../model/index.ts";
 import { createTestApp } from "../../state/index.ts";
@@ -15,6 +16,7 @@ import {
   resolveDiscussion,
   startDiscussion,
 } from "./comment.commands.ts";
+import { selectOpenDiscussions } from "./comments.selectors.ts";
 
 const page = toBlockId("page");
 const text = toBlockId("t");
@@ -125,5 +127,21 @@ describe("comments", () => {
         patch: { props: { discussions: [] } },
       },
     ]);
+  });
+
+  it("keep a value's discussions apart from the page's own", () => {
+    const { dispatch, store } = createApp();
+
+    dispatch(
+      startDiscussion.create({
+        pageId: page,
+        blockId: null,
+        value: { propertyId: toPropertyId("p"), quote: "Done" },
+        text: "Since when?",
+      }),
+    );
+
+    const own = selectOpenDiscussions(store.getState(), page);
+    expect(own?.discussions).toEqual([]);
   });
 });

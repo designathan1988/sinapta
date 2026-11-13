@@ -7,6 +7,7 @@ import { COPY } from "../../ui/copy.ts";
 import { afterRender, whenConnected } from "../../ui/focus/index.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
+import { renderCellActions } from "./cell-actions.view.ts";
 import { selectCellContext } from "./cell-context.selectors.ts";
 import { propertyType } from "./property-registry.ts";
 import { setFrozenStart } from "./table-column-style.ts";
@@ -174,6 +175,14 @@ export function renderCell(
       if (active && !isEditing) focusCell(element);
     })}
   >
-    ${isEditing ? renderEditor(editText(row, column), column) : renderValue(row, column, context)}
+    ${
+      isEditing
+        ? renderEditor(editText(row, column), column)
+        : html`${renderCellActions(row, column, context)}${renderValue(
+            row,
+            column,
+            context,
+          )}`
+    }
   </td>`;
 }

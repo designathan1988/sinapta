@@ -134,9 +134,15 @@
     }
   }
 
+  /* The composer is 470 px wide, a list of discussions 480 px, as
+     Notion's. */
   .comments__popover {
-    inline-size: var(--size-menu-width);
+    inline-size: var(--size-comment-composer);
     padding: var(--space-inset-md);
+
+    &:has(.comments__discussion) {
+      inline-size: var(--size-comment-discussions);
+    }
   }
 
   /* A block's discussions, counted at its end as a speech bubble. */

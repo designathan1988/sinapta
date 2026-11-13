@@ -1,6 +1,7 @@
 import * as v from "valibot";
 import {
   blockIdSchema,
+  propertyIdSchema,
   richTextSchema,
   safeImageSource,
   type TypedBlock,
@@ -40,13 +41,15 @@ export const pageCommentSchema = v.object({
   createdAt: v.string(),
 });
 
-// A discussion, as Notion's: its comments, about the page or one of its
-// blocks, resolved or open.
+// A discussion, as Notion's: its comments, about the page, one of its
+// blocks, or one of a database row's property values; resolved or open.
 export const discussionSchema = v.object({
   id: blockIdSchema,
   // The block it is about, or null for the page itself.
   blockId: v.nullable(blockIdSchema),
-  // The text it was started on, as it read then.
+  // On a database row with no block: the property whose value it is about.
+  propertyId: v.optional(propertyIdSchema),
+  // The text or value it was started on, as it read then.
   quote: v.optional(v.string()),
   isResolved: v.boolean(),
   comments: v.array(pageCommentSchema),

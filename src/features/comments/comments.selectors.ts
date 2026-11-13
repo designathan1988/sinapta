@@ -6,7 +6,7 @@ import {
   type Discussion,
   type PageBlock,
 } from "../../blocks/page/index.ts";
-import type { Block, BlockId } from "../../model/index.ts";
+import type { Block, BlockId, PropertyId } from "../../model/index.ts";
 import type { AppState } from "../../state/index.ts";
 
 // The page that holds the block, or the block itself when it is a page.
@@ -34,9 +34,39 @@ export function selectOpenDiscussions(
   if (page === undefined) return undefined;
   const about = page.id === target ? null : target;
   const discussions = (page.props.discussions ?? []).filter(
-    (item) => !item.isResolved && item.blockId === about,
+    (item) =>
+      !item.isResolved &&
+      item.blockId === about &&
+      item.propertyId === undefined,
   );
   return { page, discussions };
+}
+
+// The open discussions about one property value of a database row; as
+// Notion's, they are kept by the property, not with the page's own.
+export function selectValueDiscussions(
+  state: AppState,
+  rowId: BlockId,
+  propertyId: PropertyId,
+):
+  { readonly page: PageBlock; readonly discussions: Discussion[] } | undefined {
+  const page = selectPage(state, rowId);
+  if (page === undefined) return undefined;
+  const discussions = (page.props.discussions ?? []).filter(
+    (item) => !item.isResolved && item.propertyId === propertyId,
+  );
+  return { page, discussions };
+}
+
+// How many open discussions a row's property value has.
+export function selectValueDiscussionCount(
+  state: AppState,
+  rowId: BlockId,
+  propertyId: PropertyId,
+): number {
+  return (
+    selectValueDiscussions(state, rowId, propertyId)?.discussions.length ?? 0
+  );
 }
 
 // How many open discussions a block inside a page has; the page's own

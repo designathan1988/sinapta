@@ -61,7 +61,9 @@ const PATHS: Record<BaseIconName, TemplateResult<2>> = {
   bell: svg`<path d="M4 11V7.5a4 4 0 0 1 8 0V11l1 1.5H3L4 11zM6.5 13.5a1.5 1.5 0 0 0 3 0" />`,
   history: svg`<path d="M2.5 8a5.5 5.5 0 1 0 1.6-3.9M2.5 2.5v2.5H5" />
     <path d="M8 5v3l2 1.5" />`,
-  comment: svg`<path d="M3 3.5h10a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H7.5L4.5 14v-2.5H3a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1z" />`,
+  // Notion's comment bubble, with two lines of text in it.
+  comment: svg`<path d="M3 3.5h10a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H7.5L4.5 14v-2.5H3a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1z" />
+    <path d="M5.25 6.25h5.5M5.25 8.5h3.75" />`,
   templates: svg`<rect x="2.5" y="2.5" width="4.5" height="4.5" rx="1" />
     <rect x="9" y="2.5" width="4.5" height="4.5" rx="1" />
     <rect x="2.5" y="9" width="4.5" height="4.5" rx="1" />

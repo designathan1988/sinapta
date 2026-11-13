@@ -42,7 +42,7 @@ export function renderPageDiscussions(
     overlay?.kind === COMMENT_COMPOSER_OVERLAY && overlay.anchorId === page.id;
   const discussions = found?.discussions ?? [];
   if (discussions.length === 0 && !isAdding) return nothing;
-  const context = { page, dispatch, now: now() };
+  const context = { page, dispatch, now: now(), overlay: state.ui.overlay };
   const close = (): void => {
     dispatch(closeOverlay.create({}));
   };
@@ -72,7 +72,7 @@ export function renderRowDiscussions(
   const { overlay } = state.ui;
   const isAdding =
     overlay?.kind === COMMENT_COMPOSER_OVERLAY && overlay.anchorId === page.id;
-  const context = { page, dispatch, now: now() };
+  const context = { page, dispatch, now: now(), overlay: state.ui.overlay };
   const start = (text: string): void => {
     dispatch(startDiscussion.create({ pageId: page.id, blockId: null, text }));
   };
@@ -112,7 +112,7 @@ export function renderBlockComments(
 
 // Escape closes a comment popover; the text it was opened from takes the
 // focus back.
-function closeOnEscape(dispatch: Dispatch) {
+export function closeOnEscape(dispatch: Dispatch) {
   return (event: KeyboardEvent): void => {
     if (event.key !== "Escape") return;
     event.preventDefault();
@@ -130,7 +130,12 @@ export function renderDiscussionsPopover(
   const found =
     blockId === undefined ? undefined : selectOpenDiscussions(state, blockId);
   if (found === undefined || found.discussions.length === 0) return nothing;
-  const context = { page: found.page, dispatch, now: now() };
+  const context = {
+    page: found.page,
+    dispatch,
+    now: now(),
+    overlay: state.ui.overlay,
+  };
   return html`<div
     class="comments__popover"
     popover="manual"

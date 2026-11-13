@@ -22,6 +22,7 @@ import type { RowPage } from "./row-files.view.ts";
 import { propertyType } from "./property-registry.ts";
 import { renderRowValue } from "./row-value.view.ts";
 import { renderPropertyTypes } from "./column-menu.view.ts";
+import { renderRowValueComments } from "./row-value-comments.view.ts";
 
 // The property types, opened from a row page's "Add a property".
 export const ROW_ADD_PROPERTY_OVERLAY = "row-add-property";
@@ -44,6 +45,7 @@ function renderProperty(
     <div class="database__row-value">
       ${renderRowValue(row, property, page)}
     </div>
+    ${renderRowValueComments(row, property, page)}
   </div>`;
 }
 

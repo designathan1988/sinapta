@@ -1,0 +1,75 @@
+@layer features {
+  /* A value cell holds its bar; a frozen cell already does, being sticky. */
+  .database__cell:has(> .database__cell-actions):not([data-frozen]) {
+    position: relative;
+  }
+
+  /* Notion's quick actions: a strip over the cell's start, 6 px down, that
+     lets the pointer through but for its pill. It shows while the cell is
+     pointed at and while one of its popovers is open. */
+  .database__cell-actions {
+    position: absolute;
+    z-index: var(--layer-sticky);
+    inset-block-start: calc(var(--space-inset-xs) + var(--space-inset-xxs));
+    inset-inline: var(--space-none);
+    display: none;
+    justify-content: start;
+    margin: var(--space-none) var(--space-inset-xs);
+    pointer-events: none;
+
+    .database__cell:is(:hover, [data-overlay-anchor="open"]) > & {
+      display: flex;
+    }
+  }
+
+  .database__cell-bar {
+    position: sticky;
+    inset-inline-end: var(--space-inset-xs);
+    display: flex;
+    block-size: var(--size-control-sm);
+    padding: var(--space-inset-xxs);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-elevated);
+    box-shadow: var(--shadow-peek);
+    pointer-events: auto;
+  }
+
+  /* Each button 24 x 20 px, a 16 px icon in the secondary color; with a
+     count, as wide as it needs. */
+  .database__cell-action {
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    justify-content: center;
+    min-inline-size: var(--size-control-sm);
+    block-size: var(--size-icon-md);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    cursor: pointer;
+
+    &:has(> .database__cell-count) {
+      padding-inline: var(--space-inset-sm);
+    }
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--color-bg-hover);
+    }
+
+    & > .icon {
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+    }
+  }
+
+  .database__cell-count {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-strong);
+    line-height: var(--size-icon-sm);
+  }
+}

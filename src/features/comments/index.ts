@@ -6,7 +6,16 @@ export {
 export {
   selectBlockDiscussionCount,
   selectResolvedDiscussions,
+  selectValueDiscussionCount,
 } from "./comments.selectors.ts";
+export {
+  renderValueComments,
+  VALUE_COMPOSER_OVERLAY,
+  VALUE_DISCUSSIONS_OVERLAY,
+  valueAnchorId,
+  type ValueTarget,
+} from "./value-comments.view.ts";
+export { valueDiscussionTidier } from "./value-discussion-tidy.ts";
 export {
   RESOLVED_COMMENTS_OVERLAY,
   renderResolvedComments,

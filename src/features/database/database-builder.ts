@@ -5,7 +5,11 @@ import {
   type SelectOption,
 } from "../../blocks/database/index.ts";
 import type { BlockId, PropertyId, View } from "../../model/index.ts";
-import { createTestApp, type TestApp } from "../../state/index.ts";
+import {
+  createTestApp,
+  type TestApp,
+  type TestAppOptions,
+} from "../../state/index.ts";
 import {
   addProperty,
   changeProperty,
@@ -145,13 +149,20 @@ const DATABASE_TEST_COMMANDS = [
   ...buttonPropertyCommands,
 ];
 
+// Commands and tidiers of other features a test needs beside the table's.
+export interface DatabaseAppExtras {
+  readonly commands?: TestAppOptions["commands"];
+  readonly tidiers?: TestAppOptions["tidiers"];
+}
+
 export function createDatabaseApp(
   properties: readonly PropertySpec[],
   rows: readonly RowSpec[],
+  extras: DatabaseAppExtras = {},
 ): DatabaseApp {
   const base = createTestApp({
-    commands: DATABASE_TEST_COMMANDS,
-    tidiers: [relationTidier],
+    commands: [...DATABASE_TEST_COMMANDS, ...(extras.commands ?? [])],
+    tidiers: [relationTidier, ...(extras.tidiers ?? [])],
     guards: [lockGuard],
   });
   const { store } = base;

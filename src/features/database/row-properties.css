@@ -36,6 +36,7 @@
   }
 
   .database__row-property {
+    position: relative;
     display: grid;
     grid-template-columns: var(--size-property-name) minmax(0, 1fr);
     gap: var(--space-inline-xs);
@@ -148,6 +149,48 @@
   @media (prefers-reduced-motion: reduce) {
     .database__row-input {
       transition: none;
+    }
+  }
+
+  /* A value's discussions, counted just past the property's end in the
+     page's margin, 6 px down, as Notion's. */
+  .database__row-comments {
+    position: absolute;
+    inset-block-start: calc(var(--space-inset-xs) + var(--space-inset-xxs));
+    inset-inline-start: calc(100% + var(--space-inline-xs));
+    display: inline-flex;
+    gap: var(--space-inline-icon);
+    align-items: center;
+    block-size: var(--size-control-sm);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: none;
+    border-radius: var(--radius-md);
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    cursor: pointer;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: var(--color-bg-hover);
+    }
+
+    & > .icon {
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+    }
+
+    & > span {
+      color: var(--color-text-tertiary);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-strong);
+    }
+  }
+
+  /* Its discussions open under it, towards the page, as Notion's. */
+  @supports (position-area: block-end) {
+    .database__row-comments ~ .comments__popover[data-discussions] {
+      position-area: block-end span-inline-start;
     }
   }
 }

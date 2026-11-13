@@ -35,6 +35,7 @@ import {
 import {
   commentCommands,
   discussionTidier,
+  valueDiscussionTidier,
 } from "../features/comments/index.ts";
 import { formatToolbarKeys } from "../features/format-toolbar/index.ts";
 import {
@@ -159,7 +160,12 @@ function createAppDispatch(store: AppStore): Dispatch {
   const dispatchCommand = createDispatcher({
     store,
     registry: createCommandRegistry(COMMANDS),
-    tidiers: [...BLOCK_TIDIERS, ...DATABASE_TIDIERS, discussionTidier],
+    tidiers: [
+      ...BLOCK_TIDIERS,
+      ...DATABASE_TIDIERS,
+      discussionTidier,
+      valueDiscussionTidier,
+    ],
     guards: [lockGuard],
   });
   return (command) => {

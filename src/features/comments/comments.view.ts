@@ -5,18 +5,19 @@ import "./comments.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import type { Discussion, PageBlock } from "../../blocks/page/index.ts";
 import type { BlockId, CommentRange } from "../../model/index.ts";
-import type { Dispatch } from "../../state/index.ts";
+import type { Dispatch, OpenOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { focusOnce } from "../../ui/focus/index.ts";
 import { ref } from "lit-html/directives/ref.js";
 import {
-  deleteComment,
   replyToDiscussion,
   resolveDiscussion,
   startDiscussion,
+  type ValueAbout,
 } from "./comment.commands.ts";
 import { commentTime } from "./comments.selectors.ts";
+import { renderCommentDelete } from "./comment-delete.view.ts";
 
 const TEXT = COPY.comments;
 
@@ -65,10 +66,31 @@ export function renderCommentField(
   </form>`;
 }
 
-interface DiscussionContext {
+export interface DiscussionContext {
   readonly page: PageBlock;
   readonly dispatch: Dispatch;
   readonly now: string;
+  // The name of the property a value discussion is about.
+  readonly propertyName?: string;
+  // The open overlay, for the question a comment's delete asks.
+  readonly overlay?: OpenOverlay | null;
+}
+
+// What the discussion is about: the quoted text, or as Notion's, the
+// property's name, a colon and the value as it read then.
+function renderQuote(
+  discussion: Discussion,
+  context: DiscussionContext,
+): TemplateResult | typeof nothing {
+  const { quote } = discussion;
+  if (quote === undefined) return nothing;
+  if (discussion.propertyId === undefined)
+    return html`<blockquote class="comments__quote">${quote}</blockquote>`;
+  return html`<p class="comments__value">
+    <span class="comments__value-name">${context.propertyName ?? ""}</span
+    ><span aria-hidden="true">:</span>
+    <span class="comments__value-text">${quote}</span>
+  </p>`;
 }
 
 // A comment: its author's initial and name, its time and text, and a
@@ -76,9 +98,16 @@ interface DiscussionContext {
 function renderComment(
   comment: Discussion["comments"][number],
   context: DiscussionContext,
-  discussionId: BlockId,
+  discussion: Discussion,
 ): TemplateResult {
-  const target = { pageId: context.page.id, discussionId };
+  const target = { pageId: context.page.id, discussionId: discussion.id };
+  // A value's discussion quotes the value in its first comment, under the
+  // author, as Notion's.
+  const isFirst = discussion.comments[0]?.id === comment.id;
+  const quote =
+    isFirst && discussion.propertyId !== undefined
+      ? renderQuote(discussion, context)
+      : nothing;
   return html`<li class="comments__comment">
     ${renderAvatar()}
     <div class="comments__body">
@@ -88,20 +117,13 @@ function renderComment(
           >${commentTime(comment.createdAt, context.now)}</time
         >
       </p>
+      ${quote}
       <p class="comments__text">${comment.text}</p>
     </div>
-    <button
-      type="button"
-      class="comments__delete"
-      aria-label=${TEXT.delete}
-      title=${TEXT.delete}
-      @click=${() =>
-        context.dispatch(
-          deleteComment.create({ ...target, commentId: comment.id }),
-        )}
-    >
-      ${renderIcon("trash")}
-    </button>
+    ${renderCommentDelete(context.overlay ?? null, context.dispatch, {
+      ...target,
+      commentId: comment.id,
+    })}
   </li>`;
 }
 
@@ -116,13 +138,7 @@ export function renderDiscussion(
     data-discussion-id=${discussion.id}
   >
     <div class="comments__head">
-      ${
-        discussion.quote === undefined
-          ? nothing
-          : html`<blockquote class="comments__quote">
-              ${discussion.quote}
-            </blockquote>`
-      }
+      ${discussion.propertyId === undefined ? renderQuote(discussion, context) : nothing}
       <button
         type="button"
         class="comments__resolve"
@@ -136,7 +152,7 @@ export function renderDiscussion(
     </div>
     <ul class="comments__list">
       ${discussion.comments.map((comment) =>
-        renderComment(comment, context, discussion.id),
+        renderComment(comment, context, discussion),
       )}
     </ul>
     ${renderCommentField(TEXT.reply, (text) =>
@@ -149,6 +165,7 @@ export interface NewDiscussion {
   readonly pageId: BlockId;
   readonly blockId: BlockId | null;
   readonly range?: CommentRange;
+  readonly value?: ValueAbout;
 }
 
 // The field that starts a discussion.
