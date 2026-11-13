@@ -59,6 +59,9 @@
       "accent": {
         "$value": "{base.color.day.textAccent}"
       },
+      "pill": {
+        "$value": "{base.color.day.textPill}"
+      },
       "onAccent": {
         "$value": "{base.color.day.onAccent}"
       },

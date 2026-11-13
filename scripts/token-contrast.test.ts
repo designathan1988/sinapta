@@ -28,6 +28,12 @@ const FILLS = [
   ["text.onAccent", ["accent.fillHover"]],
   ["text.onAccent", ["status.dangerFill"]],
   ["text.danger", ["status.dangerBg"]],
+  // The date picker and the filter pill (n76): today's number on its
+  // circle, a range's days on the band, a rule's words on its pill.
+  ["text.onAccent", ["status.today"]],
+  ["text.primary", ["accent.range"]],
+  ["text.pill", ["accent.pill"]],
+  ["text.pill", ["accent.pillOpen"]],
 ] as const;
 const PAIRS: readonly (readonly [string, readonly string[]])[] = [
   ...TEXTS.flatMap((text) =>

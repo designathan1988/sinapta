@@ -97,6 +97,7 @@
     --base-color-day-text-secondary: oklch(0.4812 0.008 97.5);
     --base-color-day-text-tertiary: oklch(0.51 0.0098 84.6);
     --base-color-day-text-accent: oklch(0.52 0.1674 252.7);
+    --base-color-day-text-pill: oklch(0.52 0.1674 252.7);
     --base-color-day-on-accent: oklch(1 0 0);
     --base-color-day-link: oklch(0.2928 0.0018 106.5);
     --base-color-day-border: oklch(0.9403 0.0029 84.6);
@@ -114,7 +115,7 @@
     --base-color-day-danger: oklch(0.54 0.1724 25.8);
     --base-color-day-danger-bg: oklch(0.9546 0.0196 13.6);
     --base-color-day-danger-fill: oklch(0.55 0.17 26);
-    --base-color-day-today: oklch(0.661 0.1631 27.7);
+    --base-color-day-today: oklch(0.585 0.1631 27.7);
     --base-color-day-template-bg: oklch(0.9641 0.0326 91.7);
     --base-color-day-template-text: oklch(0.697 0.1296 76);
     --base-color-day-template-border: oklch(0.697 0.1296 76 / 0.46);
@@ -146,6 +147,7 @@
     --base-color-night-text-secondary: oklch(0.7894 0.006 84.6);
     --base-color-night-text-tertiary: oklch(0.71 0.0082 80.7);
     --base-color-night-text-accent: oklch(0.684 0.1008 238.1);
+    --base-color-night-text-pill: oklch(0.77 0.1008 238.1);
     --base-color-night-on-accent: oklch(1 0 0);
     --base-color-night-link: oklch(0.9523 0.0029 84.6);
     --base-color-night-border: oklch(0.285 0 0);
@@ -163,7 +165,7 @@
     --base-color-night-danger: oklch(0.705 0.1605 26.5);
     --base-color-night-danger-bg: oklch(0.2927 0.0355 24.9);
     --base-color-night-danger-fill: oklch(0.55 0.17 26);
-    --base-color-night-today: oklch(0.661 0.1631 27.7);
+    --base-color-night-today: oklch(0.585 0.1631 27.7);
     --base-color-night-template-bg: oklch(0.3911 0.0494 88.9);
     --base-color-night-template-text: oklch(0.7032 0.1272 77.4);
     --base-color-night-template-border: oklch(0.8362 0.1587 79.9 / 0.46);
@@ -333,6 +335,7 @@
     --color-text-secondary: light-dark(var(--base-color-day-text-secondary), var(--base-color-night-text-secondary));
     --color-text-tertiary: light-dark(var(--base-color-day-text-tertiary), var(--base-color-night-text-tertiary));
     --color-text-accent: light-dark(var(--base-color-day-text-accent), var(--base-color-night-text-accent));
+    --color-text-pill: light-dark(var(--base-color-day-text-pill), var(--base-color-night-text-pill));
     --color-text-on-accent: light-dark(var(--base-color-day-on-accent), var(--base-color-night-on-accent));
     --color-text-link: light-dark(var(--base-color-day-link), var(--base-color-night-link));
     --color-text-danger: light-dark(var(--base-color-day-danger), var(--base-color-night-danger));

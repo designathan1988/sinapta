@@ -627,6 +627,13 @@
             "components": [0.52, 0.1674, 252.7]
           }
         },
+        "textPill": {
+          "$description": "A rule's words on its filter pill: the accent text, which gives 4.5:1 on the light pills (ADR-0012).",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.52, 0.1674, 252.7]
+          }
+        },
         "onAccent": {
           "$value": {
             "colorSpace": "oklch",
@@ -733,10 +740,10 @@
           }
         },
         "today": {
-          "$description": "Today's circle in a date picker, as Notion's light one (n76-light): rgb(229, 100, 88).",
+          "$description": "Today's circle in a date picker: Notion's red (n76-light: rgb(229, 100, 88)) at the lightness that gives its white number 4.5:1 (ADR-0012).",
           "$value": {
             "colorSpace": "oklch",
-            "components": [0.661, 0.1631, 27.7]
+            "components": [0.585, 0.1631, 27.7]
           }
         },
         "templateBg": {
@@ -952,6 +959,13 @@
             "components": [0.684, 0.1008, 238.1]
           }
         },
+        "textPill": {
+          "$description": "A rule's words on its filter pill: the accent text made light enough for 4.5:1 on Notion's open pill (ADR-0012).",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.77, 0.1008, 238.1]
+          }
+        },
         "onAccent": {
           "$value": {
             "colorSpace": "oklch",
@@ -1058,10 +1072,10 @@
           }
         },
         "today": {
-          "$description": "Today's circle in a date picker, as Notion's (n69-date-cleanup): rgb(229, 100, 88).",
+          "$description": "Today's circle in a date picker: Notion's red (n69-date-cleanup: rgb(229, 100, 88)) at the lightness that gives its white number 4.5:1 (ADR-0012).",
           "$value": {
             "colorSpace": "oklch",
-            "components": [0.661, 0.1631, 27.7]
+            "components": [0.585, 0.1631, 27.7]
           }
         },
         "templateBg": {

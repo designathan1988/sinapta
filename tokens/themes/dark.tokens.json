@@ -55,6 +55,9 @@
       "accent": {
         "$value": "{base.color.night.textAccent}"
       },
+      "pill": {
+        "$value": "{base.color.night.textPill}"
+      },
       "onAccent": {
         "$value": "{base.color.night.onAccent}"
       },
