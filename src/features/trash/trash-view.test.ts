@@ -1,7 +1,8 @@
 // @vitest-environment happy-dom
 import { render } from "lit-html";
 import { describe, expect, it } from "vitest";
-import { createInitialState } from "../../state/index.ts";
+import { buildWorkspace } from "../../model/index.ts";
+import { createInitialState, type Command } from "../../state/index.ts";
 import { renderTrash, TRASH_OVERLAY } from "./trash.view.ts";
 
 describe("the trash, as Notion's", () => {
@@ -23,5 +24,41 @@ describe("the trash, as Notion's", () => {
     expect(dialog?.getAttribute("data-variant")).toBe("panel");
     expect(dialog?.querySelector(".dialog__header")).toBeNull();
     expect(dialog?.querySelector("input")).not.toBeNull();
+  });
+});
+
+describe("a trashed page's row", () => {
+  it("restores the page from its Restore button", () => {
+    const initial = createInitialState();
+    const props = {
+      title: [{ text: "Scratch" }],
+      icon: null,
+      isFavorite: false,
+      isTrashed: true,
+      trashedAt: "2026-11-13T00:00:00.000Z",
+    };
+    const state = {
+      ...initial,
+      workspace: buildWorkspace([{ id: "scratch", props }]),
+      ui: { ...initial.ui, overlay: { kind: TRASH_OVERLAY } },
+    };
+    const sent: Command[] = [];
+    const host = document.createElement("div");
+    document.body.replaceChildren(host);
+    render(
+      renderTrash(state, (command) => {
+        sent.push(command);
+        return { ok: true };
+      }),
+      host,
+    );
+
+    host
+      .querySelector<HTMLElement>(".trash__row [aria-label='Restore']")
+      ?.click();
+
+    expect(sent).toContainEqual(
+      expect.objectContaining({ type: "page.restore", pageId: "scratch" }),
+    );
   });
 });

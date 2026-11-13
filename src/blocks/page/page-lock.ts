@@ -14,7 +14,13 @@ import { defineCommand, type Guard } from "../../state/index.ts";
 import { selectPage } from "./page.selectors.ts";
 import { DATABASE_TYPE } from "./page.schema.ts";
 
-const FREE_PROPS = new Set(["isLocked", "isFavorite", "isTrashed"]);
+// The trash date goes and comes with isTrashed, so it is free too.
+const FREE_PROPS = new Set([
+  "isLocked",
+  "isFavorite",
+  "isTrashed",
+  "trashedAt",
+]);
 
 const isLocked = (block: Block | undefined): boolean =>
   block?.props.isLocked === true;

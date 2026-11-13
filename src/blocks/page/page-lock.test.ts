@@ -129,3 +129,24 @@ describe("a page in the trash, as Notion's", () => {
     );
   });
 });
+
+describe("a page in the trash", () => {
+  const trashed = buildWorkspace([
+    {
+      id: "bin",
+      props: pageProps({ isTrashed: true, trashedAt: "2026-11-13T10:00" }),
+    },
+  ]);
+  const restore = (): Operation[] => {
+    const block = trashed.blocks[id("bin")];
+    const { trashedAt: _when, ...kept } = block?.props ?? {};
+    const props = { ...kept, isTrashed: false };
+    return [
+      { type: "record.update", kind: "block", id: id("bin"), patch: { props } },
+    ];
+  };
+
+  it("is restored, its trash date going with it", () => {
+    expect(lockGuard(trashed, restore())).toBe(false);
+  });
+});
