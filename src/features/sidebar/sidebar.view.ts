@@ -94,8 +94,9 @@ function renderBody(state: AppState, dispatch: Dispatch): TemplateResult {
     ${renderSidebarCustomize(state, dispatch)}`;
   }
   const isCalendar = selectSidebarTab(state) === "calendar";
+  // The Home tab opens Home, so no Home row repeats it, as Notion's.
   return html`${renderSidebarTabs(state, dispatch)}
-  ${isCalendar ? renderUpcoming(state, dispatch) : renderHome(state, dispatch)}
+  ${isCalendar ? renderUpcoming(state, dispatch) : nothing}
   ${isCalendar ? nothing : renderShortcuts(state, dispatch)}
   ${renderSections(state, dispatch)} ${renderCustomizeOpen(dispatch)}`;
 }
