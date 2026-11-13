@@ -31,7 +31,8 @@ function rendered(
   const rule = app.view().colorRules?.[0];
   if (rule === undefined) throw new Error("no rule");
   const items = [{ propertyId: finished, operator: "is-checked", value: "" }];
-  const patch = { filter: { conjunction: "and" as const, items }, target };
+  const filter = { conjunction: "and" as const, items };
+  const patch = { filter, target, color: "red" as const };
   app.dispatch(setColorRule.create({ viewId, ruleId: rule.id, patch }));
   const host = document.createElement("div");
   document.body.replaceChildren(host);

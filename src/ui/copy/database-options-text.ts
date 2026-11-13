@@ -74,6 +74,11 @@ export const DATABASE_OPTIONS_TEXT = {
     ],
   },
   addColorCondition: "Add condition",
+  // A color rule's rows, as Notion's.
+  pageBackground: "Page background",
+  applyTo: "Apply to",
+  applyTargets: { row: "Entire row", property: "This property" },
+  addAnotherColor: "Add another",
   colorTarget: "Color applies to",
   newColorSetting: "New color setting",
   colorRuleColor: "Color",

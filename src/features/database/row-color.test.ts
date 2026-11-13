@@ -59,4 +59,12 @@ describe("selectRowColor", () => {
       ["Later", undefined],
     ]);
   });
+
+  it("gives no color for a rule whose value is not chosen yet, as Notion's", () => {
+    // "Is" with no day lets every row through a filter, but colors none.
+    expect(colors([{ operator: "is", color: "red" }])).toEqual([
+      ["Late", undefined],
+      ["Later", undefined],
+    ]);
+  });
 });

@@ -39,10 +39,18 @@ export function newCondition(
 
 export function newFilter(context: TableContext): Filter | undefined {
   const first = filterProperties(context)[0];
-  if (first === undefined) return undefined;
-  const operator = firstOperator(first, context.state);
-  const value = startingOperand(first, operator, context.state);
-  return { propertyId: first.id, operator, value };
+  return first === undefined ? undefined : newFilterFor(first, context);
+}
+
+// A new condition on a property: its first operator and that operator's
+// own starting value.
+export function newFilterFor(
+  property: PropertyDefinition,
+  context: TableContext,
+): Filter {
+  const operator = firstOperator(property, context.state);
+  const value = startingOperand(property, operator, context.state);
+  return { propertyId: property.id, operator, value };
 }
 
 // The operand a condition starts with: its operator's own, or none.

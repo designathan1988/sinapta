@@ -89,6 +89,9 @@ export const colorRuleSchema = v.object({
   filter: filterGroupSchema,
   color: v.union([v.literal("default"), toneSchema]),
   target: v.picklist(["background", "text"]),
+  // Notion's "Apply to": the whole row, or in a table the rule's own
+  // property alone; absent, the whole row.
+  applyTo: v.optional(v.picklist(["row", "property"])),
 });
 
 // What a column's footer works out from the rows a view shows. A rollup

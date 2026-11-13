@@ -11,7 +11,10 @@ import { VIEW_SETTINGS_OVERLAY } from "./index.ts";
 function rendered(withRule = false, panel = "color") {
   const app = createDatabaseApp([{ name: "Due", type: "date" }], [["Ship"]]);
   const viewId = app.view().id;
-  if (withRule) app.dispatch(addColorRule.create({ viewId }));
+  const [due] = app.propertyIds;
+  if (due === undefined) throw new Error("setup");
+  const condition = { propertyId: due, operator: "is-not-empty", value: "" };
+  if (withRule) app.dispatch(addColorRule.create({ viewId, condition }));
   const built = app.store.getState();
   const overlay: OpenOverlay = {
     kind: VIEW_SETTINGS_OVERLAY,
@@ -47,8 +50,8 @@ describe("the Conditional color panel", () => {
     expect(labels).toContain("Conditional color");
   });
 
-  it("shows the note and adds a rule from New color setting", () => {
-    const { host, sent, viewId, button } = rendered();
+  it("shows the note, and New color setting asks for a property first", () => {
+    const { host, sent, button } = rendered();
 
     expect(host.textContent).toContain("Customize page colors");
     // With no rows, New color setting is what the panel focuses first.
@@ -58,24 +61,39 @@ describe("the Conditional color panel", () => {
     button("New color setting")?.click();
 
     expect(sent).toEqual([
-      expect.objectContaining({ type: "view.addColorRule", viewId }),
+      expect.objectContaining({
+        type: "ui.openOverlayPanel",
+        panel: "color-property",
+      }),
     ]);
   });
 
-  it("lists a rule with its color, its target and a condition to add", () => {
-    const { host, sent, button } = rendered(true);
+  it("makes a green rule on the property chosen, the title listed first", () => {
+    const { host, sent, viewId } = rendered(false, "color-property");
+    const rows = [...host.querySelectorAll<HTMLElement>(".menu [data-index]")];
 
-    expect(host.querySelector(".view-settings__rule")?.textContent).toContain(
-      "Red",
-    );
-    expect(host.querySelector(".view-settings__rule")?.textContent).toContain(
-      "Background",
-    );
-    button("Add condition")?.click();
+    expect(rows.map((row) => row.textContent.trim())).toEqual(["Name", "Due"]);
+    rows[1]?.click();
+
+    expect(sent[0]).toMatchObject({ type: "view.addColorRule", viewId });
+    // The rule holds the chosen property's condition.
+    expect(JSON.stringify(sent[0])).toContain('"condition":{"propertyId"');
+  });
+
+  it("shows a rule as Notion's: its condition, Page background, Apply to", () => {
+    const { host, sent, button } = rendered(true);
+    const rule = host.querySelector(".view-settings__rule")?.textContent ?? "";
+
+    // A date names which end it tests, as the filter does.
+    expect(rule).toContain("Start date");
+    expect(rule).toContain("Page background");
+    expect(rule).toContain("Green");
+    expect(rule).toContain("Apply to");
+    expect(rule).toContain("Entire row");
+    expect(button("Add another")).toBeDefined();
     button("Delete color setting")?.click();
 
     expect(sent.map((command) => command.type)).toEqual([
-      "view.setColorRule",
       "view.deleteColorRule",
     ]);
   });

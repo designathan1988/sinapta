@@ -27,7 +27,11 @@ import {
   subGroupPanel,
   subGroupSortPanel,
 } from "./sub-group-panel.ts";
-import { colorPanel } from "./color-panel.ts";
+import {
+  COLOR_PROPERTY_PANEL,
+  colorPanel,
+  colorPropertyPanel,
+} from "./color-panel.ts";
 import { timelineEndPanel } from "./layout-items.ts";
 import { layoutPanel } from "./layout-panel.view.ts";
 import { rootPanel } from "./root-panel.view.ts";
@@ -68,6 +72,7 @@ const PANELS: Readonly<
   "timeline-date": timelineDatePanel,
   "timeline-end": timelineEndPanel,
   color: colorPanel,
+  [COLOR_PROPERTY_PANEL]: colorPropertyPanel,
   "chart-kind": chartKindPanel,
   "chart-x": chartXPanel,
   "chart-y": chartYPanel,

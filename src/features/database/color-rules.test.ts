@@ -19,7 +19,7 @@ function createApp() {
 }
 
 describe("a view's conditional color rules", () => {
-  it("adds a red rule with no condition, sets it, deletes it and undoes", () => {
+  it("adds a green rule, as Notion's, sets it, deletes it and undoes", () => {
     const app = createApp();
     const viewId = app.view().id;
     const rules = () => app.view().colorRules ?? [];
@@ -27,7 +27,7 @@ describe("a view's conditional color rules", () => {
     app.dispatch(addColorRule.create({ viewId }));
     const [rule] = rules();
     expect(rule).toMatchObject({
-      color: "red",
+      color: "green",
       target: "background",
       filter: { conjunction: "and", items: [] },
     });

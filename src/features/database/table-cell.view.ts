@@ -9,6 +9,7 @@ import { renderIcon } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { renderCellActions } from "./cell-actions.view.ts";
 import { selectCellContext } from "./cell-context.selectors.ts";
+import { selectCellColor } from "./row-color.selectors.ts";
 import { editorOf, propertyType } from "./property-registry.ts";
 import { setFrozenStart } from "./table-column-style.ts";
 import type {
@@ -201,6 +202,7 @@ export function renderCell(
     data-cell=${key}
     data-type=${column.isTitle ? TITLE_KEY : column.property.type}
     data-overlay-anchor=${isAnchor ? "open" : nothing}
+    data-color=${selectCellColor({ model: context.model, row, propertyId: column.property.id }, state) ?? nothing}
     ?data-active=${active}
     ?data-wrapped=${column.isWrapped === true}
     ?data-frozen=${column.frozenStart !== undefined}

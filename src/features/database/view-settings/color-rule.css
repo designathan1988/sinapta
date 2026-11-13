@@ -1,0 +1,97 @@
+@layer features {
+  /* A conditional color rule, as Notion's: a softly filled box holding
+     the condition, its value, "Page background" and "Apply to". */
+  .view-settings__colors > .view-settings__rule {
+    gap: var(--space-stack-xs);
+    background-color: var(--color-bg-field);
+    box-shadow: none;
+  }
+
+  .view-settings__colors > .button:not([data-variant="primary"]) {
+    justify-content: center;
+    box-shadow: inset 0 0 0 var(--size-border-thin) var(--color-border-default);
+  }
+
+  .view-settings__rule > .select[data-variant="row"] {
+    inline-size: 100%;
+  }
+
+  /* The ten colors of Notion's swatch grid, five to a row, and the small
+     one beside the color's name. */
+  .view-settings__swatches {
+    display: grid;
+    grid-template-columns: repeat(5, var(--size-control-sm));
+    gap: var(--space-inline-sm);
+    padding: var(--space-inset-sm);
+  }
+
+  .view-settings__swatch {
+    display: inline-block;
+    inline-size: var(--size-icon-sm);
+    block-size: var(--size-icon-sm);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: var(--color-chip-gray-bg);
+    box-shadow: inset 0 0 0 var(--size-border-thin) var(--color-border-default);
+    vertical-align: middle;
+
+    .view-settings__swatches > & {
+      inline-size: var(--size-control-sm);
+      block-size: var(--size-control-sm);
+      cursor: pointer;
+    }
+
+    &[aria-pressed="true"] {
+      box-shadow: inset 0 0 0 var(--size-border-thick)
+        var(--color-accent-default);
+    }
+
+    &[data-color="default"] {
+      background-color: transparent;
+    }
+
+    &[data-color="gray"] {
+      background-color: var(--color-chip-gray-bg);
+    }
+
+    &[data-color="brown"] {
+      background-color: var(--color-chip-brown-bg);
+    }
+
+    &[data-color="orange"] {
+      background-color: var(--color-chip-orange-bg);
+    }
+
+    &[data-color="yellow"] {
+      background-color: var(--color-chip-yellow-bg);
+    }
+
+    &[data-color="green"] {
+      background-color: var(--color-chip-green-bg);
+    }
+
+    &[data-color="blue"] {
+      background-color: var(--color-chip-blue-bg);
+    }
+
+    &[data-color="purple"] {
+      background-color: var(--color-chip-purple-bg);
+    }
+
+    &[data-color="pink"] {
+      background-color: var(--color-chip-pink-bg);
+    }
+
+    &[data-color="red"] {
+      background-color: var(--color-chip-red-bg);
+    }
+  }
+}
+
+@layer features {
+  /* The color's swatch stands a little apart from its name. */
+  .view-settings__rule .select .view-settings__swatch {
+    margin-inline-end: var(--space-inline-xs);
+  }
+}

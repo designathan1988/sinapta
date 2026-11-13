@@ -1,9 +1,11 @@
 @layer features {
   /* Conditional color, as Notion's: a row the first matching rule keeps
      takes that rule's color on its background, or on its title's text
-     (the calendar entry being its own title). */
+     (the calendar entry being its own title); in a table a rule that
+     applies to its property alone colors that cell. */
   :is(
     .database__row,
+    .database__cell,
     .row-card,
     .list__row,
     .calendar__entry
@@ -13,6 +15,7 @@
 
   :is(
     .database__row,
+    .database__cell,
     .row-card,
     .list__row,
     .calendar__entry
@@ -22,6 +25,7 @@
 
   :is(
     .database__row,
+    .database__cell,
     .row-card,
     .list__row,
     .calendar__entry
@@ -31,6 +35,7 @@
 
   :is(
     .database__row,
+    .database__cell,
     .row-card,
     .list__row,
     .calendar__entry
@@ -40,6 +45,7 @@
 
   :is(
     .database__row,
+    .database__cell,
     .row-card,
     .list__row,
     .calendar__entry
@@ -49,6 +55,7 @@
 
   :is(
     .database__row,
+    .database__cell,
     .row-card,
     .list__row,
     .calendar__entry
@@ -58,6 +65,7 @@
 
   :is(
     .database__row,
+    .database__cell,
     .row-card,
     .list__row,
     .calendar__entry
@@ -67,6 +75,7 @@
 
   :is(
     .database__row,
+    .database__cell,
     .row-card,
     .list__row,
     .calendar__entry
@@ -76,6 +85,7 @@
 
   :is(
     .database__row,
+    .database__cell,
     .row-card,
     .list__row,
     .calendar__entry

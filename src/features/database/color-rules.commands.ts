@@ -1,6 +1,7 @@
 // A view's conditional color rules, as Notion's "Conditional color": each
 // rule a filter and a color for the rows it keeps, on their background
-// or their title's text. A new rule is red, with no condition yet.
+// or their title's text. A new rule is green, as Notion's, and holds the
+// condition of the property it was made for.
 import type { DatabaseBlock } from "../../blocks/database/index.ts";
 import type {
   ColorRule,
@@ -31,7 +32,10 @@ function patchRules(view: View, colorRules: ColorRule[]): CommandEffect {
 
 const EMPTY_FILTER: FilterGroup = { conjunction: "and", items: [] };
 
-export const addColorRule = defineCommand<{ viewId: ViewId }>({
+export const addColorRule = defineCommand<{
+  viewId: ViewId;
+  condition?: FilterItem;
+}>({
   type: "view.addColorRule",
   // A rule's id comes from the ids the dispatcher makes for properties.
   newIds: { properties: 1 },
@@ -39,10 +43,14 @@ export const addColorRule = defineCommand<{ viewId: ViewId }>({
     const view = state.workspace.views[command.viewId];
     const id = command.meta.propertyIds[0];
     if (view === undefined || id === undefined) return {};
+    const { condition } = command;
     const rule: ColorRule = {
       id,
-      filter: EMPTY_FILTER,
-      color: "red",
+      filter:
+        condition === undefined
+          ? EMPTY_FILTER
+          : { conjunction: "and", items: [condition] },
+      color: "green",
       target: "background",
     };
     return patchRules(view, [...(view.colorRules ?? []), rule]);
@@ -50,7 +58,7 @@ export const addColorRule = defineCommand<{ viewId: ViewId }>({
 });
 
 export type ColorRulePatch = Partial<
-  Pick<ColorRule, "filter" | "color" | "target">
+  Pick<ColorRule, "filter" | "color" | "target" | "applyTo">
 >;
 
 export const setColorRule = defineCommand<{

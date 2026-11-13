@@ -24,6 +24,8 @@ export interface RuleHead {
   readonly change: (change: FieldChange) => void;
   readonly remove: () => void;
   readonly toAdvanced: () => void;
+  // What ends the head in place of the "…", as a color rule's Delete.
+  readonly trailing?: TemplateResult;
 }
 
 // "Contains" reads "contains" after the property's name, as in Notion.
@@ -124,6 +126,6 @@ export function renderRuleHead(
     )}
     ${renderCondition(head, select)}
     <span class="database__spacer"></span>
-    ${renderMore(head, select)}
+    ${head.trailing ?? renderMore(head, select)}
   </div>`;
 }
