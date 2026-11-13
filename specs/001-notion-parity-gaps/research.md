@@ -61,6 +61,11 @@ Paths are relative to `src/` unless stated.
 - **Rationale**: one place for grouping; follows the date pattern.
 - **Alternatives**: a single `by: string` replacing `dateBy` (needs a
   migration of every stored view).
+- **Corrected after the sample comparison (T039)**: Notion groups text
+  by its first character with digits in their own groups, A–Z, and
+  "Other" for accented letters and signs; intervals lie within a range
+  (0–1000 by default, size 100) with an "Out of range" group. The code
+  follows Notion, not the folding first planned.
 
 ## R4. "Show large counts as 99+" (FR-014)
 

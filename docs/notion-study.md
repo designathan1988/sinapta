@@ -813,31 +813,98 @@ integrations, upgrade cards.
    (checkbox), crescente / decrescente (select, status, number).
 4. **done** Table layout switches: Mostrar linhas verticais, Exibir ícone da
    página, Envolver todo o conteúdo.
-5. View tab "Exibir como": Texto e ícone, Apenas texto, Apenas ícone.
-6. Date filter "É relativo a hoje": Últimos(as) / Próximo(as) / Este(a)
+5. **done** (`p13-tab-menu`) View tab "Exibir como": Texto e ícone, Apenas texto, Apenas ícone.
+6. **done** (`p6-date-filter`) Date filter "É relativo a hoje": Últimos(as) / Próximo(as) / Este(a)
    × dia / semana / mês / ano; and Data de início / Data de término for
    a range.
-7. Group by text "Exato | Alfabética" (first letter) and number "Únicos |
+7. **done** (`p9-group-by`) Group by text "Exato | Alfabética" (first letter) and number "Únicos |
    Intervalo".
-8. Count calculations: "Exibir contagens grandes como 99+".
-9. Rollup filter: Qualquer / Nenhuma / A cada.
-10. Status "Exibir como": Caixa de seleção (done when in the last group).
-11. Card layout "Compacto | Lista" (board, gallery); gallery "Ajustar
+8. **done** (`p19-properties/12-count`) Count calculations: "Exibir contagens grandes como 99+".
+9. **done** (`p8-probe/16-quantifier`) Rollup filter: Qualquer / Nenhuma / A cada.
+10. **done** (`p19-properties/07-show-as`) Status "Exibir como": Caixa de seleção (done when in the last group).
+11. **done** (`p14-layouts`) Card layout "Compacto | Lista" (board, gallery); gallery "Ajustar
     mídia"; calendar "Ajustar títulos das páginas"; timeline "Separar
     datas de início e fim"; list "Directly edit page name"; feed
     "Quebrar linhas nas propriedades".
-12. Conditional color (Cor condicional): rules that tint a view's pages.
-13. Floating outline: dashes at the page's right edge, one per heading.
-14. Selection toolbar in Notion's new panel form (turn into, two rows of
+12. **done** (`p22-conditional-color`) Conditional color (Cor condicional): rules that tint a view's pages.
+13. **done** (`p12-outline`) Floating outline: dashes at the page's right edge, one per heading.
+14. **done** (`p10-selection-panel`) Selection toolbar in Notion's new panel form (turn into, two rows of
     formatting buttons, comment).
-15. Slash menu: the line washed with "/Type to search" while the menu is
+15. **done** (`p11-slash-line`) Slash menu: the line washed with "/Type to search" while the menu is
     open.
 16. **done** Text, URL, email and phone filters: Is, Is not, Contains,
     Does not contain, Starts with, Ends with, Is empty, Is not empty;
     a new one starts with Contains.
-17. The filter popover in Notion's simple form ("<Property> <condition> ⌄
+17. **done** (`p6-date-filter`) The filter popover in Notion's simple form ("<Property> <condition> ⌄
     …" over the value) where Pagecraft shows the advanced "Where" rows.
-18. Number "Show as" as three pictured tiles (42 Number, Bar, Ring).
+18. **done** (`p19-properties/03-ring`) Number "Show as" as three pictured tiles (42 Number, Bar, Ring).
+
+Left open after the 2026-11-13 work, each a Notion feature outside the
+items above, found while photographing them:
+
+19. Date filter "Is between" (two days) is not offered yet; Is on or
+    before and Is on or after are.
+20. A new rollup shows "Relation" as its relation without storing it;
+    the rollup works out nothing until a relation is chosen again.
+21. The selection panel leaves out Notion's add-reaction and
+    suggest-edit buttons and the AI skills (out of scope: people, AI).
+22. The view tab menu leaves out Source, Add view to sidebar, Hide data
+    source titles and Manage in Notion Calendar (server or paid
+    features).
+23. Grouping by the title column (Notion's "Agrupar por › Nome") is not
+    offered; only the database's other properties group.
+24. With text grouped by its exact value and sorted Alphabetical, Notion
+    lists the "Sem Nome" group last; Pagecraft lists the empty group
+    first (as Notion does for numbers: "Sem Número" first).
+
+### Sample database (2026-11-13, SC-002)
+
+The same rows were built in Notion's test workspace (in Teste blocos'
+database, then moved to the trash) and in Pagecraft
+(`src/features/database/notion-sample.test.ts`), with today 2026-11-13,
+a Friday, weeks from Sunday:
+
+| Row | Number | Date |
+| --- | --- | --- |
+| Linha teste | | |
+| Ana | 5 | Nov 8 |
+| álvaro | -5 | Nov 10 |
+| Bia | 0 | Nov 12 |
+| 3D | 9 | Nov 13 |
+| Carlos | 10 | Nov 14 |
+| Zeca | 12 | Nov 16 |
+| Ébano | 19 | Nov 18 |
+| Duda | 20 | Nov 20 |
+| Marta | 30 | Nov 2 |
+| Nina | 35 | Dec 1 |
+
+Rows kept by "is relative to today", Notion and Pagecraft alike:
+
+| Period | Rows |
+| --- | --- |
+| This week | Ana, álvaro, Bia, 3D, Carlos |
+| Past week | Ana, álvaro, Bia, 3D |
+| Next week | 3D, Carlos, Zeca, Ébano, Duda |
+| This month | Ana, álvaro, Bia, 3D, Carlos, Zeca, Ébano, Duda, Marta |
+| Next month | 3D, Carlos, Zeca, Ébano, Duda, Nina |
+| Past month | Ana, álvaro, Bia, 3D, Marta |
+| This day | 3D |
+| Past day | Bia, 3D |
+| Next day | 3D, Carlos |
+
+Groups, Notion and Pagecraft alike (Pagecraft changed to match):
+
+- Text by Alphabetical: 3 (3D), A (Ana), B, C, D, L, M, N, Z, then
+  "Outro" / Other (álvaro, Ébano): a digit is its own group, only A–Z
+  are letters, accented letters fall in Other, after the letters.
+- Number by Interval: Notion's range is 0 to 1000 and its size 100 by
+  default ("Agrupar por intervalo 0 – 1000", "Agrupar a cada 100");
+  with size 10: Sem Número (Linha teste), 0 a 10 (Ana, Bia, 3D), 10 a
+  20 (Carlos, Zeca, Ébano), 20 a 30 (Duda), 30 a 40 (Marta, Nina), Fora
+  do intervalo (álvaro).
+- The rollup quantifier was compared by its words (Any, None, Every and
+  the target's conditions); the related-rows results are covered by
+  `rollup-filters.test.ts`.
 
 ## Controls
 

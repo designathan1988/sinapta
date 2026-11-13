@@ -21,11 +21,15 @@ otherwise the condition lets every row through (as a blank operand does).
 | Field | Type | Rule |
 | --- | --- | --- |
 | textBy | `"exact" \| "alphabetical"`, optional | text-like properties; absent = exact |
-| numberBy | `{kind:"unique"} \| {kind:"interval", size:number>0}`, optional | numbers; absent = unique; size default 10 |
+| numberBy | `{kind:"unique"} \| {kind:"interval", size:number>0, from?:number, to?:number}`, optional | numbers; absent = unique; size default 100, range 0–1000 |
 
-Group keys: alphabetical = first letter folded to its base letter, upper
-case; digits, emoji and others = "#"; empty = "No <property>". Interval =
-`floor(value/size)`, label "a to b", sorted numerically.
+Group keys (as Notion forms them, checked on the 2026-11-13 sample):
+alphabetical = the first character: a digit is its own group, A–Z in
+upper case, anything else (accented letters, emoji, signs) under
+"Other", after the letters; empty = "No <property>". Interval = within
+the range `from`–`to` (default 0–1000), `floor((value-from)/size)`,
+label "a to b", sorted numerically; values outside the range under "Out
+of range", last. Size default 100.
 
 ## View presentation (`viewSchema`)
 
