@@ -156,6 +156,9 @@ export const viewSchema = v.object({
   // Counts above 99 written "99+" in the footer.
   countCap: v.optional(v.boolean()),
   colorRules: v.optional(v.array(colorRuleSchema)),
+  // The database's name over an inline or linked view's tabs, hidden,
+  // as Notion's "Show data source title" switched off.
+  isSourceTitleHidden: v.optional(v.boolean()),
   // How a board or a gallery shows its cards: how wide, what picture
   // above the title, and whether a board tints each column.
   cardSize: v.picklist(["small", "medium", "large"]),

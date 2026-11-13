@@ -115,7 +115,8 @@ function renderToolbar(
     icon: "more",
   } as const;
   return html`<div class="database__toolbar">
-    ${parts.header ?? nothing} ${renderViewTabs(context)}
+    ${model.view.isSourceTitleHidden === true ? nothing : (parts.header ?? nothing)}
+    ${renderViewTabs(context)}
     <span class="database__spacer"></span>
     ${renderPopoverButton(filters, context)}
     ${renderPopoverButton(sorts, context)} ${renderSearch(context)}

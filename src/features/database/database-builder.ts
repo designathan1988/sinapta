@@ -49,6 +49,7 @@ import { templateDefaultCommands } from "./template-default.commands.ts";
 import { templateRepeatCommands } from "./template-repeat.commands.ts";
 import { csvImportCommands } from "./csv-import.commands.ts";
 import { viewLockCommands } from "./view-lock.commands.ts";
+import { sourceTitleCommands } from "./source-title.commands.ts";
 import { subGroupCommands } from "./sub-group.commands.ts";
 import { formCommands } from "./layouts/form/form.commands.ts";
 import { boardCardCommands } from "./layouts/board/board-card.commands.ts";
@@ -140,6 +141,7 @@ const DATABASE_TEST_COMMANDS = [
   ...templateRepeatCommands,
   ...csvImportCommands,
   ...viewLockCommands,
+  ...sourceTitleCommands,
   ...subGroupCommands,
   ...formCommands,
   ...boardCardCommands,

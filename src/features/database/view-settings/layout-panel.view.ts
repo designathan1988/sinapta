@@ -25,6 +25,7 @@ import type { TableContext } from "../table-cell.view.ts";
 import { setViewType } from "../view-layout.commands.ts";
 import { LAYOUT_ICONS } from "../layout-icons.ts";
 import { OPEN_MODE_ICONS } from "./choice-panels.ts";
+import { showSourceTitleItem } from "../view-tab-source.ts";
 import { panelRow, type SettingsPanel } from "./settings-panel.ts";
 
 function renderLayoutTiles(context: TableContext): TemplateResult {
@@ -104,7 +105,11 @@ function openModeItems(context: TableContext): MenuEntry[] {
 }
 
 function layoutItems(context: TableContext): MenuEntry[] {
-  return [...typeItems(context), ...openModeItems(context)];
+  return [
+    ...showSourceTitleItem(context),
+    ...typeItems(context),
+    ...openModeItems(context),
+  ];
 }
 
 function isCardLayout(context: TableContext): boolean {

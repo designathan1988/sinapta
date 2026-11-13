@@ -84,7 +84,9 @@ describe("the open view's tab menu", () => {
       "Rename",
       "Show as",
       "Edit view",
+      "Source",
       "Copy link to view",
+      "Add view to sidebar",
       "Duplicate view",
       "Delete view",
     ]);
@@ -105,6 +107,22 @@ describe("the open view's tab menu", () => {
       }),
     );
     expect(document.body.textContent).toContain("Only for you");
+  });
+
+  it("keeps the view in the sidebar", () => {
+    const { item, sent } = rendered({ isOpen: true });
+
+    item("Add view to sidebar")?.click();
+
+    expect(sent).toContainEqual(
+      expect.objectContaining({ type: "settings.addSidebarView" }),
+    );
+  });
+
+  it("shows the database the view reads beside Source", () => {
+    const { item } = rendered({ isOpen: true });
+
+    expect(item("Source")?.textContent).toContain("Untitled database");
   });
 
   it("duplicates the view", () => {

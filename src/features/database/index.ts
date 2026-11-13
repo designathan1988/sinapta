@@ -25,6 +25,7 @@ import { templateDefaultCommands } from "./template-default.commands.ts";
 import { templateRepeatCommands } from "./template-repeat.commands.ts";
 import { csvImportCommands } from "./csv-import.commands.ts";
 import { viewLockCommands } from "./view-lock.commands.ts";
+import { sourceTitleCommands } from "./source-title.commands.ts";
 import { subGroupCommands } from "./sub-group.commands.ts";
 import { formCommands } from "./layouts/form/form.commands.ts";
 import { boardCardCommands } from "./layouts/board/board-card.commands.ts";
@@ -37,7 +38,10 @@ export {
   selectDueRepeats,
   type DueRepeat,
 } from "./template-repeat.commands.ts";
-export { selectTableModel } from "./table-model.selectors.ts";
+export { selectTableModel, type TableRow } from "./table-model.selectors.ts";
+export { selectViewRows } from "./view-rows.selectors.ts";
+export { selectHolderOfView } from "./view-holder.selectors.ts";
+export { setActiveView } from "./view.commands.ts";
 export { groupByProperty } from "./group.commands.ts";
 export { startDatabase } from "./database-start.commands.ts";
 export { LAYOUT_ICONS } from "./layout-icons.ts";
@@ -92,6 +96,7 @@ export const databaseCommands = [
   ...templateRepeatCommands,
   ...csvImportCommands,
   ...viewLockCommands,
+  ...sourceTitleCommands,
   ...subGroupCommands,
   ...formCommands,
   ...boardCardCommands,

@@ -125,7 +125,7 @@ interface Query {
   readonly state: AppState;
 }
 
-function sortedAndFiltered(data: TableRow[], query: Query): TableRow[] {
+export function sortedAndFiltered(data: TableRow[], query: Query): TableRow[] {
   const { view, properties, today, state } = query;
   const weekStartsOn = view.calendar.weekStartsOn;
   const titleId = TITLE_PROPERTY_ID;

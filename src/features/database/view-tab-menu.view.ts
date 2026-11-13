@@ -1,6 +1,7 @@
 // The open view's menu, opened from its tab as Notion's: Rename; Show as
 // (Text and icon, Text only, Icon only, for the owner alone); Edit view;
-// Copy link to view; Open as full page; Duplicate view; Delete view.
+// Source; Copy link to view; Add view to sidebar; Open as full page; Hide
+// data source titles; Duplicate view; Delete view.
 import { html, type TemplateResult } from "lit-html";
 import type { ViewTabStyle } from "../../model/index.ts";
 import {
@@ -22,6 +23,12 @@ import {
 import { LAYOUT_ICONS } from "./layout-icons.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import { duplicateView } from "./view-duplicate.commands.ts";
+import {
+  isInsidePage,
+  sourceItem,
+  sourceTitleItem,
+  sidebarItem,
+} from "./view-tab-source.ts";
 import { VIEW_SETTINGS_OVERLAY } from "./view-settings/index.ts";
 import { deleteView, renameView } from "./view.commands.ts";
 
@@ -72,11 +79,11 @@ function copyLink(context: TableContext): void {
 }
 
 function linkItems(context: TableContext): MenuItem[] {
-  const { model, state, dispatch } = context;
-  const isPage = state.ui.activePageId === model.holderId;
+  const { model, dispatch } = context;
+  const isInside = isInsidePage(context);
   const full: MenuItem = {
     label: COPY.database.openFullPage,
-    icon: "expand",
+    icon: "arrow-up-right",
     onSelect: () => dispatch(setActivePage.create({ pageId: model.holderId })),
   };
   return [
@@ -87,7 +94,8 @@ function linkItems(context: TableContext): MenuItem[] {
         copyLink(context);
       },
     },
-    ...(isPage ? [] : [full]),
+    sidebarItem(context),
+    ...(isInside ? [full, sourceTitleItem(context)] : []),
   ];
 }
 
@@ -115,6 +123,7 @@ function viewItems(context: TableContext): MenuEntry[] {
       icon: "sliders",
       onSelect: () => dispatch(openOverlay.create({ overlay: settings })),
     },
+    sourceItem(context),
     { kind: "divider" },
     ...linkItems(context),
     { kind: "divider" },

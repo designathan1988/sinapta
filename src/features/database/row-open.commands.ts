@@ -4,12 +4,17 @@
 import type { BlockId, View, ViewId } from "../../model/index.ts";
 import { defineCommand } from "../../state/index.ts";
 
-export const openRow = defineCommand<{ rowId: BlockId; viewId: ViewId }>({
+// A view kept in the sidebar opens its pages where its section says.
+export const openRow = defineCommand<{
+  rowId: BlockId;
+  viewId: ViewId;
+  mode?: View["openMode"];
+}>({
   type: "row.open",
   handle(state, command) {
     const { rowId, viewId } = command;
     const view = state.workspace.views[viewId];
-    const mode = view?.openMode ?? "full";
+    const mode = command.mode ?? view?.openMode ?? "full";
     if (mode === "full") {
       return {
         ui: { ...state.ui, activePageId: rowId, activeCell: null, peek: null },
