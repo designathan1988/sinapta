@@ -24,7 +24,7 @@
     /* A database's first row is its title and tools, below its margin. */
     &:has(> .database) {
       --editor-line-start: var(--space-stack-sm);
-      --editor-line-size: var(--size-control-md);
+      --editor-line-size: var(--size-database-header);
     }
 
     &:has(> .heading) {

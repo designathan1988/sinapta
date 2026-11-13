@@ -9,8 +9,9 @@
     border: none;
     background-color: transparent;
     color: var(--color-text-primary);
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-strong);
+    line-height: var(--font-line-height-heading);
 
     &::placeholder {
       color: var(--color-text-tertiary);
@@ -19,6 +20,33 @@
     &:focus-visible {
       outline: none;
     }
+  }
+
+  /* Notion's title row, measured: 40 px; its title 24 px, 600, 1.3; the
+     28 px tools side by side, New 6 px after them; "+" 24 px. */
+  .database[data-inline] > .database__toolbar {
+    gap: 0;
+    min-block-size: var(--size-database-header);
+
+    & .database__new {
+      margin-inline-start: var(--space-inline-icon);
+    }
+
+    & .database__more-views {
+      min-inline-size: var(--size-target-min);
+      min-block-size: var(--size-target-min);
+    }
+  }
+
+  /* The database's icon, a 22 px box before its title. */
+  .database__inline-icon {
+    display: inline-grid;
+    place-items: center;
+    inline-size: var(--size-sidebar-icon);
+    block-size: var(--size-sidebar-icon);
+    margin-inline: var(--space-inline-xs) var(--space-inline-sm);
+    font-size: var(--font-size-lg);
+    line-height: 1;
   }
 
   /* The view's tools show while the database is pointed at or has focus,

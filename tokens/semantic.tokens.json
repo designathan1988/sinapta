@@ -647,6 +647,10 @@
       "$description": "A menu's scrollbar, thin as Notion's: 6 px.",
       "$value": "{base.size.0x375}"
     },
+    "databaseHeader": {
+      "$description": "An inline database's title row, as Notion's, measured: 40 px.",
+      "$value": "{base.size.2x5}"
+    },
     "slashMenu": {
       "width": {
         "$description": "Notion's slash menu, measured: 324 px wide.",

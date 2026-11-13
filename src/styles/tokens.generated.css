@@ -228,6 +228,7 @@
     --base-size-0x5: 0.5rem;
     --base-size-20x25: 20.25rem;
     --base-size-22x5: 22.5rem;
+    --base-size-2x5: 2.5rem;
     --base-size-2x625: 2.625rem;
     --base-size-5x375: 5.375rem;
     --base-radius-1: 0.25rem;
@@ -432,6 +433,7 @@
     --size-settings-nav: var(--base-size-15);
     --size-scrollbar: var(--base-size-0x625);
     --size-scrollbar-thin: var(--base-size-0x375);
+    --size-database-header: var(--base-size-2x5);
     --size-slash-menu-width: var(--base-size-20x25);
     --size-slash-menu-max-height: var(--base-size-22x5);
     --size-slash-menu-row: var(--base-size-8);

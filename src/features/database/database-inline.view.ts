@@ -1,7 +1,7 @@
 // A database inside a page's body, as in Notion: its title leads the row
 // of its views, and among its tools a button opens it as a page of its
 // own.
-import { html, type TemplateResult, type nothing } from "lit-html";
+import { html, type TemplateResult, nothing } from "lit-html";
 import { selectDatabase } from "../../blocks/database/index.ts";
 import { renamePage, selectPageTitle } from "../../blocks/page/index.ts";
 import type { BlockId } from "../../model/index.ts";
@@ -18,7 +18,7 @@ import "./database-inline.css";
 function renderTitle(
   dispatch: Dispatch,
   databaseId: BlockId,
-  title: string,
+  page: { readonly title: string; readonly icon: string | null },
 ): TemplateResult {
   const onTitle = (event: Event): void => {
     if (!(event.target instanceof HTMLInputElement)) return;
@@ -26,14 +26,20 @@ function renderTitle(
       renamePage.create({ pageId: databaseId, title: event.target.value }),
     );
   };
-  return html`<input
-    class="database__inline-title"
-    type="text"
-    aria-label=${COPY.database.databaseTitle}
-    placeholder=${COPY.database.untitled}
-    .value=${title}
-    @change=${onTitle}
-  />`;
+  const icon =
+    page.icon === null
+      ? nothing
+      : html`<span class="database__inline-icon" aria-hidden="true"
+          >${page.icon}</span
+        >`;
+  return html`${icon}<input
+      class="database__inline-title"
+      type="text"
+      aria-label=${COPY.database.databaseTitle}
+      placeholder=${COPY.database.untitled}
+      .value=${page.title}
+      @change=${onTitle}
+    />`;
 }
 
 export function renderInlineDatabase(
@@ -53,7 +59,10 @@ export function renderInlineDatabase(
   });
   return renderDatabaseSection(state, dispatch, {
     holderId: databaseId,
-    header: renderTitle(dispatch, databaseId, selectPageTitle(database)),
+    header: renderTitle(dispatch, databaseId, {
+      title: selectPageTitle(database),
+      icon: database.props.icon,
+    }),
     opener,
     isInline: true,
   });
