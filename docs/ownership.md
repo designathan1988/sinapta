@@ -193,7 +193,7 @@ owner listed here exists.
 | Concern | Owner | Milestone |
 | --- | --- | --- |
 | Import direction, file and function limits, banned names | `eslint.config.js` | 1 |
-| Native-resolution captures of the running app, each control pointed at | `scripts/capture.ts` | 20 |
+| Native-resolution captures of Pagecraft and Notion, each control pointed at | `scripts/capture.ts` | 20 |
 | What Notion looks like and does, and how far Pagecraft matches it | `docs/notion-study.md` | 20 |
 | Raw-value ban and class naming in CSS | `stylelint.config.js` | 1 |
 | Content Security Policy | `vite.config.ts` (added to the built page) | 1 |

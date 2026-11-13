@@ -1,4 +1,12 @@
-// The steps of a capture, read from a JSON file.
+// The steps of a capture, read from a JSON file:
+// { "url"?, "theme"?: "dark" | "light", "steps": [ { "name", "eval"?,
+//   "click"?, "type"?, "press"?, "hover"?, "expect"?, "clip"?, "pad"?,
+//   "wait"?, "read"? } ] }. Selectors are Playwright's (CSS, or
+// text=Label). The url defaults to the review server; click, type and
+// press act, hover points with the real mouse, expect names what must
+// appear after the action (else it is done once more, then the step
+// fails with a photo), clip photographs a region around an element, and
+// read prints a value measured in the page.
 import * as v from "valibot";
 
 const stepSchema = v.object({
@@ -8,6 +16,7 @@ const stepSchema = v.object({
   type: v.optional(v.string()),
   press: v.optional(v.string()),
   hover: v.optional(v.string()),
+  expect: v.optional(v.string()),
   clip: v.optional(v.string()),
   pad: v.optional(v.number()),
   wait: v.optional(v.number()),
@@ -16,9 +25,6 @@ const stepSchema = v.object({
 
 export const capturePlanSchema = v.object({
   url: v.optional(v.string()),
-  // A signed-in profile kept open by npm run capture:login (port 9333),
-  // for a site that needs a sign-in, such as Notion.
-  profile: v.optional(v.pipe(v.string(), v.regex(/^[a-z0-9-]+$/))),
   theme: v.optional(v.picklist(["light", "dark"])),
   steps: v.array(stepSchema),
 });

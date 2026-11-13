@@ -69,7 +69,7 @@ On macOS, use Command where this file says Ctrl.
 | `npm run check:watch` | Type check in watch mode |
 | `npm run test:watch` | Tests in watch mode |
 | `npm run tokens` | Rebuild `src/styles/tokens.generated.css` from `tokens/` |
-| `npm run capture -- <steps.json>` | Photograph the running app headless at 1440 × 900 @2x |
+| `npm run capture -- pagecraft\|notion [steps.json\|url]` | Photograph Pagecraft or Notion headless at 1440 × 900 @2x |
 | `npm run lint` | ESLint, Stylelint and a Prettier check |
 | `npm run test` | Full test suite |
 | `npm run verify` | Type check, lint and tests; run before every commit |
