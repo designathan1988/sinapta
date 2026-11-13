@@ -1105,6 +1105,41 @@ items above, found while photographing them:
     semana" and the template menu "Duplicar a cada... Semana"
     (`n58-banner`); the test template was deleted in the same run and the
     list read empty afterwards (`n57-state`).
+41. **done** [T127–T130, FR-001, FR-003, FR-004, FR-005, SC-002, `n59-measure`,
+    `n60-groups2`, `n63-ranges`, `n68-rollup-filters`,
+    `n69-text-filter-measure`, `n69-date-cleanup`] Filters read in
+    Notion against the sample. A checkbox filters with "Is" and "Is not"
+    and lists "Unchecked" then "Checked" under the head, 4 px in, in a
+    220 px popover. A rollup "> 8" over related numbers 5 and 10 (A1), 20
+    (A2) and none (A3) kept A1, A2 for Any, A3 for None and only A2 for
+    Every: a row with no related value fails Every. Ranges R1 Nov 1–14,
+    R2 Nov 10–20, R3 Nov 16–25 kept by "This week" R2 (start) and R1
+    (end), by "Next week" R3 (start) and R1, R2 (end): Notion's next week
+    runs from today seven days on. Groups: Unique numbers "No Number"
+    first, then −5 to 35; Exact names A–Z with accents set aside. The
+    rule popover: 220 px, its head 18 px at y 8 in 12 px words, the value
+    8 px under it; a date's 260 × 368: selects at 34 (28 tall), the
+    month at 70, weekdays at 102 (18 tall), day 1 at 129, days 28 px
+    every 32, a line at 331 (x 12, 236 wide) and the note at 340 (16 px
+    line); the open pill rgb(40, 72, 107). Every filter made was deleted
+    in its run and the table read "Linha teste" alone afterwards.
+42. **done** [T131–T132, FR-001, FR-020, `n70-next-week`, `n71-date-cell`]
+    The date picker. In a relative filter the month is only shown: no
+    Today, the start the accent with a white number, the days between one
+    band rgb(36, 57, 77) through the gaps, the end the accent at 43 %
+    over the band with its number not white, today a 24 px red circle
+    rgb(229, 100, 88) over the band, and the days after the range grey;
+    when today starts the range it takes the accent. In a date cell:
+    248 px wide, the day field 224 × 28 at (12, 12), Today and ‹ › (20 px)
+    centred at 62, weekdays at 81, day 1 at 108, a line 12 px in at 302,
+    rows every 29 px from 307, Clear at 431; the empty cell stayed empty.
+    Open: Notion's date formats are Full date (the default), Short date,
+    Month/Day/Year, Day/Month/Year, Year/Month/Day and Relative
+    (`dateHelpers.dateFormat.*`), its Date format row shows the chosen
+    one, and a "Learn more about reminders" row closes the menu;
+    Pagecraft's list starts with "Nov 10, 2026" and has no Short date or
+    Relative (T133). Notion's light-mode red, band and pill were not
+    photographed; their day tokens keep the earlier values.
 
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,
