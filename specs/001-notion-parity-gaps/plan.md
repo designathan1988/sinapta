@@ -128,3 +128,15 @@ src/
 ## Complexity Tracking
 
 No constitution violations to justify.
+
+## Later additions (converge, 2026-11-13)
+
+Items 19–24 of the audit (FR-020 to FR-024) touched, beyond the files
+above: `src/features/database/filter-between.view.ts`,
+`properties/rollup/rollup-effective.ts`, `view-tab-source.ts`,
+`source-title.commands.ts`, `view-rows.selectors.ts`; the settings'
+`sidebarViews` in `src/model/workspace.schema.ts` with its commands in
+`src/state/sidebar-views.commands.ts`; the sidebar's sections in
+`src/features/sidebar/sidebar-views.view.ts`, `sidebar-view-menu.view.ts`,
+`sidebar-view-template.ts`; and `src/model/apply-operation.ts`, whose
+inverse now removes a field an update added (found by T046's undo test).

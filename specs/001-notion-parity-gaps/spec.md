@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-13
 
-**Status**: Draft
+**Status**: Implemented (T001–T052; amended 2026-11-13 after the converge and analyze passes)
 
 **Input**: User description: "Notion parity, remaining gaps found by the 2026-11-13 audit (docs/notion-study.md, section 'Gaps found by the audit'). Pagecraft must match Notion's layout, behavior and words for: view tab shown as text and icon, text only or icon only; a date filter relative to today and the start or end of a range; grouping text by exact value or first letter and numbers by unique value or interval; count calculations shown as 99+; rollup filters with any / none / every; a status shown as a checkbox; card layout compact or list, gallery fit media, calendar wrap page titles, timeline separate start and end dates, list directly edit page name, feed wrap properties; conditional color; a floating outline; the text selection toolbar in Notion's new panel form; the slash menu washing its line with '/Type to search'; the filter popover in Notion's simple form; the number 'Show as' choice as three pictured tiles. Out of scope: AI, sharing, people, automations, paid-plan features. Every item checked with a photo against Notion at 1440x900 2x, and the full suite stays green."
 
@@ -168,10 +168,13 @@ after reload and applies only to that view.
 - "Next 1 week" across a year's end and weeks starting Monday or Sunday:
   the range follows the owner's week start setting.
 - Alphabetical grouping of names starting with digits, emoji or accented
-  letters: accented letters group by their base letter; digits, emoji and
-  other symbols share a "#" group.
-- Interval grouping with negative numbers and an empty cell: a "No
-  <property>" group holds empty cells.
+  letters, as Notion does (sample database, SC-002): each digit is a group
+  of its own, before the letters; only A–Z are letters; accented letters,
+  emoji and other symbols fall in "Other", after the letters; the empty
+  group comes last.
+- Interval grouping with negative numbers and an empty cell: values
+  outside the range (0–1000 by default) fall in "Out of range", after the
+  intervals; a "No <property>" group, first, holds empty cells.
 - A rollup filter on a rollup with no relation set: the filter offers no
   conditions and no rows are hidden.
 - Status shown as checkbox when the Complete group has no option: the
@@ -241,6 +244,25 @@ after reload and applies only to that view.
 - **FR-016**: Rows and cards matching a rule MUST show its color in every
   layout that draws rows; the first matching rule wins.
 
+**Found while photographing (audit items 19–24)**
+
+- **FR-020**: A date filter MUST offer "Is between" (two days, both
+  included) beside "Is on or before" and "Is on or after".
+- **FR-021**: A new rollup MUST work from the relation and property its
+  settings show before any is chosen (the first relation, the related
+  pages' titles, shown as they are).
+- **FR-022**: Grouping MUST offer the title column first; text grouped by
+  exact value MUST list its empty group last.
+- **FR-023**: The view tab menu MUST offer, in Notion's order, Source (the
+  database's name in grey; a linked view picks another), Add view to
+  sidebar, Open as full page and Hide data source titles (an action; the
+  layout's "Show data source title" switch is the same setting).
+- **FR-024**: "Add view to sidebar" MUST add a sidebar section under the
+  database's name listing the view's first pages, with Open, Add a page
+  and a menu: Rename, Open in, Show (5, 10, 15, 20), Show page icon,
+  Source, View, Template, Move up / Move down and Remove section; the
+  section is the owner's own and survives a reload.
+
 **Quality bar**
 
 - **FR-017**: Every interface text MUST use Notion's English words as
@@ -291,11 +313,19 @@ after reload and applies only to that view.
 - "Show as" for view tabs is a per-viewer preference in Notion ("Valid
   only for you"); for one person it is stored with the owner's display
   settings.
-- The interval size for number grouping defaults to 10, as Notion's.
-- The alphabetical group for non-letters is "#".
+- Number grouping by interval defaults to the range 0–1000 in steps of
+  100, as Notion's ("Group by interval 0 – 1000", "Group every 100").
+- The alphabetical group for anything but A–Z and digits is "Other".
 - The outline threshold is three headings, matching what the audit saw.
 - The selection panel keeps the existing formats and adds none Pagecraft
   does not have; the AI rows Notion shows are out of scope.
 - Conditional color offers the same ten colors as Notion's text and
   background colors already used in Pagecraft.
 - Map view, dashboard view, people, sharing and AI stay out of scope.
+- Left out of Notion's menus for the reasons above: the selection panel's
+  add reaction and suggest edits (people) and AI skills (AI); the view tab
+  menu's Manage in Notion Calendar (another product); the sidebar
+  section's Move to tab (the sidebar tabs are Notion's AI chat and Notion
+  Calendar) and Customize sidebar (an edit mode for the whole sidebar —
+  shortcuts, Upcoming events, Recents, Shared — a feature of its own,
+  outside this audit's gaps).

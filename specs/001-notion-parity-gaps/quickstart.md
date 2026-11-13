@@ -35,6 +35,11 @@
 | Selection panel | select a word in a paragraph | `d5-block-menu/15-t-select.png` |
 | Slash placeholder | type "/" on an empty line | `d2-slash/02-slash.png` |
 | Floating outline | a page with three headings; point at the right edge | `d3-blocks/32-page-mid.png` |
+| Is between (FR-020) | Tasks › Due › Filter › condition › is between | `c1-filters` (date conditions) |
+| Rollup default (FR-021) | add a rollup, open its filter before choosing a relation | `p8-rollup-default` notes |
+| Group by title, empty last (FR-022) | view settings › Group › Name › Text by | `n39-groups` |
+| Tab menu rows (FR-023) | a database inside a page, two views; click the active tab | `n40-tab-source/04-source.png` |
+| Sidebar section (FR-024) | tab menu › Add view to sidebar; point at the section; its "…" | `n40-sidebar/04-add-sidebar.png`, `n40-section-fix/02-more.png` |
 
 ## Once, at the end
 

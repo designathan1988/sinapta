@@ -821,6 +821,9 @@ edited by, Place and the map view, the dashboard view (paid),
 automations, linked events and calendars, property access, connections,
 integrations, upgrade cards.
 
+Items 1–4 and 16 were closed before `specs/001-notion-parity-gaps`;
+items 5–24 trace to its tasks and requirements, as marked.
+
 1. **done** Number property: "Casas decimais" (Default, 0–5).
 2. **done** URL property: "Show full URL" switch.
 3. **done** Sort directions named per type: A → Z / Z → A (text, person),
@@ -828,50 +831,52 @@ integrations, upgrade cards.
    (checkbox), crescente / decrescente (select, status, number).
 4. **done** Table layout switches: Mostrar linhas verticais, Exibir ícone da
    página, Envolver todo o conteúdo.
-5. **done** (`p13-tab-menu`) View tab "Exibir como": Texto e ícone, Apenas texto, Apenas ícone.
-6. **done** (`p6-date-filter`) Date filter "É relativo a hoje": Últimos(as) / Próximo(as) / Este(a)
+5. **done** [T020, T021 in specs/001-notion-parity-gaps/tasks.md] (`p13-tab-menu`) View tab "Exibir como": Texto e ícone, Apenas texto, Apenas ícone.
+6. **done** [T009, T010 in specs/001-notion-parity-gaps/tasks.md] (`p6-date-filter`) Date filter "É relativo a hoje": Últimos(as) / Próximo(as) / Este(a)
    × dia / semana / mês / ano; and Data de início / Data de término for
    a range.
-7. **done** (`p9-group-by`) Group by text "Exato | Alfabética" (first letter) and number "Únicos |
+7. **done** [T014, T015 in specs/001-notion-parity-gaps/tasks.md] (`p9-group-by`) Group by text "Exato | Alfabética" (first letter) and number "Únicos |
    Intervalo".
-8. **done** (`p19-properties/12-count`) Count calculations: "Exibir contagens grandes como 99+".
-9. **done** (`p8-probe/16-quantifier`) Rollup filter: Qualquer / Nenhuma / A cada.
-10. **done** (`p19-properties/07-show-as`) Status "Exibir como": Caixa de seleção (done when in the last group).
-11. **done** (`p14-layouts`) Card layout "Compacto | Lista" (board, gallery); gallery "Ajustar
+8. **done** [T029 in specs/001-notion-parity-gaps/tasks.md] (`p19-properties/12-count`) Count calculations: "Exibir contagens grandes como 99+".
+9. **done** [T012, T013 in specs/001-notion-parity-gaps/tasks.md] (`p8-probe/16-quantifier`) Rollup filter: Qualquer / Nenhuma / A cada.
+10. **done** [T028 in specs/001-notion-parity-gaps/tasks.md] (`p19-properties/07-show-as`) Status "Exibir como": Caixa de seleção (done when in the last group).
+11. **done** [T022–T026 in specs/001-notion-parity-gaps/tasks.md] (`p14-layouts`) Card layout "Compacto | Lista" (board, gallery); gallery "Ajustar
     mídia"; calendar "Ajustar títulos das páginas"; timeline "Separar
     datas de início e fim"; list "Directly edit page name"; feed
     "Quebrar linhas nas propriedades".
-12. **done** (`p22-conditional-color`) Conditional color (Cor condicional): rules that tint a view's pages.
-13. **done** (`p12-outline`) Floating outline: dashes at the page's right edge, one per heading.
-14. **done** (`p10-selection-panel`) Selection toolbar in Notion's new panel form (turn into, two rows of
+12. **done** [T030–T033 in specs/001-notion-parity-gaps/tasks.md] (`p22-conditional-color`) Conditional color (Cor condicional): rules that tint a view's pages.
+13. **done** [T019 in specs/001-notion-parity-gaps/tasks.md] (`p12-outline`) Floating outline: dashes at the page's right edge, one per heading.
+14. **done** [T016, T017 in specs/001-notion-parity-gaps/tasks.md] (`p10-selection-panel`) Selection toolbar in Notion's new panel form (turn into, two rows of
     formatting buttons, comment).
-15. **done** (`p11-slash-line`) Slash menu: the line washed with "/Type to search" while the menu is
+15. **done** [T018 in specs/001-notion-parity-gaps/tasks.md] (`p11-slash-line`) Slash menu: the line washed with "/Type to search" while the menu is
     open.
 16. **done** Text, URL, email and phone filters: Is, Is not, Contains,
     Does not contain, Starts with, Ends with, Is empty, Is not empty;
     a new one starts with Contains.
-17. **done** (`p6-date-filter`) The filter popover in Notion's simple form ("<Property> <condition> ⌄
+17. **done** [T011 in specs/001-notion-parity-gaps/tasks.md] (`p6-date-filter`) The filter popover in Notion's simple form ("<Property> <condition> ⌄
     …" over the value) where Pagecraft shows the advanced "Where" rows.
-18. **done** (`p19-properties/03-ring`) Number "Show as" as three pictured tiles (42 Number, Bar, Ring).
+18. **done** [T027 in specs/001-notion-parity-gaps/tasks.md] (`p19-properties/03-ring`) Number "Show as" as three pictured tiles (42 Number, Bar, Ring).
 
 Left open after the 2026-11-13 work, each a Notion feature outside the
 items above, found while photographing them:
 
-19. **done** (`p24-between`) Date filter "Is between" (two days, both
+19. **done** [T041, FR-020 in specs/001-notion-parity-gaps/tasks.md] (`p24-between`) Date filter "Is between" (two days, both
     included), beside Is on or before and Is on or after.
-20. **done** (`p8-rollup-default`) A new rollup works out from the
+20. **done** [T042, FR-021 in specs/001-notion-parity-gaps/tasks.md] (`p8-rollup-default`) A new rollup works out from the
     relation and property its settings show, before one is chosen.
-21. **out of scope** (spec: people, AI) The selection panel leaves out Notion's add-reaction and
+21. **out of scope** (spec.md Assumptions: people, AI) The selection panel leaves out Notion's add-reaction and
     suggest-edit buttons and the AI skills (out of scope: people, AI).
-22. **done** (`p25-tab-source`, `p25-section`; Notion `n40-tab-source`,
+22. **done** [T046, T047, T049, FR-023, FR-024 in specs/001-notion-parity-gaps/tasks.md] (`p25-tab-source`, `p25-section`; Notion `n40-tab-source`,
     `n40-sidebar`, `n40-section-fix`) The view tab menu's Source (the
     database's name in grey, a submenu), Add view to sidebar (enabled in
     the 2026-11-13 photo: it adds a sidebar section) and Hide data source
-    titles (an action with an eye, no switch) are built; Manage in Notion
-    Calendar stays out (another product).
-23. **done** (`p24-converge/14-by-name`) Grouping by the title column (Notion's "Agrupar por › Nome") is not
+    titles (an action with an eye, no switch) are built, and the sidebar
+    section's menu with Template (`p26-section-reload`, kept after a
+    reload); Manage in Notion Calendar, Move to tab and Customize sidebar
+    stay out (spec.md Assumptions).
+23. **done** [T043, FR-022 in specs/001-notion-parity-gaps/tasks.md] (`p24-converge/14-by-name`) Grouping by the title column (Notion's "Agrupar por › Nome") is not
     offered — now offered first, as Notion's list.
-24. **done** With text grouped by its exact value and sorted Alphabetical, Notion
+24. **done** [T044, FR-022 in specs/001-notion-parity-gaps/tasks.md] With text grouped by its exact value and sorted Alphabetical, Notion
     lists the "Sem Nome" group last; Pagecraft lists the empty group
     first (as Notion does for numbers: "Sem Número" first) — now text
     lists it last and numbers and options first.
