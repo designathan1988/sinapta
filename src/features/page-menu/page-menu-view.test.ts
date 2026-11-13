@@ -71,7 +71,7 @@ describe("the page menu, as Notion's", () => {
       expect.stringContaining("Duplicate"),
       expect.stringContaining("Rename"),
       expect.stringContaining("Move to"),
-      expect.stringContaining("Move to trash"),
+      expect.stringContaining("Move to Trash"),
     ]);
     expect(host.querySelector(".page-menu__fonts")).toBeNull();
     expect(host.textContent).toContain("Edited");
@@ -107,7 +107,7 @@ describe("the page menu, as Notion's", () => {
       expect.stringContaining("Version history"),
       expect.stringContaining("Appearance and layout"),
       expect.stringContaining("Lock page"),
-      expect.stringContaining("Move to trash"),
+      expect.stringContaining("Move to Trash"),
       expect.stringContaining("More"),
     ]);
   });

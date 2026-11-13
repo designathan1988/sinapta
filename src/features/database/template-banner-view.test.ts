@@ -38,7 +38,7 @@ describe("the template strip", () => {
 
     host.querySelector<HTMLElement>(".database__template-link")?.click();
 
-    expect(host.textContent).toContain("You're editing a template in");
+    expect(host.textContent).toContain("You’re editing a template in");
     expect(sent).toEqual([
       expect.objectContaining({
         type: "ui.setActivePage",

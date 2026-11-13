@@ -94,11 +94,12 @@ function renderWeekdays(context: CadenceContext): TemplateResult {
 function renderNext(context: CadenceContext): TemplateResult {
   const { draft, today } = context;
   const next = firstNext(draftCadence(draft), today);
-  const at =
-    draft.time === "" ? TEXT.nextMidnight : draft.time.replace(/^0/, "");
-  return html`<p class="cadence__next">
-    ${TEXT.next}<br />${TEXT.nextAt(dayLabel(next, today), at)}
-  </p>`;
+  const day = dayLabel(next, today);
+  const when =
+    draft.time === ""
+      ? TEXT.nextMidnight(day)
+      : TEXT.nextAt(day, draft.time.replace(/^0/, ""));
+  return html`<p class="cadence__next">${TEXT.next}<br />${when}</p>`;
 }
 
 function isChanged(context: CadenceContext): boolean {

@@ -41,12 +41,24 @@ const SHORT = new Intl.DateTimeFormat("en-US", {
   timeZone: "UTC",
 });
 
+const WEEKDAY = new Intl.DateTimeFormat("en-US", {
+  weekday: "short",
+  timeZone: "UTC",
+});
+
+const DAY_MS = 86_400_000;
+
+// A day in Notion's words: Today, Tomorrow, "Next Mon" within the week,
+// otherwise its date.
 export function dayLabel(day: string, today: string): string {
-  const tomorrow = new Date(`${today}T00:00:00Z`);
-  tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
-  return day === tomorrow.toISOString().slice(0, 10)
-    ? TEXT.tomorrow
-    : SHORT.format(new Date(`${day}T00:00:00Z`));
+  const date = new Date(`${day}T00:00:00Z`);
+  const days = Math.round(
+    (date.getTime() - new Date(`${today}T00:00:00Z`).getTime()) / DAY_MS,
+  );
+  if (days === 0) return TEXT.today;
+  if (days === 1) return TEXT.tomorrow;
+  if (days > 1 && days < 7) return TEXT.nextWeekday(WEEKDAY.format(date));
+  return SHORT.format(date);
 }
 
 // "Around midnight", then every quarter hour from 3:15 to 23:45.

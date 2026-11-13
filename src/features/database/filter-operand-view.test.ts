@@ -69,7 +69,7 @@ describe("the operand of a date filter relative to today", () => {
       popover?.querySelector(".date-picker__day[data-in-range]"),
     ).not.toBeNull();
     expect(popover?.textContent).toContain(
-      "The filter will update with today's date",
+      "Filter will update with the current date",
     );
   });
 

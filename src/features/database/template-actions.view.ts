@@ -17,7 +17,8 @@ import {
   selectRowTemplate,
 } from "./template.commands.ts";
 import { setDefaultTemplate } from "./template-default.commands.ts";
-import { presetChoices, repeatSummary } from "./template-repeat.view.ts";
+import { presetName } from "./template-cadence.ts";
+import { presetChoices } from "./template-repeat.view.ts";
 
 const TEXT = COPY.database;
 
@@ -75,14 +76,14 @@ export function defaultItem(
   };
 }
 
-// "Repeat", with how often beside it.
+// "Duplicate every…", with its preset beside it, as Notion's.
 function repeatItem(context: TableContext, templateId: BlockId): MenuItem {
   const { state, dispatch, model } = context;
   const repeat = selectPage(state, templateId)?.props.repeat;
   return {
     label: TEXT.templateRepeat,
     icon: "clock",
-    value: repeatSummary(repeat),
+    value: presetName(repeat),
     submenu: {
       id: `template-repeat:${templateId}`,
       menu: () => ({

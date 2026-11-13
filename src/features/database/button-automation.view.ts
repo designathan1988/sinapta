@@ -92,11 +92,12 @@ function saveDraft(
   dispatch(closeOverlay.create({}));
 }
 
-// "When: The button is clicked", and the line down to Do.
+// "When: Button is clicked", Button in bold, and the line down to Do.
 function renderWhen(): TemplateResult {
+  const rest = TEXT.clicked.slice(TEXT.clickedBold.length);
   return html`<p class="automation__label">${TEXT.when}</p>
     <div class="automation__box">
-      ${renderIcon("button")}<span>${TEXT.clicked}</span>
+      ${renderIcon("button")}<span><b>${TEXT.clickedBold}</b>${rest}</span>
     </div>
     <span class="automation__line" aria-hidden="true"></span>`;
 }

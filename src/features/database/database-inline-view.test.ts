@@ -29,14 +29,14 @@ describe("renderInlineDatabase", () => {
     );
     if (title === null) throw new Error("no title");
 
-    title.value = "Reading list";
+    title.value = "Reading List";
     title.dispatchEvent(new Event("change", { bubbles: true }));
 
     expect(sent).toEqual([
       expect.objectContaining({
         type: "page.rename",
         pageId: app.databaseId,
-        title: "Reading list",
+        title: "Reading List",
       }),
     ]);
   });

@@ -65,7 +65,7 @@ describe("a select cell's editor", () => {
     expect(editor?.firstElementChild).toBe(field);
     expect(field?.querySelector(".chip")?.textContent).toContain("Todo");
     expect(field?.querySelector("input")?.placeholder).toBe(
-      "Search for an option…",
+      "Search for an option...",
     );
     expect(sections()[0]).toBe("Select an option or create one");
     expect(row("Todo")).toBeDefined();

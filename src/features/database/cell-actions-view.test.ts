@@ -129,7 +129,7 @@ describe("a press on a button's cell", () => {
 });
 
 describe("a files cell with its popover open", () => {
-  it("reads + Add file or image, as Notion's", () => {
+  it("reads + Add a file or image, as Notion's", () => {
     const app = createDatabaseApp([{ name: "Files", type: "files" }], [["A"]]);
     const [rowId] = app.rowIds;
     const [files] = app.propertyIds;
@@ -147,12 +147,12 @@ describe("a files cell with its popover open", () => {
     );
 
     const cell = host.querySelector(`[data-cell="${rowId}:${files}"]`);
-    expect(cell?.textContent).toContain("Add file or image");
+    expect(cell?.textContent).toContain("Add a file or image");
   });
 });
 
 describe("a files cell's bar while its popover is open", () => {
-  it("is not drawn over + Add file or image", () => {
+  it("is not drawn over + Add a file or image", () => {
     const app = createDatabaseApp([{ name: "Files", type: "files" }], [["A"]]);
     const [rowId] = app.rowIds;
     const [files] = app.propertyIds;

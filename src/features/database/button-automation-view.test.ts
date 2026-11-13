@@ -79,6 +79,18 @@ describe("a button's column menu", () => {
 });
 
 describe("Edit automation", () => {
+  it("tells when it runs as Notion's: Button, in bold, is clicked", () => {
+    rendered((button) => ({
+      kind: BUTTON_AUTOMATION_OVERLAY,
+      anchorId: button,
+      draft: DRAFT,
+    }));
+    const box = document.querySelector(".automation__box");
+
+    expect(box?.textContent.trim()).toBe("Button is clicked");
+    expect(box?.querySelector("b")?.textContent).toBe("Button");
+  });
+
   it("adds an action from New action", () => {
     const { sent, press } = rendered((button) => ({
       kind: BUTTON_AUTOMATION_OVERLAY,

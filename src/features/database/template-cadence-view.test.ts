@@ -93,12 +93,14 @@ describe("Edit cadence", () => {
     });
   });
 
-  it("tells the next occurrence", () => {
+  it("tells the next occurrence in Notion's words", () => {
     const { host } = rendered();
+    const next = host.querySelector(".cadence__next")?.textContent ?? "";
 
-    expect(host.querySelector(".cadence__next")?.textContent).toContain(
-      "Nov 16, 2026",
-    );
+    // Monday is three days on: "Next {dayOfTheWeek}", and around
+    // midnight "{date} between 12–3 AM" (automations.recurrenceHelpers).
+    expect(next).toContain("Next occurrence:");
+    expect(next).toContain("Next Mon between 12–3 AM");
   });
 });
 

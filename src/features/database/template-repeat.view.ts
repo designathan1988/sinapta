@@ -1,4 +1,4 @@
-// A template's Repeat, as Notion's: the strip's "Repeat…" button, which
+// A template's cadence, as Notion's: the strip's "Duplicate every…", which
 // lists the eight cadences (Day to Year) and, once one is chosen or one is
 // set, shows "Edit cadence" under it; and the same choices in the
 // template's "…", which open the template with its cadence to edit.
@@ -35,7 +35,7 @@ function todayOf(): string {
   return new Date().toLocaleDateString("en-CA");
 }
 
-// "Every week", "Every 2 weeks", or Off.
+// "Duplicate every week", "Duplicate every 2 weeks", or Off.
 export function repeatSummary(repeat: Repeat | undefined): string {
   if (repeat === undefined) return COPY.database.repeatPeriods.off;
   const interval = repeat.interval ?? 1;

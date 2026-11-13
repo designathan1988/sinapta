@@ -88,7 +88,7 @@ describe("a filter rule opened from its pill", () => {
     expect(rule?.textContent).toContain("Done");
     expect(
       head?.querySelector("#select-filter-rule-1-more")?.textContent,
-    ).toContain("More filter actions");
+    ).toContain("More actions");
   });
 
   it("filters as the value is typed, as Notion's", () => {

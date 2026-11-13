@@ -3,6 +3,7 @@
 // saved as a template's repeat. Notion's eight choices start a draft.
 import type { Repeat, RepeatPeriod } from "../../blocks/page/index.ts";
 import { REPEAT_PERIODS } from "../../blocks/page/index.ts";
+import { COPY } from "../../ui/copy.ts";
 import { weekdayOf } from "./repeat-rule.ts";
 import type { Cadence } from "./template-repeat.commands.ts";
 
@@ -49,6 +50,24 @@ const PRESETS: Readonly<
   sixMonths: { every: "month", interval: 6 },
   year: { every: "year", interval: 1 },
 };
+
+type RepeatShape = Pick<Repeat, "every" | "interval" | "weekdays">;
+
+// A cadence's name in a template's menu, as Notion's: its preset ("Week",
+// "2 Weeks", "Weekday"), Off when there is none, or its interval and unit.
+export function presetName(repeat: RepeatShape | undefined): string {
+  const text = COPY.cadence;
+  if (repeat === undefined) return COPY.database.repeatPeriods.off;
+  const interval = repeat.interval ?? 1;
+  const isWeekday = repeat.every === "week" && repeat.weekdays?.length === 5;
+  const preset = CADENCE_PRESETS.find((name) => {
+    const shape = PRESETS[name];
+    const matches = shape.every === repeat.every && shape.interval === interval;
+    return matches && (name === "weekday") === isWeekday;
+  });
+  if (preset !== undefined) return text.presets[preset];
+  return `${String(interval)} ${text.unitsPlural[repeat.every]}`;
+}
 
 function tomorrowOf(today: string): string {
   const date = new Date(`${today}T00:00:00Z`);
