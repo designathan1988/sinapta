@@ -189,4 +189,9 @@
         (var(--size-table-row) + var(--size-border-thin))
     );
   }
+
+  /* Notion's "Show vertical lines" off: no rules between columns. */
+  .database__table[data-no-lines] :is(.database__header, .database__cell) {
+    border-inline-end: none;
+  }
 }

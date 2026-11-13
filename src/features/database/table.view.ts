@@ -145,6 +145,7 @@ export function renderTable(context: TableContext): TemplateResult {
     >
       <table
         class="database__table"
+        ?data-no-lines=${model.view.table?.verticalLines === false}
         role="grid"
         aria-label=${COPY.database.views}
         aria-rowcount=${selectTableEntries(model).length + 1}

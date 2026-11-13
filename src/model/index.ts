@@ -38,6 +38,8 @@ export {
   type CalculationKind,
   type CalendarOptions,
   type TimelineOptions,
+  type TableOptions,
+  DEFAULT_TABLE_OPTIONS,
   type ChartOptions,
   type FormOptions,
   type Conjunction,

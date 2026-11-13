@@ -83,6 +83,22 @@ export const calculationSchema = v.picklist(CALCULATION_KINDS);
 // How a calendar shows its rows (version 22): a month or a week, with or
 // without Saturdays and Sundays, its weeks starting on Sunday (0) or
 // Monday (1).
+// How a table draws itself, as Notion's layout switches: lines between
+// columns, each row's page icon, and every column's text wrapped.
+export const tableOptionsSchema = v.object({
+  verticalLines: v.boolean(),
+  pageIcons: v.boolean(),
+  wrapAll: v.boolean(),
+});
+
+export type TableOptions = v.InferOutput<typeof tableOptionsSchema>;
+
+export const DEFAULT_TABLE_OPTIONS: TableOptions = {
+  verticalLines: true,
+  pageIcons: true,
+  wrapAll: false,
+};
+
 export const calendarOptionsSchema = v.object({
   mode: v.picklist(["month", "week"]),
   showWeekends: v.boolean(),
@@ -143,6 +159,8 @@ export const viewSchema = v.object({
   // How many columns from the start stay in place while the table
   // scrolls sideways.
   frozenCount: v.pipe(v.number(), v.integer(), v.minValue(0)),
+  // A table's layout switches; absent, Notion's defaults.
+  table: v.optional(tableOptionsSchema),
   // How a board or a gallery shows its cards: how wide, what picture
   // above the title, and whether a board tints each column.
   cardSize: v.picklist(["small", "medium", "large"]),

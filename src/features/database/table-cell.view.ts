@@ -93,9 +93,14 @@ function renderTitle(row: TableRow, context: TableContext): TemplateResult {
   const mode = context.model.view.openMode;
   const label = COPY.database.openIn[mode];
   const icon = selectPage(context.state, row.id)?.props.icon ?? null;
-  return html`<span class="database__row-icon" aria-hidden="true"
-      >${icon ?? renderIcon("page")}</span
-    ><span class="database__title" ?data-untitled=${row.title === ""}
+  const showsIcon = context.model.view.table?.pageIcons !== false;
+  return html`${
+      showsIcon
+        ? html`<span class="database__row-icon" aria-hidden="true"
+            >${icon ?? renderIcon("page")}</span
+          >`
+        : nothing
+    }<span class="database__title" ?data-untitled=${row.title === ""}
       >${row.title === "" ? COPY.sidebar.untitled : row.title}</span
     >
     <button

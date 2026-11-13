@@ -10,6 +10,9 @@ export const DATABASE_MENU_TEXT = {
   },
   sort: "Sort",
   showFullUrl: "Show full URL",
+  verticalLines: "Show vertical lines",
+  pageIcons: "Show page icon",
+  wrapAll: "Wrap all content",
   // Notion names a column's two orders by what its values are.
   sortNames: {
     text: ["Sort A → Z", "Sort Z → A"],

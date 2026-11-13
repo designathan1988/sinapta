@@ -161,7 +161,9 @@ function toColumn(view: View, property: PropertyDefinition): TableColumn {
     width: view.propertyWidths[property.id] ?? fallback,
     sortDirection: view.sorts.find((sort) => sort.propertyId === property.id)
       ?.direction,
-    isWrapped: view.wrappedPropertyIds.includes(property.id),
+    isWrapped:
+      view.table?.wrapAll === true ||
+      view.wrappedPropertyIds.includes(property.id),
   };
 }
 

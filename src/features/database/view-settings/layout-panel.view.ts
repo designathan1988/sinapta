@@ -2,7 +2,11 @@
 // then the chosen layout's own settings.
 import { chartItems } from "./chart-panels.ts";
 import { setTimelineOptions } from "../timeline-options.commands.ts";
-import type { CalendarOptions } from "../../../model/index.ts";
+import {
+  DEFAULT_TABLE_OPTIONS,
+  type CalendarOptions,
+  type TableOptions,
+} from "../../../model/index.ts";
 import { setCalendarOptions } from "../calendar-options.commands.ts";
 import { html, type TemplateResult } from "lit-html";
 import { VIEW_TYPES } from "../../../model/index.ts";
@@ -10,6 +14,7 @@ import { COPY } from "../../../ui/copy.ts";
 import { renderIcon } from "../../../ui/icon/index.ts";
 import type { MenuEntry } from "../../../ui/menu/index.ts";
 import { setCardOptions } from "../card.commands.ts";
+import { setTableOptions } from "../table-layout.commands.ts";
 import type { TableContext } from "../table-cell.view.ts";
 import { setViewType } from "../view-layout.commands.ts";
 import { LAYOUT_ICONS } from "../layout-icons.ts";
@@ -107,8 +112,28 @@ function timelineItems(context: TableContext): MenuEntry[] {
   ];
 }
 
+// A table's layout switches, as Notion's.
+function tableItems(context: TableContext): MenuEntry[] {
+  const { view } = context.model;
+  const table = view.table ?? DEFAULT_TABLE_OPTIONS;
+  const toggle = (key: keyof TableOptions): MenuEntry => ({
+    label: COPY.database[key],
+    check: "switch",
+    isChecked: table[key],
+    onSelect: () =>
+      context.dispatch(
+        setTableOptions.create({
+          viewId: view.id,
+          options: { [key]: !table[key] },
+        }),
+      ),
+  });
+  return [toggle("verticalLines"), toggle("pageIcons"), toggle("wrapAll")];
+}
+
 function typeItems(context: TableContext): MenuEntry[] {
   const { view, database } = context.model;
+  if (view.type === "table") return tableItems(context);
   if (view.type === "board" || view.type === "gallery") {
     return cardItems(context);
   }
