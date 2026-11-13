@@ -32,6 +32,10 @@ export interface DatePickerProps {
   // False leaves out the fields of the chosen days, as in the search's
   // date filter, which shows only the month.
   readonly hasFields?: boolean;
+  // True for a month that is only shown, as Notion's relative date
+  // filter (n70-next-week): no Today, the range's end dimmed and the
+  // days after it grey.
+  readonly isShownOnly?: boolean;
 }
 
 // The value after a day is pressed: with an end, a later day ends the

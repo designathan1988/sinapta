@@ -1,7 +1,7 @@
 @layer ui {
   /* Notion's date picker: the chosen days in fields, the month with
-     Today and its arrows, then a 7-column grid of days. Today is ringed
-     in red, the chosen days filled with the accent, the days between
+     Today and its chevrons, then a 7-column grid of days. Today is a red
+     circle, the chosen days filled with the accent, the days between
      them tinted. */
   .date-picker {
     display: grid;
@@ -9,9 +9,20 @@
     margin: var(--space-none) var(--space-inset-xs) var(--space-stack-xs);
   }
 
+  /* Notion's day field (n71-date-cell): 224 px wide and 8 px in, the
+     weekdays 41 px under it, a line 12 px in, 6 px under the weeks. */
   .date-picker__fields {
     display: grid;
     gap: var(--space-stack-xxs);
+    padding: var(--space-stack-sm) var(--space-inset-xs) var(--space-stack-hair);
+  }
+
+  .date-picker:has(> .date-picker__fields)::after {
+    content: "";
+    block-size: var(--size-border-thin);
+    margin-block-start: var(--space-stack-xxs);
+    margin-inline: var(--space-inset-xs);
+    background-color: var(--color-border-default);
   }
 
   .date-picker__field {
@@ -27,11 +38,15 @@
     font-size: var(--font-size-sm);
   }
 
+  /* Notion's month row (n69-date-cleanup): the weekdays 32 px under
+     the month's line. */
   .date-picker__header {
     display: flex;
     gap: var(--space-inline-xs);
     align-items: center;
-    padding-inline: var(--space-inline-icon);
+    min-block-size: var(--size-menu-row);
+    box-sizing: content-box;
+    padding: var(--space-stack-xxs) var(--space-inline-icon);
   }
 
   .date-picker__month {
@@ -63,21 +78,26 @@
     padding: var(--space-none);
   }
 
+  /* Notion's grid (n69-date-grid): 28 px days every 32 px, the first
+     27 px under the 18 px weekday names. */
   .date-picker__grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: var(--space-stack-xxs);
+    grid-template-columns: repeat(7, var(--size-menu-day));
+    justify-content: center;
+    gap: var(--space-stack-xs);
   }
 
   .date-picker__weekday {
+    block-size: var(--size-menu-weekday-row);
     color: var(--color-text-tertiary);
     font-size: var(--font-size-xs);
-    line-height: var(--size-control-sm);
+    line-height: var(--size-menu-weekday);
     text-align: center;
   }
 
+  /* Notion's day is 28 px (n69-date-filter-measure). */
   .date-picker__day {
-    block-size: var(--size-control-sm);
+    block-size: var(--size-menu-day);
     padding: var(--space-none);
     border: none;
     border-radius: var(--radius-sm);
@@ -95,24 +115,85 @@
       color: var(--color-text-tertiary);
     }
 
+    /* Notion's range (n69-date-cleanup): one band from the first day to
+       the last, through the gaps, inside each week's row. */
     &[data-in-range] {
-      background-color: var(--color-accent-subtle);
+      margin-inline: calc(var(--space-stack-xs) * -1);
+      border-radius: 0;
+      background-color: var(--color-accent-range);
+
+      &:nth-child(7n + 1) {
+        margin-inline-start: var(--space-none);
+      }
+
+      &:nth-child(7n) {
+        margin-inline-end: var(--space-none);
+      }
     }
 
+    &[data-range="start"]:not(:nth-child(7n)) {
+      box-shadow: var(--space-stack-xs) 0 0 0 var(--color-accent-range);
+    }
+
+    &[data-range="end"]:not(:nth-child(7n + 1)) {
+      box-shadow: calc(var(--space-stack-xs) * -1) 0 0 0
+        var(--color-accent-range);
+    }
+
+    /* Notion's today (n69-date-cleanup): a 24 px red circle in the
+       28 px day, its number white, over the band when in a range. */
     &[data-today] {
-      box-shadow: inset 0 0 0 var(--size-border-thin) var(--color-text-danger);
-      color: var(--color-text-danger);
+      padding: var(--space-stack-xxs);
+      background-image: radial-gradient(
+        circle closest-side,
+        var(--color-status-today) 96%,
+        transparent
+      );
+      background-repeat: no-repeat;
+      background-origin: content-box;
+      color: var(--color-text-on-accent);
     }
 
+    /* A chosen day is the accent, today too (n70-next-week). */
     &[aria-pressed="true"] {
       background-color: var(--color-accent-fill);
+      background-image: none;
       color: var(--color-text-on-accent);
+    }
+  }
+
+  /* A month only shown, as Notion's relative filter (n70-next-week): the
+     range's end is the accent at 43% over the band, its number not
+     white, and the days after the range grey. */
+  .date-picker[data-shown-only] .date-picker__day {
+    &[data-range="end"] {
+      background-color: var(--color-accent-range);
+      background-image: linear-gradient(
+        color-mix(in srgb, var(--color-accent-default) 43%, transparent),
+        color-mix(in srgb, var(--color-accent-default) 43%, transparent)
+      );
+      color: var(--color-text-primary);
+    }
+
+    &[data-after] {
+      color: var(--color-text-tertiary);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .date-picker__day {
       transition: none;
+    }
+  }
+
+  /* A menu led by a date picker, as Notion's date cell (n71-date-cell):
+     248 px, its rows every 29 px. */
+  .menu:has(> .date-picker) {
+    inline-size: var(--size-menu-date);
+    min-inline-size: var(--size-menu-date);
+
+    & .menu__item + .menu__item {
+      margin-block-start: var(--space-stack-hair);
     }
   }
 }

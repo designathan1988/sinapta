@@ -8,7 +8,10 @@ import {
   type DateRangeValue,
 } from "./index.ts";
 
-function mount(value: DateRangeValue | undefined) {
+function mount(
+  value: DateRangeValue | undefined,
+  more: Partial<DatePickerProps> = {},
+) {
   const changes: (DateRangeValue | undefined)[] = [];
   const months: string[] = [];
   const props: DatePickerProps = {
@@ -18,6 +21,7 @@ function mount(value: DateRangeValue | undefined) {
     today: "2026-11-11",
     onChange: (next) => changes.push(next),
     onMonth: (month) => months.push(month),
+    ...more,
   };
   const host = document.createElement("div");
   document.body.replaceChildren(host);
@@ -92,6 +96,46 @@ describe("renderDatePicker", () => {
     button("Today")?.click();
 
     expect(months).toEqual(["2026-10", "2026-12", "2026-11"]);
+  });
+
+  it("marks which end of a range each chosen day is, for Notion's band", () => {
+    const { day } = mount({ start: "2026-11-08", end: "2026-11-14" });
+    const single = mount({ start: "2026-11-08" });
+
+    expect(day("2026-11-08").getAttribute("data-range")).toBe("start");
+    expect(day("2026-11-14").getAttribute("data-range")).toBe("end");
+    expect(day("2026-11-10").hasAttribute("data-range")).toBe(false);
+    expect(single.day("2026-11-08").hasAttribute("data-range")).toBe(false);
+  });
+
+  it("draws the month's arrows as Notion's chevrons", () => {
+    const { host } = mount(undefined);
+    const icons = [...host.querySelectorAll(".date-picker__nav svg")].map(
+      (icon) => icon.getAttribute("data-icon"),
+    );
+
+    expect(icons).toEqual(["back", "chevron"]);
+  });
+
+  it("shows a month that is only shown as Notion's filter: no Today, the days after the range grey", () => {
+    const { host, day } = mount(
+      { start: "2026-11-13", end: "2026-11-20" },
+      { isShownOnly: true },
+    );
+
+    expect(host.querySelector(".date-picker__today")).toBeNull();
+    expect(host.querySelectorAll(".date-picker__nav")).toHaveLength(2);
+    expect(host.querySelector("[data-shown-only]")).not.toBeNull();
+    expect(day("2026-11-21").hasAttribute("data-after")).toBe(true);
+    expect(day("2026-11-20").hasAttribute("data-after")).toBe(false);
+    expect(day("2026-11-01").hasAttribute("data-after")).toBe(false);
+  });
+
+  it("greys no day of a month that can be chosen", () => {
+    const { host, day } = mount({ start: "2026-11-13", end: "2026-11-20" });
+
+    expect(host.querySelector("[data-shown-only]")).toBeNull();
+    expect(day("2026-11-21").hasAttribute("data-after")).toBe(false);
   });
 });
 

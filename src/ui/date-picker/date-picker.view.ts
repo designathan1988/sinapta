@@ -91,12 +91,22 @@ function renderFields(props: DatePickerProps): TemplateResult {
   </div>`;
 }
 
+function renderToday(props: DatePickerProps): TemplateResult {
+  return html`<button
+    type="button"
+    class="date-picker__today"
+    aria-label=${TEXT.today}
+    @click=${() => {
+      props.onMonth(monthOf(props.today));
+    }}
+  >
+    ${TEXT.today}
+  </button>`;
+}
+
+// The month's name, Today, and Notion's chevrons to the months beside it.
 function renderHeader(props: DatePickerProps): TemplateResult {
-  const arrow = (
-    label: string,
-    icon: "arrow-left" | "arrow-right",
-    by: number,
-  ) =>
+  const arrow = (label: string, icon: "back" | "chevron", by: number) =>
     html`<button
       type="button"
       class="date-picker__nav"
@@ -111,24 +121,30 @@ function renderHeader(props: DatePickerProps): TemplateResult {
     <span class="date-picker__month"
       >${MONTH.format(at(`${props.month}-01`))}</span
     >
-    <button
-      type="button"
-      class="date-picker__today"
-      aria-label=${TEXT.today}
-      @click=${() => {
-        props.onMonth(monthOf(props.today));
-      }}
-    >
-      ${TEXT.today}
-    </button>
-    ${arrow(TEXT.previousMonth, "arrow-left", -1)}
-    ${arrow(TEXT.nextMonth, "arrow-right", 1)}
+    ${props.isShownOnly === true ? nothing : renderToday(props)}
+    ${arrow(TEXT.previousMonth, "back", -1)}
+    ${arrow(TEXT.nextMonth, "chevron", 1)}
   </div>`;
 }
 
 function isInRange(day: string, props: DatePickerProps): boolean {
   const { value } = props;
   return value?.end !== undefined && day > value.start && day < value.end;
+}
+
+// A day after the range of a month that is only shown, greyed as
+// Notion's filter greys it.
+function isAfterRange(day: string, props: DatePickerProps): boolean {
+  const end = props.value?.end;
+  return props.isShownOnly === true && end !== undefined && day > end;
+}
+
+// Which end of a range a chosen day is: the band runs between them.
+function rangeEnd(day: string, props: DatePickerProps) {
+  const { value } = props;
+  if (value?.end === undefined || value.end === value.start) return nothing;
+  if (day === value.start) return "start";
+  return day === value.end ? "end" : nothing;
 }
 
 function renderDay(day: string, isInMonth: boolean, props: DatePickerProps) {
@@ -142,6 +158,8 @@ function renderDay(day: string, isInMonth: boolean, props: DatePickerProps) {
     ?data-today=${day === props.today}
     ?data-outside=${!isInMonth}
     ?data-in-range=${isInRange(day, props)}
+    ?data-after=${isAfterRange(day, props)}
+    data-range=${rangeEnd(day, props)}
     @click=${() => {
       props.onChange(chooseDay(props.value, day));
     }}
@@ -151,7 +169,12 @@ function renderDay(day: string, isInMonth: boolean, props: DatePickerProps) {
 }
 
 export function renderDatePicker(props: DatePickerProps): TemplateResult {
-  return html`<div class="date-picker" aria-label=${props.label} role="group">
+  return html`<div
+    class="date-picker"
+    aria-label=${props.label}
+    role="group"
+    ?data-shown-only=${props.isShownOnly === true}
+  >
     ${props.hasFields === false ? nothing : renderFields(props)}
     ${renderHeader(props)}
     <div class="date-picker__grid">
