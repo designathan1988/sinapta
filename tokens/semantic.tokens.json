@@ -546,6 +546,10 @@
       "width": {
         "$value": "{base.size.18x125}"
       },
+      "choices": {
+        "$description": "A filter whose values are listed, as Notion's checkbox filter: 220 px.",
+        "$value": "{base.size.13x75}"
+      },
       "short": {
         "$description": "A long list kept short and scrolled, as Notion's list of times (maxHeight 250 in its code).",
         "$value": "{base.size.15x625}"

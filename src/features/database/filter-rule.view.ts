@@ -26,6 +26,7 @@ const VALUE_FIELD = [
   '.select[id$="-value"]',
   ".database__between input",
   ".database__relative .select",
+  ".database__choices [role=option]",
 ].join(", ");
 
 // The rule takes the keys in its value once it opens, as Notion's.
@@ -123,6 +124,7 @@ export function renderFilterRule(
     class="database__popover database__rule"
     popover="manual"
     data-overlay
+    ?data-narrow=${operator?.listsChoices === true}
     ${ref(showPopoverWhenConnected)}
     ${ref(focusValue)}
     @input=${onChange}

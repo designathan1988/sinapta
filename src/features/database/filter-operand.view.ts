@@ -3,10 +3,11 @@
 // Notion's option lists; a span relative to today; free text or a date
 // for the others. A typed
 // value is a field whose holder carries the rule's path.
-import { html, type TemplateResult } from "lit-html";
+import { html, nothing, type TemplateResult } from "lit-html";
 import type { PropertyDefinition } from "../../blocks/database/index.ts";
 import type { Filter } from "../../model/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { renderIcon } from "../../ui/icon/index.ts";
 import { renderSelect, type SelectOption } from "../../ui/select/index.ts";
 import type { FilterPath } from "./filter-edit.ts";
 import { renderBetweenOperand } from "./filter-between.view.ts";
@@ -88,6 +89,47 @@ function renderOwnEditor(
   });
 }
 
+// The choices as rows under the condition, the chosen one checked, as
+// Notion's checkbox filter.
+function renderChoiceList(
+  options: readonly SelectOption[],
+  current: string,
+  onChange: OperandProps["onChange"],
+): TemplateResult {
+  return html`<div
+    class="database__choices"
+    role="listbox"
+    aria-label=${COPY.database.filterValue}
+  >
+    ${options.map((option) => {
+      const isChosen = option.value === current;
+      return html`<button
+        type="button"
+        class="menu__item"
+        role="option"
+        data-arrow-stop
+        aria-selected=${String(isChosen)}
+        @click=${() => {
+          onChange({ field: "value", value: option.value });
+        }}
+      >
+        <span class="menu__label">${option.label}</span>
+        ${isChosen ? renderIcon("check") : nothing}
+      </button>`;
+    })}
+  </div>`;
+}
+
+// A filter's popover, not a color rule (which names its placeholder) nor
+// an advanced filter's compact row.
+function listsChoices(props: OperandProps): boolean {
+  return (
+    props.operator?.listsChoices === true &&
+    props.placeholder === undefined &&
+    props.isCompact !== true
+  );
+}
+
 export function renderFilterOperand(
   props: OperandProps,
   context: TableContext,
@@ -97,6 +139,9 @@ export function renderFilterOperand(
   const own = renderOwnEditor(props, context);
   if (own !== undefined) return own;
   const options = operandOptions(property, props.operator);
+  if (options !== undefined && listsChoices(props)) {
+    return renderChoiceList(options, current, onChange);
+  }
   if (options !== undefined) {
     return renderSelect(
       {

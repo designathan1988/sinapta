@@ -133,3 +133,69 @@ describe("the operand of a date filter relative to today", () => {
     );
   });
 });
+
+// A view filtered by Done, its rule open, as Notion's checkbox filter.
+function checkboxRule(value: string) {
+  const app = createDatabaseApp([{ name: "Done", type: "checkbox" }], [["A"]]);
+  const [done] = app.propertyIds;
+  if (done === undefined) throw new Error("none");
+  const viewId = app.view().id;
+  const rule = { propertyId: done, operator: "is", value };
+  app.dispatch(
+    setViewFilter.create({
+      viewId,
+      filter: { conjunction: "and", items: [rule] },
+    }),
+  );
+  const built = app.store.getState();
+  const overlay = {
+    kind: VIEW_FILTER_RULE_OVERLAY,
+    anchorId: ruleAnchorId(app.databaseId, 0),
+  };
+  const sent: Command[] = [];
+  const host = document.createElement("div");
+  document.body.replaceChildren(host);
+  render(
+    renderDatabase({ ...built, ui: { ...built.ui, overlay } }, (command) => {
+      sent.push(command);
+      return { ok: true };
+    }),
+    host,
+  );
+  return { host, sent };
+}
+
+describe("the operand of a checkbox filter", () => {
+  it("lists Unchecked then Checked under the condition, as Notion's", () => {
+    const { host, sent } = checkboxRule("");
+    const rows = [
+      ...host.querySelectorAll<HTMLElement>(".database__rule [role=option]"),
+    ];
+
+    expect(rows.map((row) => row.textContent.trim())).toEqual([
+      "Unchecked",
+      "Checked",
+    ]);
+    rows[1]?.click();
+
+    expect(JSON.stringify(sent.at(-1))).toContain('"value":"checked"');
+  });
+
+  it("marks the value chosen", () => {
+    const { host } = checkboxRule("unchecked");
+    const chosen = host.querySelector(
+      ".database__rule [role=option][aria-selected=true]",
+    );
+
+    expect(chosen?.textContent.trim()).toBe("Unchecked");
+  });
+
+  it("is a narrow popover whose first value takes the keys, as Notion's", async () => {
+    const { host } = checkboxRule("");
+    const popover = host.querySelector(".database__rule");
+    await Promise.resolve();
+
+    expect(popover?.hasAttribute("data-narrow")).toBe(true);
+    expect(document.activeElement?.textContent.trim()).toBe("Unchecked");
+  });
+});

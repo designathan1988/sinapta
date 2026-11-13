@@ -7,33 +7,49 @@
     padding: var(--space-inset-sm);
   }
 
+  /* Measured on Notion's (n59-measure): 12 px, the name in its faintest
+     grey, the condition a step brighter at weight 500; here the faintest
+     grey the contrast floor allows. */
   .database__rule-head {
     display: flex;
     gap: var(--space-none);
     align-items: center;
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-sm);
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
 
     & > .database__spacer {
       flex: 1;
     }
 
     & > .select[data-variant="quiet"] {
-      color: var(--color-text-primary);
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-xs);
       font-weight: var(--font-weight-medium);
     }
 
     /* A date's "Start date" stands where the name stands: grey, as
        Notion's "Data de início". */
     & > .select[data-variant="quiet"]:first-child {
-      color: var(--color-text-secondary);
+      color: var(--color-text-tertiary);
       font-weight: var(--font-weight-regular);
     }
   }
 
   .database__rule-name {
     padding-inline: var(--space-inset-xs) var(--space-none);
-    color: var(--color-text-secondary);
+    color: var(--color-text-tertiary);
+  }
+
+  /* A rule whose values are listed is narrow, as Notion's checkbox one. */
+  .database__rule[data-narrow]:popover-open {
+    inline-size: var(--size-menu-choices);
+    min-inline-size: var(--size-menu-choices);
+    padding: var(--space-inset-xs);
+
+    /* The name lines up with the values' words, as Notion's. */
+    & .database__rule-head {
+      padding-inline-start: var(--space-inset-xs);
+    }
   }
 
   /* "Is relative to today": its two selects side by side, the month
@@ -73,5 +89,10 @@
       flex: 1;
       min-inline-size: 0;
     }
+  }
+
+  /* A checkbox's Unchecked and Checked, as rows under the condition. */
+  .database__choices {
+    display: grid;
   }
 }

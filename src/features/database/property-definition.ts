@@ -57,6 +57,9 @@ export interface FilterOperator {
   readonly defaultOperand?: string;
   // Kept for conditions saved before Notion dropped it, never offered.
   readonly isRetired?: boolean;
+  // The choices listed as rows in a filter's popover, as Notion lists a
+  // checkbox's Unchecked and Checked; a color rule still picks from a list.
+  readonly listsChoices?: boolean;
 }
 
 // The options and config a new property of a type starts with, such as a

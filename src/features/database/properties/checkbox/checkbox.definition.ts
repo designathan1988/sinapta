@@ -12,10 +12,41 @@ function readChecked(stored: unknown): boolean {
   return stored === true;
 }
 
+// Notion's: Is or Is not, and Checked or Unchecked, chosen after; with no
+// value yet the condition keeps every row.
+const VALUES = [
+  { id: "unchecked", label: COPY.database.unchecked },
+  { id: "checked", label: COPY.database.checked },
+] as const;
+
+function matches(value: unknown, operand: string): boolean {
+  return readChecked(value) === (operand !== "unchecked");
+}
+
+const IS: FilterOperator = {
+  id: "is",
+  label: COPY.operators.is,
+  needsOperand: true,
+  choices: () => VALUES,
+  listsChoices: true,
+  test: matches,
+};
+
+const IS_NOT: FilterOperator = {
+  id: "is-not",
+  label: COPY.operators.isNot,
+  needsOperand: true,
+  choices: () => VALUES,
+  listsChoices: true,
+  test: (value, operand) => !matches(value, operand),
+};
+
+// Kept for conditions saved before the value was chosen, never offered.
 const IS_CHECKED: FilterOperator = {
   id: "is-checked",
   label: COPY.operators.isChecked,
   needsOperand: false,
+  isRetired: true,
   test: readChecked,
 };
 
@@ -23,6 +54,7 @@ const IS_NOT_CHECKED: FilterOperator = {
   id: "is-not-checked",
   label: COPY.operators.isNotChecked,
   needsOperand: false,
+  isRetired: true,
   test: (value) => !readChecked(value),
 };
 
@@ -45,7 +77,7 @@ export const checkboxProperty: PropertyType = {
   parse: (text) => (text === "true" ? true : undefined),
   format: (value) => (readChecked(value) ? "true" : ""),
   compare: (a, b) => Number(readChecked(a)) - Number(readChecked(b)),
-  filterOperators: [IS_CHECKED, IS_NOT_CHECKED],
+  filterOperators: [IS, IS_NOT, IS_CHECKED, IS_NOT_CHECKED],
   // The same box as everywhere, drawn as a mark: the cell toggles it.
   renderCell: (value) => {
     const isChecked = readChecked(value);

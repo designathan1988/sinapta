@@ -229,6 +229,7 @@
     --base-size-72: 72rem;
     --base-size-hairline: 1px;
     --base-size-thick: 2px;
+    --base-size-13x75: 13.75rem;
     --base-size-42x25: 42.25rem;
     --base-size-4x25: 4.25rem;
     --base-size-5x25: 5.25rem;
@@ -446,6 +447,7 @@
     --size-menu-min-width: var(--base-size-14);
     --size-menu-max-height: var(--base-size-40);
     --size-menu-width: var(--base-size-18x125);
+    --size-menu-choices: var(--base-size-13x75);
     --size-menu-short: var(--base-size-15x625);
     --size-menu-narrow: var(--base-size-12x5);
     --size-menu-row: var(--base-size-7);
