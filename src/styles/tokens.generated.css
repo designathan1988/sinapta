@@ -111,6 +111,9 @@
     --base-color-day-danger: oklch(0.54 0.1724 25.8);
     --base-color-day-danger-bg: oklch(0.9546 0.0196 13.6);
     --base-color-day-danger-fill: oklch(0.55 0.17 26);
+    --base-color-day-template-bg: oklch(0.9641 0.0326 91.7);
+    --base-color-day-template-text: oklch(0.697 0.1296 76);
+    --base-color-day-template-border: oklch(0.697 0.1296 76 / 0.46);
     --base-color-day-success: oklch(0.5579 0.0848 158.4);
     --base-color-day-warning: oklch(0.6198 0.1204 74.9);
     --base-color-day-shadow: oklch(0.1684 0 0 / 0.1);
@@ -153,6 +156,9 @@
     --base-color-night-danger: oklch(0.705 0.1605 26.5);
     --base-color-night-danger-bg: oklch(0.2927 0.0355 24.9);
     --base-color-night-danger-fill: oklch(0.55 0.17 26);
+    --base-color-night-template-bg: oklch(0.3911 0.0494 88.9);
+    --base-color-night-template-text: oklch(0.7032 0.1272 77.4);
+    --base-color-night-template-border: oklch(0.8362 0.1587 79.9 / 0.46);
     --base-color-night-success: oklch(0.6796 0.093 179.8);
     --base-color-night-warning: oklch(0.7679 0.157 86.5);
     --base-color-night-shadow: oklch(0.2134 0 0 / 0.2);
@@ -330,6 +336,9 @@
     --color-accent-subtle: light-dark(var(--base-color-day-accent-subtle), var(--base-color-night-accent-subtle));
     --color-status-danger-bg: light-dark(var(--base-color-day-danger-bg), var(--base-color-night-danger-bg));
     --color-status-danger-fill: light-dark(var(--base-color-day-danger-fill), var(--base-color-night-danger-fill));
+    --color-template-bg: light-dark(var(--base-color-day-template-bg), var(--base-color-night-template-bg));
+    --color-template-text: light-dark(var(--base-color-day-template-text), var(--base-color-night-template-text));
+    --color-template-border: light-dark(var(--base-color-day-template-border), var(--base-color-night-template-border));
     --color-shadow-overlay: light-dark(var(--base-color-day-shadow), var(--base-color-night-shadow));
     --color-shadow-ring: light-dark(var(--base-color-day-shadow-ring), var(--base-color-night-shadow-ring));
     --color-shadow-soft: light-dark(var(--base-color-day-shadow-soft), var(--base-color-night-shadow-soft));
@@ -407,6 +416,8 @@
     --size-control-action: var(--base-size-7);
     --size-control-sm: var(--base-size-6);
     --size-control-md: var(--base-size-8);
+    --size-confirm-width: var(--base-size-20);
+    --size-banner-height: var(--base-size-2x75);
     --size-row-height: var(--base-size-8);
     --size-grip-width: var(--base-size-1x125);
     --size-target-min: var(--base-size-6);

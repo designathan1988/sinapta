@@ -33,12 +33,14 @@ function mount(value: DateRangeValue | undefined) {
       (entry) =>
         entry.kind !== "section" &&
         entry.kind !== "divider" &&
+        entry.kind !== "note" &&
         entry.label === label,
     );
     if (
       found === undefined ||
       found.kind === "section" ||
-      found.kind === "divider"
+      found.kind === "divider" ||
+      found.kind === "note"
     ) {
       throw new Error(`no ${label}`);
     }

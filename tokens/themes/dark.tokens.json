@@ -116,6 +116,17 @@
         "$value": "{base.color.night.dangerFill}"
       }
     },
+    "template": {
+      "bg": {
+        "$value": "{base.color.night.templateBg}"
+      },
+      "text": {
+        "$value": "{base.color.night.templateText}"
+      },
+      "border": {
+        "$value": "{base.color.night.templateBorder}"
+      }
+    },
     "shadow": {
       "overlay": {
         "$value": "{base.color.night.shadow}"

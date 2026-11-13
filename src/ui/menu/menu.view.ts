@@ -55,7 +55,7 @@ export interface MenuOptions {
   // Content above the rows, such as a name field or layout tiles.
   readonly lead?: TemplateResult;
   // Content under the rows, such as a card layout's tiles.
-  readonly tail?: TemplateResult;
+  readonly tail?: TemplateResult | typeof nothing;
   // A submenu as wide as a menu, for rows with long words.
   readonly isWide?: boolean;
   // A list opened from a control inside another overlay.

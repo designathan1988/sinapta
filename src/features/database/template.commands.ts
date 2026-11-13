@@ -18,8 +18,13 @@ import {
   type Operation,
   type ViewId,
 } from "../../model/index.ts";
-import { defineCommand, type AppState } from "../../state/index.ts";
+import {
+  defineCommand,
+  type AppState,
+  type UiState,
+} from "../../state/index.ts";
 import type { RowTemplate } from "./row.commands.ts";
+import { openingTemplate } from "./template-open.ts";
 
 interface TemplatesChange {
   readonly templateIds?: readonly BlockId[];
@@ -70,7 +75,10 @@ export function selectRowTemplate(
 }
 
 // Adds an empty template at the end and opens it, to be written.
-export const addTemplate = defineCommand<{ databaseId: BlockId }>({
+export const addTemplate = defineCommand<{
+  databaseId: BlockId;
+  viewId?: ViewId;
+}>({
   type: "template.add",
   newBlockIds: 1,
   handle(state, command) {
@@ -102,10 +110,39 @@ export const addTemplate = defineCommand<{ databaseId: BlockId }>({
         { type: "list.insert", list: listOf(database.id), id, index },
         templatesUpdate(database, { templateIds }),
       ],
-      ui: { ...state.ui, activePageId: id, activeCell: null, peek: null },
+      ui: openingTemplate(state, id, command.viewId),
     };
   },
 });
+
+// A template's Edit, from the templates menu.
+export const editTemplate = defineCommand<{
+  templateId: BlockId;
+  viewId: ViewId;
+}>({
+  type: "template.edit",
+  handle(state, { templateId, viewId }) {
+    if (selectTemplateDatabase(state, templateId) === undefined) return {};
+    return { ui: openingTemplate(state, templateId, viewId) };
+  },
+});
+
+// Where a deleted template open on screen leaves the person: its peek
+// closes; open as a page, its database opens.
+function closingTemplate(
+  state: AppState,
+  templateId: BlockId,
+  databaseId: BlockId,
+): UiState | undefined {
+  const isPage = state.ui.activePageId === templateId;
+  const isPeek = state.ui.peek?.pageId === templateId;
+  if (!isPage && !isPeek) return undefined;
+  return {
+    ...state.ui,
+    ...(isPage && { activePageId: databaseId }),
+    ...(isPeek && { peek: null }),
+  };
+}
 
 function treeIds(state: AppState, id: BlockId): BlockId[] {
   const block = state.workspace.blocks[id];
@@ -136,7 +173,7 @@ export const deleteTemplate = defineCommand<{ templateId: BlockId }>({
         defaultTemplateId === templateId ? null : defaultTemplateId,
     };
     const list = listOf(database.id);
-    const isOpen = state.ui.activePageId === templateId;
+    const ui = closingTemplate(state, templateId, database.id);
     return {
       operations: [
         templatesUpdate(database, change),
@@ -152,7 +189,7 @@ export const deleteTemplate = defineCommand<{ templateId: BlockId }>({
           id,
         })),
       ],
-      ...(isOpen && { ui: { ...state.ui, activePageId: database.id } }),
+      ...(ui !== undefined && { ui }),
     };
   },
 });
@@ -203,6 +240,7 @@ export const duplicateTemplate = defineCommand<{
 
 export const templateCommands = [
   addTemplate,
+  editTemplate,
   deleteTemplate,
   duplicateTemplate,
 ];

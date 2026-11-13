@@ -1,20 +1,86 @@
 @layer features {
-  /* Notion's template note: a quiet strip above the template's page. */
+  /* Notion's template strip: edge to edge, gold words on a dark gold
+     wash, centered; the database's name underlined as a link, a help
+     mark, and an outlined Repeat… with a chevron. */
   .database__template-banner {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--space-inline-sm);
     align-items: center;
+    justify-content: center;
+    min-block-size: var(--size-banner-height);
     margin: var(--space-none);
-    padding: var(--space-inset-xs) var(--space-inset-sm);
-    border-radius: var(--radius-md);
-    background-color: var(--color-bg-hover);
-    color: var(--color-text-secondary);
+    padding: var(--space-inset-xs) var(--space-inset-md);
+    background-color: var(--color-template-bg);
+    color: var(--color-template-text);
     font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .database__template-icon {
+    display: inline-flex;
+    color: var(--color-text-secondary);
 
     & > .icon {
-      flex: none;
       inline-size: var(--size-icon-sm);
       block-size: var(--size-icon-sm);
     }
+  }
+
+  .database__template-link {
+    padding: var(--space-none);
+    border: none;
+    background: none;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--color-template-border);
+    text-underline-offset: var(--space-inline-xxs);
+    cursor: pointer;
+  }
+
+  .database__template-help {
+    display: inline-flex;
+    margin-inline-end: var(--space-inline-md);
+
+    & > .icon {
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+    }
+  }
+
+  .database__template-repeat {
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    min-block-size: var(--size-control-action);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: var(--size-border-thin) solid var(--color-template-border);
+    border-radius: var(--radius-md);
+    background: none;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    & > .icon {
+      inline-size: var(--size-icon-xs);
+      block-size: var(--size-icon-xs);
+      rotate: 90deg;
+    }
+  }
+
+  /* On a template's own page it spans the main area at the top, as the
+     trash's banner does. */
+  .editor > .database__template-banner {
+    margin: calc(-1 * var(--space-inset-xl)) calc(-1 * var(--space-inset-lg))
+      var(--space-stack-md);
   }
 }

@@ -132,6 +132,13 @@
     white-space: nowrap;
   }
 
+  .menu__note {
+    margin: var(--space-none);
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+  }
+
   .menu__section {
     margin: var(--space-stack-sm) var(--space-none) var(--space-stack-xxs);
     padding: var(--space-none) var(--space-inset-sm);

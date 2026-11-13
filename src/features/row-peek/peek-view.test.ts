@@ -3,7 +3,7 @@ import { render } from "lit-html";
 import { describe, expect, it, vi } from "vitest";
 import type { Command } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
-import { openRow } from "../database/index.ts";
+import { addTemplate, openRow } from "../database/index.ts";
 import { createPeekApp } from "./peek-builder.ts";
 import { renderPeek } from "./peek.view.ts";
 
@@ -148,5 +148,27 @@ describe("the row peek view", () => {
     expect(
       sent.map((command) => ("width" in command ? command.width : null)),
     ).toEqual([41, 39, 60]);
+  });
+});
+
+describe("a template in the peek", () => {
+  it("shows the template strip, without the mode switch or the steps", () => {
+    const app = createPeekApp(["One"]);
+    const { databaseId, viewId } = app;
+    app.dispatch(addTemplate.create({ databaseId, viewId }));
+    const host = document.createElement("div");
+    document.body.replaceChildren(host);
+
+    render(
+      renderPeek(app.store.getState(), () => ({ ok: true })),
+      host,
+    );
+
+    expect(host.querySelector(".peek")?.getAttribute("data-mode")).toBe(
+      "center",
+    );
+    expect(host.querySelector(".database__template-banner")).not.toBeNull();
+    expect(host.querySelector(`[aria-label="${COPY.peek.next}"]`)).toBeNull();
+    expect(host.querySelector(`[aria-label="${COPY.peek.mode}"]`)).toBeNull();
   });
 });

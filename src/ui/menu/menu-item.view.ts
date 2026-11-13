@@ -98,6 +98,9 @@ export function renderEntry(
       ${entry.label}
     </p>`;
   }
+  if (entry.kind === "note") {
+    return html`<p class="menu__note">${entry.label}</p>`;
+  }
   if (entry.kind === "divider") {
     return html`<hr class="menu__divider" role="separator" />`;
   }

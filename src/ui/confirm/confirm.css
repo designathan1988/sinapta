@@ -1,0 +1,50 @@
+@layer ui {
+  /* Notion's question before a delete: in the window's middle, over the
+     page dimmed; its words, a red answer filling the width, then an
+     outlined Cancel. */
+  .confirm {
+    display: grid;
+    gap: var(--space-stack-sm);
+    inline-size: var(--size-confirm-width);
+    padding: var(--space-inset-lg);
+    text-align: center;
+
+    &:popover-open {
+      position: fixed;
+      inset: 0;
+      margin: auto;
+      position-area: none;
+    }
+
+    &::backdrop {
+      background-color: var(--color-bg-scrim);
+    }
+
+    & > .button {
+      justify-content: center;
+      min-block-size: var(--size-control-md);
+    }
+
+    & > .button[data-variant="danger"] {
+      background-color: var(--color-status-danger-fill);
+      color: var(--color-text-on-accent);
+
+      &:hover {
+        background-color: var(--color-status-danger-fill);
+        filter: brightness(1.08);
+      }
+    }
+
+    & > .button[data-variant="outline"] {
+      border-color: var(--color-border-default);
+      color: var(--color-text-primary);
+    }
+  }
+
+  .confirm__question {
+    margin: var(--space-none) var(--space-none) var(--space-stack-sm);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+  }
+}

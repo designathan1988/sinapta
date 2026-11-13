@@ -1,5 +1,30 @@
 // The row peek, as Notion's: the row's page beside the database (side) or
 // over it (center), under a bar that closes it, opens it as a full page,
+
+// The mode switch and the previous and next rows.
+function renderSteps(
+  state: AppState,
+  dispatch: Dispatch,
+  place: ReturnType<typeof selectPeekPlace>,
+): TemplateResult {
+  const button = (item: BarButton) => renderBarButton(item, dispatch);
+  return html`<span class="peek__gap"></span>
+    ${renderModeSwitch(state, dispatch)}
+    <span class="peek__gap"></span>
+    ${button({
+      label: TEXT.previous,
+      icon: "up",
+      command: stepPeek.create({ by: -1 }),
+      isDisabled: !place.hasPrevious,
+    })}
+    ${button({
+      label: TEXT.next,
+      icon: "down",
+      command: stepPeek.create({ by: 1 }),
+      isDisabled: !place.hasNext,
+    })}`;
+}
+
 // switches where rows open and steps to the previous or next row.
 import "./peek.css";
 import { html, nothing, type TemplateResult } from "lit-html";
@@ -13,6 +38,10 @@ import { focusOnce } from "../../ui/focus/index.ts";
 import { renderIcon, type IconName } from "../../ui/icon/index.ts";
 import { renderSelect } from "../../ui/select/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
+import {
+  renderTemplateBanner,
+  selectTemplateDatabase,
+} from "../database/index.ts";
 import { renderEditor } from "../editor/index.ts";
 import { renderPageMenuButton } from "../page-menu/index.ts";
 import {
@@ -91,24 +120,12 @@ function renderBar(
 ): TemplateResult {
   const place = selectPeekPlace(state);
   const button = (item: BarButton) => renderBarButton(item, dispatch);
+  // A template has no rows to step through, nor a view's open mode.
+  const isTemplate = selectTemplateDatabase(state, pageId) !== undefined;
   return html`<div class="peek__bar">
     ${button({ label: TEXT.close, icon: "peek-close", command: closePeek.create({}) })}
     ${button({ label: TEXT.expand, icon: "expand", command: expandPeek.create({}) })}
-    <span class="peek__gap"></span>
-    ${renderModeSwitch(state, dispatch)}
-    <span class="peek__gap"></span>
-    ${button({
-      label: TEXT.previous,
-      icon: "up",
-      command: stepPeek.create({ by: -1 }),
-      isDisabled: !place.hasPrevious,
-    })}
-    ${button({
-      label: TEXT.next,
-      icon: "down",
-      command: stepPeek.create({ by: 1 }),
-      isDisabled: !place.hasNext,
-    })}
+    ${isTemplate ? nothing : renderSteps(state, dispatch, place)}
     <span class="peek__end">
       ${renderPeekActions(state, dispatch, pageId)}
       ${renderPageMenuButton({ place: "peek", pageId, state, dispatch })}
@@ -183,6 +200,7 @@ export function renderPeek(
   >
     ${peek.mode === "side" ? renderPeekResizer(state, outer) : nothing}
     ${renderBar(state, dispatch, page.id)}
+    ${renderTemplateBanner(state, page.id, dispatch)}
     <div class="peek__body">
       ${keyed(page.id, renderEditor(state, dispatch, page.id))}
     </div>

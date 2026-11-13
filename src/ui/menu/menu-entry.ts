@@ -1,6 +1,6 @@
 // What a menu holds: items to choose, labels over groups of items, and
 // lines between groups; and which items a search leaves.
-import type { TemplateResult } from "lit-html";
+import type { nothing, TemplateResult } from "lit-html";
 import type { IconName } from "../icon/index.ts";
 
 interface ItemLook {
@@ -48,6 +48,8 @@ export interface SubmenuContent {
   readonly role?: "menu" | "listbox";
   // Full width, for rows with long words, as the counts' 99+ switch.
   readonly isWide?: boolean;
+  // Drawn after the rows, as a question one of them asks.
+  readonly tail?: TemplateResult | typeof nothing;
 }
 
 // A menu the row opens beside its own, as Notion's "Change type".
@@ -83,7 +85,14 @@ export interface MenuDivider {
   readonly kind: "divider";
 }
 
-export type MenuEntry = MenuItem | MenuSection | MenuDivider;
+// A line of words that says what the menu is for, as Notion's templates
+// menu does while it has none.
+export interface MenuNote {
+  readonly kind: "note";
+  readonly label: string;
+}
+
+export type MenuEntry = MenuItem | MenuSection | MenuDivider | MenuNote;
 
 export function isMenuItem(entry: MenuEntry): entry is MenuItem {
   return entry.kind === undefined || entry.kind === "item";

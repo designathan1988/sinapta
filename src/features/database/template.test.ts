@@ -8,6 +8,7 @@ import {
   addTemplate,
   deleteTemplate,
   duplicateTemplate,
+  editTemplate,
 } from "./template.commands.ts";
 import {
   setDefaultTemplate,
@@ -130,5 +131,32 @@ describe("row templates", () => {
     expect(
       withDefaultTemplate(app.store.getState(), { databaseId }).template?.id,
     ).toBe(templateId);
+  });
+});
+
+describe("a template being written", () => {
+  it("opens in the center peek over the database, as Notion's", () => {
+    const app = createDatabaseApp([], [["One"]]);
+    const viewId = app.view().id;
+    const before = app.store.getState().ui.activePageId;
+
+    app.dispatch(addTemplate.create({ databaseId: app.databaseId, viewId }));
+
+    const templateId = app.database().props.templateIds[0];
+    const { ui } = app.store.getState();
+    expect(ui.peek).toEqual({ pageId: templateId, viewId, mode: "center" });
+    expect(ui.activePageId).toBe(before);
+  });
+
+  it("opens from Edit in the center peek, and closes with its delete", () => {
+    const { app, templateId } = withTemplate();
+    const viewId = app.view().id;
+
+    app.dispatch(editTemplate.create({ templateId, viewId }));
+    const opened = app.store.getState().ui.peek;
+    app.dispatch(deleteTemplate.create({ templateId }));
+
+    expect(opened).toEqual({ pageId: templateId, viewId, mode: "center" });
+    expect(app.store.getState().ui.peek).toBeNull();
   });
 });

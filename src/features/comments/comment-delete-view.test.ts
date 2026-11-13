@@ -57,9 +57,7 @@ describe("a comment's delete", () => {
       children: [{ anchorId: "comment-delete:c" }],
     });
 
-    host
-      .querySelector<HTMLButtonElement>(".comments__confirm [data-autofocus]")
-      ?.click();
+    host.querySelector<HTMLButtonElement>(".confirm [data-autofocus]")?.click();
 
     expect(sent.map((command) => command.type)).toEqual([
       "ui.closeChildOverlay",

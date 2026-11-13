@@ -131,6 +131,23 @@ function renderPageActions(
     </div>`;
 }
 
+// The strips across the page's top: the trash's, and a template's on its
+// own page (in a peek it sits under the peek's bar instead).
+function renderBanners(
+  state: AppState,
+  page: PageBlock,
+  dispatch: Dispatch,
+): TemplateResult {
+  return html`${
+    page.props.isTrashed ? renderTrashedBanner(page, dispatch) : nothing
+  }
+  ${
+    state.ui.activePageId === page.id
+      ? renderTemplateBanner(state, page.id, dispatch)
+      : nothing
+  }`;
+}
+
 // A page: its icon, its title and its blocks. The open page, unless a
 // peek shows another.
 export function renderEditor(
@@ -157,8 +174,7 @@ export function renderEditor(
       ?data-small-text=${page.props.isSmallText === true}
       ?data-locked=${page.props.isLocked === true || page.props.isTrashed}
     >
-      ${page.props.isTrashed ? renderTrashedBanner(page, dispatch) : nothing}
-      ${renderTemplateBanner(state, page.id)}
+      ${renderBanners(state, page, dispatch)}
       ${isPage ? renderCover(state, page, dispatch) : nothing}
       ${renderPageActions(state, page, dispatch)} ${renderTitle(page, context)}
       ${isPage ? renderBacklinks(state, dispatch, page) : nothing}

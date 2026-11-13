@@ -199,3 +199,12 @@ Within a story: model/command → selector → view → photo (each control in i
 - [X] T059 "Add reaction" in the selection panel (`format-toolbar-rows.view.ts`), the emoji picker overlay (`reaction-picker.view.ts`), chips and the hover button on comments (`reactions.view.ts`, `reactions.css`), and a feed card's page reactions (`page-reactions.view.ts`, `layouts/feed/feed.view.ts`) per FR-026 (missing) — tests `reactions-view.test.ts`, `format-toolbar-view.test.ts`; photos `p28-reaction`, `p28-feed-reaction`.
 - [X] T060 Record item 21 in `docs/notion-study.md`: reactions built; suggest edits and AI skills out per spec.md Assumptions, with the photos of T057.
 
+## Phase 12: Convergence (database templates, found by the real-user journey)
+
+- [X] T061 Study Notion's template flow and record item 25 in `docs/notion-study.md` — photos `n48-template-probe`, `n48-template-measure`, `n48-repeat-probe`; every probe's template deleted (`n48-template-check`).
+- [X] T062 Template in the center peek: `template.add` and `template.edit` open `ui.peek` in center mode (`src/features/database/template.commands.ts`), the peek drops its mode switch and steps for a template (`src/features/row-peek/peek.view.ts`), `template.delete` closes it per FR-027 (partial) — tests `template.test.ts`, `peek-view.test.ts`; photo `u12-template` against `n48-template-measure/03-banner`.
+- [X] T063 The strip (`template-banner.view.ts`, `template-banner.css`, new color tokens): words, database link, help mark, Repeat… button per FR-027 (partial) — test `template-banner-view.test.ts`; photo `u12-template`.
+- [X] T064 "Delete this template?" with a confirm overlay in `src/ui/confirm/` (also used by the comment delete) and the no-template line in `templates-menu.view.ts` per FR-027 (missing) — tests `templates-menu-view.test.ts`, `confirm-view.test.ts`; photo `u12-template-delete` against `n48-template-cleanup/04-delete`.
+- [ ] T065 Repeat cadence: the eight periods, every N, weekdays, start, ending, in `page.schema.ts` and `template-repeat.commands.ts` per FR-028 (missing) — test `template-repeat.test.ts`.
+- [ ] T066 "Edit cadence" panel from the strip's Repeat… and the template's "…" (`template-cadence.view.ts`) per FR-028 (missing) — test `template-cadence-view.test.ts`; photo `u12-cadence` against `n48-repeat-probe/05-week-panel`.
+

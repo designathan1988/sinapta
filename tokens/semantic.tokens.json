@@ -122,6 +122,17 @@
         "$value": "{base.color.day.dangerFill}"
       }
     },
+    "template": {
+      "bg": {
+        "$value": "{base.color.day.templateBg}"
+      },
+      "text": {
+        "$value": "{base.color.day.templateText}"
+      },
+      "border": {
+        "$value": "{base.color.day.templateBorder}"
+      }
+    },
     "shadow": {
       "overlay": {
         "$value": "{base.color.day.shadow}"
@@ -410,6 +421,18 @@
       },
       "md": {
         "$value": "{base.size.8}"
+      }
+    },
+    "confirm": {
+      "width": {
+        "$description": "A question before a delete, as Notion's Delete this template?: about 325 px.",
+        "$value": "{base.size.20}"
+      }
+    },
+    "banner": {
+      "height": {
+        "$description": "A strip across a page, as Notion's template strip: 44 px.",
+        "$value": "{base.size.2x75}"
       }
     },
     "row": {

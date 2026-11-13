@@ -125,7 +125,8 @@ owner listed here exists.
 | Where a view opens its rows (side peek, center peek, full page) | `src/features/database/row-open.commands.ts` | 16 |
 | The row peek: its panel, bar, mode switch and stepping through rows | `src/features/row-peek/` | 16 |
 | Row templates: adding, the default, duplicating, deleting, and new rows made from them | `src/features/database/template.commands.ts`, `row-template.ts` | 16 |
-| The New button's template list and the note over a template | `src/features/database/templates-menu.view.ts`, `template-banner.view.ts` | 16 |
+| The New button's template list, a template's actions and the strip over a template (Repeat…) | `src/features/database/templates-menu.view.ts`, `template-actions.view.ts`, `template-banner.view.ts`, `template-open.ts` | 16 |
+| A question asked before a delete ("Delete this template?", "Delete this comment?") | `src/ui/confirm/` | 16 |
 | A menu row's own actions behind its "…" | `src/ui/menu/menu-submenu.ts`, `menu-item.view.ts`, `menu-more.css` | 16 |
 | Reading and writing CSV text (RFC 4180) | `src/model/csv.ts` | 16 |
 | Writing ZIP archives (stored, CRC-32) | `src/model/zip.ts` | 17 |

@@ -32,6 +32,7 @@ export interface SubmenuOptions {
   readonly lead?: TemplateResult;
   readonly role?: "menu" | "listbox";
   readonly isWide?: boolean;
+  readonly tail?: TemplateResult | typeof nothing;
   readonly isChild: true;
   readonly placement: "beside";
   readonly context: MenuContext;

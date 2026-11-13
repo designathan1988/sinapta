@@ -907,6 +907,32 @@ items above, found while photographing them:
     first (as Notion does for numbers: "Sem Número" first) — now text
     lists it last and numbers and options first.
 
+25. **open** [T061–T064, FR-027] Database templates, as Notion's
+    (`n48-template-probe`, `n48-template-measure`, `n48-repeat-probe`):
+    - "Novo modelo" opens the template in a center peek (the row peek's
+      center frame, 975 wide, only Expand at its top left), not as a full
+      page.
+    - Under the peek's bar, a strip edge to edge, 44 high, rgb(80,68,37) on
+      the dark theme: "You're editing a template in" ▤ <database name>
+      (an underlined link to the database, rgb(203,148,52)), a "?" help
+      icon, then a "Repeat…" button (28 high, radius 6, a gold border
+      rgba(255,188,53,0.46)) with a chevron. Words and link in gold.
+    - Repeat lists Day, Weekday, Week, 2 weeks, Month, 3 months, 6 months,
+      Year. Choosing one opens "Edit cadence" with Save: "Every [1]
+      [week ⌄]", the weekday chips Mon–Sun (one ticked, blue) for weeks,
+      At "Around midnight" ›, Start "tomorrow" ›, Ending "Never" ›, Time
+      zone ›, "Cancel recurrence", and "Next occurrence: next Mon between
+      0h and 3h". Escape leaves without saving.
+    - A template's "…" lists Repeat… (Off ⌄), Set as default, Edit,
+      Duplicate, Delete. Delete asks first in the window's middle over a
+      dimmed page: "Delete this template?", a red Delete filling the
+      width, an outlined Cancel under it (~325 wide).
+    - With no template, the menu shows "Templates for <name>", the line
+      "Create a reusable page template for this database." and New
+      template; "Empty · Default" shows only beside a template.
+    Each probe's template was deleted after (`n48-template-check`: the
+    menu back to its line and New template).
+
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,
 `n45-history/04-updates`: "Há 4 horas", ID 1, Nome, the box ticked). A

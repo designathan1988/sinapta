@@ -78,3 +78,73 @@ describe("the templates menu", () => {
     );
   });
 });
+
+describe("a template's Delete", () => {
+  it("asks first, then deletes the template on Delete", () => {
+    const { sent, templateId } = rendered("template-delete");
+    const confirm = document.querySelector(".confirm");
+    const answer = [...(confirm?.querySelectorAll("button") ?? [])].find(
+      (button) => button.textContent.trim() === "Delete",
+    );
+
+    answer?.click();
+
+    expect(confirm?.textContent).toContain("Delete this template?");
+    expect(sent).toContainEqual(
+      expect.objectContaining({ type: "template.delete", templateId }),
+    );
+  });
+
+  it("opens the question from the Delete row, keeping the menu", () => {
+    const { sent, item, templateId } = rendered("template-none");
+
+    item("Delete")?.click();
+
+    expect(sent).toEqual([
+      expect.objectContaining({
+        type: "ui.openChildOverlay",
+        anchorId: `template-delete:${templateId}`,
+        depth: 1,
+      }),
+    ]);
+  });
+
+  it("edits a template in the center peek over the view", () => {
+    const { app, sent, item, templateId } = rendered("template-none");
+
+    item("Edit")?.click();
+
+    expect(sent).toContainEqual(
+      expect.objectContaining({
+        type: "template.edit",
+        templateId,
+        viewId: app.view().id,
+      }),
+    );
+  });
+});
+
+describe("the templates menu of a database with none", () => {
+  it("says what a template is, and has no empty-page row", () => {
+    const app = createDatabaseApp([{ name: "Done", type: "checkbox" }], []);
+    const built = app.store.getState();
+    const overlay = { kind: TEMPLATES_OVERLAY, anchorId: app.databaseId };
+    const state = {
+      ...built,
+      ui: { ...built.ui, activePageId: app.databaseId, overlay },
+    };
+    const host = document.createElement("div");
+    document.body.replaceChildren(host);
+    render(
+      renderDatabase(state, () => ({ ok: true })),
+      host,
+    );
+
+    const menu = host.querySelector(".menu")?.textContent ?? "";
+
+    expect(menu).toContain(
+      "Create a reusable page template for this database.",
+    );
+    expect(menu).not.toContain("Empty page");
+  });
+});

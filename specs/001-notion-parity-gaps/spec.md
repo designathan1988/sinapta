@@ -279,6 +279,22 @@ after reload and applies only to that view.
   under its comment (or on the card) that takes it away, and a
   reaction-only discussion MUST go with its last reaction.
 
+- **FR-027**: A new database template, and a template's Edit, MUST open in
+  the center peek, without the peek's mode switch or row steps; a strip
+  edge to edge under its bar MUST read "You're editing a template in" with
+  the database's name as a link to it, a help mark and a "Repeat…" button;
+  a template's Delete MUST ask "Delete this template?" (Delete, Cancel) in
+  the window's middle first; with no template the templates menu MUST show
+  "Create a reusable page template for this database." and no empty-page
+  row.
+
+- **FR-028**: Repeat MUST offer Day, Weekday, Week, 2 weeks, Month,
+  3 months, 6 months and Year, and a choice MUST open "Edit cadence":
+  every N units, the weekdays for weeks, the start day, an ending (never
+  or on a day), "Cancel recurrence", the next occurrence, and Save; the
+  rows MUST then be made on those days while the app is open, as the
+  simple repeat was.
+
 **Quality bar**
 
 - **FR-017**: Every interface text MUST use Notion's English words as
