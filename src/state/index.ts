@@ -16,6 +16,11 @@ export {
   type TextSelection,
   type UiState,
 } from "./app-state.ts";
+export {
+  NO_SEARCH_FILTERS,
+  type SearchDateFilter,
+  type SearchFilters,
+} from "./search-filters.ts";
 export { createAppStore, type AppStore } from "./store.ts";
 export { PEEK_WIDTH, SIDEBAR_WIDTH } from "./widths.ts";
 export {
@@ -97,6 +102,7 @@ export { selectAssetUrl } from "./asset.selectors.ts";
 export {
   closeChildOverlay,
   openChildOverlay,
+  setOverlayValues,
   openOverlayPanel,
   setOverlayQuery,
 } from "./ui-overlay.commands.ts";

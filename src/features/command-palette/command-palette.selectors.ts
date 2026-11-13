@@ -12,8 +12,10 @@ import {
   setTheme,
   toggleSidebar,
   UNDO_COMMAND,
+  NO_SEARCH_FILTERS,
   type AppState,
   type Command,
+  type SearchFilters,
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import type { IconName } from "../../ui/icon/index.ts";
@@ -33,10 +35,16 @@ import {
   selectPagePath,
   titleOf,
 } from "./command-palette-preview.selectors.ts";
+import { selectPageLastEdit } from "../page-info/index.ts";
+import {
+  hasSearchFilters,
+  selectPassesFilters,
+} from "./search-filters.selectors.ts";
 
 export const PALETTE_OVERLAY = PALETTE_OVERLAY_KIND;
 const PAGE_LIMIT = 8;
 const RECENT_LIMIT = 8;
+const FILTERED_LIMIT = 20;
 
 // One thing the palette can do: a label and the command it dispatches.
 export interface PaletteItem {
@@ -60,9 +68,17 @@ export interface PaletteItem {
   readonly href?: string;
 }
 
-// How the search narrows, as Notion's filters.
+// How the search narrows, as Notion's filters, and today, for the date
+// filter's presets.
 export interface PaletteOptions {
   readonly isTitleOnly?: boolean;
+  readonly filters?: SearchFilters;
+  readonly today?: string;
+}
+
+interface Narrowing {
+  readonly filters: SearchFilters;
+  readonly today: string;
 }
 
 function pageItem(
@@ -128,45 +144,80 @@ function actions(): PaletteItem[] {
   ];
 }
 
-// Every page and row that is not in the trash, by title.
-function pages(state: AppState): PaletteItem[] {
+// Every page and row that is not in the trash and that the filters let
+// through.
+function pages(state: AppState, narrowing: Narrowing): PaletteItem[] {
   return Object.values(state.workspace.blocks).flatMap((block) =>
-    isPageLike(block) && !block.props.isTrashed
+    isPageLike(block) &&
+    !block.props.isTrashed &&
+    selectPassesFilters(state, block, narrowing)
       ? [pageItem(state, block, "pages")]
       : [],
   );
 }
 
-function contentItems(state: AppState, needle: string): PaletteItem[] {
-  return selectTextMatches(state, needle, PAGE_LIMIT).map((found) => ({
-    ...pageItem(state, found.page, "pages"),
-    kind: "content",
-    detail: found.detail,
-    match: found.match,
-    href: found.href,
-  }));
+function contentItems(
+  state: AppState,
+  needle: string,
+  narrowing: Narrowing,
+): PaletteItem[] {
+  return selectTextMatches(state, needle, PAGE_LIMIT * 4)
+    .filter((found) => selectPassesFilters(state, found.page, narrowing))
+    .slice(0, PAGE_LIMIT)
+    .map((found) => ({
+      ...pageItem(state, found.page, "pages"),
+      kind: "content",
+      detail: found.detail,
+      match: found.match,
+      href: found.href,
+    }));
+}
+
+// With filters and no query: the pages they let through, last edited
+// first, as Notion's "Search results".
+function filteredPages(state: AppState, narrowing: Narrowing): PaletteItem[] {
+  const edited = (item: PaletteItem): number =>
+    item.pageId === undefined ? 0 : selectPageLastEdit(state, item.pageId);
+  return pages(state, narrowing)
+    .sort((a, b) => edited(b) - edited(a))
+    .slice(0, FILTERED_LIMIT);
+}
+
+function narrowingOf(options: PaletteOptions): Narrowing {
+  const filters = options.filters ?? NO_SEARCH_FILTERS;
+  const isTitleOnly = options.isTitleOnly ?? filters.isTitleOnly;
+  // Only the date presets read today; the view always gives it.
+  const today = options.today ?? "";
+  return { filters: { ...filters, isTitleOnly }, today };
 }
 
 // What the palette lists for a query: pages whose title matches, then
 // pages whose text matches, then matching actions. An empty query lists
-// the recent pages, then the actions.
+// the recent pages, then the actions; with filters set, only pages show.
 export function selectPaletteItems(
   state: AppState,
   query: string,
   options: PaletteOptions = {},
 ): PaletteItem[] {
+  const narrowing = narrowingOf(options);
+  const isFiltered = hasSearchFilters(narrowing.filters);
   const needle = foldQuery(query.trim());
-  if (needle === "") return [...recents(state), ...actions()];
+  if (needle === "")
+    return isFiltered
+      ? filteredPages(state, narrowing)
+      : [...recents(state), ...actions()];
   const matches = (item: PaletteItem): boolean =>
     foldQuery(item.label).includes(needle);
-  const found = pages(state)
+  const found = pages(state, narrowing)
     .filter(matches)
     .sort((a, b) => a.label.localeCompare(b.label, "en-US"))
     .slice(0, PAGE_LIMIT);
   const titled = new Set(found.map((item) => item.pageId));
-  const inText =
-    options.isTitleOnly === true
-      ? []
-      : contentItems(state, needle).filter((item) => !titled.has(item.pageId));
-  return [...found, ...inText, ...actions().filter(matches)];
+  const inText = narrowing.filters.isTitleOnly
+    ? []
+    : contentItems(state, needle, narrowing).filter(
+        (item) => !titled.has(item.pageId),
+      );
+  const commands = isFiltered ? [] : actions().filter(matches);
+  return [...found, ...inText, ...commands];
 }

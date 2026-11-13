@@ -1,5 +1,6 @@
 export {
   selectEditedLabel,
+  selectPageLastEdit,
   selectWordCount,
   type WordCount,
 } from "./page-info.selectors.ts";

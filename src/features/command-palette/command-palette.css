@@ -37,38 +37,6 @@
     }
   }
 
-  .command-palette__filters {
-    display: flex;
-    gap: var(--space-inline-sm);
-    padding: var(--space-none) var(--space-inset-md) var(--space-inset-sm);
-  }
-
-  /* A filter chip: a pill, lit while it is on. */
-  .command-palette__chip {
-    display: inline-flex;
-    gap: var(--space-inline-xs);
-    align-items: center;
-    min-block-size: var(--size-control-sm);
-    padding: var(--space-none) var(--space-inset-sm);
-    border: var(--size-border-thin) solid var(--color-border-default);
-    border-radius: var(--radius-full);
-    background-color: transparent;
-    color: var(--color-text-secondary);
-    font-family: inherit;
-    font-size: var(--font-size-sm);
-    cursor: pointer;
-
-    &:hover {
-      background-color: var(--color-bg-hover);
-    }
-
-    &[aria-pressed="true"] {
-      border-color: transparent;
-      background-color: var(--color-bg-selected);
-      color: var(--color-text-link);
-    }
-  }
-
   .command-palette__body {
     display: grid;
     grid-template-columns: minmax(0, var(--size-search-list)) minmax(0, 1fr);

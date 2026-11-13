@@ -1,4 +1,5 @@
 // The shape of the single application state and its initial value.
+import { NO_SEARCH_FILTERS, type SearchFilters } from "./search-filters.ts";
 import type { PageVersion } from "./page-versions.commands.ts";
 import { PEEK_WIDTH, SIDEBAR_WIDTH } from "./widths.ts";
 import {
@@ -49,6 +50,9 @@ export interface OpenOverlay {
   // The overlay's own switches that are on, such as a search's "Title
   // only".
   readonly flags?: readonly string[];
+  // The overlay's own chosen values, by name, such as the pages a search
+  // looks in; a name with no values is a filter shown but not yet set.
+  readonly values?: Readonly<Record<string, readonly string[]>>;
   // Where a menu opened by a right click shows, in viewport pixels.
   readonly point?: { readonly x: number; readonly y: number };
   // The panel shown of an overlay that moves between panels, such as a
@@ -112,12 +116,13 @@ export interface UiState {
   } | null;
   // What has been typed into each view's search field.
   readonly viewSearches: Readonly<Record<ViewId, string>>;
+  // The search's filters, kept while it is closed, as Notion's.
+  readonly searchFilters: SearchFilters;
   // Sidebar and side peek widths in rem.
   readonly sidebarWidth: number;
   readonly peekWidth: number;
   readonly isSidebarCollapsed: boolean;
-  // A window under 768 px wide shows the sidebar as a drawer over the
-  // page, open or closed on its own; neither is saved.
+  // Under 768 px the sidebar is a drawer, open or closed; neither saved.
   readonly isNarrow: boolean;
   readonly isDrawerOpen: boolean;
   // A new version of the app: none, ready to apply, or being applied.
@@ -212,6 +217,7 @@ export function createInitialUiState(): UiState {
     pageVersions: null,
     readReminders: [],
     viewSearches: {},
+    searchFilters: NO_SEARCH_FILTERS,
     sidebarWidth: SIDEBAR_WIDTH.initial,
     peekWidth: PEEK_WIDTH.initial,
     isSidebarCollapsed: false,

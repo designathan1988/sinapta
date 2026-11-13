@@ -33,7 +33,8 @@ function pageBlocks(state: AppState, pageId: BlockId): Block[] {
   return blocks;
 }
 
-function lastEdit(state: AppState, pageId: BlockId): number {
+// When the page or a block of its text last changed, in milliseconds.
+export function selectPageLastEdit(state: AppState, pageId: BlockId): number {
   const times = pageBlocks(state, pageId).map((b) => Date.parse(b.updatedAt));
   return Math.max(0, ...times);
 }
@@ -44,7 +45,7 @@ export function selectEditedLabel(
   pageId: BlockId,
   now: string,
 ): string {
-  const edited = lastEdit(state, pageId);
+  const edited = selectPageLastEdit(state, pageId);
   const elapsed = Math.max(0, Date.parse(now) - edited);
   if (elapsed < MINUTE_MS) return `${TEXT.edited} ${TEXT.justNow}`;
   if (elapsed < HOUR_MS) {

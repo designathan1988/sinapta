@@ -29,6 +29,9 @@ export interface DatePickerProps {
   // Undefined clears the date.
   readonly onChange: (next: DateRangeValue | undefined) => void;
   readonly onMonth: (month: string) => void;
+  // False leaves out the fields of the chosen days, as in the search's
+  // date filter, which shows only the month.
+  readonly hasFields?: boolean;
 }
 
 // The value after a day is pressed: with an end, a later day ends the

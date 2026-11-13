@@ -1,0 +1,196 @@
+@layer features {
+  /* Notion's search filters: a row of chips under the field. */
+  .command-palette__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-inline-xs);
+    padding: var(--space-none) var(--space-inset-md) var(--space-inset-sm);
+  }
+
+  .command-palette__filter {
+    display: contents;
+  }
+
+  /* A chip: 24 px, a pill, an icon, its label and a small chevron down,
+     in the secondary color, no border; blue on a blue wash once set. */
+  .command-palette__chip {
+    display: inline-flex;
+    gap: var(--space-inline-icon);
+    align-items: center;
+    block-size: var(--size-control-sm);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: none;
+    border-radius: var(--radius-full);
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: var(--color-bg-hover);
+    }
+
+    &[data-active] {
+      background-color: var(--color-accent-subtle);
+      color: var(--color-text-accent);
+    }
+
+    & > .icon {
+      flex: none;
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+    }
+
+    /* "Filter" is quieter and rounder at its start, as Notion's. */
+    &[data-kind="filter"] {
+      padding-inline: var(--space-inline-xs) var(--space-inset-sm);
+      border-radius: var(--radius-lg);
+      color: var(--color-text-tertiary);
+    }
+  }
+
+  /* A chip's small chevron, pointing down. */
+  .command-palette__chevron {
+    display: inline-grid;
+    place-items: center;
+
+    & > .icon {
+      inline-size: var(--size-icon-xs);
+      block-size: var(--size-icon-xs);
+      rotate: 90deg;
+    }
+  }
+
+  /* "In page" lists its pages 250 px wide, as Notion's. */
+  .command-palette__chip[data-kind="in-page"] + [data-overlay] {
+    inline-size: var(--size-search-in-page);
+    min-inline-size: var(--size-search-in-page);
+  }
+
+  /* The date filter's popover: a header, the presets, a month, Remove. */
+  .command-palette__date {
+    inline-size: var(--size-search-date);
+  }
+
+  .command-palette__date-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-inset-xs) var(--space-inset-xs) var(--space-inset-sm);
+  }
+
+  .command-palette__date-field,
+  .command-palette__date-clear {
+    display: inline-flex;
+    gap: var(--space-inline-xxs);
+    align-items: center;
+    padding: var(--space-none) var(--space-inline-xxs);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: var(--font-size-xs);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    & > .icon {
+      inline-size: var(--size-icon-xs);
+      block-size: var(--size-icon-xs);
+      rotate: 90deg;
+    }
+  }
+
+  .command-palette__date-presets {
+    display: grid;
+  }
+
+  .command-palette__date-row {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    min-block-size: var(--size-menu-row);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: none;
+    border-radius: var(--radius-md);
+    background-color: transparent;
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+    text-align: start;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--color-bg-hover);
+    }
+
+    & > span {
+      flex: 1;
+    }
+
+    & > .icon {
+      flex: none;
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+    }
+  }
+
+  /* The pages chosen for "In page", as small tokens over its list. */
+  .command-palette__tokens {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-inline-xs);
+    padding: var(--space-none) var(--space-inset-xs);
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  .command-palette__token {
+    display: inline-flex;
+    gap: var(--space-inline-xxs);
+    align-items: center;
+    max-inline-size: 100%;
+    padding-inline-start: var(--space-inline-sm);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-hover);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+
+    & > span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    & > button {
+      display: inline-grid;
+      place-items: center;
+      inline-size: var(--size-icon-sm);
+      block-size: var(--size-icon-sm);
+      padding: var(--space-none);
+      border: none;
+      border-radius: var(--radius-sm);
+      background-color: transparent;
+      color: inherit;
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--color-bg-active);
+      }
+
+      & > .icon {
+        inline-size: var(--size-icon-xs);
+        block-size: var(--size-icon-xs);
+      }
+    }
+  }
+}

@@ -5,6 +5,7 @@ import {
   openChildOverlay,
   openOverlayPanel,
   setOverlayQuery,
+  setOverlayValues,
 } from "./ui-overlay.commands.ts";
 import { openOverlay, uiCommands } from "./ui.commands.ts";
 
@@ -99,5 +100,25 @@ describe("an overlay's panels and child list", () => {
     app.dispatch(openOverlayPanel.create({ panel: "group" }));
 
     expect(app.store.getState().ui.overlay).toBeNull();
+  });
+});
+
+describe("an overlay's chosen values", () => {
+  it("are set by name with its lists kept open, and taken away by null", () => {
+    const app = withOverlay();
+    app.dispatch(openChildOverlay.create({ anchorId: "in" }));
+
+    app.dispatch(setOverlayValues.create({ name: "in", values: ["a", "b"] }));
+    app.dispatch(setOverlayValues.create({ name: "date", values: [] }));
+    expect(app.overlay()).toEqual({
+      kind: "settings",
+      anchorId: "db",
+      children: [{ anchorId: "in" }],
+      values: { in: ["a", "b"], date: [] },
+    });
+
+    app.dispatch(setOverlayValues.create({ name: "in", values: null }));
+    app.dispatch(setOverlayValues.create({ name: "date", values: null }));
+    expect(app.overlay()?.values).toBeUndefined();
   });
 });

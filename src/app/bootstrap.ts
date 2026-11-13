@@ -26,6 +26,7 @@ import { peekCommands } from "../features/row-peek/index.ts";
 import { templateCommands } from "../features/templates/index.ts";
 import { inboxCommands } from "../features/inbox/index.ts";
 import { markdownImportCommands } from "../features/markdown-import/index.ts";
+import { searchFilterCommands } from "../features/command-palette/index.ts";
 import { startReminderNotices } from "./reminder-notices.ts";
 import { startTemplateRepeats } from "./template-repeats.ts";
 import {
@@ -111,6 +112,7 @@ const COMMANDS = [
   ...inboxCommands,
   ...markdownImportCommands,
   ...pageVersionCommands,
+  ...searchFilterCommands,
 ];
 
 // Keys that apply while one part of the interface is active.

@@ -19,27 +19,23 @@ import {
   selectPaletteItems,
   type PaletteItem,
 } from "./command-palette.selectors.ts";
+import { renderSearchFilters } from "./search-filters.view.ts";
 
 interface Palette {
   readonly query: string;
   readonly items: readonly PaletteItem[];
   readonly activeIndex: number;
-  readonly isTitleOnly: boolean;
 }
 
-// The palette's own switches, kept in the open overlay's flags.
-const TITLE_ONLY = "title-only";
-
+// Typing or moving through the list closes any open filter list.
 function update(
   dispatch: Dispatch,
-  palette: Pick<Palette, "query" | "activeIndex" | "isTitleOnly">,
+  palette: Pick<Palette, "query" | "activeIndex">,
 ): void {
-  const flags = palette.isTitleOnly ? [TITLE_ONLY] : [];
   const overlay = {
     kind: PALETTE_OVERLAY,
     query: palette.query,
     activeIndex: palette.activeIndex,
-    flags,
   };
   dispatch(openOverlay.create({ overlay }));
 }
@@ -103,22 +99,6 @@ function renderField(palette: Palette, dispatch: Dispatch): TemplateResult {
   </label>`;
 }
 
-function renderFilters(palette: Palette, dispatch: Dispatch): TemplateResult {
-  const toggle = (): void => {
-    update(dispatch, { ...palette, isTitleOnly: !palette.isTitleOnly });
-  };
-  return html`<div class="command-palette__filters">
-    <button
-      type="button"
-      class="command-palette__chip"
-      aria-pressed=${String(palette.isTitleOnly)}
-      @click=${toggle}
-    >
-      <span aria-hidden="true">Aa</span> ${COPY.palette.titleOnly}
-    </button>
-  </div>`;
-}
-
 function renderList(palette: Palette, dispatch: Dispatch): TemplateResult {
   const { items, activeIndex } = palette;
   const onClick = (event: Event): void => {
@@ -147,7 +127,7 @@ function renderContent(
   dispatch: Dispatch,
 ): TemplateResult {
   return html`<div class="command-palette">
-    ${renderField(palette, dispatch)} ${renderFilters(palette, dispatch)}
+    ${renderField(palette, dispatch)} ${renderSearchFilters(state, dispatch)}
     <div class="command-palette__body">
       ${renderList(palette, dispatch)}
       ${renderPreview(state, palette.items[palette.activeIndex])}
@@ -165,8 +145,10 @@ export function renderCommandPalette(
 ): TemplateResult {
   const { overlay } = state.ui;
   const query = overlay?.query ?? "";
-  const isTitleOnly = overlay?.flags?.includes(TITLE_ONLY) === true;
-  const items = selectPaletteItems(state, query, { isTitleOnly });
+  const items = selectPaletteItems(state, query, {
+    filters: state.ui.searchFilters,
+    today: new Date().toLocaleDateString("en-CA"),
+  });
   const activeIndex = Math.min(
     overlay?.activeIndex ?? 0,
     Math.max(0, items.length - 1),
@@ -175,11 +157,7 @@ export function renderCommandPalette(
     title: COPY.palette.title,
     closeLabel: COPY.palette.close,
     variant: "search",
-    content: renderContent(
-      state,
-      { query, items, activeIndex, isTitleOnly },
-      dispatch,
-    ),
+    content: renderContent(state, { query, items, activeIndex }, dispatch),
     onClose: () => dispatch(closeOverlay.create({})),
   });
 }

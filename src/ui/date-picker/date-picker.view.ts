@@ -152,7 +152,8 @@ function renderDay(day: string, isInMonth: boolean, props: DatePickerProps) {
 
 export function renderDatePicker(props: DatePickerProps): TemplateResult {
   return html`<div class="date-picker" aria-label=${props.label} role="group">
-    ${renderFields(props)} ${renderHeader(props)}
+    ${props.hasFields === false ? nothing : renderFields(props)}
+    ${renderHeader(props)}
     <div class="date-picker__grid">
       ${TEXT.weekdays.map(
         (weekday) => html`<span class="date-picker__weekday">${weekday}</span>`,

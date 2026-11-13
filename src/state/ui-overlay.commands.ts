@@ -83,9 +83,29 @@ export const setOverlayQuery = defineCommand<{ query: string }>({
     }),
 });
 
+// Sets the values the open overlay holds under a name, keeping its lists
+// open; null takes the name away.
+export const setOverlayValues = defineCommand<{
+  name: string;
+  values: string[] | null;
+}>({
+  type: "ui.setOverlayValues",
+  handle: (state, command) =>
+    withOverlay(state.ui, (overlay) => {
+      const { [command.name]: _old, ...rest } = overlay.values ?? {};
+      const values =
+        command.values === null
+          ? rest
+          : { ...rest, [command.name]: command.values };
+      const { values: _values, ...others } = overlay;
+      return Object.keys(values).length === 0 ? others : { ...others, values };
+    }),
+});
+
 export const uiOverlayCommands = [
   openOverlayPanel,
   openChildOverlay,
   closeChildOverlay,
   setOverlayQuery,
+  setOverlayValues,
 ];
