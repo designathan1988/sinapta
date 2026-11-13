@@ -56,12 +56,36 @@ function sortItems(column: TableColumn, context: TableContext): MenuItem[] {
     icon: "close" as const,
     onSelect: sort(null, true),
   };
+  const [up, down] = sortNames(column.property.type);
   return [
-    item(TEXT.sortAscending, "ascending"),
-    item(TEXT.sortDescending, "descending"),
+    item(up, "ascending"),
+    item(down, "descending"),
     ...(hasOtherSort ? then : []),
     ...(column.sortDirection === undefined ? [] : [clear]),
   ];
+}
+
+const SORT_KINDS: Readonly<Record<string, keyof typeof TEXT.sortNames>> = {
+  title: "text",
+  text: "text",
+  url: "text",
+  email: "text",
+  phone: "text",
+  date: "date",
+  "created-time": "date",
+  "edited-time": "date",
+  number: "number",
+  "unique-id": "number",
+  checkbox: "checkbox",
+};
+
+// The column's two orders in Notion's words; select and status keep
+// ascending and descending.
+function sortNames(type: string): readonly [string, string] {
+  const kind = SORT_KINDS[type];
+  return kind === undefined
+    ? [TEXT.sortAscending, TEXT.sortDescending]
+    : TEXT.sortNames[kind];
 }
 
 export function sortItem(column: TableColumn, context: TableContext): MenuItem {

@@ -9,6 +9,13 @@ export const DATABASE_MENU_TEXT = {
     more: "More options",
   },
   sort: "Sort",
+  // Notion names a column's two orders by what its values are.
+  sortNames: {
+    text: ["Sort A → Z", "Sort Z → A"],
+    date: ["Sort old → new", "Sort new → old"],
+    number: ["Sort low → high", "Sort high → low"],
+    checkbox: ["Sort unchecked → checked", "Sort checked → unchecked"],
+  },
   insertLeft: "Insert left",
   insertRight: "Insert right",
   duplicateProperty: "Duplicate property",
