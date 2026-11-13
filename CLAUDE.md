@@ -63,23 +63,33 @@ No UI framework. Full specification: docs/specification.md.
 - If a rule blocks the task, stop and ask. Do not work around it.
 
 ## Visual checks
-- Judge the interface only from photos at native pixels. Never use a
-  screenshot of the built-in browser pane as a photo, of any site: the
-  pane shrinks every frame to 800 px, and its zoom only crops that.
-- Pagecraft: npm run capture -- <steps.json> (scripts/capture.ts):
-  headless Chrome through playwright-core, never a window, 1440x900 at
-  2x, against the review server, http://localhost:5190. Each step can
-  click, point at an element with the real mouse, photograph the window
-  or a region, and print a value read from the page. Open every PNG
-  with Read and look at it.
-- Notion: the owner's Chrome through the Claude in Chrome extension
-  (tools mcp__claude-in-chrome__*; first tabs_context_mcp with
-  createIfEmpty, then work in that new tab). Notion's test workspace is
-  signed in there. A photo is the extension's zoom of a region (at most
-  about 1440 px of page per zoom, returned at the monitor's own pixels),
-  saved with save_to_disk and copied to .captures/notion/NNN-name.png.
-  The plain screenshot is only for aiming. Measure with javascript_tool
-  (getComputedStyle, inline styles, aria-label) under a real hover.
+- Every photo, of Pagecraft and of Notion alike, comes from one command
+  and nothing else: npm run capture -- <steps.json> [outDir]
+  (scripts/capture.ts). It photographs in headless Chrome, never a
+  visible window, at 1440x900 (a laptop screen) and 2x, so each PNG is
+  2880x1800. Open every PNG with Read and look at it.
+- Never use as a photo: the built-in browser pane (shrinks to 800 px),
+  the Claude in Chrome extension's screenshot (shrinks the window) or
+  its zoom (1x at most, laid out at the owner's window width), or any
+  window that is not 1440x900. They are for nothing in visual checks.
+- steps.json: { "url": "...", "profile": "notion"?, "theme": "dark"?,
+  "steps": [ { "name": "kebab-name", "eval"?, "click"?, "type"?,
+  "press"?, "hover"?, "clip"?, "pad"?, "wait"?, "read"? } ] }. Selectors
+  are Playwright's (CSS, or text=Label). click, type and press act;
+  hover points with the real mouse; clip photographs a region around an
+  element instead of the window; read prints a value (getComputedStyle,
+  sizes) to measure. Steps run in order in one page.
+- Pagecraft: no url and no profile; it opens the review server,
+  http://localhost:5190. Photos go to .captures/.
+- Notion: "profile": "notion" and a Notion url. The photo is taken in a
+  fresh 1440x900 2x context that carries the sign-in of a plain Chrome
+  window kept open on port 9333 (profile .captures/profiles/notion, the
+  test account signed in). Photos go to .captures/notion/.
+  If that window is closed, reopen it, never close it yourself:
+  npm run capture:login -- notion https://www.notion.so/login
+  (scripts/capture-login.ts starts plain Chrome, not an automated one,
+  because Google refuses to sign in inside automated browsers). If it
+  shows the login page, ask the owner to sign in there.
 - Install what a check needs (npm devDependencies, Claude Code plugins
   such as superpowers-chrome) instead of working around it.
 - Check every control in each of its states: at rest, pointed at,

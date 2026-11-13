@@ -5,6 +5,8 @@ const stepSchema = v.object({
   name: v.pipe(v.string(), v.regex(/^[a-z0-9-]+$/)),
   eval: v.optional(v.string()),
   click: v.optional(v.string()),
+  type: v.optional(v.string()),
+  press: v.optional(v.string()),
   hover: v.optional(v.string()),
   clip: v.optional(v.string()),
   pad: v.optional(v.number()),
@@ -14,6 +16,9 @@ const stepSchema = v.object({
 
 export const capturePlanSchema = v.object({
   url: v.optional(v.string()),
+  // A signed-in profile kept open by npm run capture:login (port 9333),
+  // for a site that needs a sign-in, such as Notion.
+  profile: v.optional(v.pipe(v.string(), v.regex(/^[a-z0-9-]+$/))),
   theme: v.optional(v.picklist(["light", "dark"])),
   steps: v.array(stepSchema),
 });

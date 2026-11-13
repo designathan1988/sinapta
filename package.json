@@ -13,6 +13,7 @@
     "test:watch": "vitest --watch",
     "tokens": "node scripts/build-tokens.ts",
     "capture": "node scripts/capture.ts",
+    "capture:login": "node scripts/capture-login.ts",
     "lint": "eslint . --max-warnings 0 --cache --cache-location node_modules/.cache/eslint/ && stylelint \"src/**/*.css\" --max-warnings 0 --cache --cache-location node_modules/.cache/stylelint/ && prettier --check .",
     "format": "prettier --write .",
     "verify": "npm run check && npm run lint && npm run test"
