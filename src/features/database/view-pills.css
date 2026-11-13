@@ -28,18 +28,14 @@
       background-color: var(--color-bg-hover);
     }
 
+    /* Notion's pill (n76-light, n76-dark): no line around it, one blue at
+       rest and on hover, a deeper one while its rule is open. */
     &[data-rule] {
-      border-color: color-mix(
-        in oklch,
-        var(--color-accent-default) 35%,
-        transparent
-      );
-      background-color: var(--color-accent-subtle);
+      background-color: var(--color-accent-pill);
       color: var(--color-text-accent);
 
-      /* Open, as Notion's (n69-date-cleanup): rgb(40, 72, 107). */
       &[aria-expanded="true"] {
-        background-color: var(--color-accent-pill);
+        background-color: var(--color-accent-pill-open);
       }
     }
 
