@@ -35,6 +35,7 @@ import {
 } from "../features/page-history/index.ts";
 import {
   commentCommands,
+  reactionCommands,
   discussionTidier,
   valueDiscussionTidier,
 } from "../features/comments/index.ts";
@@ -108,6 +109,7 @@ const COMMANDS = [
   ...onboardingCommands,
   ...templateCommands,
   ...commentCommands,
+  ...reactionCommands,
   ...pageHistoryCommands,
   ...inboxCommands,
   ...markdownImportCommands,

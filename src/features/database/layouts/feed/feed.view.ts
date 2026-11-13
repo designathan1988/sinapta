@@ -2,6 +2,7 @@
 // and title, which open the row, and the first blocks of its page.
 import { openRow } from "../../row-open.commands.ts";
 import "./feed.css";
+import { renderPageReactions } from "../../../comments/index.ts";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { COPY } from "../../../../ui/copy.ts";
 import { selectCellContext } from "../../cell-context.selectors.ts";
@@ -59,6 +60,7 @@ function renderPost(post: FeedPost, context: TableContext): TemplateResult {
         ? html`<p class="feed__empty">${COPY.database.feedEmpty}</p>`
         : post.blocks.map(renderBlock)
     }
+    ${renderPageReactions(context.state, context.dispatch, row.id)}
   </article>`;
 }
 

@@ -2,6 +2,7 @@
 // its author, time and text, a reply field, and its resolve button; and a
 // field that starts one.
 import "./comments.css";
+import "./reactions.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import type { Discussion, PageBlock } from "../../blocks/page/index.ts";
 import type { BlockId, CommentRange } from "../../model/index.ts";
@@ -18,6 +19,7 @@ import {
 } from "./comment.commands.ts";
 import { commentTime } from "./comments.selectors.ts";
 import { renderCommentDelete } from "./comment-delete.view.ts";
+import { renderAddReaction, renderReactions } from "./reactions.view.ts";
 
 const TEXT = COPY.comments;
 
@@ -101,6 +103,13 @@ function renderComment(
   discussion: Discussion,
 ): TemplateResult {
   const target = { pageId: context.page.id, discussionId: discussion.id };
+  const reaction = {
+    pageId: context.page.id,
+    discussion,
+    comment,
+    dispatch: context.dispatch,
+    overlay: context.overlay ?? null,
+  };
   // A value's discussion quotes the value in its first comment, under the
   // author, as Notion's.
   const isFirst = discussion.comments[0]?.id === comment.id;
@@ -118,8 +127,10 @@ function renderComment(
         >
       </p>
       ${quote}
-      <p class="comments__text">${comment.text}</p>
+      ${comment.text === "" ? nothing : html`<p class="comments__text">${comment.text}</p>`}
+      ${renderReactions(reaction)}
     </div>
+    ${renderAddReaction(reaction)}
     ${renderCommentDelete(context.overlay ?? null, context.dispatch, {
       ...target,
       commentId: comment.id,

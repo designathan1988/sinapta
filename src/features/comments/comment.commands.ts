@@ -33,7 +33,7 @@ function discussionsUpdate(
 }
 
 // The block's text with a discussion marked on a range, or unmarked.
-function textUpdate(
+export function textUpdate(
   state: AppState,
   blockId: BlockId | null,
   change: (text: RichText) => RichText,
@@ -61,6 +61,9 @@ export interface StartDiscussionPayload {
   // On a database row: the property value it is about, as it reads now.
   readonly value?: ValueAbout;
   readonly text: string;
+  // A reaction it starts with, as Notion's "Add reaction" on selected
+  // text; the text may then be empty.
+  readonly reaction?: string;
 }
 
 export interface ValueAbout {
@@ -91,9 +94,14 @@ export const startDiscussion = defineCommand<StartDiscussionPayload>({
     const text = command.text.trim();
     if (page === undefined || id === undefined || commentId === undefined)
       return {};
-    if (text === "") return {};
-    const { blockId, range } = command;
-    const comment = { id: commentId, text, createdAt: command.meta.now };
+    const { blockId, range, reaction } = command;
+    if (text === "" && reaction === undefined) return {};
+    const comment = {
+      id: commentId,
+      text,
+      createdAt: command.meta.now,
+      ...(reaction !== undefined && { reactions: [reaction] }),
+    };
     const discussion: Discussion = {
       id,
       blockId,
@@ -112,7 +120,7 @@ export const startDiscussion = defineCommand<StartDiscussionPayload>({
   },
 });
 
-function changeDiscussion(
+export function changeDiscussion(
   state: AppState,
   target: { readonly pageId: BlockId; readonly discussionId: BlockId },
   change: (discussion: Discussion) => Discussion | null,

@@ -52,7 +52,7 @@ function rendered(overlay: OpenOverlay | null = null) {
 const RANGE = { blockId: A, start: 6, end: 11 };
 
 describe("the selection panel", () => {
-  it("lays out Notion's rows: type, two rows of tools, then Comment", () => {
+  it("lays out Notion's rows: type, two rows of tools, then Comment and Add reaction", () => {
     const { host } = rendered();
     const controls = [...host.querySelectorAll("button")].map(
       (item) => item.getAttribute("aria-label") ?? item.textContent.trim(),
@@ -71,6 +71,7 @@ describe("the selection panel", () => {
       "Equation",
       "More",
       "Comment",
+      "Add reaction",
     ]);
   });
 

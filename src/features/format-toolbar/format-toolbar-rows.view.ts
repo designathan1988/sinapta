@@ -14,7 +14,10 @@ import {
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon, type IconName } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
-import { COMMENT_COMPOSER_OVERLAY } from "../comments/index.ts";
+import {
+  COMMENT_COMPOSER_OVERLAY,
+  REACTION_OVERLAY,
+} from "../comments/index.ts";
 import {
   BLOCK_MENU_OVERLAY,
   blockTypeName,
@@ -184,16 +187,32 @@ export function renderSecondRow(context: PanelContext): TemplateResult {
   </div>`;
 }
 
-// "Comment": a discussion on the selected text.
+// "Comment": a discussion on the selected text; beside it, as Notion's,
+// "Add reaction", a discussion that is a reaction alone.
 export function renderCommentRow(context: PanelContext): TemplateResult {
-  return html`<button
-    type="button"
-    class="format-toolbar__row"
-    aria-keyshortcuts=${TEXT.keys.comment}
-    data-tooltip=${`${TEXT.comment} ${TEXT.keys.comment}`}
-    @click=${open(context, COMMENT_COMPOSER_OVERLAY)}
-  >
-    ${renderIcon("comment")}
-    <span class="format-toolbar__row-label">${TEXT.comment}</span>
-  </button>`;
+  const isReacting = context.state.ui.overlay?.kind === REACTION_OVERLAY;
+  return html`<div class="format-toolbar__comment-row">
+    <button
+      type="button"
+      class="format-toolbar__row"
+      aria-keyshortcuts=${TEXT.keys.comment}
+      data-tooltip=${`${TEXT.comment} ${TEXT.keys.comment}`}
+      @click=${open(context, COMMENT_COMPOSER_OVERLAY)}
+    >
+      ${renderIcon("comment")}
+      <span class="format-toolbar__row-label">${TEXT.comment}</span>
+    </button>
+    <button
+      type="button"
+      class="format-toolbar__button"
+      data-overlay-anchor
+      aria-haspopup="dialog"
+      aria-expanded=${String(isReacting)}
+      aria-label=${COPY.comments.addReaction}
+      data-tooltip=${COPY.comments.addReaction}
+      @click=${open(context, REACTION_OVERLAY)}
+    >
+      ${renderIcon("smile")}
+    </button>
+  </div>`;
 }

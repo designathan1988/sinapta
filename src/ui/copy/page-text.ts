@@ -50,6 +50,8 @@ export const PAGE_TEXT = {
     closeResolved: "Close resolved comments",
     noResolved: "No resolved comments on this page.",
     reopen: "Reopen",
+    addReaction: "Add reaction",
+    removeReaction: "Remove reaction",
   },
   backlinks: {
     label: "Backlinks",

@@ -3,6 +3,12 @@ export {
   discussionTidier,
   startDiscussion,
 } from "./comment.commands.ts";
+export { reactionCommands } from "./reaction.commands.ts";
+export { renderPageReactions } from "./page-reactions.view.ts";
+export {
+  REACTION_OVERLAY,
+  renderReactionPicker,
+} from "./reaction-picker.view.ts";
 export {
   selectBlockDiscussionCount,
   selectResolvedDiscussions,

@@ -39,6 +39,9 @@ export const pageCommentSchema = v.object({
   id: blockIdSchema,
   text: v.string(),
   createdAt: v.string(),
+  // The emoji the owner reacted with, as Notion's reactions; a comment
+  // started by a reaction alone has no text.
+  reactions: v.optional(v.array(v.string())),
 });
 
 // A discussion, as Notion's: its comments, about the page, one of its

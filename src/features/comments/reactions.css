@@ -1,0 +1,59 @@
+@layer features {
+  /* Reactions, as Notion's: rounded chips under a comment, the emoji and
+     its count, and "Add reaction" while the comment is pointed at. */
+  .comments__reactions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-inline-xs);
+    margin-block-start: var(--space-stack-xs);
+  }
+
+  .comments__reaction {
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    min-block-size: var(--size-control-sm);
+    padding: var(--space-none) var(--space-inset-xs);
+    border: var(--size-border-thin) solid var(--color-accent-default);
+    border-radius: var(--radius-full);
+    background-color: var(--color-bg-selected);
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: var(--font-size-xs);
+    cursor: pointer;
+  }
+
+  .comments__add-reaction {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    inline-size: var(--size-control-sm);
+    block-size: var(--size-control-sm);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-tertiary);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+      color: var(--color-text-primary);
+    }
+  }
+
+  .comments__comment:not(:hover, :focus-within)
+    > .comments__add-reaction[aria-expanded="false"] {
+    opacity: 0;
+  }
+
+  /* The panel's last row: Comment, then Add reaction at its end. */
+  .format-toolbar__comment-row {
+    display: flex;
+    align-items: center;
+
+    & > .format-toolbar__row {
+      flex: 1;
+    }
+  }
+}
