@@ -1,6 +1,8 @@
-// A right click on a row of the table opens the row page's menu. From the
-// keyboard (Shift+F10 or the menu key) there is no pointer, so the menu
-// opens under the cell that has focus.
+// A right click on a row of the table, or on a board or gallery card,
+// opens the row page's menu. From the keyboard (Shift+F10 or the menu key)
+// there is no pointer, so the menu opens under the cell or card that has
+// focus.
+import type { BlockId } from "../../model/index.ts";
 import { openOverlay, type Dispatch } from "../../state/index.ts";
 import { PAGE_MENU_OVERLAY, pageMenuAnchorId } from "../page-menu/index.ts";
 import { cellOf } from "./table-cell-ref.ts";
@@ -13,7 +15,7 @@ function pointOf(event: MouseEvent): { x: number; y: number } {
   }
   const cell =
     event.target instanceof Element
-      ? event.target.closest("[data-cell]")
+      ? event.target.closest("[data-cell], [data-row-id]")
       : null;
   const rect = cell?.getBoundingClientRect();
   return { x: rect?.left ?? 0, y: rect?.bottom ?? 0 };
@@ -25,6 +27,18 @@ export function onRowContextMenu(event: Event, dispatch: Dispatch): void {
   if (cell === undefined) return;
   event.preventDefault();
   const anchorId = pageMenuAnchorId(ROW_PLACE, cell.rowId);
+  const overlay = { kind: PAGE_MENU_OVERLAY, anchorId, point: pointOf(event) };
+  dispatch(openOverlay.create({ overlay }));
+}
+
+// A card's own menu: the same as its row's in the table.
+export function onCardContextMenu(
+  event: MouseEvent,
+  rowId: BlockId,
+  dispatch: Dispatch,
+): void {
+  event.preventDefault();
+  const anchorId = pageMenuAnchorId(ROW_PLACE, rowId);
   const overlay = { kind: PAGE_MENU_OVERLAY, anchorId, point: pointOf(event) };
   dispatch(openOverlay.create({ overlay }));
 }

@@ -1,6 +1,7 @@
 // A row shown as a card: its title and the values of the view's visible
 // properties. Board and gallery views show their rows this way.
 import { openRow } from "../../row-open.commands.ts";
+import { onCardContextMenu } from "../../table-context-menu.view.ts";
 import "./row-card.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import {
@@ -83,6 +84,9 @@ export function renderRowCard(options: RowCardOptions): TemplateResult {
     aria-description=${options.description ?? nothing}
     @click=${() => dispatch(openRow.create({ rowId: row.id, viewId: options.viewId }))}
     @keydown=${options.onKeyDown ?? nothing}
+    @contextmenu=${(event: MouseEvent) => {
+      onCardContextMenu(event, row.id, dispatch);
+    }}
   >
     ${renderPicture(options.picture)}
     <span class="row-card__title" ?data-untitled=${row.title === ""}

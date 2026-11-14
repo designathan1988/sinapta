@@ -48,3 +48,43 @@ describe("renderRowCard", () => {
     expect(gallery?.hasAttribute("data-fit")).toBe(true);
   });
 });
+
+describe("a card's right click", () => {
+  it("opens the row page's menu where the pointer is", () => {
+    const app = createDatabaseApp(
+      [{ name: "Status", type: "status" }],
+      [["soon"]],
+    );
+    app.dispatch(
+      setViewType.create({ viewId: app.view().id, viewType: "board" }),
+    );
+    const sent: unknown[] = [];
+    const host = document.createElement("div");
+    render(
+      renderDatabase(app.store.getState(), (command) => {
+        sent.push(command);
+        return { ok: true };
+      }),
+      host,
+    );
+
+    host.querySelector(".row-card")?.dispatchEvent(
+      new MouseEvent("contextmenu", {
+        bubbles: true,
+        cancelable: true,
+        clientX: 40,
+        clientY: 60,
+      }),
+    );
+
+    expect(sent).toContainEqual(
+      expect.objectContaining({
+        type: "ui.openOverlay",
+        overlay: expect.objectContaining({
+          kind: "page-menu",
+          point: { x: 40, y: 60 },
+        }),
+      }),
+    );
+  });
+});
