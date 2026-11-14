@@ -2,7 +2,12 @@
 // the list of types to turn the block into.
 import { AI_MENU_OVERLAY, renderAskAiMenu } from "../ai/index.ts";
 import { html, nothing, type TemplateResult } from "lit-html";
-import { BLOCK_DEFINITIONS, isTextBlock, textOf } from "../../blocks/index.ts";
+import {
+  BLOCK_DEFINITIONS,
+  countText,
+  isTextBlock,
+  textOf,
+} from "../../blocks/index.ts";
 import { parseBlockId, type Block, type BlockId } from "../../model/index.ts";
 import {
   closeOverlay,
@@ -14,7 +19,7 @@ import {
   type OpenOverlay,
   type TextSelection,
 } from "../../state/index.ts";
-import { COPY } from "../../ui/copy.ts";
+import { COPY, countLabel } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { renderMenu, type MenuItem } from "../../ui/menu/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
@@ -26,6 +31,7 @@ import { convertBlock } from "./editor-convert.commands.ts";
 import { insertBlockBelow } from "./editor-insert.commands.ts";
 import type { InputContext } from "./editor-input.view.ts";
 import { BLOCK_COLOR_OVERLAY } from "./editor-color-menu.view.ts";
+import { selectBlockOrder, selectSelectedBlocks } from "./editor.selectors.ts";
 
 export const BLOCK_MENU_OVERLAY = "block-menu";
 
@@ -172,9 +178,22 @@ export function renderBlockMenu(
         onQuery: (query) => dispatch(setOverlayQuery.create({ query })),
       },
       ...(overlay.point ? { point: overlay.point } : { placement: "before" }),
+      ...selectionFooter(state, block.id),
     });
   }
   return renderPanel({ block, overlay, dispatch }, onClose);
+}
+
+// Opened on selected blocks, the menu ends with their words and
+// characters, as the page menu ends with the page's.
+function selectionFooter(state: AppState, blockId: BlockId) {
+  const selected = selectSelectedBlocks(state);
+  if (!selected.some((each) => each.id === blockId)) return {};
+  const inside = selected.flatMap((each) => [
+    each,
+    ...selectBlockOrder(state, each.id),
+  ]);
+  return { footer: countLabel(countText(inside)) };
 }
 
 // The panels the block menu opens in its place: Turn into and Ask AI.

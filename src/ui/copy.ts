@@ -61,4 +61,4 @@ export const COPY = {
   meeting: MEETING_TEXT.meeting,
 } as const;
 
-export { pluralize } from "./copy/index.ts";
+export { countLabel, pluralize } from "./copy/index.ts";

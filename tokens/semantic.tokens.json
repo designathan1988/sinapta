@@ -596,8 +596,8 @@
     },
     "content": {
       "max": {
-        "$description": "A page's text column, as Notion's at 1440 px: 704 px.",
-        "$value": "{base.size.44}"
+        "$description": "A page's text column, as Notion's at 1440 px (n106-column): 708 px, in its 900 px frame.",
+        "$value": "{base.size.44x25}"
       }
     },
     "outline": {

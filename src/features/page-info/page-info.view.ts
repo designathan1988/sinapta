@@ -19,7 +19,7 @@ import {
 } from "../../state/index.ts";
 import { linkToPage } from "../../ui/address/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
-import { COPY, pluralize } from "../../ui/copy.ts";
+import { COPY, countLabel } from "../../ui/copy.ts";
 import { renderCommentsButton } from "../comments/index.ts";
 import { writeSystemClipboard } from "../editor/index.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
@@ -98,8 +98,5 @@ export function renderPageInfo(
 
 // "12 words · 64 characters", for the page menu.
 export function wordCountLabel(state: AppState, pageId: BlockId): string {
-  const count = selectWordCount(state, pageId);
-  const words = `${String(count.words)} ${pluralize(count.words, COPY.pageInfo.words)}`;
-  const characters = `${String(count.characters)} ${pluralize(count.characters, COPY.pageInfo.characters)}`;
-  return `${words} · ${characters}`;
+  return countLabel(selectWordCount(state, pageId));
 }

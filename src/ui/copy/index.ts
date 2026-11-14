@@ -2,6 +2,7 @@ export { ACCOUNT_TEXT } from "./account-text.ts";
 export { AI_TEXT } from "./ai-text.ts";
 export { AUTOMATION_TEXT } from "./automation-text.ts";
 export { CADENCE_TEXT } from "./cadence-text.ts";
+export { countLabel } from "./count-label.ts";
 export { BLOCK_TEXT } from "./block-text.ts";
 export { DATABASE_MENU_TEXT } from "./database-menu-text.ts";
 export { DATABASE_OPTIONS_TEXT } from "./database-options-text.ts";

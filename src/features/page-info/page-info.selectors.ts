@@ -1,7 +1,7 @@
 // What the top bar and the page menu say about the open page: when it was
 // last edited, and how many words and characters its text has.
 import { isPageLike } from "../../blocks/page/index.ts";
-import { isTextBlock, textOf } from "../../blocks/index.ts";
+import { countText, type WordCount } from "../../blocks/index.ts";
 import type { Block, BlockId } from "../../model/index.ts";
 import type { AppState } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
@@ -57,21 +57,6 @@ export function selectEditedLabel(
   return `${TEXT.edited} ${DAY_FORMAT.format(edited)}`;
 }
 
-const words = new Intl.Segmenter(undefined, { granularity: "word" });
-const graphemes = new Intl.Segmenter(undefined, { granularity: "grapheme" });
-
-export interface WordCount {
-  readonly words: number;
-  readonly characters: number;
-}
-
 export function selectWordCount(state: AppState, pageId: BlockId): WordCount {
-  const texts = pageBlocks(state, pageId).filter(isTextBlock).map(textOf);
-  let wordCount = 0;
-  let characterCount = 0;
-  for (const text of texts) {
-    for (const part of words.segment(text)) if (part.isWordLike) wordCount += 1;
-    characterCount += [...graphemes.segment(text)].length;
-  }
-  return { words: wordCount, characters: characterCount };
+  return countText(pageBlocks(state, pageId));
 }

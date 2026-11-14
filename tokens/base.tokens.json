@@ -2142,6 +2142,12 @@
           "unit": "rem"
         }
       },
+      "44x25": {
+        "$value": {
+          "value": 44.25,
+          "unit": "rem"
+        }
+      },
       "45": {
         "$value": {
           "value": 45,

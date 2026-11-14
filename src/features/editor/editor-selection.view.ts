@@ -9,6 +9,7 @@ import {
 } from "../../model/index.ts";
 import { readSelection } from "../../ui/caret/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import type { AppState, Dispatch } from "../../state/index.ts";
 import type { InputContext } from "./editor-input.view.ts";
 import {
   clearBlockSelection,
@@ -81,7 +82,10 @@ function arrowAction(event: KeyboardEvent, context: InputContext) {
 
 // Each selected block whose parent is not selected too, with everything
 // inside it, is copied below itself.
-function duplicateSelected(context: InputContext): void {
+export function duplicateSelected(context: {
+  readonly state: AppState;
+  readonly dispatch: Dispatch;
+}): void {
   const blocks = selectSelectedBlocks(context.state);
   const ids = new Set(blocks.map((block) => block.id));
   for (const block of blocks) {
@@ -131,15 +135,39 @@ export function onSelectionKeyDown(
   action();
 }
 
-// Focus that leaves the blocks, or a press inside them, ends the selection.
+// Focus that leaves the blocks, or a press inside them, ends the selection;
+// as Notion's, a selected block's handle and the menu it opens keep it,
+// so the menu acts on, and counts, every block selected.
 export function onSelectionLeave(
   event: FocusEvent | PointerEvent,
   context: InputContext,
 ): void {
   if (context.state.ui.blockSelection === null) return;
-  const next = event instanceof FocusEvent ? event.relatedTarget : null;
-  if (next !== null && next === event.currentTarget) return;
+  if (event instanceof FocusEvent) {
+    if (keepsFocusNear(event.currentTarget, event.relatedTarget)) return;
+  } else if (isSelectedHandle(event.target, context)) {
+    return;
+  }
   context.dispatch(clearBlockSelection.create({ toCaret: false }));
+}
+
+function keepsFocusNear(
+  blocks: EventTarget | null,
+  next: EventTarget | null,
+): boolean {
+  if (!(next instanceof Element)) return false;
+  const isInside = blocks instanceof Element && blocks.contains(next);
+  return isInside || next.closest("[data-overlay]") !== null;
+}
+
+function isSelectedHandle(
+  target: EventTarget | null,
+  context: InputContext,
+): boolean {
+  if (!(target instanceof Element)) return false;
+  if (target.closest("[data-handle]") === null) return false;
+  const id = blockAt(target);
+  return selectSelectedBlocks(context.state).some((block) => block.id === id);
 }
 
 const BLOCK = ".editor__block";

@@ -22,6 +22,9 @@ import {
 import { colorMenuItem } from "./editor-color-menu.view.ts";
 import { duplicateBlock } from "./editor-insert.commands.ts";
 import { deleteBlock } from "./editor-move.commands.ts";
+import { deleteSelectedBlocks } from "./editor-selection.commands.ts";
+import { duplicateSelected } from "./editor-selection.view.ts";
+import { selectSelectedBlocks } from "./editor.selectors.ts";
 
 export const TURN_INTO_OVERLAY = "turn-into";
 
@@ -49,6 +52,12 @@ export function blockTypeName(block: Block): string {
   return blockDefinition(block.type)?.label ?? "";
 }
 
+// Over the menu: the block's type, or "2 blocks" for a selection.
+function menuName(block: Block, state: AppState): string {
+  const count = selectedWith(block, state);
+  return count > 1 ? COPY.blockMenu.blocks(count) : blockTypeName(block);
+}
+
 // A text block can turn into another type and take a color.
 function textItems(block: Block, context: ActionContext): MenuItem[] {
   const { overlay, dispatch } = context;
@@ -67,9 +76,16 @@ function textItems(block: Block, context: ActionContext): MenuItem[] {
   return [turnInto, colorMenuItem(overlay, dispatch)];
 }
 
+// The other blocks selected with this one, when it is one of several.
+function selectedWith(block: Block, state: AppState): number {
+  const selected = selectSelectedBlocks(state);
+  return selected.some((each) => each.id === block.id) ? selected.length : 1;
+}
+
 function editItems(block: Block, context: ActionContext): MenuItem[] {
   const { state, dispatch } = context;
   const blockId = block.id;
+  const isMany = selectedWith(block, state) > 1;
   // Blocks in the tree of the block, for a copy of it.
   const blockCount = countBlockTree(state.workspace, blockId);
   return [
@@ -78,14 +94,22 @@ function editItems(block: Block, context: ActionContext): MenuItem[] {
       label: COPY.blockMenu.duplicate,
       icon: "duplicate",
       shortcut: COPY.blockMenu.duplicateKeys,
-      onSelect: () => dispatch(duplicateBlock.create({ blockId, blockCount })),
+      onSelect: () => {
+        if (isMany) duplicateSelected(context);
+        else dispatch(duplicateBlock.create({ blockId, blockCount }));
+      },
     },
     moveToItem(block, dispatch),
     {
       label: COPY.blockMenu.delete,
       icon: "trash",
       shortcut: COPY.blockMenu.deleteKeys,
-      onSelect: () => dispatch(deleteBlock.create({ blockId })),
+      onSelect: () =>
+        dispatch(
+          isMany
+            ? deleteSelectedBlocks.create({})
+            : deleteBlock.create({ blockId }),
+        ),
     },
   ];
 }
@@ -116,7 +140,7 @@ export function blockActionEntries(
 ): MenuEntry[] {
   const { state, dispatch } = context;
   return [
-    { kind: "section", label: blockTypeName(block) },
+    { kind: "section", label: menuName(block, state) },
     ...grouped([
       isTextBlock(block) ? [askAiItem(context.overlay, dispatch)] : [],
       textItems(block, context),

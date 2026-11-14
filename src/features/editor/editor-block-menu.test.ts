@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { render } from "lit-html";
 import { describe, expect, it, vi } from "vitest";
-import type { BlockSpec } from "../../model/index.ts";
+import { toBlockId, type BlockSpec } from "../../model/index.ts";
 import type { Command, Dispatch } from "../../state/index.ts";
 import {
   BLOCK_MENU_OVERLAY,
@@ -178,5 +178,46 @@ describe("the block menu", () => {
     expect(writeText).toHaveBeenCalledWith(
       expect.stringMatching(/#\/page\/page\?block=a$/),
     );
+  });
+
+  it("heads, counts and deletes the blocks selected, as one", () => {
+    const { store } = createApp([
+      text("a", "Plan the launch"),
+      text("b", "Call Grace"),
+      text("c", "Not selected"),
+    ]);
+    const state = store.getState();
+    const ui = {
+      ...state.ui,
+      overlay: { kind: BLOCK_MENU_OVERLAY, anchorId: "a" },
+      blockSelection: { anchorId: toBlockId("a"), focusId: toBlockId("b") },
+    };
+    const sent: Command[] = [];
+    const host = document.createElement("div");
+
+    render(
+      renderBlockMenu({ ...state, ui }, (command) => {
+        sent.push(command);
+        return { ok: true };
+      }),
+      host,
+    );
+    [...host.querySelectorAll<HTMLElement>("[role^=menuitem]")]
+      .find((row) => row.textContent.includes("Delete"))
+      ?.click();
+
+    expect(host.querySelector(".menu__footer")?.textContent).toBe(
+      "5 words · 25 characters",
+    );
+    expect(host.textContent).toContain("2 blocks");
+    expect(sent.map((command) => command.type)).toContain(
+      "block.deleteSelected",
+    );
+  });
+
+  it("has no count when no blocks are selected", () => {
+    const { host } = opened();
+
+    expect(host.querySelector(".menu__footer")).toBeNull();
   });
 });

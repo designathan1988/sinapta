@@ -42,6 +42,8 @@ export const EDITOR_TEXT = {
   },
   blockMenu: {
     open: "Block actions",
+    // Over the menu of several selected blocks, as Notion's "2 blocks".
+    blocks: (count: number) => `${String(count)} blocks`,
     add: "Add a block below",
     duplicate: "Duplicate",
     color: "Color",

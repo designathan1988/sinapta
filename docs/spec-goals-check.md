@@ -60,8 +60,8 @@ version 3 scope of ADR-0013 and the plan
 
 | Goal | Status | Evidence |
 | --- | --- | --- |
-| Page column about 708 px, Full width | Done | `--size-content-max` 44rem in `editor.css`; `page-style.test.ts` |
-| A 900 px width mode | Not in Notion | Notion's Appearance offers Full width only (finding 52, `n99-home-customize`) |
+| Page column 708 px in a 900 px frame, as Notion's; Full width | Done | measured at 1440 × 900: Notion's text runs 708 px (`n106-column`), Pagecraft's 708 px centred in the same main area (`p95-column`), `--size-content-max`; Full width: `page-style.test.ts` |
+| The 900 px page frame (S2 §4.1: "708 px wide, 900 px or full") | Done | Notion's default page is the 708 px column in a 900 px frame, with no separate mode (finding 52); the row above measures both |
 | Cover across the main area, Reposition, icon over the cover's foot | Done | `editor-cover.test.ts`; photo `p80-discussions` |
 | Add icon, Add cover, Add comment on hover | Done | `editor-title-view.test.ts` |
 | Page style Default, Serif, Mono; Small text | Done | `page-style.test.ts`, `page-menu-view.test.ts`; photo `p81-layout` |
@@ -92,7 +92,7 @@ version 3 scope of ADR-0013 and the plan
 | Callout icon and color; image width, alignment, full screen | Done | `callout.test.ts`, `src/blocks/image/image*.test.ts`; dragging the width handle: `image-view.test.ts` |
 | Nested numbered list styles | Done | `numbered-list.test.ts` |
 | Word and character count of the page | Done | `src/features/page-info/page-info.test.ts` |
-| Word count of a block selection | Not in Notion | Notion shows none: blocks selected (finding 53, `n99-home-customize`) or text highlighted (finding 55, `n103-selection-words`) leave the page menu's foot on the page's total, as Pagecraft's |
+| Word and character count of the page or the block selection | Done | the page: the page menu's foot, `page-info.test.ts`; the blocks selected: their menu, headed "2 blocks", ends with their words and characters and acts on all of them: `editor-block-menu.test.ts`; photo `p96-selection-count` (Notion's own page menu clears the selection, `n107-blocks-words`) |
 
 ## S2 §4.3: blocks
 

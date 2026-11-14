@@ -7,3 +7,4 @@ export {
   blockDefinition,
 } from "./block-registry.ts";
 export { isTextBlock, textOf, type TextBlock } from "./text-block.ts";
+export { countText, type WordCount } from "./text-count.ts";

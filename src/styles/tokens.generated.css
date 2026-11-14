@@ -312,6 +312,7 @@
     --base-size-28x5: 28.5rem;
     --base-size-17x25: 17.25rem;
     --base-size-16x875: 16.875rem;
+    --base-size-44x25: 44.25rem;
     --base-size-2x75: 2.75rem;
     --base-size-18x125: 18.125rem;
     --base-size-19x75: 19.75rem;
@@ -547,7 +548,7 @@
     --size-sidebar-button: var(--base-size-7);
     --size-sidebar-footer: var(--base-size-2x75);
     --size-sidebar-key: var(--base-size-1x125);
-    --size-content-max: var(--base-size-44);
+    --size-content-max: var(--base-size-44x25);
     --size-outline-dash-long: var(--base-size-4);
     --size-outline-dash-mid: var(--base-size-3);
     --size-outline-dash-short: var(--base-size-0x5);
