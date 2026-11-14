@@ -1,7 +1,8 @@
 // Notion's "Updates & analytics": a panel docked beside the page, opened
 // from the page menu, with two tabs. Updates lists each run of edits, who
 // made it and when, and the blocks it changed, five at most before "Show
-// more"; its clock opens the page's version history. Analytics is beside.
+// more"; its clock opens the page's version history; the page's open
+// suggested edits sit among them. Analytics is beside.
 import "./page-updates.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import {
@@ -22,6 +23,8 @@ import { renderIcon } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { renderAnalytics } from "./page-updates-analytics.view.ts";
 import { renderPersonMark } from "./page-updates-person.view.ts";
+import { renderSuggestionEntry } from "./page-updates-suggestion.view.ts";
+import { selectSuggestionEntries } from "./page-updates-suggestions.selectors.ts";
 import {
   selectTimeAgo,
   selectUpdateEntries,
@@ -102,11 +105,22 @@ function renderUpdates(
   page: PageBlock,
   dispatch: Dispatch,
 ): TemplateResult {
-  const entries = selectUpdateEntries(state, page.id);
-  if (entries.length === 0)
+  const now = new Date().toISOString();
+  const you = state.persistence.account.user?.name ?? TEXT.you;
+  const edits = selectUpdateEntries(state, page.id).map((entry) => ({
+    at: entry.at,
+    view: renderEntry({ state, page, now }, entry, dispatch),
+  }));
+  const suggestions = selectSuggestionEntries(page).map((entry) => ({
+    at: entry.at,
+    view: renderSuggestionEntry({ page, you, now }, entry, dispatch),
+  }));
+  const all = [...edits, ...suggestions].sort((a, b) =>
+    b.at.localeCompare(a.at),
+  );
+  if (all.length === 0)
     return html`<p class="page-updates__empty">${TEXT.noUpdates}</p>`;
-  const view = { state, page, now: new Date().toISOString() };
-  return html`${entries.map((entry) => renderEntry(view, entry, dispatch))}`;
+  return html`${all.map((item) => item.view)}`;
 }
 
 function renderTab(

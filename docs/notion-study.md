@@ -1460,8 +1460,11 @@ Groups, Notion and Pagecraft alike (Pagecraft changed to match):
     tinted box, "Page editors can see your view history for this page.",
     and a choice Allow ✓ / Don't allow. Pagecraft has it on server
     workspaces (migration 16): Don't allow keeps the person's views in
-    the total and takes their name off Viewers. Not yet: suggestion runs
-    among the updates.
+    the total and takes their name off Viewers. Suggested edits sit
+    among the updates as Notion's "You made suggestions in <page>", what
+    each adds or deletes ("Add: “ zz”") and Reply; text only suggested is
+    left out of the edit runs until accepted. Pagecraft now has all of
+    it.
 
 ## Controls
 

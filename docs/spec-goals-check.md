@@ -78,7 +78,8 @@ Checked against the sources, goal by goal (2026-11-14, last):
   - `w13-filter` (§4.5): Add advanced filter, Add filter rule's list, a
     group, Delete filter.
   - `w14-updates`: the page menu's Updates & analytics docks the panel;
-    Updates lists the run of edits (the title and two lines), Analytics
+    Updates lists the run of edits (the title and two lines) and, apart,
+    a suggestion typed in Suggesting ("Add: “ zz”", Reply); Analytics
     the view kept on the server with who opened it, and the editors; the
     period chip chooses Last 7 days; Show your view history set to Don't
     allow takes the viewer off the list, Allow puts them back; » closes it.

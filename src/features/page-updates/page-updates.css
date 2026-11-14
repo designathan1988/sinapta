@@ -142,4 +142,16 @@
     font-size: var(--font-size-xs);
     cursor: pointer;
   }
+
+  /* A suggested edit: what it adds or deletes, then Reply. */
+  .page-updates__suggested {
+    margin: var(--space-none);
+    margin-block-start: var(--space-stack-sm);
+    color: var(--color-accent-default);
+    overflow-wrap: anywhere;
+  }
+
+  .page-updates__reply {
+    margin-block-start: var(--space-stack-sm);
+  }
 }

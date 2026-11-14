@@ -65,6 +65,48 @@ describe("the page's updates", () => {
   });
 });
 
+describe("an edit's lines", () => {
+  it("leave out text that is only suggested, as Notion lists it apart", () => {
+    const initial = createInitialState();
+    const workspace = buildWorkspace([
+      {
+        id: "page",
+        props: {
+          title: [{ text: "Plan" }],
+          icon: null,
+          isFavorite: false,
+          isTrashed: false,
+        },
+        children: [
+          {
+            id: "a",
+            type: "paragraph",
+            props: {
+              text: [
+                { text: "Ship it" },
+                { text: " zz", suggestion: "insert" },
+              ],
+            },
+          },
+        ],
+      },
+    ]);
+    const state = {
+      ...initial,
+      workspace,
+      ui: {
+        ...initial.ui,
+        pageVersions: {
+          pageId: PAGE,
+          versions: [versionOf("Plan", { a: "Ship it" })],
+        },
+      },
+    };
+
+    expect(selectUpdateEntries(state, PAGE)).toEqual([]);
+  });
+});
+
 describe("the page's analytics", () => {
   const views = [
     { viewedAt: "2026-11-13T08:00:00.000Z", viewer: "Ada" },

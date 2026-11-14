@@ -6,7 +6,7 @@ import {
   selectPageTitle,
   type PageBlock,
 } from "../../blocks/page/index.ts";
-import { isTextBlock, textOf } from "../../blocks/index.ts";
+import { isTextBlock, type TextBlock } from "../../blocks/index.ts";
 import type { Block, BlockId } from "../../model/index.ts";
 import type {
   AppState,
@@ -53,11 +53,24 @@ function changedLines(all: readonly PageVersion[], index: number) {
   if (title !== undefined && title !== titleOf(older.blocks[0]))
     lines.push({ id: `${newer.id}:title`, text: title, isTitle: true });
   const changes = selectVersionChanges(all, index);
+  const before = new Map(older.blocks.map((block) => [block.id, block]));
   for (const block of newer.blocks.slice(1)) {
     if (!changes.has(block.id) || !isTextBlock(block)) continue;
-    lines.push({ id: block.id, text: textOf(block), isTitle: false });
+    const text = settledText(block);
+    const old = before.get(block.id);
+    const was = isTextBlock(old) ? settledText(old) : "";
+    if (text !== was) lines.push({ id: block.id, text, isTitle: false });
   }
   return lines;
+}
+
+// A block's text without the insertions only suggested: Notion lists a
+// suggestion apart, and counts it as an edit once accepted.
+function settledText(block: TextBlock): string {
+  return block.props.text
+    .filter((span) => span.suggestion !== "insert")
+    .map((span) => span.text)
+    .join("");
 }
 
 // The page as it is now, then its versions, each against the one before.
