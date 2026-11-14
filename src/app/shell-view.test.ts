@@ -51,6 +51,28 @@ describe("renderShell", () => {
     );
   });
 
+  it.each([
+    ["syncing", "Syncing…"],
+    ["offline", "Offline"],
+  ] as const)(
+    "says %s while the server has not taken the changes",
+    (connection, words) => {
+      const state = createInitialState();
+      const sync = { ...state.persistence.sync, connection };
+      const persistence = {
+        ...state.persistence,
+        status: "saved" as const,
+        sync,
+      };
+
+      const { host } = rendered({ ...state, persistence });
+
+      expect(host.querySelector(".app__save-status")?.textContent.trim()).toBe(
+        words,
+      );
+    },
+  );
+
   it("keeps the focus in an open drawer: all else is inert", async () => {
     const { host } = rendered(withDrawer());
     await Promise.resolve();

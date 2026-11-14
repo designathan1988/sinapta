@@ -81,9 +81,9 @@ const DUTY =
 // A free question that names what it wants, as "Summarize: …": the action
 // it names and the text after the colon.
 const NAMED: readonly (readonly [RegExp, Action])[] = [
-  [/^s*summar/i, "summarize"],
-  [/^s*(find |list )?(the )?(action items|to-?dos?|tasks)/i, "action-items"],
-  [/^s*(make (it )?)?short/i, "shorter"],
+  [/^\s*summar/i, "summarize"],
+  [/^\s*(find |list )?(the )?(action items|to-?dos?|tasks)/i, "action-items"],
+  [/^\s*(make (it )?)?short/i, "shorter"],
 ];
 
 function namedAction(text: string): [Action, string] | undefined {

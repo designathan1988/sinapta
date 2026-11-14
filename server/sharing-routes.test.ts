@@ -170,4 +170,38 @@ describe("published pages", () => {
     expect(secret.status).toBe(403);
     expect(whileEditing.status).toBe(200);
   });
+
+  it("sets the page's general access, Only people invited by default", async () => {
+    const { server, ada, id } = await published();
+    const base = `/api/workspaces/${id}/pages/shown/sharing`;
+
+    const before = await server.call(`GET ${base}`, undefined, ada);
+    const changed = await server.call(
+      `POST ${base}/general`,
+      { general: "workspace" },
+      ada,
+    );
+    const after = await server.call(`GET ${base}`, undefined, ada);
+
+    expect(before.body).toMatchObject({ general: "invited" });
+    expect(changed.status).toBe(200);
+    expect(after.body).toMatchObject({ general: "workspace" });
+  });
+
+  it("lets no one outside the workspace change the general access", async () => {
+    const { server, id } = await published();
+    const signUp = await server.call("POST /api/account/sign-up", {
+      email: "zed@pagecraft.test",
+      password: "long enough",
+      name: "Zed",
+    });
+
+    const refused = await server.call(
+      `POST /api/workspaces/${id}/pages/shown/sharing/general`,
+      { general: "web" },
+      signUp.cookies?.[0],
+    );
+
+    expect(refused.status).toBeGreaterThanOrEqual(403);
+  });
 });

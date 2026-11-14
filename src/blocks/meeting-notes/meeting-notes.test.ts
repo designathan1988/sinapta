@@ -4,6 +4,7 @@ import { createTestApp, setMeetingSummary } from "../../state/index.ts";
 import {
   appendTranscript,
   meetingNotesCommands,
+  setTranscript,
   startTranscribing,
   stopTranscribing,
 } from "./meeting-notes.commands.ts";
@@ -84,5 +85,17 @@ describe("AI meeting notes", () => {
     dispatch(stopTranscribing.create({ blockId }));
 
     expect(propsOf(store)?.status).toBe("ready");
+  });
+
+  // Without a microphone, or when it is refused, the notes are typed.
+  it("keeps notes typed by hand, without recording", () => {
+    const { store, dispatch } = app();
+
+    dispatch(setTranscript.create({ blockId, text: "Ship on Friday." }));
+
+    expect(propsOf(store)).toMatchObject({
+      status: "ready",
+      transcript: "Ship on Friday.",
+    });
   });
 });

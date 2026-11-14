@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { createTestApp } from "../../state/index.ts";
 import { createPage } from "../page/index.ts";
 import {
+  archiveTeamspace,
   createTeamspace,
   setTeamspaceAccess,
   toggleTeamspaceMember,
@@ -66,5 +67,24 @@ describe("createTeamspace", () => {
       access: "closed",
       memberIds: ["u2"],
     });
+  });
+});
+
+describe("archiveTeamspace", () => {
+  it("archives a teamspace and brings it back", () => {
+    const { store, dispatch } = createTestApp({
+      commands: [createTeamspace, archiveTeamspace],
+    });
+    dispatch(createTeamspace.create({ name: "Ops", description: "" }));
+    const [teamspace] = selectTeamspaces(store.getState());
+    if (teamspace === undefined) throw new Error("no teamspace");
+    const teamspaceId = teamspace.id;
+
+    dispatch(archiveTeamspace.create({ teamspaceId, isArchived: true }));
+    const archived = selectTeamspaces(store.getState())[0]?.props.isArchived;
+    dispatch(archiveTeamspace.create({ teamspaceId, isArchived: false }));
+
+    expect(archived).toBe(true);
+    expect(selectTeamspaces(store.getState())[0]?.props.isArchived).toBe(false);
   });
 });

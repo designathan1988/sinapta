@@ -1487,6 +1487,19 @@ against the reference on every run.
 
 ## Last run
 
+2026-11-14, last: the signed-in Notion window and the review server,
+1440 × 900, light theme (`n103`, `p92`–`p93`).
+
+- Notion read without changes: "Heading two" highlighted with Home and
+  Shift+End, then the page menu (its foot still the page's 23 words,
+  finding 55). Nothing was typed.
+- Pagecraft: the page menu's More › Save as template, the gallery's
+  "Your templates" and Use this template; the workspace menu's Upgrade,
+  Settings › Plans, and Connections' "Connect apps". Found and fixed: a
+  saved page's drawn icon was narrower than an emoji, so its name sat
+  left of the built-in ones; disabled buttons looked enabled; "Connect
+  apps" rows had no layout.
+
 2026-11-14, later: the signed-in Notion window and the review server,
 1440 × 900, light theme (`n95`–`n101`, `p77`–`p87`).
 

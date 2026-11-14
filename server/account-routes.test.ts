@@ -111,4 +111,34 @@ describe("accounts", () => {
     expect(known.body).toEqual({ exists: true, hasPassword: true });
     expect(unknown.body).toEqual({ exists: false, hasPassword: false });
   });
+
+  it("changes the profile's name, only for the person signed in", async () => {
+    const signUp = await call("POST /api/account/sign-up", ANA);
+    const cookie = signUp.cookies?.[0];
+
+    const renamed = await call(
+      "POST /api/account/profile",
+      { name: "  Ana Lima " },
+      cookie,
+    );
+    const me = await call("GET /api/account/me", undefined, cookie);
+    const anonymous = await call("POST /api/account/profile", { name: "X" });
+
+    expect(renamed.body).toMatchObject({ user: { name: "Ana Lima" } });
+    expect(me.body).toMatchObject({ user: { name: "Ana Lima" } });
+    expect(anonymous.status).toBe(401);
+  });
+
+  // The route refuses it; server/api.ts answers the refusal with 400.
+  it("refuses an empty name", async () => {
+    const signUp = await call("POST /api/account/sign-up", ANA);
+
+    const empty = call(
+      "POST /api/account/profile",
+      { name: "   " },
+      signUp.cookies?.[0],
+    );
+
+    await expect(empty).rejects.toMatchObject({ name: "ValiError" });
+  });
 });

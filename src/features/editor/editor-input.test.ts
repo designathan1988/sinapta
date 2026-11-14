@@ -203,3 +203,22 @@ describe("deleting with a collapsed caret", () => {
     ]);
   });
 });
+
+describe("Space on an empty line", () => {
+  it("asks Notion AI instead of typing a space", () => {
+    const sent = typeAtEndCommands("", { inputType: "insertText", data: " " });
+
+    expect(sent).toEqual([
+      expect.objectContaining({
+        type: "ui.openOverlay",
+        overlay: { kind: "ai-prompt", anchorId: "a" },
+      }),
+    ]);
+  });
+
+  it("types a space on a line with text", () => {
+    const sent = typeAtEnd("Hi", { inputType: "insertText", data: " " });
+
+    expect(sent).toEqual(["text.replace"]);
+  });
+});
