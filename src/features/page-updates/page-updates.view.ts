@@ -156,7 +156,7 @@ export function renderPageUpdatesPanel(
       ${
         open.tab === "updates"
           ? renderUpdates(state, page, dispatch)
-          : renderAnalytics(state, page)
+          : renderAnalytics(state, page, dispatch)
       }
     </div>
   </aside>`;

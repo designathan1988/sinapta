@@ -79,8 +79,8 @@ Checked against the sources, goal by goal (2026-11-14, last):
     group, Delete filter.
   - `w14-updates`: the page menu's Updates & analytics docks the panel;
     Updates lists the run of edits (the title and two lines), Analytics
-    the view kept on the server with who opened it, and the editors; »
-    closes it.
+    the view kept on the server with who opened it, and the editors; the
+    period chip chooses Last 7 days; » closes it.
   Bugs these walks found are fixed with a test each: a database title's
   Enter adding a hidden line and unique IDs starting at 2, a child listed
   twice after a synced block, text typed after inline Markdown keeping

@@ -8,7 +8,12 @@ import {
 } from "../../blocks/page/index.ts";
 import { isTextBlock, textOf } from "../../blocks/index.ts";
 import type { Block, BlockId } from "../../model/index.ts";
-import type { AppState, PageVersion, PageView } from "../../state/index.ts";
+import type {
+  AppState,
+  PageVersion,
+  PageView,
+  ViewsPeriod,
+} from "../../state/index.ts";
 import {
   pageContent,
   selectVersionAuthor,
@@ -17,7 +22,6 @@ import {
 import { selectPageLastEdit } from "../page-info/index.ts";
 
 const DAY_MS = 86_400_000;
-export const ANALYTICS_DAYS = 28;
 
 export interface ChangedLine {
   readonly id: string;
@@ -84,13 +88,15 @@ function dayOf(time: number): number {
 }
 
 // Views per day, from the first day with one (or yesterday) to today,
-// within the last 28 days; and how many views the page has had in all.
+// within the period (the last 28 days unless another is given); and how
+// many views the page has had in all.
 export function selectDailyViews(
   views: readonly PageView[],
   now: string,
+  period: ViewsPeriod = 28,
 ): { readonly days: readonly { day: string; count: number }[]; total: number } {
   const today = dayOf(Date.parse(now));
-  const first = today - ANALYTICS_DAYS + 1;
+  const first = period === "all" ? -Infinity : today - period + 1;
   const counts = new Map<number, number>();
   for (const view of views) {
     const day = dayOf(Date.parse(view.viewedAt));

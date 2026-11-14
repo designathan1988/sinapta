@@ -131,11 +131,13 @@ export {
   pageVersionCommands,
   setPageVersions,
   setPageViews,
+  setViewsPeriod,
   showPageUpdates,
   type PageUpdates,
   type PageUpdatesTab,
   type PageVersion,
   type PageView,
+  type ViewsPeriod,
 } from "./page-versions.commands.ts";
 export {
   setCalendarView,

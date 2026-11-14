@@ -70,3 +70,20 @@ describe("the Updates & analytics panel", () => {
     );
   });
 });
+
+describe("the views' period, as Notion's", () => {
+  it("opens its menu from the chip under Analytics", () => {
+    const { host, sent } = rendered("analytics");
+    const chip = host.querySelector<HTMLElement>(".page-updates__period");
+
+    chip?.click();
+
+    expect(chip?.textContent).toContain("Last 28 days");
+    expect(sent).toContainEqual(
+      expect.objectContaining({
+        type: "ui.openOverlay",
+        overlay: { kind: "views-period", anchorId: "views-period" },
+      }),
+    );
+  });
+});

@@ -22,10 +22,15 @@ export interface PageView {
 
 export type PageUpdatesTab = "updates" | "analytics";
 
+// How far back the panel counts views, as Notion's: 7, 28 or 90 days, or
+// all of them; 28 until another is chosen.
+export type ViewsPeriod = 7 | 28 | 90 | "all";
+
 export interface PageUpdates {
   readonly pageId: BlockId;
   readonly tab: PageUpdatesTab;
   readonly views?: readonly PageView[];
+  readonly period?: ViewsPeriod;
 }
 
 export const setPageVersions = defineCommand<{
@@ -51,11 +56,12 @@ export const showPageUpdates = defineCommand<{
   handle(state, command) {
     const { pageUpdates: old, ...ui } = state.ui;
     if (command.pageId === null) return { ui };
-    const views = old?.pageId === command.pageId ? old.views : undefined;
+    const kept = old?.pageId === command.pageId ? old : undefined;
     const pageUpdates: PageUpdates = {
       pageId: command.pageId,
       tab: command.tab ?? "updates",
-      ...(views !== undefined && { views }),
+      ...(kept?.views !== undefined && { views: kept.views }),
+      ...(kept?.period !== undefined && { period: kept.period }),
     };
     return { ui: { ...ui, pageUpdates } };
   },
@@ -76,7 +82,19 @@ export const setPageViews = defineCommand<{
   },
 });
 
+export const setViewsPeriod = defineCommand<{ period: ViewsPeriod }>({
+  type: "ui.setViewsPeriod",
+  handle(state, command) {
+    const open = state.ui.pageUpdates;
+    if (open === undefined) return {};
+    return {
+      ui: { ...state.ui, pageUpdates: { ...open, period: command.period } },
+    };
+  },
+});
+
 export const pageVersionCommands = [
+  setViewsPeriod,
   setPageVersions,
   showPageUpdates,
   setPageViews,

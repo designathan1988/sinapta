@@ -75,6 +75,10 @@ import {
   SIDEBAR_WORKSPACE_OVERLAY,
 } from "../features/sidebar/index.ts";
 import {
+  renderViewsPeriodMenu,
+  VIEWS_PERIOD_OVERLAY,
+} from "../features/page-updates/index.ts";
+import {
   PAGE_HISTORY_OVERLAY,
   type AppState,
   type Dispatch,
@@ -95,6 +99,7 @@ const OVERLAYS: Readonly<Record<string, OverlayView>> = {
   [SETTINGS_OVERLAY]: renderSettings,
   [TRASH_OVERLAY]: renderTrash,
   [PAGE_HISTORY_OVERLAY]: renderPageHistory,
+  [VIEWS_PERIOD_OVERLAY]: renderViewsPeriodMenu,
   [INBOX_OVERLAY]: renderInbox,
   [COMMENT_COMPOSER_OVERLAY]: renderComposerPopover,
   [REACTION_OVERLAY]: renderReactionPicker,

@@ -1,0 +1,106 @@
+@layer features {
+  /* Analytics: views, the chart, viewers and editors. */
+  .page-updates__views-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-inset-md) var(--space-inset-md) var(--space-none);
+  }
+
+  .page-updates__heading {
+    margin: var(--space-none);
+    padding: var(--space-inset-md) var(--space-inset-md) var(--space-inset-xs);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-strong);
+
+    .page-updates__views-head & {
+      padding: var(--space-none);
+    }
+  }
+
+  .page-updates__total {
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-regular);
+  }
+
+  .page-updates__period {
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    padding: var(--space-inset-xxs) var(--space-inset-sm);
+    border-radius: var(--radius-md);
+    border: none;
+    background-color: var(--color-accent-subtle);
+    color: var(--color-accent-default);
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: var(--color-accent-range);
+    }
+
+    /* Its chevron points down, as Notion's. */
+    & .icon:last-child {
+      rotate: 90deg;
+    }
+  }
+
+  .page-updates__chart {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    padding-inline: var(--space-inset-md);
+  }
+
+  .page-updates__area {
+    fill: var(--color-bg-change);
+  }
+
+  .page-updates__line-chart {
+    fill: none;
+    stroke: var(--color-accent-default);
+    stroke-width: var(--size-border-thin);
+  }
+
+  .page-updates__axis {
+    stroke: var(--color-border-strong);
+  }
+
+  .page-updates__tick {
+    fill: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+  }
+
+  .page-updates__caption {
+    padding: var(--space-inset-xs) var(--space-inset-md);
+
+    /* Over a new title it sits in the entry, its icon beside it. */
+    .page-updates__title & {
+      display: inline-flex;
+      gap: var(--space-inline-xs);
+      align-items: center;
+      padding: var(--space-none);
+    }
+  }
+
+  .page-updates__people {
+    display: grid;
+    gap: var(--space-stack-sm);
+    margin: var(--space-none);
+    padding: var(--space-inset-xs) var(--space-inset-md);
+    list-style: none;
+  }
+
+  .page-updates__person {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+  }
+
+  .page-updates__name {
+    flex: 1;
+    font-weight: var(--font-weight-medium);
+  }
+}

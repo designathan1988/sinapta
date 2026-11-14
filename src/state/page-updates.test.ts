@@ -4,6 +4,7 @@ import {
   createTestApp,
   pageVersionCommands,
   setPageViews,
+  setViewsPeriod,
   showPageUpdates,
 } from "./index.ts";
 
@@ -44,5 +45,17 @@ describe("the Updates & analytics panel", () => {
 
     expect(kept).toEqual({ pageId: DOC, tab: "updates" });
     expect(app.store.getState().ui.pageUpdates).toBeUndefined();
+  });
+});
+
+describe("the views' period", () => {
+  it("is kept while the panel moves between tabs", () => {
+    const app = setup();
+    app.dispatch(showPageUpdates.create({ pageId: DOC, tab: "analytics" }));
+
+    app.dispatch(setViewsPeriod.create({ period: 90 }));
+    app.dispatch(showPageUpdates.create({ pageId: DOC, tab: "updates" }));
+
+    expect(app.store.getState().ui.pageUpdates?.period).toBe(90);
   });
 });

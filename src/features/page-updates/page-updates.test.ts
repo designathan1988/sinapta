@@ -83,6 +83,13 @@ describe("the page's analytics", () => {
     expect(total).toBe(4);
   });
 
+  it("count every day of the views when All time is chosen", () => {
+    const { days } = selectDailyViews(views, "2026-11-14T10:00:00Z", "all");
+
+    expect(days[0]).toEqual({ day: "2026-09-01", count: 1 });
+    expect(days.at(-1)).toEqual({ day: "2026-11-14", count: 2 });
+  });
+
   it("name each viewer once, at their latest view", () => {
     expect(selectViewers(views)).toEqual([
       { viewer: "Ada", viewedAt: "2026-11-14T09:00:00.000Z" },

@@ -1453,9 +1453,11 @@ Groups, Notion and Pagecraft alike (Pagecraft changed to match):
     Viewers (each person at their latest view), and Editors: Created by,
     Last edited by. Pagecraft now has the panel; each opening of a page
     is kept (on the server with who opened it, else in the browser), the
-    same opening within half an hour counted once. Not yet: the period
-    menu (Pagecraft shows the last 28 days only), the "Show your view
-    history" setting, and suggestion runs among the updates.
+    same opening within half an hour counted once. The period chip
+    (`n121-period`) opens Last 7 days, Last 28 days, Last 90 days, All
+    time, with no check beside the chosen one; Pagecraft has the same.
+    Not yet: the "Show your view history" setting, and suggestion runs
+    among the updates.
 
 ## Controls
 
@@ -1550,7 +1552,7 @@ against the reference on every run.
 
 2026-11-14, Notion's "Updates & analytics": the signed-in Notion window
 and the review server, 1440 × 900 (`n119-updates`, `n120-close-updates`,
-`w14-updates`).
+`n121-period`, `w14-updates`).
 
 - Notion: the panel opened from the page menu, both tabs read, then
   closed; nothing on the page changed.

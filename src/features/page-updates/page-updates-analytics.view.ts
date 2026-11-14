@@ -1,12 +1,12 @@
 // The Analytics tab of Notion's "Updates & analytics": the page's views
-// (how many in all) as an area chart by day over the last 28 days; who
+// (how many in all) as an area chart by day over the chosen period; who
 // viewed it, each at their latest view; who created it and who edited it
 // last.
+import "./page-updates-analytics.css";
 import { html, nothing, svg, type TemplateResult } from "lit-html";
 import type { PageBlock } from "../../blocks/page/index.ts";
-import type { AppState } from "../../state/index.ts";
+import type { AppState, Dispatch } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
-import { renderIcon } from "../../ui/icon/index.ts";
 import {
   selectDailyViews,
   selectEditors,
@@ -14,6 +14,7 @@ import {
   selectViewers,
 } from "./page-updates.selectors.ts";
 import { renderPersonMark } from "./page-updates-person.view.ts";
+import { renderPeriodButton } from "./page-updates-period.view.ts";
 
 const TEXT = COPY.pageUpdates;
 const TICKS = 5;
@@ -121,19 +122,22 @@ function renderEditors(state: AppState, page: PageBlock, now: string) {
 export function renderAnalytics(
   state: AppState,
   page: PageBlock,
+  dispatch: Dispatch,
 ): TemplateResult {
   const now = new Date().toISOString();
   const views = state.ui.pageUpdates?.views ?? [];
-  const { days, total } = selectDailyViews(views, now);
+  const { days, total } = selectDailyViews(
+    views,
+    now,
+    state.ui.pageUpdates?.period,
+  );
   const you = state.persistence.account.user?.name ?? TEXT.you;
   return html`<div class="page-updates__views-head">
       <h3 class="page-updates__heading">
         ${TEXT.views}
         <span class="page-updates__total">${TEXT.total(total)}</span>
       </h3>
-      <span class="page-updates__period"
-        >${renderIcon("calendar")} ${TEXT.last28Days}</span
-      >
+      ${renderPeriodButton(state, dispatch)}
     </div>
     ${renderChart(days)}
     <h3 class="page-updates__heading">${TEXT.viewers}</h3>
