@@ -34,6 +34,15 @@
     }
   }
 
+  /* Under its anchor, held inside the window's edge: for an anchor that
+     runs past the window, as the last column of a wide table, where
+     neither side has room. */
+  @position-try --overlay-inside-end {
+    position-area: none;
+    inset-block-start: anchor(end);
+    inset-inline: auto var(--space-inset-sm);
+  }
+
   /* Without anchor positioning the popover keeps its centered default. */
   @supports (position-area: block-end) {
     [data-overlay][popover] {
@@ -44,7 +53,8 @@
       position-try-fallbacks:
         flip-block,
         flip-inline,
-        flip-block flip-inline;
+        flip-block flip-inline,
+        --overlay-inside-end;
     }
 
     [data-overlay][data-child][popover] {

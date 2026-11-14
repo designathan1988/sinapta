@@ -65,6 +65,9 @@ export function closeOverlayOnEscape(
   return true;
 }
 
+const OPEN_ANCHOR =
+  "[data-overlay-anchor][aria-expanded='true'], [data-overlay-anchor='open']";
+
 // Puts focus back on the control that opened the innermost open list, or
 // on the one that opened the overlay when all of it closes.
 export function focusOverlayAnchor(closing = { isWhole: false }): void {
@@ -97,6 +100,15 @@ function isTypingElsewhere(element: Element): boolean {
   );
 }
 
+// A control that the window cuts on the side, as the last column of a
+// wide table, is scrolled into view before its overlay opens, so the
+// overlay can sit beside it inside the window, as Notion's.
+export function revealAnchor(anchor: Element, windowWidth: number): void {
+  const box = anchor.getBoundingClientRect();
+  if (box.left >= 0 && box.right <= windowWidth) return;
+  anchor.scrollIntoView({ block: "nearest", inline: "nearest" });
+}
+
 // Shows a popover element once it is in the document, and focuses its
 // first field or row. A popover already open is left as it is: lit calls
 // a ref again whenever another element shares its callback, as nested
@@ -107,6 +119,10 @@ export function showPopoverWhenConnected(element: Element | undefined): void {
     if (!element.isConnected || element.matches(":popover-open")) return;
     // A list follows its control, and so is placed by it.
     const source = popoverSourceOf(element);
+    const anchor = document.querySelector(OPEN_ANCHOR);
+    if (anchor !== null && source === undefined) {
+      revealAnchor(anchor, window.innerWidth);
+    }
     element.showPopover(source === undefined ? undefined : { source });
     if (takesFocus(element, source)) {
       element.querySelector<HTMLElement>("[data-autofocus]")?.focus();

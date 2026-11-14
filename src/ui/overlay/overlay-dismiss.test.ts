@@ -6,7 +6,7 @@ import {
   uiCommands,
   type Command,
 } from "../../state/index.ts";
-import { closeOverlayOnEscape } from "./overlay-dismiss.ts";
+import { closeOverlayOnEscape, revealAnchor } from "./overlay-dismiss.ts";
 
 // An open overlay and the control that opened it, the focus left on the
 // control, as after a click.
@@ -57,5 +57,33 @@ describe("Escape with an overlay open", () => {
     escape(document.querySelector("#inside"));
 
     expect(sent).toEqual([]);
+  });
+});
+
+describe("an overlay's control cut by the window's edge", () => {
+  const control = (left: number, width: number) => {
+    const button = document.createElement("button");
+    button.getBoundingClientRect = () => new DOMRect(left, 200, width, 32);
+    const calls: ScrollIntoViewOptions[] = [];
+    button.scrollIntoView = (options?: boolean | ScrollIntoViewOptions) => {
+      if (typeof options === "object") calls.push(options);
+    };
+    return { button, calls };
+  };
+
+  it("is scrolled into view first, as Notion shows a new last column", () => {
+    const { button, calls } = control(1386, 250);
+
+    revealAnchor(button, 1440);
+
+    expect(calls).toEqual([{ block: "nearest", inline: "nearest" }]);
+  });
+
+  it("is left where it is when the window shows all of it", () => {
+    const { button, calls } = control(600, 250);
+
+    revealAnchor(button, 1440);
+
+    expect(calls).toEqual([]);
   });
 });
