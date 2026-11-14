@@ -1473,8 +1473,13 @@ Groups, Notion and Pagecraft alike (Pagecraft changed to match):
     settings); then Manage data sources, Lock database, Manage in Notion
     Calendar. Pagecraft now has Copy link to view and the section with
     Source (its own panel, a linked view choosing among databases), Edit
-    properties and Lock database. Not yet: database Automations, an AI
-    Autofill list, Turn into, Linked events, Manage data sources.
+    properties, AI Autofill and Lock database. Notion's AI Autofill
+    (`n125-turn-into`) explains itself ("Autofill properties with
+    context from your workspace and the web") over "New AI autofill";
+    Pagecraft's panel says the same and lists each text property's kinds
+    (Summary, Key info, Translation), each filling that column. Turn into
+    offers Notion's typed databases (Tasks, Meetings, Skills). Not yet:
+    database Automations, Turn into, Linked events, Manage data sources.
 
 ## Controls
 
@@ -1570,7 +1575,7 @@ against the reference on every run.
 2026-11-14, Notion's "Updates & analytics": the signed-in Notion window
 and the review server, 1440 × 900 (`n119-updates`, `n120-close-updates`,
 `n121-period`, `n122-view-history`, `n123-refavorite`, `n124-view-settings`,
-`w14-updates`, `w15-view-settings`).
+`n125-turn-into`, `w14-updates`, `w15-view-settings`).
 
 - Notion: the panel opened from the page menu, both tabs read, then
   closed; nothing on the page changed.

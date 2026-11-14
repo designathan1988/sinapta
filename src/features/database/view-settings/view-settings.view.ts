@@ -48,6 +48,7 @@ const SORT_KINDS: ReadonlySet<string> = new Set([
   "view-sort-pill",
 ]);
 import { sourcePanel } from "./source-panel.ts";
+import { aiAutofillPanel } from "./ai-autofill-panel.ts";
 
 const PANELS: Readonly<
   Record<string, (context: TableContext) => SettingsPanel>
@@ -74,6 +75,7 @@ const PANELS: Readonly<
   "timeline-end": timelineEndPanel,
   color: colorPanel,
   source: sourcePanel,
+  "ai-autofill": aiAutofillPanel,
   [COLOR_PROPERTY_PANEL]: colorPropertyPanel,
   "chart-kind": chartKindPanel,
   "chart-x": chartXPanel,

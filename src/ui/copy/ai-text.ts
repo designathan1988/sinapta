@@ -15,6 +15,8 @@ export const AI_TEXT = {
     replace: "Replace",
     discard: "Discard",
     autofill: "AI autofill",
+    autofillNote:
+      "Autofill properties with context from your workspace and the web.",
     autofillKinds: {
       summarize: "Summary",
       "action-items": "Key info",

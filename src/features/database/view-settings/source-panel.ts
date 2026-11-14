@@ -1,6 +1,6 @@
 // The view settings' "Data source settings", as Notion's: Source, the
 // database the view reads (a linked view may choose another), Edit
-// properties, and Lock database.
+// properties, AI Autofill, and Lock database.
 import { setPageLocked } from "../../../blocks/page/index.ts";
 import { COPY } from "../../../ui/copy.ts";
 import type { MenuEntry } from "../../../ui/menu/index.ts";
@@ -56,6 +56,11 @@ export function sourceRows(context: TableContext): MenuEntry[] {
       context,
       { label: TEXT.editProperties, icon: "list" },
       "properties",
+    ),
+    panelRow(
+      context,
+      { label: COPY.ai.autofill, icon: "sparkles" },
+      "ai-autofill",
     ),
     {
       label: COPY.pageMenu.lockDatabase,

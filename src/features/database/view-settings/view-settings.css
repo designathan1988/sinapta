@@ -138,6 +138,11 @@
     margin: var(--space-none);
     color: var(--color-text-secondary);
     font-size: var(--font-size-sm);
+
+    /* Above a panel's rows, it lines up with them. */
+    &[data-lead] {
+      padding: var(--space-inset-xs) var(--space-inset-sm);
+    }
   }
 
   .view-settings__rule {

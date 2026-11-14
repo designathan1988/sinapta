@@ -85,7 +85,7 @@ Checked against the sources, goal by goal (2026-11-14, last):
     allow takes the viewer off the list, Allow puts them back; » closes it.
   - `w15-view-settings` (§4.5): the view settings' Copy link to view and
     Data source settings: Source's panel, Edit properties, Lock database
-    on and off.
+    on and off, AI autofill's panel with the Text column's kinds.
   Bugs these walks found are fixed with a test each: a database title's
   Enter adding a hidden line and unique IDs starting at 2, a child listed
   twice after a synced block, text typed after inline Markdown keeping
