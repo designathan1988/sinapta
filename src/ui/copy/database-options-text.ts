@@ -71,6 +71,15 @@ export const DATABASE_OPTIONS_TEXT = {
   webhookNeedsServer:
     "Webhooks are sent by a workspace's server: sign in to send them.",
   removeWebhook: "Remove webhook",
+  turnInto: "Turn into",
+  turnIntoTasks: "Turn into Tasks database",
+  turnIntoTasksNote:
+    "Adds Assignee, Status and Due date, whichever the database lacks.",
+  isTaskDatabase:
+    "This is a Tasks database: it has Assignee, Status and Due date.",
+  taskAssignee: "Assignee",
+  taskStatus: "Status",
+  taskDue: "Due date",
   setTo: (name: string, value: string) => `Set ${name} to ${value}`,
   automationActive: "Active",
   deleteAutomation: "Delete automation",

@@ -204,6 +204,10 @@ owner listed here exists.
 | A page's history: its content, restoring a version, the full-window view, what each version changed | `src/features/page-history/` | 17 |
 | Notion's "Updates & analytics" panel: a page's runs of edits, its views by day, viewers and editors | `src/features/page-updates/` | 31 |
 | The view settings' data source rows: Source, Edit properties, Lock database | `src/features/database/view-settings/source-panel.ts` | 31 |
+| A database's automations: their commands, what sets them off, running them after a change | `src/features/database/automation.commands.ts`, `src/features/database/automation-runs.selectors.ts`, `src/features/database/automation-runner.ts`, `src/blocks/database/automation.schema.ts` | 31 |
+| The view settings' Automations: the list, the Free plan's card, the editor and its panels | `src/features/database/view-settings/automations-panel.ts`, `automation-edit-panel.ts`, `automation-add-panel.ts`, `automation-hook-panel.ts`, `automation-words.ts` | 31 |
+| An automation's webhook, sent by the server | `server/automation-webhook.ts`, `src/persistence/automation-webhook-client.ts` | 31 |
+| Joining a workspace with this browser's unconfirmed changes made again on it | `src/persistence/sync-download.ts`, `src/persistence/sync-outbox.ts` | 31 |
 | Copy link to view, from the view tab's menu or the view settings | `src/features/database/view-link.ts` | 31 |
 | Each opening of a page, kept on the server or in this browser | `src/persistence/page-views.ts`, `src/persistence/page-records.ts`, `server/page-views.ts` | 31 |
 | Marking commented text | `src/model/rich-text-comments.ts`, `src/ui/rich-text/rich-text-projection.ts` | 17 |

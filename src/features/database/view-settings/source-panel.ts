@@ -1,6 +1,6 @@
 // The view settings' "Data source settings", as Notion's: Source, the
 // database the view reads (a linked view may choose another), Edit
-// properties, Automations, AI Autofill, and Lock database.
+// properties, Automations, AI Autofill, Turn into, and Lock database.
 import { setPageLocked } from "../../../blocks/page/index.ts";
 import { COPY } from "../../../ui/copy.ts";
 import type { MenuEntry } from "../../../ui/menu/index.ts";
@@ -9,6 +9,7 @@ import type { TableContext } from "../table-cell.view.ts";
 import { sourceChoices } from "../view-tab-source.ts";
 import { choiceItems, panelRow, type SettingsPanel } from "./settings-panel.ts";
 import { automationsRow } from "./automations-panel.ts";
+import { turnIntoRow } from "./turn-into-panel.ts";
 
 const TEXT = COPY.database;
 
@@ -64,6 +65,7 @@ export function sourceRows(context: TableContext): MenuEntry[] {
       { label: COPY.ai.autofill, icon: "sparkles" },
       "ai-autofill",
     ),
+    turnIntoRow(context),
     {
       label: COPY.pageMenu.lockDatabase,
       icon: "lock",
