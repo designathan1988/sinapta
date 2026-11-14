@@ -9,6 +9,7 @@ import {
   selectIsEditable,
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { renderEmojiPicker } from "../../ui/emoji/index.ts";
 import {
   focusOverlayAnchor,
@@ -83,6 +84,8 @@ export function renderCallout(
       class="callout__icon"
       data-overlay-anchor
       aria-label=${COPY.calloutBlock.icon}
+      title=${tooltipTitle(COPY.calloutBlock.icon)}
+      interestfor=${TOOLTIP_TARGET}
       aria-expanded=${String(isOpen)}
       ?data-empty=${icon === ""}
       @click=${toggle}

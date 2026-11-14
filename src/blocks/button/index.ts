@@ -5,3 +5,4 @@ export {
   type ButtonAction,
   type ButtonBlock,
 } from "./button.schema.ts";
+export { BUTTON_CONFIG } from "./button.view.ts";

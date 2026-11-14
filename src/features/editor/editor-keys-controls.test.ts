@@ -75,3 +75,40 @@ describe("Ctrl+/ in a block's text", () => {
     expect(event.defaultPrevented).toBe(true);
   });
 });
+
+describe("Tab in a code block", () => {
+  it("writes an indent at the caret instead of nesting the block", () => {
+    const block = document.createElement("div");
+    block.dataset.blockId = "a";
+    block.innerHTML = "<p data-text>one</p>";
+    document.body.replaceChildren(block);
+    const paragraph = block.querySelector("p");
+    if (paragraph?.firstChild == null) throw new Error("setup failed");
+    document
+      .getSelection()
+      ?.setBaseAndExtent(paragraph.firstChild, 3, paragraph.firstChild, 3);
+    const { store } = createApp([text("a", "one", "code")]);
+    const sent: Command[] = [];
+    const dispatch: Dispatch = (command) => {
+      sent.push(command);
+      return { ok: true };
+    };
+    const event = new KeyboardEvent("keydown", {
+      key: "Tab",
+      cancelable: true,
+    });
+    Object.defineProperty(event, "target", { value: paragraph });
+
+    onBlockKeyDown(event, { state: store.getState(), dispatch });
+
+    expect(sent).toEqual([
+      expect.objectContaining({
+        type: "text.replace",
+        start: 3,
+        end: 3,
+        text: "  ",
+      }),
+    ]);
+    expect(event.defaultPrevented).toBe(true);
+  });
+});

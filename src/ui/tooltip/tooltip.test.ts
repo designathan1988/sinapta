@@ -55,6 +55,19 @@ describe("installTooltip", () => {
     expect(shown.defaultPrevented).toBe(true);
   });
 
+  it("names an open toggle's arrow, which is no menu", () => {
+    document.body.innerHTML = `<button aria-label="Hide content" aria-expanded="true" data-disclosure></button>
+      <div id="tooltip"></div>`;
+    const hint = document.querySelector("#tooltip");
+    if (hint === null) throw new Error("setup");
+    installTooltip();
+
+    const shown = showInterest(hint, document.querySelector("button"));
+
+    expect(shown.defaultPrevented).toBe(false);
+    expect(hint.textContent).toBe("Hide content");
+  });
+
   it("puts an open hint away when the person presses", () => {
     document.body.innerHTML = `<button aria-label="View settings"></button>
       <div id="tooltip" popover="manual"></div>`;

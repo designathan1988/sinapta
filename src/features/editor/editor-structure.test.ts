@@ -67,7 +67,23 @@ describe("block.split", () => {
   });
 });
 
-describe("block.split in an empty nested list item", () => {
+describe("block.split in a toggle and a nested list, as Notion's", () => {
+  it("writes the new line inside the toggle, first", () => {
+    const props = { isOpen: true, text: [{ text: "Title" }] };
+    const children = [text("b", "old child")];
+    const { dispatch, outline } = createApp([
+      { id: "a", type: "toggle", props, children },
+    ]);
+
+    dispatch(splitBlock.create({ blockId: A, offset: 5 }));
+
+    expect(outline()).toEqual([
+      "toggle:Title",
+      "  paragraph:",
+      "  paragraph:old child",
+    ]);
+  });
+
   it("moves the item out one level and keeps it a list item, as Notion", () => {
     const { dispatch, outline } = createApp([
       {

@@ -2,6 +2,7 @@ import "./toggle.css";
 import { html, type TemplateResult } from "lit-html";
 import type { Dispatch } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { renderRichText } from "../../ui/rich-text/index.ts";
 import { setToggleOpen } from "./toggle.commands.ts";
@@ -20,6 +21,9 @@ export function renderToggle(
     <button
       type="button"
       class="toggle__button"
+      data-disclosure
+      title=${tooltipTitle(isOpen ? COPY.blocks.toggleClose : COPY.blocks.toggleOpen)}
+      interestfor=${TOOLTIP_TARGET}
       aria-expanded=${String(isOpen)}
       aria-label=${isOpen ? COPY.blocks.toggleClose : COPY.blocks.toggleOpen}
       @click=${onClick}

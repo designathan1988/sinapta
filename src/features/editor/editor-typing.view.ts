@@ -4,6 +4,7 @@
 import { isTextBlock, textOf } from "../../blocks/index.ts";
 import { BULLETED_LIST_TYPE } from "../../blocks/bulleted-list/index.ts";
 import { CODE_TYPE } from "../../blocks/code/index.ts";
+import { DIVIDER_TYPE } from "../../blocks/divider/index.ts";
 import { HEADING_TYPE } from "../../blocks/heading/index.ts";
 import { NUMBERED_LIST_TYPE } from "../../blocks/numbered-list/index.ts";
 import { PARAGRAPH_TYPE } from "../../blocks/paragraph/index.ts";
@@ -42,8 +43,24 @@ function isOwnKind(shortcut: BlockShortcut, block: Block): boolean {
   );
 }
 
+// As Notion's, the third dash of "---" alone on a line makes a divider at
+// once, with no space after it.
+function isDividerDash(target: Target, text: string, block: Block): boolean {
+  return (
+    text === "-" &&
+    block.type === PARAGRAPH_TYPE &&
+    isTextBlock(block) &&
+    textOf(block) === "--" &&
+    target.start === 2 &&
+    target.end === 2
+  );
+}
+
 export function shortcutFor(target: Target, text: string, state: AppState) {
   const block = state.workspace.blocks[target.blockId];
+  if (block !== undefined && isDividerDash(target, text, block)) {
+    return { blockType: DIVIDER_TYPE, removePrefix: 2 };
+  }
   const isTyped = text === " " && target.start === target.end;
   if (!isTyped || !isTextBlock(block) || !TURNS.has(block.type)) {
     return undefined;

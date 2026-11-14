@@ -1,6 +1,7 @@
 // Keys inside text blocks that are not text input: indenting, moving
 // between blocks, and the inline code and strikethrough shortcuts.
 import { isTextBlock, textOf, type TextBlock } from "../../blocks/index.ts";
+import { CODE_TYPE } from "../../blocks/code/index.ts";
 import type { Mark } from "../../model/index.ts";
 import { setSelection } from "../../state/index.ts";
 import { readSelection, textElementOf } from "../../ui/caret/index.ts";
@@ -14,7 +15,7 @@ import {
   startBlockSelection,
 } from "./editor-selection.view.ts";
 import { indentBlock, outdentBlock } from "./editor-structure.commands.ts";
-import { caretAt, toggleTextMark } from "./editor.commands.ts";
+import { caretAt, replaceText, toggleTextMark } from "./editor.commands.ts";
 import type { InputContext } from "./editor-input.view.ts";
 import { selectNeighborTextBlock } from "./editor.selectors.ts";
 
@@ -94,11 +95,25 @@ function moveBetweenBlocks(
   return true;
 }
 
+// In code, as Notion's, Tab writes an indent where the caret is and
+// Shift+Tab does nothing; elsewhere they nest and un-nest the block.
+const CODE_INDENT = "  ";
+
 function indent(event: KeyboardEvent, context: InputContext): boolean {
   const selection = readSelection();
   if (event.key !== "Tab" || selection === null) return false;
+  const { blockId, anchorOffset, focusOffset } = selection;
+  if (context.state.workspace.blocks[blockId]?.type === CODE_TYPE) {
+    if (event.shiftKey) return true;
+    const start = Math.min(anchorOffset, focusOffset);
+    const end = Math.max(anchorOffset, focusOffset);
+    context.dispatch(
+      replaceText.create({ blockId, start, end, text: CODE_INDENT }),
+    );
+    return true;
+  }
   const command = event.shiftKey ? outdentBlock : indentBlock;
-  context.dispatch(command.create({ blockId: selection.blockId }));
+  context.dispatch(command.create({ blockId }));
   return true;
 }
 

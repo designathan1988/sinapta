@@ -68,4 +68,16 @@ describe("renderSlashMenu", () => {
       overlay: { kind: "equation-editor" },
     });
   });
+
+  it("opens a new button's settings, as Notion's", () => {
+    const sent: Command[] = [];
+    const option = rendered("/button", sent).querySelector("[role=option]");
+
+    option?.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+
+    expect(sent.at(-1)).toMatchObject({
+      type: "ui.openOverlay",
+      overlay: { kind: "button-config" },
+    });
+  });
 });

@@ -49,8 +49,11 @@ function renderFileChoice(file: FileChoice): TemplateResult {
 }
 
 export function renderUrlField(options: UrlFieldOptions): TemplateResult {
+  // The field checks the address itself and says why in its own words:
+  // no browser bubble in the browser's language.
   return html`<form
     class="url-field"
+    novalidate
     @submit=${(event: SubmitEvent) => {
       submitted(event, options);
     }}
@@ -67,6 +70,6 @@ export function renderUrlField(options: UrlFieldOptions): TemplateResult {
       ${options.submitLabel}
     </button>
     ${options.file === undefined ? nothing : renderFileChoice(options.file)}
-    <p class="url-field__hint">${options.invalidMessage}</p>
+    <p class="url-field__hint" role="alert">${options.invalidMessage}</p>
   </form>`;
 }

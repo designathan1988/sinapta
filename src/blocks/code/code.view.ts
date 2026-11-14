@@ -10,7 +10,7 @@ import {
 } from "../../state/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
-import { afterRender } from "../../ui/focus/index.ts";
+import { afterRender, focusOnce } from "../../ui/focus/index.ts";
 import { renderRichText } from "../../ui/rich-text/index.ts";
 import { renderSelect } from "../../ui/select/index.ts";
 import {
@@ -119,6 +119,8 @@ function renderCaption(block: CodeBlock, dispatch: Dispatch) {
     const next = value === "" ? null : value;
     dispatch(setCodeCaption.create({ blockId: block.id, caption: next }));
   };
+  // A caption just added is empty: it takes the focus, to be written.
+  const isNew = plainText(caption) === "";
   return html`<input
     class="code__caption"
     type="text"
@@ -126,6 +128,7 @@ function renderCaption(block: CodeBlock, dispatch: Dispatch) {
     placeholder=${TEXT.captionPlaceholder}
     .value=${plainText(caption)}
     @change=${onChange}
+    ${isNew ? ref(focusOnce) : nothing}
   />`;
 }
 

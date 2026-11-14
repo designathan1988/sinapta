@@ -33,8 +33,12 @@ export function installTooltip(): void {
       source.getAttribute("data-tooltip") ??
       source.getAttribute("aria-label") ??
       "";
-    // A control whose menu is open says nothing over it, as Notion's.
-    const isOpen = source.getAttribute("aria-expanded") === "true";
+    // A control whose menu is open says nothing over it, as Notion's; an
+    // open toggle's arrow (data-disclosure) is no menu and still names
+    // what it does.
+    const isOpen =
+      source.getAttribute("aria-expanded") === "true" &&
+      !source.hasAttribute("data-disclosure");
     if (words === "" || isOpen) {
       event.preventDefault();
       return;

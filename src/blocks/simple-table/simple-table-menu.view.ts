@@ -9,6 +9,7 @@ import {
   type Dispatch,
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { afterRender } from "../../ui/focus/index.ts";
 import { renderMenu, type MenuItem } from "../../ui/menu/index.ts";
 import {
   insertTableColumn,
@@ -129,7 +130,18 @@ export function renderTableMenu(
   return renderMenu({
     label: COPY.simpleTable.menu,
     items: menuItems(block, cell, dispatch),
-    onClose: () => dispatch(closeOverlay.create({})),
+    onClose: () => {
+      dispatch(closeOverlay.create({}));
+      focusCell(block.id, cell);
+    },
     ...(point && { point }),
+  });
+}
+
+// Escape gives the focus back to the cell the menu was opened on.
+function focusCell(blockId: BlockId, cell: Cell): void {
+  const selector = `[data-block-id="${CSS.escape(blockId)}"] [data-row="${String(cell.row)}"][data-column="${String(cell.column)}"]`;
+  afterRender(() => {
+    document.querySelector<HTMLElement>(selector)?.focus();
   });
 }

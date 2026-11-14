@@ -7,6 +7,7 @@ import {
   type Dispatch,
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { afterRender } from "../../ui/focus/index.ts";
 import {
   insertTableColumn,
@@ -150,6 +151,8 @@ function renderAddButtons(
       class="simple-table__add"
       data-axis="row"
       aria-label=${COPY.simpleTable.addRow}
+      title=${tooltipTitle(COPY.simpleTable.addRow)}
+      interestfor=${TOOLTIP_TARGET}
       @click=${() => dispatch(insertTableRow.create({ blockId, index: height }))}
     >
       +
@@ -159,6 +162,8 @@ function renderAddButtons(
       class="simple-table__add"
       data-axis="column"
       aria-label=${COPY.simpleTable.addColumn}
+      title=${tooltipTitle(COPY.simpleTable.addColumn)}
+      interestfor=${TOOLTIP_TARGET}
       @click=${() =>
         dispatch(insertTableColumn.create({ blockId, index: width }))}
     >

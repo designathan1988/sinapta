@@ -2,6 +2,7 @@ import "./heading.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import type { Dispatch } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { renderRichText, type RichTextTag } from "../../ui/rich-text/index.ts";
 import { setHeadingOpen } from "./heading.commands.ts";
@@ -25,6 +26,9 @@ function renderArrow(
   return html`<button
     type="button"
     class="heading__toggle"
+    data-disclosure
+    title=${tooltipTitle(isOpen ? COPY.blocks.toggleClose : COPY.blocks.toggleOpen)}
+    interestfor=${TOOLTIP_TARGET}
     aria-expanded=${String(isOpen)}
     aria-label=${isOpen ? COPY.blocks.toggleClose : COPY.blocks.toggleOpen}
     @click=${() =>

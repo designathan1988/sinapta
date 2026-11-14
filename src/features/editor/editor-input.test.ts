@@ -103,8 +103,13 @@ function typeAtEndCommands(text: string, init: InputEventInit): Command[] {
   return typeAtEndSent(text, init, "paragraph");
 }
 
-describe("block Markdown in a list item, as Notion's", () => {
+describe("block Markdown, as Notion's", () => {
   const space = { inputType: "insertText", data: " " };
+  const dash = { inputType: "insertText", data: "-" };
+
+  it("makes the divider at the third dash, with no space", () => {
+    expect(typeAtEnd("--", dash)).toEqual(["block.convert"]);
+  });
 
   it("turns a bullet into a to-do on [] and a space", () => {
     const sent = typeAtEndSent("[]", space, "bulleted-list");

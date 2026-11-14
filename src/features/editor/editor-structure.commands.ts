@@ -6,7 +6,9 @@ import {
   textOf,
 } from "../../blocks/index.ts";
 import { DATABASE_TYPE } from "../../blocks/page/index.ts";
+import { HEADING_TYPE } from "../../blocks/heading/index.ts";
 import { PARAGRAPH_TYPE } from "../../blocks/paragraph/index.ts";
+import { TOGGLE_TYPE } from "../../blocks/toggle/index.ts";
 import {
   concatRichText,
   snapToBoundary,
@@ -63,6 +65,32 @@ export const appendParagraph = defineCommand<{ pageId: BlockId }>({
   },
 });
 
+// An open toggle, or an open toggle heading: Enter in its title writes
+// its first line inside.
+function opensInside(block: Block): boolean {
+  const { isOpen, isToggleable } = block.props;
+  if (block.type === TOGGLE_TYPE) return isOpen === true;
+  return (
+    block.type === HEADING_TYPE && isToggleable === true && isOpen !== false
+  );
+}
+
+// Where Enter's new line goes, and what it is: as Notion's, a line inside
+// an open toggle, first; else the kind that continues this one, after it.
+function newLinePlace(
+  state: AppState,
+  block: Block & { readonly parentId: BlockId },
+) {
+  if (opensInside(block)) {
+    return { type: PARAGRAPH_TYPE, parentId: block.id, index: 0 };
+  }
+  return {
+    type: blockDefinition(block.type)?.continuesAs ?? PARAGRAPH_TYPE,
+    parentId: block.parentId,
+    index: indexIn(state, block) + 1,
+  };
+}
+
 function outdent(state: AppState, block: Block): Operation[] {
   const parent =
     block.parentId === null
@@ -94,10 +122,11 @@ export const splitBlock = defineCommand<{ blockId: BlockId; offset: number }>({
     }
     const offset = snapToBoundary(textOf(block), command.offset);
     const [before, after] = splitRichText(block.props.text, offset);
-    const type = blockDefinition(block.type)?.continuesAs ?? PARAGRAPH_TYPE;
-    const { parentId } = block;
+    const { type, parentId, index } = newLinePlace(state, {
+      ...block,
+      parentId: block.parentId,
+    });
     const record = createBlock({ id, type, parentId, text: after, now });
-    const index = indexIn(state, block) + 1;
     return {
       operations: [
         ...setText(state, { blockId: block.id, text: before, now }),
