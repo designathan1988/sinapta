@@ -3,6 +3,7 @@
 // rows, labels and lines; a listbox chooses one value. Rendered while open.
 import "./menu.css";
 import "./menu-field.css";
+import "./menu-inset.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import { COPY } from "../copy.ts";
@@ -22,51 +23,10 @@ import {
   onSubmenuHover,
   renderSubmenu,
   renderSubmenuOf,
-  type MenuContext,
 } from "./menu-submenu.ts";
+import type { MenuOptions, MenuSearch } from "./menu-options.ts";
 
-export interface MenuSearch {
-  readonly placeholder: string;
-  readonly query: string;
-  readonly onQuery: (query: string) => void;
-}
-
-export interface MenuOptions {
-  readonly label: string;
-  readonly items: readonly MenuEntry[];
-  // Called when the menu should close: after a choice, Escape or Tab.
-  readonly onClose: () => void;
-  // Called instead of onClose after a choice, when that closes more than
-  // this menu, as a choice in a submenu closes the whole overlay.
-  readonly onDone?: () => void;
-  // A short note under the items, such as a page's word count.
-  readonly footer?: string;
-  // Where a menu opened by a right click shows; otherwise it sits by the
-  // control that opened it.
-  readonly point?: { readonly x: number; readonly y: number };
-  // A header with this title and a close button, and a back button when
-  // the panel was reached from another one.
-  readonly title?: string;
-  readonly onBack?: () => void;
-  readonly search?: MenuSearch;
-  // "listbox" for choosing one value among options.
-  readonly role?: "menu" | "listbox";
-  // Content above the rows, such as a name field or layout tiles.
-  readonly lead?: TemplateResult;
-  // Content under the rows, such as a card layout's tiles.
-  readonly tail?: TemplateResult | typeof nothing;
-  // A submenu as wide as a menu, for rows with long words.
-  readonly isWide?: boolean;
-  // A long list kept short and scrolled, as Notion's list of times.
-  readonly isShort?: boolean;
-  // A list opened from a control inside another overlay.
-  readonly isChild?: boolean;
-  // A submenu sits beside the row that opened it, not under it; an editor
-  // of a cell lies over the cell, at least as wide.
-  readonly placement?: "beside" | "over" | "before";
-  // The open overlay, for menus whose rows open submenus.
-  readonly context?: MenuContext;
-}
+export type { MenuOptions, MenuSearch } from "./menu-options.ts";
 
 // The point is set through the CSSOM: it changes with every opening.
 function placeAt(point: MenuOptions["point"]) {
@@ -220,6 +180,7 @@ export function renderMenu(options: MenuOptions): TemplateResult {
     ?data-at-point=${options.point !== undefined}
     ?data-child=${options.isChild === true}
     ?data-short=${options.isShort === true}
+    ?data-inset=${options.isInset === true}
     data-placement=${options.placement ?? nothing}
     data-size=${
       isSubmenu && options.lead === undefined && options.isWide !== true

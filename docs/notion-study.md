@@ -1454,5 +1454,7 @@ board measured in Notion (item 46).
   most, its search field focused, "Suggested", then the places that
   match what is typed (`p66-move-popover`); from the page menu it stays
   a dialog. Left: each place's icon and chevron, the workspace at its foot.
-- Notion's view settings rows 8 px from the panel's edge against
-  Pagecraft's 4 px on every menu (item 45).
+- (Closed 2026-11-14) Notion's view settings rows sit 8 px from the
+  panel's edge and its page menu's 4 (`n93-menu-inset`); Pagecraft's
+  menus take `isInset` for the view settings alone, the rest keep 4
+  (`p67-menu-inset`).

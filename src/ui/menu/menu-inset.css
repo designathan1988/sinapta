@@ -1,0 +1,8 @@
+@layer ui {
+  /* data-inset: rows 8 px from the panel's edge, as Notion's view
+     settings (n93-menu-inset); its other menus keep 4. The panel's own
+     content above the rows keeps its place. */
+  .menu[data-inset] .menu__list {
+    padding-inline: var(--space-inset-xs);
+  }
+}

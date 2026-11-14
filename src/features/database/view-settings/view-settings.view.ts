@@ -125,6 +125,7 @@ export function renderViewSettings(context: TableContext): TemplateResult {
   return renderMenu({
     label: COPY.database.viewSettings,
     title: panel.title,
+    isInset: true,
     items: panel.items,
     ...(lead !== undefined && { lead }),
     ...(tail !== undefined && { tail }),
