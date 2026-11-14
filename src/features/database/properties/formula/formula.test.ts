@@ -144,7 +144,7 @@ describe("formulas", () => {
   });
 
   // A formula worked out anew for each row would be about ten times
-  // slower; the fastest of fifteen runs, with twice the room the work
+  // slower; the fastest of up to fifteen runs, with twice the room the work
   // needs alone, stays clear of a processor busy with other test files,
   // the watchers and the browser.
   it("works out 5,000 rows in under 100 milliseconds", () => {
@@ -153,14 +153,16 @@ describe("formulas", () => {
       PROPERTIES,
     );
     if (!compiled.ok) throw new Error(compiled.error);
-    const times = Array.from({ length: 15 }, () => {
+    // Up to fifteen runs, stopping at the first under the budget.
+    let fastest = Infinity;
+    for (let run = 0; run < 15 && fastest >= 100; run += 1) {
       const start = performance.now();
       for (let row = 0; row < 5000; row += 1) {
         evaluateFormula(compiled.program, CONTEXT);
       }
-      return performance.now() - start;
-    });
+      fastest = Math.min(fastest, performance.now() - start);
+    }
 
-    expect(Math.min(...times)).toBeLessThan(100);
+    expect(fastest).toBeLessThan(100);
   });
 });

@@ -30,18 +30,20 @@ describe("typing on a long page", () => {
     };
     draw();
     const blockId = toBlockId("b500");
-    const times = Array.from({ length: 12 }, (_, index) => {
+    // Up to twelve keystrokes, stopping at the first under a frame.
+    let fastest = Infinity;
+    for (let index = 0; index < 12 && fastest >= FRAME_MS; index += 1) {
       const start = performance.now();
       app.dispatch(
         replaceText.create({ blockId, start: index, end: index, text: "x" }),
       );
       draw();
-      return performance.now() - start;
-    });
+      fastest = Math.min(fastest, performance.now() - start);
+    }
 
     expect(host.querySelectorAll("[data-block-id]").length).toBeGreaterThan(
       BLOCKS - 1,
     );
-    expect(Math.min(...times)).toBeLessThan(FRAME_MS);
+    expect(fastest).toBeLessThan(FRAME_MS);
   });
 });
