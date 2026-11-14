@@ -14,3 +14,4 @@ export { startAccount, type Fetch } from "./account-client.ts";
 export { createSyncLink, type SyncLink } from "./sync-client.ts";
 export { startAi } from "./ai-client.ts";
 export { createOutbox, type Outbox } from "./workspace-repository.ts";
+export { startLinkPreviews } from "./link-preview-client.ts";

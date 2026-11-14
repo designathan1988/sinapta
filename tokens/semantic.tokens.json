@@ -755,6 +755,10 @@
         "$value": "{base.size.2x5}"
       }
     },
+    "bookmark": {
+      "$description": "Notion's web bookmark card: 106 px tall, its image as tall.",
+      "$value": "{base.size.6x625}"
+    },
     "card": {
       "cover": {
         "$value": "{base.size.12}"

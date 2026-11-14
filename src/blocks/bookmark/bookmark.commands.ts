@@ -14,6 +14,7 @@ export const setBookmarkUrl = defineCommand<{ blockId: BlockId; url: string }>({
     if (block === undefined || url === undefined) return {};
     if (!isBlockOfType<BookmarkBlock>(block, BOOKMARK_TYPE)) return {};
     const patch = { props: { url }, updatedAt: command.meta.now };
+    // A new address is read again: the old preview goes with the old one.
     return {
       operations: [
         { type: "record.update", kind: "block", id: block.id, patch },

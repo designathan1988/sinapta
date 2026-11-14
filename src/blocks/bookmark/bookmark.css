@@ -25,3 +25,55 @@
     white-space: nowrap;
   }
 }
+
+@layer blocks {
+  /* Notion's card once the page is read: the words, then the image. */
+  .bookmark[data-preview] {
+    display: flex;
+    gap: var(--space-none);
+    align-items: stretch;
+    max-block-size: var(--size-bookmark);
+    padding: var(--space-none);
+    overflow: hidden;
+  }
+
+  /* As Notion's: the title 14 px, the description and the address 12. */
+  .bookmark__text {
+    display: grid;
+    flex: 1;
+    gap: var(--space-stack-xxs);
+    align-content: start;
+    min-inline-size: 0;
+    padding: var(--space-inset-sm) var(--space-inset-md);
+    font-size: var(--font-size-sm);
+  }
+
+  .bookmark__description {
+    display: -webkit-box;
+    overflow: hidden;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .bookmark__url {
+    display: flex;
+    font-size: var(--font-size-xs);
+    gap: var(--space-inline-xs);
+    align-items: center;
+  }
+
+  .bookmark__icon {
+    flex: none;
+    inline-size: var(--size-icon-sm);
+    block-size: var(--size-icon-sm);
+  }
+
+  .bookmark__image {
+    flex: none;
+    inline-size: 33%;
+    block-size: var(--size-bookmark);
+    object-fit: cover;
+  }
+}

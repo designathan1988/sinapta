@@ -15,6 +15,15 @@ export const bookmarkPropsSchema = v.object({
     v.string(),
     v.check((url) => url === "" || safeBookmarkUrl(url) !== undefined),
   ),
+  // What the page says of itself, read by the server once (ADR-0013).
+  preview: v.optional(
+    v.object({
+      title: v.string(),
+      description: v.string(),
+      image: v.nullable(v.string()),
+      icon: v.nullable(v.string()),
+    }),
+  ),
 });
 
 export type BookmarkProps = v.InferOutput<typeof bookmarkPropsSchema>;

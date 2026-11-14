@@ -55,6 +55,7 @@ import {
   type Dispatch,
   accountCommands,
   aiCommands,
+  linkPreviewCommands,
   syncCommands,
   createCommandRegistry,
   createDispatcher,
@@ -73,6 +74,7 @@ import {
   startAccount,
   createOutbox,
   startAi,
+  startLinkPreviews,
   createSyncLink,
   type SyncLink,
   startAssetStore,
@@ -103,6 +105,7 @@ const COMMANDS = [
   ...accountCommands,
   ...syncCommands,
   ...aiCommands,
+  ...linkPreviewCommands,
   ...aiFeatureCommands,
   ...settingsCommands,
   ...persistenceCommands,
@@ -173,6 +176,7 @@ async function startPersistence(
   // The workspace on the server, once someone signs in (ADR-0013).
   sync.start({ store, dispatch, propsSchemas, outbox: createOutbox(adapter) });
   startAi({ store, dispatch });
+  startLinkPreviews({ store, dispatch });
   return { isFirstRun };
 }
 

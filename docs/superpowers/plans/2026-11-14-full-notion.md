@@ -106,3 +106,14 @@ in `src/persistence/`.
   anything…", whose plain-text requests the local provider answers too.
 - [x] 30.3 AI autofill for a text property (summary, action items), done
   by the server for every row; the AI chat from the sidebar's "New chat".
+
+## Milestone 31: What the specification's version 3 still listed
+
+The specification's "Out of scope" list, brought in by ADR-0013, held
+items milestones 22 to 30 did not plan: link previews that need a server,
+integrations and the public API, notifications to other devices, and
+transcription.
+
+- [x] 31.1 Link previews: the server reads a bookmarked page's title,
+  description, image and icon from its own tags (private hosts refused),
+  and the bookmark shows Notion's card (`p73-bookmark`).
