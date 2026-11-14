@@ -167,6 +167,9 @@ export const DATABASE_TEXT = {
       calendar: "Calendar",
       map: "Map",
     },
+    people: "People",
+    noPeople:
+      "No people in this workspace yet. Invite them from Settings › People.",
     noPlaces:
       "A map shows rows by a place property. Add one to this database and show it in this view.",
     mapCredit: "© OpenStreetMap contributors",

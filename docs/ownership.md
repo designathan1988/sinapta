@@ -88,6 +88,7 @@ owner listed here exists.
 | The inbox's notices from others: mentions of the person, replies to them | `src/features/inbox/inbox-notices.selectors.ts` | 27 |
 | Created by and Last edited by properties | `src/features/database/properties/created-by/` | 28 |
 | The Place property: a name and coordinates | `src/features/database/properties/place/` | 29 |
+| The Person property and its people picker | `src/features/database/properties/person/` | 28 |
 | The Map view: OpenStreetMap tiles, a pin per row with a place | `src/features/database/layouts/map/` | 29 |
 | Notion AI: Ask AI in the block menu, the answer with Insert below, Replace, Discard | `src/features/ai/` | 30 |
 | Notion AI's state: the question and the answer | `src/state/ai.commands.ts` | 30 |

@@ -47,6 +47,7 @@ describe("the property registry", () => {
       "button",
       "created-time",
       "edited-time",
+      "person",
       "created-by",
       "edited-by",
       "place",

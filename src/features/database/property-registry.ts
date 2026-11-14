@@ -20,6 +20,7 @@ import { emailProperty } from "./properties/email/index.ts";
 import { filesProperty } from "./properties/files/index.ts";
 import { multiSelectProperty } from "./properties/multi-select/index.ts";
 import { numberProperty } from "./properties/number/index.ts";
+import { personProperty } from "./properties/person/index.ts";
 import { phoneProperty } from "./properties/phone/index.ts";
 import { placeProperty } from "./properties/place/index.ts";
 import { relationProperty } from "./properties/relation/index.ts";
@@ -50,6 +51,7 @@ export const PROPERTY_TYPES: readonly PropertyType[] = [
   buttonProperty,
   createdTimeProperty,
   editedTimeProperty,
+  personProperty,
   createdByProperty,
   editedByProperty,
   placeProperty,
