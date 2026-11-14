@@ -58,6 +58,14 @@ milestones 11 to 20 in `docs/superpowers/plans/2026-11-11-notion-parity.md`.
 The table above describes what is built; that document lists what is
 coming.
 
+Version 3 widens it to everything Notion offers (ADR-0013, 2026-11-14):
+the list under "Out of scope" comes in, served by a local server in
+`server/` (Node's own `node:http`, `node:sqlite` and `node:crypto`, no new
+dependency) and planned as milestones 22 to 30 in
+`docs/superpowers/plans/2026-11-14-full-notion.md`. Only third parties a
+local server cannot run (Google, Apple, Microsoft and SSO sign-in, Slack,
+Google Drive, payment) stay out; their menus are drawn and say so.
+
 ### Quality targets
 
 - Typing latency under 16 ms per keystroke on a page of 1,000 blocks.
@@ -212,6 +220,7 @@ in the official docs first, and record the exact version in its ADR.
 | Data table | `@tanstack/table-core` | Row models only, state controlled from the store |
 | Schemas | Valibot | Imported only in `src/model/` and in `*.schema.ts` files |
 | Storage | IndexedDB through `idb` | Used only in `src/persistence/` |
+| Server | Node 24's `node:http`, `node:sqlite`, `node:crypto`, in `server/` (ADR-0013) | Mounted in Vite's dev server; imports only `src/model/` from the app; nothing in `src/` imports it |
 | Tokens | Design Tokens Format 2025.10 JSON, built to CSS by `scripts/build-tokens.ts` | See section 5.4 |
 | Lint and format | ESLint with typescript-eslint, Stylelint, Prettier | Zero warnings allowed |
 
