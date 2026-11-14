@@ -1,9 +1,9 @@
 ---
 name: real-user-testing
-description: Use when testing Pagecraft (or Notion beside it) the way a real person uses it — pointing, clicking, double- or right-clicking, dragging and dropping, resizing, selecting text, scrolling, typing, shortcuts, menus — or when checking that every action gives the person visible, timely feedback (hover, pressed, focus ring, cursor, drop indicator, announcement, undo). Also when a gesture works in unit tests but fails or feels wrong in the app, or a drag, hover menu or tooltip needs checking with real mouse movement.
+description: Use when driving Pagecraft (or Notion beside it) with a real person's gestures in a capture plan — pointing, clicking, double- or right-clicking, dragging and dropping, resizing, selecting text, scrolling, typing, shortcuts — or when a gesture needs photographing in each of its states, with the cursor, the mouse trail or the keys drawn on the photo. Also when a gesture works in unit tests but fails or feels wrong in the app. For what to test and in which order, see feature-test-scripts.
 ---
 
-# Real-user testing
+# Real-user gestures
 
 ## Overview
 
@@ -12,14 +12,12 @@ little short or long and corrects, never hits the exact centre, holds each
 click for a moment, shakes slightly at rest, scrolls with wheel notches,
 drags more slowly than it points, types in a rhythm with slips it takes back.
 An interface that only works for instant, straight, pixel-exact input is
-broken for people. And every action needs an answer the person can see in
-time: something must change on hover, on press, during a drag, on drop, on
-focus, on error.
+broken for people.
 
-**Core principle:** drive the app with the human hand of the capture script
-(`"human"` plans), photograph every state of every gesture, and judge the
-feedback from the photos plus the printed facts — never from code reading
-or a passing unit test.
+**Core principle:** every gesture goes through the human hand of the capture
+script (`"human"` plans), and every state of the gesture is photographed and
+looked at. This skill is how to do gestures; what to test, and how to judge
+the result, is the `feature-test-scripts` skill.
 
 The project rules in CLAUDE.md still hold and come first: photos only from
 `npm run capture`, read every PNG, one process at a time, subagents never run
@@ -61,13 +59,15 @@ New fields work only with `"human"`:
 | --- | --- |
 | `hover` / `moveTo: sel` | reach the element and stay (button held or not) |
 | `pointAt: [x, y]` | move the hand to a point without pressing (move away, clear hover) |
-| `click`, `doubleClick`, `rightClick`, `clickAt` + `clicks` | reach, look, press and release |
+| `click`, `doubleClick`, `rightClick`, `clickAt` + `clicks` | reach, look, press and release (`clicks: 3` selects a paragraph) |
 | `down: sel` | reach and press, **keep holding** (photo shows the pressed state) |
 | `up: true` | let go where the hand is |
 | `drag: sel` + `to: sel` (or `by: [dx, dy]`) | the whole drag in one step; `hold: "Alt"` for a copy |
+| `hold: "Shift"` | a key held around the step's press or drag (Shift-click, Ctrl-click, Alt-drag) |
 | `aim: [fx, fy]` | where in the **last element the step reaches** to aim, as fractions of its box |
 | `wheel: [dx, dy]` | turn the wheel over where the hand is (after any `hover`/`pointAt`) |
 | `watch: "expr"` | read the expression after every event the hand sends; print each change with its time |
+| `frames: true` | a photo at every phase of the gesture (also plan-wide) — see below |
 
 `pointAt`, `hover` and `moveTo` never press or release: with the button held
 (after `down`) they carry it, so `down` → `pointAt: [x, y]` → `up` resizes
@@ -76,28 +76,51 @@ The hand aims at an element's own box: when the real hit area is a
 pseudo-element (a 1 px resizer with a wide `::after`), `read` its rectangle
 first and use `pointAt`.
 
-Order inside one step: eval → `pointAt`/`hover`/`moveTo` → `wheel` → presses
-(`click` … `down`, `drag`) → `up` → **`type` → `press`**. Typing comes before
-the key press, so "type a line, then Enter" is `"type": "line\n"` or two
-steps. One gesture per step gives one photo per state; prefer that.
+Order inside one step: `offline`/`reload` → eval → `pointAt`/`hover`/`moveTo`
+→ `wheel` → presses (`click` … `down`, `drag`) → `up` → **`type` → `press`**.
+Typing comes before the key press, so "type a line, then Enter" is
+`"type": "line\n"` or two steps. One gesture per step gives one photo per
+state; prefer that.
 
-After each photo the script prints what the hand did and what a person
-would sense, because a headless photo has no cursor:
+## What is printed after each photo
+
+A headless photo has no cursor, so the script prints what the hand did and
+what a person would sense, and what went wrong behind the page:
 
 ```
-.captures\pagecraft\human-verify\04-carry.png [236,30]
-  did: drag 402 px, 81 events, bend 15 px, overshoot 0 px
-  watched: 1 ms "" → 326 ms "after@Second line" → 390 ms "inside@Second line" → 440 ms "before@Second line" → 490 ms "" → 507 ms "after@First line" → 540 ms "inside@First line" → 883 ms "before@First line"
-  pointer 872,242 (button held) on p.rich-text "First line", cursor auto
+.captures\pagecraft\human-overlay\07-carry.png
+  did: drag 392 px in 1161 ms (planned 1116), 65 of 107 reports sent, bend 11 px, overshoot 2 px
+  watched: 1 ms "" → 98 ms "dragging" → 191 ms "left|dragging" → 293 ms "before|dragging"
+  pointer 858,239 (button held) on p.rich-text "Alpha line", cursor text (auto over editable)
   focus button.editor__handle "Block actions", not :focus-visible, no outline
 ```
 
-Read it as a person: the indicator swept the zones the hand passed over, then
-settled before "First line" and stayed (no flicker at rest); the cursor
-while carrying is the text cursor, not `grabbing` (compare with Notion). A
-`watch` on the editor's text while typing once showed `"Third " → "" →
-"Third "` and the later keys lost: text vanishing under typing is the kind of
-fault only this rhythm finds.
+- `did: … in X ms (planned Y)`: every mouse report waits for the page to take
+  it, so a much longer time, or few reports sent, means the page was busy.
+- `cursor`: the shape the browser shows there (pointer capture wins; `auto`
+  is the I-beam over editable or selectable text).
+- `did:` also reports what a person would hit: `arrived on X, but it cannot
+  be seen (opacity 0.00)`, `aimed at X, but the pointer is on .Y`, `held at
+  the edge 4 s: nothing scrolled`, `nothing expected appeared: did it again`.
+- `focus …, :focus-visible, outline …`: where the focus is and whether its
+  ring shows.
+- `selected "…"`: the text selection, when there is one.
+- `announced "…"`: what the live regions (`role=status`, `aria-live`) say.
+- `problem:` console errors, page errors, failed requests and answers of 400
+  and above during the step (address paths only).
+
+A missed `expect` is retried once, except while the button is held.
+
+## Frames: a photo at every phase (`"frames": true`)
+
+With `frames` on (plan or step), the hand photographs each phase of its
+gesture as it happens, beside the step's final photo:
+`05-carry.1-arrived.png`, `06-drag.1-arrived.png`, `06-drag.2-pressed.png`,
+`06-drag.3-carried.png`, `06-drag.4-released.png`; also `clicked`,
+`right-clicked`, `typed`, `keys`. Each frame prints its path and cursor.
+Open every frame like any other photo. A frame pauses the hand for the
+photo (about 0.2 s): do not judge timing from a framed step; use `watch` in
+a run without frames.
 
 ## Overlays: cursor, trail, keys (off by default)
 
@@ -113,23 +136,11 @@ so the page under test never gets anything injected.
 
 | Layer | Shows |
 | --- | --- |
-| `cursor` | the cursor in the shape the browser shows there, one of 25 CSS cursors drawn as Windows does at 200 % (arrow, hand, I-beam, grab/grabbing, resize arrows, not-allowed, wait, progress, copy, help, zoom…); while an element holds the pointer capture its cursor wins; `auto` is the I-beam over editable or selectable text. While the button is held: an orange halo. Presses of the step: a filled dot, releases a ring, a second ring for a double-click, purple for the right button |
+| `cursor` | the cursor in the shape the browser shows there, one of 25 CSS cursors drawn as Windows does at 200 % (arrow, hand, I-beam, grab/grabbing, resize arrows, not-allowed, wait, progress, copy, help, zoom…). While the button is held: an orange halo. Presses of the step: a filled dot, releases a ring, a second ring for a double-click, purple for the right button |
 | `trail` | every mouse report of the step as a dot, joined by a line coloured by speed (blue slow → red fast), thicker while the button is held, a square where it started, and a legend: reports, length, time, peak speed |
 | `keys` | keycaps of each shortcut (`Ctrl + Shift + ↓`), typed text as the fingers struck it with slips and `⌫` (`Secp⌫ond↵`), held modifiers, wheel turns (`Wheel ↓ × 3`) |
 
-The printed `did: move … in 1073 ms (planned 1035), 53 of 115 reports sent`
-compares the plan with what the page allowed: every report waits for the page
-to take it, so a much longer time or few reports sent means the page was busy
-(a performance finding), as long as nothing else is running.
-
-`did:` lines also report problems a person would hit: `arrived on X, but it
-cannot be seen (opacity 0.00)`, `aimed at X, but the pointer is on .Y`,
-`held at the edge 4 s: nothing scrolled`, `nothing expected appeared: did it
-again`. A missed `expect` is retried once, except while the button is held.
-
-## Photograph every state
-
-For each control, one step per state, in Pagecraft and in Notion:
+## Photograph every state of a gesture
 
 | State | Step |
 | --- | --- |
@@ -158,58 +169,29 @@ More gestures:
 - Shift-click / Ctrl-click: `click` with `hold: "Shift"`.
 - Resize: `drag` the handle `by: [dx, 0]`, or `down` / `moveTo` / `up` to photograph mid-resize.
 - Autoscroll: `down` on an item, `moveTo` a target below the fold; the hand waits at the edge and says whether the page scrolled.
-- Escape mid-drag: `down`, `moveTo`, then `press: "Escape"`, then `up: true`; the order must be unchanged.
-- Keyboard path for every drag (required by `.claude/rules/ui.md`): click into the block's text, `press: "Control+Shift+ArrowDown"`; the order changes and "Block moved." is announced. Sidebar pages and board cards: Alt+arrows.
+- Escape mid-drag: `down`, `moveTo`, then `press: "Escape"`, then `up: true`.
+- Keyboard path of a drag: click into the block's text, `press: "Control+Shift+ArrowDown"`. Sidebar pages and board cards: Alt+arrows.
 - Typing faults: put a `watch` on the text being typed; every key should add exactly its character, and nothing may vanish.
 
-Where Pagecraft's surfaces, selectors and thresholds are: read
-[pagecraft-surfaces.md](pagecraft-surfaces.md). The review account's pages
-change between runs: start every plan with a step whose `read` lists the
-items you will index with `nth`, or create what you test (`New page`).
-Notion's selectors: the earlier Notion plans in `.captures/plans/` (`n*.json`)
-and `docs/notion-study.md`.
-
-## Judge the feedback
-
-For every action, answer from the photo and the printed lines:
-
-| Action | The person must see | Within |
-| --- | --- | --- |
-| point at anything clickable | a wash or highlight; cursor `pointer` (or `grab`, resize cursors) | 0.1 s |
-| point and wait | a tooltip on icon-only buttons | 0.5–1 s |
-| press | a pressed or active state, or the result itself | 0.1 s |
-| drag past the threshold | the item marked as lifted; a drop indicator under the pointer that follows it without flicker | 0.1 s |
-| drop | the item in its new place, the indicator gone, an announcement, focus kept sensibly | 0.1 s |
-| type | each character at once; Markdown and menu triggers react at their key | 0.1 s |
-| keyboard focus | a visible ring on the focused control (contenteditable text is the agreed exception) | at once |
-| open a menu | the menu at the pointer or anchor, first item ready, Escape closes and focus returns | 0.1 s |
-| slow work | a progress or saving state | 1 s |
-| error or refusal | a message saying what happened and what to do | at once |
-| undo | the previous state restored, visibly | 0.1 s |
-
-Use `watch` timings for "within"; a photo only shows the end. Feedback that
-appears late, flickers between zones, sits away from the pointer, or never
-appears is a finding even when the action itself worked. Compare each
-finding with Notion by running the same steps with Notion's selectors
-(`npm run capture -- notion plan.json`); record the numbers under the
-control's section in `docs/notion-study.md`.
-
-## Report
-
-Per gesture: the step names and PNG paths, what the person sees (from the
-photo), the printed facts that matter (cursor, focus, announced, watched
-times), Notion's value beside it, and a verdict: matches, finding (what is
-missing or wrong, and where the owning code is), or not tested (why).
+Gesture numbers in Pagecraft (from `src/ui/drag/pointer-drag.ts` and the
+tokens): a drag starts after 4 px; drop before / inside / after a block at
+its top 30 % / middle 40 % / bottom 30 %; side drop (columns) within 10 % of
+an edge; tooltips after 500 ms. Selectors and every control of a part:
+`npm run inventory -- <part>`. The review account's pages change between
+runs: start a plan with a step whose `read` lists the items you will index
+with `nth`, or create what you test (`New page`). Notion's selectors: the
+earlier Notion plans in `.captures/plans/` (`n*.json`).
 
 ## Common mistakes
 
 | Mistake | Instead |
 | --- | --- |
 | `"type": "/head", "press": "Enter"` expecting the menu open before Enter | type runs first; split into steps or put the key in the text |
-| Testing a drag with one `drag` step and judging only the final order | `down` / `moveTo` / `up` with `watch`: the feedback is in the middle |
+| Testing a drag with one `drag` step and judging only the final order | `down` / `moveTo` / `up` with `watch`, or `frames`: the feedback is in the middle |
 | Trusting `expect` on a hover-revealed control | Playwright counts opacity 0 as visible; read the `did:` line (`cannot be seen`) and the photo |
-| Judging the cursor from a plain photo | headless photos have no cursor: turn on `overlay.cursor`, or read `cursor …` in the printed lines |
+| Judging the cursor from a plain photo | turn on `overlay.cursor`, or read `cursor …` in the printed lines |
 | Studying a path from the end photo alone | turn on `overlay.trail`: the line shows overshoot, corrections and where the hand slowed |
+| Judging timing in a step with `frames` | frames pause the hand; time with `watch` in a run without frames |
 | Pressing Tab inside a text block to test focus rings | Tab indents there; start from a button or the sidebar |
 | Re-running with a new random hand after a failure | add the printed seed to replay the same motion |
 | Calling a gesture fine because the unit test passes | the unit tests fire synthetic events at fixed points; only the hand finds threshold, hit-area and timing faults |
