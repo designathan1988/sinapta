@@ -6,7 +6,7 @@ import {
   type Automation,
   type DatabaseBlock,
 } from "../../blocks/database/index.ts";
-import { selectPage } from "../../blocks/page/index.ts";
+import { selectPage, type PageBlock } from "../../blocks/page/index.ts";
 import {
   parseBlockId,
   type BlockId,
@@ -15,6 +15,8 @@ import {
 import { defineCommand, type AppState } from "../../state/index.ts";
 import { resolveValues } from "./button-values.ts";
 import { newRow } from "./button-press.commands.ts";
+import { automationTrigger } from "./automation-runs.selectors.ts";
+import { COPY } from "../../ui/copy.ts";
 
 export const AUTOMATION_PANEL = "automation:";
 
@@ -121,8 +123,59 @@ function addedPage(
   return newRow({ database: target, id, values: {} }, meta.now);
 }
 
-// Runs an automation on a page of its database: Edit property, then Add
-// page to.
+const NOTICES_KEPT = 20;
+
+// Send notification to: a notice on the page for each person it names.
+function noticesOf(
+  automation: Automation,
+  database: DatabaseBlock | undefined,
+  now: string,
+) {
+  if (database === undefined) return [];
+  const text = COPY.database.automationNotice(
+    automationTrigger(database, automation),
+    database.props.title.map((span) => span.text).join("") ||
+      COPY.database.untitled,
+  );
+  return (automation.notifyUserIds ?? []).map((userId) => ({
+    id: `${automation.id}:${userId}@${now}`,
+    userId,
+    text,
+    at: now,
+  }));
+}
+
+// The page with what the automation set and told; nothing if neither.
+function rowUpdate(
+  row: PageBlock,
+  change: {
+    readonly values: Readonly<Record<string, unknown>>;
+    readonly notices: NonNullable<PageBlock["props"]["automationNotices"]>;
+  },
+  now: string,
+): Operation[] {
+  const { values, notices } = change;
+  if (Object.keys(values).length === 0 && notices.length === 0) return [];
+  const kept = [...(row.props.automationNotices ?? []), ...notices];
+  const props = {
+    ...row.props,
+    values: { ...row.props.values, ...values },
+    ...(notices.length > 0 && {
+      automationNotices: kept.slice(-NOTICES_KEPT),
+    }),
+  };
+  return [
+    {
+      type: "record.update",
+      kind: "block",
+      id: row.id,
+      patch: { props, updatedAt: now },
+    },
+  ];
+}
+
+// Runs an automation on a page of its database: Edit property and Send
+// notification to, then Add page to.
 export const runAutomation = defineCommand<{
   databaseId: BlockId;
   automationId: string;
@@ -146,19 +199,9 @@ export const runAutomation = defineCommand<{
       now.slice(0, 10),
       new Map(),
     );
-    const props = { ...row.props, values: { ...row.props.values, ...values } };
-    const patch = { props, updatedAt: now };
+    const notices = noticesOf(automation, database, now);
     const operations: Operation[] = [
-      ...(Object.keys(values).length === 0
-        ? []
-        : [
-            {
-              type: "record.update",
-              kind: "block",
-              id: row.id,
-              patch,
-            } as const,
-          ]),
+      ...rowUpdate(row, { values, notices }, now),
       ...addedPage(state, automation, command.meta),
     ];
     return operations.length === 0 ? {} : { operations };

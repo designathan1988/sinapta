@@ -154,4 +154,13 @@ describe("the view settings' Automations, as Notion's", () => {
       patch: { values: { [stage]: "new" } },
     });
   });
+
+  it("asks to sign in before notifying people, in the browser's own workspace", () => {
+    const { host, row } = rendered("automation-notify:{id}", undefined, true);
+
+    expect(host.textContent).toContain(
+      "Notifications go to a workspace's people: sign in to send them.",
+    );
+    expect(row("Send notification to")).toBeUndefined();
+  });
 });

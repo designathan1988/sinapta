@@ -26,6 +26,8 @@ export const automationSchema = v.object({
   // Send Slack notification (version 33): to the workspace's connected
   // Slack.
   sendsSlack: v.optional(v.boolean()),
+  // Send notification to (version 34): the people told in their inbox.
+  notifyUserIds: v.optional(v.array(v.string())),
 });
 
 export type Automation = v.InferOutput<typeof automationSchema>;

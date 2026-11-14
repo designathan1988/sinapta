@@ -98,3 +98,32 @@ export function shares(state: AppState, context: NoticeContext): Reminder[] {
     ];
   });
 }
+
+// What automations told this person about pages, each a notice of its own.
+export function automationNotices(
+  state: AppState,
+  context: NoticeContext,
+): Reminder[] {
+  const { me, read, titleOf } = context;
+  return Object.values(state.workspace.blocks).flatMap((block) => {
+    if (!isPageLike(block)) return [];
+    return (block.props.automationNotices ?? []).flatMap(
+      (notice): Reminder[] =>
+        notice.userId === me
+          ? [
+              {
+                key: notice.id,
+                blockId: block.id,
+                pageId: block.id,
+                pageTitle: titleOf(block),
+                date: notice.at.slice(0, 10),
+                text: notice.text,
+                isRead: read.has(notice.id),
+                isNotice: true,
+                kind: "edit",
+              },
+            ]
+          : [],
+    );
+  });
+}

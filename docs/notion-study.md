@@ -1494,8 +1494,10 @@ Groups, Notion and Pagecraft alike (Pagecraft changed to match):
     Tasks (Assignee, Status, Due date). Since then (`w18-slack`): Send
     Slack notification, posted by the server to the workspace's
     connected Slack ("<page> in <database>: Page added"), or "Connect"
-    to Settings › Connections without one. Not yet: Meetings and Skills,
-    Manage data sources, an in-app notification action.
+    to Settings › Connections without one; and (`w19-notify`) Send
+    notification to, the workspace's people each switched on, who find
+    "Automation in <database>: <trigger>" in their inbox. Not yet:
+    Meetings and Skills, Manage data sources.
 68. **done** [`n127-sources`; Pagecraft `w17-linked-events`] Notion's
     "Linked events": without a calendar, "Connect your calendar", "Connect
     a calendar to choose meetings and automatically file their notes

@@ -1,8 +1,8 @@
 // One automation in the view settings, as Notion's editor: When (Page
-// added, or a property edited, chosen in a list of its own), Do (Edit property: the values a page is
-// given), Active, and Delete automation. Its panels are named by the
-// automation: "automation:<id>", "automation-set:<id>" to choose a
-// property, "automation-value:<id>:<property>" to choose its value.
+// added, or a property edited, chosen in a list of its own), Do (Edit
+// property, Add page to, Send webhook, Send Slack notification, Send
+// notification to), Active, and Delete automation; its panels are named
+// by the automation and found in automation-panels.ts.
 import type {
   Automation,
   PropertyDefinition,
@@ -16,23 +16,15 @@ import {
 } from "../automation.commands.ts";
 import type { TableContext } from "../table-cell.view.ts";
 import { actionWords, triggerWords, valueWords } from "./automation-words.ts";
-import {
-  ADD_PANEL,
-  addPageItem,
-  addPagePanel,
-} from "./automation-add-panel.ts";
-import {
-  HOOK_PANEL,
-  slackItem,
-  webhookItem,
-  webhookPanel,
-} from "./automation-hook-panel.ts";
+import { addPageItem } from "./automation-add-panel.ts";
+import { slackItem, webhookItem } from "./automation-hook-panel.ts";
+import { notifyItem } from "./automation-notify-panel.ts";
 import { goTo, panelRow, type SettingsPanel } from "./settings-panel.ts";
 
 const TEXT = COPY.database;
-const SET_PANEL = "automation-set:";
-const WHEN_PANEL = "automation-when:";
-const VALUE_PANEL = "automation-value:";
+export const SET_PANEL = "automation-set:";
+export const WHEN_PANEL = "automation-when:";
+export const VALUE_PANEL = "automation-value:";
 // What an automation can set, as Notion's Edit property offers first.
 const SETTABLE = new Set([
   "select",
@@ -52,12 +44,6 @@ const COMPUTED = new Set([
   "button",
   "unique-id",
 ]);
-
-function automationOf(context: TableContext, id: string) {
-  return context.model.database.props.automations?.find(
-    (item) => item.id === id,
-  );
-}
 
 function change(
   context: TableContext,
@@ -103,7 +89,7 @@ function triggerItems(context: TableContext, automation: Automation) {
 }
 
 // "When": what sets it off, chosen from a list of its own, searched.
-function whenPanel(context: TableContext, automation: Automation) {
+export function whenPanel(context: TableContext, automation: Automation) {
   return {
     title: TEXT.automationWhen,
     back: `${AUTOMATION_PANEL}${automation.id}`,
@@ -132,10 +118,11 @@ function actionItems(context: TableContext, automation: Automation) {
     addPageItem(context, automation),
     webhookItem(context, automation),
     slackItem(context, automation),
+    notifyItem(context, automation),
   ];
 }
 
-function editPanel(context: TableContext, automation: Automation) {
+export function editPanel(context: TableContext, automation: Automation) {
   const { dispatch, model } = context;
   const databaseId = model.database.id;
   const items: MenuEntry[] = [
@@ -172,7 +159,7 @@ function editPanel(context: TableContext, automation: Automation) {
   return { title: TEXT.automation, back: "automations", items };
 }
 
-function setPanel(context: TableContext, automation: Automation) {
+export function setPanel(context: TableContext, automation: Automation) {
   const items = context.model.columns
     .filter(({ property }) => SETTABLE.has(property.type))
     .map(({ property }) =>
@@ -193,7 +180,7 @@ function choicesOf(property: PropertyDefinition): unknown[] {
   return property.type === "multi-select" ? ids.map((id) => [id]) : ids;
 }
 
-function valuePanel(
+export function valuePanel(
   context: TableContext,
   automation: Automation,
   property: PropertyDefinition,
@@ -215,35 +202,4 @@ function valuePanel(
     };
   });
   return { title: property.name, back, items };
-}
-
-// The panels named by an automation alone, by their names' start.
-const PANELS_OF: Readonly<
-  Record<
-    string,
-    (context: TableContext, automation: Automation) => SettingsPanel
-  >
-> = {
-  [AUTOMATION_PANEL]: editPanel,
-  [SET_PANEL]: setPanel,
-  [WHEN_PANEL]: whenPanel,
-  [ADD_PANEL]: addPagePanel,
-  [HOOK_PANEL]: webhookPanel,
-};
-
-// The panel a name stands for, when it names one of an automation's.
-export function automationPanelOf(
-  context: TableContext,
-  name: string,
-): SettingsPanel | undefined {
-  const [kind = "", id = "", propertyId = ""] = name.split(":");
-  const automation = automationOf(context, id);
-  if (automation === undefined) return undefined;
-  const build = PANELS_OF[`${kind}:`];
-  if (build !== undefined) return build(context, automation);
-  const property = context.model.database.props.properties.find(
-    (item) => item.id === propertyId,
-  );
-  if (`${kind}:` !== VALUE_PANEL || property === undefined) return undefined;
-  return valuePanel(context, automation, property);
 }

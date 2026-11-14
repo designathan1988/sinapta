@@ -89,7 +89,10 @@ function nameOf(rich: readonly { readonly text: string }[]): string {
 }
 
 // "Page added", or "<property> edited".
-function triggerText(database: DatabaseBlock, automation: Automation): string {
+export function automationTrigger(
+  database: DatabaseBlock,
+  automation: Automation,
+): string {
   const { trigger } = automation;
   if (trigger.kind === "page-added") return COPY.database.pageAdded;
   const property = database.props.properties.find(
@@ -138,6 +141,6 @@ export function selectSlackText(
   return COPY.database.slackText(
     nameOf(row.props.title),
     nameOf(database.props.title),
-    triggerText(database, automation),
+    automationTrigger(database, automation),
   );
 }

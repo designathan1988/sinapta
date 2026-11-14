@@ -1,8 +1,8 @@
 // The inbox's notices from other people (ADR-0013), as Notion's: where the
 // signed-in person is mentioned, and the replies others wrote in the
 // discussions they took part in, every comment on the pages set to all
-// comments, the changes others made to their pages and the pages shared
-// with them.
+// comments, the changes others made to their pages, the pages shared
+// with them, and what automations told them.
 import { isTextBlock, textOf } from "../../blocks/index.ts";
 import {
   isPageLike,
@@ -12,7 +12,7 @@ import {
 import type { Block, Workspace } from "../../model/index.ts";
 import { selectCommentNotices, type AppState } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
-import { edits, shares } from "./inbox-changes.selectors.ts";
+import { automationNotices, edits, shares } from "./inbox-changes.selectors.ts";
 import type { Reminder } from "./inbox.selectors.ts";
 
 function pageOf(workspace: Workspace, block: Block): PageBlock | undefined {
@@ -126,5 +126,6 @@ export function selectNotices(state: AppState): Reminder[] {
     ...pageComments(state, me, read),
     ...edits(state, context),
     ...shares(state, context),
+    ...automationNotices(state, context),
   ];
 }

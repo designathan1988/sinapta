@@ -72,6 +72,12 @@ export const DATABASE_OPTIONS_TEXT = {
     "Webhooks are sent by a workspace's server: sign in to send them.",
   removeWebhook: "Remove webhook",
   sendSlack: "Send Slack notification",
+  sendNotification: "Send notification to",
+  notifyNote: "The people chosen find it in their inbox.",
+  notifyNeedsServer:
+    "Notifications go to a workspace's people: sign in to send them.",
+  automationNotice: (what: string, database: string) =>
+    `Automation in ${database}: ${what}`,
   connectSlack: "Connect",
   slackText: (page: string, database: string, what: string) =>
     `${page} in ${database}: ${what}`,

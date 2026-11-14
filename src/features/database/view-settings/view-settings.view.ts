@@ -52,7 +52,7 @@ import { aiAutofillPanel } from "./ai-autofill-panel.ts";
 import { automationsPanel } from "./automations-panel.ts";
 import { turnIntoPanel } from "./turn-into-panel.ts";
 import { linkedEventsPanel } from "./linked-events-panel.ts";
-import { automationPanelOf } from "./automation-edit-panel.ts";
+import { automationPanelOf } from "./automation-panels.ts";
 
 const PANELS: Readonly<
   Record<string, (context: TableContext) => SettingsPanel>

@@ -132,6 +132,18 @@ export const pagePropsSchema = v.object({
   inlineComments: v.optional(v.picklist(["default", "minimal"])),
   // The discussions on the page and its blocks.
   discussions: v.optional(v.array(discussionSchema)),
+  // What automations told people about the page (version 34), each in the
+  // inbox of the person it names; the 20 newest are kept.
+  automationNotices: v.optional(
+    v.array(
+      v.object({
+        id: v.string(),
+        userId: v.string(),
+        text: v.string(),
+        at: v.string(),
+      }),
+    ),
+  ),
   // A database template's repeat: it makes a row from itself on its days.
   repeat: v.optional(repeatSchema),
   // Notion's verification: who verified the page, when, and until when
