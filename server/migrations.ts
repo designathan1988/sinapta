@@ -88,4 +88,19 @@ export const MIGRATIONS: readonly string[] = [
      created_at INTEGER NOT NULL,
      PRIMARY KEY (workspace_id, teamspace_id, user_id)
    );`,
+  // 7: integrations, as Notion's internal integrations: a secret for the
+  // public API, and the pages connected to each.
+  `CREATE TABLE integrations (
+     id TEXT PRIMARY KEY,
+     workspace_id TEXT NOT NULL REFERENCES workspaces (id) ON DELETE CASCADE,
+     name TEXT NOT NULL,
+     secret_hash TEXT NOT NULL UNIQUE,
+     created_by TEXT NOT NULL,
+     created_at INTEGER NOT NULL
+   );
+   CREATE TABLE integration_pages (
+     integration_id TEXT NOT NULL REFERENCES integrations (id) ON DELETE CASCADE,
+     page_id TEXT NOT NULL,
+     PRIMARY KEY (integration_id, page_id)
+   );`,
 ];

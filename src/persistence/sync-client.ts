@@ -16,6 +16,10 @@ import {
   type Transaction,
 } from "../state/index.ts";
 import { parseReply } from "./account.schema.ts";
+import {
+  answerIntegrations,
+  isIntegrationRequest,
+} from "./integration-client.ts";
 import { answerPeople } from "./people-client.ts";
 import { answerTeamspaces, isTeamspaceRequest } from "./teamspace-client.ts";
 import {
@@ -133,6 +137,7 @@ async function join(link: Link, sync: Sync, wanted?: string): Promise<void> {
   // The workspace's people, for "@" and the comments' authors.
   sync.dispatch(requestSync.create({ request: { kind: "people" } }));
   sync.dispatch(requestSync.create({ request: { kind: "shared" } }));
+  sync.dispatch(requestSync.create({ request: { kind: "integrations" } }));
 }
 
 function leave(link: Link): void {
@@ -144,6 +149,10 @@ function leave(link: Link): void {
 // other requests go to the people client and keep the workspace open.
 function answer(link: Link, sync: Sync, request: SyncRequest): void {
   const { workspaceId } = sync.store.getState().persistence.sync;
+  if (isIntegrationRequest(request)) {
+    void answerIntegrations(sync, request, workspaceId);
+    return;
+  }
   if (isTeamspaceRequest(request)) {
     const afterwards = {
       reload: () => {

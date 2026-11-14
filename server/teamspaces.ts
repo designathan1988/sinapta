@@ -9,7 +9,7 @@ import {
 } from "../src/model/index.ts";
 import type { ApiContext } from "./api.ts";
 import * as rows from "./rows.schema.ts";
-import { logOperations } from "./workspaces.ts";
+import { logServerChange } from "./server-change.ts";
 
 const TEAMSPACE = "teamspace";
 const CLIENT_ID = "pagecraft-teamspaces";
@@ -117,25 +117,6 @@ export function forgetRequest(
     .run(workspaceId, teamspaceId, userId);
 }
 
-// Logs the server's own change and tells every client.
-function serverChange(
-  context: ApiContext,
-  change: { readonly workspaceId: string; readonly by: string },
-  operation: Operation,
-): void {
-  const seq = logOperations(context, {
-    workspaceId: change.workspaceId,
-    userId: change.by,
-    clientId: CLIENT_ID,
-    operations: [operation],
-  });
-  context.events.publish(change.workspaceId, "operations", {
-    seq,
-    clientId: CLIENT_ID,
-    operations: [operation],
-  });
-}
-
 // The server adds a person to a teamspace's members, as its own change
 // that every client receives.
 export function addMember(
@@ -161,7 +142,11 @@ export function addMember(
     id,
     patch,
   } as const;
-  serverChange(context, change, operation);
+  logServerChange(
+    context,
+    { workspaceId: change.workspaceId, by: change.by, clientId: CLIENT_ID },
+    [operation],
+  );
   forgetRequest(context, {
     workspaceId: change.workspaceId,
     teamspaceId: id,

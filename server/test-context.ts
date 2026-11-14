@@ -27,8 +27,15 @@ function requestOf(key: string, body: unknown, cookie?: string): ApiRequest {
     method,
     path: url.pathname,
     query: url.searchParams,
-    cookies: new Map(token === undefined ? [] : [[SESSION_COOKIE, token]]),
+    cookies: new Map(
+      token === undefined || cookie?.startsWith("Bearer ") === true
+        ? []
+        : [[SESSION_COOKIE, token]],
+    ),
     sameOrigin: true,
+    ...(cookie?.startsWith("Bearer ") === true && {
+      bearer: cookie.slice("Bearer ".length),
+    }),
     body,
     params: {},
   };

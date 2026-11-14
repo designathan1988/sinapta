@@ -58,6 +58,15 @@ person can use offline.
   version wrote; backlinks; Markdown, HTML and ZIP export and import; undo
   and redo; light and dark themes; keyboard shortcuts for every action.
   Installs as an app and works offline.
+- **Integrations and the API.** Settings › Connections makes an internal
+  integration and shows its secret once; a page's menu connects it under
+  Connections. Programs then call Notion's REST shapes at `/v1` with
+  `Authorization: Bearer <secret>`: `GET /v1/users/me`, `POST /v1/search`,
+  `GET` and `PATCH /v1/pages/:id`, `POST /v1/pages`,
+  `GET /v1/databases/:id`, `POST /v1/databases/:id/query`, `GET` and
+  `PATCH /v1/blocks/:id/children`, reaching only the connected pages and
+  the pages inside them. Bookmarks show the page's own title, description
+  and image, read by the server.
 
 On macOS, use Command where this file says Ctrl.
 

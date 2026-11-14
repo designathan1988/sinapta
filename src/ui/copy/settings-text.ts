@@ -13,6 +13,7 @@ export const SETTINGS_TEXT = {
       general: "General",
       people: "People",
       teamspaces: "Teamspaces",
+      connections: "Connections",
       data: "Import and export",
     },
     accountGroup: "Account",

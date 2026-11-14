@@ -25,6 +25,7 @@ import {
   pageActionItems,
   resolvedItems,
 } from "./page-menu-items.ts";
+import { connectionsItem } from "../integrations/index.ts";
 import {
   backlinksItem,
   renderFontTiles,
@@ -170,6 +171,7 @@ export function pageMenuEntries(
       lockItem(page, dispatch),
       trashItem(page, dispatch),
     ],
+    connectionsItem(state, page.id, dispatch),
     [moreItem(state, page)],
   ]);
 }

@@ -17,6 +17,7 @@ import type {
   SyncState,
   WorkspaceSummary,
   ListedTeamspace,
+  IntegrationSummary,
 } from "./sync-state.ts";
 
 // Another client's operations, with this client's unconfirmed ones taken
@@ -87,6 +88,16 @@ export const requestOpenSharing = defineCommand<NoPayload>({
   },
 });
 
+// The integrations as the server lists them, with a new one's secret.
+export const setIntegrations = defineCommand<{
+  integrations: readonly IntegrationSummary[];
+  newSecret?: { name: string; secret: string };
+}>({
+  type: "sync.setIntegrations",
+  handle: (state, { integrations, newSecret }) =>
+    withSync(state, { integrations, newSecret: newSecret ?? null }),
+});
+
 // The teamspaces as the server lists them.
 export const setTeamspaceList = defineCommand<{
   teamspaces: readonly ListedTeamspace[];
@@ -150,6 +161,7 @@ export const setConnection = defineCommand<{
 });
 
 export const syncCommands = [
+  setIntegrations,
   setTeamspaceList,
   requestOpenSharing,
   setShared,

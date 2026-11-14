@@ -53,20 +53,28 @@ async function route(
 ): Promise<ApiResponse> {
   const match = matchRoute(routes, request.method, request.path);
   if (match === undefined) return answer(404, { error: "not-found" });
-  if (!SAFE_METHODS.has(request.method) && !request.sameOrigin) {
+  // The public API is called by programs with a secret, not by a page.
+  const isPublicApi = request.path.startsWith("/v1/");
+  if (
+    !SAFE_METHODS.has(request.method) &&
+    !request.sameOrigin &&
+    !isPublicApi
+  ) {
     return answer(403, { error: "cross-origin" });
   }
   return match.route({ ...request, params: match.params }, context);
 }
 
-// Answers requests under /api and reports whether it did, so that a dev
+// Answers requests under /api and the public API's /v1, and reports
+// whether it did, so that a dev
 // server or a file server can take the others.
 export function createApi(
   routes: RouteTable,
   context: ApiContext,
 ): (request: IncomingMessage, response: ServerResponse) => Promise<boolean> {
   return async (incoming, response) => {
-    if (!(incoming.url ?? "").startsWith("/api/")) return false;
+    const url = incoming.url ?? "";
+    if (!url.startsWith("/api/") && !url.startsWith("/v1/")) return false;
     let result: ApiResponse;
     try {
       result = await route(routes, await readRequest(incoming), context);

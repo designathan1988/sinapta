@@ -273,6 +273,10 @@ owner listed here exists.
 | Teamspaces on the server: the list, joining, requests and approval, the creation limit | `server/teamspaces.ts`, `server/teamspace-routes.ts`, `src/persistence/teamspace-client.ts` | 26 |
 | A teamspace's security overrides, refused by the sharing routes | `server/teamspace-security.ts` | 26 |
 | A web bookmark's preview: the server reads the page, the client asks once and keeps it on the block | `server/link-preview.ts`, `src/persistence/link-preview-client.ts`, `src/state/link-preview.commands.ts` | 31 |
+| Integrations: their secrets and connected pages on the server, Settings › Connections and the page menu's Connections | `server/integrations.ts`, `server/integration-routes.ts`, `src/persistence/integration-client.ts`, `src/features/integrations/` | 31 |
+| The public API at /v1, in Notion's shapes, and what it writes | `server/public-api.ts`, `server/public-api-changes.ts`, `server/notion-format.ts`, `server/notion-input.schema.ts` | 31 |
+| A change the server makes itself, logged and sent to every client | `server/server-change.ts` | 31 |
+| The member-only check of Settings' server routes | `server/member-asker.ts` | 31 |
 | Each person's view of a workspace on the server: downloads, writes, streams and catch-up reads for guests and members | `server/workspace-access.ts` | 26 |
 | The Share menu's routes, the shared pages listed for the sidebar, and published pages read by anyone | `server/sharing-routes.ts` | 26 |
 | The sidebar's Shared section: the top pages shared with people | `src/features/sidebar/sidebar.selectors.ts` (`selectTreeRows`), `sidebar.view.ts` | 26 |

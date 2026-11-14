@@ -1,0 +1,88 @@
+@layer features {
+  /* Settings › Connections: the name and New integration on one line. */
+  .integrations__form {
+    display: flex;
+    gap: var(--space-inline-sm);
+    margin-block: var(--space-stack-md);
+  }
+
+  .integrations__field {
+    flex: 1;
+    min-block-size: var(--size-control-md);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-field);
+    background-color: var(--color-bg-field);
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+  }
+
+  /* The new secret, shown once, on a gray note. */
+  .integrations__secret {
+    display: grid;
+    gap: var(--space-stack-xs);
+    margin-block-end: var(--space-stack-md);
+    padding: var(--space-inset-md);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-bg-hover);
+  }
+
+  .integrations__secret-title {
+    margin: var(--space-none);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .integrations__secret-row {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+  }
+
+  .integrations__code {
+    flex: 1;
+    overflow: hidden;
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-code);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-sm);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .integrations__table {
+    inline-size: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-sm);
+
+    & th {
+      padding: var(--space-inset-xs);
+      border-block-end: var(--size-border-thin) solid
+        var(--color-border-default);
+      color: var(--color-text-secondary);
+      font-weight: var(--font-weight-regular);
+      text-align: start;
+    }
+
+    & td {
+      padding: var(--space-inset-xs);
+    }
+  }
+
+  .integrations__none {
+    color: var(--color-text-secondary);
+    text-align: center;
+  }
+
+  .integrations__remove {
+    padding: var(--space-none) var(--space-inset-xs);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-danger);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+  }
+}

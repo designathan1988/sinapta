@@ -58,6 +58,14 @@ export interface ListedTeamspace {
   }[];
 }
 
+// An integration, as Settings › Connections lists it, with the pages
+// connected to it.
+export interface IntegrationSummary {
+  readonly id: string;
+  readonly name: string;
+  readonly pageIds: readonly string[];
+}
+
 // Someone with the workspace open, and the page they are on.
 export interface Presence {
   readonly userId: string;
@@ -82,6 +90,15 @@ export type SyncRequest =
       readonly userId: string;
     }
   | { readonly kind: "teamspace-limit"; readonly limited: boolean }
+  | { readonly kind: "integrations" }
+  | { readonly kind: "create-integration"; readonly name: string }
+  | { readonly kind: "remove-integration"; readonly integrationId: string }
+  | {
+      readonly kind: "connect-integration";
+      readonly integrationId: string;
+      readonly pageId: string;
+      readonly connected: boolean;
+    }
   | { readonly kind: "invite"; readonly email: string; readonly role: string }
   | { readonly kind: "remove-member"; readonly userId: string }
   | { readonly kind: "remove-invite"; readonly email: string }
@@ -137,6 +154,10 @@ export interface SyncState {
   readonly access: Readonly<Record<string, PageAccess>>;
   // The teamspaces the server lists in Settings › Teamspaces.
   readonly teamspaces: readonly ListedTeamspace[];
+  // The workspace's integrations, and the secret of the one just made,
+  // shown once.
+  readonly integrations: readonly IntegrationSummary[];
+  readonly newSecret: { readonly name: string; readonly secret: string } | null;
 }
 
 export const NOT_SYNCED: SyncState = {
@@ -152,4 +173,6 @@ export const NOT_SYNCED: SyncState = {
   shared: [],
   access: {},
   teamspaces: [],
+  integrations: [],
+  newSecret: null,
 };

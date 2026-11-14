@@ -12,6 +12,9 @@ export interface ApiRequest {
   // The request came from the server's own page: its Origin, when it has
   // one, names the host it was sent to.
   readonly sameOrigin: boolean;
+  // An integration's secret, sent as "Authorization: Bearer …" to the
+  // public API.
+  readonly bearer?: string;
   readonly body: unknown;
   // The parts of the path a route names with ":", as ":id".
   readonly params: Readonly<Record<string, string>>;
@@ -74,6 +77,11 @@ async function readBody(request: IncomingMessage): Promise<unknown> {
   return value;
 }
 
+function bearerOf(header: string | undefined): { bearer?: string } {
+  const match = /^Bearer\s+(\S+)$/i.exec(header ?? "");
+  return match?.[1] === undefined ? {} : { bearer: match[1] };
+}
+
 export async function readRequest(
   request: IncomingMessage,
 ): Promise<ApiRequest> {
@@ -85,6 +93,7 @@ export async function readRequest(
     query: url.searchParams,
     cookies: parseCookies(request.headers.cookie),
     sameOrigin: isSameOrigin(request),
+    ...bearerOf(request.headers.authorization),
     body: hasBody ? await readBody(request) : undefined,
     params: {},
   };

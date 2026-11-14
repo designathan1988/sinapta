@@ -3,9 +3,7 @@
 // owners' approval, and whether only the workspace's owners make them.
 import * as v from "valibot";
 import { answer, type ApiContext, type RouteTable } from "./api.ts";
-import type { ApiRequest, ApiResponse } from "./http-exchange.ts";
-import type { UserRow, WorkspaceRow } from "./rows.schema.ts";
-import { sessionUser } from "./sessions.ts";
+import { askerOf, isAsker, type Asker } from "./member-asker.ts";
 import {
   accessOf,
   addMember,
@@ -15,29 +13,9 @@ import {
   teamspaceIn,
 } from "./teamspaces.ts";
 import { currentWorkspace } from "./workspace-state.ts";
-import { membership } from "./workspaces.ts";
 
 const NOT_FOUND = answer(404, { error: "not-found" });
 const NOT_ALLOWED = answer(403, { error: "not-allowed" });
-
-interface Asker {
-  readonly user: UserRow;
-  readonly workspace: WorkspaceRow;
-}
-
-// A member of the workspace, not a guest, or the answer refusing them.
-function askerOf(
-  request: ApiRequest,
-  context: ApiContext,
-): Asker | ApiResponse {
-  const user = sessionUser(context, request);
-  if (user === undefined) return answer(401, { error: "signed-out" });
-  const workspace = membership(context, request.params.id ?? "", user.id);
-  if (workspace === undefined) return NOT_FOUND;
-  return workspace.role === "guest" ? NOT_ALLOWED : { user, workspace };
-}
-
-const isAsker = (value: Asker | ApiResponse): value is Asker => "user" in value;
 
 function whoOf(asker: Asker) {
   return {

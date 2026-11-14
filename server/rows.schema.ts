@@ -110,3 +110,12 @@ export const requestRowSchema = v.object({
   user_id: v.string(),
   name: v.string(),
 });
+
+export const integrationRowSchema = v.object({
+  id: v.string(),
+  workspace_id: v.string(),
+  name: v.string(),
+  created_at: v.number(),
+});
+
+export const pageIdRowSchema = v.object({ page_id: v.string() });

@@ -158,3 +158,19 @@ const joinedSchema = v.object({ joined: v.boolean() });
 
 // True once the server put this person in the teamspace.
 export const readJoined = (value: unknown) => read(joinedSchema, value)?.joined;
+
+const integrationsSchema = v.object({
+  integrations: v.array(
+    v.object({
+      id: v.string(),
+      name: v.string(),
+      pageIds: v.array(v.string()),
+    }),
+  ),
+  created: v.optional(
+    v.object({ id: v.string(), name: v.string(), secret: v.string() }),
+  ),
+});
+
+export const readIntegrations = (value: unknown) =>
+  read(integrationsSchema, value);

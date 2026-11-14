@@ -117,3 +117,9 @@ transcription.
 - [x] 31.1 Link previews: the server reads a bookmarked page's title,
   description, image and icon from its own tags (private hosts refused),
   and the bookmark shows Notion's card (`p73-bookmark`).
+- [x] 31.2 Integrations and the public API: Settings › Connections makes
+  an internal integration (its secret shown once, kept hashed), a page's
+  menu connects it, and `/v1` answers Notion's REST shapes (users/me,
+  search, pages, databases and their query, block children read and
+  appended) for the connected pages alone; its changes reach every client
+  (`p74-integrations`).
