@@ -16,6 +16,11 @@ import {
 } from "../automation.commands.ts";
 import type { TableContext } from "../table-cell.view.ts";
 import { actionWords, valueWords } from "./automation-words.ts";
+import {
+  ADD_PANEL,
+  addPageItem,
+  addPagePanel,
+} from "./automation-add-panel.ts";
 import { goTo, panelRow, type SettingsPanel } from "./settings-panel.ts";
 
 const TEXT = COPY.database;
@@ -102,7 +107,7 @@ function actionItems(context: TableContext, automation: Automation) {
     { label: TEXT.editProperty, icon: "plus" },
     `${SET_PANEL}${automation.id}`,
   );
-  return [...set, add];
+  return [...set, add, addPageItem(context, automation)];
 }
 
 function editPanel(context: TableContext, automation: Automation) {
@@ -193,6 +198,7 @@ export function automationPanelOf(
   if (automation === undefined) return undefined;
   if (`${kind}:` === AUTOMATION_PANEL) return editPanel(context, automation);
   if (`${kind}:` === SET_PANEL) return setPanel(context, automation);
+  if (`${kind}:` === ADD_PANEL) return addPagePanel(context, automation);
   const property = context.model.database.props.properties.find(
     (item) => item.id === propertyId,
   );

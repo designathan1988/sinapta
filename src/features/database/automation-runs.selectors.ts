@@ -10,6 +10,8 @@ export interface AutomationRun {
   readonly databaseId: BlockId;
   readonly automationId: string;
   readonly rowId: BlockId;
+  // How many pages it adds: one for Add page to.
+  readonly adds: number;
 }
 
 function isDatabase(block: Block): block is DatabaseBlock {
@@ -63,6 +65,7 @@ export function selectAutomationRuns(
           databaseId: block.id,
           automationId: automation.id,
           rowId,
+          adds: automation.addPageTo === undefined ? 0 : 1,
         })),
       );
   });

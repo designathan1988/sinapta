@@ -187,6 +187,6 @@ describe("viewSchema", () => {
   });
 
   it("keeps the stored format's version", () => {
-    expect(SCHEMA_VERSION).toBe(30);
+    expect(SCHEMA_VERSION).toBe(31);
   });
 });

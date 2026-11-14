@@ -1,6 +1,7 @@
 // A database automation, as Notion's: when a page is added to the
 // database, or when one of its pages has a property edited, Edit property
-// sets values on that page ({ today: true } is the day it runs).
+// sets values on that page ({ today: true } is the day it runs), and Add
+// page to adds a page to a database.
 import * as v from "valibot";
 import { propertyIdSchema } from "../../model/index.ts";
 
@@ -18,6 +19,8 @@ export const automationSchema = v.object({
   trigger: automationTriggerSchema,
   // Property id to the value the page takes.
   values: v.record(v.string(), v.unknown()),
+  // Add page to (version 31): the database a new, empty page is added to.
+  addPageTo: v.optional(v.string()),
 });
 
 export type Automation = v.InferOutput<typeof automationSchema>;

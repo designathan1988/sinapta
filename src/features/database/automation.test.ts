@@ -128,6 +128,34 @@ describe("a database's automations, as Notion's", () => {
     expect(valueOf(added, stage)).toBeUndefined();
   });
 
+  it("add a page to the database they name, and stop once cleared", async () => {
+    const { app, stage, databaseId, automationId } = setup();
+    const trigger = { kind: "property-edited", propertyId: stage } as const;
+    const patch = { trigger, addPageTo: databaseId };
+    app.dispatch(setAutomation.create({ databaseId, automationId, patch }));
+    const before = app.database().childIds.length;
+    const [first] = app.rowIds;
+    if (first === undefined) throw new Error("setup");
+
+    app.dispatch(
+      setRowValue.create({ rowId: first, propertyId: stage, value: "new" }),
+    );
+    await settled();
+    const added = app.database().childIds.length - before;
+    app.dispatch(
+      setAutomation.create({
+        databaseId,
+        automationId,
+        patch: { addPageTo: "" },
+      }),
+    );
+
+    expect(added).toBe(1);
+    expect(app.database().props.automations?.[0]).not.toHaveProperty(
+      "addPageTo",
+    );
+  });
+
   it("are deleted", () => {
     const { app, databaseId, automationId } = setup();
 

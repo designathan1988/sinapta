@@ -7,9 +7,14 @@ import {
   type DatabaseBlock,
 } from "../../blocks/database/index.ts";
 import { selectPage } from "../../blocks/page/index.ts";
-import type { BlockId, Operation } from "../../model/index.ts";
-import { defineCommand } from "../../state/index.ts";
+import {
+  parseBlockId,
+  type BlockId,
+  type Operation,
+} from "../../model/index.ts";
+import { defineCommand, type AppState } from "../../state/index.ts";
 import { resolveValues } from "./button-values.ts";
+import { newRow } from "./button-press.commands.ts";
 
 export const AUTOMATION_PANEL = "automation:";
 
@@ -53,6 +58,17 @@ export const addAutomation = defineCommand<{ databaseId: BlockId }>({
   },
 });
 
+// The automation with the patch on it; an empty Add page to takes it off.
+function changed(
+  automation: Automation,
+  patch: Partial<Omit<Automation, "id">>,
+): Automation {
+  const next = { ...automation, ...patch };
+  if (next.addPageTo !== "") return next;
+  const { addPageTo: _none, ...rest } = next;
+  return rest;
+}
+
 export const setAutomation = defineCommand<{
   databaseId: BlockId;
   automationId: string;
@@ -64,7 +80,7 @@ export const setAutomation = defineCommand<{
     if (database === undefined) return {};
     const list = (database.props.automations ?? []).map((automation) =>
       automation.id === command.automationId
-        ? { ...automation, ...command.patch }
+        ? changed(automation, command.patch)
         : automation,
     );
     return { operations: [withAutomations(database, list, command.meta.now)] };
@@ -86,13 +102,32 @@ export const deleteAutomation = defineCommand<{
   },
 });
 
-// Runs an automation on a page of its database: Edit property.
+// The page Add page to adds, at the end of the database it names.
+function addedPage(
+  state: AppState,
+  automation: Automation,
+  meta: { readonly blockIds: readonly BlockId[]; readonly now: string },
+): Operation[] {
+  const target = selectDatabase(
+    state,
+    parseBlockId(automation.addPageTo ?? "") ?? null,
+  );
+  const id = meta.blockIds[0];
+  if (target === undefined || id === undefined) return [];
+  return newRow({ database: target, id, values: {} }, meta.now);
+}
+
+// Runs an automation on a page of its database: Edit property, then Add
+// page to.
 export const runAutomation = defineCommand<{
   databaseId: BlockId;
   automationId: string;
   rowId: BlockId;
+  // How many pages it adds.
+  adds?: number;
 }>({
   type: "database.runAutomation",
+  newIds: (payload) => ({ blocks: payload.adds ?? 0 }),
   handle(state, command) {
     const database = selectDatabase(state, command.databaseId);
     const row = selectPage(state, command.rowId);
@@ -107,12 +142,22 @@ export const runAutomation = defineCommand<{
       now.slice(0, 10),
       new Map(),
     );
-    if (Object.keys(values).length === 0) return {};
     const props = { ...row.props, values: { ...row.props.values, ...values } };
     const patch = { props, updatedAt: now };
-    return {
-      operations: [{ type: "record.update", kind: "block", id: row.id, patch }],
-    };
+    const operations: Operation[] = [
+      ...(Object.keys(values).length === 0
+        ? []
+        : [
+            {
+              type: "record.update",
+              kind: "block",
+              id: row.id,
+              patch,
+            } as const,
+          ]),
+      ...addedPage(state, automation, command.meta),
+    ];
+    return operations.length === 0 ? {} : { operations };
   },
 });
 

@@ -63,7 +63,7 @@ function change(pressing: Pressing, rowId: BlockId, values: object): void {
   pressing.changes.set(rowId, { ...before, ...values });
 }
 
-interface NewRow {
+export interface NewRow {
   readonly database: DatabaseBlock;
   readonly id: BlockId;
   readonly values: Readonly<Record<string, unknown>>;
@@ -71,7 +71,7 @@ interface NewRow {
 
 // A new row at the database's end, with its starting values, its numbers
 // and the action's values.
-function newRow(row: NewRow, now: string): Operation[] {
+export function newRow(row: NewRow, now: string): Operation[] {
   const { database, id } = row;
   const numbered = numberNewRow(database);
   const values = {
