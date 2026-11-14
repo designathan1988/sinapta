@@ -39,3 +39,12 @@ export function selectVersionChanges(
   }
   return changes;
 }
+
+// Who wrote a version, as Notion's history names it: the one who last
+// changed a block of it (ADR-0013); nothing for versions before servers.
+export function selectVersionAuthor(version: PageVersion): string | undefined {
+  const edited = version.blocks
+    .filter((block) => block.editedBy !== undefined)
+    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  return edited[0]?.editedBy?.name;
+}

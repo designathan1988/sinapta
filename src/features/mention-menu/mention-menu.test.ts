@@ -97,3 +97,31 @@ describe("the + menu", () => {
     ).toBeUndefined();
   });
 });
+
+describe("people after @", () => {
+  it("lists the workspace's people first, as Notion's", () => {
+    const state = createState("@gr", MENTION_MENU_OVERLAY);
+    const members = [
+      { id: "u1", name: "Grace", email: "g@pagecraft.test", role: "member" },
+      { id: "u2", name: "Linus", email: "l@pagecraft.test", role: "member" },
+    ];
+    const withPeople = {
+      ...state,
+      persistence: {
+        ...state.persistence,
+        sync: { ...state.persistence.sync, members },
+      },
+    };
+
+    const menu = selectOpenMentionMenu(withPeople, TODAY);
+
+    expect(menu?.items[0]).toEqual({
+      label: "Grace",
+      span: {
+        text: "@Grace",
+        mention: { kind: "person", userId: "u1", name: "Grace" },
+      },
+    });
+    expect(menu?.items.map((item) => item.label)).not.toContain("Linus");
+  });
+});

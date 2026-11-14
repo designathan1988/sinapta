@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { buildWorkspace, toBlockId, type Block } from "../../model/index.ts";
 import type { PageVersion } from "../../state/index.ts";
-import { selectVersionChanges } from "./page-history.selectors.ts";
+import {
+  selectVersionAuthor,
+  selectVersionChanges,
+} from "./page-history.selectors.ts";
 
 function version(id: string, texts: Readonly<Record<string, string>>) {
   const workspace = buildWorkspace([
@@ -43,5 +46,24 @@ describe("a version's changes", () => {
 
     expect(selectVersionChanges([newest, older], 1).size).toBe(0);
     expect(selectVersionChanges([newest, older], 0).size).toBe(0);
+  });
+});
+
+describe("selectVersionAuthor", () => {
+  it("names the one who last changed a block of the version", () => {
+    const taken = version("1", { a: "One", b: "Two" });
+    const editors = [
+      { at: "2026-11-10T10:00:00.000Z", by: { id: "u1", name: "Ada" } },
+      { at: "2026-11-10T11:00:00.000Z", by: { id: "u2", name: "Grace" } },
+    ];
+    const blocks = taken.blocks.map((block, index) => {
+      const editor = editors[index - 1];
+      return editor === undefined
+        ? block
+        : { ...block, updatedAt: editor.at, editedBy: editor.by };
+    });
+
+    expect(selectVersionAuthor({ ...taken, blocks })).toBe("Grace");
+    expect(selectVersionAuthor(taken)).toBeUndefined();
   });
 });

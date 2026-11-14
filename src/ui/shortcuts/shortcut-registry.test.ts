@@ -79,3 +79,22 @@ describe("matchShortcut", () => {
     expect(matchShortcut(composing)).toBeUndefined();
   });
 });
+
+describe("search and comment keys", () => {
+  it.each([
+    ["Ctrl+K", stroke({ key: "k", ctrlKey: true })],
+    ["Cmd+K", stroke({ key: "k", metaKey: true })],
+    ["Ctrl+P", stroke({ key: "p", ctrlKey: true })],
+  ])("%s opens search", (_, keyStroke) => {
+    expect(matchShortcut(keyStroke)?.command).toMatchObject({
+      type: "ui.openOverlay",
+      overlay: { kind: "command-palette" },
+    });
+  });
+
+  it("Ctrl+Shift+M comments on the selection", () => {
+    const keyStroke = stroke({ key: "M", ctrlKey: true, shiftKey: true });
+
+    expect(matchShortcut(keyStroke)?.action).toBe("comment");
+  });
+});
