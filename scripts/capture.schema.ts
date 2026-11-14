@@ -67,6 +67,12 @@ const stepSchema = v.object({
   // step; each change is printed with its time (capture-watch.ts).
   watch: v.optional(v.string()),
   overlay: v.optional(overlaySchema),
+  // A photo at every phase of the step's gesture (arrived, pressed,
+  // carried, released, typed…), as <step>.<n>-<phase>.png.
+  frames: v.optional(v.boolean()),
+  // Before acting: cut or restore the network, or read the page again.
+  offline: v.optional(v.boolean()),
+  reload: v.optional(v.boolean()),
 });
 
 // A person's hand and fingers instead of instant, straight input: curved,
@@ -96,6 +102,7 @@ export const capturePlanSchema = v.object({
   passkey: v.optional(v.boolean()),
   human: v.optional(humanSchema),
   overlay: v.optional(overlaySchema),
+  frames: v.optional(v.boolean()),
   steps: v.array(stepSchema),
 });
 

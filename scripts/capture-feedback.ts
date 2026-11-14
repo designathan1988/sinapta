@@ -51,6 +51,9 @@ function readFelt(at: { x: number; y: number }): Felt {
   };
 }
 
+// What each hand last heard announced: printed again only when it changes.
+const lastHeard = new WeakMap<Hand, string>();
+
 export async function printFelt(hand: Hand, label: string): Promise<void> {
   const felt = await hand.page.evaluate(readFelt, hand.at);
   const shown = await shownCursor(hand);
@@ -64,7 +67,10 @@ export async function printFelt(hand: Hand, label: string): Promise<void> {
     `  focus ${felt.focus}, ${felt.ring}`,
   ];
   if (felt.selection !== "") lines.push(`  selected "${felt.selection}"`);
-  if (felt.live !== "") lines.push(`  announced "${felt.live}"`);
+  if (felt.live !== "" && felt.live !== lastHeard.get(hand)) {
+    lines.push(`  announced "${felt.live}"`);
+  }
+  lastHeard.set(hand, felt.live);
   console.log([label, ...lines].filter((line) => line !== "").join("\n"));
   hand.notes.length = 0;
   clearTrace(hand.trace, hand.at);

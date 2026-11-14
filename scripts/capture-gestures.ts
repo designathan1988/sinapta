@@ -5,10 +5,10 @@
 // to see they are on target; each click holds the button for a moment.
 import type { CaptureStep } from "./capture.schema.ts";
 import { between, type Point } from "./capture-motion.ts";
-import { planChord, planTyping, type KeyEvent } from "./capture-typing.ts";
 import { rest, sleep, travel, type Hand, type Target } from "./capture-hand.ts";
+import { keys } from "./capture-keys.ts";
 import { reach, wheel } from "./capture-sight.ts";
-import { chordLabel, keyName, typedLabel, type Mark } from "./capture-trace.ts";
+import { keyName, type Mark } from "./capture-trace.ts";
 import { observe, startWatch } from "./capture-watch.ts";
 
 function mark(hand: Hand, what: Omit<Mark, "x" | "y">): void {
@@ -46,7 +46,9 @@ async function clickOn(
 ) {
   await reach(hand, target);
   await settle(hand);
+  await hand.snap?.("arrived");
   await clickHere(hand, how.button, how.clicks);
+  await hand.snap?.(how.button === "right" ? "right-clicked" : "clicked");
 }
 
 async function pressDown(hand: Hand): Promise<void> {
@@ -74,8 +76,10 @@ async function dragOn(
   if (step.drag === undefined) return;
   await reach(hand, { selector: step.drag });
   await settle(hand);
+  await hand.snap?.("arrived");
   await pressDown(hand);
   await rest(hand, between(hand.random, 120, 350));
+  await hand.snap?.("pressed");
   if (step.to !== undefined) {
     await reach(hand, { selector: step.to, aim });
   } else {
@@ -84,7 +88,9 @@ async function dragOn(
     await travel(hand, to, { ...to, width: 24, height: 24 });
   }
   await rest(hand, between(hand.random, 150, 450));
+  await hand.snap?.("carried");
   await release(hand);
+  await hand.snap?.("released");
 }
 
 async function upload(hand: Hand, step: CaptureStep, act: () => Promise<void>) {
@@ -121,18 +127,31 @@ async function pressGestures(
       { button: "right", clicks: 1 },
     );
   }
+  await pointGestures(hand, step, aim);
+  await dragOn(hand, step, aim);
+}
+
+// A click at a point, and a press that stays held.
+async function pointGestures(
+  hand: Hand,
+  step: CaptureStep,
+  aim: Target["aim"],
+) {
   if (step.clickAt !== undefined) {
     const [x, y] = step.clickAt;
     await travel(hand, { x, y }, { x: x - 6, y: y - 6, width: 12, height: 12 });
     await settle(hand);
+    await hand.snap?.("arrived");
     await clickHere(hand, "left", step.clicks ?? 1);
+    await hand.snap?.("clicked");
   }
   if (step.down !== undefined) {
     await reach(hand, { selector: step.down, aim });
     await settle(hand);
+    await hand.snap?.("arrived");
     await pressDown(hand);
+    await hand.snap?.("pressed");
   }
-  await dragOn(hand, step, aim);
 }
 
 // The hand goes to a point, or to an element to point at it, without
@@ -143,37 +162,9 @@ async function approach(hand: Hand, step: CaptureStep, aim: Target["aim"]) {
     await travel(hand, { x, y }, { x: x - 6, y: y - 6, width: 12, height: 12 });
   }
   const selector = step.moveTo ?? step.hover;
-  if (selector !== undefined) await reach(hand, { selector, aim });
-}
-
-export async function playKeys(
-  hand: Hand,
-  events: readonly KeyEvent[],
-): Promise<void> {
-  const { keyboard } = hand.page;
-  const start = performance.now();
-  for (const event of events) {
-    await sleep(event.t - (performance.now() - start));
-    if (event.kind === "down") await keyboard.down(event.key);
-    else if (event.kind === "up") await keyboard.up(event.key);
-    else await keyboard.insertText(event.key);
-    await observe(hand);
-  }
-}
-
-async function keys(hand: Hand, step: CaptureStep): Promise<void> {
-  if (step.type !== undefined) {
-    const typing = planTyping(step.type, hand);
-    hand.trace.keys.push(typedLabel(typing.events));
-    await playKeys(hand, typing.events);
-    const fixed =
-      typing.typos > 0 ? `, ${String(typing.typos)} typo(s) fixed` : "";
-    hand.notes.push(`typed ${String(step.type.length)} characters${fixed}`);
-  }
-  if (step.press !== undefined) {
-    hand.trace.keys.push(chordLabel(step.press));
-    await playKeys(hand, planChord(step.press, hand.random));
-    hand.notes.push(`pressed ${step.press}`);
+  if (selector !== undefined) {
+    await reach(hand, { selector, aim });
+    await hand.snap?.(hand.pressed ? "carried" : "arrived");
   }
 }
 
@@ -217,6 +208,9 @@ export async function actHuman(hand: Hand, step: CaptureStep): Promise<void> {
   }
   await pressGestures(hand, step, step.aim);
   if (step.hold !== undefined) await hand.page.keyboard.up(step.hold);
-  if (step.up === true) await release(hand);
+  if (step.up === true) {
+    await release(hand);
+    await hand.snap?.("released");
+  }
   await keys(hand, step);
 }

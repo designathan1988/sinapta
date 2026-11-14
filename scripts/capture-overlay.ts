@@ -6,7 +6,12 @@
 // keys pressed, as keycaps. The photo itself stays pixel for pixel.
 import type { Page } from "playwright-core";
 import { cursorDrawing } from "./capture-cursors.ts";
-import type { Mark, Trace, TracePoint } from "./capture-trace.ts";
+import {
+  TYPED_MARK,
+  type Mark,
+  type Trace,
+  type TracePoint,
+} from "./capture-trace.ts";
 
 export interface Layers {
   readonly cursor: boolean;
@@ -95,10 +100,8 @@ function legend(moves: readonly TracePoint[]): string {
 function keysStrip(keys: readonly string[]): string {
   const pills = keys.slice(-6).map((label) => {
     const caps = label.split(" + ").map((key) => `<kbd>${escape(key)}</kbd>`);
-    const typed =
-      !label.includes(" + ") && label.length > 3 && !label.startsWith("Wheel");
-    return typed
-      ? `<div class="pill typed">${escape(label.slice(-70))}</div>`
+    return label.startsWith(TYPED_MARK)
+      ? `<div class="pill typed">${escape(label.slice(TYPED_MARK.length).slice(-70))}</div>`
       : `<div class="pill">${caps.join("<b>+</b>")}</div>`;
   });
   return `<div class="keys">${pills.join("")}</div>`;
@@ -126,12 +129,14 @@ function sceneHtml(
   const box = `${String(origin.x)} ${String(origin.y)} ${String(size.width)} ${String(size.height)}`;
   const trail = layers.trail ? trailDrawing(trace.moves) : "";
   const cursor = layers.cursor ? cursorLayer(scene) : "";
+  // A clipped photo is a detail: panels would cover what it shows.
+  const panels = size.width >= 1000 && size.height >= 600;
   return [
     `<!doctype html><style>${STYLE}</style>`,
     `<img src="data:image/png;base64,${photo}" width="${String(size.width)}" height="${String(size.height)}">`,
     `<svg width="${String(size.width)}" height="${String(size.height)}" viewBox="${box}">${trail}${cursor}</svg>`,
-    layers.trail && trace.moves.length > 3 ? legend(trace.moves) : "",
-    layers.keys && trace.keys.length > 0 ? keysStrip(trace.keys) : "",
+    panels && layers.trail && trace.moves.length > 3 ? legend(trace.moves) : "",
+    panels && layers.keys && trace.keys.length > 0 ? keysStrip(trace.keys) : "",
   ].join("");
 }
 

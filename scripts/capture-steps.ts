@@ -6,13 +6,12 @@ import { join, resolve } from "node:path";
 
 const PUSH_PROFILE = resolve(".captures/profiles/push");
 import { chromium, type Page } from "playwright-core";
-import type { CapturePlan, CaptureStep } from "./capture.schema.ts";
-import { drag, press } from "./capture-actions.ts";
-import { printFelt } from "./capture-feedback.ts";
-import { actHuman, usesHand } from "./capture-gestures.ts";
-import { notePointerCapture, shownCursor } from "./capture-cursor-state.ts";
-import { createHand, rest, type Hand } from "./capture-hand.ts";
-import { photograph, type Stage } from "./capture-photo.ts";
+import type { CapturePlan } from "./capture.schema.ts";
+import { notePointerCapture } from "./capture-cursor-state.ts";
+import { createHand, type Hand } from "./capture-hand.ts";
+import type { Stage } from "./capture-photo.ts";
+import { listenForProblems } from "./capture-problems.ts";
+import { runStep } from "./capture-step-run.ts";
 import {
   CHROME,
   NOTION_PORT,
@@ -112,76 +111,6 @@ async function addAuthenticator(page: Page): Promise<void> {
   });
 }
 
-async function actOnce(stage: Stage, step: CaptureStep): Promise<void> {
-  if (stage.hand !== undefined) return actHuman(stage.hand, step);
-  if (usesHand(step)) throw new Error(`step ${step.name} needs "human"`);
-  return act(stage.page, step);
-}
-
-// Acts, then waits for what the step expects to appear; a page still
-// loading may swallow the first action, so it is done once more (and a
-// person whose click did nothing clicks again).
-async function actAndExpect(stage: Stage, step: CaptureStep): Promise<void> {
-  await actOnce(stage, step);
-  if (step.expect === undefined) return;
-  const expected = stage.page.locator(step.expect).first();
-  try {
-    await expected.waitFor({ timeout: 4000 });
-  } catch (error) {
-    // A gesture in the middle of a held button is not done twice.
-    if (stage.hand?.pressed === true || step.up === true) throw error;
-    stage.hand?.notes.push("nothing expected appeared: did it again");
-    await actOnce(stage, step);
-    await expected.waitFor({ timeout: 6000 });
-  }
-}
-
-async function act(page: Page, step: CaptureStep): Promise<void> {
-  if (step.eval !== undefined) await page.evaluate(step.eval);
-  await press(page, step);
-  await drag(page, step);
-  // After a click the mouse stays on what it clicked: submenus that open
-  // on hover close when it leaves. Otherwise it rests in a corner.
-  if (step.hover !== undefined) {
-    await page.locator(step.hover).first().hover({ timeout: 10000 });
-  } else if (
-    step.click === undefined &&
-    step.clickAt === undefined &&
-    step.rightClick === undefined &&
-    step.doubleClick === undefined &&
-    step.drag === undefined
-  ) {
-    await page.mouse.move(2, 2);
-  }
-}
-
-// A step that fails leaves a photo of the window as it was, named
-// <step>-failed.png, so the reason can be seen.
-async function run(
-  stage: Stage,
-  step: CaptureStep,
-  path: string,
-): Promise<void> {
-  const { page, hand } = stage;
-  try {
-    await actAndExpect(stage, step);
-  } catch (error) {
-    const failed = path.replace(/\.png$/, "-failed.png");
-    await page.screenshot({ path: failed });
-    console.error("step failed:", step.name, "- see", failed);
-    if (hand !== undefined) await printFelt(hand, "at the failure:");
-    throw error;
-  }
-  if (hand === undefined) await page.waitForTimeout(step.wait ?? 350);
-  else await rest(hand, step.wait ?? 350);
-  const cursor = hand === undefined ? undefined : await shownCursor(hand);
-  await photograph(stage, { step, path, cursor });
-  const value: unknown =
-    step.read === undefined ? undefined : await page.evaluate(step.read);
-  console.log(path, value === undefined ? "" : JSON.stringify(value));
-  if (hand !== undefined) await printFelt(hand, "");
-}
-
 function handFor(plan: CapturePlan, page: Page): Promise<Hand> | undefined {
   if (plan.human === undefined || plan.human === false) return undefined;
   return createHand(page, plan.human === true ? {} : plan.human);
@@ -223,10 +152,11 @@ export async function takePhotos(
   await page.waitForTimeout(1200);
   try {
     const hand = await handFor(plan, page);
-    const stage: Stage = { page, hand, plan, composer: undefined };
+    const problems = listenForProblems(page);
+    const stage: Stage = { page, hand, plan, composer: undefined, problems };
     for (const [index, step] of plan.steps.entries()) {
       const name = `${String(index).padStart(2, "0")}-${step.name}.png`;
-      await run(stage, step, join(outDir, name));
+      await runStep(stage, step, join(outDir, name));
     }
     return page.url();
   } finally {

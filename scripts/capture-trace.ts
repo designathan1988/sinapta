@@ -73,6 +73,9 @@ const TYPED: Record<string, string> = {
   Tab: "⇥",
 };
 
+// Marks a typed entry among the keys, so it is drawn as text.
+export const TYPED_MARK = "typed:";
+
 // The characters as the fingers struck them, slips and Backspaces kept.
 export function typedLabel(events: readonly KeyEvent[]): string {
   return events

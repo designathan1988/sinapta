@@ -43,6 +43,8 @@ export interface Hand {
   // The current move as planned and as the page let it happen: each report
   // waits for the page to take it, so a slow page stretches the move.
   readonly timing: { planned: number; took: number; sent: number };
+  // With "frames", photographs the phase of the gesture just reached.
+  snap: ((phase: string) => Promise<void>) | undefined;
 }
 
 export interface Target {
@@ -82,6 +84,7 @@ export async function createHand(
     watch: undefined,
     trace: emptyTrace(),
     timing: { planned: 0, took: 0, sent: 0 },
+    snap: undefined,
   };
   clearTrace(hand.trace, at);
   return hand;

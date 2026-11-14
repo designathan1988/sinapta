@@ -7,6 +7,7 @@ import type { CapturePlan, CaptureStep } from "./capture.schema.ts";
 import type { ShownCursor } from "./capture-cursor-state.ts";
 import type { Hand } from "./capture-hand.ts";
 import { compose, type Layers } from "./capture-overlay.ts";
+import type { Problems } from "./capture-problems.ts";
 
 // The page, the person's hand when the plan asks for one, and the blank
 // page the overlays are drawn in, made the first time one is needed.
@@ -15,6 +16,7 @@ export interface Stage {
   readonly hand: Hand | undefined;
   readonly plan: CapturePlan;
   composer: Page | undefined;
+  readonly problems: Problems;
 }
 
 type Overlay = CaptureStep["overlay"];
