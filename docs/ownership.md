@@ -182,6 +182,11 @@ owner listed here exists.
 | Comments: discussions on a page, a block, its text or a row's property value; replies, resolving, deleting after a question | `src/features/comments/` | 17 |
 | Value discussions leaving with their property | `src/features/comments/value-discussion-tidy.ts` | 20 |
 | Keeping page versions in storage | `src/persistence/snapshot-store.ts` | 17 |
+| Billing: plan prices and card checks, the card and invoices on the server, the payment processor, Settings › Billing and the plan request | `src/model/billing.ts`, `server/billing.ts`, `server/billing-store.ts`, `server/billing.schema.ts`, `server/payments.ts`, `src/state/billing.commands.ts`, `src/persistence/billing-client.ts`, `src/persistence/billing.schema.ts`, `src/features/settings/settings-billing.view.ts` | 31 |
+| The requests that leave the open workspace as it is: integrations, apps, billing | `src/persistence/side-requests.ts` | 31 |
+| Keys that apply while one part of the interface is active, listed once | `src/app/scoped-keys.ts` | 31 |
+| Where a menu opened at the pointer goes, inside the window | `src/ui/menu/menu-point.ts` | 31 |
+| Escape letting go of selected rows | `src/features/database/row-selection-keys.ts` | 31 |
 | Page versions on the server while a server workspace is open | `server/page-versions.ts`, `server/page-version.schema.ts`, `src/persistence/server-snapshots.ts`, `src/persistence/snapshot.schema.ts` | 31 |
 | The inbox: due reminders, read state, the dialog and the sidebar's count | `src/features/inbox/` | 17 |
 | The inbox's notices from people: mentions, replies, edits to one's pages, pages shared with a guest | `src/features/inbox/inbox-notices.selectors.ts`, `inbox-changes.selectors.ts` | 27 |

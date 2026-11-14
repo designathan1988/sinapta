@@ -51,11 +51,35 @@ Checked against the sources, goal by goal (2026-11-14, last):
     Settings › Import and export.
   - `w7-history`: an edit keeps a version on the server and the history
     shows it, written by the signed-in person.
+  - `w8-keys` (§4.2): Ctrl+Shift+4 to a to-do and Ctrl+Enter to check
+    it, Ctrl+Shift+0 and 7, Ctrl+Alt+T both ways, nested numbering
+    1. a. i., a word double-clicked and colored red, Ctrl+Shift+H giving
+    another word the same color, a code block's Language, Wrap, Caption
+    and Copy, a callout, an image's link and file choice, Ctrl+C on a
+    selected block (plain text and HTML) and Ctrl+V, Alt+drag dropping a
+    copy.
+  - `w9-data` (§4.4, §4.5): number, select and date properties, a
+    currency format, a Sum in it, an option renamed and recolored, a date
+    range with start and end times, a formula, a relation searched and
+    picked, a rollup, a filter moved to the advanced filter with a group,
+    group by with a group collapsed and opened, rows selected and let go
+    with Escape, Export as CSV, Lock view, and a CSV imported through the
+    file picker.
+  - `w10-billing`: Plans refuses Plus without a card and leads to
+    Billing; a test card saved there upgrades the workspace and leaves a
+    paid invoice; back to Free, and the card removed.
   Bugs these walks found are fixed with a test each: a database title's
   Enter adding a hidden line and unique IDs starting at 2, a child listed
   twice after a synced block, text typed after inline Markdown keeping
   its mark, clicking below a page, a new equation's editor, the trash's
-  Escape, and page versions kept only in one browser.
+  Escape, page versions kept only in one browser, a turned block's caret
+  going to its start, copied blocks without HTML, Alt+drag down the
+  gutter making columns, a menu cut by the window's edge (a last column's,
+  and a sidebar row's at the bottom), a sum without its column's
+  currency, a formula lost on Escape, the relation picker without search,
+  the advanced filter wrapping its rule in a group, a locked view not
+  shown, Escape not letting go of selected rows, and the server unable to
+  read a snapshot an older app kept.
 
 Sources: S1 is `docs/specification.md` §1 "In scope"; S2 is
 `docs/superpowers/specs/2026-11-11-notion-parity-design.md` §4; V3 is the
@@ -215,7 +239,8 @@ Paths: `blk/` is `src/blocks/`, `db/` is `src/features/database/`.
 | AI: Ask AI, Space prompt, streaming, autofill, chat | Done | `server/ai.test.ts`, `ai-stream.test.ts`, `ai-fill.test.ts`, `src/persistence/ai-client.test.ts`; photos `p43-ai`, `p49`–`p51`, `p60-ai-stream`, `p86-start`; Insert below, Replace, Discard and the chat: `src/features/ai/ai.test.ts`; Space on an empty line: `editor-input.test.ts`; the Ollama branch: `server/ai.test.ts` |
 | Integrations and the public API | Done | `server/public-api.test.ts`; photo `p74-integrations` |
 | Notion's app connections (Gmail, Google Calendar, Slack, Outlook, iCloud, Asana, GitHub, Jira, Figma, Google Drive) | Done | each connects the way the app lets anyone in (ADR-0014, decision 6): Slack's channel webhook receives the mention notices, a calendar's iCal address puts its events under Home's Upcoming, Gmail adds "Email page", and the others' links are offered as a preview when pasted: `server/app-connections.test.ts`, `server/ical.test.ts`, `src/model/app-connection.test.ts`, `third-party-view.test.ts`, `home-view.test.ts`, `page-menu-email.test.ts`, `editor-paste-preview.test.ts`; photos `n108-connections`, `p98-apps` (a public holiday calendar's events on Home), `p98b-apps-off` |
-| Plans and Upgrade | Done | Notion's Free, Plus, Business and Enterprise, each with Notion's limits: files up to 5 MB on Free (50 MB, this server's largest, above), page history of 7, 30, 90 days or all; the workspace menu's Upgrade opens them and a choice applies at once, at no cost, by the workspace's owners only (payment, Notion's own service, has no part on this server): `server/member-routes.test.ts`, `settings-plans-view.test.ts`, `page-history-plan.test.ts`, `asset-store.test.ts`; photo `p97-plans` |
+| Plans and Upgrade | Done | Notion's Free, Plus, Business and Enterprise, each with Notion's limits: files up to 5 MB on Free (50 MB, this server's largest, above), page history of 7, 30, 90 days or all; the workspace menu's Upgrade opens them, and the workspace's owners choose; a paid plan is charged to the workspace's card for each member (Plus $12, Business $24 a month): `server/member-routes.test.ts`, `settings-plans-view.test.ts`, `page-history-plan.test.ts`, `asset-store.test.ts`; photo `p97-plans` |
+| Billing: a card, charges and invoices | Done | Settings › Billing keeps the card through the server's payment processor (checked by Luhn, expiry and CVC; only brand, last four, expiry and the processor's token kept), an upgrade without a card says so and goes through once one is saved, a declined card or charge leaves the plan as it was, and each charge is an invoice (ADR-0014, decision 12): `server/billing.test.ts`, `src/model/billing.test.ts`, `src/persistence/billing-client.test.ts`, `settings-billing-view.test.ts`; walk `w10-billing`. Real money moves only once a payment company is registered as the processor |
 | Link previews from a server | Done | `server/link-preview.test.ts`, `src/state/link-preview.test.ts`; photo `p73-bookmark`; no host on this machine or its network is fetched: `server/link-preview.test.ts`; the card: `src/blocks/bookmark/bookmark-view.test.ts` |
 | AI Meeting Notes with transcription from the microphone | Done | `transcriber.test.ts`, `recorder-listener.test.ts`, `src/persistence/meeting-client.test.ts`, `server/transcription.test.ts`; photo `p87-meeting-mic`: Chrome's microphone played a spoken WAV (made with Windows' speech synthesizer), the app recorded it in 6-second pieces, the server's local Whisper model (`Xenova/whisper-base.en`, Transformers.js) wrote the words, and the AI summed them up. The small model mishears some words of a synthetic voice ("lunch" for "launch"); typed notes and a refused microphone: `meeting-notes.test.ts`, `transcriber.test.ts` |
 
@@ -225,7 +250,7 @@ Paths: `blk/` is `src/blocks/`, `db/` is `src/features/database/`.
 | --- | --- | --- |
 | Typing under 16 ms on 1,000 blocks | Done | `src/features/editor/editor-typing-speed.test.ts`: a keystroke's command and the page drawn again |
 | A 5,000-row table responsive | Done | `table-model-speed.test.ts` (sort, filter, group, formulas, rollups under 100 ms), `table-render-speed.test.ts` (drawn window, a change redrawn under 50 ms) |
-| Full tests under 10 s; verify under 30 s | Done | the suite: about 9 s for 2,359 tests; `npm run verify` (types, lint, styles, format, tests): about 25 s |
+| Full tests under 10 s; verify under 30 s | Done | the suite: 7.4 to 7.6 s for 2,456 tests (each speed check stops at its first run under budget); `npm run verify` (types, lint, styles, format, tests): about 25 s |
 | WCAG 2.2 AA contrast | Done | `scripts/token-contrast.test.ts` |
 | Every action by keyboard; focus visible | Done | `scoped-keys.test.ts`, `table-keys.test.ts`, `slash-menu-keys.test.ts`, `mention-menu-keys.test.ts`; `:focus-visible` in every control's CSS; photo `sc4-keyboard`; every control of the main screen takes the focus and rings are left out only on text fields and script-focused panels, listed: `src/app/focus-rings.test.ts`; Ctrl+/ opens the block menu: `editor-keys-controls.test.ts` |
 | Reload restores the open page and the sidebar | Done | `workspace-repository.test.ts`; photos `s05-reload`, `sc3-reload` |

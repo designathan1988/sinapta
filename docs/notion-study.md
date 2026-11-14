@@ -1514,6 +1514,21 @@ against the reference on every run.
 
 ## Last run
 
+2026-11-14, more walks: the review server, 1440 × 900, light theme
+(`w8-keys`, `w9-data`, `w10-billing`).
+
+- Pagecraft only, no Notion change. Found and fixed: Ctrl+Shift+4 put
+  the caret at the line's start; copied blocks carried no HTML; Alt+drag
+  down the gutter made columns; a last column's menu and a bottom row's
+  right-click menu ran past the window; a sum ignored its column's
+  currency; the formula field lost its formula on Escape; the relation
+  picker had no search; Add to advanced filter boxed its rule as a group;
+  the advanced filter's Where column was 192 px (now about 60 px, not yet
+  measured on Notion); a locked view showed no lock; Escape did not let
+  go of selected rows; an empty date had no field to type into; a range
+  had no end time. The walks' pages (about 80) went to the review
+  workspace's trash afterward.
+
 2026-11-14, walks: the review server, 1440 × 900, light theme
 (`w1-layout` to `w7-history`, in `.captures/pagecraft/`).
 

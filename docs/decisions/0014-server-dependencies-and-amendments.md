@@ -66,9 +66,9 @@ the record should say so.
    them and tells clients only their host (`server/app-connections.ts`,
    migration 10).
 7. **Plans.** A workspace has Notion's plan, Free by default (migration
-   9); its owners choose another in Settings › Plans at no cost, as no
-   payment runs here. Each plan keeps Notion's limits: files up to 5 MB on
-   Free, and page history of 7, 30, 90 days or all.
+   9); its owners choose another in Settings › Plans, a paid one charged
+   to the workspace's card (decision 12). Each plan keeps Notion's limits:
+   files up to 5 MB on Free, and page history of 7, 30, 90 days or all.
 
 8. **Passkeys.** "Continue with passkey" and My account's "Add a
    passkey" use Web Authentication with no third party: the server keeps
@@ -90,13 +90,33 @@ the record should say so.
    `PAGECRAFT_OIDC_SSO_ISSUER` for SSO); a provider not set up says so on
    the sign-in screen. `PAGECRAFT_DEV_OIDC=1` puts a test provider inside
    the server (`server/oidc-dev.ts`) so the whole flow runs on one machine.
-   Payment is the one thing left out: every plan is free on this server.
 10. **Page history on the server.** While a server workspace is open, the
    versions of a page (taken before a run of edits, at most every 10
    minutes) are kept on the server, not in the browser, so every member
    on any device reads one history, as in Notion (`server/page-versions.ts`,
    migration 13, the 50 newest of each page; `src/persistence/server-snapshots.ts`).
    A workspace kept only in the browser keeps its versions in IndexedDB.
+11. **The server reads older snapshots.** A snapshot an older version of
+   the app kept is brought up to the current format by the same pure
+   migrations the browser runs (`src/persistence/migrations/`, which
+   import only the model). Before, the server read only snapshots of
+   exactly the current version, so any format change would have made
+   every stored workspace unreadable. The architecture test allows the
+   server this one import beside the model. Version 29 adds a view
+   filter's `isAdvanced` and a date's `endTime`, both optional.
+12. **Paying for a plan.** Settings › Billing keeps the workspace's card
+   and lists its invoices; Plans charges a paid plan to it for each member
+   (Plus $12, Business $24 a month, Notion's prices; Enterprise has no
+   public price). The card's number goes once to the server, which checks
+   it (Luhn checksum, expiry, CVC) and hands it to the payment processor;
+   only the brand, the last four digits, the expiry and the processor's
+   token are kept (migration 14). The processor is a seam on the server's
+   context (`payments`): with none registered, the server's own takes the
+   payment, as the sign-in has its own test provider, and the card
+   networks' published test numbers decline as they do at a real
+   processor (4000 0000 0000 0002 when added, 4000 0000 0000 0341 on each
+   charge). Moving real money needs an account with a payment company
+   registered as that processor; none is registered here.
 
 ## Options Considered
 
