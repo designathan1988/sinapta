@@ -8,6 +8,14 @@ export const CHROME = "C:/Program Files/Google/Chrome/Application/chrome.exe";
 export const NOTION_PORT = 9333;
 export const REVIEW_URL = "http://localhost:5190/";
 
+// The review server's own test account (ADR-0013): photos of Pagecraft are
+// taken signed in, except in a plan marked "guest".
+export const REVIEW_ACCOUNT = {
+  email: "review@pagecraft.test",
+  name: "Review",
+  password: "review-pagecraft-local",
+};
+
 async function answers(url: string): Promise<boolean> {
   try {
     const response = await fetch(url);

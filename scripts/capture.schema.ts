@@ -1,5 +1,5 @@
 // The steps of a capture, read from a JSON file:
-// { "url"?, "theme"?: "dark" | "light", "steps": [ { "name", "eval"?,
+// { "url"?, "theme"?: "dark" | "light", "guest"?: true, "steps": [ { "name", "eval"?,
 //   "click"?, "clickAt"?: [x, y], "type"?, "press"?, "hover"?, "expect"?, "clip"?, "pad"?,
 //   "wait"?, "read"? } ] }. Selectors are Playwright's (CSS, or
 // text=Label). The url defaults to the review server; click, type and
@@ -27,6 +27,8 @@ const stepSchema = v.object({
 export const capturePlanSchema = v.object({
   url: v.optional(v.string()),
   theme: v.optional(v.picklist(["light", "dark"])),
+  // Notion signed out: a clean context, for its sign-in pages.
+  guest: v.optional(v.boolean()),
   steps: v.array(stepSchema),
 });
 

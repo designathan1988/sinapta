@@ -5,7 +5,12 @@
 import { join } from "node:path";
 import { chromium, type Page } from "playwright-core";
 import type { CapturePlan, CaptureStep } from "./capture.schema.ts";
-import { CHROME, NOTION_PORT, REVIEW_URL } from "./capture-window.ts";
+import {
+  CHROME,
+  NOTION_PORT,
+  REVIEW_ACCOUNT,
+  REVIEW_URL,
+} from "./capture-window.ts";
 
 const WINDOW = {
   viewport: { width: 1440, height: 900 },
@@ -119,18 +124,34 @@ async function run(page: Page, step: CaptureStep, path: string): Promise<void> {
   console.log(path, value === undefined ? "" : JSON.stringify(value));
 }
 
+// Signs the photo's context in to the review server, making the review
+// account the first time.
+async function signInForReview(page: Page): Promise<void> {
+  const api = new URL("/api/account/", REVIEW_URL).href;
+  const headers = { Origin: new URL(REVIEW_URL).origin };
+  const signIn = await page.request.post(`${api}sign-in`, {
+    data: REVIEW_ACCOUNT,
+    headers,
+  });
+  if (signIn.ok()) return;
+  await page.request.post(`${api}sign-up`, { data: REVIEW_ACCOUNT, headers });
+}
+
 // Photographs every step and answers the address the page ended on.
 export async function takePhotos(
   target: Target,
   plan: CapturePlan,
   outDir: string,
 ): Promise<string> {
-  const session =
-    target === "notion" ? await notionSession(plan) : await headless(plan);
+  const signedIn = target === "notion" && plan.guest !== true;
+  const session = signedIn ? await notionSession(plan) : await headless(plan);
   const { page } = session;
+  if (target === "pagecraft" && plan.guest !== true) {
+    await signInForReview(page);
+  }
   await page.goto(plan.url ?? REVIEW_URL, { waitUntil: "domcontentloaded" });
   // Notion draws its page well after load: wait for its blocks.
-  if (target === "notion") {
+  if (signedIn) {
     await page.locator("[data-block-id]").first().waitFor({ timeout: 20000 });
   }
   await page.waitForTimeout(1200);

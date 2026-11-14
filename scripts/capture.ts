@@ -39,7 +39,7 @@ function readPlan(source: string): { plan: CapturePlan; name: string } {
 async function photographNotion(plan: CapturePlan, outDir: string) {
   await ensureNotionWindow();
   const address = await takePhotos("notion", plan, outDir);
-  if (!/\/login|\/signup/.test(address)) return;
+  if (plan.guest === true || !/\/login|\/signup/.test(address)) return;
   console.error("Notion asks for a sign-in: ask the owner to sign in in the");
   console.error("Chrome window open on the Notion profile, then run again.");
   process.exit(2);

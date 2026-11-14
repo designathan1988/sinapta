@@ -21,6 +21,9 @@ owner listed here exists.
 | Inside the open overlay: its panel, the lists and submenus open in it (outermost first), its search, its chosen values | `src/state/ui-overlay.commands.ts` | 16 |
 | Settings commands (theme) | `src/state/settings.commands.ts` | 1 |
 | Save status, export and import request commands | `src/state/persistence.commands.ts` | 1 |
+| The persistence slice's shape and initial value | `src/state/persistence-state.ts` | 22 |
+| The account's state: who is signed in, the sign-in step, the question asked | `src/state/account-state.ts` | 23 |
+| Sign-in and account commands | `src/state/account.commands.ts` | 23 |
 | Cross-feature selectors over `AppState` | `src/state/app-state.selectors.ts` | 1 |
 | Loading a whole workspace into the store | `src/state/workspace.commands.ts` | 1 |
 | The saved part of the `ui` slice | `src/state/ui.schema.ts` | 1 |
@@ -49,6 +52,8 @@ owner listed here exists.
 | Storage adapter contract and in-memory adapter for tests | `src/persistence/storage-adapter.ts` | 1 |
 | One writer tab per browser profile (Web Locks) and save messages between tabs (BroadcastChannel) | `src/persistence/tab-lock.ts` | 11 |
 | Migrations | `src/persistence/migrations/run-migrations.ts` plus one file per format change | 1 |
+| Asking the server who is signed in and the sign-in screen's questions | `src/persistence/account-client.ts` | 23 |
+| Parsing the server's account answers | `src/persistence/account.schema.ts` | 23 |
 | JSON export and import, and carrying out export and import requests | `src/persistence/workspace-file.ts` | 7 |
 | Keeping files beside the workspace: asset ids, blobs, base64 | `src/persistence/asset-store.ts` | 14 |
 | Handing files people add to the asset store | `src/ui/asset/` | 14 |
@@ -66,6 +71,7 @@ owner listed here exists.
 | What file, PDF, video and audio blocks share: props, commands, empty field, caption | `src/blocks/media/` | 14 |
 | Pages: schema, commands, selectors, tree moves, trash | `src/blocks/page/` | 2 |
 | Sidebar tree and favorites | `src/features/sidebar/` | 2 |
+| Notion's sign-in screen: the address, password, login code and profile steps, the other ways in | `src/features/sign-in/` | 23 |
 | A page as one HTML file | `src/features/markdown-export/html-export.selectors.ts` | 20 |
 | Repeating templates: the repeat, its days, and the check that adds their rows | `src/features/database/template-repeat.commands.ts`, `src/app/template-repeats.ts` | 20 |
 | The widths a person drags: the sidebar's and the side peek's | `src/state/widths.ts`, `src/features/row-peek/peek-resizer.view.ts` | 20 |
@@ -207,6 +213,24 @@ owner listed here exists.
 | The @ and [[ menu: pages and dates to mention; backlinks of a page | `src/features/mention-menu/` | 13 |
 | Emoji data, search and the picker | `src/ui/emoji/` | 13 |
 | The :name emoji menu while typing | `src/features/emoji-menu/` | 13 |
+
+## Server (ADR-0013)
+
+| Concern | Owner | Milestone |
+| --- | --- | --- |
+| Routing a request under /api, cross-site refusal, failures as answers | `server/api.ts` | 22 |
+| Reading requests and writing responses (node:http) | `server/http-exchange.ts` | 22 |
+| Every route by method and path; health | `server/routes.ts` | 22 |
+| Opening the database, migrating it, transactions | `server/database.ts` | 22 |
+| The database's schema steps | `server/migrations.ts` | 22 |
+| Parsing database rows | `server/rows.schema.ts` | 22 |
+| Mounting the API in Vite's dev and preview servers | `server/vite-plugin.ts` | 22 |
+| The standalone server for the built app | `server/main.ts` | 22 |
+| Password hashing, tokens and sign-in codes | `server/secrets.ts` | 23 |
+| Sessions in a cookie | `server/sessions.ts` | 23 |
+| The users table | `server/users.ts` | 23 |
+| Sign-in, sign-up, codes, sign-out, the signed-in user | `server/account-routes.ts` | 23 |
+| The account routes' request bodies | `server/account.schema.ts` | 23 |
 
 ## Styles and tokens
 
