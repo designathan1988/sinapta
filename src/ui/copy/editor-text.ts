@@ -140,7 +140,7 @@ export const EDITOR_TEXT = {
     callout: "Callout",
     code: "Code",
     missingPage: "Page not found",
-    paragraph: "Type '/' for commands",
+    paragraph: "Press ‘space’ for AI or ‘/’ for commands",
     heading: "Heading",
     listItem: "List item",
     toDo: "To-do",

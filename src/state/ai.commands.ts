@@ -8,6 +8,7 @@ import {
 } from "./command-registry.ts";
 
 export type AiAction =
+  | "ask"
   | "improve"
   | "fix"
   | "shorter"

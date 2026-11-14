@@ -93,7 +93,7 @@ owner listed here exists.
 | The verified badge in the top bar | `src/features/page-menu/verified-badge.view.ts` | 28 |
 | The Verification property | `src/features/database/properties/verification/` | 28 |
 | The Map view: OpenStreetMap tiles, a pin per row with a place | `src/features/database/layouts/map/` | 29 |
-| Notion AI: Ask AI in the block menu, the answer with Insert below, Replace, Discard | `src/features/ai/` | 30 |
+| Notion AI: Ask AI in the block menu and on Space, the answer with Insert below, Replace, Discard | `src/features/ai/` | 30 |
 | Notion AI's state: the question and the answer | `src/state/ai.commands.ts` | 30 |
 | Asking the server's AI | `src/persistence/ai-client.ts` | 30 |
 | A page published to the web, shown alone and read only | `src/app/public-page.ts` | 26 |

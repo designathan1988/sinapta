@@ -69,3 +69,15 @@
     }
   }
 }
+
+@layer features {
+  .ai__prompt {
+    min-block-size: var(--size-control-md);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: none;
+    border-radius: var(--radius-field);
+    background-color: var(--color-bg-hover);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+  }
+}

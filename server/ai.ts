@@ -6,6 +6,7 @@ import { answer, type RouteTable } from "./api.ts";
 import { sessionUser } from "./sessions.ts";
 
 export const AI_ACTIONS = [
+  "ask",
   "improve",
   "fix",
   "shorter",
@@ -24,6 +25,7 @@ const askSchema = v.object({
 });
 
 const INSTRUCTIONS: Readonly<Record<Action, string>> = {
+  ask: "Answer this request. Answer with the text to put in the page only.",
   improve: "Improve the writing of this text. Answer with the new text only.",
   fix: "Fix the spelling and grammar of this text. Answer with the fixed text only.",
   shorter: "Make this text shorter. Answer with the new text only.",
@@ -76,8 +78,27 @@ function sentencesOf(text: string): string[] {
 const DUTY =
   /\b(should|must|need|needs|todo|to do|will|have to|please|follow up)\b/i;
 
+// A free question that names what it wants, as "Summarize: …": the action
+// it names and the text after the colon.
+const NAMED: readonly (readonly [RegExp, Action])[] = [
+  [/^s*summar/i, "summarize"],
+  [/^s*(find |list )?(the )?(action items|to-?dos?|tasks)/i, "action-items"],
+  [/^s*(make (it )?)?short/i, "shorter"],
+];
+
+function namedAction(text: string): [Action, string] | undefined {
+  const colon = text.indexOf(":");
+  if (colon < 0) return undefined;
+  const found = NAMED.find(([pattern]) => pattern.test(text.slice(0, colon)));
+  return found === undefined ? undefined : [found[1], text.slice(colon + 1)];
+}
+
 // What can be done without a model; undefined for the rest.
 export function askLocally(action: Action, text: string): string | undefined {
+  if (action === "ask") {
+    const named = namedAction(text);
+    return named === undefined ? undefined : askLocally(named[0], named[1]);
+  }
   const sentences = sentencesOf(text);
   switch (action) {
     case "summarize":

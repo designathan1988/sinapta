@@ -23,4 +23,11 @@ describe("the AI without a model", () => {
   it("leaves to a model what needs one", () => {
     expect(askLocally("improve", NOTES)).toBeUndefined();
   });
+
+  it("answers a free question that names a plain-text action", () => {
+    expect(askLocally("ask", `Summarize: ${NOTES}`)).toBe(
+      "The launch moved to Friday. We need to update the press kit.",
+    );
+    expect(askLocally("ask", "Write a poem about Friday")).toBeUndefined();
+  });
 });

@@ -2,6 +2,7 @@
 export const AI_TEXT = {
   ai: {
     ask: "Ask AI",
+    promptPlaceholder: "Ask AI anything…",
     panel: "AI",
     thinking: "AI is writing…",
     failed: "Something went wrong. Try again.",
@@ -11,6 +12,7 @@ export const AI_TEXT = {
     replace: "Replace",
     discard: "Discard",
     actions: {
+      ask: "Ask AI",
       improve: "Improve writing",
       fix: "Fix spelling & grammar",
       shorter: "Make shorter",

@@ -83,6 +83,7 @@ in `src/persistence/`.
   (model from PAGECRAFT_AI_MODEL, llama3.2 by default), else a local
   provider for summaries, shorter text and action items. (Streaming remains.)
 - [x] 30.2 Ask AI in the block menu with Notion's actions, the answer with
-  Insert below, Replace, Discard. (Ask AI on space remains.)
+  Insert below, Replace, Discard; Space on an empty line opens "Ask AI
+  anything…", whose plain-text requests the local provider answers too.
 - [ ] 30.3 AI autofill for database properties; the AI chat in the
   sidebar ("New chat").

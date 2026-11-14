@@ -1,5 +1,6 @@
 // Translates input inside text blocks into commands. The browser's default
 // edit is cancelled; the store changes and the text is projected back.
+import { AI_PROMPT_OVERLAY } from "../ai/index.ts";
 import { replaceText, toggleTextMark } from "./editor.commands.ts";
 import { afterTyping, shortcutFor } from "./editor-typing.view.ts";
 import { convertBlock } from "./editor-convert.commands.ts";
@@ -7,6 +8,7 @@ import { pasteInto } from "./editor-paste.view.ts";
 import { mergeBlockBackward, splitBlock } from "./editor-structure.commands.ts";
 import { selectNeighborTextBlock } from "./editor.selectors.ts";
 import { blockDefinition, isTextBlock, textOf } from "../../blocks/index.ts";
+import { PARAGRAPH_TYPE } from "../../blocks/paragraph/index.ts";
 import {
   diffText,
   nextBoundary,
@@ -15,6 +17,7 @@ import {
   type Mark,
 } from "../../model/index.ts";
 import {
+  openOverlay,
   REDO_COMMAND,
   UNDO_COMMAND,
   type AppState,
@@ -72,8 +75,24 @@ type Handler = (
   context: InputContext,
 ) => void;
 
+// Notion's Space on an empty line: Ask AI instead of a space.
+function opensAi(target: Target, text: string, state: AppState): boolean {
+  const block = state.workspace.blocks[target.blockId];
+  return (
+    text === " " &&
+    block?.type === PARAGRAPH_TYPE &&
+    isTextBlock(block) &&
+    textOf(block) === ""
+  );
+}
+
 const insert: Handler = (target, event, context) => {
   const text = insertedText(event);
+  if (opensAi(target, text, context.state)) {
+    const overlay = { kind: AI_PROMPT_OVERLAY, anchorId: target.blockId };
+    context.dispatch(openOverlay.create({ overlay }));
+    return;
+  }
   const shortcut = shortcutFor(target, text, context.state);
   if (shortcut !== undefined) {
     const { blockId } = target;
