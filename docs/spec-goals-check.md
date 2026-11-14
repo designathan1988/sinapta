@@ -30,6 +30,32 @@ Checked against the sources, goal by goal (2026-11-14, last):
   (app connections, plans, passkeys) have theirs.
 - A script checks that every test file and photo this table names exists:
   none is missing.
+- Walks through the running app, signed in to the review server, each a
+  plan of steps with an expected result (`.captures/plans/`), as a person
+  would use it, every photo looked at:
+  - `w1-layout` (§4.1): sidebar sections, cover and icon, the top bar,
+    Appearance and layout (Serif, Small text), the block, sidebar and
+    database row menus, a new page's start, Home.
+  - `w2-editing` (§4.2): typing, Markdown shortcuts, inline Markdown,
+    the slash menu, mentions, selection and the block keys.
+  - `w3-blocks` (§4.3): columns from a right click, a table, a block
+    equation, a breadcrumb, a video and an embed, a synced block, a
+    button, a database and a linked view.
+  - `w4-properties` (§4.4): every property type set in a new database,
+    unique IDs starting at 1.
+  - `w5-views` (§4.5): table, board, list, gallery, calendar, timeline,
+    chart and map views, filters and sorts.
+  - `w6-workspace` (§4.6): Ctrl+K search, backlinks, version history,
+    Ctrl+Shift+M's comment box, Lock and unlock, Ctrl+N, Ctrl+[ and
+    Ctrl+], Ctrl+Shift+L to dark and back, the inbox, the trash's search,
+    Settings › Import and export.
+  - `w7-history`: an edit keeps a version on the server and the history
+    shows it, written by the signed-in person.
+  Bugs these walks found are fixed with a test each: a database title's
+  Enter adding a hidden line and unique IDs starting at 2, a child listed
+  twice after a synced block, text typed after inline Markdown keeping
+  its mark, clicking below a page, a new equation's editor, the trash's
+  Escape, and page versions kept only in one browser.
 
 Sources: S1 is `docs/specification.md` §1 "In scope"; S2 is
 `docs/superpowers/specs/2026-11-11-notion-parity-design.md` §4; V3 is the
@@ -155,7 +181,7 @@ Paths: `blk/` is `src/blocks/`, `db/` is `src/features/database/`.
 | Search on Ctrl+K and Ctrl+P, recent pages, filters | Done | `shortcut-registry.test.ts`, `command-palette.test.ts`, `search-filters.test.ts` |
 | Template gallery | Done | `src/features/templates/template*.test.ts` |
 | Save a page as a template | Done | Page menu "More › Save as template", the gallery's "Your templates": `src/features/templates/own-template.test.ts`; photo `p92-save-template` (finding 56); database row templates: `src/features/database/template*.test.ts` |
-| Page history with preview, restore and who wrote each version | Done | `src/features/page-history/page-history*.test.ts` |
+| Page history with preview, restore and who wrote each version | Done | `src/features/page-history/page-history*.test.ts`; kept on the server for every member (ADR-0014, decision 10): `server/page-versions.test.ts`, `src/persistence/server-snapshots.test.ts`; walk `w7-history` |
 | Comments on a page and on text, resolve; Ctrl+Shift+M | Done | `comment.test.ts`, `comments-view.test.ts`, `shortcut-registry.test.ts` |
 | Page notification settings: the Discussions bell and Get notified | Done | `src/features/inbox/comment-notices.test.ts`, `page-menu-view.test.ts`; photos `n102-bell`, `p89-bell` |
 | Backlinks; Lock page | Done | `backlinks.test.ts`, `page-lock.test.ts` |
@@ -165,7 +191,7 @@ Paths: `blk/` is `src/blocks/`, `db/` is `src/features/database/`.
 | Print or save as PDF | Done | `src/features/page-menu/page-print.test.ts`; `src/styles/print.css` |
 | Ctrl+N, Ctrl+[, Ctrl+], Ctrl+L, Ctrl+Shift+U, Ctrl+Shift+L | Done | `shortcut-registry.test.ts`, `shortcut-actions.test.ts`, `shortcut-history.test.ts`, `theme.test.ts` |
 | Reminders and the inbox | Done | `reminder-notices.test.ts`, `src/features/inbox/inbox*.test.ts` |
-| Trash search, emptied after 30 days | Done | `trash.test.ts`, `trash-view.test.ts`, `page-trash.test.ts` |
+| Trash search, emptied after 30 days | Done | `trash.test.ts`, `trash-view.test.ts` (Escape closes it even with words typed), `page-trash.test.ts`; walk `w6-workspace` |
 | Two tabs do not overwrite each other | Done | `tab-lock.test.ts`, `workspace-repository-tabs.test.ts` |
 | Ask the browser to keep the data | Done | `src/persistence/workspace-repository-persist.test.ts` |
 | Layouts under 768 px; installable, offline | Done | `src/state/viewport.test.ts`, `src/app/shell-view.test.ts`, `offline.test.ts`, `offline-cache.test.ts`; photos `s04-offline`, `s06-offline-bar` |

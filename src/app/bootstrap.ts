@@ -81,6 +81,7 @@ import {
   startAssetStore,
   startFileTools,
   startSnapshots,
+  chooseSnapshots,
   startRepository,
   type RepositoryStart,
 } from "../persistence/index.ts";
@@ -169,11 +170,15 @@ async function startPersistence(
   });
   // Files people add to blocks are kept beside the workspace.
   installAssetSaver(startAssetStore({ adapter, dispatch, store }));
-  // Versions of the pages being edited, for their history.
+  // Versions of the pages being edited, for their history: on the server
+  // while a server workspace is open, else in this browser.
   startSnapshots({
     store,
     dispatch,
-    storage: createIndexedDbSnapshots(),
+    storage: chooseSnapshots(
+      createIndexedDbSnapshots(),
+      () => store.getState().persistence.sync.workspaceId,
+    ),
     contentOf: pageContent,
   });
   // The workspace on the server, once someone signs in (ADR-0013).

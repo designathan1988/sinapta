@@ -153,4 +153,17 @@ export const MIGRATIONS: readonly string[] = [
      verifier TEXT NOT NULL,
      expires_at INTEGER NOT NULL
    );`,
+  // 13: page versions, Notion's page history: what a page held before a
+  // run of edits, kept by whoever edited it, for every member to read.
+  `CREATE TABLE page_versions (
+     workspace_id TEXT NOT NULL REFERENCES workspaces (id) ON DELETE CASCADE,
+     id TEXT NOT NULL,
+     page_id TEXT NOT NULL,
+     taken_at TEXT NOT NULL,
+     blocks TEXT NOT NULL,
+     kept_by TEXT NOT NULL,
+     PRIMARY KEY (workspace_id, id)
+   );
+   CREATE INDEX page_versions_page
+     ON page_versions (workspace_id, page_id, taken_at);`,
 ];

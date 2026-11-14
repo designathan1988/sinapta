@@ -26,6 +26,7 @@ export {
   type Tone,
 } from "./rich-text.schema.ts";
 export {
+  blockSchema,
   isBlockOfType,
   type Block,
   type BlockProps,

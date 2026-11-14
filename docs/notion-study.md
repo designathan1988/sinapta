@@ -1514,6 +1514,17 @@ against the reference on every run.
 
 ## Last run
 
+2026-11-14, walks: the review server, 1440 × 900, light theme
+(`w1-layout` to `w7-history`, in `.captures/pagecraft/`).
+
+- Pagecraft only, no Notion change: one walk per part of the parity
+  design's §4, each step with its expected result. Found and fixed: the
+  trash's search kept the trash open on Escape when it held words
+  (Notion's closes); page versions lived in one browser only, so a
+  member on another device saw no history (now on the server). A review
+  server left from 08:19 was stopped before the server's new routes
+  were tried.
+
 2026-11-14, closing: the signed-in Notion window and the review server,
 1440 × 900, light theme (`n104`–`n108`, `p94`–`p100`).
 

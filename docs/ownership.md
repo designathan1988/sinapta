@@ -182,6 +182,7 @@ owner listed here exists.
 | Comments: discussions on a page, a block, its text or a row's property value; replies, resolving, deleting after a question | `src/features/comments/` | 17 |
 | Value discussions leaving with their property | `src/features/comments/value-discussion-tidy.ts` | 20 |
 | Keeping page versions in storage | `src/persistence/snapshot-store.ts` | 17 |
+| Page versions on the server while a server workspace is open | `server/page-versions.ts`, `server/page-version.schema.ts`, `src/persistence/server-snapshots.ts`, `src/persistence/snapshot.schema.ts` | 31 |
 | The inbox: due reminders, read state, the dialog and the sidebar's count | `src/features/inbox/` | 17 |
 | The inbox's notices from people: mentions, replies, edits to one's pages, pages shared with a guest | `src/features/inbox/inbox-notices.selectors.ts`, `inbox-changes.selectors.ts` | 27 |
 | Settings › Notifications: the kinds of notice the inbox shows, kept per person | `src/features/settings/settings-notifications.view.ts`, `src/features/inbox/inbox.commands.ts` (`toggleNotices`) | 27 |

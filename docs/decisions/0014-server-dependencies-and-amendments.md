@@ -91,6 +91,12 @@ the record should say so.
    the sign-in screen. `PAGECRAFT_DEV_OIDC=1` puts a test provider inside
    the server (`server/oidc-dev.ts`) so the whole flow runs on one machine.
    Payment is the one thing left out: every plan is free on this server.
+10. **Page history on the server.** While a server workspace is open, the
+   versions of a page (taken before a run of edits, at most every 10
+   minutes) are kept on the server, not in the browser, so every member
+   on any device reads one history, as in Notion (`server/page-versions.ts`,
+   migration 13, the 50 newest of each page; `src/persistence/server-snapshots.ts`).
+   A workspace kept only in the browser keeps its versions in IndexedDB.
 
 ## Options Considered
 
