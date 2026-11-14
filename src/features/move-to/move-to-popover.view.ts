@@ -12,10 +12,10 @@ import {
 import { COPY } from "../../ui/copy.ts";
 import { focusOnce } from "../../ui/focus/index.ts";
 import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
+import { selectWorkspaceName } from "../sidebar/index.ts";
 import { renderOption, type MoveEntry } from "./move-to.view.ts";
 
-// The overlay's panel when the top bar's place opened it.
-export const MOVE_TO_PLACE_PANEL = "place";
+export { MOVE_TO_PLACE_PANEL } from "../page-menu/index.ts";
 
 function renderSearch(query: string, dispatch: Dispatch): TemplateResult {
   return html`<input
@@ -62,5 +62,6 @@ export function renderMovePopover(
           : shown.map(renderOption)
       }
     </ul>
+    <p class="move-to__foot">${selectWorkspaceName(state)}</p>
   </div>`;
 }

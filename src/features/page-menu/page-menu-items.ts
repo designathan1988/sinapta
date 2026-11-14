@@ -29,6 +29,32 @@ import {
 
 // Opened from this menu; rendered by the move-to feature.
 export const MOVE_TO_OVERLAY_KIND = "move-to";
+// Move to as Notion's popover under the top bar's place of the open page.
+export const MOVE_TO_PLACE_PANEL = "place";
+
+// Move to: for the open page, Notion's popover under its place in the top
+// bar; for another, the dialog.
+function moveToItem(
+  state: AppState,
+  pageId: BlockId,
+  dispatch: Dispatch,
+): MenuItem {
+  const isOpenPage = pageId === state.ui.activePageId;
+  return {
+    label: COPY.pageMenu.moveToAction,
+    icon: "move",
+    onSelect: () =>
+      dispatch(
+        openOverlay.create({
+          overlay: {
+            kind: MOVE_TO_OVERLAY_KIND,
+            anchorId: pageId,
+            ...(isOpenPage && { panel: MOVE_TO_PLACE_PANEL }),
+          },
+        }),
+      ),
+  };
+}
 
 // Notion's first group: copy the link, duplicate, move, and the trash.
 export function pageActionItems(
@@ -54,16 +80,7 @@ export function pageActionItems(
         dispatch(duplicatePage.create({ pageId, ...size }));
       },
     },
-    {
-      label: COPY.pageMenu.moveToAction,
-      icon: "move",
-      onSelect: () =>
-        dispatch(
-          openOverlay.create({
-            overlay: { kind: MOVE_TO_OVERLAY_KIND, anchorId: pageId },
-          }),
-        ),
-    },
+    moveToItem(state, pageId, dispatch),
     {
       label: COPY.pageMenu.trash,
       icon: "trash",

@@ -35,7 +35,7 @@
      "Suggested", then the places, scrolling within the panel. */
   .move-to__popover {
     display: grid;
-    grid-template-rows: auto auto minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
     gap: var(--space-stack-xs);
     inline-size: var(--size-menu-move);
     max-block-size: var(--size-menu-move-height);
@@ -68,5 +68,38 @@
   .move-to__none {
     padding: var(--space-inset-xs) var(--space-inset-sm);
     color: var(--color-text-secondary);
+  }
+}
+
+@layer features {
+  /* Each place with its icon, as Notion's: the page's emoji or glyph, a
+     teamspace's letter. */
+  .move-to__option {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+  }
+
+  .move-to__icon {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    inline-size: var(--size-icon-md);
+    color: var(--color-text-secondary);
+  }
+
+  .move-to__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* The workspace the places are in, at the popover's foot. */
+  .move-to__foot {
+    margin: var(--space-none);
+    padding: var(--space-inset-xs) var(--space-inset-sm) var(--space-none);
+    border-block-start: var(--size-border-thin) solid var(--color-border-subtle);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    text-align: end;
   }
 }

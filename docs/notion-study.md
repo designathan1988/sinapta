@@ -1452,8 +1452,11 @@ board measured in Notion (item 46).
   a teamspace before the path, each opening Move to (`p65-place`).
   Opened from the place, Move to is Notion's popover too, 330 × 440 at
   most, its search field focused, "Suggested", then the places that
-  match what is typed (`p66-move-popover`); from the page menu it stays
-  a dialog. Left: each place's icon and chevron, the workspace at its foot.
+  match what is typed, each with its icon (a page's emoji or glyph, a
+  teamspace's letter), the workspace's name at its foot
+  (`p66-move-popover`). The page menu's Move to opens the same popover
+  for the open page; for a page elsewhere, as a sidebar row's, it stays
+  a dialog, there being no place to sit under.
 - (Closed 2026-11-14) Notion's view settings rows sit 8 px from the
   panel's edge and its page menu's 4 (`n93-menu-inset`); Pagecraft's
   menus take `isInset` for the view settings alone, the rest keep 4

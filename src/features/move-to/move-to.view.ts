@@ -1,6 +1,7 @@
 import "./move-to.css";
 import { html, type TemplateResult } from "lit-html";
 import {
+  DATABASE_TYPE,
   movePage,
   PAGE_TYPE,
   selectBreadcrumbs,
@@ -8,7 +9,11 @@ import {
   selectPageTitle,
   type PageBlock,
 } from "../../blocks/page/index.ts";
-import { parseBlockId, type BlockId } from "../../model/index.ts";
+import {
+  firstGrapheme,
+  parseBlockId,
+  type BlockId,
+} from "../../model/index.ts";
 import {
   closeOverlay,
   type AppState,
@@ -17,6 +22,7 @@ import {
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderDialog } from "../../ui/dialog/index.ts";
+import { renderIcon } from "../../ui/icon/index.ts";
 import { moveBlocksToPage, selectPageIdOf } from "../editor/index.ts";
 import { MOVE_TO_OVERLAY_KIND } from "../page-menu/index.ts";
 import {
@@ -82,13 +88,23 @@ function moveCommand(
 
 export interface MoveEntry {
   readonly label: string;
+  // The page's emoji or glyph, a teamspace's letter.
+  readonly icon: TemplateResult | string;
   readonly onChoose: () => void;
+}
+
+function iconOf(page: PageBlock): TemplateResult | string {
+  return (
+    page.props.icon ??
+    renderIcon(page.type === DATABASE_TYPE ? "database" : "page")
+  );
 }
 
 export function renderOption(entry: MoveEntry): TemplateResult {
   return html`<li>
     <button type="button" class="move-to__option" @click=${entry.onChoose}>
-      ${entry.label}
+      <span class="move-to__icon" aria-hidden="true">${entry.icon}</span>
+      <span class="move-to__label">${entry.label}</span>
     </button>
   </li>`;
 }
@@ -105,15 +121,21 @@ function selectEntries(state: AppState, dispatch: Dispatch): MoveEntry[] {
     if (!isPage) announce(COPY.blockMenu.movedToPage);
   };
   const pages = selectDestinations(state, movedId).map((page) => ({
+    icon: iconOf(page),
     label: selectBreadcrumbs(state, page.id).map(titleOf).join(" / "),
     onChoose: moveTo(page.id),
   }));
   if (!isPage) return pages;
   const teamspaces = selectTeamspaces(state).map((teamspace) => ({
+    icon: firstGrapheme(teamspace.props.name).toUpperCase(),
     label: teamspace.props.name,
     onChoose: moveTo(teamspace.id),
   }));
-  const top = { label: COPY.moveTo.topLevel, onChoose: moveTo(null) };
+  const top = {
+    icon: renderIcon("home"),
+    label: COPY.moveTo.topLevel,
+    onChoose: moveTo(null),
+  };
   return [top, ...teamspaces, ...pages];
 }
 
