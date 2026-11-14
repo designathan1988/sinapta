@@ -13,6 +13,7 @@ export const PAGE_TEXT = {
   inbox: {
     mentioned: "You were mentioned:",
     replied: "replied:",
+    commented: "commented:",
     edited: "edited",
     sharedWithYou: "Shared with you",
     open: "Inbox",
@@ -65,6 +66,10 @@ export const PAGE_TEXT = {
     noResolved: "No resolved comments on this page.",
     reopen: "Reopen",
     discussions: "Discussions",
+    notifySettings: "Page notification settings",
+    notifyAll: "All comments",
+    notifyReplies: "Replies and @mentions",
+    notifyMenu: "Get notified",
     allRead: "You're all caught up",
     noOpen: "No open discussions",
     viewAll: "View all",

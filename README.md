@@ -71,6 +71,10 @@ person can use offline.
   the server, a local Whisper model (`Xenova/whisper-base.en`, set with
   `PAGECRAFT_SPEECH_MODEL`) writes the words, fetched once into
   `.data/models`. Stopping asks the AI for a summary and action items.
+- **Push notifications.** Settings › Notifications › Push notices to this
+  browser subscribes it with the server (Web Push, keys made once); a
+  mention of you or a page shared with you then reaches every browser
+  you turned it on in, even while Pagecraft is closed.
 
 On macOS, use Command where this file says Ctrl.
 

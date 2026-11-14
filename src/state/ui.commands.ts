@@ -1,4 +1,5 @@
 // Commands for the parts of the `ui` slice that belong to no feature.
+import { setCommentNotices } from "./comment-notices.commands.ts";
 import type { BlockId } from "../model/index.ts";
 import {
   RECENT_PAGES_MAX,
@@ -149,6 +150,7 @@ export const setClipboard = defineCommand<{ clipboard: CopiedBlocks | null }>({
 
 export const uiCommands = [
   ...uiOverlayCommands,
+  setCommentNotices,
   setClipboard,
   setSelection,
   setSidebarWidth,

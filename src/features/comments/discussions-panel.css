@@ -7,8 +7,33 @@
     padding: var(--space-inset-md);
   }
 
+  .comments__panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-block-end: var(--space-stack-sm);
+  }
+
+  .comments__bell {
+    display: inline-grid;
+    place-items: center;
+    inline-size: var(--size-control-sm);
+    block-size: var(--size-control-sm);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
   .comments__panel-title {
-    margin: var(--space-none) var(--space-none) var(--space-stack-sm);
+    margin: var(--space-none);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
   }

@@ -18,6 +18,7 @@ export {
   type SaveStatus,
   type TextSelection,
   type UiState,
+  type CommentNoticeLevel,
 } from "./app-state.ts";
 export {
   NO_SEARCH_FILTERS,
@@ -211,3 +212,5 @@ export {
   type LinkPreview,
 } from "./link-preview.commands.ts";
 export { meetingCommands, setMeetingSummary } from "./meeting.commands.ts";
+export { setCommentNotices } from "./comment-notices.commands.ts";
+export { selectCommentNotices } from "./comment-notices.selectors.ts";

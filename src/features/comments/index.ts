@@ -48,3 +48,7 @@ export {
   rejectSuggestionCommand,
   setSuggesting,
 } from "./suggestion.commands.ts";
+export {
+  commentNoticeItems,
+  commentNoticeLabel,
+} from "./comment-notices.view.ts";

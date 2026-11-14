@@ -1,6 +1,7 @@
 // The top bar's comments button and the panel it opens, as Notion's
-// "Discussions": the page's open discussions, or "You're all caught up"
-// and View all, which lists the resolved ones too, to reopen.
+// "Discussions": a bell for the page's notification settings, the page's
+// open discussions, or "You're all caught up" and View all, which lists
+// the resolved ones too, to reopen.
 import "./discussions-panel.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
@@ -21,6 +22,7 @@ import { renderIcon } from "../../ui/icon/index.ts";
 import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { resolveDiscussion } from "./comment.commands.ts";
+import { renderDiscussionsBell } from "./discussions-bell.view.ts";
 import { commentTime } from "./comments.selectors.ts";
 import { renderResolved } from "./resolved-comments.view.ts";
 
@@ -140,7 +142,10 @@ export function renderDiscussionsPanel(
     aria-label=${TEXT.discussions}
     ${ref(showPopoverWhenConnected)}
   >
-    <h2 class="comments__panel-title">${TEXT.discussions}</h2>
+    <div class="comments__panel-head">
+      <h2 class="comments__panel-title">${TEXT.discussions}</h2>
+      ${renderDiscussionsBell(state, page, dispatch)}
+    </div>
     ${renderBody(page, { isAll, showAll }, dispatch)}
   </div>`;
 }

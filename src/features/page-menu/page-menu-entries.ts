@@ -25,6 +25,7 @@ import {
   pageActionItems,
   resolvedItems,
 } from "./page-menu-items.ts";
+import { commentNoticeItems, commentNoticeLabel } from "../comments/index.ts";
 import { connectionsItem } from "../integrations/index.ts";
 import {
   backlinksItem,
@@ -47,6 +48,26 @@ export function grouped(groups: readonly (readonly MenuItem[])[]): MenuEntry[] {
 
 // Notion's lock switch: a page's text and blocks, or a database's
 // properties and views, stay as they are while it is on.
+// "Get notified ›": the page's comment notices, as Notion's page menu.
+function notifyItem(
+  state: AppState,
+  page: PageBlock,
+  dispatch: Dispatch,
+): MenuItem {
+  return {
+    label: COPY.comments.notifyMenu,
+    icon: "bell",
+    value: commentNoticeLabel(state, page),
+    submenu: {
+      id: `notify:${page.id}`,
+      menu: () => ({
+        label: COPY.comments.notifySettings,
+        items: commentNoticeItems(state, page, dispatch),
+      }),
+    },
+  };
+}
+
 function lockItem(page: PageBlock, dispatch: Dispatch): MenuItem {
   const isLocked = page.props.isLocked === true;
   const pageId = page.id;
@@ -168,6 +189,7 @@ export function pageMenuEntries(
       ...resolvedItems(state, page.id, dispatch),
     ],
     appearanceItem(page, dispatch),
+    [notifyItem(state, page, dispatch)],
     [
       verifyItem(page, dispatch),
       lockItem(page, dispatch),

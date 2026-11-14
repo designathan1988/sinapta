@@ -21,6 +21,10 @@ const persistedUiSchema = v.object({
   mutedNotices: v.optional(v.array(v.picklist(NOTICE_KINDS)), []),
   desktopNotices: v.optional(v.boolean(), false),
   pushNotices: v.optional(v.boolean(), false),
+  commentNotices: v.optional(
+    v.record(v.string(), v.picklist(["all", "replies"])),
+    {},
+  ),
 });
 
 export type PersistedUi = v.InferOutput<typeof persistedUiSchema>;
@@ -39,6 +43,7 @@ export function toPersistedUi(ui: UiState): PersistedUi {
     mutedNotices: [...ui.mutedNotices],
     desktopNotices: ui.desktopNotices,
     pushNotices: ui.pushNotices,
+    commentNotices: { ...ui.commentNotices },
   };
 }
 

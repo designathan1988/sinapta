@@ -81,6 +81,8 @@ export interface OverlayChild {
   readonly query?: string;
 }
 
+export type CommentNoticeLevel = "all" | "replies";
+
 export interface UiState {
   readonly activePageId: BlockId | null;
   // True while Home is shown in place of a page.
@@ -119,6 +121,9 @@ export interface UiState {
   readonly desktopNotices: boolean;
   // Notices pushed to this browser by the server even while it is closed.
   readonly pushNotices: boolean;
+  // Per page, the comments that bring a notice, as Notion's page
+  // notification settings: all of them, or replies and mentions only.
+  readonly commentNotices: Readonly<Record<string, CommentNoticeLevel>>;
   // The versions of the page whose history is open, once read.
   readonly pageVersions: {
     readonly pageId: BlockId;
@@ -220,6 +225,7 @@ export function createInitialUiState(): UiState {
     mutedNotices: [],
     desktopNotices: false,
     pushNotices: false,
+    commentNotices: {},
     viewSearches: {},
     searchFilters: NO_SEARCH_FILTERS,
     sidebarWidth: SIDEBAR_WIDTH.initial,
