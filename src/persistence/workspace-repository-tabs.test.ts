@@ -29,6 +29,8 @@ function sharedStorage(initial: StoredData) {
   const storage = { stored: initial, saves: 0 };
   const adapter: StorageAdapter = {
     load: () => Promise.resolve(storage.stored),
+    loadOutbox: () => Promise.resolve(undefined),
+    saveOutbox: () => Promise.resolve(),
     save() {
       storage.saves += 1;
       return Promise.resolve();

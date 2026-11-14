@@ -112,3 +112,11 @@ export function readPresenceEvent(text: string) {
     return undefined;
   }
 }
+
+const outboxSchema = v.object({
+  workspaceId: v.string(),
+  entries: v.array(v.unknown()),
+});
+
+// The stored outbox, or undefined when there is none or it is unreadable.
+export const readOutbox = (value: unknown) => read(outboxSchema, value);

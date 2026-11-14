@@ -9,6 +9,7 @@ import {
   type Dispatch,
 } from "../state/index.ts";
 import type { Fetch } from "./account-client.ts";
+import type { Outbox } from "./workspace-repository.ts";
 import { parseReply } from "./account.schema.ts";
 import { rebase, type Pending } from "./sync-rebase.ts";
 import {
@@ -28,6 +29,7 @@ export interface SyncOptions {
   readonly propsSchemas: PropsSchemas;
   readonly send?: Fetch;
   readonly openEvents?: (url: string) => EventsLike;
+  readonly outbox?: Outbox;
 }
 
 export type Sync = Required<SyncOptions>;
@@ -63,6 +65,13 @@ export async function getJson(send: Fetch, path: string, body?: unknown) {
   });
   if (!response.ok) throw new Error(`${path}: ${String(response.status)}`);
   return parseReply(await response.text());
+}
+
+// Keeps the unconfirmed transactions, so that a reload or a lost
+// connection does not lose them.
+export function keepOutbox(link: Link, session: Session): void {
+  const entries = session.pending.map((entry) => entry.operations);
+  void link.sync?.outbox.save({ workspaceId: session.id, entries });
 }
 
 // Sends the oldest unsent transaction, then the next, and tries again a
@@ -120,8 +129,10 @@ export function receive(link: Link, session: Session, logged: Logged): void {
     return;
   }
   session.seq = logged.seq;
-  if (logged.clientId === session.clientId) session.pending.shift();
-  else applyOthers(link, session, logged);
+  if (logged.clientId === session.clientId) {
+    session.pending.shift();
+    keepOutbox(link, session);
+  } else applyOthers(link, session, logged);
 }
 
 // Applies what came while the workspace was being read, then the rest as

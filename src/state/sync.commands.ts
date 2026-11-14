@@ -85,7 +85,17 @@ export const setPresence = defineCommand<{ presence: readonly Presence[] }>({
   handle: (state, { presence }) => withSync(state, { presence }),
 });
 
+// This client's transactions the server never confirmed, made again on
+// the server's workspace when the client joins it.
+export const replayOffline = defineCommand<{
+  operations: readonly Operation[];
+}>({
+  type: "sync.replayOffline",
+  handle: (_state, { operations }) => ({ operations }),
+});
+
 export const syncCommands = [
+  replayOffline,
   setPresence,
   setSharing,
   setPeople,

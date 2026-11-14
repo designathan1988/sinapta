@@ -134,10 +134,23 @@ async function deleteSnapshots(ids: readonly string[]): Promise<void> {
   database.close();
 }
 
+async function loadOutbox(): Promise<unknown> {
+  const database = await open();
+  const outbox: unknown = await database.get("meta", "outbox");
+  database.close();
+  return outbox;
+}
+
+async function saveOutbox(outbox: unknown): Promise<void> {
+  const database = await open();
+  await database.put("meta", outbox, "outbox");
+  database.close();
+}
+
 export function createIndexedDbSnapshots(): SnapshotStorage {
   return { listSnapshots, putSnapshot, deleteSnapshots };
 }
 
 export function createIndexedDbAdapter(): StorageAdapter {
-  return { load, save, loadAssets, putAssets };
+  return { load, save, loadAssets, putAssets, loadOutbox, saveOutbox };
 }

@@ -63,6 +63,7 @@ owner listed here exists.
 | Putting this client's unconfirmed transactions after the others' | `src/persistence/sync-rebase.ts` | 24 |
 | Settings' requests to the server: the account's and workspace's names, members, invitations | `src/persistence/people-client.ts` | 25 |
 | Parsing the server's workspace answers and events | `src/persistence/sync.schema.ts` | 24 |
+| What joining makes again: the logged operations, and the unconfirmed transactions kept in the outbox | `src/persistence/sync-outbox.ts` | 24 |
 | JSON export and import, and carrying out export and import requests | `src/persistence/workspace-file.ts` | 7 |
 | Keeping files beside the workspace: asset ids, blobs, base64 | `src/persistence/asset-store.ts` | 14 |
 | Handing files people add to the asset store | `src/ui/asset/` | 14 |

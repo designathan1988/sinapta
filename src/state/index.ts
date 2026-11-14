@@ -160,6 +160,7 @@ export {
 } from "./sync.commands.ts";
 export type { Transaction } from "./history.ts";
 export {
+  replayOffline,
   requestSync,
   setPeople,
   setPresence,

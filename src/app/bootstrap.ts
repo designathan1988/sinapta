@@ -70,6 +70,7 @@ import {
   createTabCoordination,
   createIndexedDbSnapshots,
   startAccount,
+  createOutbox,
   startAi,
   createSyncLink,
   type SyncLink,
@@ -168,7 +169,7 @@ async function startPersistence(
     contentOf: pageContent,
   });
   // The workspace on the server, once someone signs in (ADR-0013).
-  sync.start({ store, dispatch, propsSchemas });
+  sync.start({ store, dispatch, propsSchemas, outbox: createOutbox(adapter) });
   startAi({ store, dispatch });
   return { isFirstRun };
 }

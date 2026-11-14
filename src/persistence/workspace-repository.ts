@@ -229,3 +229,17 @@ export async function startRepository(
   watch(options, tabs, result === "migrated");
   return { isFirstRun: result === "empty" };
 }
+
+// The outbox of transactions the server has not confirmed (ADR-0013):
+// read and written here, as all storage is.
+export interface Outbox {
+  readonly load: () => Promise<unknown>;
+  readonly save: (outbox: unknown) => Promise<void>;
+}
+
+export function createOutbox(adapter: StorageAdapter): Outbox {
+  return {
+    load: () => adapter.loadOutbox(),
+    save: (outbox) => adapter.saveOutbox(outbox),
+  };
+}

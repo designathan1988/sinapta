@@ -20,6 +20,7 @@ import { answerPeople } from "./people-client.ts";
 import {
   flush,
   getJson,
+  keepOutbox,
   listen,
   ready,
   type Link,
@@ -27,6 +28,7 @@ import {
   type Sync,
   type SyncOptions,
 } from "./sync-session.ts";
+import { replayOutbox, withLogged } from "./sync-outbox.ts";
 import * as reply from "./sync.schema.ts";
 import { readWorkspaceFile, serializeWorkspace } from "./workspace-file.ts";
 
@@ -54,9 +56,12 @@ async function download(link: Link, sync: Sync, session: Session) {
   const text = JSON.stringify(loaded.snapshot);
   const file = readWorkspaceFile(text, sync.propsSchemas);
   if (!file.ok) return;
-  sync.dispatch(loadServerWorkspace.create({ workspace: file.workspace }));
-  session.buffered = [...loaded.operations, ...session.buffered];
-  ready(link, session, loaded.seq);
+  // The workspace as it stands now, built before it is shown, so that the
+  // open page, made after the snapshot, is there when it is.
+  const now = withLogged(file.workspace, loaded.operations);
+  sync.dispatch(loadServerWorkspace.create({ workspace: now.workspace }));
+  ready(link, session, now.seq ?? loaded.seq);
+  await replayOutbox(sync, session.id);
 }
 
 // A new workspace on the server: the browser's copy at the first sign-in,
@@ -210,12 +215,17 @@ export function createSyncLink(): SyncLink {
       if (operations.length === 0) return;
       session.pending.push({ operations, inverse: transaction.inverse });
       session.unsent += 1;
+      keepOutbox(link, session);
       flush(link, session);
     },
     start(given) {
       const sync: Sync = {
         send: (input, init) => fetch(input, init),
         openEvents: (url) => new EventSource(url),
+        outbox: {
+          load: () => Promise.resolve(undefined),
+          save: () => Promise.resolve(),
+        },
         ...given,
       };
       link.sync = sync;

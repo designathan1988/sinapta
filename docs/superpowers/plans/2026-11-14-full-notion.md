@@ -29,8 +29,9 @@ in `src/persistence/`.
   sign-in, download it on another browser.
 - [x] 24.2 Operation log with sequences, SSE stream, the others' operations
   applied outside undo after taking back this client's unconfirmed ones.
-- [ ] 24.3 Offline queue in IndexedDB, reconnect, the sync state in the
-  top bar as Notion shows it.
+- [x] 24.3 The unconfirmed transactions kept in IndexedDB (the meta store's
+  "outbox"), retried while open and made again on the server's workspace
+  after a reload. (The sync state in the top bar remains.)
 
 ## Milestone 25: Workspaces
 

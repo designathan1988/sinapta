@@ -44,6 +44,10 @@ export interface StorageAdapter {
   // Writes every asset or none; rejects as the browser does when storage
   // is full.
   putAssets(assets: readonly StoredAsset[]): Promise<void>;
+  // The transactions not yet confirmed by the server (ADR-0013), kept
+  // across reloads; untrusted until parsed.
+  loadOutbox(): Promise<unknown>;
+  saveOutbox(outbox: unknown): Promise<void>;
 }
 
 export interface MemoryAdapter extends StorageAdapter {
@@ -56,6 +60,7 @@ export function createMemoryAdapter(
 ): MemoryAdapter {
   const saves: StorageChanges[] = [];
   const assets = new Map<string, StoredAsset>();
+  const outbox: { value: unknown } = { value: undefined };
   return {
     saves,
     assets,
@@ -65,6 +70,11 @@ export function createMemoryAdapter(
       return Promise.resolve();
     },
     loadAssets: () => Promise.resolve([...assets.values()]),
+    loadOutbox: () => Promise.resolve(outbox.value),
+    saveOutbox(value) {
+      outbox.value = value;
+      return Promise.resolve();
+    },
     putAssets(list) {
       for (const asset of list) assets.set(asset.id, asset);
       return Promise.resolve();
