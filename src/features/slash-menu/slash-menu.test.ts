@@ -114,12 +114,22 @@ describe("selectOpenSlashMenu", () => {
     expect(selectOpenSlashMenu(createState("quo", 3))).toBeUndefined();
   });
 
-  it("is closed when nothing matches", () => {
-    expect(selectOpenSlashMenu(createState("/zzz", 4))).toBeUndefined();
+  it("stays open with no items when nothing matches, as Notion's No results", () => {
+    expect(selectOpenSlashMenu(createState("/zzz", 4))?.items).toEqual([]);
   });
 
   it("is closed when the caret is before the slash", () => {
     expect(selectOpenSlashMenu(createState("ab/", 1, 2))).toBeUndefined();
+  });
+});
+
+describe("finding blocks as Notion's", () => {
+  it.each([
+    ["h2", "Heading 2"],
+    ["todo", "To-do list"],
+    ["bl", "Bulleted list"],
+  ])("finds %s as %s first", (query, label) => {
+    expect(selectSlashItems(createInitialState(), query)[0]?.label).toBe(label);
   });
 });
 

@@ -52,6 +52,13 @@
     }
   }
 
+  .slash-menu__empty {
+    margin: var(--space-none);
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+  }
+
   .slash-menu__group {
     padding: var(--space-inset-sm) var(--space-inset-sm) var(--space-inset-xs);
     color: var(--color-text-tertiary);

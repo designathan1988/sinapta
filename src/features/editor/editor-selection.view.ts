@@ -2,14 +2,9 @@
 // selected the container of the blocks has focus, not a block's text.
 import { isTextBlock, textOf } from "../../blocks/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
-import {
-  countBlockTree,
-  parseBlockId,
-  type BlockId,
-} from "../../model/index.ts";
+import { parseBlockId, type BlockId } from "../../model/index.ts";
 import { readSelection } from "../../ui/caret/index.ts";
 import { COPY } from "../../ui/copy.ts";
-import type { AppState, Dispatch } from "../../state/index.ts";
 import type { InputContext } from "./editor-input.view.ts";
 import {
   clearBlockSelection,
@@ -21,7 +16,10 @@ import {
   selectBlockRange,
 } from "./editor-selection.commands.ts";
 import { copyBlocksByKey } from "./editor-clipboard.view.ts";
-import { duplicateBlock } from "./editor-insert.commands.ts";
+import {
+  duplicateSelected,
+  selectEveryBlock,
+} from "./editor-selection-actions.ts";
 import { selectSelectedBlocks } from "./editor.selectors.ts";
 
 const DIRECTIONS: Record<string, -1 | 1> = { ArrowUp: -1, ArrowDown: 1 };
@@ -82,32 +80,26 @@ function arrowAction(event: KeyboardEvent, context: InputContext) {
     : undefined;
 }
 
-// Each selected block whose parent is not selected too, with everything
-// inside it, is copied below itself.
-export function duplicateSelected(context: {
-  readonly state: AppState;
-  readonly dispatch: Dispatch;
-}): void {
-  const blocks = selectSelectedBlocks(context.state);
-  const ids = new Set(blocks.map((block) => block.id));
-  for (const block of blocks) {
-    if (block.parentId !== null && ids.has(block.parentId)) continue;
-    const blockCount = countBlockTree(context.state.workspace, block.id);
-    context.dispatch(duplicateBlock.create({ blockId: block.id, blockCount }));
-  }
-}
+// Ctrl or Command with a letter, on the selected blocks.
+const WITH_MOD: Readonly<
+  Record<string, (event: KeyboardEvent, context: InputContext) => void>
+> = {
+  d: (_event, context) => {
+    duplicateSelected(context);
+  },
+  a: (_event, context) => {
+    selectEveryBlock(context);
+  },
+  c: copyBlocksByKey,
+  x: copyBlocksByKey,
+};
 
 function otherAction(event: KeyboardEvent, context: InputContext) {
   const { dispatch } = context;
-  const hasMod = event.ctrlKey || event.metaKey;
-  if (hasMod && event.key.toLowerCase() === "d") {
+  const withMod = WITH_MOD[event.key.toLowerCase()];
+  if ((event.ctrlKey || event.metaKey) && withMod !== undefined) {
     return () => {
-      duplicateSelected(context);
-    };
-  }
-  if (hasMod && ["c", "x"].includes(event.key.toLowerCase())) {
-    return () => {
-      copyBlocksByKey(event, context);
+      withMod(event, context);
     };
   }
   if (event.key === "Tab") {

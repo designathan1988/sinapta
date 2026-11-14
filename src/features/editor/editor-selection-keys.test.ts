@@ -34,6 +34,18 @@ function press(init: KeyboardEventInit): Command[] {
 }
 
 describe("keys on selected blocks", () => {
+  it("selects every block of the page with Ctrl+A, not the window", () => {
+    const sent = press({ key: "a", ctrlKey: true });
+
+    expect(sent).toEqual([
+      expect.objectContaining({
+        type: "ui.selectBlockRange",
+        anchorId: "a",
+        focusId: "b",
+      }),
+    ]);
+  });
+
   it("moves the selected blocks with Ctrl+Shift and an arrow", () => {
     const sent = press({ key: "ArrowDown", ctrlKey: true, shiftKey: true });
 

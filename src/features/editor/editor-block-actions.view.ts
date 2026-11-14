@@ -23,10 +23,13 @@ import { colorMenuItem } from "./editor-color-menu.view.ts";
 import { duplicateBlock } from "./editor-insert.commands.ts";
 import { deleteBlock } from "./editor-move.commands.ts";
 import { deleteSelectedBlocks } from "./editor-selection.commands.ts";
-import { duplicateSelected } from "./editor-selection.view.ts";
+import { duplicateSelected } from "./editor-selection-actions.ts";
 import { selectSelectedBlocks } from "./editor.selectors.ts";
 
 export const TURN_INTO_OVERLAY = "turn-into";
+// Turn into opened from the block menu, in its place; the formatting
+// toolbar opens it beside its own row.
+export const FROM_BLOCK_MENU = "from-block-menu";
 
 export interface ActionContext {
   readonly overlay: OpenOverlay;
@@ -69,7 +72,11 @@ function textItems(block: Block, context: ActionContext): MenuItem[] {
     onSelect: () =>
       dispatch(
         openOverlay.create({
-          overlay: { ...overlay, kind: TURN_INTO_OVERLAY },
+          overlay: {
+            ...overlay,
+            kind: TURN_INTO_OVERLAY,
+            panel: FROM_BLOCK_MENU,
+          },
         }),
       ),
   };

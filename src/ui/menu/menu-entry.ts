@@ -124,7 +124,18 @@ export function visibleEntries(
 ): readonly MenuEntry[] {
   const wanted = fold(query.trim());
   if (wanted === "") return entries;
-  return entries.filter(
-    (entry) => isMenuItem(entry) && fold(entry.label).includes(wanted),
-  );
+  const isWanted = (entry: MenuEntry): boolean =>
+    isMenuItem(entry) && fold(entry.label).includes(wanted);
+  // As Notion's "Search actions…", the actions inside a submenu are found
+  // too, as "Full width" under "Appearance and layout".
+  return entries.flatMap((entry): readonly MenuEntry[] => {
+    if (isWanted(entry)) return [entry];
+    if (!isMenuItem(entry) || entry.submenu === undefined) return [];
+    return entry.submenu
+      .menu()
+      .items.filter(
+        (inner) =>
+          isWanted(inner) && isMenuItem(inner) && inner.submenu === undefined,
+      );
+  });
 }

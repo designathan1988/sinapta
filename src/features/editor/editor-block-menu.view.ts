@@ -25,6 +25,7 @@ import { renderMenu, type MenuItem } from "../../ui/menu/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import {
   blockActionEntries,
+  FROM_BLOCK_MENU,
   TURN_INTO_OVERLAY,
 } from "./editor-block-actions.view.ts";
 import { convertBlock } from "./editor-convert.commands.ts";
@@ -141,12 +142,16 @@ interface TurnIntoAt {
 // The types a block can turn into; from the selection panel's type row
 // they open beside it, as Notion's.
 function renderTurnInto(at: TurnIntoAt, onClose: () => void): TemplateResult {
-  const fromPanel = at.overlay.start !== undefined;
+  const fromPanel =
+    at.overlay.start !== undefined && at.overlay.panel !== FROM_BLOCK_MENU;
   return renderMenu({
     label: COPY.blockMenu.turnInto,
     items: typeItems(at.blockId, at.overlay, at.dispatch),
     onClose,
-    ...(fromPanel && { placement: "beside" as const }),
+    // Opened from the block menu it takes that menu's place, before the
+    // grip, not the far end of the block's row.
+    placement: fromPanel ? "beside" : "before",
+    ...(at.overlay.point && { point: at.overlay.point }),
   });
 }
 

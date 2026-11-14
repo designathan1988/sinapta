@@ -68,6 +68,7 @@ export function renderColorMenu(
     label: COPY.blockMenu.color,
     items: colorItems(blockId, dispatch),
     onClose: () => dispatch(closeOverlay.create({})),
-    ...(overlay.point && { point: overlay.point }),
+    // In the block menu's place, before the grip.
+    ...(overlay.point ? { point: overlay.point } : { placement: "before" }),
   });
 }

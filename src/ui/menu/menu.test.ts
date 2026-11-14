@@ -1,5 +1,6 @@
 // @vitest-environment happy-dom
 import { render } from "lit-html";
+import { visibleEntries } from "./menu-entry.ts";
 import { describe, expect, it } from "vitest";
 import { renderMenu, type MenuItem } from "./index.ts";
 
@@ -96,5 +97,23 @@ describe("renderMenu", () => {
     expect(menu?.hasAttribute("data-at-point")).toBe(true);
     expect(menu?.style.getPropertyValue("--menu-x")).toBe("10px");
     expect(menu?.style.getPropertyValue("--menu-y")).toBe("20px");
+  });
+});
+
+describe("a menu's search", () => {
+  it("finds the actions inside a submenu, as Notion's", () => {
+    const fullWidth = { label: "Full width", onSelect: () => undefined };
+    const entries = [
+      { label: "Copy link", onSelect: () => undefined },
+      {
+        label: "Appearance and layout",
+        submenu: {
+          id: "look",
+          menu: () => ({ label: "Look", items: [fullWidth] }),
+        },
+      },
+    ];
+
+    expect(visibleEntries(entries, "full")).toEqual([fullWidth]);
   });
 });

@@ -4,6 +4,7 @@ export const EDITOR_TEXT = {
     label: "Turn into",
     close: "Close menu",
     closeKey: "esc",
+    noResults: "No results",
     groups: {
       basic: "Basic blocks",
       media: "Media",

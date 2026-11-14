@@ -18,6 +18,7 @@ import {
 } from "./slash-menu-catalog.ts";
 
 import { SLASH_MENU_OVERLAY } from "../editor/index.ts";
+import { fold, isFound, matchRank } from "./slash-search.ts";
 
 export { SLASH_MENU_OVERLAY };
 const PAGE_LINK_LIMIT = 5;
@@ -144,15 +145,9 @@ function pageItems(state: AppState): BlockSlashItem[] {
   }));
 }
 
-// Comparison that ignores case in every language.
-function fold(text: string): string {
-  return text.normalize("NFKC").toLocaleLowerCase("en-US");
-}
-
 export function selectSlashItems(state: AppState, query: string): SlashItem[] {
   const needle = fold(query);
-  const matches = (item: SlashItem): boolean =>
-    fold(item.label).includes(needle);
+  const matches = (item: SlashItem): boolean => isFound(item.label, needle);
   const pages = pageItems(state).filter(matches).slice(0, PAGE_LINK_LIMIT);
   const colors = needle === "" ? [] : colorItems().filter(matches);
   const blocks = [PAGE_ITEM, ...blockItems(), ...DATABASE_ITEMS].filter(
@@ -161,16 +156,9 @@ export function selectSlashItems(state: AppState, query: string): SlashItem[] {
   // The closest matches first, as Notion's ("/toggle" gives Toggle list
   // before the toggle headings); then by group, keeping each group's order.
   const rank = (item: SlashItem): number =>
-    matchRank(fold(item.label), needle) * SLASH_GROUPS.length +
+    matchRank(item.label, needle) * SLASH_GROUPS.length +
     SLASH_GROUPS.indexOf(item.group);
   return [...blocks, ...pages, ...colors].toSorted((a, b) => rank(a) - rank(b));
-}
-
-// 0 for the whole name, 1 for its start, 2 for a word's start, 3 else.
-function matchRank(label: string, needle: string): number {
-  if (needle === "" || label === needle) return 0;
-  if (label.startsWith(needle)) return 1;
-  return label.includes(` ${needle}`) ? 2 : 3;
 }
 
 export interface OpenSlashMenu {
@@ -214,9 +202,13 @@ export function selectOpenSlashMenu(
     return undefined;
   const typed = typedQuery(state);
   if (typed === undefined) return undefined;
+  // With nothing found the menu stays, saying so, and Escape closes it,
+  // as Notion's "No results".
   const items = selectSlashItems(state, typed.query);
-  if (items.length === 0) return undefined;
-  const activeIndex = Math.min(overlay.activeIndex ?? 0, items.length - 1);
+  const activeIndex = Math.max(
+    0,
+    Math.min(overlay.activeIndex ?? 0, items.length - 1),
+  );
   const { start, end } = typed;
   return { blockId: selection.blockId, start, end, items, activeIndex };
 }

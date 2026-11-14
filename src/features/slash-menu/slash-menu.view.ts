@@ -68,12 +68,24 @@ function choose(
   }
 }
 
+// The row under the pointer is the one highlighted, as Notion's: one row
+// at a time, for the keys and the pointer alike.
+function pointAt(menu: OpenSlashMenu, event: Event, dispatch: Dispatch): void {
+  if (!(event.target instanceof Element)) return;
+  const index = Number(
+    event.target.closest<HTMLElement>("[data-index]")?.dataset.index ?? -1,
+  );
+  if (index < 0 || index === menu.activeIndex) return;
+  highlight(menu, index - menu.activeIndex, dispatch);
+}
+
 function highlight(
   menu: OpenSlashMenu,
   offset: number,
   dispatch: Dispatch,
 ): void {
   const count = menu.items.length;
+  if (count === 0) return;
   const activeIndex = (menu.activeIndex + offset + count) % count;
   const overlay = {
     kind: SLASH_MENU_OVERLAY,
@@ -144,6 +156,9 @@ function renderOption(
 
 // The options, with the name of each group before its first option.
 function renderOptions(menu: OpenSlashMenu): TemplateResult[] {
+  if (menu.items.length === 0) {
+    return [html`<p class="slash-menu__empty">${COPY.slashMenu.noResults}</p>`];
+  }
   return menu.items.flatMap((item, index) => {
     const option = renderOption(item, index, index === menu.activeIndex);
     if (menu.items[index - 1]?.group === item.group) return [option];
@@ -164,6 +179,21 @@ function renderFooter(): TemplateResult {
 }
 
 // The list of block types offered after "/" is typed.
+// A press in the menu keeps the caret in the text; on Close menu it closes
+// it, on a row it chooses the row.
+function pressIn(menu: OpenSlashMenu, event: Event, context: ChooseContext) {
+  event.preventDefault();
+  if (!(event.target instanceof Element)) return;
+  if (event.target.closest(".slash-menu__footer")) {
+    context.dispatch(closeOverlay.create({}));
+    return;
+  }
+  const index =
+    event.target.closest<HTMLElement>("[data-index]")?.dataset.index;
+  const item = menu.items[Number(index ?? -1)];
+  if (item !== undefined) choose(menu, item, context);
+}
+
 export function renderSlashMenu(
   state: AppState,
   dispatch: Dispatch,
@@ -171,17 +201,7 @@ export function renderSlashMenu(
   const menu = selectOpenSlashMenu(state);
   if (menu === undefined) return nothing;
   const onPointerDown = (event: Event): void => {
-    // Keep the caret in the text.
-    event.preventDefault();
-    if (!(event.target instanceof Element)) return;
-    if (event.target.closest(".slash-menu__footer")) {
-      dispatch(closeOverlay.create({}));
-      return;
-    }
-    const index =
-      event.target.closest<HTMLElement>("[data-index]")?.dataset.index;
-    const item = menu.items[Number(index ?? -1)];
-    if (item !== undefined) choose(menu, item, { state, dispatch });
+    pressIn(menu, event, { state, dispatch });
   };
   // As Notion's: the list scrolls inside the menu, over a Close menu line.
   return html`<div
@@ -190,6 +210,9 @@ export function renderSlashMenu(
     data-overlay
     ${ref(showPopoverWhenConnected)}
     @pointerdown=${onPointerDown}
+    @pointerover=${(event: Event) => {
+      pointAt(menu, event, dispatch);
+    }}
   >
     <div
       class="slash-menu__list"
