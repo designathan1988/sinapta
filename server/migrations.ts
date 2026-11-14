@@ -62,4 +62,20 @@ export const MIGRATIONS: readonly string[] = [
      created_at INTEGER NOT NULL,
      PRIMARY KEY (workspace_id, email)
    );`,
+  // 5: a page's sharing: who else can open it, whether it is published,
+  // and the people invited to it with their access.
+  `CREATE TABLE page_access (
+     workspace_id TEXT NOT NULL REFERENCES workspaces (id) ON DELETE CASCADE,
+     page_id TEXT NOT NULL,
+     general TEXT NOT NULL DEFAULT 'workspace',
+     published INTEGER NOT NULL DEFAULT 0,
+     PRIMARY KEY (workspace_id, page_id)
+   );
+   CREATE TABLE page_shares (
+     workspace_id TEXT NOT NULL REFERENCES workspaces (id) ON DELETE CASCADE,
+     page_id TEXT NOT NULL,
+     email TEXT NOT NULL COLLATE NOCASE,
+     access TEXT NOT NULL,
+     PRIMARY KEY (workspace_id, page_id, email)
+   );`,
 ];

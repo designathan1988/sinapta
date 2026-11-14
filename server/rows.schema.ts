@@ -81,3 +81,14 @@ export const inviteRowSchema = v.object({
   email: v.string(),
   role: v.string(),
 });
+
+export const pageAccessRowSchema = v.object({
+  general: v.picklist(["invited", "workspace", "web"]),
+  published: v.number(),
+});
+
+export const pageShareRowSchema = v.object({
+  email: v.string(),
+  access: v.picklist(["full", "edit", "comment", "view"]),
+  name: v.nullable(v.string()),
+});
