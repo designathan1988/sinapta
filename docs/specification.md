@@ -65,6 +65,9 @@ dependency) and planned as milestones 22 to 30 in
 `docs/superpowers/plans/2026-11-14-full-notion.md`. Only third parties a
 local server cannot run (Google, Apple, Microsoft and SSO sign-in, Slack,
 Google Drive, payment) stay out; their menus are drawn and say so.
+Milestone 31 there brings in what that list still held: link previews
+read by the server, integrations with the public API at `/v1`,
+notifications on this device, and meeting transcription.
 
 ### Quality targets
 

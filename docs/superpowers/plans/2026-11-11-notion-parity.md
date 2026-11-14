@@ -1214,5 +1214,9 @@ deletion after 30 days as a setting, on load).
 
 - [x] Specification, architecture, ownership, README, design system and
   `docs/tasks.md` brought in line with the code; ADR status updated.
-- [ ] Final `npm run verify`, build, audits; push the branch.
-- [ ] Commit `docs: describe version 2`
+- [x] Final `npm run verify`, build, audits; push the branch (2026-11-14:
+  verify green with 2195 tests, `npm run build` passes, `npm audit
+  --omit=dev` finds 0 vulnerabilities, the specification's acceptance
+  checks hold, every owner in `docs/ownership.md` exists).
+- [x] Commit `docs: describe version 2` (with the release checks, after
+  version 3's milestones 22 to 31).
