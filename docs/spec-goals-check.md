@@ -76,7 +76,7 @@ version 3 scope of ADR-0013 and the plan
 | Block color and background; /red, /red background, /default | Done | `editor-color.test.ts`, `slash-menu.test.ts` |
 | Heading 4, toggle headings, subpages as blocks, /page | Done | `src/blocks/heading/heading.test.ts`, `editor-subpages.test.ts` |
 | @ pages, dates, people, reminders; [[ links | Done | `src/features/mention-menu/mention-menu.test.ts` (people after @), `src/app/reminder-notices.test.ts` |
-| "+" for a new subpage or a link to a page | Done | `src/features/editor/editor-plus.test.ts`, `mention-menu.test.ts`; photos `n97-plus`, `p78-plus`; finding 50 |
+| "+" for a new subpage, a new page in a chosen place, or a link to a page | Done | `src/features/editor/editor-plus.test.ts`, `mention-menu.test.ts`; photos `n97-plus`, `p78-plus`, `p91-page-in`; finding 50 |
 | :emoji and the emoji picker | Done | `src/features/emoji-menu/emoji-menu.test.ts`, `src/ui/emoji/emoji-picker.test.ts` |
 | Copy blocks with their structure; paste web HTML as blocks | Done | `editor-selection-keys.test.ts`, `src/ui/rich-text/pasted-html-blocks.test.ts` |
 | A URL pasted over text links it; alone it offers Mention, URL, bookmark, embed | Done | `editor-paste-view.test.ts`, `editor-paste-as.test.ts`; photos `n95-paste-plus`, `p79-paste-as`; finding 49 |
@@ -98,7 +98,7 @@ Paths: `blk/` is `src/blocks/`, `db/` is `src/features/database/`.
 | Equation block and inline TeX | Done | `blk/equation/equation.test.ts`, `src/features/editor/editor-equation.test.ts`, `src/ui/rich-text/equation.test.ts`, `src/model/tex/tex-parse.test.ts` |
 | Breadcrumb block | Done | `blk/breadcrumb/breadcrumb.test.ts` |
 | File, PDF, video, audio | Done | `blk/media-blocks.test.ts` |
-| Embed | Done, narrowed | `blk/embed/embed.test.ts` (31 hosts); photo `p79-paste-as` |
+| Embed of any https page; known hosts' players | Done | `blk/embed/embed.test.ts` ("frames any other https page as it is"), `src/features/editor/editor-paste-as.test.ts`; photo `p79-paste-as` |
 | Synced block | Done | `blk/synced-block/synced-block.test.ts` |
 | Button block: insert blocks, add a database row | Done | `blk/button/button.test.ts`, `button-view.test.ts` |
 | Inline database and linked view | Done | `db/inline-database.test.ts`, `db/database-inline-view.test.ts`, `db/linked-view.test.ts`, `db/linked-view-view.test.ts` |
@@ -143,6 +143,7 @@ Paths: `blk/` is `src/blocks/`, `db/` is `src/features/database/`.
 | Save a page as a template | n/a | Notion has no page "Save as template" (plan Task 17.2); database row templates: `src/features/database/template*.test.ts` |
 | Page history with preview, restore and who wrote each version | Done | `src/features/page-history/page-history*.test.ts` |
 | Comments on a page and on text, resolve; Ctrl+Shift+M | Done | `comment.test.ts`, `comments-view.test.ts`, `shortcut-registry.test.ts` |
+| Page notification settings: the Discussions bell and Get notified | Done | `src/features/inbox/comment-notices.test.ts`, `page-menu-view.test.ts`; photos `n102-bell`, `p89-bell` |
 | Backlinks; Lock page | Done | `backlinks.test.ts`, `page-lock.test.ts` |
 | Customize page: backlinks, page discussions, inline comments, outline | Done | `page-style.test.ts` ("page.setLayout"), `page-outline.test.ts`; photo `p81-layout`; finding 52 |
 | Import Markdown, ZIP, CSV and HTML | Done | `markdown-import.test.ts`, `markdown-archive.test.ts`, `csv-import.test.ts`, `src/features/markdown-import/html-page.test.ts`; photo `p82-html-import` |
@@ -168,7 +169,7 @@ Paths: `blk/` is `src/blocks/`, `db/` is `src/features/database/`.
 | Teamspaces: open, closed, private, requests, archive, security, limit | Done | `server/teamspace-routes.test.ts`, `teamspace-filters.test.ts`; photos `p55`, `p63`, `p68`–`p70`; findings 47, 48 |
 | Real-time collaboration: presence, faces and carets | Done | `server/presence.test.ts`, `presence-view.test.ts`; photos `p54-collaborate`, `p56-block-presence`, `p64-caret` |
 | Notifications to others: mentions, edits, shares; Settings › Notifications | Done | `inbox-notices.test.ts` (mentions, replies, edits, shares, kinds turned off); photos `p57-edit-notice`, `p61-notifications` |
-| Notifications to this device's desktop | Done, narrowed | `inbox-notifier.test.ts`; photo `p75-desktop-notices`. Push to other devices needs a push service outside this machine; not built |
+| Notifications to this device and to the person's other devices | Done | `inbox-notifier.test.ts`; `server/push.test.ts` (a mention pushed once, a share pushed, a browser that turns push off forgotten), `src/persistence/push-client.test.ts`, `src/app/service-worker-push.test.ts`; photos `p75-desktop-notices`, `p88-push`: the built app on the real server, Settings › Notifications › Push notices, a subscription with the browser's push service (FCM), a page shared, and the service worker's notification "A page was shared with you" read back |
 | Person, Created by, Last edited by, Verification, Place | Done | `row-groups-person.test.ts`, `src/model/author-stamp.test.ts`, `src/blocks/page/page-verify.test.ts`, `properties/place/place.test.ts`; photos `p46`, `p47`, `p59` |
 | Map view | Done | `layouts/map/map.test.ts`; photos `p44-map`, `p58-map-move` |
 | AI: Ask AI, Space prompt, streaming, autofill, chat | Done | `server/ai.test.ts`, `ai-stream.test.ts`, `ai-fill.test.ts`, `src/persistence/ai-client.test.ts`; photos `p43-ai`, `p49`–`p51`, `p60-ai-stream`, `p86-start` |
@@ -189,16 +190,15 @@ Paths: `blk/` is `src/blocks/`, `db/` is `src/features/database/`.
 | 250 lines per file, 40 per function, no lint warnings, tokens only in CSS | Done | `eslint.config.js`, `stylelint.config.js`, `architecture.test.ts`; `npm run verify` passes |
 | `setState` only in `dispatch.ts`; storage only in `persistence` | Done | ESLint rules in `eslint.config.js` |
 
-## Differences kept on purpose
+## Measured against Notion
 
-- Embeds frame the hosts the content security policy names (31 hosts,
-  `src/blocks/embed/`); Notion embeds any address.
-- A link mention shows the address without its scheme; Notion shows the
-  page's own title.
-- The "Paste as" menu is 282 px wide, as Pagecraft's other menus; Notion's
-  is 200 px. The Discussions panel's empty state is 254 px high; Notion's
-  316 px.
-- "Get started with" sits under the page's first line; Notion's at the
-  window's foot.
-- Notion's bell in the Discussions panel and "New page in…" in the "+"
-  menu are not built; page notices are set in Settings › Notifications.
+Every difference found while checking is closed; what is left are
+measurements that come close rather than match to the pixel:
+
+- "Paste as" is 200 px wide, as Notion's, and 141 px high to Notion's
+  123 px: its rows are Pagecraft's menu rows, Notion's rows here are
+  28 px.
+- The empty Discussions panel is 316 px high, as Notion's.
+- A link mention shows the page's title as the server reads it from the
+  page (`og:title`, else `<title>`); github.com/notion, for one, is an
+  account named "Trove", which is what its mention shows.
