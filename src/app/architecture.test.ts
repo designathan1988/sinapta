@@ -103,4 +103,25 @@ describe("architecture", () => {
     );
     expect(longest.map(fromSrc)).toEqual([]);
   });
+
+  // ADR-0013: the app never imports the server, and the server reaches
+  // into src/ only for the model's schemas.
+  it("keeps the server and the app apart", () => {
+    const server = listFiles(resolve(SRC, "../server")).filter((path) =>
+      path.endsWith(".ts"),
+    );
+    const fromApp = SOURCES.flatMap((path) =>
+      importsOf(path).filter((specifier) =>
+        fromSrc(resolve(dirname(path), specifier)).startsWith("../server/"),
+      ),
+    );
+    const fromServer = server.flatMap((path) =>
+      importsOf(path).flatMap((specifier) => {
+        const target = fromSrc(resolve(dirname(path), specifier));
+        const isApp = !target.startsWith("../");
+        return isApp && layerOf(target) !== "model" ? [target] : [];
+      }),
+    );
+    expect([...fromApp, ...fromServer]).toEqual([]);
+  });
 });

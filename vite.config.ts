@@ -4,6 +4,7 @@ import { relative, resolve } from "node:path";
 import type { Plugin } from "vite";
 import { defineConfig } from "vitest/config";
 import { buildTokens } from "./scripts/build-tokens.ts";
+import { apiPlugin } from "./server/vite-plugin.ts";
 import { FRAME_HOSTS } from "./src/blocks/embed/embed-hosts.ts";
 
 function isTokenFile(file: string): boolean {
@@ -122,6 +123,7 @@ function serviceWorkerPlugin(): Plugin {
 export default defineConfig({
   plugins: [
     tokensPlugin(),
+    apiPlugin(),
     contentSecurityPolicyPlugin(),
     serviceWorkerPlugin(),
   ],
@@ -145,7 +147,11 @@ export default defineConfig({
     },
   },
   test: {
-    include: ["src/**/*.test.ts", "scripts/**/*.test.ts"],
+    include: [
+      "src/**/*.test.ts",
+      "scripts/**/*.test.ts",
+      "server/**/*.test.ts",
+    ],
     setupFiles: ["src/dom-test-setup.ts"],
     environment: "node",
     // A VM context per worker and a fresh window per file: building 140
