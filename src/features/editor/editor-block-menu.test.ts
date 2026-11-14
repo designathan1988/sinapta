@@ -154,13 +154,13 @@ describe("the block menu", () => {
     );
   });
 
-  it("opens the dialog to move the block to another page", () => {
+  it("opens Move to under the block, to move it to another page", () => {
     const { sent } = choose("Move to");
 
     expect(sent).toContainEqual(
       expect.objectContaining({
         type: "ui.openOverlay",
-        overlay: { kind: "move-to", anchorId: "a" },
+        overlay: { kind: "move-to", anchorId: "a", panel: "place" },
       }),
     );
   });
