@@ -38,6 +38,8 @@ export interface MenuOptions {
   readonly isWide?: boolean;
   // A long list kept short and scrolled, as Notion's list of times.
   readonly isShort?: boolean;
+  // A small menu of a few short rows, 200 px wide, as Notion's Paste as.
+  readonly isNarrow?: boolean;
   // Rows 8 px from the panel's edge, as Notion's view settings, not 4.
   readonly isInset?: boolean;
   // A list opened from a control inside another overlay.

@@ -140,6 +140,13 @@
     background-color: var(--color-border-focus);
   }
 
+  /* An empty page too, for its start list at the foot. */
+  .app__page:has(.editor__start) {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  }
+
   /* A database page uses the full height of the main area. */
   .app__page:has(> [data-wide]) {
     flex: 1;

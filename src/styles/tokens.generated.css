@@ -314,6 +314,7 @@
     --base-size-16x875: 16.875rem;
     --base-size-2x75: 2.75rem;
     --base-size-18x125: 18.125rem;
+    --base-size-19x75: 19.75rem;
     --base-size-20x625: 20.625rem;
     --base-size-6x625: 6.625rem;
     --base-size-27x5: 27.5rem;
@@ -571,6 +572,7 @@
     --size-menu-short: var(--base-size-15x625);
     --size-menu-share: var(--base-size-28x5);
     --size-menu-discussions: var(--base-size-28x5);
+    --size-menu-discussions-height: var(--base-size-19x75);
     --size-menu-tile: var(--base-size-3x5625);
     --size-menu-narrow: var(--base-size-12x5);
     --size-menu-row: var(--base-size-7);

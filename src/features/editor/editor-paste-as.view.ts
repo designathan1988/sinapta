@@ -66,5 +66,6 @@ export function renderPasteAs(
     label: TEXT.title,
     items: entries({ blockId, start, end, href }, dispatch),
     onClose: () => dispatch(closeOverlay.create({})),
+    isNarrow: true,
   });
 }

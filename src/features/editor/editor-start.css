@@ -3,6 +3,7 @@
   .editor__start {
     display: grid;
     gap: var(--space-stack-xs);
+    padding-block-end: var(--space-stack-xxl);
   }
 
   .editor__start-label {
@@ -42,10 +43,13 @@
     }
   }
 
-  /* With a start list below it, the line that invites writing keeps to
-     its own height, so the list sits right under it. */
+  /* An empty page fills the window, as Notion's: the line that invites
+     writing takes the room, and the start list sits at the foot. */
+  .editor:has(> .editor__start) {
+    flex: 1;
+  }
+
   .editor__continue:has(+ .editor__start) {
-    flex: none;
     min-block-size: auto;
   }
 }

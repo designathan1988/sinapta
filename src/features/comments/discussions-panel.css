@@ -2,6 +2,7 @@
   /* Notion's Discussions panel under the top bar's comments button. */
   .comments__panel {
     inline-size: var(--size-menu-discussions);
+    min-block-size: var(--size-menu-discussions-height);
     max-block-size: var(--size-menu-max-height);
     overflow: hidden auto;
     padding: var(--space-inset-md);

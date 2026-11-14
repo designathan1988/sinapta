@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { buildWorkspace, toBlockId } from "../model/index.ts";
-import { setLinkPreview } from "./link-preview.commands.ts";
+import {
+  setLinkMentionTitle,
+  setLinkPreview,
+} from "./link-preview.commands.ts";
 import { createTestApp } from "./state-builder.ts";
 
 const PREVIEW = {
@@ -54,5 +57,40 @@ describe("setLinkPreview", () => {
     expect(
       store.getState().workspace.blocks[toBlockId("mark")]?.props.preview,
     ).toBeUndefined();
+  });
+});
+
+describe("setLinkMentionTitle", () => {
+  it("shows the page's title in its mentions, once", () => {
+    const href = "https://github.com/notion";
+    const mention = { kind: "link", href };
+    const workspace = buildWorkspace([
+      {
+        id: "page",
+        props: { title: [] },
+        children: [
+          {
+            id: "line",
+            type: "paragraph",
+            props: {
+              text: [{ text: "See " }, { text: "github.com/notion", mention }],
+            },
+          },
+        ],
+      },
+    ]);
+    const { store, dispatch } = createTestApp({
+      workspace,
+      commands: [setLinkMentionTitle],
+    });
+    const blockId = toBlockId("line");
+
+    dispatch(setLinkMentionTitle.create({ blockId, href, title: "Notion" }));
+    dispatch(setLinkMentionTitle.create({ blockId, href, title: "Again" }));
+
+    expect(store.getState().workspace.blocks[blockId]?.props.text).toEqual([
+      { text: "See " },
+      { text: "Notion", mention: { kind: "link", href, isTitled: true } },
+    ]);
   });
 });

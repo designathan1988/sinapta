@@ -208,6 +208,7 @@ export {
 } from "./page-access.selectors.ts";
 export {
   linkPreviewCommands,
+  setLinkMentionTitle,
   setLinkPreview,
   type LinkPreview,
 } from "./link-preview.commands.ts";

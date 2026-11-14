@@ -169,6 +169,12 @@ function onRowClick(event: Event, choosing: Choosing): void {
   choose(choosing.items[Number(row.dataset.index ?? -1)], choosing, row);
 }
 
+function isNarrowMenu(options: MenuOptions): boolean {
+  if (options.isNarrow === true) return true;
+  const isSubmenu = options.placement === "beside";
+  return isSubmenu && options.lead === undefined && options.isWide !== true;
+}
+
 export function renderMenu(options: MenuOptions): TemplateResult {
   const items = visibleEntries(options.items, options.search?.query ?? "");
   const choosing = choosingOf(options, items);
@@ -182,11 +188,7 @@ export function renderMenu(options: MenuOptions): TemplateResult {
     ?data-short=${options.isShort === true}
     ?data-inset=${options.isInset === true}
     data-placement=${options.placement ?? nothing}
-    data-size=${
-      isSubmenu && options.lead === undefined && options.isWide !== true
-        ? "narrow"
-        : nothing
-    }
+    data-size=${isNarrowMenu(options) ? "narrow" : nothing}
     ${ref(placeAt(options.point))}
     ${ref(showPopoverWhenConnected)}
     @click=${(event: Event) => {

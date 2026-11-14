@@ -38,6 +38,8 @@ export const mentionSchema = v.variant("kind", [
       v.string(),
       v.check((href) => safeHref(href) !== undefined),
     ),
+    // True once the mention shows the page's own title, read by the server.
+    isTitled: v.optional(v.boolean()),
   }),
 ]);
 

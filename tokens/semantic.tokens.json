@@ -702,6 +702,10 @@
         "$description": "Notion's Discussions panel under the comments button: 456 px wide (n98-comments-button).",
         "$value": "{base.size.28x5}"
       },
+      "discussionsHeight": {
+        "$description": "The Discussions panel's least height, as Notion's with nothing open: 316 px (n98-comments-button).",
+        "$value": "{base.size.19x75}"
+      },
       "tile": {
         "$description": "A layout or show-as tile, as Notion's: 57 px high (83 px wide from the grid).",
         "$value": "{base.size.3x5625}"
