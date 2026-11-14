@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createDatabaseApp } from "../../database-builder.ts";
 import { selectTableModel } from "../../table-model.selectors.ts";
+import { setViewGroupBy } from "../../group.commands.ts";
 import { setViewType } from "../../view-layout.commands.ts";
 import {
   selectBoardColumns,
@@ -86,5 +87,45 @@ describe("selectGroupProperty", () => {
     if (model === undefined) throw new Error("no model");
 
     expect(selectGroupProperty(model)?.name).toBe("Status");
+  });
+});
+
+describe("a board grouped by a multi-select", () => {
+  it("shows a card with two tags in the column of each", () => {
+    const app = createDatabaseApp(
+      [
+        {
+          name: "Tags",
+          type: "multi-select",
+          options: [
+            { id: "web", name: "Web", color: "blue" },
+            { id: "app", name: "App", color: "green" },
+          ],
+        },
+      ],
+      [
+        ["Both", ["web", "app"]],
+        ["One", ["app"]],
+      ],
+    );
+    const viewId = app.view().id;
+    const [tags] = app.propertyIds;
+    if (tags === undefined) throw new Error("setup");
+    app.dispatch(setViewType.create({ viewId, viewType: "board" }));
+    app.dispatch(setViewGroupBy.create({ viewId, propertyId: tags }));
+    const model = selectTableModel(app.store.getState(), app.databaseId);
+    if (model === undefined) throw new Error("no model");
+
+    const columns = selectBoardColumns(model);
+
+    expect(
+      columns?.map((column) => [
+        column.key,
+        column.rows.map((row) => row.title),
+      ]),
+    ).toEqual([
+      ["web", ["Both"]],
+      ["app", ["Both", "One"]],
+    ]);
   });
 });

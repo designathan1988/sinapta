@@ -76,3 +76,16 @@ describe("the chart", () => {
     );
   });
 });
+
+describe("the bar chart", () => {
+  it("draws a bar per group, as long as its share, lying down", () => {
+    const host = rendered({ kind: "bar" });
+    const bars = [...host.querySelectorAll<HTMLElement>(".chart__mark")];
+
+    expect(host.querySelector(".chart")?.getAttribute("data-kind")).toBe("bar");
+    expect(bars.map((bar) => bar.style.getPropertyValue("--share"))).toEqual([
+      "0.5",
+      "1",
+    ]);
+  });
+});

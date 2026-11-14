@@ -83,3 +83,23 @@ describe("a card's right click", () => {
     });
   });
 });
+
+describe("the gallery's card size", () => {
+  it("draws its cards small, medium or large, as the view says", () => {
+    const app = createDatabaseApp([{ name: "Notes", type: "text" }], [["A"]]);
+    const viewId = app.view().id;
+    app.dispatch(setViewType.create({ viewId, viewType: "gallery" }));
+    app.dispatch(
+      setCardOptions.create({ viewId, options: { cardSize: "large" } }),
+    );
+    const host = document.createElement("div");
+    render(
+      renderDatabase(app.store.getState(), () => ({ ok: true })),
+      host,
+    );
+
+    expect(host.querySelector(".gallery")?.getAttribute("data-size")).toBe(
+      "large",
+    );
+  });
+});
