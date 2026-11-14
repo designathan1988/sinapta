@@ -15,6 +15,19 @@
 // prints, after each photo, what the hand did and felt.
 import * as v from "valibot";
 
+// Drawn over the photos of a "human" plan, each off unless asked: the
+// cursor in the shape the browser shows (with presses and a halo while
+// held), the trail of the step's movement, the keys pressed. true turns
+// all three on; a step's own "overlay" overrides the plan's.
+const overlaySchema = v.union([
+  v.boolean(),
+  v.object({
+    cursor: v.optional(v.boolean()),
+    trail: v.optional(v.boolean()),
+    keys: v.optional(v.boolean()),
+  }),
+]);
+
 const stepSchema = v.object({
   name: v.pipe(v.string(), v.regex(/^[a-z0-9-]+$/)),
   eval: v.optional(v.string()),
@@ -53,6 +66,7 @@ const stepSchema = v.object({
   // A page expression read after every event the hand sends during the
   // step; each change is printed with its time (capture-watch.ts).
   watch: v.optional(v.string()),
+  overlay: v.optional(overlaySchema),
 });
 
 // A person's hand and fingers instead of instant, straight input: curved,
@@ -81,6 +95,7 @@ export const capturePlanSchema = v.object({
   // that confirms each use: Chrome's virtual authenticator.
   passkey: v.optional(v.boolean()),
   human: v.optional(humanSchema),
+  overlay: v.optional(overlaySchema),
   steps: v.array(stepSchema),
 });
 

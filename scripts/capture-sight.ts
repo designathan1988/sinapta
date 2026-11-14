@@ -15,6 +15,7 @@ import {
   type Hand,
   type Target,
 } from "./capture-hand.ts";
+import { wheelLabel } from "./capture-trace.ts";
 import { observe } from "./capture-watch.ts";
 
 function inView(hand: Hand, box: Box): boolean {
@@ -58,6 +59,7 @@ export async function wheel(
   }
   await sleep(120);
   hand.notes.push(`wheel ${String(delta)} in ${String(ticks.length)} notches`);
+  hand.trace.keys.push(wheelLabel(delta, ticks.length));
 }
 
 // Off screen: with the button up the hand goes over the scrolling area

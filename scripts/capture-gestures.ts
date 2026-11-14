@@ -8,7 +8,12 @@ import { between, type Point } from "./capture-motion.ts";
 import { planChord, planTyping, type KeyEvent } from "./capture-typing.ts";
 import { rest, sleep, travel, type Hand, type Target } from "./capture-hand.ts";
 import { reach, wheel } from "./capture-sight.ts";
+import { chordLabel, keyName, typedLabel, type Mark } from "./capture-trace.ts";
 import { observe, startWatch } from "./capture-watch.ts";
+
+function mark(hand: Hand, what: Omit<Mark, "x" | "y">): void {
+  hand.trace.marks.push({ ...what, x: hand.at.x, y: hand.at.y });
+}
 
 type Button = "left" | "right";
 
@@ -20,9 +25,11 @@ async function clickHere(
   const { mouse } = hand.page;
   for (let count = 1; count <= clicks; count += 1) {
     await mouse.down({ button, clickCount: count });
+    mark(hand, { kind: "down", button, clicks: count });
     await observe(hand);
     await sleep(between(hand.random, 55, 130));
     await mouse.up({ button, clickCount: count });
+    mark(hand, { kind: "up", button, clicks: count });
     await observe(hand);
     if (count < clicks) await sleep(between(hand.random, 70, 160));
   }
@@ -45,6 +52,7 @@ async function clickOn(
 async function pressDown(hand: Hand): Promise<void> {
   await hand.page.mouse.down();
   hand.pressed = true;
+  mark(hand, { kind: "down", button: "left", clicks: 1 });
   await observe(hand);
 }
 
@@ -52,6 +60,7 @@ export async function release(hand: Hand): Promise<void> {
   await rest(hand, between(hand.random, 40, 120));
   await hand.page.mouse.up();
   hand.pressed = false;
+  mark(hand, { kind: "up", button: "left", clicks: 1 });
   await observe(hand);
 }
 
@@ -155,12 +164,14 @@ export async function playKeys(
 async function keys(hand: Hand, step: CaptureStep): Promise<void> {
   if (step.type !== undefined) {
     const typing = planTyping(step.type, hand);
+    hand.trace.keys.push(typedLabel(typing.events));
     await playKeys(hand, typing.events);
     const fixed =
       typing.typos > 0 ? `, ${String(typing.typos)} typo(s) fixed` : "";
     hand.notes.push(`typed ${String(step.type.length)} characters${fixed}`);
   }
   if (step.press !== undefined) {
+    hand.trace.keys.push(chordLabel(step.press));
     await playKeys(hand, planChord(step.press, hand.random));
     hand.notes.push(`pressed ${step.press}`);
   }
@@ -200,7 +211,10 @@ export async function actHuman(hand: Hand, step: CaptureStep): Promise<void> {
   await observe(hand);
   await approach(hand, step, presses(step) ? undefined : step.aim);
   if (step.wheel !== undefined) await wheel(hand, step.wheel);
-  if (step.hold !== undefined) await hand.page.keyboard.down(step.hold);
+  if (step.hold !== undefined) {
+    hand.trace.keys.push(`${keyName(step.hold)} (held)`);
+    await hand.page.keyboard.down(step.hold);
+  }
   await pressGestures(hand, step, step.aim);
   if (step.hold !== undefined) await hand.page.keyboard.up(step.hold);
   if (step.up === true) await release(hand);

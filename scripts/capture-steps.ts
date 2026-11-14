@@ -10,7 +10,9 @@ import type { CapturePlan, CaptureStep } from "./capture.schema.ts";
 import { drag, press } from "./capture-actions.ts";
 import { printFelt } from "./capture-feedback.ts";
 import { actHuman, usesHand } from "./capture-gestures.ts";
+import { notePointerCapture, shownCursor } from "./capture-cursor-state.ts";
 import { createHand, rest, type Hand } from "./capture-hand.ts";
+import { photograph, type Stage } from "./capture-photo.ts";
 import {
   CHROME,
   NOTION_PORT,
@@ -110,25 +112,6 @@ async function addAuthenticator(page: Page): Promise<void> {
   });
 }
 
-async function region(page: Page, step: CaptureStep) {
-  if (step.clip === undefined) return undefined;
-  const box = await page.locator(step.clip).first().boundingBox();
-  if (box === null) return undefined;
-  const pad = step.pad ?? 24;
-  return {
-    x: Math.max(0, box.x - pad),
-    y: Math.max(0, box.y - pad),
-    width: box.width + pad * 2,
-    height: box.height + pad * 2,
-  };
-}
-
-// The page, and the person's hand when the plan asks for one.
-interface Stage {
-  readonly page: Page;
-  readonly hand: Hand | undefined;
-}
-
 async function actOnce(stage: Stage, step: CaptureStep): Promise<void> {
   if (stage.hand !== undefined) return actHuman(stage.hand, step);
   if (usesHand(step)) throw new Error(`step ${step.name} needs "human"`);
@@ -191,8 +174,8 @@ async function run(
   }
   if (hand === undefined) await page.waitForTimeout(step.wait ?? 350);
   else await rest(hand, step.wait ?? 350);
-  const clip = await region(page, step);
-  await page.screenshot(clip === undefined ? { path } : { path, clip });
+  const cursor = hand === undefined ? undefined : await shownCursor(hand);
+  await photograph(stage, { step, path, cursor });
   const value: unknown =
     step.read === undefined ? undefined : await page.evaluate(step.read);
   console.log(path, value === undefined ? "" : JSON.stringify(value));
@@ -229,6 +212,9 @@ export async function takePhotos(
   if (target === "pagecraft" && plan.guest !== true) {
     await signInForReview(page);
   }
+  if (plan.human !== undefined && plan.human !== false) {
+    await notePointerCapture(page);
+  }
   await page.goto(plan.url ?? REVIEW_URL, { waitUntil: "domcontentloaded" });
   // Notion draws its page well after load: wait for its blocks.
   if (signedIn) {
@@ -236,7 +222,8 @@ export async function takePhotos(
   }
   await page.waitForTimeout(1200);
   try {
-    const stage: Stage = { page, hand: await handFor(plan, page) };
+    const hand = await handFor(plan, page);
+    const stage: Stage = { page, hand, plan, composer: undefined };
     for (const [index, step] of plan.steps.entries()) {
       const name = `${String(index).padStart(2, "0")}-${step.name}.png`;
       await run(stage, step, join(outDir, name));

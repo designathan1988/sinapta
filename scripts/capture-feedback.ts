@@ -3,12 +3,13 @@
 // cursor it shows (a headless photo has no cursor), where the focus is
 // and whether its ring shows, the selected text, and what the live
 // regions said. Only facts are printed; judging them is the reader's work.
+import { shownCursor } from "./capture-cursor-state.ts";
 import type { Hand } from "./capture-hand.ts";
+import { clearTrace } from "./capture-trace.ts";
 import { endWatch } from "./capture-watch.ts";
 
 interface Felt {
   readonly under: string;
-  readonly cursor: string;
   readonly focus: string;
   readonly ring: string;
   readonly selection: string;
@@ -43,7 +44,6 @@ function readFelt(at: { x: number; y: number }): Felt {
     .join(" | ");
   return {
     under: name(under),
-    cursor: under === null ? "none" : getComputedStyle(under).cursor,
     focus: active === document.body ? "body" : name(active),
     ring,
     selection: (getSelection()?.toString() ?? "").slice(0, 40),
@@ -53,16 +53,19 @@ function readFelt(at: { x: number; y: number }): Felt {
 
 export async function printFelt(hand: Hand, label: string): Promise<void> {
   const felt = await hand.page.evaluate(readFelt, hand.at);
+  const shown = await shownCursor(hand);
+  const why = shown.why === "" ? "" : ` (${shown.why})`;
   const at = `${String(Math.round(hand.at.x))},${String(Math.round(hand.at.y))}`;
   const watched = endWatch(hand);
   const lines = [
     ...hand.notes.map((done) => `  did: ${done}`),
     ...(watched === undefined ? [] : [`  ${watched}`]),
-    `  pointer ${at}${hand.pressed ? " (button held)" : ""} on ${felt.under}, cursor ${felt.cursor}`,
+    `  pointer ${at}${hand.pressed ? " (button held)" : ""} on ${felt.under}, cursor ${shown.keyword}${why}`,
     `  focus ${felt.focus}, ${felt.ring}`,
   ];
   if (felt.selection !== "") lines.push(`  selected "${felt.selection}"`);
   if (felt.live !== "") lines.push(`  announced "${felt.live}"`);
   console.log([label, ...lines].filter((line) => line !== "").join("\n"));
   hand.notes.length = 0;
+  clearTrace(hand.trace, hand.at);
 }

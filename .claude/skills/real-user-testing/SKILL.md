@@ -99,6 +99,29 @@ while carrying is the text cursor, not `grabbing` (compare with Notion). A
 "Third "` and the later keys lost: text vanishing under typing is the kind of
 fault only this rhythm finds.
 
+## Overlays: cursor, trail, keys (off by default)
+
+```json
+{ "human": { "seed": 5 }, "overlay": { "cursor": true, "trail": true, "keys": true }, "steps": [
+  { "name": "clean-photo", "pointAt": [1000, 600], "overlay": false } ] }
+```
+
+`"overlay": true` turns on all three; a step's own `overlay` overrides the
+plan's (`false` for a clean photo to compare with Notion). They need
+`"human"`. They are drawn over the finished photo in a separate blank page,
+so the page under test never gets anything injected.
+
+| Layer | Shows |
+| --- | --- |
+| `cursor` | the cursor in the shape the browser shows there, one of 25 CSS cursors drawn as Windows does at 200 % (arrow, hand, I-beam, grab/grabbing, resize arrows, not-allowed, wait, progress, copy, help, zoom…); while an element holds the pointer capture its cursor wins; `auto` is the I-beam over editable or selectable text. While the button is held: an orange halo. Presses of the step: a filled dot, releases a ring, a second ring for a double-click, purple for the right button |
+| `trail` | every mouse report of the step as a dot, joined by a line coloured by speed (blue slow → red fast), thicker while the button is held, a square where it started, and a legend: reports, length, time, peak speed |
+| `keys` | keycaps of each shortcut (`Ctrl + Shift + ↓`), typed text as the fingers struck it with slips and `⌫` (`Secp⌫ond↵`), held modifiers, wheel turns (`Wheel ↓ × 3`) |
+
+The printed `did: move … in 1073 ms (planned 1035), 53 of 115 reports sent`
+compares the plan with what the page allowed: every report waits for the page
+to take it, so a much longer time or few reports sent means the page was busy
+(a performance finding), as long as nothing else is running.
+
 `did:` lines also report problems a person would hit: `arrived on X, but it
 cannot be seen (opacity 0.00)`, `aimed at X, but the pointer is on .Y`,
 `held at the edge 4 s: nothing scrolled`, `nothing expected appeared: did it
@@ -185,7 +208,8 @@ missing or wrong, and where the owning code is), or not tested (why).
 | `"type": "/head", "press": "Enter"` expecting the menu open before Enter | type runs first; split into steps or put the key in the text |
 | Testing a drag with one `drag` step and judging only the final order | `down` / `moveTo` / `up` with `watch`: the feedback is in the middle |
 | Trusting `expect` on a hover-revealed control | Playwright counts opacity 0 as visible; read the `did:` line (`cannot be seen`) and the photo |
-| Judging the cursor from the photo | headless photos have no cursor: read `cursor …` in the printed lines |
+| Judging the cursor from a plain photo | headless photos have no cursor: turn on `overlay.cursor`, or read `cursor …` in the printed lines |
+| Studying a path from the end photo alone | turn on `overlay.trail`: the line shows overshoot, corrections and where the hand slowed |
 | Pressing Tab inside a text block to test focus rings | Tab indents there; start from a button or the sidebar |
 | Re-running with a new random hand after a failure | add the printed seed to replay the same motion |
 | Calling a gesture fine because the unit test passes | the unit tests fire synthetic events at fixed points; only the hand finds threshold, hit-area and timing faults |

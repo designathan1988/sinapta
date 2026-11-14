@@ -18,6 +18,7 @@ import {
   planRest,
   summarize,
 } from "./capture-reach.ts";
+import { clearTrace, emptyTrace, type Trace } from "./capture-trace.ts";
 import { observe, type Watch } from "./capture-watch.ts";
 
 export interface HandOptions {
@@ -37,6 +38,11 @@ export interface Hand {
   readonly notes: string[];
   // The step's "watch", read after every event the hand sends.
   watch: Watch | undefined;
+  // Moves, presses and keys since the last photo, drawn on the next one.
+  readonly trace: Trace;
+  // The current move as planned and as the page let it happen: each report
+  // waits for the page to take it, so a slow page stretches the move.
+  readonly timing: { planned: number; took: number; sent: number };
 }
 
 export interface Target {
@@ -74,7 +80,10 @@ export async function createHand(
     pressed: false,
     notes: [],
     watch: undefined,
+    trace: emptyTrace(),
+    timing: { planned: 0, took: 0, sent: 0 },
   };
+  clearTrace(hand.trace, at);
   return hand;
 }
 
@@ -83,21 +92,33 @@ export async function createHand(
 export async function play(
   hand: Hand,
   samples: readonly Sample[],
+  account = true,
 ): Promise<void> {
   const start = performance.now();
+  let sent = 0;
   for (const [index, sample] of samples.entries()) {
     const next = samples[index + 1];
     const now = performance.now() - start;
     if (next !== undefined && now > next.t) continue;
     await sleep(sample.t - now);
     await hand.page.mouse.move(sample.x, sample.y);
+    sent += 1;
     hand.at = sample;
+    hand.trace.moves.push({
+      ...sample,
+      t: performance.now(),
+      pressed: hand.pressed,
+    });
     await observe(hand);
   }
+  if (!account) return;
+  hand.timing.planned += samples[samples.length - 1]?.t ?? 0;
+  hand.timing.took += performance.now() - start;
+  hand.timing.sent += sent;
 }
 
 export async function rest(hand: Hand, ms: number): Promise<void> {
-  await play(hand, planRest(hand.at, ms, hand.random));
+  await play(hand, planRest(hand.at, ms, hand.random), false);
   hand.at = { x: hand.at.x, y: hand.at.y };
 }
 
@@ -136,8 +157,11 @@ export function note(
 ): void {
   const s = summarize(move.from, move.to, move.samples);
   const round = (n: number) => String(Math.round(n));
+  const { timing } = hand;
   hand.notes.push(
-    `${hand.pressed ? "drag" : "move"} ${round(s.span)} px, ${String(s.events)} events,` +
+    `${hand.pressed ? "drag" : "move"} ${round(s.span)} px in ${round(timing.took)} ms` +
+      ` (planned ${round(timing.planned)}), ${String(timing.sent)} of ${String(s.events)} reports sent,` +
       ` bend ${round(s.bend)} px, overshoot ${round(Math.max(0, s.overshoot))} px`,
   );
+  Object.assign(timing, { planned: 0, took: 0, sent: 0 });
 }
