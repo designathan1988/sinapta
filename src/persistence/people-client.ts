@@ -43,6 +43,15 @@ function routeOf(request: PeopleRequest, base: string): Asked | undefined {
       return [`${base}/name`, { name: request.name }];
     case "profile":
       return undefined;
+    case "ai-fill":
+      return [
+        `${base}/ai/fill`,
+        {
+          databaseId: request.databaseId,
+          propertyId: request.propertyId,
+          action: request.action,
+        },
+      ];
     default:
       return sharingRoute(request, base);
   }
@@ -95,5 +104,7 @@ export async function answerPeople(
     if (sharing !== undefined) sync.dispatch(setSharing.create({ sharing }));
     return;
   }
-  if (request.kind !== "rename") publishPeople(sync, reply);
+  if (request.kind !== "rename" && request.kind !== "ai-fill") {
+    publishPeople(sync, reply);
+  }
 }

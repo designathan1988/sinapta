@@ -52,6 +52,12 @@ export type SyncRequest =
   | { readonly kind: "remove-member"; readonly userId: string }
   | { readonly kind: "remove-invite"; readonly email: string }
   | { readonly kind: "profile"; readonly name: string }
+  | {
+      readonly kind: "ai-fill";
+      readonly databaseId: string;
+      readonly propertyId: string;
+      readonly action: "summarize" | "action-items" | "translate" | "shorter";
+    }
   | { readonly kind: "sharing"; readonly pageId: string }
   | {
       readonly kind: "share";

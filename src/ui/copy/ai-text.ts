@@ -11,6 +11,8 @@ export const AI_TEXT = {
     insertBelow: "Insert below",
     replace: "Replace",
     discard: "Discard",
+    fillSummary: "AI autofill: summary",
+    fillActions: "AI autofill: action items",
     actions: {
       ask: "Ask AI",
       improve: "Improve writing",

@@ -1,6 +1,6 @@
 // The rows of a column's menu, as Notion's: filter, the Sort and
 // Calculate submenus, group, and how the table shows the column.
-import { openOverlay } from "../../state/index.ts";
+import { openOverlay, requestSync } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import type { MenuItem } from "../../ui/menu/index.ts";
 import { addFilter } from "./filter-edit.ts";
@@ -127,6 +127,40 @@ export function groupItems(
 
 // How the table shows the column: frozen with the ones before it, hidden
 // in this view, its text wrapped.
+// Notion's AI autofill: fills a text property of every row from the row's
+// page, on the server (ADR-0013).
+export function aiFillItem(
+  column: TableColumn,
+  context: TableContext,
+): MenuItem[] {
+  const { property } = column;
+  const isSignedIn = context.state.persistence.account.user !== null;
+  if (property.type !== "text" || column.isTitle || !isSignedIn) return [];
+  const fill = (action: "summarize" | "action-items") => () =>
+    context.dispatch(
+      requestSync.create({
+        request: {
+          kind: "ai-fill",
+          databaseId: context.model.database.id,
+          propertyId: property.id,
+          action,
+        },
+      }),
+    );
+  return [
+    {
+      label: COPY.ai.fillSummary,
+      icon: "sparkles",
+      onSelect: fill("summarize"),
+    },
+    {
+      label: COPY.ai.fillActions,
+      icon: "sparkles",
+      onSelect: fill("action-items"),
+    },
+  ];
+}
+
 export function showItems(
   column: TableColumn,
   context: TableContext,

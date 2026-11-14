@@ -17,7 +17,7 @@ export const AI_ACTIONS = [
   "explain",
   "continue",
 ] as const;
-type Action = (typeof AI_ACTIONS)[number];
+export type Action = (typeof AI_ACTIONS)[number];
 
 const askSchema = v.object({
   action: v.picklist(AI_ACTIONS),
@@ -116,6 +116,14 @@ export function askLocally(action: Action, text: string): string | undefined {
     default:
       return undefined;
   }
+}
+
+// The model's answer when one runs, else the plain-text one, else none.
+export async function askAi(
+  action: Action,
+  text: string,
+): Promise<string | undefined> {
+  return (await askOllama(action, text)) ?? askLocally(action, text);
 }
 
 export const AI_ROUTES: RouteTable = {
