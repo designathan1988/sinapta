@@ -43,6 +43,8 @@ export const ACCOUNT_TEXT = {
       network: "Something went wrong. Please try again.",
     },
     loggedInAs: "Logged in as",
+    member: { one: "member", other: "members" },
+    newWorkspace: "New workspace",
     logOut: "Log out",
   },
 } as const;

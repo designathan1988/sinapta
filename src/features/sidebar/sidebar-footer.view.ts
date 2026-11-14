@@ -5,11 +5,10 @@ import { html, nothing, type TemplateResult } from "lit-html";
 import {
   closeOverlay,
   openOverlay,
-  requestAccount,
   type AppState,
   type Dispatch,
 } from "../../state/index.ts";
-import { COPY, PRODUCT_NAME } from "../../ui/copy.ts";
+import { COPY } from "../../ui/copy.ts";
 import { renderIcon, type IconName } from "../../ui/icon/index.ts";
 import { renderMenu, type MenuItem } from "../../ui/menu/index.ts";
 import {
@@ -20,6 +19,7 @@ import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { TEMPLATE_GALLERY_OVERLAY } from "../templates/index.ts";
 import { TRASH_OVERLAY } from "../trash/index.ts";
 import { chooseImportFiles } from "./sidebar-import.ts";
+import { selectWorkspaceName, workspaceMenuEntries } from "./workspace-menu.ts";
 
 export const SIDEBAR_WORKSPACE_OVERLAY = "sidebar-workspace";
 export const SIDEBAR_APPS_OVERLAY = "sidebar-apps";
@@ -71,15 +71,16 @@ export function renderSidebarFooter(
   dispatch: Dispatch,
 ): TemplateResult {
   const context = { state, dispatch };
+  const name = selectWorkspaceName(state);
   const workspace = html`<span class="sidebar__mark" aria-hidden="true"
-      >${PRODUCT_NAME.slice(0, 1)}</span
+      >${name.slice(0, 1)}</span
     >
-    <span class="sidebar__workspace-name">${PRODUCT_NAME}</span>
+    <span class="sidebar__workspace-name">${name}</span>
     ${renderIcon("chevron")}`;
   return html`<div class="sidebar__footer">
     ${renderMenuButton(
       SIDEBAR_WORKSPACE_OVERLAY,
-      { label: PRODUCT_NAME, body: workspace },
+      { label: name, body: workspace },
       context,
     )}
     ${renderHelp(dispatch)}
@@ -95,25 +96,14 @@ function item(label: string, icon: IconName, onSelect: () => void): MenuItem {
   return { label, icon, onSelect };
 }
 
-// The workspace's menu, with the account's address and Log out at its
-// foot while one is signed in, as Notion's (ADR-0013).
 function renderWorkspaceMenu(
   state: AppState,
   dispatch: Dispatch,
   items: readonly MenuItem[],
 ): TemplateResult {
-  const { user } = state.persistence.account;
-  const logOut: MenuItem = {
-    label: COPY.account.logOut,
-    onSelect: () =>
-      dispatch(requestAccount.create({ request: { kind: "sign-out" } })),
-  };
   return renderMenu({
     label: COPY.sidebar.workspaceMenu,
-    items: user === null ? items : [...items, logOut],
-    ...(user === null
-      ? {}
-      : { footer: `${COPY.account.loggedInAs} ${user.email}` }),
+    items: workspaceMenuEntries(state, dispatch, items),
     onClose: () => dispatch(closeOverlay.create({})),
   });
 }

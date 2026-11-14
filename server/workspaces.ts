@@ -21,7 +21,7 @@ export interface LoggedOperations {
 }
 
 const WORKSPACE_COLUMNS =
-  "SELECT w.id, w.name, w.icon, m.role FROM workspaces w JOIN members m ON m.workspace_id = w.id";
+  "SELECT w.id, w.name, w.icon, m.role, (SELECT COUNT(*) FROM members c WHERE c.workspace_id = w.id) AS members FROM workspaces w JOIN members m ON m.workspace_id = w.id";
 
 export function workspacesOf(
   context: ApiContext,
@@ -67,7 +67,8 @@ export function createWorkspace(
       "INSERT INTO snapshots (workspace_id, seq, body) VALUES (?, 0, ?)",
     ).run(id, JSON.stringify(workspace.snapshot));
   });
-  return { id, name: workspace.name, icon: null, role: "owner" };
+  markOpened(context, workspace.ownerId, id);
+  return { id, name: workspace.name, icon: null, role: "owner", members: 1 };
 }
 
 function parsed(text: string): unknown {
@@ -139,4 +140,15 @@ export function logOperations(context: ApiContext, entry: Logged): number {
     );
     return seq;
   });
+}
+
+// The workspace a person opened last, opened again at the next sign-in.
+export function markOpened(
+  context: ApiContext,
+  userId: string,
+  workspaceId: string,
+): void {
+  context.db
+    .prepare("UPDATE users SET last_workspace_id = ? WHERE id = ?")
+    .run(workspaceId, userId);
 }

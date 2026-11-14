@@ -2,6 +2,7 @@
 // on the server (ADR-0013).
 import type { AssetError, BlockId } from "../model/index.ts";
 import { SIGNED_OUT_LOCAL, type AccountState } from "./account-state.ts";
+import { NOT_SYNCED, type SyncState } from "./sync-state.ts";
 
 export type SaveStatus = "idle" | "saving" | "saved" | "failed";
 
@@ -31,6 +32,8 @@ export interface PersistenceState {
   readonly assetUrls: Readonly<Record<string, string>>;
   // Who is signed in to the server, and the sign-in screen's progress.
   readonly account: AccountState;
+  // The workspaces on the server and the one joined.
+  readonly sync: SyncState;
 }
 
 export const INITIAL_PERSISTENCE: PersistenceState = {
@@ -43,4 +46,5 @@ export const INITIAL_PERSISTENCE: PersistenceState = {
   assetError: null,
   assetUrls: {},
   account: SIGNED_OUT_LOCAL,
+  sync: NOT_SYNCED,
 };

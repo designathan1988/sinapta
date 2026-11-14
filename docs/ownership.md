@@ -24,7 +24,8 @@ owner listed here exists.
 | The persistence slice's shape and initial value | `src/state/persistence-state.ts` | 22 |
 | The account's state: who is signed in, the sign-in step, the question asked | `src/state/account-state.ts` | 23 |
 | Sign-in and account commands | `src/state/account.commands.ts` | 23 |
-| Applying the others' operations and the server's workspace | `src/state/sync.commands.ts` | 24 |
+| Applying the others' operations and the server's workspace; the workspace list and switch requests | `src/state/sync.commands.ts` | 24 |
+| The workspaces on the server, the one joined, what was asked | `src/state/sync-state.ts` | 25 |
 | Cross-feature selectors over `AppState` | `src/state/app-state.selectors.ts` | 1 |
 | Loading a whole workspace into the store | `src/state/workspace.commands.ts` | 1 |
 | The saved part of the `ui` slice | `src/state/ui.schema.ts` | 1 |
@@ -77,6 +78,7 @@ owner listed here exists.
 | What file, PDF, video and audio blocks share: props, commands, empty field, caption | `src/blocks/media/` | 14 |
 | Pages: schema, commands, selectors, tree moves, trash | `src/blocks/page/` | 2 |
 | Sidebar tree and favorites | `src/features/sidebar/` | 2 |
+| Notion's workspace menu: members, the account's workspaces, New workspace, Log out | `src/features/sidebar/workspace-menu.ts` | 25 |
 | Notion's sign-in screen: the address, password, login code and profile steps, the other ways in | `src/features/sign-in/` | 23 |
 | A page as one HTML file | `src/features/markdown-export/html-export.selectors.ts` | 20 |
 | Repeating templates: the repeat, its days, and the check that adds their rows | `src/features/database/template-repeat.commands.ts`, `src/app/template-repeats.ts` | 20 |

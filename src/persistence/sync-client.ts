@@ -1,10 +1,16 @@
 // Keeps the signed-in workspace on the server (ADR-0013): joins it or
 // uploads the browser's copy, sends each transaction in order, and applies
 // the others' as the server's event stream brings them.
-import { toWireOperations, type Workspace } from "../model/index.ts";
+import {
+  createEmptyWorkspace,
+  toWireOperations,
+  type Workspace,
+} from "../model/index.ts";
 import {
   loadServerWorkspace,
+  setWorkspaces,
   type AccountStatus,
+  type SyncRequest,
   type AppState,
   type Transaction,
 } from "../state/index.ts";
@@ -51,29 +57,65 @@ async function download(link: Link, sync: Sync, session: Session) {
   ready(link, session, loaded.seq);
 }
 
-// The first sign-in on a server with no workspace for this person: the
-// browser's copy becomes the server's.
-async function upload(link: Link, sync: Sync, name: string) {
-  const workspace = sync.store.getState().workspace;
-  const snapshot = parseReply(serializeWorkspace(workspace));
-  const body = { name, snapshot };
+// A new workspace on the server: the browser's copy at the first sign-in,
+// an empty one when asked for (Notion's "New workspace").
+async function create(link: Link, sync: Sync, made: Made) {
+  const snapshot = parseReply(serializeWorkspace(made.workspace));
+  const body = { name: made.name, snapshot };
   const created = reply.readCreated(
     await getJson(sync.send, "/api/workspaces", body),
   );
   if (created === undefined) return;
+  if (made.isEmpty) {
+    sync.dispatch(loadServerWorkspace.create({ workspace: made.workspace }));
+  }
   ready(link, listen(link, sync, created.workspace.id), created.seq);
+  await publishList(sync, created.workspace.id);
 }
 
-async function join(link: Link, sync: Sync): Promise<void> {
+interface Made {
+  readonly name: string;
+  readonly workspace: Workspace;
+  readonly isEmpty: boolean;
+}
+
+// The server's list of this person's workspaces, with the one joined.
+async function publishList(sync: Sync, joined: string | null) {
+  const list = reply.readWorkspaceList(
+    await getJson(sync.send, "/api/workspaces"),
+  );
+  if (list === undefined) return list;
+  const workspaceId = joined ?? list.lastWorkspaceId;
+  sync.dispatch(
+    setWorkspaces.create({ workspaces: list.workspaces, workspaceId }),
+  );
+  return list;
+}
+
+// Joins the workspace asked for, else the one opened last, else the first;
+// with none, the browser's copy becomes the person's first workspace.
+async function join(link: Link, sync: Sync, wanted?: string): Promise<void> {
   const { user } = sync.store.getState().persistence.account;
   if (user === null) return;
-  const list = await getJson(sync.send, "/api/workspaces");
-  const first = reply.readWorkspaceList(list)?.[0];
-  if (first === undefined) {
-    await upload(link, sync, `${user.name}'s Pagecraft`);
+  const list = await publishList(sync, wanted ?? null);
+  const ids = list?.workspaces.map((workspace) => workspace.id) ?? [];
+  const chosen = [wanted, list?.lastWorkspaceId, ids[0]].find(
+    (id) => id !== undefined && id !== null && ids.includes(id),
+  );
+  if (typeof chosen !== "string") {
+    const workspace = sync.store.getState().workspace;
+    const name = `${user.name}'s Pagecraft`;
+    await create(link, sync, { name, workspace, isEmpty: false });
     return;
   }
-  await download(link, sync, listen(link, sync, first.id));
+  sync.dispatch(
+    setWorkspaces.create({
+      workspaces: list?.workspaces ?? [],
+      workspaceId: chosen,
+    }),
+  );
+  await getJson(sync.send, `/api/workspaces/${chosen}/open`, {});
+  await download(link, sync, listen(link, sync, chosen));
 }
 
 function leave(link: Link): void {
@@ -81,13 +123,31 @@ function leave(link: Link): void {
   delete link.session;
 }
 
+// Joins another workspace or makes a new one, as the switcher asks.
+function answer(link: Link, sync: Sync, request: SyncRequest): void {
+  leave(link);
+  if (request.kind === "switch") {
+    void join(link, sync, request.workspaceId);
+    return;
+  }
+  const workspace = createEmptyWorkspace();
+  void create(link, sync, { name: request.name, workspace, isEmpty: true });
+}
+
 function follow(link: Link, sync: Sync): void {
-  let status: AccountStatus = sync.store.getState().persistence.account.status;
-  sync.store.subscribe((state) => {
-    const next = state.persistence.account.status;
-    if (next === status) return;
-    status = next;
-    if (next === "signed-in") void join(link, sync);
+  const state = sync.store.getState();
+  let status: AccountStatus = state.persistence.account.status;
+  let asked = state.persistence.sync.requestCount;
+  sync.store.subscribe((next) => {
+    const { request, requestCount } = next.persistence.sync;
+    if (request !== null && requestCount !== asked) {
+      asked = requestCount;
+      answer(link, sync, request);
+    }
+    const now = next.persistence.account.status;
+    if (now === status) return;
+    status = now;
+    if (now === "signed-in") void join(link, sync);
     else leave(link);
   });
   if (status === "signed-in") void join(link, sync);

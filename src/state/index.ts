@@ -157,3 +157,10 @@ export {
   syncCommands,
 } from "./sync.commands.ts";
 export type { Transaction } from "./history.ts";
+export { requestSync, setWorkspaces } from "./sync.commands.ts";
+export {
+  NOT_SYNCED,
+  type SyncRequest,
+  type SyncState,
+  type WorkspaceSummary,
+} from "./sync-state.ts";

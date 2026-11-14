@@ -13,6 +13,7 @@ export const userRowSchema = v.object({
   photo: v.nullable(v.string()),
   password_hash: v.nullable(v.string()),
   created_at: v.number(),
+  last_workspace_id: v.optional(v.nullable(v.string()), null),
 });
 
 export type UserRow = v.InferOutput<typeof userRowSchema>;
@@ -41,6 +42,7 @@ export const workspaceRowSchema = v.object({
   name: v.string(),
   icon: v.nullable(v.string()),
   role: v.string(),
+  members: v.number(),
 });
 
 export type WorkspaceRow = v.InferOutput<typeof workspaceRowSchema>;

@@ -6,6 +6,7 @@ const workspaceSchema = v.object({
   name: v.string(),
   icon: v.nullable(v.string()),
   role: v.string(),
+  members: v.number(),
 });
 
 const loggedSchema = v.object({
@@ -14,7 +15,10 @@ const loggedSchema = v.object({
   operations: v.unknown(),
 });
 
-const listSchema = v.object({ workspaces: v.array(workspaceSchema) });
+const listSchema = v.object({
+  workspaces: v.array(workspaceSchema),
+  lastWorkspaceId: v.nullable(v.string()),
+});
 const createdSchema = v.object({ workspace: workspaceSchema, seq: v.number() });
 const downloadSchema = v.object({
   workspace: workspaceSchema,
@@ -35,8 +39,7 @@ function read<TSchema extends v.GenericSchema>(
   return result.success ? result.output : undefined;
 }
 
-export const readWorkspaceList = (value: unknown) =>
-  read(listSchema, value)?.workspaces;
+export const readWorkspaceList = (value: unknown) => read(listSchema, value);
 export const readCreated = (value: unknown) => read(createdSchema, value);
 export const readDownload = (value: unknown) => read(downloadSchema, value);
 

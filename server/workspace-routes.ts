@@ -13,6 +13,7 @@ import {
 import {
   createWorkspace,
   logOperations,
+  markOpened,
   membership,
   operationsAfter,
   snapshotOf,
@@ -53,7 +54,10 @@ export const WORKSPACE_ROUTES: RouteTable = {
   "GET /api/workspaces": (request, context) => {
     const user = sessionUser(context, request);
     if (user === undefined) return SIGNED_OUT;
-    return answer(200, { workspaces: workspacesOf(context, user.id) });
+    return answer(200, {
+      workspaces: workspacesOf(context, user.id),
+      lastWorkspaceId: user.last_workspace_id,
+    });
   },
   "POST /api/workspaces": (request, context) => {
     const user = sessionUser(context, request);
@@ -74,6 +78,12 @@ export const WORKSPACE_ROUTES: RouteTable = {
       ...snapshot,
       operations,
     });
+  },
+  "POST /api/workspaces/:id/open": (request, context) => {
+    const member = memberOf(request, context);
+    if (!isMember(member)) return member;
+    markOpened(context, member.user.id, member.workspace.id);
+    return answer(204);
   },
   "GET /api/workspaces/:id/operations": (request, context) => {
     const member = memberOf(request, context);

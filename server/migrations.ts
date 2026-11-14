@@ -52,4 +52,6 @@ export const MIGRATIONS: readonly string[] = [
      created_at INTEGER NOT NULL,
      PRIMARY KEY (workspace_id, seq)
    );`,
+  // 3: the workspace each person opened last, opened again at sign-in.
+  `ALTER TABLE users ADD COLUMN last_workspace_id TEXT;`,
 ];

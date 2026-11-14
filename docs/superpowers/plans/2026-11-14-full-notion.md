@@ -34,8 +34,9 @@ in `src/persistence/`.
 
 ## Milestone 25: Workspaces
 
-- [ ] 25.1 Several workspaces per account; Notion's workspace switcher;
-  create, rename, icon, leave, delete.
+- [x] 25.1 Several workspaces per account; Notion's workspace switcher;
+  create; the one opened last opens at sign-in. (Rename, icon, leave and
+  delete go with Settings in 25.2.)
 - [ ] 25.2 Members and invitations (an invite link printed and shown),
   roles, Settings › People.
 

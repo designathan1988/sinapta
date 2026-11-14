@@ -38,6 +38,7 @@ export function createUser(context: ApiContext, user: NewUser): UserRow {
     photo: null,
     password_hash: user.passwordHash,
     created_at: context.now(),
+    last_workspace_id: null,
   };
   context.db
     .prepare(
