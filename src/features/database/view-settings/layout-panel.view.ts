@@ -24,7 +24,6 @@ import { setTableOptions } from "../table-layout.commands.ts";
 import type { TableContext } from "../table-cell.view.ts";
 import { setViewType } from "../view-layout.commands.ts";
 import { LAYOUT_ICONS } from "../layout-icons.ts";
-import { OPEN_MODE_ICONS } from "./choice-panels.ts";
 import { showSourceTitleItem } from "../view-tab-source.ts";
 import { panelRow, type SettingsPanel } from "./settings-panel.ts";
 
@@ -93,14 +92,14 @@ function typeItems(context: TableContext): MenuEntry[] {
   return TYPE_ITEMS[context.model.view.type]?.(context) ?? [];
 }
 
-// Where the view opens its rows, as Notion's "Open pages in"; a chart and
-// a form show no rows to open.
+// Where the view opens its rows, as Notion's "Open pages in", with no icon
+// so the layout's rows stand flush (n77-light-menu); a chart and a form
+// show no rows to open.
 function openModeItems(context: TableContext): MenuEntry[] {
   const { view } = context.model;
   if (view.type === "chart" || view.type === "form") return [];
   const value = COPY.peek.modes[view.openMode];
-  const icon = OPEN_MODE_ICONS[view.openMode];
-  const row = { label: COPY.database.openPagesIn, icon, value };
+  const row = { label: COPY.database.openPagesIn, value };
   return [panelRow(context, row, "open-mode")];
 }
 
