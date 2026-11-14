@@ -24,4 +24,17 @@
     font-size: var(--font-size-md);
     font-weight: var(--font-weight-strong);
   }
+
+  /* Notion's "Upgrade now": outlined, a blue round arrow before it. */
+  .view-settings__upgrade {
+    gap: var(--space-inline-sm);
+  }
+
+  .view-settings__upgrade-icon {
+    display: inline-grid;
+    place-items: center;
+    border-radius: var(--radius-full);
+    background-color: var(--color-accent-default);
+    color: var(--color-text-on-accent);
+  }
 }

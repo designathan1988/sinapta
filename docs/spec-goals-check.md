@@ -86,6 +86,10 @@ Checked against the sources, goal by goal (2026-11-14, last):
   - `w15-view-settings` (§4.5): the view settings' Copy link to view and
     Data source settings: Source's panel, Edit properties, Lock database
     on and off, AI autofill's panel with the Text column's kinds.
+  - `w16-automations` (§4.5): Automations on Free show Notion's card and
+    Upgrade now; on Plus (a test card), New automation, Page added → Set
+    Status to Done, a new row takes Done; Turn into says Tasks is a Tasks
+    database; then the automation, the row, Plus and the card undone.
   Bugs these walks found are fixed with a test each: a database title's
   Enter adding a hidden line and unique IDs starting at 2, a child listed
   twice after a synced block, text typed after inline Markdown keeping
@@ -224,6 +228,8 @@ Paths: `blk/` is `src/blocks/`, `db/` is `src/features/database/`.
 | Template gallery | Done | `src/features/templates/template*.test.ts` |
 | Save a page as a template | Done | Page menu "More › Save as template", the gallery's "Your templates": `src/features/templates/own-template.test.ts`; photo `p92-save-template` (finding 56); database row templates: `src/features/database/template*.test.ts` |
 | Page history with preview, restore and who wrote each version | Done | `src/features/page-history/page-history*.test.ts`; kept on the server for every member (ADR-0014, decision 10): `server/page-versions.test.ts`, `src/persistence/server-snapshots.test.ts`; walk `w7-history` |
+| Database automations: Page added or a property edited; Edit property, Add page to, Send webhook; plan-gated as Notion's | Done | `src/features/database/automation.test.ts`, `view-settings/automations-panel-view.test.ts`, `server/automation-webhook.test.ts`, `src/persistence/automation-webhook-client.test.ts`; walk `w16-automations` |
+| Turn into Tasks database | Done | `src/features/database/task-database.test.ts`; walk `w16-automations` |
 | Updates & analytics: a page's runs of edits, its views by day, viewers and editors | Done | `src/features/page-updates/page-updates*.test.ts`, `src/state/page-updates.test.ts`, `src/persistence/page-views.test.ts`, `server/page-views.test.ts`; walk `w14-updates` |
 | Comments on a page and on text, resolve; Ctrl+Shift+M | Done | `comment.test.ts`, `comments-view.test.ts`, `shortcut-registry.test.ts` |
 | Page notification settings: the Discussions bell and Get notified | Done | `src/features/inbox/comment-notices.test.ts`, `page-menu-view.test.ts`; photos `n102-bell`, `p89-bell` |

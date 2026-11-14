@@ -1,5 +1,5 @@
 // One automation in the view settings, as Notion's editor: When (Page
-// added, or a property edited), Do (Edit property: the values a page is
+// added, or a property edited, chosen in a list of its own), Do (Edit property: the values a page is
 // given), Active, and Delete automation. Its panels are named by the
 // automation: "automation:<id>", "automation-set:<id>" to choose a
 // property, "automation-value:<id>:<property>" to choose its value.
@@ -15,7 +15,7 @@ import {
   setAutomation,
 } from "../automation.commands.ts";
 import type { TableContext } from "../table-cell.view.ts";
-import { actionWords, valueWords } from "./automation-words.ts";
+import { actionWords, triggerWords, valueWords } from "./automation-words.ts";
 import {
   ADD_PANEL,
   addPageItem,
@@ -30,6 +30,7 @@ import { goTo, panelRow, type SettingsPanel } from "./settings-panel.ts";
 
 const TEXT = COPY.database;
 const SET_PANEL = "automation-set:";
+const WHEN_PANEL = "automation-when:";
 const VALUE_PANEL = "automation-value:";
 // What an automation can set, as Notion's Edit property offers first.
 const SETTABLE = new Set([
@@ -76,6 +77,7 @@ function triggerItems(context: TableContext, automation: Automation) {
     keepsOpen: true,
     onSelect: () => {
       change(context, automation, { trigger: { kind: "page-added" } });
+      goTo(context, `${AUTOMATION_PANEL}${automation.id}`);
     },
   };
   const edited = context.model.columns
@@ -93,9 +95,20 @@ function triggerItems(context: TableContext, automation: Automation) {
           propertyId: property.id,
         } as const;
         change(context, automation, { trigger: next });
+        goTo(context, `${AUTOMATION_PANEL}${automation.id}`);
       },
     }));
   return [added, ...edited];
+}
+
+// "When": what sets it off, chosen from a list of its own, searched.
+function whenPanel(context: TableContext, automation: Automation) {
+  return {
+    title: TEXT.automationWhen,
+    back: `${AUTOMATION_PANEL}${automation.id}`,
+    search: COPY.database.searchProperty,
+    items: triggerItems(context, automation),
+  };
 }
 
 function actionItems(context: TableContext, automation: Automation) {
@@ -125,7 +138,11 @@ function editPanel(context: TableContext, automation: Automation) {
   const databaseId = model.database.id;
   const items: MenuEntry[] = [
     { kind: "section", label: TEXT.automationWhen },
-    ...triggerItems(context, automation),
+    panelRow(
+      context,
+      { label: triggerWords(context, automation.trigger), icon: "bolt" },
+      `${WHEN_PANEL}${automation.id}`,
+    ),
     { kind: "section", label: TEXT.automationDo },
     ...actionItems(context, automation),
     { kind: "divider" },
@@ -207,6 +224,7 @@ const PANELS_OF: Readonly<
 > = {
   [AUTOMATION_PANEL]: editPanel,
   [SET_PANEL]: setPanel,
+  [WHEN_PANEL]: whenPanel,
   [ADD_PANEL]: addPagePanel,
   [HOOK_PANEL]: webhookPanel,
 };

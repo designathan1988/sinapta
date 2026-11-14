@@ -1480,6 +1480,20 @@ Groups, Notion and Pagecraft alike (Pagecraft changed to match):
     (Summary, Key info, Translation), each filling that column. Turn into
     offers Notion's typed databases (Tasks, Meetings, Skills). Not yet:
     database Automations, Turn into, Linked events, Manage data sources.
+67. **done** [`n126-automations`; Pagecraft `w16-automations`,
+    `w16b-automation-run`, `w16e-free-card`] Notion's database Automations on
+    the Free plan: the bolt, "Automations", "Edit properties, create pages,
+    send updates and more automatically" and an outlined "Upgrade now" with
+    a blue arrow; the editor itself is for paid plans, so Pagecraft's
+    follows Notion's documented triggers and actions: When (Page added, or
+    a property edited, in a list of its own), Do (Edit property, Add page
+    to, Send webhook), Active, Delete automation. On Plus, a row added to
+    Tasks took Status Done from "Page added → Set Status to Done"; the
+    automation, the row, the plan and the test card were then undone.
+    Turn into offers Tasks, Meetings and Skills databases; Pagecraft has
+    Tasks (Assignee, Status, Due date). Not yet: Meetings and Skills,
+    Linked events, Manage data sources, Notion's other automation actions
+    (notifications, Slack).
 
 ## Controls
 
@@ -1575,7 +1589,7 @@ against the reference on every run.
 2026-11-14, Notion's "Updates & analytics": the signed-in Notion window
 and the review server, 1440 × 900 (`n119-updates`, `n120-close-updates`,
 `n121-period`, `n122-view-history`, `n123-refavorite`, `n124-view-settings`,
-`n125-turn-into`, `w14-updates`, `w15-view-settings`).
+`n125-turn-into`, `n126-automations`, `w14-updates`, `w15-view-settings`, `w16-automations`).
 
 - Notion: the panel opened from the page menu, both tabs read, then
   closed; nothing on the page changed.

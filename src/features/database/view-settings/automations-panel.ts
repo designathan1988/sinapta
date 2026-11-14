@@ -6,7 +6,6 @@ import "./automations.css";
 import { html, type TemplateResult } from "lit-html";
 import type { Automation } from "../../../blocks/database/index.ts";
 import { openOverlay, selectPlanLimits } from "../../../state/index.ts";
-import { renderButton } from "../../../ui/button/index.ts";
 import { COPY } from "../../../ui/copy.ts";
 import { renderIcon } from "../../../ui/icon/index.ts";
 import type { MenuEntry } from "../../../ui/menu/index.ts";
@@ -24,11 +23,16 @@ function renderUpgrade(context: TableContext): TemplateResult {
     <span class="view-settings__upsell-icon">${renderIcon("bolt")}</span>
     <p class="view-settings__upsell-title">${TEXT.automations}</p>
     <p class="view-settings__note">${TEXT.automationsPitch}</p>
-    ${renderButton({
-      label: TEXT.upgradeNow,
-      takesFocus: true,
-      onClick: () => context.dispatch(openOverlay.create({ overlay })),
-    })}
+    <button
+      type="button"
+      class="button view-settings__upgrade"
+      data-variant="outline"
+      data-autofocus
+      @click=${() => context.dispatch(openOverlay.create({ overlay }))}
+    >
+      <span class="view-settings__upgrade-icon">${renderIcon("up")}</span>
+      ${TEXT.upgradeNow}
+    </button>
   </div>`;
 }
 

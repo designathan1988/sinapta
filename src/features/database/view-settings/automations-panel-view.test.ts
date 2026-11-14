@@ -101,19 +101,38 @@ describe("the view settings' Automations, as Notion's", () => {
     );
   });
 
-  it("chooses what sets it off", () => {
+  it("chooses what sets it off from its own list, then goes back", () => {
+    const { sent, row, automationId } = rendered(
+      "automation-when:{id}",
+      undefined,
+      true,
+    );
+
+    row("Stage edited")?.click();
+
+    expect(sent[0]).toMatchObject({
+      type: "database.setAutomation",
+      patch: { trigger: { kind: "property-edited" } },
+    });
+    expect(sent[1]).toMatchObject({
+      type: "ui.openOverlayPanel",
+      panel: `automation:${automationId}`,
+    });
+  });
+
+  it("shows When as one row, with Do under it", () => {
     const { sent, row, automationId } = rendered(
       "automation:{id}",
       undefined,
       true,
     );
 
-    row("Stage edited")?.click();
+    row("Page added")?.click();
     row("Edit property")?.click();
 
     expect(sent[0]).toMatchObject({
-      type: "database.setAutomation",
-      patch: { trigger: { kind: "property-edited" } },
+      type: "ui.openOverlayPanel",
+      panel: `automation-when:${automationId}`,
     });
     expect(sent[1]).toMatchObject({
       type: "ui.openOverlayPanel",
