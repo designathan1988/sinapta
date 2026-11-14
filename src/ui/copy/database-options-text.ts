@@ -92,12 +92,16 @@ export const DATABASE_OPTIONS_TEXT = {
   filingSettings: "Workspace filing settings",
   turnIntoTasks: "Turn into Tasks database",
   turnIntoTasksNote:
-    "Adds Assignee, Status and Due date, whichever the database lacks.",
+    "Adds the properties that kind of database has, whichever this one lacks.",
   isTaskDatabase:
-    "This is a Tasks database: it has Assignee, Status and Due date.",
+    "This database has the properties of a Tasks and a Meetings database.",
   taskAssignee: "Assignee",
   taskStatus: "Status",
   taskDue: "Due date",
+  turnIntoMeetings: "Turn into Meetings database",
+  meetingAttendees: "Attendees",
+  meetingDate: "Date",
+  meetingType: "Type",
   setTo: (name: string, value: string) => `Set ${name} to ${value}`,
   automationActive: "Active",
   deleteAutomation: "Delete automation",

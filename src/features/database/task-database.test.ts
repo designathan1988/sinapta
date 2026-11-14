@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createDatabaseApp } from "./database-builder.ts";
 import {
+  missingProperties,
   missingTaskProperties,
   turnIntoTasks,
 } from "./task-database.commands.ts";
@@ -36,5 +37,18 @@ describe("Turn into Tasks database, as Notion's", () => {
     app.dispatch({ type: "history.undo" });
 
     expect(app.database().props.properties).toHaveLength(before);
+  });
+
+  it("adds Attendees, Date and Type for a Meetings database", () => {
+    const app = createDatabaseApp([{ name: "When", type: "date" }], []);
+    const add = missingProperties(app.database(), "meetings");
+
+    app.dispatch(turnIntoTasks.create({ databaseId: app.databaseId, add }));
+
+    expect(add.map((item) => [item.name, item.type])).toEqual([
+      ["Attendees", "person"],
+      ["Type", "select"],
+    ]);
+    expect(missingProperties(app.database(), "meetings")).toEqual([]);
   });
 });

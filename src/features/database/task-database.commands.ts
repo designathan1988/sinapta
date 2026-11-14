@@ -1,7 +1,8 @@
-// "Turn into › Tasks database", as Notion's: a task database has someone
-// it is for (Assignee, a person), a Status and a Due date; turning a
-// database into one adds whichever of these it lacks, in one step, and
-// keeps the ones it has, whatever their names.
+// "Turn into › Tasks database" and "› Meetings database", as Notion's: a
+// task database has someone it is for (Assignee, a person), a Status and
+// a Due date; a meetings database its Attendees, a Date and a Type.
+// Turning a database into one adds whichever of these it lacks, in one
+// step, and keeps the ones it has, whatever their names.
 import {
   selectDatabase,
   type DatabaseBlock,
@@ -18,18 +19,38 @@ interface TaskProperty {
   readonly name: string;
 }
 
-const TASK_PROPERTIES: readonly TaskProperty[] = [
-  { type: "person", name: COPY.database.taskAssignee },
-  { type: "status", name: COPY.database.taskStatus },
-  { type: "date", name: COPY.database.taskDue },
-];
+export type DatabaseKind = "tasks" | "meetings";
+
+const KIND_PROPERTIES: Readonly<Record<DatabaseKind, readonly TaskProperty[]>> =
+  {
+    tasks: [
+      { type: "person", name: COPY.database.taskAssignee },
+      { type: "status", name: COPY.database.taskStatus },
+      { type: "date", name: COPY.database.taskDue },
+    ],
+    // As Notion's guide to a meeting notes database: who attended, when,
+    // and what kind of meeting.
+    meetings: [
+      { type: "person", name: COPY.database.meetingAttendees },
+      { type: "date", name: COPY.database.meetingDate },
+      { type: "select", name: COPY.database.meetingType },
+    ],
+  };
+
+// The properties of that kind of database the database lacks.
+export function missingProperties(
+  database: DatabaseBlock,
+  kind: DatabaseKind,
+): readonly TaskProperty[] {
+  const types = new Set(database.props.properties.map((item) => item.type));
+  return KIND_PROPERTIES[kind].filter((property) => !types.has(property.type));
+}
 
 // The task properties the database lacks.
 export function missingTaskProperties(
   database: DatabaseBlock,
 ): readonly TaskProperty[] {
-  const types = new Set(database.props.properties.map((item) => item.type));
-  return TASK_PROPERTIES.filter((property) => !types.has(property.type));
+  return missingProperties(database, "tasks");
 }
 
 function idsFor(property: TaskProperty): number {
