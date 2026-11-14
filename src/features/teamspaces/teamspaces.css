@@ -147,3 +147,22 @@
     pointer-events: none;
   }
 }
+
+@layer features {
+  /* Join or Leave beside a closed teamspace's member count. */
+  .teamspaces__join {
+    margin-inline-start: var(--space-inline-sm);
+    padding: var(--space-none) var(--space-inset-xs);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
+}

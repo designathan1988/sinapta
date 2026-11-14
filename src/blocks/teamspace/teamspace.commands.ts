@@ -1,8 +1,21 @@
 // Making a teamspace, as Notion's "Create teamspace": at the workspace's
-// top, open in the sidebar.
-import type { Operation } from "../../model/index.ts";
-import { defineCommand } from "../../state/index.ts";
-import { TEAMSPACE_TYPE } from "./teamspace.schema.ts";
+// top, open in the sidebar; opening or closing it, and its members.
+import {
+  isBlockOfType,
+  type BlockId,
+  type Operation,
+} from "../../model/index.ts";
+import {
+  defineCommand,
+  type AppState,
+  type CommandEffect,
+} from "../../state/index.ts";
+import {
+  TEAMSPACE_TYPE,
+  type TeamspaceAccess,
+  type TeamspaceBlock,
+  type TeamspaceProps,
+} from "./teamspace.schema.ts";
 
 export const createTeamspace = defineCommand<{
   name: string;
@@ -41,4 +54,53 @@ export const createTeamspace = defineCommand<{
     const expandedPageIds = [...state.ui.expandedPageIds, id];
     return { operations, ui: { ...state.ui, expandedPageIds } };
   },
+});
+
+function teamspaceUpdate(
+  state: AppState,
+  teamspaceId: BlockId,
+  change: (props: TeamspaceProps) => Partial<TeamspaceProps>,
+): CommandEffect {
+  const block = state.workspace.blocks[teamspaceId];
+  if (
+    block === undefined ||
+    !isBlockOfType<TeamspaceBlock>(block, TEAMSPACE_TYPE)
+  ) {
+    return {};
+  }
+  const props = { ...block.props, ...change(block.props) };
+  return {
+    operations: [
+      {
+        type: "record.update",
+        kind: "block",
+        id: teamspaceId,
+        patch: { props },
+      },
+    ],
+  };
+}
+
+// Opens a teamspace to the workspace, or closes it to its members.
+export const setTeamspaceAccess = defineCommand<{
+  teamspaceId: BlockId;
+  access: TeamspaceAccess;
+}>({
+  type: "teamspace.setAccess",
+  handle: (state, { teamspaceId, access }) =>
+    teamspaceUpdate(state, teamspaceId, () => ({ access })),
+});
+
+// Adds a person to a teamspace's members, or takes them out.
+export const toggleTeamspaceMember = defineCommand<{
+  teamspaceId: BlockId;
+  userId: string;
+}>({
+  type: "teamspace.toggleMember",
+  handle: (state, { teamspaceId, userId }) =>
+    teamspaceUpdate(state, teamspaceId, ({ memberIds = [] }) => ({
+      memberIds: memberIds.includes(userId)
+        ? memberIds.filter((id) => id !== userId)
+        : [...memberIds, userId],
+    })),
 });

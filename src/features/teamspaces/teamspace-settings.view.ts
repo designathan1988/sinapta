@@ -2,11 +2,7 @@
 // workspace's teamspaces in a table, and "New teamspace".
 import "./teamspaces.css";
 import { html, type TemplateResult } from "lit-html";
-import {
-  selectTeamspaces,
-  type TeamspaceBlock,
-} from "../../blocks/teamspace/index.ts";
-import { firstGrapheme } from "../../model/index.ts";
+import { selectTeamspaces } from "../../blocks/teamspace/index.ts";
 import {
   openOverlay,
   type AppState,
@@ -14,24 +10,9 @@ import {
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { TEAMSPACE_CREATE_OVERLAY } from "./teamspace-create.view.ts";
+import { renderTeamspaceRow } from "./teamspace-row.view.ts";
 
 const TEXT = COPY.teamspace;
-
-const DAY = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" });
-
-function renderTeamspace(teamspace: TeamspaceBlock): TemplateResult {
-  const { name, icon } = teamspace.props;
-  return html`<tr>
-    <td class="teamspaces__cell">
-      <span class="teamspaces__letter" aria-hidden="true"
-        >${icon ?? firstGrapheme(name).toUpperCase()}</span
-      >
-      ${name}
-    </td>
-    <td>${TEXT.open}</td>
-    <td>${DAY.format(new Date(teamspace.updatedAt))}</td>
-  </tr>`;
-}
 
 function renderNewButton(dispatch: Dispatch): TemplateResult {
   return html`<button
@@ -65,6 +46,7 @@ export function renderTeamspaceSettings(
         <tr>
           <th>${TEXT.columnName}</th>
           <th>${TEXT.columnAccess}</th>
+          <th>${TEXT.columnMembers}</th>
           <th>${TEXT.columnUpdated}</th>
         </tr>
       </thead>
@@ -72,9 +54,11 @@ export function renderTeamspaceSettings(
         ${
           teamspaces.length === 0
             ? html`<tr>
-                <td class="teamspaces__none" colspan="3">${TEXT.none}</td>
+                <td class="teamspaces__none" colspan="4">${TEXT.none}</td>
               </tr>`
-            : teamspaces.map(renderTeamspace)
+            : teamspaces.map((teamspace) =>
+                renderTeamspaceRow(teamspace, state, dispatch),
+              )
         }
       </tbody>
     </table>`;

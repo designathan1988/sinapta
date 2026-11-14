@@ -34,8 +34,17 @@ function openToAll(context: ApiContext, workspaceId: string): Set<string> {
 
 // A top block every member sees, or this one alone.
 function isSeenAtTop(block: Block, userId: string, open: Set<string>): boolean {
-  if (block.type === TEAMSPACE || open.has(block.id)) return true;
-  return block.createdBy === undefined || block.createdBy.id === userId;
+  const isMaker =
+    block.createdBy === undefined || block.createdBy.id === userId;
+  if (block.type === TEAMSPACE) return isMaker || isInTeamspace(block, userId);
+  return open.has(block.id) || isMaker;
+}
+
+// An open teamspace is everyone's; a closed one its members'.
+function isInTeamspace(block: Block, userId: string): boolean {
+  if (block.props.access !== "closed") return true;
+  const members = block.props.memberIds;
+  return Array.isArray(members) && members.includes(userId);
 }
 
 export function memberReach(

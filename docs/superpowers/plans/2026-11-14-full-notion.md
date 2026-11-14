@@ -58,8 +58,9 @@ in `src/persistence/`.
   Publish tab, and the sidebar's Shared section: the top pages shared
   with people, and "Start collaborating" while none is. Teamspaces:
   Settings › Teamspaces and its "Create a teamspace", the sidebar's
-  Teamspaces section, pages added inside. (Closed teamspaces and their
-  own members remain: every teamspace is open to the workspace.)
+  Teamspaces section, pages added inside; a teamspace open to the
+  workspace or closed to its members, who join and leave in Settings, and
+  the server sends a closed one to its members and maker alone.
 
 ## Milestone 27: Collaboration
 

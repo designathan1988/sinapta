@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { createTestApp } from "../../state/index.ts";
 import { createPage } from "../page/index.ts";
-import { createTeamspace } from "./teamspace.commands.ts";
+import {
+  createTeamspace,
+  setTeamspaceAccess,
+  toggleTeamspaceMember,
+} from "./teamspace.commands.ts";
 import { selectTeamspaces } from "./teamspace.selectors.ts";
 
 describe("createTeamspace", () => {
@@ -42,5 +46,25 @@ describe("createTeamspace", () => {
 
     const [inside] = selectTeamspaces(store.getState());
     expect(inside?.childIds).toHaveLength(1);
+  });
+
+  it("closes it to its members, who join and leave", () => {
+    const { store, dispatch } = createTestApp({
+      commands: [createTeamspace, setTeamspaceAccess, toggleTeamspaceMember],
+    });
+    dispatch(createTeamspace.create({ name: "Board", description: "" }));
+    const [made] = selectTeamspaces(store.getState());
+    if (made === undefined) throw new Error("no teamspace");
+    const teamspaceId = made.id;
+
+    dispatch(setTeamspaceAccess.create({ teamspaceId, access: "closed" }));
+    dispatch(toggleTeamspaceMember.create({ teamspaceId, userId: "u1" }));
+    dispatch(toggleTeamspaceMember.create({ teamspaceId, userId: "u2" }));
+    dispatch(toggleTeamspaceMember.create({ teamspaceId, userId: "u1" }));
+
+    expect(selectTeamspaces(store.getState())[0]?.props).toMatchObject({
+      access: "closed",
+      memberIds: ["u2"],
+    });
   });
 });

@@ -6,10 +6,17 @@ import type { TypedBlock } from "../../model/index.ts";
 
 export const TEAMSPACE_TYPE = "teamspace";
 
+export const TEAMSPACE_ACCESS = ["open", "closed"] as const;
+export type TeamspaceAccess = (typeof TEAMSPACE_ACCESS)[number];
+
 export const teamspacePropsSchema = v.object({
   name: v.string(),
   icon: v.nullable(v.string()),
   description: v.string(),
+  // Open: everyone in the workspace sees it. Closed: its members alone,
+  // and the person who made it.
+  access: v.optional(v.picklist(TEAMSPACE_ACCESS)),
+  memberIds: v.optional(v.array(v.string())),
 });
 
 export type TeamspaceProps = v.InferOutput<typeof teamspacePropsSchema>;

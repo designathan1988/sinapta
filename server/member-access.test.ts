@@ -7,7 +7,11 @@ const AT = "2026-11-14T00:00:00.000Z";
 function block(
   id: string,
   type: string,
-  extra: { createdBy?: { id: string; name: string }; childIds?: string[] },
+  extra: {
+    createdBy?: { id: string; name: string };
+    childIds?: string[];
+    props?: object;
+  },
 ) {
   return {
     id,
@@ -16,7 +20,7 @@ function block(
     childIds: extra.childIds ?? [],
     props:
       type === "teamspace"
-        ? { name: id, icon: null, description: "" }
+        ? { name: id, icon: null, description: "", ...extra.props }
         : { title: [{ text: id }] },
     createdAt: AT,
     updatedAt: AT,
@@ -45,11 +49,15 @@ async function workspaceOfTwo() {
   const author = { id: adaId, name: "Ada" };
   const snapshot = {
     schemaVersion: SCHEMA_VERSION,
-    rootIds: ["diary", "old", "team"],
+    rootIds: ["diary", "old", "team", "board"],
     blocks: {
       diary: block("diary", "page", { createdBy: author }),
       old: block("old", "page", {}),
       team: block("team", "teamspace", {}),
+      board: block("board", "teamspace", {
+        createdBy: author,
+        props: { access: "closed", memberIds: [adaId] },
+      }),
     },
     views: {},
     settings: createEmptyWorkspace().settings,
