@@ -1407,7 +1407,7 @@ Closed on 2026-11-13: the checkbox filter (item 41, T127, the old ids
 read as retired conditions), the menu reference by day (item 45) and a
 board measured in Notion (item 46).
 
-- Status pills with Notion's dot before the name (in tables, boards and
-  menus), seen in `n78-board` and `n79-board-light`.
+- (Closed 2026-11-14) Status pills carry Notion's dot and round ends in
+  tables and boards (`p45-status-dot`), drawn by `src/ui/chip/chip.css`.
 - Notion's view settings rows 8 px from the panel's edge against
   Pagecraft's 4 px on every menu (item 45).

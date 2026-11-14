@@ -107,3 +107,24 @@
     --chip-text: var(--color-chip-red-text);
   }
 }
+
+@layer ui {
+  /* A status pill, as Notion's: a round dot of its color before the name,
+     and fully round ends (n78-board, n79-board-light). */
+  [data-type="status"] .chip,
+  .chip[data-status] {
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    border-radius: var(--radius-full);
+
+    &::before {
+      content: "";
+      inline-size: var(--space-inset-sm);
+      block-size: var(--space-inset-sm);
+      border-radius: var(--radius-full);
+      background-color: currentcolor;
+      opacity: 0.6;
+    }
+  }
+}
