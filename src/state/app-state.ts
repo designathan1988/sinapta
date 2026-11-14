@@ -10,7 +10,7 @@ export type {
   PersistenceState,
   SaveStatus,
 } from "./persistence-state.ts";
-import type { PageVersion } from "./page-versions.commands.ts";
+import type { PageUpdates, PageVersion } from "./page-versions.commands.ts";
 import { PEEK_WIDTH, SIDEBAR_WIDTH } from "./widths.ts";
 import {
   createEmptyWorkspace,
@@ -138,9 +138,8 @@ export interface UiState {
   readonly viewSearches: Readonly<Record<ViewId, string>>;
   // The search's filters, kept while it is closed, as Notion's.
   readonly searchFilters: SearchFilters;
-  // Sidebar and side peek widths in rem.
   readonly sidebarWidth: number;
-  readonly peekWidth: number;
+  readonly peekWidth: number; // sidebar and side peek widths in rem
   readonly isSidebarCollapsed: boolean;
   // Under 768 px the sidebar is a drawer, open or closed; neither saved.
   readonly isNarrow: boolean;
@@ -154,6 +153,7 @@ export interface UiState {
   // for them: a paste of that text rebuilds the blocks.
   readonly clipboard: CopiedBlocks | null;
   readonly suggestingPageId?: BlockId; // the page in Suggesting, unsaved
+  readonly pageUpdates?: PageUpdates; // the docked Updates panel, unsaved
   // Where a map view was zoomed and moved to; the others frame their pins.
   readonly mapCamera?: MapCamera;
 }

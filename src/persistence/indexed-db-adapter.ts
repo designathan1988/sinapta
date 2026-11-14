@@ -8,12 +8,14 @@ import type {
   StoredData,
 } from "./storage-adapter.ts";
 import type { SnapshotStorage, StoredSnapshot } from "./snapshot-store.ts";
+import type { PageViewStorage } from "./page-views.ts";
 
 // Storage identity: changing this name would hide existing data.
 const DATABASE_NAME = "pagecraft";
 // Changes only when the object stores change, not with the record format.
-// Version 2 adds the asset store; version 3 the page versions.
-const DATABASE_VERSION = 3;
+// Version 2 adds the asset store; version 3 the page versions; version 4
+// the page views.
+const DATABASE_VERSION = 4;
 const STORES = ["blocks", "views", "meta"] as const;
 
 interface PagecraftDatabase extends DBSchema {
@@ -24,6 +26,11 @@ interface PagecraftDatabase extends DBSchema {
   snapshots: {
     key: string;
     value: StoredSnapshot;
+    indexes: { pageId: string };
+  };
+  pageViews: {
+    key: number;
+    value: { pageId: string; viewedAt: string };
     indexes: { pageId: string };
   };
 }
@@ -43,6 +50,12 @@ function open(): Promise<IDBPDatabase<PagecraftDatabase>> {
           keyPath: "id",
         });
         snapshots.createIndex("pageId", "pageId");
+      }
+      if (oldVersion < 4) {
+        const views = database.createObjectStore("pageViews", {
+          autoIncrement: true,
+        });
+        views.createIndex("pageId", "pageId");
       }
     },
   });
@@ -145,6 +158,23 @@ async function saveOutbox(outbox: unknown): Promise<void> {
   const database = await open();
   await database.put("meta", outbox, "outbox");
   database.close();
+}
+
+async function listViews(pageId: string) {
+  const database = await open();
+  const list = await database.getAllFromIndex("pageViews", "pageId", pageId);
+  database.close();
+  return list.map(({ viewedAt }) => ({ viewedAt, viewer: null }));
+}
+
+async function putView(pageId: string, viewedAt: string): Promise<void> {
+  const database = await open();
+  await database.add("pageViews", { pageId, viewedAt });
+  database.close();
+}
+
+export function createIndexedDbPageViews(): PageViewStorage {
+  return { listViews, putView };
 }
 
 export function createIndexedDbSnapshots(): SnapshotStorage {

@@ -105,6 +105,7 @@ describe("the page menu, as Notion's", () => {
       expect.stringMatching(/^Duplicate\s+Ctrl\+D$/),
       expect.stringMatching(/^Move to\s+Ctrl\+Shift\+P$/),
       expect.stringContaining("Version history"),
+      expect.stringContaining("Updates & analytics"),
       expect.stringContaining("Appearance and layout"),
       expect.stringContaining("Suggest edits"),
       expect.stringContaining("Get notified"),
@@ -122,6 +123,16 @@ describe("the page menu, as Notion's", () => {
     expect(more).toContain("Export");
     expect(more).toContain("Verify");
     expect(more).toContain("Save as template");
+  });
+
+  it("docks Updates & analytics beside the page", () => {
+    const { sent, row } = rendered(false);
+
+    row("Updates & analytics")?.click();
+
+    expect(sent).toContainEqual(
+      expect.objectContaining({ type: "ui.showPageUpdates", pageId: "page" }),
+    );
   });
 
   it("turns on suggesting for the page from Suggest edits", () => {

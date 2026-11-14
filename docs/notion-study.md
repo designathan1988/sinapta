@@ -1442,6 +1442,20 @@ Groups, Notion and Pagecraft alike (Pagecraft changed to match):
     size until a width is chosen.
 64. **done** [Pagecraft `w11-board`, `w13-filter`] "1 rule" and "1 sort"
     in the singular on the pills, as Notion's "1 regra".
+65. **done** [`n119-updates`; Pagecraft `w14-updates`] Notion's page menu
+    "Updates & analytics" docks a panel beside the page, 384 px wide, a »
+    at its top to close it (Escape leaves it open). Its tabs: Updates,
+    each run of edits as "You edited <page>", how long ago, a clock to
+    the version history, a new title under "Aa Title", the changed blocks
+    in blue on a blue tint, five at most and then "Show 7 more"; and
+    Analytics, "Views (193 total)" with "Last 28 days", an area chart by
+    day with five ticks on the left and the first and last day below,
+    Viewers (each person at their latest view), and Editors: Created by,
+    Last edited by. Pagecraft now has the panel; each opening of a page
+    is kept (on the server with who opened it, else in the browser), the
+    same opening within half an hour counted once. Not yet: the period
+    menu (Pagecraft shows the last 28 days only), the "Show your view
+    history" setting, and suggestion runs among the updates.
 
 ## Controls
 
@@ -1533,6 +1547,14 @@ against the reference on every run.
   dismiss. One overlay at a time, kept in `ui.overlay`.
 
 ## Last run
+
+2026-11-14, Notion's "Updates & analytics": the signed-in Notion window
+and the review server, 1440 × 900 (`n119-updates`, `n120-close-updates`,
+`w14-updates`).
+
+- Notion: the panel opened from the page menu, both tabs read, then
+  closed; nothing on the page changed.
+- Finding 65 below.
 
 2026-11-14, Notion's advanced filter and code colors: the signed-in
 Notion window and the review server, 1440 × 900 (`n110`–`n114`,

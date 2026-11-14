@@ -130,7 +130,12 @@ export {
   PAGE_HISTORY_OVERLAY,
   pageVersionCommands,
   setPageVersions,
+  setPageViews,
+  showPageUpdates,
+  type PageUpdates,
+  type PageUpdatesTab,
   type PageVersion,
+  type PageView,
 } from "./page-versions.commands.ts";
 export {
   setCalendarView,

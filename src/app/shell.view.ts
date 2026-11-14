@@ -19,6 +19,7 @@ import {
 } from "../features/page-menu/index.ts";
 import { renderPageOutline } from "../features/page-outline/index.ts";
 import { renderPeek } from "../features/row-peek/index.ts";
+import { renderPageUpdatesPanel } from "../features/page-updates/index.ts";
 import { renderPresence } from "../features/presence/index.ts";
 import { renderAiPanel } from "../features/ai/index.ts";
 import { renderShareButton } from "../features/share/index.ts";
@@ -102,6 +103,14 @@ function renderStatusAndTools(
     }`;
 }
 
+// What docks beside the page: a row in a side peek, else the page's
+// "Updates & analytics" while it is open.
+function renderBeside(state: AppState, dispatch: Dispatch) {
+  return state.ui.peek === null
+    ? renderPageUpdatesPanel(state, dispatch)
+    : renderPeek(state, dispatch);
+}
+
 export function renderShell(
   state: AppState,
   dispatch: Dispatch,
@@ -114,6 +123,7 @@ export function renderShell(
     ?data-sidebar-collapsed=${isNarrow || !selectIsSidebarShown(state)}
     ?data-narrow=${isNarrow}
     data-peek=${state.ui.peek?.mode ?? nothing}
+    ?data-updates=${state.ui.pageUpdates !== undefined && state.ui.peek === null}
     ${ref((shell) => {
       setWidth(shell, sidebarWidth);
     })}
@@ -136,7 +146,7 @@ export function renderShell(
       ${renderAiPanel(state, dispatch)}
     </main>
     <div class="app__peek" ?inert=${isBehind}>
-      ${renderPeek(state, dispatch)}
+      ${renderBeside(state, dispatch)}
     </div>
     ${renderUpdatePrompt(state, dispatch)}
   </div>`;

@@ -297,6 +297,7 @@
     --base-size-16: 16rem;
     --base-size-18: 18rem;
     --base-size-20: 20rem;
+    --base-size-24: 24rem;
     --base-size-26: 26rem;
     --base-size-30: 30rem;
     --base-size-32: 32rem;
@@ -622,6 +623,7 @@
     --size-timeline-table: var(--base-size-14);
     --size-chart-height: var(--base-size-16);
     --size-chart-donut: var(--base-size-12);
+    --size-updates-panel: var(--base-size-24);
     --size-peek-side: var(--base-size-40);
     --size-peek-center: var(--base-size-60);
     --size-peek-inset: var(--base-size-4x5);

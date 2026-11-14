@@ -16,7 +16,7 @@ interface PageAt {
   readonly userId: string;
 }
 
-function memberPage(
+export function memberPage(
   request: ApiRequest,
   context: ApiContext,
 ): PageAt | ApiResponse {

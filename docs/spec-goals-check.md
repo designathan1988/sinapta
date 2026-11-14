@@ -77,6 +77,10 @@ Checked against the sources, goal by goal (2026-11-14, last):
     file picker at its own size.
   - `w13-filter` (§4.5): Add advanced filter, Add filter rule's list, a
     group, Delete filter.
+  - `w14-updates`: the page menu's Updates & analytics docks the panel;
+    Updates lists the run of edits (the title and two lines), Analytics
+    the view kept on the server with who opened it, and the editors; »
+    closes it.
   Bugs these walks found are fixed with a test each: a database title's
   Enter adding a hidden line and unique IDs starting at 2, a child listed
   twice after a synced block, text typed after inline Markdown keeping
@@ -215,6 +219,7 @@ Paths: `blk/` is `src/blocks/`, `db/` is `src/features/database/`.
 | Template gallery | Done | `src/features/templates/template*.test.ts` |
 | Save a page as a template | Done | Page menu "More › Save as template", the gallery's "Your templates": `src/features/templates/own-template.test.ts`; photo `p92-save-template` (finding 56); database row templates: `src/features/database/template*.test.ts` |
 | Page history with preview, restore and who wrote each version | Done | `src/features/page-history/page-history*.test.ts`; kept on the server for every member (ADR-0014, decision 10): `server/page-versions.test.ts`, `src/persistence/server-snapshots.test.ts`; walk `w7-history` |
+| Updates & analytics: a page's runs of edits, its views by day, viewers and editors | Done | `src/features/page-updates/page-updates*.test.ts`, `src/state/page-updates.test.ts`, `src/persistence/page-views.test.ts`, `server/page-views.test.ts`; walk `w14-updates` |
 | Comments on a page and on text, resolve; Ctrl+Shift+M | Done | `comment.test.ts`, `comments-view.test.ts`, `shortcut-registry.test.ts` |
 | Page notification settings: the Discussions bell and Get notified | Done | `src/features/inbox/comment-notices.test.ts`, `page-menu-view.test.ts`; photos `n102-bell`, `p89-bell` |
 | Backlinks; Lock page | Done | `backlinks.test.ts`, `page-lock.test.ts` |

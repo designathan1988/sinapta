@@ -862,6 +862,12 @@
         "$value": "{base.size.12}"
       }
     },
+    "updates": {
+      "panel": {
+        "$description": "Notion's Updates & analytics panel beside the page, 384 px.",
+        "$value": "{base.size.24}"
+      }
+    },
     "peek": {
       "side": {
         "$description": "A side peek's width, as Notion's.",

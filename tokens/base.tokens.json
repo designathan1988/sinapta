@@ -2065,6 +2065,12 @@
           "unit": "rem"
         }
       },
+      "24": {
+        "$value": {
+          "value": 24,
+          "unit": "rem"
+        }
+      },
       "26": {
         "$value": {
           "value": 26,

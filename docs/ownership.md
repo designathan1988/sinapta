@@ -202,6 +202,8 @@ owner listed here exists.
 | What runs beside the app once started | `src/app/services.ts` | 31 |
 | Reminder notifications while the app is open | `src/app/reminder-notices.ts` | 17 |
 | A page's history: its content, restoring a version, the full-window view, what each version changed | `src/features/page-history/` | 17 |
+| Notion's "Updates & analytics" panel: a page's runs of edits, its views by day, viewers and editors | `src/features/page-updates/` | 31 |
+| Each opening of a page, kept on the server or in this browser | `src/persistence/page-views.ts`, `src/persistence/page-records.ts`, `server/page-views.ts` | 31 |
 | Marking commented text | `src/model/rich-text-comments.ts`, `src/ui/rich-text/rich-text-projection.ts` | 17 |
 | A board's sub-groups: the setting, its options and its lanes | `src/features/database/sub-group.commands.ts`, `view-settings/sub-group-panel.ts`, `layouts/board/board-lanes.view.ts` | 16 |
 | CSV import: column types, the new database; CSV export of a view | `src/features/database/csv-import.ts`, `csv-import.commands.ts`, `csv-export.selectors.ts`, `csv-file.view.ts` | 16 |

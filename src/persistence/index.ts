@@ -1,9 +1,5 @@
-export {
-  createIndexedDbAdapter,
-  createIndexedDbSnapshots,
-} from "./indexed-db-adapter.ts";
-export { startSnapshots } from "./snapshot-store.ts";
-export { chooseSnapshots } from "./server-snapshots.ts";
+export { createIndexedDbAdapter } from "./indexed-db-adapter.ts";
+export { startPageRecords } from "./page-records.ts";
 export {
   startRepository,
   type RepositoryStart,

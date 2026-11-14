@@ -28,6 +28,17 @@
         );
     }
 
+    /* Notion's "Updates & analytics" docks the same way, at its width. */
+    &[data-updates] {
+      grid-template-columns: var(--app-sidebar-width) minmax(0, 1fr) var(
+          --size-updates-panel
+        );
+    }
+
+    &[data-updates][data-sidebar-collapsed] {
+      grid-template-columns: minmax(0, 1fr) var(--size-updates-panel);
+    }
+
     &[data-resizing] {
       cursor: col-resize;
       user-select: none;

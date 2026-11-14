@@ -1,8 +1,8 @@
 // The open page's menu, in the groups Notion's has today: copy the link
-// or the contents, duplicate and move; the page's versions; "Appearance
-// and layout" beside it with "Suggest edits"; "Get notified"; lock and
-// trash; and "More", which holds the export, the connections, Verify and
-// "Save as template".
+// or the contents, duplicate and move; the page's versions and "Updates &
+// analytics"; "Appearance and layout" beside "Suggest edits"; "Get
+// notified"; lock and trash; and "More", which holds the export, the
+// connections, Verify and "Save as template".
 import { nothing } from "lit-html";
 import {
   DATABASE_TYPE,
@@ -31,6 +31,7 @@ import {
 import { layoutItems } from "./page-menu-layout.view.ts";
 import { emailItem } from "./page-menu-email.view.ts";
 import { moreItem, suggestItem } from "./page-menu-more.ts";
+import { updatesItem } from "../page-updates/index.ts";
 
 const TEXT = COPY.pageMenu;
 const DIVIDER: MenuEntry = { kind: "divider" };
@@ -148,6 +149,7 @@ export function pageMenuEntries(
     acts.flatMap((item) => (item === undefined ? [] : [item])),
     [
       historyItem(page.id, dispatch),
+      updatesItem(state, page.id, dispatch),
       ...resolvedItems(state, page.id, dispatch),
     ],
     [...appearanceItem(page, dispatch), suggestItem(state, page, dispatch)],

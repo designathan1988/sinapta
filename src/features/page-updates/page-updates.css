@@ -1,0 +1,236 @@
+@layer features {
+  /* Notion's "Updates & analytics": a panel docked beside the page, as
+     tall as the window, a hairline at its edge. */
+  .page-updates {
+    display: flex;
+    flex-direction: column;
+    min-inline-size: 0;
+    overflow: hidden;
+    border-inline-start: var(--size-border-thin) solid
+      var(--color-border-subtle);
+    background-color: var(--color-bg-app);
+    font-size: var(--font-size-sm);
+  }
+
+  .page-updates__head {
+    display: flex;
+    align-items: center;
+    block-size: var(--size-top-bar);
+    padding-inline: var(--space-inset-sm);
+  }
+
+  .page-updates__close,
+  .page-updates__history {
+    display: inline-grid;
+    place-items: center;
+    inline-size: var(--size-control-sm);
+    block-size: var(--size-control-sm);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
+  /* Two tabs, the chosen one underlined, over a hairline. */
+  .page-updates__tabs {
+    display: flex;
+    gap: var(--space-inline-sm);
+    padding-inline: var(--space-inset-md);
+    border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
+  }
+
+  .page-updates__tab {
+    padding-block: var(--space-inset-sm);
+    padding-inline: var(--space-inset-xs);
+    border: none;
+    border-block-end: var(--size-border-thick) solid transparent;
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-text-primary);
+    }
+
+    &[aria-selected="true"] {
+      border-block-end-color: var(--color-text-primary);
+      color: var(--color-text-primary);
+    }
+  }
+
+  .page-updates__body {
+    flex: 1;
+    overflow: hidden auto;
+  }
+
+  /* One run of edits: who and when, then the blocks it changed. */
+  .page-updates__entry {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: var(--space-inline-sm);
+    padding: var(--space-inset-lg) var(--space-inset-md);
+    border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
+  }
+
+  .page-updates__avatar {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    inline-size: var(--size-icon-md);
+    block-size: var(--size-icon-md);
+    border-radius: var(--radius-full);
+    background-color: var(--color-bg-active);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .page-updates__summary,
+  .page-updates__empty,
+  .page-updates__caption {
+    margin: var(--space-none);
+  }
+
+  .page-updates__when,
+  .page-updates__caption,
+  .page-updates__person time {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+  }
+
+  .page-updates__empty {
+    padding: var(--space-inset-md);
+    color: var(--color-text-secondary);
+  }
+
+  .page-updates__lines {
+    display: grid;
+    gap: var(--space-stack-xs);
+    margin: var(--space-none);
+    margin-block-start: var(--space-stack-sm);
+    padding: var(--space-none);
+    list-style: none;
+  }
+
+  /* A changed block, in the accent on its tint, as Notion marks it. */
+  .page-updates__line {
+    padding: var(--space-inset-xxs) var(--space-inset-xs);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-change);
+    color: var(--color-accent-default);
+    overflow-wrap: anywhere;
+  }
+
+  /* A new title: "Title" over it, in the accent without a tint. */
+  .page-updates__title {
+    display: grid;
+    gap: var(--space-stack-xxs);
+    color: var(--color-accent-default);
+  }
+
+  .page-updates__more summary {
+    margin-block-start: var(--space-stack-sm);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    cursor: pointer;
+  }
+
+  /* Analytics: views, the chart, viewers and editors. */
+  .page-updates__views-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-inset-md) var(--space-inset-md) var(--space-none);
+  }
+
+  .page-updates__heading {
+    margin: var(--space-none);
+    padding: var(--space-inset-md) var(--space-inset-md) var(--space-inset-xs);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-strong);
+
+    .page-updates__views-head & {
+      padding: var(--space-none);
+    }
+  }
+
+  .page-updates__total {
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-regular);
+  }
+
+  .page-updates__period {
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    padding: var(--space-inset-xxs) var(--space-inset-sm);
+    border-radius: var(--radius-md);
+    background-color: var(--color-accent-subtle);
+    color: var(--color-accent-default);
+  }
+
+  .page-updates__chart {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    padding-inline: var(--space-inset-md);
+  }
+
+  .page-updates__area {
+    fill: var(--color-bg-change);
+  }
+
+  .page-updates__line-chart {
+    fill: none;
+    stroke: var(--color-accent-default);
+    stroke-width: var(--size-border-thin);
+  }
+
+  .page-updates__axis {
+    stroke: var(--color-border-strong);
+  }
+
+  .page-updates__tick {
+    fill: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+  }
+
+  .page-updates__caption {
+    padding: var(--space-inset-xs) var(--space-inset-md);
+
+    /* Over a new title it sits in the entry, its icon beside it. */
+    .page-updates__title & {
+      display: inline-flex;
+      gap: var(--space-inline-xs);
+      align-items: center;
+      padding: var(--space-none);
+    }
+  }
+
+  .page-updates__people {
+    display: grid;
+    gap: var(--space-stack-sm);
+    margin: var(--space-none);
+    padding: var(--space-inset-xs) var(--space-inset-md);
+    list-style: none;
+  }
+
+  .page-updates__person {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+  }
+
+  .page-updates__name {
+    flex: 1;
+    font-weight: var(--font-weight-medium);
+  }
+}

@@ -71,15 +71,13 @@ import {
 import {
   createIndexedDbAdapter,
   createTabCoordination,
-  createIndexedDbSnapshots,
   startAccount,
   createOutbox,
   createSyncLink,
   type SyncLink,
   startAssetStore,
   startFileTools,
-  startSnapshots,
-  chooseSnapshots,
+  startPageRecords,
   startRepository,
   type RepositoryStart,
 } from "../persistence/index.ts";
@@ -160,17 +158,9 @@ async function startPersistence(
   });
   // Files people add to blocks are kept beside the workspace.
   installAssetSaver(startAssetStore({ adapter, dispatch, store }));
-  // Versions of the pages being edited, for their history: on the server
-  // while a server workspace is open, else in this browser.
-  startSnapshots({
-    store,
-    dispatch,
-    storage: chooseSnapshots(
-      createIndexedDbSnapshots(),
-      () => store.getState().persistence.sync.workspaceId,
-    ),
-    contentOf: pageContent,
-  });
+  // Versions of the pages being edited, for their history, and each
+  // opening of a page, for its analytics (persistence/page-records.ts).
+  startPageRecords({ store, dispatch, contentOf: pageContent });
   // The workspace on the server, once someone signs in (ADR-0013).
   sync.start({ store, dispatch, propsSchemas, outbox: createOutbox(adapter) });
   startServices(store, dispatch);

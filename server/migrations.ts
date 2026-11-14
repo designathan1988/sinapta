@@ -192,4 +192,13 @@ export const MIGRATIONS: readonly string[] = [
      created_at INTEGER NOT NULL
    );
    CREATE INDEX invoices_by_workspace ON invoices (workspace_id, created_at);`,
+  // 15: page views, Notion's page analytics: who opened a page, when.
+  `CREATE TABLE page_views (
+     workspace_id TEXT NOT NULL REFERENCES workspaces (id) ON DELETE CASCADE,
+     page_id TEXT NOT NULL,
+     user_id TEXT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+     viewed_at TEXT NOT NULL
+   );
+   CREATE INDEX page_views_page
+     ON page_views (workspace_id, page_id, viewed_at);`,
 ];

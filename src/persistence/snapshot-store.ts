@@ -119,16 +119,25 @@ function takeDue(
   }
 }
 
+// The page whose history, or whose "Updates & analytics" panel, has just
+// opened.
+function askedPage(before: AppState, after: AppState): BlockId | undefined {
+  const panel = after.ui.pageUpdates?.pageId;
+  if (panel !== undefined && panel !== before.ui.pageUpdates?.pageId)
+    return panel;
+  const overlay = after.ui.overlay;
+  if (overlay?.kind !== PAGE_HISTORY_OVERLAY || overlay.anchorId === undefined)
+    return undefined;
+  if (before.ui.overlay?.kind === PAGE_HISTORY_OVERLAY) return undefined;
+  return parseBlockId(overlay.anchorId);
+}
+
 // When a page's history opens, its versions are read, newest first.
 function readWhenAsked(
   options: SnapshotOptions,
   states: { readonly before: AppState; readonly after: AppState },
 ): void {
-  const overlay = states.after.ui.overlay;
-  if (overlay?.kind !== PAGE_HISTORY_OVERLAY || overlay.anchorId === undefined)
-    return;
-  if (states.before.ui.overlay?.kind === PAGE_HISTORY_OVERLAY) return;
-  const pageId = parseBlockId(overlay.anchorId);
+  const pageId = askedPage(states.before, states.after);
   if (pageId === undefined) return;
   void options.storage.listSnapshots(pageId).then((list) => {
     const versions = [...list]
