@@ -32,15 +32,17 @@
     line-height: var(--font-line-height-tight);
   }
 
-  /* Notion's centered card: the close button alone at the corner. */
-  .dialog[data-variant="card"] .dialog__panel {
+  /* Notion's centered card and its settings: the close button alone at
+     the corner. */
+  .dialog:is([data-variant="card"], [data-variant="settings"]) .dialog__panel {
     position: relative;
   }
 
-  .dialog[data-variant="card"] .dialog__header {
+  .dialog:is([data-variant="card"], [data-variant="settings"]) .dialog__header {
     position: absolute;
     inset-block-start: var(--space-inset-md);
     inset-inline-end: var(--space-inset-md);
+    z-index: var(--layer-sticky);
   }
 
   /* Its close button round and gray, as Notion's. */

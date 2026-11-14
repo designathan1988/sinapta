@@ -2,7 +2,7 @@
 export const INTEGRATION_TEXT = {
   integration: {
     section: "Connections",
-    lead: "Integrations reach the pages you connect to them, through Pagecraft's API at /v1, as Notion's API does.",
+    lead: "Integrations reach the pages you connect to them, through Pagecraft's API at /v1.",
     nameLabel: "Integration name",
     namePlaceholder: "e.g. Weekly report",
     create: "New integration",
@@ -41,7 +41,7 @@ export const INTEGRATION_TEXT = {
 
   plans: {
     title: "Plans",
-    lead: "Each plan keeps Notion's limits on file size and page history. Upgrading charges the workspace's card for each member, every month.",
+    lead: "Each plan sets how large an uploaded file can be and how far back page history goes. Upgrading charges the workspace's card for each member, every month.",
     current: "Current plan",
     upgrade: "Upgrade",
     downgrade: "Downgrade",

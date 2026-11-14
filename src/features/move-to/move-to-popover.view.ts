@@ -11,7 +11,10 @@ import {
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { focusOnce } from "../../ui/focus/index.ts";
-import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
+import {
+  focusOverlayAnchor,
+  showPopoverWhenConnected,
+} from "../../ui/overlay/index.ts";
 import { selectWorkspaceName } from "../sidebar/index.ts";
 import { renderOption, type MoveEntry } from "./move-to.view.ts";
 
@@ -55,7 +58,10 @@ export function renderMovePopover(
     aria-label=${COPY.moveTo.title}
     ${ref(showPopoverWhenConnected)}
     @keydown=${(event: KeyboardEvent) => {
-      if (event.key === "Escape") dispatch(closeOverlay.create({}));
+      // Escape closes it and gives the focus back to what opened it.
+      if (event.key !== "Escape") return;
+      focusOverlayAnchor({ isWhole: true });
+      dispatch(closeOverlay.create({}));
     }}
   >
     ${renderSearch(query, dispatch, search)}

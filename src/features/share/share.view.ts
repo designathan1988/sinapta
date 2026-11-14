@@ -12,7 +12,10 @@ import {
   type Dispatch,
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
-import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
+import {
+  focusOverlayAnchor,
+  showPopoverWhenConnected,
+} from "../../ui/overlay/index.ts";
 import { renderPublishTab } from "./share-publish.view.ts";
 import { renderShareTab } from "./share-tab.view.ts";
 
@@ -75,6 +78,16 @@ function renderTabs(isPublish: boolean, dispatch: Dispatch): TemplateResult {
   </div>`;
 }
 
+// Escape anywhere in the menu, its email field included, closes it and
+// gives the focus back to Share, as Notion's does. A key a control used
+// for itself (an open list) is left to it.
+export function onShareKeydown(event: KeyboardEvent, dispatch: Dispatch) {
+  if (event.key !== "Escape" || event.defaultPrevented) return;
+  event.preventDefault();
+  focusOverlayAnchor({ isWhole: true });
+  dispatch(closeOverlay.create({}));
+}
+
 export function renderSharePanel(
   state: AppState,
   dispatch: Dispatch,
@@ -88,6 +101,9 @@ export function renderSharePanel(
     popover="manual"
     role="dialog"
     aria-label=${TEXT.label}
+    @keydown=${(event: KeyboardEvent) => {
+      onShareKeydown(event, dispatch);
+    }}
     ${ref(showPopoverWhenConnected)}
   >
     ${renderTabs(isPublish, dispatch)}

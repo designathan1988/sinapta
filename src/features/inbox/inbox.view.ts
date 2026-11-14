@@ -11,6 +11,7 @@ import { hashForBlock } from "../../ui/address/index.ts";
 import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderDialog } from "../../ui/dialog/index.ts";
+import { afterRender } from "../../ui/focus/index.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { markRemindersRead } from "./inbox.commands.ts";
 import { selectReminders, type Reminder } from "./inbox.selectors.ts";
@@ -18,6 +19,8 @@ import { selectReminders, type Reminder } from "./inbox.selectors.ts";
 export const INBOX_OVERLAY = "inbox";
 
 const TEXT = COPY.inbox;
+
+const CLOSE_BUTTON = `.inbox__header button[aria-label="${TEXT.close}"]`;
 
 const DAY = new Intl.DateTimeFormat("en-US", {
   month: "short",
@@ -67,10 +70,16 @@ function renderHeader(
   unread: readonly Reminder[],
   dispatch: Dispatch,
 ): TemplateResult {
-  const markAll = () =>
+  // The button goes once nothing is unread; the focus it had moves to the
+  // panel's close button rather than falling out of the panel.
+  const markAll = () => {
     dispatch(
       markRemindersRead.create({ keys: unread.map((item) => item.key) }),
     );
+    afterRender(() =>
+      document.querySelector<HTMLElement>(CLOSE_BUTTON)?.focus(),
+    );
+  };
   return html`<header class="inbox__header">
     <h3 class="inbox__heading">${TEXT.title}</h3>
     ${

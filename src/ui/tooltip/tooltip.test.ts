@@ -68,6 +68,25 @@ describe("installTooltip", () => {
     expect(hint.textContent).toBe("Hide content");
   });
 
+  it("says nothing for focus given back by code, away from the pointer", () => {
+    document.body.innerHTML = `<button aria-label="Page actions"></button>
+      <div id="tooltip"></div>`;
+    const hint = document.querySelector("#tooltip");
+    const button = document.querySelector("button");
+    if (hint === null || button === null) throw new Error("setup");
+    // The test DOM counts every focus as visible; this one is not, and
+    // the pointer is elsewhere.
+    Object.defineProperty(button, "matches", {
+      value: (selector: string) =>
+        selector === ":focus:not(:focus-visible):not(:hover)",
+    });
+    installTooltip();
+
+    const shown = showInterest(hint, button);
+
+    expect(shown.defaultPrevented).toBe(true);
+  });
+
   it("puts an open hint away when the person presses", () => {
     document.body.innerHTML = `<button aria-label="View settings"></button>
       <div id="tooltip" popover="manual"></div>`;

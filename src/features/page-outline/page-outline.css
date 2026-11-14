@@ -6,6 +6,21 @@
     inset-block-start: calc(var(--size-control-md) * 5);
     inset-inline-end: var(--size-outline-edge);
     z-index: var(--layer-sticky);
+
+    /* A panel docked at the window's right (Updates & analytics, a side
+       peek) takes that edge: the dashes stay at the page's own edge,
+       beside the panel, as Notion's do, not over it. */
+    .app[data-updates] & {
+      inset-inline-end: calc(
+        var(--size-updates-panel) + var(--size-outline-edge)
+      );
+    }
+
+    .app[data-peek="side"] & {
+      inset-inline-end: calc(
+        var(--app-peek-width, var(--size-peek-side)) + var(--size-outline-edge)
+      );
+    }
   }
 
   .page-outline__dashes {

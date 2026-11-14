@@ -187,12 +187,14 @@
     font-weight: var(--font-weight-medium);
   }
 
-  /* A switch at a row's end: the bare button around its mark. */
+  /* A switch at a row's end: the bare button around its mark, rounded as
+     the mark so the focus ring follows the pill. */
   .settings__switch {
     display: inline-grid;
     place-items: center;
     padding: var(--space-none);
     border: none;
+    border-radius: var(--radius-full);
     background-color: transparent;
     cursor: pointer;
   }

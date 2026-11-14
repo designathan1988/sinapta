@@ -54,17 +54,20 @@ function onClosed(event: Event, onClose: () => void): void {
   if (dialog.isConnected && !dialog.open) onClose();
 }
 
+// Dialogs whose close button shows alone at the corner, their title read
+// only, as Notion's card and settings.
+const CORNER_CLOSE: ReadonlySet<string> = new Set(["card", "settings"]);
+const SHOWN_HEADER: ReadonlySet<string> = new Set(["full", "form"]);
+
 // The dialog's heading and close button: read only on a bare dialog, the
-// title read only on a card.
+// title read only where the close button sits at the corner.
 function renderHeader(options: DialogOptions): TemplateResult {
-  const isBare =
-    options.variant !== undefined &&
-    options.variant !== "full" &&
-    options.variant !== "form" &&
-    options.variant !== "card";
+  const variant = options.variant ?? "";
+  const isCorner = CORNER_CLOSE.has(variant);
+  const isBare = variant !== "" && !isCorner && !SHOWN_HEADER.has(variant);
   return html`<header class=${isBare ? "visually-hidden" : "dialog__header"}>
     <h2
-      class=${options.variant === "card" ? "visually-hidden" : "dialog__title"}
+      class=${isCorner ? "visually-hidden" : "dialog__title"}
       id="dialog-title"
     >
       ${options.title}

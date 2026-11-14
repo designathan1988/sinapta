@@ -65,6 +65,18 @@ describe("restoreSelection", () => {
     expect(document.activeElement).toBe(text);
   });
 
+  it("leaves focus on a control outside the blocks whose overlay closed", () => {
+    mount();
+    const share = document.createElement("button");
+    share.dataset.overlayAnchor = "";
+    document.body.append(share);
+    share.focus();
+
+    restoreSelection(document, CARET);
+
+    expect(document.activeElement).toBe(share);
+  });
+
   it("leaves focus alone when there is no selection to restore", () => {
     mount();
     const button = document.querySelector("button");

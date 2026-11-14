@@ -104,6 +104,17 @@ export function focusSelection(
     ?.setBaseAndExtent(anchor.node, anchor.offset, focus.node, focus.offset);
 }
 
+// A control outside the blocks that opens an overlay, as Share, keeps the
+// focus it gets back when its overlay closes, as Notion's does; the text
+// does not take it.
+function isOnOverlayControl(): boolean {
+  const active = document.activeElement;
+  return (
+    active?.matches("[data-overlay-anchor]") === true &&
+    active.closest("[data-block-id]") === null
+  );
+}
+
 // Makes the document's selection match the store's. Does nothing when it
 // already matches, so the browser's own caret movement is left alone. A
 // block that was moved in the document keeps its selection but loses
@@ -115,6 +126,7 @@ export function restoreSelection(
   if (selection === null) return;
   // An overlay has the focus; the text takes it back once it closes.
   if (document.activeElement?.closest("[data-overlay]") != null) return;
+  if (isOnOverlayControl()) return;
   const isFocusLost = document.activeElement === document.body;
   if (!isFocusLost && isSame(readSelection(), selection)) return;
   const text = textElementFor(root, selection.blockId);

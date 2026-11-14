@@ -1,8 +1,15 @@
 @layer features {
+  /* A long trash scrolls in its list, as Notion's: the search stays at
+     the panel's head and the note at its foot. */
   .trash__list {
     display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
     gap: var(--space-stack-xs);
+    min-block-size: 0;
+    margin: var(--space-none);
+    padding: var(--space-none);
+    overflow-y: auto;
   }
 
   .trash__row {

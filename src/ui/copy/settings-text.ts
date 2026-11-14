@@ -62,15 +62,14 @@ export const SETTINGS_TEXT = {
     inApp: "In-app notifications",
     desktop: "Desktop notifications",
     desktopName: "Show notifications on this device",
-    desktopHint:
-      "New notices appear in your system’s notifications, as Notion’s desktop app shows them.",
+    desktopHint: "New notices appear in your system’s notifications.",
     desktopBlocked:
       "This browser blocks notifications from this site. Allow them in its site settings.",
     desktopMissing: "This browser cannot show notifications.",
     push: "Push notifications",
     pushName: "Push notices to this browser",
     pushHint:
-      "Mentions and pages shared with you reach this browser even while Pagecraft is closed, as Notion’s mobile push notifications.",
+      "Mentions and pages shared with you reach this browser even while Pagecraft is closed.",
     pushMissing: "Log in to a Pagecraft server, in a browser that has push.",
     notices: {
       mention: [
