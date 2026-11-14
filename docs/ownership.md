@@ -231,7 +231,7 @@ owner listed here exists.
 | The line the slash menu is open on, and the slash menu's overlay kind | `src/features/editor/editor-slash.selectors.ts` | 21 |
 | Adding a block below another and duplicating a block | `src/features/editor/editor-insert.commands.ts` | 8 |
 | Writing a page as Markdown and saving it | `src/features/markdown-export/` | 8 |
-| A page's cover and width | `src/blocks/page/page-cover.commands.ts`, `src/features/editor/editor-cover.view.ts` | 10 |
+| A page's cover and width | `src/blocks/page/page-style.commands.ts` (`setPageCover`, `setCoverPosition`, full width), `src/features/editor/editor-cover.view.ts` | 10 |
 | Duplicating a page with everything inside it | `src/blocks/page/page-duplicate.commands.ts` | 10 |
 | Formatting toolbar and text color picker over selected text | `src/features/format-toolbar/` | 8 |
 | What a block type declares | `src/blocks/block-definition.ts` | 3 |
