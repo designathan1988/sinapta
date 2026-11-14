@@ -3,6 +3,7 @@ import { toBlockId } from "../../model/index.ts";
 import { matchBlockShortcut } from "./block-shortcut.ts";
 import { createApp, PAGE, text } from "./editor-builder.ts";
 import { convertBlock } from "./editor-convert.commands.ts";
+import { replaceText } from "./editor.commands.ts";
 
 const A = toBlockId("a");
 const NEW = toBlockId("new-1");
@@ -103,5 +104,31 @@ describe("turning text into a synced block", () => {
     });
     expect(store.getState().ui.selection).toMatchObject({ blockId: NEW });
     expect(blocks[PAGE]?.childIds).toEqual([A]);
+  });
+});
+
+describe("turning a block into another type", () => {
+  it("leaves the caret where it was in the text, as Notion's Ctrl+Shift+4", () => {
+    const { store, dispatch } = createApp([text("a", "Task on")]);
+    dispatch(replaceText.create({ blockId: A, start: 7, end: 7, text: "e" }));
+
+    dispatch(convertBlock.create({ blockId: A, blockType: "to-do" }));
+
+    expect(store.getState().ui.selection).toMatchObject({
+      blockId: A,
+      anchorOffset: 8,
+      focusOffset: 8,
+    });
+  });
+
+  it("moves the caret back by the Markdown prefix it drops", () => {
+    const { store, dispatch } = createApp([text("a", "[Task")]);
+    dispatch(replaceText.create({ blockId: A, start: 1, end: 1, text: "]" }));
+
+    dispatch(
+      convertBlock.create({ blockId: A, blockType: "to-do", removePrefix: 2 }),
+    );
+
+    expect(store.getState().ui.selection).toMatchObject({ focusOffset: 0 });
   });
 });

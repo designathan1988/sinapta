@@ -1,4 +1,5 @@
-// Copying selected blocks: their text as plain lines for other apps, and
+// Copying selected blocks: their text as plain lines and as HTML for
+// other apps, and
 // their kinds and nesting in Pagecraft's own clipboard type, so a paste in
 // Pagecraft rebuilds them. Cutting also deletes them.
 import { isPageLike } from "../../blocks/page/index.ts";
@@ -15,6 +16,7 @@ import {
   type ClipboardBlock,
 } from "../../model/index.ts";
 import { setClipboard, type AppState } from "../../state/index.ts";
+import { selectBlocksHtml } from "../markdown-export/index.ts";
 import type { InputContext } from "./editor-input.view.ts";
 import { deleteSelectedBlocks } from "./editor-selection.commands.ts";
 import { selectSelectedBlocks } from "./editor.selectors.ts";
@@ -89,6 +91,7 @@ export function onSelectionCopy(
   if (blocks.length === 0 || event.clipboardData === null) return;
   const lines = blocks.filter(isTextBlock).map(textOf);
   event.clipboardData.setData("text/plain", lines.join("\n"));
+  event.clipboardData.setData("text/html", selectedHtml(context.state));
   const copied = serializeBlockClipboard(clipboardBlocksOf(context.state));
   event.clipboardData.setData(BLOCK_CLIPBOARD_TYPE, copied);
   event.preventDefault();
@@ -103,9 +106,28 @@ function copyKey(event: KeyboardEvent): "c" | "x" | undefined {
   return key === "c" || key === "x" ? key : undefined;
 }
 
-export function writeSystemClipboard(text: string): void {
+export function writeSystemClipboard(text: string, html?: string): void {
   if (typeof navigator === "undefined" || !("clipboard" in navigator)) return;
-  navigator.clipboard.writeText(text).catch(() => undefined);
+  if (html === undefined || typeof ClipboardItem === "undefined") {
+    navigator.clipboard.writeText(text).catch(() => undefined);
+    return;
+  }
+  const item = new ClipboardItem({
+    "text/plain": new Blob([text], { type: "text/plain" }),
+    "text/html": new Blob([html], { type: "text/html" }),
+  });
+  navigator.clipboard.write([item]).catch(() => undefined);
+}
+
+// The selected blocks as HTML, each once: a block inside a selected one
+// comes with it.
+function selectedHtml(state: AppState): string {
+  const blocks = selectSelectedBlocks(state);
+  const ids = new Set(blocks.map((block) => block.id));
+  const tops = blocks.filter(
+    (block) => block.parentId === null || !ids.has(block.parentId),
+  );
+  return selectBlocksHtml(state, tops);
 }
 
 // Chrome sends no copy event while whole blocks are selected, since no text
@@ -122,7 +144,7 @@ export function copyBlocksByKey(
   const lines = selectSelectedBlocks(state).filter(isTextBlock).map(textOf);
   const text = lines.join("\n");
   dispatch(setClipboard.create({ clipboard: { text, blocks } }));
-  writeSystemClipboard(text);
+  writeSystemClipboard(text, selectedHtml(state));
   if (key === "x") dispatch(deleteSelectedBlocks.create({}));
   return true;
 }

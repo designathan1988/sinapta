@@ -65,6 +65,14 @@ function paragraphInside(
   ];
 }
 
+// The caret stays where it was in the text, moved back by a dropped
+// Markdown prefix; at the start when the text did not hold it.
+function keptOffset(state: AppState, blockId: BlockId, removed = 0): number {
+  const { selection } = state.ui;
+  if (selection?.blockId !== blockId) return 0;
+  return Math.max(0, selection.focusOffset - removed);
+}
+
 // Turns a text block into another type. A block that becomes one without
 // text, such as a divider, is followed by a new paragraph for the caret.
 export const convertBlock = defineCommand<ConvertBlockPayload>({
@@ -91,7 +99,11 @@ export const convertBlock = defineCommand<ConvertBlockPayload>({
       patch,
     };
     if ("text" in props) {
-      return { operations: [update], ui: withSelection(state, block.id, 0) };
+      const offset = keptOffset(state, block.id, command.removePrefix);
+      return {
+        operations: [update],
+        ui: withSelection(state, block.id, offset),
+      };
     }
     if (definition.startsWithChild === true) {
       const inside = paragraphInside(block, { id, now, text });

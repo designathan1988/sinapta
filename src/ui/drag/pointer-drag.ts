@@ -95,6 +95,9 @@ function positionIn(
 function sideIn(target: HTMLElement, event: PointerEvent) {
   const box = target.getBoundingClientRect();
   const share = (event.clientX - box.left) / Math.max(1, box.width);
+  // Outside the item, as in the gutter that holds the handles, a drop is
+  // a plain one, as Notion's.
+  if (share < 0 || share > 1) return undefined;
   if (share < SIDE_SHARE) return "left";
   return share > 1 - SIDE_SHARE ? "right" : undefined;
 }

@@ -73,6 +73,19 @@ describe("copying selected blocks", () => {
     ]);
     expect(clipboardData.getData("text/plain")).toBe("one\ntwo");
   });
+
+  it("puts them as HTML too, for other apps, as Notion's", () => {
+    const clipboardData = new DataTransfer();
+    const event = new ClipboardEvent("copy", {
+      clipboardData,
+      cancelable: true,
+    });
+    const dispatch: Dispatch = () => ({ ok: true });
+
+    onSelectionCopy(event, { state: selectedState(), dispatch });
+
+    expect(clipboardData.getData("text/html")).toBe("<p>one</p><p>two</p>");
+  });
 });
 
 describe("Ctrl+C on selected blocks", () => {

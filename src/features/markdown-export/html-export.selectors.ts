@@ -134,6 +134,15 @@ function blocksHtml(state: AppState, blocks: readonly Block[]): string {
   return html;
 }
 
+// Blocks as HTML alone, as a copy of them puts on the clipboard for
+// other apps.
+export function selectBlocksHtml(
+  state: AppState,
+  blocks: readonly Block[],
+): string {
+  return blocksHtml(state, blocks);
+}
+
 const STYLE =
   "body{max-width:42rem;margin:4rem auto;padding:0 1rem;font-family:system-ui,sans-serif;line-height:1.5;color:#37352f}" +
   "pre{padding:1rem;background:#f7f6f3;overflow:auto}blockquote{margin:0;padding-left:1rem;border-left:3px solid currentColor}" +
