@@ -3,6 +3,7 @@ import { ACCOUNT_ROUTES } from "./account-routes.ts";
 import { answer, type RouteTable } from "./api.ts";
 import { countRowSchema, readRow } from "./rows.schema.ts";
 import { MEMBER_ROUTES } from "./member-routes.ts";
+import { PRESENCE_ROUTES } from "./presence.ts";
 import { SHARING_ROUTES } from "./sharing-routes.ts";
 import { WORKSPACE_ROUTES } from "./workspace-routes.ts";
 
@@ -22,4 +23,5 @@ export const ROUTES: RouteTable = {
   ...WORKSPACE_ROUTES,
   ...MEMBER_ROUTES,
   ...SHARING_ROUTES,
+  ...PRESENCE_ROUTES,
 };

@@ -82,6 +82,7 @@ owner listed here exists.
 | Notion's workspace menu: members, the account's workspaces, New workspace, Log out | `src/features/sidebar/workspace-menu.ts` | 25 |
 | Settings › My account, General and People | `src/features/settings/settings-people.view.ts` | 25 |
 | Notion's Share menu: Share and Publish tabs, the top bar's Share | `src/features/share/` | 26 |
+| The faces of the others on the open page | `src/features/presence/` | 27 |
 | A page published to the web, shown alone and read only | `src/app/public-page.ts` | 26 |
 | Notion's sign-in screen: the address, password, login code and profile steps, the other ways in | `src/features/sign-in/` | 23 |
 | A page as one HTML file | `src/features/markdown-export/html-export.selectors.ts` | 20 |
@@ -254,6 +255,7 @@ owner listed here exists.
 | A page's sharing: invited people, general access, published | `server/sharing.ts` | 26 |
 | The Share menu's routes and published pages read by anyone | `server/sharing-routes.ts` | 26 |
 | What a guest reaches: the pages shared with them, read and written at their access | `server/guest-access.ts` | 26 |
+| Who is where: each person's open page, kept a minute, sent to the workspace | `server/presence.ts` | 27 |
 | A server on an in-memory database for tests | `server/test-context.ts` | 24 |
 | The root render: the sign-in page or the app | `src/app/root-render.ts` | 23 |
 

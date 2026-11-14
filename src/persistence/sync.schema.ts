@@ -88,3 +88,27 @@ export const readSharing = (value: unknown, pageId: string) => {
   const sharing = read(sharingSchema, value);
   return sharing === undefined ? undefined : { pageId, ...sharing };
 };
+
+const presenceSchema = v.object({
+  people: v.array(
+    v.object({
+      userId: v.string(),
+      name: v.string(),
+      pageId: v.nullable(v.string()),
+    }),
+  ),
+});
+
+// A "presence" event's data: its text is JSON.
+export function readPresenceEvent(text: string) {
+  try {
+    const value: unknown = JSON.parse(text);
+    return read(presenceSchema, value)?.people.map((person) => ({
+      userId: person.userId,
+      name: person.name,
+      pageId: person.pageId,
+    }));
+  } catch {
+    return undefined;
+  }
+}

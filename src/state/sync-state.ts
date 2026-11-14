@@ -36,6 +36,13 @@ export interface PageSharing {
   }[];
 }
 
+// Someone with the workspace open, and the page they are on.
+export interface Presence {
+  readonly userId: string;
+  readonly name: string;
+  readonly pageId: string | null;
+}
+
 export type SyncRequest =
   | { readonly kind: "switch"; readonly workspaceId: string }
   | { readonly kind: "create"; readonly name: string }
@@ -79,6 +86,8 @@ export interface SyncState {
   readonly invites: readonly InviteSummary[];
   // The sharing of the page whose Share menu is open, once read.
   readonly sharing: PageSharing | null;
+  // Everyone with the workspace open now, this person included.
+  readonly presence: readonly Presence[];
 }
 
 export const NOT_SYNCED: SyncState = {
@@ -89,4 +98,5 @@ export const NOT_SYNCED: SyncState = {
   members: [],
   invites: [],
   sharing: null,
+  presence: [],
 };

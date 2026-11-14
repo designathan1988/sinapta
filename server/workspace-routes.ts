@@ -115,6 +115,10 @@ function guestFilter(
       ? new Map<string, Access>()
       : reachOf(start, sharedWith(context, id, member.user.email));
   return (event, data) => {
+    if (event !== OPERATIONS_EVENT) {
+      send(event, data);
+      return;
+    }
     const logged = v.safeParse(loggedSchema, data);
     const workspace = currentWorkspace(context, id);
     if (!logged.success || workspace === undefined) return;

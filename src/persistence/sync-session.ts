@@ -2,11 +2,20 @@
 // last sequence applied, and this client's transactions not yet confirmed,
 // sent one at a time so that the server keeps their order.
 import { parseWireOperations, type PropsSchemas } from "../model/index.ts";
-import { applyRemote, type AppStore, type Dispatch } from "../state/index.ts";
+import {
+  applyRemote,
+  setPresence,
+  type AppStore,
+  type Dispatch,
+} from "../state/index.ts";
 import type { Fetch } from "./account-client.ts";
 import { parseReply } from "./account.schema.ts";
 import { rebase, type Pending } from "./sync-rebase.ts";
-import { readLoggedEvent, type Logged } from "./sync.schema.ts";
+import {
+  readLoggedEvent,
+  readPresenceEvent,
+  type Logged,
+} from "./sync.schema.ts";
 
 export interface EventsLike {
   addEventListener(type: string, listener: (event: MessageEvent) => void): void;
@@ -137,6 +146,12 @@ export function listen(link: Link, sync: Sync, id: string): Session {
     unsent: 0,
     isSending: false,
   };
+  session.events.addEventListener("presence", (event) => {
+    const text: unknown = event.data;
+    const presence =
+      typeof text === "string" ? readPresenceEvent(text) : undefined;
+    if (presence !== undefined) sync.dispatch(setPresence.create({ presence }));
+  });
   session.events.addEventListener("operations", (event) => {
     const text: unknown = event.data;
     const logged = typeof text === "string" ? readLoggedEvent(text) : undefined;

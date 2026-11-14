@@ -1,0 +1,28 @@
+@layer features {
+  /* Notion's faces in the top bar: small circles over each other. */
+  .presence {
+    display: inline-flex;
+    align-items: center;
+    padding-inline-end: var(--space-inline-xs);
+  }
+
+  .presence__face,
+  .presence__more {
+    display: grid;
+    place-items: center;
+    inline-size: var(--size-icon-md);
+    block-size: var(--size-icon-md);
+    margin-inline-start: calc(var(--space-inline-xs) * -1);
+    border-radius: var(--radius-full);
+    background-color: var(--color-accent-fill);
+    box-shadow: 0 0 0 var(--size-border-thick) var(--color-bg-app);
+    color: var(--color-text-on-accent);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .presence__more {
+    background-color: var(--color-bg-hover);
+    color: var(--color-text-secondary);
+  }
+}

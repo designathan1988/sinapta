@@ -16,6 +16,7 @@ import { renderPageInfo } from "../features/page-info/index.ts";
 import { renderPageMenuButton } from "../features/page-menu/index.ts";
 import { renderPageOutline } from "../features/page-outline/index.ts";
 import { renderPeek } from "../features/row-peek/index.ts";
+import { renderPresence } from "../features/presence/index.ts";
 import { renderShareButton } from "../features/share/index.ts";
 import { renderButton } from "../ui/button/index.ts";
 import { COPY } from "../ui/copy.ts";
@@ -81,6 +82,7 @@ function renderStatusAndTools(
         ? nothing
         : [
             renderPageInfo(state, dispatch),
+            renderPresence(state),
             renderShareButton(state, dispatch),
             renderActivePageMenu(state, dispatch),
           ]

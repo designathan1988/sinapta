@@ -143,6 +143,33 @@ function answer(link: Link, sync: Sync, request: SyncRequest): void {
   void create(link, sync, { name: request.name, workspace, isEmpty: true });
 }
 
+const PRESENCE_MS = 30_000;
+
+// Tells the server which page this person has open, so that the others
+// see their face on it.
+function announce(link: Link, sync: Sync): void {
+  const session = link.session;
+  if (session?.isReady !== true) return;
+  const pageId = sync.store.getState().ui.activePageId;
+  const path = `/api/workspaces/${session.id}/presence`;
+  getJson(sync.send, path, { pageId }).catch(() => undefined);
+}
+
+function followPage(link: Link, sync: Sync): void {
+  let pageId = sync.store.getState().ui.activePageId;
+  let wasReady = false;
+  sync.store.subscribe((state) => {
+    const isReady = link.session?.isReady === true;
+    if (state.ui.activePageId === pageId && isReady === wasReady) return;
+    pageId = state.ui.activePageId;
+    wasReady = isReady;
+    announce(link, sync);
+  });
+  setInterval(() => {
+    announce(link, sync);
+  }, PRESENCE_MS);
+}
+
 function follow(link: Link, sync: Sync): void {
   const state = sync.store.getState();
   let status: AccountStatus = state.persistence.account.status;
@@ -190,6 +217,7 @@ export function createSyncLink(): SyncLink {
       };
       link.sync = sync;
       follow(link, sync);
+      followPage(link, sync);
     },
   };
 }

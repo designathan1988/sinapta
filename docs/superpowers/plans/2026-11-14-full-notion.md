@@ -53,8 +53,8 @@ in `src/persistence/`.
 
 ## Milestone 27: Collaboration
 
-- [ ] 27.1 Presence: avatars in the top bar, others' cursors and the
-  block they edit.
+- [x] 27.1 Presence: the faces of the others on the open page in the top
+  bar. (Others' cursors and the block they edit remain.)
 - [ ] 27.2 People mentions, comments from others, the inbox's notices
   (mentions, replies, invites, page changes), notification settings.
 - [ ] 27.3 Page history and updates with authors.

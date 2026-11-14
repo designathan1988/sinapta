@@ -8,6 +8,7 @@ import type {
   InviteSummary,
   MemberSummary,
   PageSharing,
+  Presence,
   SyncRequest,
   SyncState,
   WorkspaceSummary,
@@ -78,7 +79,14 @@ export const setSharing = defineCommand<{ sharing: PageSharing }>({
   handle: (state, { sharing }) => withSync(state, { sharing, request: null }),
 });
 
+// Who has the workspace open, as the server last said.
+export const setPresence = defineCommand<{ presence: readonly Presence[] }>({
+  type: "sync.setPresence",
+  handle: (state, { presence }) => withSync(state, { presence }),
+});
+
 export const syncCommands = [
+  setPresence,
   setSharing,
   setPeople,
   applyRemote,

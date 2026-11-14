@@ -162,6 +162,7 @@ export type { Transaction } from "./history.ts";
 export {
   requestSync,
   setPeople,
+  setPresence,
   setSharing,
   setWorkspaces,
 } from "./sync.commands.ts";
@@ -172,6 +173,7 @@ export {
   type MemberSummary,
   type PageAccess,
   type PageSharing,
+  type Presence,
   type SyncRequest,
   type SyncState,
   type WorkspaceSummary,
