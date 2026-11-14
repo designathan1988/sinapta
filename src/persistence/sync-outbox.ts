@@ -1,6 +1,6 @@
 // What joining a workspace makes again (ADR-0013): the operations logged
 // since the server's snapshot, and this browser's transactions the server
-// never confirmed.
+// never confirmed, typed while it was read included.
 import {
   applyOperations,
   findInvariantViolation,
@@ -9,7 +9,7 @@ import {
   type Operation,
   type Workspace,
 } from "../model/index.ts";
-import { replayOffline } from "../state/index.ts";
+import type { Pending } from "./sync-rebase.ts";
 import type { Sync } from "./sync-session.ts";
 import * as reply from "./sync.schema.ts";
 
@@ -46,16 +46,39 @@ export function withLogged(
   return { workspace: current, seq: logged.at(-1)?.seq };
 }
 
-// Makes again, on the server's workspace, what this browser changed while
-// the server never heard of it; each change is then sent as usual.
-export async function replayOutbox(sync: Sync, workspaceId: string) {
-  const outbox = reply.readOutbox(await sync.outbox.load());
-  if (outbox?.workspaceId !== workspaceId) return;
-  await sync.outbox.save(undefined);
-  for (const entry of outbox.entries) {
-    const operations = parseWireOperations(entry);
-    if (operations !== undefined) {
-      sync.dispatch(replayOffline.create({ operations }));
-    }
+// This browser's changes the server never confirmed, made again on the
+// server's workspace before it is shown, so that what is on screen stays
+// as it is, typing included; each is then sent as usual. One that cannot
+// be made again, or that would break the workspace's rules, is dropped.
+export function withUnsent(
+  workspace: Workspace,
+  entries: readonly (readonly Operation[])[],
+): { workspace: Workspace; pending: Pending[] } {
+  let current = workspace;
+  const pending: Pending[] = [];
+  for (const operations of entries) {
+    const result = applyOperations(current, operations);
+    if (!result.ok) continue;
+    const ids = touched(operations);
+    if (findInvariantViolation(current, result.workspace, ids) !== undefined)
+      continue;
+    current = result.workspace;
+    pending.push({ operations, inverse: result.inverse });
   }
+  return { workspace: current, pending };
+}
+
+// The unconfirmed changes the outbox kept for this workspace, taken out of
+// it: the session that sends them keeps them again.
+export async function takeOutbox(
+  sync: Sync,
+  workspaceId: string,
+): Promise<(readonly Operation[])[]> {
+  const outbox = reply.readOutbox(await sync.outbox.load());
+  if (outbox?.workspaceId !== workspaceId) return [];
+  await sync.outbox.save(undefined);
+  return outbox.entries.flatMap((entry) => {
+    const operations = parseWireOperations(entry);
+    return operations === undefined ? [] : [operations];
+  });
 }

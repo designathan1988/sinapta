@@ -39,6 +39,7 @@ function linkFailing(failures: number) {
     );
   });
   const link: Link = {
+    held: [],
     resync: () => undefined,
     sync: {
       store,

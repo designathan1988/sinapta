@@ -1,11 +1,7 @@
 // Keeps the signed-in workspace on the server (ADR-0013): joins it or
 // uploads the browser's copy, sends each transaction in order, and applies
 // the others' as the server's event stream brings them.
-import {
-  createEmptyWorkspace,
-  toWireOperations,
-  type Workspace,
-} from "../model/index.ts";
+import { createEmptyWorkspace, type Workspace } from "../model/index.ts";
 import {
   loadServerWorkspace,
   requestSync,
@@ -19,51 +15,30 @@ import { parseReply } from "./account.schema.ts";
 import { answerPeople } from "./people-client.ts";
 import { answerSide } from "./side-requests.ts";
 import { afterAnswer, type AfterSteps } from "./sync-after.ts";
-import { currentRecords } from "./sync-records.ts";
 import { answerTeamspaces, isTeamspaceRequest } from "./teamspace-client.ts";
 import {
   flush,
   getJson,
-  keepOutbox,
   listen,
   ready,
   type Link,
-  type Session,
   type Sync,
   type SyncOptions,
+  startPending,
+  takeHeld,
+  track,
 } from "./sync-session.ts";
-import { replayOutbox, withLogged } from "./sync-outbox.ts";
+import { withUnsent } from "./sync-outbox.ts";
+import { download } from "./sync-download.ts";
 import { followPage } from "./sync-presence.ts";
 import * as reply from "./sync.schema.ts";
-import { readWorkspaceFile, serializeWorkspace } from "./workspace-file.ts";
+import { serializeWorkspace } from "./workspace-file.ts";
 
 export type { EventsLike, SyncOptions } from "./sync-session.ts";
 
 export interface SyncLink {
   readonly onTransaction: (transaction: Transaction, state: AppState) => void;
   readonly start: (options: SyncOptions) => void;
-}
-
-// Reads the server's workspace, replaces the browser's copy with it, then
-// applies the operations made since its snapshot.
-async function download(link: Link, sync: Sync, session: Session) {
-  const path = `/api/workspaces/${session.id}`;
-  const loaded = reply.readDownload(await getJson(sync.send, path));
-  if (loaded === undefined) return;
-  const text = JSON.stringify(loaded.snapshot);
-  const file = readWorkspaceFile(text, sync.propsSchemas);
-  if (!file.ok) return;
-  // The workspace as it stands now, built before it is shown, so that the
-  // open page, made after the snapshot, is there when it is.
-  const now = withLogged(file.workspace, loaded.operations);
-  sync.dispatch(
-    loadServerWorkspace.create({
-      workspace: now.workspace,
-      ...(loaded.access !== undefined && { access: loaded.access }),
-    }),
-  );
-  ready(link, session, now.seq ?? loaded.seq);
-  await replayOutbox(sync, session.id);
 }
 
 // A new workspace on the server: the browser's copy at the first sign-in,
@@ -78,7 +53,16 @@ async function create(link: Link, sync: Sync, made: Made) {
   if (made.isEmpty) {
     sync.dispatch(loadServerWorkspace.create({ workspace: made.workspace }));
   }
-  ready(link, listen(link, sync, created.workspace.id), created.seq);
+  // Changes made here while the copy went up are sent after it; a new,
+  // empty workspace has none of them.
+  const held = takeHeld(link);
+  const session = listen(link, sync, created.workspace.id);
+  startPending(
+    session,
+    withUnsent(made.workspace, made.isEmpty ? [] : held).pending,
+  );
+  ready(link, session, created.seq);
+  flush(link, session);
   await publishList(sync, created.workspace.id);
 }
 
@@ -134,6 +118,7 @@ async function join(link: Link, sync: Sync, wanted?: string): Promise<void> {
 function leave(link: Link): void {
   link.session?.events.close();
   delete link.session;
+  link.held = [];
 }
 
 function stepsOf(link: Link, sync: Sync, joined: string | null): AfterSteps {
@@ -211,6 +196,7 @@ function follow(link: Link, sync: Sync): void {
 // transaction; it starts working once someone signs in.
 export function createSyncLink(): SyncLink {
   const link: Link = {
+    held: [],
     resync: () => {
       leave(link);
       if (link.sync !== undefined) void join(link, link.sync);
@@ -218,15 +204,7 @@ export function createSyncLink(): SyncLink {
   };
   return {
     onTransaction(transaction, state) {
-      const session = link.session;
-      if (session?.isReady !== true) return;
-      const records = currentRecords(state.workspace);
-      const operations = toWireOperations(transaction.applied, records);
-      if (operations.length === 0) return;
-      session.pending.push({ operations, inverse: transaction.inverse });
-      session.unsent += 1;
-      keepOutbox(link, session);
-      flush(link, session);
+      track(link, transaction, state);
     },
     start(given) {
       const sync: Sync = {

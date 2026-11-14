@@ -1,12 +1,20 @@
 // One joined workspace on the server (ADR-0013): its event stream, the
 // last sequence applied, and this client's transactions not yet confirmed,
 // sent one at a time so that the server keeps their order.
-import { parseWireOperations, type PropsSchemas } from "../model/index.ts";
+import {
+  parseWireOperations,
+  toWireOperations,
+  type Operation,
+  type PropsSchemas,
+} from "../model/index.ts";
+import { currentRecords } from "./sync-records.ts";
 import {
   applyRemote,
   setConnection,
   setPresence,
+  type AppState,
   type AppStore,
+  type Transaction,
   type Dispatch,
 } from "../state/index.ts";
 import type { Fetch } from "./account-client.ts";
@@ -52,6 +60,9 @@ export interface Session {
 export interface Link {
   sync?: Sync;
   session?: Session;
+  // Changes made here while the workspace is being read (joining, or
+  // reading it again), made again on it once read.
+  held: (readonly Operation[])[];
   resync: () => void;
 }
 
@@ -178,4 +189,41 @@ export function listen(link: Link, sync: Sync, id: string): Session {
   });
   link.session = session;
   return session;
+}
+
+// A transaction made here: sent in turn while the workspace is joined, or
+// held while it is being read, to be made again on it once read; nothing
+// while no one is signed in.
+export function track(
+  link: Link,
+  transaction: Transaction,
+  state: AppState,
+): void {
+  const session = link.session;
+  const isJoined = session?.isReady === true;
+  if (!isJoined && state.persistence.account.user === null) return;
+  const records = currentRecords(state.workspace);
+  const operations = toWireOperations(transaction.applied, records);
+  if (operations.length === 0) return;
+  if (session === undefined || !isJoined) {
+    link.held.push(operations);
+    return;
+  }
+  session.pending.push({ operations, inverse: transaction.inverse });
+  session.unsent += 1;
+  keepOutbox(link, session);
+  flush(link, session);
+}
+
+// The changes held while the workspace was read, taken to be made again.
+export function takeHeld(link: Link): (readonly Operation[])[] {
+  const held = link.held;
+  link.held = [];
+  return held;
+}
+
+// A session's first unconfirmed changes, sent once it is ready.
+export function startPending(session: Session, pending: readonly Pending[]) {
+  session.pending = [...pending];
+  session.unsent = pending.length;
 }
