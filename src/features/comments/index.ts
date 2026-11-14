@@ -24,6 +24,11 @@ export {
 } from "./value-comments.view.ts";
 export { valueDiscussionTidier } from "./value-discussion-tidy.ts";
 export {
+  DISCUSSIONS_PANEL_OVERLAY,
+  renderCommentsButton,
+  renderDiscussionsPanel,
+} from "./discussions-panel.view.ts";
+export {
   RESOLVED_COMMENTS_OVERLAY,
   renderResolvedComments,
 } from "./resolved-comments.view.ts";

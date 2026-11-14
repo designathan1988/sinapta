@@ -1288,9 +1288,16 @@ items above, found while photographing them:
     a line with other words), a page picked becomes a link to page; "+"
     then a space still starts a bulleted list. Not built: "New page in…"
     and the feedback line. Undone in Notion (16 blocks as before).
-51. **open** [`n97-plus/02-plus`] Notion's top bar has a comments button
-    (a speech bubble) between Copy link and the star, which opens the
-    page's comments; Pagecraft's top bar has none yet.
+51. **done** [`n98-comments-button`; Pagecraft `p80-discussions`]
+    Notion's top bar has a comments button (a speech bubble, "Comentários")
+    between Copy link and the star. It opens "Discussões" under it, its
+    right edge on the button's: 456 × 316, a bell at the title's right,
+    and with nothing open a mark, "Você leu tudo", "Não há discussões
+    abertas" and an outlined "Ver tudo". Pagecraft has the button and the
+    panel: the page's open discussions with Resolve, or "You're all caught
+    up" and View all, which lists the resolved ones too with Reopen. Not
+    built: the bell (Pagecraft's page notices are set in Settings ›
+    Notifications). Pagecraft's empty panel is 254 px high.
 
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,

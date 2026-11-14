@@ -39,7 +39,7 @@ function renderReadOnly(
   </li>`;
 }
 
-function renderResolved(
+export function renderResolved(
   discussion: Discussion,
   pageId: BlockId,
   dispatch: Dispatch,

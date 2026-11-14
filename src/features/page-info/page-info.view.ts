@@ -20,6 +20,7 @@ import {
 import { linkToPage } from "../../ui/address/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY, pluralize } from "../../ui/copy.ts";
+import { renderCommentsButton } from "../comments/index.ts";
 import { writeSystemClipboard } from "../editor/index.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
@@ -81,7 +82,7 @@ export function renderPageInfo(
     >
       ${edited}
     </button>
-    ${renderCopyLink(pageId)}
+    ${renderCopyLink(pageId)} ${renderCommentsButton(state, pageId, dispatch)}
     <button
       type="button"
       class="page-info__action page-info__favorite"

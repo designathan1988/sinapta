@@ -698,6 +698,10 @@
         "$description": "Notion's Share menu: 456 px wide (n85-share-tab).",
         "$value": "{base.size.28x5}"
       },
+      "discussions": {
+        "$description": "Notion's Discussions panel under the comments button: 456 px wide (n98-comments-button).",
+        "$value": "{base.size.28x5}"
+      },
       "tile": {
         "$description": "A layout or show-as tile, as Notion's: 57 px high (83 px wide from the grid).",
         "$value": "{base.size.3x5625}"

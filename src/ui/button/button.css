@@ -43,6 +43,12 @@
       color: var(--color-text-danger);
     }
 
+    /* A quiet button with a frame, as Notion's "View all". */
+    &[data-variant="outline"] {
+      border-color: var(--color-border-default);
+      color: var(--color-text-primary);
+    }
+
     @media (prefers-reduced-motion: reduce) {
       transition: none;
     }
