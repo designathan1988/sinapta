@@ -3,11 +3,14 @@ import { html, nothing, type TemplateResult } from "lit-html";
 import {
   openHome,
   openOverlay,
+  requestOpenSharing,
   selectIsHomeShown,
   type AppState,
   type Dispatch,
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { createPage } from "../../blocks/page/index.ts";
+import { SHARE_OVERLAY } from "../share/index.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import {
   renderSidebarCustomize,
@@ -44,16 +47,39 @@ function renderHome(state: AppState, dispatch: Dispatch): TemplateResult {
   </div>`;
 }
 
-// Notion's Shared section: the top pages shared with people, when any.
+// Notion's "Start collaborating" while nothing is shared: a new page, and
+// its Share menu open.
+function renderStartCollaborating(dispatch: Dispatch): TemplateResult {
+  return html`<button
+    type="button"
+    class="sidebar__item sidebar__collaborate"
+    @click=${() => {
+      dispatch(createPage.create({ parentId: null }));
+      dispatch(openOverlay.create({ overlay: { kind: SHARE_OVERLAY } }));
+      dispatch(requestOpenSharing.create({}));
+    }}
+  >
+    <span class="sidebar__icon" aria-hidden="true">${renderIcon("plus")}</span>
+    <span class="sidebar__title">${COPY.share.startCollaborating}</span>
+  </button>`;
+}
+
+// Notion's Shared section: the top pages shared with people; while signed
+// in, the section stays with "Start collaborating" when none are.
 function renderShared(
   state: AppState,
   dispatch: Dispatch,
 ): TemplateResult | typeof nothing {
   const rows = selectTreeRows(state, "shared");
-  if (rows.length === 0) return nothing;
+  const isSignedIn = state.persistence.account.user !== null;
+  if (rows.length === 0 && !isSignedIn) return nothing;
   return html`<section class="sidebar__section">
     <h2 class="sidebar__heading" id="sidebar-shared">${COPY.sidebar.shared}</h2>
-    ${renderTree(rows, { state, dispatch })}
+    ${
+      rows.length === 0
+        ? renderStartCollaborating(dispatch)
+        : renderTree(rows, { state, dispatch })
+    }
   </section>`;
 }
 

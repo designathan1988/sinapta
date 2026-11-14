@@ -2,6 +2,8 @@
 export const SHARE_TEXT = {
   share: {
     button: "Share",
+    // The Shared section's row while nothing is shared.
+    startCollaborating: "Start collaborating",
     label: "Share and publish",
     tabShare: "Share",
     tabPublish: "Publish",

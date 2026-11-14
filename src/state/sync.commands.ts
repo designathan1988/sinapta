@@ -2,7 +2,11 @@
 // like any transaction but stay out of this client's undo history.
 import type { Operation, PageAccess, Workspace } from "../model/index.ts";
 import { createInitialUiState } from "./app-state.ts";
-import { defineCommand, type CommandEffect } from "./command-registry.ts";
+import {
+  defineCommand,
+  type CommandEffect,
+  type NoPayload,
+} from "./command-registry.ts";
 import type { AppState } from "./app-state.ts";
 import type {
   InviteSummary,
@@ -68,6 +72,20 @@ export const requestSync = defineCommand<{ request: SyncRequest }>({
     }),
 });
 
+// Asks for the open page's sharing, whichever page that is by then: the
+// one a command just before made, for "Start collaborating".
+export const requestOpenSharing = defineCommand<NoPayload>({
+  type: "sync.requestOpenSharing",
+  handle: (state) => {
+    const pageId = state.ui.activePageId;
+    if (pageId === null) return {};
+    return withSync(state, {
+      request: { kind: "sharing", pageId },
+      requestCount: state.persistence.sync.requestCount + 1,
+    });
+  },
+});
+
 // The open workspace's people as the server lists them.
 export const setPeople = defineCommand<{
   members: readonly MemberSummary[];
@@ -123,6 +141,7 @@ export const setConnection = defineCommand<{
 });
 
 export const syncCommands = [
+  requestOpenSharing,
   setShared,
   setConnection,
   replayOffline,

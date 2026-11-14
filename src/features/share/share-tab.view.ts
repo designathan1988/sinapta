@@ -1,6 +1,7 @@
 // The Share tab: invite by email, the people with access and their level,
 // who else can open the page, and Copy link.
 import { html, type TemplateResult } from "lit-html";
+import { ref } from "lit-html/directives/ref.js";
 import {
   requestSync,
   type AppState,
@@ -11,6 +12,7 @@ import {
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { announce } from "../../ui/announcer/index.ts";
+import { focusOnce } from "../../ui/focus/index.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 
 const TEXT = COPY.share;
@@ -56,6 +58,7 @@ function renderInvite(pageId: string, dispatch: Dispatch): TemplateResult {
       aria-label=${TEXT.placeholder}
       placeholder=${TEXT.placeholder}
       autocomplete="off"
+      ${ref(focusOnce)}
     />
     <button class="share__primary" type="submit">${TEXT.invite}</button>
   </form>`;
@@ -127,7 +130,7 @@ function peopleOf(state: AppState): Person[] {
 }
 
 function renderGeneral(state: AppState, pageId: string, dispatch: Dispatch) {
-  const general = state.persistence.sync.sharing?.general ?? "workspace";
+  const general = state.persistence.sync.sharing?.general ?? "invited";
   return html`<p class="share__label">${TEXT.generalAccess}</p>
     <div class="share__general">
       <span class="share__lock" aria-hidden="true"

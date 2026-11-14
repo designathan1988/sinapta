@@ -210,3 +210,10 @@
     background-color: var(--color-bg-selected);
   }
 }
+
+@layer features {
+  /* Notion's "Start collaborating": muted, as an invitation. */
+  .sidebar__collaborate {
+    color: var(--color-text-tertiary);
+  }
+}

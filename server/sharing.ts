@@ -30,7 +30,7 @@ export function sharingOf(context: ApiContext, page: PageRef) {
     )
     .all(page.workspaceId, page.pageId);
   return {
-    general: settings?.general ?? "workspace",
+    general: settings?.general ?? "invited",
     published: settings?.published === 1,
     people: rows.readRows(rows.pageShareRowSchema, people),
   };
@@ -39,7 +39,7 @@ export function sharingOf(context: ApiContext, page: PageRef) {
 function ensureRow(context: ApiContext, page: PageRef): void {
   context.db
     .prepare(
-      "INSERT OR IGNORE INTO page_access (workspace_id, page_id) VALUES (?, ?)",
+      "INSERT OR IGNORE INTO page_access (workspace_id, page_id, general) VALUES (?, ?, 'invited')",
     )
     .run(page.workspaceId, page.pageId);
 }

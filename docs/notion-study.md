@@ -1220,6 +1220,26 @@ items above, found while photographing them:
     Left: Notion's group head is its option pill with a dot; Pagecraft's
     pills draw no dot anywhere (tables included), a change of every pill.
 
+47. **done** [`n86-teamspaces`, `n87-collaborate`, `n88-undo-collaborate`;
+    Pagecraft `p52-shared`, `p53-view-guest`, `p54-collaborate`] The
+    sidebar's sections read Compartilhado (Shared), then Particular
+    (Private); this account, alone on the Free plan, shows no Teamspaces
+    section. With nothing shared, Shared holds one muted row "+ Começar a
+    colaborar" (Start collaborating): clicked, it makes a new page in
+    Private and opens its Share menu, 456 × 349 under the top bar, with
+    the email field focused and General access "Somente pessoas
+    convidadas" (Only people invited), the access of every private page.
+    Pagecraft now does the same while signed in (a page shared with
+    people moves to Shared), and a page with no sharing yet reads "Only
+    people invited" on the server and in the menu (it read "Everyone in
+    the workspace"). A guest sees the pages shared with them under
+    Shared; one shared to view or comment reads as a locked page.
+    Notion left as found: the empty page "Start collaborating" made, and
+    two more a mistaken selector made in `n88` (it hit "Nova página" at
+    the sidebar's top), were moved to Notion's trash, where they stay
+    until Notion empties it; Private reads as before
+    (`n86-teamspaces/00-page`).
+
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,
 `n45-history/04-updates`: "Há 4 horas", ID 1, Nome, the box ticked). A
@@ -1409,5 +1429,8 @@ board measured in Notion (item 46).
 
 - (Closed 2026-11-14) Status pills carry Notion's dot and round ends in
   tables and boards (`p45-status-dot`), drawn by `src/ui/chip/chip.css`.
+- Notion's top bar names a private page's place, "🔒 Particular ⌄",
+  beside its title (`n87-collaborate/03-open`); Pagecraft's shows the
+  title alone.
 - Notion's view settings rows 8 px from the panel's edge against
   Pagecraft's 4 px on every menu (item 45).

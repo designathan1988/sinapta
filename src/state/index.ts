@@ -161,6 +161,7 @@ export {
 export type { Transaction } from "./history.ts";
 export {
   replayOffline,
+  requestOpenSharing,
   requestSync,
   setConnection,
   setShared,
