@@ -1,7 +1,8 @@
-// The functions formulas can call, besides prop(), if(), ifs(), map() and
-// filter(), which the evaluator works out itself.
+// The functions formulas can call, besides the special forms below, which
+// the evaluator works out itself.
 import { graphemeCount } from "../../../../model/index.ts";
 import { DATE_FUNCTIONS, type FormulaFunction } from "./formula-dates.ts";
+import { LIST_FUNCTIONS } from "./formula-lists.ts";
 import {
   asList,
   asNumber,
@@ -101,6 +102,19 @@ function at(list: readonly FormulaValue[], index: number): FormulaValue {
   return list.at(index) ?? null;
 }
 
+function median(values: number[]): number {
+  const sorted = [...values].sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+  const high = sorted[middle] ?? 0;
+  return sorted.length % 2 === 1
+    ? high
+    : ((sorted[middle - 1] ?? 0) + high) / 2;
+}
+
+function constant(value: number): FormulaFunction {
+  return { arity: [0, 0], call: () => value };
+}
+
 function toNumber(args: readonly FormulaValue[]): FormulaValue {
   const value = args[0] ?? null;
   if (typeof value === "number") return value;
@@ -111,6 +125,7 @@ function toNumber(args: readonly FormulaValue[]): FormulaValue {
 
 export const FUNCTIONS: Readonly<Record<string, FormulaFunction>> = {
   ...DATE_FUNCTIONS,
+  ...LIST_FUNCTIONS,
   and: {
     arity: [1, MANY],
     call: (args) => args.every((arg) => !isEmptyValue(arg)),
@@ -145,6 +160,20 @@ export const FUNCTIONS: Readonly<Record<string, FormulaFunction>> = {
   ceil: math("ceil", Math.ceil),
   abs: math("abs", Math.abs),
   sqrt: math("sqrt", Math.sqrt),
+  cbrt: math("cbrt", Math.cbrt),
+  sign: math("sign", Math.sign),
+  exp: math("exp", Math.exp),
+  ln: math("ln", Math.log),
+  log10: math("log10", Math.log10),
+  log2: math("log2", Math.log2),
+  pi: constant(Math.PI),
+  e: constant(Math.E),
+  mean: aggregate(
+    "mean",
+    (values) =>
+      values.reduce((total, value) => total + value, 0) / values.length,
+  ),
+  median: aggregate("median", median),
   min: aggregate("min", (values) => Math.min(...values)),
   max: aggregate("max", (values) => Math.max(...values)),
   sum: aggregate("sum", (values) =>
@@ -186,6 +215,14 @@ export const SPECIAL_FORMS: Readonly<
   ifs: [3, MANY],
   map: [2, 2],
   filter: [2, 2],
+  find: [2, 2],
+  findIndex: [2, 2],
+  some: [2, 2],
+  every: [2, 2],
+  sort: [1, 2],
+  let: [3, 3],
+  lets: [3, MANY],
+  id: [0, 0],
 };
 
 export type { FormulaFunction };

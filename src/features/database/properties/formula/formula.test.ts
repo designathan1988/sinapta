@@ -82,7 +82,7 @@ describe("formulas", () => {
     ).toBe(14);
     expect(run('formatDate(prop("Due"), "YYYY/MM/DD")')).toBe("2026/11/10");
     expect(
-      run('year(prop("Due")) + month(prop("Due")) + day(prop("Due"))'),
+      run('year(prop("Due")) + month(prop("Due")) + date(prop("Due"))'),
     ).toBe(2047);
   });
 

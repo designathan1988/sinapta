@@ -119,6 +119,7 @@ export function formulaResult(
     valueOf: (name) =>
       valueByName(name, { ...reading, depth: reading.depth + 1 }),
     now: `${reading.context.today}T00:00`,
+    id: reading.row.id,
   });
 }
 

@@ -42,6 +42,32 @@ describe("toEmbedUrl", () => {
       "https://docs.google.com/document/d/abc/edit",
       "https://docs.google.com/document/d/abc/preview",
     ],
+    [
+      "https://gist.github.com/ana/0a1b2c",
+      "https://gist.github.com/ana/0a1b2c.pibb",
+    ],
+    [
+      "https://miro.com/app/board/uXjVabc=/",
+      "https://miro.com/app/live-embed/uXjVabc=/",
+    ],
+    ["https://codesandbox.io/s/x1y2z3", "https://codesandbox.io/embed/x1y2z3"],
+    [
+      "https://acme.typeform.com/to/AbCd12",
+      "https://form.typeform.com/to/AbCd12",
+    ],
+    [
+      "https://drive.google.com/file/d/f1/view?usp=sharing",
+      "https://drive.google.com/file/d/f1/preview",
+    ],
+    [
+      "https://excalidraw.com/#json=abc,key",
+      "https://excalidraw.com/#json=abc,key",
+    ],
+    ["https://whimsical.com/flow-AbC", "https://whimsical.com/embed/flow-AbC"],
+    [
+      "https://airtable.com/appX/shrY?backgroundColor=red",
+      "https://airtable.com/embed/appX/shrY",
+    ],
   ])("turns %s into its embed address", (url, embed) => {
     expect(toEmbedUrl(url)).toBe(embed);
   });

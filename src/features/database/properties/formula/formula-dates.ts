@@ -118,6 +118,42 @@ function part(read: (date: Date) => number) {
     read(new Date(timeOf(asDate(args[0] ?? null, "date"))));
 }
 
+// The ISO week of the year: weeks start on Monday, and week 1 holds the
+// year's first Thursday.
+function isoWeek(date: Date): number {
+  const thursday = new Date(date.getTime());
+  thursday.setUTCDate(date.getUTCDate() + 3 - ((date.getUTCDay() + 6) % 7));
+  const yearStart = Date.UTC(thursday.getUTCFullYear(), 0, 1);
+  return Math.ceil(((thursday.getTime() - yearStart) / UNIT_MS_DAY + 1) / 7);
+}
+
+const UNIT_MS_DAY = 86_400_000;
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2})?/;
+
+function parseDate(args: readonly FormulaValue[]): FormulaValue {
+  const found = ISO_DATE.exec(asText(args[0] ?? null).trim());
+  if (found === null || Number.isNaN(Date.parse(found[0]))) {
+    throw new FormulaError("parseDate needs a date written as YYYY-MM-DD.");
+  }
+  return { kind: "date", start: found[0] };
+}
+
+function range(args: readonly FormulaValue[]): FormulaValue {
+  const start = asDate(args[0] ?? null, "dateRange").start;
+  const end = asDate(args[1] ?? null, "dateRange").start;
+  return { kind: "date", start, end };
+}
+
+function ends(atEnd: boolean) {
+  return (args: readonly FormulaValue[]): FormulaValue => {
+    const date = asDate(args[0] ?? null, atEnd ? "dateEnd" : "dateStart");
+    return {
+      kind: "date",
+      start: atEnd ? (date.end ?? date.start) : date.start,
+    };
+  };
+}
+
 export interface FormulaFunction {
   // How many arguments it takes, the most possibly unlimited.
   readonly arity: readonly [number, number];
@@ -136,5 +172,23 @@ export const DATE_FUNCTIONS: Readonly<Record<string, FormulaFunction>> = {
   formatDate: { arity: [1, 2], call: formatDate },
   year: { arity: [1, 1], call: part((date) => date.getUTCFullYear()) },
   month: { arity: [1, 1], call: part((date) => date.getUTCMonth() + 1) },
-  day: { arity: [1, 1], call: part((date) => date.getUTCDate()) },
+  // Notion 2.0: date() is the day of the month, day() the day of the
+  // week from 1, Monday, to 7, Sunday.
+  date: { arity: [1, 1], call: part((date) => date.getUTCDate()) },
+  day: {
+    arity: [1, 1],
+    call: part((date) => ((date.getUTCDay() + 6) % 7) + 1),
+  },
+  hour: { arity: [1, 1], call: part((date) => date.getUTCHours()) },
+  minute: { arity: [1, 1], call: part((date) => date.getUTCMinutes()) },
+  week: { arity: [1, 1], call: part(isoWeek) },
+  dateStart: { arity: [1, 1], call: ends(false) },
+  dateEnd: { arity: [1, 1], call: ends(true) },
+  dateRange: { arity: [2, 2], call: range },
+  parseDate: { arity: [1, 1], call: parseDate },
+  timestamp: { arity: [1, 1], call: part((date) => date.getTime()) },
+  fromTimestamp: {
+    arity: [1, 1],
+    call: ([ms = null]) => dateAt(asNumber(ms, "fromTimestamp"), true),
+  },
 };

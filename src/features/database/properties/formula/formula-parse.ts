@@ -93,17 +93,25 @@ function expect(cursor: Cursor, value: string): void {
 
 function parseArguments(cursor: Cursor): FormulaNode[] {
   expect(cursor, "(");
+  return parseItems(cursor, ")");
+}
+
+// The values up to the closing bracket, separated by commas.
+function parseItems(cursor: Cursor, close: string): FormulaNode[] {
   const args: FormulaNode[] = [];
-  if (isOp(peek(cursor), ")")) {
+  if (isOp(peek(cursor), close)) {
     next(cursor);
     return args;
   }
   for (;;) {
     args.push(parseExpression(cursor, 0));
     const token = next(cursor);
-    if (isOp(token, ")")) return args;
+    if (isOp(token, close)) return args;
     if (!isOp(token, ",")) {
-      throw new FormulaSyntaxError('Expected "," or ")" here.', token.offset);
+      throw new FormulaSyntaxError(
+        `Expected "," or "${close}" here.`,
+        token.offset,
+      );
     }
   }
 }
@@ -133,6 +141,11 @@ function parsePrefix(cursor: Cursor): FormulaNode {
         const inner = parseExpression(cursor, 0);
         expect(cursor, ")");
         return inner;
+      }
+      // [1, 2, 3]: a list, worked out as list(1, 2, 3).
+      if (token.value === "[") {
+        const args = parseItems(cursor, "]");
+        return { kind: "call", name: "list", args, offset: token.offset };
       }
       if (token.value === "-" || token.value === "!") {
         const operand = parseExpression(cursor, PREFIX_BINDING);

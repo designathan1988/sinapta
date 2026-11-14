@@ -1,9 +1,14 @@
 // Works a checked formula out for one row. Mistakes that show only with
 // the row's values, such as a division by zero, become an error value.
 import { FUNCTIONS } from "./formula-functions.ts";
+import {
+  isListForm,
+  overList,
+  withNames,
+  type Scope,
+} from "./formula-lambdas.ts";
 import type { FormulaNode } from "./formula-parse.ts";
 import {
-  asList,
   asNumber,
   FormulaEmpty,
   FormulaError,
@@ -20,14 +25,14 @@ export interface FormulaContext {
   readonly valueOf: (name: string) => FormulaValue;
   // Now as "YYYY-MM-DDTHH:MM", for now() and today().
   readonly now: string;
+  // The row's page id, for id().
+  readonly id?: string;
 }
 
 export type FormulaResult = FormulaValue | { readonly error: string };
 
-interface Env {
+interface Env extends Scope {
   readonly context: FormulaContext;
-  // The list item map() and filter() are working on.
-  readonly current: FormulaValue;
 }
 
 function divide(a: number, b: number, remainder: boolean): number {
@@ -114,31 +119,20 @@ function ifs(args: readonly FormulaNode[], env: Env): FormulaValue {
   return otherwise === undefined ? null : evaluate(otherwise, env);
 }
 
-function overList(
-  args: readonly FormulaNode[],
-  env: Env,
-  keep: boolean,
-): FormulaValue {
-  const [listNode, body] = args;
-  if (listNode === undefined || body === undefined) return null;
-  const list = asList(evaluate(listNode, env), keep ? "filter" : "map");
-  if (!keep) return list.map((current) => evaluate(body, { ...env, current }));
-  return list.filter(
-    (current) => !isEmptyValue(evaluate(body, { ...env, current })),
-  );
+function prop(args: readonly FormulaNode[], env: Env): FormulaValue {
+  const first = args[0];
+  return first?.kind === "literal"
+    ? env.context.valueOf(valueText(first.value))
+    : null;
 }
 
 function call(node: FormulaNode & { kind: "call" }, env: Env): FormulaValue {
   const { name, args } = node;
-  const first = args[0];
-  if (name === "prop") {
-    return first?.kind === "literal"
-      ? env.context.valueOf(valueText(first.value))
-      : null;
-  }
+  if (name === "prop") return prop(args, env);
   if (name === "if" || name === "ifs") return ifs(args, env);
-  if (name === "map" || name === "filter")
-    return overList(args, env, name === "filter");
+  if (isListForm(name)) return overList(node, env, evaluate);
+  if (name === "let" || name === "lets") return withNames(args, env, evaluate);
+  if (name === "id") return env.context.id ?? null;
   return callFunction(
     name,
     args.map((arg) => evaluate(arg, env)),
@@ -164,12 +158,20 @@ function callFunction(
   }
 }
 
+// A name let() bound, or the list item and its place.
+function nameValue(name: string, env: Env): FormulaValue {
+  const bound = env.variables.get(name);
+  if (bound !== undefined) return bound;
+  if (name === "current") return env.current;
+  return name === "index" ? env.index : null;
+}
+
 function evaluate(node: FormulaNode, env: Env): FormulaValue {
   switch (node.kind) {
     case "literal":
       return node.value;
     case "name":
-      return node.name === "current" ? env.current : null;
+      return nameValue(node.name, env);
     case "unary": {
       const value = evaluate(node.operand, env);
       return node.op === "!" ? isEmptyValue(value) : -asNumber(value, "-");
@@ -190,7 +192,12 @@ export function evaluateFormula(
   context: FormulaContext,
 ): FormulaResult {
   try {
-    return evaluate(program, { context, current: null });
+    return evaluate(program, {
+      context,
+      current: null,
+      index: 0,
+      variables: new Map(),
+    });
   } catch (error) {
     if (error instanceof FormulaError) return { error: error.message };
     if (error instanceof RangeError)

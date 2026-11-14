@@ -2,7 +2,7 @@
 // people paste into the address its player or viewer lives at. The
 // content security policy in vite.config.ts lists exactly the hosts in
 // FRAME_HOSTS.
-type Rule = (url: URL) => string | undefined;
+import { TOOL_FRAME_HOSTS, toolRuleOf, type Rule } from "./embed-tools.ts";
 
 function segments(url: URL): string[] {
   return url.pathname.split("/").filter((part) => part !== "");
@@ -121,6 +121,7 @@ export const FRAME_HOSTS = [
   "https://www.google.com",
   "https://www.figma.com",
   "https://w.soundcloud.com",
+  ...TOOL_FRAME_HOSTS,
 ] as const;
 
 // The address to frame for a pasted https address, or undefined for an
@@ -128,5 +129,6 @@ export const FRAME_HOSTS = [
 export function toEmbedUrl(address: string): string | undefined {
   const url = URL.parse(address.trim());
   if (url?.protocol !== "https:") return undefined;
-  return RULES.get(url.hostname)?.(url);
+  const rule = RULES.get(url.hostname) ?? toolRuleOf(url.hostname);
+  return rule?.(url);
 }
