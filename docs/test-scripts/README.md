@@ -14,4 +14,5 @@ code as it is when the script is written), are run with the human hand of
 | editor and text blocks | [editor.md](editor.md) | 2026-11-14 | 53 | 40 | 11 (9 fixed) | 2 |
 | other blocks | [blocks.md](blocks.md) | 2026-11-14 | 38 | 24 | 11 (11 fixed) | 3 |
 | menus | [menus.md](menus.md) | 2026-11-14 | 28 | 21 | 7 (5 fixed) | 0 |
+| database and views | [database.md](database.md) | 2026-11-14 | 26 | 18 | 8 (3 fixed) | 0 |
 | blocks/toggle | [blocks-toggle.md](blocks-toggle.md) | 2026-11-14 | 43 | 18 | 4 (1 fixed) | 21 |
