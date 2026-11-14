@@ -2,8 +2,6 @@
 import { isTextBlock } from "../../blocks/index.ts";
 import {
   applyInlineMarkdownTo,
-  deleteRange,
-  insertText,
   plainText,
   safeHref,
   setLink,
@@ -20,6 +18,7 @@ import {
   type Tone,
 } from "../../model/index.ts";
 import { suggestReplace } from "../comments/index.ts";
+import { replaced } from "./editor-typed-text.ts";
 import {
   defineCommand,
   type AppState,
@@ -85,9 +84,8 @@ export const replaceText = defineCommand<ReplaceTextPayload>({
     if (suggested !== undefined) {
       return { ...suggested, mergeKey: `text:${block.id}` };
     }
-    const kept = deleteRange(block.props.text, start, end);
-    const text = insertText(kept, start, command.text);
-    const caret = start + command.text.normalize("NFC").length;
+    const change = { start, end, text: command.text };
+    const { text, caret } = replaced(state, block, change);
     return {
       operations: setText(state, {
         blockId: block.id,
@@ -136,13 +134,14 @@ export const applyInlineMarkdown = defineCommand<
     const text = applyInlineMarkdownTo(block.props.text, command);
     if (text === undefined) return {};
     const caret = command.end - 2 * command.markerLength;
+    const selection = { ...caretAt(block.id, caret), isPlainNext: true };
     return {
       operations: setText(state, {
         blockId: block.id,
         text,
         now: command.meta.now,
       }),
-      ui: { ...state.ui, selection: caretAt(block.id, caret) },
+      ui: { ...state.ui, selection },
     };
   },
 });

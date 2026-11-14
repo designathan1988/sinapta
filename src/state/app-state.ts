@@ -28,6 +28,8 @@ export interface TextSelection {
   // UTF-16 offsets that always sit on grapheme cluster boundaries.
   readonly anchorOffset: number;
   readonly focusOffset: number;
+  // Just after inline Markdown closed: text typed here next is plain.
+  readonly isPlainNext?: boolean;
 }
 
 // Whole blocks selected together: every block of the page from the anchor
@@ -56,16 +58,14 @@ export interface OpenOverlay {
   readonly activeIndex?: number;
   // What has been typed into the overlay's search field.
   readonly query?: string;
-  // The overlay's own switches that are on, such as a search's "Title
-  // only".
+  // The overlay's own switches that are on, as a search's "Title only".
   readonly flags?: readonly string[];
   // The overlay's own chosen values, by name, such as the pages a search
   // looks in; a name with no values is a filter shown but not yet set.
   readonly values?: Readonly<Record<string, readonly string[]>>;
   // Where a menu opened by a right click shows, in viewport pixels.
   readonly point?: { readonly x: number; readonly y: number };
-  // The panel shown of an overlay that moves between panels, such as a
-  // view's settings; absent for its first panel.
+  // The panel shown of an overlay with panels; absent for its first.
   readonly panel?: string;
   readonly draft?: unknown; // settings changed before Save
   // The lists and submenus opened from inside the overlay, outermost

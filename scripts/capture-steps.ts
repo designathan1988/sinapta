@@ -138,6 +138,12 @@ async function press(page: Page, step: CaptureStep): Promise<void> {
   if (step.click !== undefined) {
     await page.locator(step.click).first().click({ timeout: 10000 });
   }
+  if (step.rightClick !== undefined) {
+    await page
+      .locator(step.rightClick)
+      .first()
+      .click({ button: "right", timeout: 10000 });
+  }
   if (step.clickAt !== undefined) {
     const [x, y] = step.clickAt;
     await page.mouse.click(x, y);
@@ -172,6 +178,7 @@ async function act(page: Page, step: CaptureStep): Promise<void> {
   } else if (
     step.click === undefined &&
     step.clickAt === undefined &&
+    step.rightClick === undefined &&
     step.drag === undefined
   ) {
     await page.mouse.move(2, 2);
