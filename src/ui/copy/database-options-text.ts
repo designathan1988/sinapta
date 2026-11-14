@@ -63,6 +63,14 @@ export const DATABASE_OPTIONS_TEXT = {
   addPageTo: "Add page to",
   addPageToNamed: (name: string) => `Add page to ${name}`,
   noDatabase: "None",
+  sendWebhook: "Send webhook",
+  sendWebhookTo: (url: string) => `Send webhook to ${url}`,
+  webhookUrl: "Webhook URL",
+  webhookNote:
+    "The workspace's server posts the page and its properties to this address.",
+  webhookNeedsServer:
+    "Webhooks are sent by a workspace's server: sign in to send them.",
+  removeWebhook: "Remove webhook",
   setTo: (name: string, value: string) => `Set ${name} to ${value}`,
   automationActive: "Active",
   deleteAutomation: "Delete automation",

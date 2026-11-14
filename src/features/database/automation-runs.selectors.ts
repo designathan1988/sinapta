@@ -4,7 +4,7 @@
 import { DATABASE_TYPE, isPageLike } from "../../blocks/page/index.ts";
 import type { Automation, DatabaseBlock } from "../../blocks/database/index.ts";
 import type { Block, BlockId } from "../../model/index.ts";
-import type { AppState } from "../../state/index.ts";
+import type { AppState, WebhookPayload } from "../../state/index.ts";
 
 export interface AutomationRun {
   readonly databaseId: BlockId;
@@ -69,4 +69,35 @@ export function selectAutomationRuns(
         })),
       );
   });
+}
+
+// What Send webhook posts for a run: the page, its title and its values by
+// property name; none when the automation sends no webhook.
+export function selectWebhook(
+  state: AppState,
+  run: AutomationRun,
+): { readonly url: string; readonly payload: WebhookPayload } | undefined {
+  const database = state.workspace.blocks[run.databaseId];
+  const row = state.workspace.blocks[run.rowId];
+  if (database === undefined || !isDatabase(database)) return undefined;
+  if (row === undefined || !isPageLike(row)) return undefined;
+  const automation = database.props.automations?.find(
+    (item) => item.id === run.automationId,
+  );
+  const url = automation?.webhookUrl;
+  if (url === undefined || url === "") return undefined;
+  const values: Readonly<Record<string, unknown>> = row.props.values ?? {};
+  const properties = Object.fromEntries(
+    database.props.properties.flatMap((property) =>
+      property.id in values ? [[property.name, values[property.id]]] : [],
+    ),
+  );
+  const title = row.props.title.map((span) => span.text).join("");
+  return {
+    url,
+    payload: {
+      source: { type: "automation", automation_id: run.automationId },
+      data: { object: "page", id: row.id, title, properties },
+    },
+  };
 }

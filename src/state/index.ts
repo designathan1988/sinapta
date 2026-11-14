@@ -210,6 +210,7 @@ export {
   type PageSharing,
   type Presence,
   type SyncRequest,
+  type WebhookPayload,
   type SyncState,
   type WorkspaceSummary,
 } from "./sync-state.ts";

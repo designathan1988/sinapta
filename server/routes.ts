@@ -20,6 +20,7 @@ import { PASSKEY_ROUTES } from "./passkey-routes.ts";
 import { OIDC_ROUTES } from "./oidc.ts";
 import { PAGE_VERSION_ROUTES } from "./page-versions.ts";
 import { PAGE_VIEW_ROUTES } from "./page-views.ts";
+import { AUTOMATION_WEBHOOK_ROUTES } from "./automation-webhook.ts";
 import { BILLING_ROUTES } from "./billing.ts";
 
 const HEALTH_ROUTES: RouteTable = {
@@ -49,6 +50,7 @@ export const ROUTES: RouteTable = {
   ...OIDC_ROUTES,
   ...PAGE_VERSION_ROUTES,
   ...PAGE_VIEW_ROUTES,
+  ...AUTOMATION_WEBHOOK_ROUTES,
   ...BILLING_ROUTES,
   ...LINK_PREVIEW_ROUTES,
   ...INTEGRATION_ROUTES,

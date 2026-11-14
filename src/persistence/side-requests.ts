@@ -1,5 +1,5 @@
 // The requests that leave the open workspace as it is: its integrations
-// and connected apps, and its billing and plan.
+// and connected apps, its billing and plan, and automations' webhooks.
 import type { SyncRequest } from "../state/index.ts";
 import {
   answerBilling,
@@ -13,13 +13,22 @@ import {
   type IntegrationRequest,
 } from "./integration-client.ts";
 import type { Sync } from "./sync-session.ts";
+import {
+  answerWebhook,
+  isWebhookRequest,
+  type WebhookRequest,
+} from "./automation-webhook-client.ts";
 
 // True when the request was one of these, now on its way.
 export function answerSide(
   sync: Sync,
   request: SyncRequest,
   target: BillingTarget,
-): request is IntegrationRequest | BillingRequest {
+): request is IntegrationRequest | BillingRequest | WebhookRequest {
+  if (isWebhookRequest(request)) {
+    void answerWebhook(sync, request, target.workspaceId);
+    return true;
+  }
   if (isIntegrationRequest(request)) {
     void answerIntegrations(sync, request, target.workspaceId);
     return true;

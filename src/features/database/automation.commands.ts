@@ -58,15 +58,19 @@ export const addAutomation = defineCommand<{ databaseId: BlockId }>({
   },
 });
 
-// The automation with the patch on it; an empty Add page to takes it off.
+// The automation with the patch on it; an empty Add page to or webhook
+// takes it off.
 function changed(
   automation: Automation,
   patch: Partial<Omit<Automation, "id">>,
 ): Automation {
   const next = { ...automation, ...patch };
-  if (next.addPageTo !== "") return next;
-  const { addPageTo: _none, ...rest } = next;
-  return rest;
+  const { addPageTo, webhookUrl, ...rest } = next;
+  return {
+    ...rest,
+    ...(addPageTo !== undefined && addPageTo !== "" && { addPageTo }),
+    ...(webhookUrl !== undefined && webhookUrl !== "" && { webhookUrl }),
+  };
 }
 
 export const setAutomation = defineCommand<{

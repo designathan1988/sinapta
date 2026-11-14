@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { isPageLike } from "../../blocks/page/index.ts";
 import type { BlockId } from "../../model/index.ts";
 import { installAutomations } from "./automation-runner.ts";
+import { selectWebhook } from "./automation-runs.selectors.ts";
 import {
   addAutomation,
   deleteAutomation,
@@ -153,6 +154,59 @@ describe("a database's automations, as Notion's", () => {
     expect(added).toBe(1);
     expect(app.database().props.automations?.[0]).not.toHaveProperty(
       "addPageTo",
+    );
+  });
+
+  it("post a page's title and values by name with Send webhook", () => {
+    const { app, stage, first, databaseId, automationId } = setup();
+    const patch = { webhookUrl: "https://hooks.example.com/in" };
+    app.dispatch(setAutomation.create({ databaseId, automationId, patch }));
+    app.dispatch(
+      setRowValue.create({ rowId: first, propertyId: stage, value: "new" }),
+    );
+
+    const webhook = selectWebhook(app.store.getState(), {
+      databaseId,
+      automationId,
+      rowId: first,
+      adds: 0,
+    });
+
+    expect(webhook).toEqual({
+      url: "https://hooks.example.com/in",
+      payload: {
+        source: { type: "automation", automation_id: automationId },
+        data: {
+          object: "page",
+          id: first,
+          title: "First",
+          properties: { Stage: "new", Done: false },
+        },
+      },
+    });
+  });
+
+  it("take Send webhook off with an empty address", () => {
+    const { app, databaseId, automationId } = setup();
+    const url = "https://hooks.example.com/in";
+    app.dispatch(
+      setAutomation.create({
+        databaseId,
+        automationId,
+        patch: { webhookUrl: url },
+      }),
+    );
+
+    app.dispatch(
+      setAutomation.create({
+        databaseId,
+        automationId,
+        patch: { webhookUrl: "" },
+      }),
+    );
+
+    expect(app.database().props.automations?.[0]).not.toHaveProperty(
+      "webhookUrl",
     );
   });
 

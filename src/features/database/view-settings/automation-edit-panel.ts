@@ -21,6 +21,11 @@ import {
   addPageItem,
   addPagePanel,
 } from "./automation-add-panel.ts";
+import {
+  HOOK_PANEL,
+  webhookItem,
+  webhookPanel,
+} from "./automation-hook-panel.ts";
 import { goTo, panelRow, type SettingsPanel } from "./settings-panel.ts";
 
 const TEXT = COPY.database;
@@ -107,7 +112,12 @@ function actionItems(context: TableContext, automation: Automation) {
     { label: TEXT.editProperty, icon: "plus" },
     `${SET_PANEL}${automation.id}`,
   );
-  return [...set, add, addPageItem(context, automation)];
+  return [
+    ...set,
+    add,
+    addPageItem(context, automation),
+    webhookItem(context, automation),
+  ];
 }
 
 function editPanel(context: TableContext, automation: Automation) {
@@ -188,6 +198,19 @@ function valuePanel(
   return { title: property.name, back, items };
 }
 
+// The panels named by an automation alone, by their names' start.
+const PANELS_OF: Readonly<
+  Record<
+    string,
+    (context: TableContext, automation: Automation) => SettingsPanel
+  >
+> = {
+  [AUTOMATION_PANEL]: editPanel,
+  [SET_PANEL]: setPanel,
+  [ADD_PANEL]: addPagePanel,
+  [HOOK_PANEL]: webhookPanel,
+};
+
 // The panel a name stands for, when it names one of an automation's.
 export function automationPanelOf(
   context: TableContext,
@@ -196,9 +219,8 @@ export function automationPanelOf(
   const [kind = "", id = "", propertyId = ""] = name.split(":");
   const automation = automationOf(context, id);
   if (automation === undefined) return undefined;
-  if (`${kind}:` === AUTOMATION_PANEL) return editPanel(context, automation);
-  if (`${kind}:` === SET_PANEL) return setPanel(context, automation);
-  if (`${kind}:` === ADD_PANEL) return addPagePanel(context, automation);
+  const build = PANELS_OF[`${kind}:`];
+  if (build !== undefined) return build(context, automation);
   const property = context.model.database.props.properties.find(
     (item) => item.id === propertyId,
   );

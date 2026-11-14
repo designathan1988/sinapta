@@ -9,6 +9,7 @@ import {
 } from "../state/index.ts";
 import { readUser } from "./account.schema.ts";
 import type { BillingRequest } from "./billing-client.ts";
+import type { WebhookRequest } from "./automation-webhook-client.ts";
 import type { IntegrationRequest } from "./integration-client.ts";
 import type { TeamspaceRequest } from "./teamspace-client.ts";
 import { getJson, type Sync } from "./sync-session.ts";
@@ -21,6 +22,7 @@ export type PeopleRequest = Exclude<
   | TeamspaceRequest
   | IntegrationRequest
   | BillingRequest
+  | WebhookRequest
 >;
 
 function publishPeople(sync: Sync, body: unknown): void {

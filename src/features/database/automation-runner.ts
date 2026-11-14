@@ -3,12 +3,17 @@
 // here (not one from the server or an undo), only on a plan that runs
 // automations, and never for a change an automation made.
 import {
+  requestSync,
   selectPlanLimits,
   type AppState,
   type AppStore,
   type Dispatch,
 } from "../../state/index.ts";
-import { selectAutomationRuns } from "./automation-runs.selectors.ts";
+import {
+  selectAutomationRuns,
+  selectWebhook,
+  type AutomationRun,
+} from "./automation-runs.selectors.ts";
 import { runAutomation } from "./automation.commands.ts";
 
 // A change made here, recorded for undo: one more step, or the last one
@@ -19,6 +24,21 @@ function isLocalChange(before: AppState, after: AppState): boolean {
   const { undo: earlier } = before.history;
   if (undo.length < earlier.length) return false;
   return undo.at(-1) !== earlier.at(-1);
+}
+
+// Send webhook goes through the open workspace's server; the browser's
+// own workspace has none to send it.
+function sendWebhook(
+  state: AppState,
+  run: AutomationRun,
+  dispatch: Dispatch,
+): void {
+  if (state.persistence.sync.workspaceId === null) return;
+  const webhook = selectWebhook(state, run);
+  if (webhook === undefined) return;
+  dispatch(
+    requestSync.create({ request: { kind: "automation-webhook", ...webhook } }),
+  );
 }
 
 export function installAutomations(store: AppStore, dispatch: Dispatch): void {
@@ -36,7 +56,10 @@ export function installAutomations(store: AppStore, dispatch: Dispatch): void {
     queueMicrotask(() => {
       isRunning = true;
       try {
-        for (const run of runs) dispatch(runAutomation.create(run));
+        for (const run of runs) {
+          dispatch(runAutomation.create(run));
+          sendWebhook(store.getState(), run, dispatch);
+        }
       } finally {
         isRunning = false;
       }

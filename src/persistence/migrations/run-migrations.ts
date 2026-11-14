@@ -30,6 +30,7 @@ import { addViewLock } from "./0028-view-lock.ts";
 import { addAdvancedFilters } from "./0029-advanced-filters.ts";
 import { addAutomations } from "./0030-automations.ts";
 import { addAutomationPages } from "./0031-automation-add-page.ts";
+import { addAutomationWebhooks } from "./0032-automation-webhook.ts";
 
 // A pure function from format version n to n + 1.
 export type Migration = (
@@ -69,6 +70,7 @@ export const MIGRATIONS: readonly Migration[] = [
   addAdvancedFilters,
   addAutomations,
   addAutomationPages,
+  addAutomationWebhooks,
 ];
 
 export type MigrationResult =

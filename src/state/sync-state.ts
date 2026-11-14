@@ -84,6 +84,11 @@ export type SyncRequest =
   | { readonly kind: "rename"; readonly name: string }
   | { readonly kind: "plan"; readonly plan: PlanId }
   | { readonly kind: "billing" }
+  | {
+      readonly kind: "automation-webhook";
+      readonly url: string;
+      readonly payload: WebhookPayload;
+    }
   | { readonly kind: "add-card"; readonly card: CardInput }
   | { readonly kind: "remove-card" }
   | { readonly kind: "checkout" }
@@ -147,6 +152,21 @@ export type SyncRequest =
       readonly pageId: string;
       readonly published: boolean;
     };
+
+// What an automation's webhook posts: the page it ran on, its title and
+// its values by property name, as Notion's webhook action.
+export interface WebhookPayload {
+  readonly source: {
+    readonly type: "automation";
+    readonly automation_id: string;
+  };
+  readonly data: {
+    readonly object: "page";
+    readonly id: string;
+    readonly title: string;
+    readonly properties: Readonly<Record<string, unknown>>;
+  };
+}
 
 export interface SyncState {
   readonly workspaces: readonly WorkspaceSummary[];
