@@ -24,16 +24,33 @@ import {
   renderSubmenu,
   renderSubmenuOf,
 } from "./menu-submenu.ts";
+import { afterRender } from "../focus/index.ts";
 import type { MenuOptions, MenuSearch } from "./menu-options.ts";
+import { menuPointPlace, type Point } from "./menu-point.ts";
 
 export type { MenuOptions, MenuSearch } from "./menu-options.ts";
 
-// The point is set through the CSSOM: it changes with every opening.
+function setPoint(element: HTMLElement, point: Point): void {
+  element.style.setProperty("--menu-x", `${String(point.x)}px`);
+  element.style.setProperty("--menu-y", `${String(point.y)}px`);
+}
+
+// The point is set through the CSSOM: it changes with every opening. Once
+// the menu is open it is measured and moved to fit in the window.
 function placeAt(point: MenuOptions["point"]) {
   return (element: Element | undefined): void => {
     if (!(element instanceof HTMLElement) || point === undefined) return;
-    element.style.setProperty("--menu-x", `${String(point.x)}px`);
-    element.style.setProperty("--menu-y", `${String(point.y)}px`);
+    setPoint(element, point);
+    const fit = (): void => {
+      const { width, height } = element.getBoundingClientRect();
+      if (!element.isConnected || height === 0) return;
+      const room = { width: window.innerWidth, height: window.innerHeight };
+      setPoint(element, menuPointPlace(point, { width, height }, room));
+    };
+    // Measured once it is open: when the popover shows, or after this
+    // render when it already shows.
+    if (element.matches(":popover-open")) afterRender(fit);
+    else element.addEventListener("toggle", fit, { once: true });
   };
 }
 
