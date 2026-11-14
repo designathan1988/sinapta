@@ -21,14 +21,10 @@ import {
 } from "../../state/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
-import { renderDialog } from "../../ui/dialog/index.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { moveBlocksToPage, selectPageIdOf } from "../editor/index.ts";
 import { MOVE_TO_OVERLAY_KIND } from "../page-menu/index.ts";
-import {
-  MOVE_TO_PLACE_PANEL,
-  renderMovePopover,
-} from "./move-to-popover.view.ts";
+import { renderMovePopover } from "./move-to-popover.view.ts";
 import { selectPageRows, selectTreeRows } from "../sidebar/index.ts";
 import { selectSidebarTeamspaces } from "../../blocks/teamspace/index.ts";
 
@@ -140,24 +136,13 @@ function selectEntries(state: AppState, dispatch: Dispatch): MoveEntry[] {
 }
 
 // A single-pointer and keyboard alternative to dragging a page elsewhere:
-// a dialog, or Notion's popover with a search under the place in the top
-// bar that opened it.
+// Notion's popover with a search, under the control that opened it.
 export function renderMoveTo(
   state: AppState,
   dispatch: Dispatch,
 ): TemplateResult {
   const entries = selectEntries(state, dispatch);
-  if (state.ui.overlay?.panel === MOVE_TO_PLACE_PANEL) {
-    const movedId = parseBlockId(state.ui.overlay.anchorId ?? "");
-    const isPage = selectPage(state, movedId ?? null) !== undefined;
-    return renderMovePopover(state, dispatch, { entries, isPage });
-  }
-  return renderDialog({
-    title: COPY.moveTo.title,
-    closeLabel: COPY.moveTo.close,
-    content: html`<ul class="move-to__list">
-      ${entries.map(renderOption)}
-    </ul>`,
-    onClose: () => dispatch(closeOverlay.create({})),
-  });
+  const movedId = parseBlockId(state.ui.overlay?.anchorId ?? "");
+  const isPage = selectPage(state, movedId ?? null) !== undefined;
+  return renderMovePopover(state, dispatch, { entries, isPage });
 }

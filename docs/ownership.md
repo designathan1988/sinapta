@@ -111,7 +111,7 @@ owner listed here exists.
 | Breadcrumbs | `src/features/breadcrumbs/` | 2 |
 | The page's place in the top bar: Private, Shared or its teamspace, opening Move to | `src/features/breadcrumbs/page-place.selectors.ts`, `breadcrumbs.view.ts` | 26 |
 | Trash panel beside the sidebar | `src/features/trash/` | 2 |
-| Move to: Notion's popover with a search, under the control that opened it (the top bar's place, a page's "…", a block) | `src/features/move-to/` | 2 |
+| Move to: Notion's popover with a search, under the control that opened it (the top bar's place, a page's "…", a block), and nothing else | `src/features/move-to/` | 2 |
 | Settings dialog | `src/features/settings/` | 1 |
 | Property type definitions | `src/features/database/property-registry.ts` plus one folder per type | 5 |
 | Changing a property's type and carrying its values over | `src/features/database/property-type.commands.ts`, `property-convert.ts`, `property-type.selectors.ts` | 16 |

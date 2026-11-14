@@ -1484,6 +1484,7 @@ board measured in Notion (item 46).
   (`p66-move-popover`). Every Move to is that popover now: from a page's
   "…" anywhere it sits under that "…" (`p71-move-from-row`), from a
   block's menu under the block, as "Move block to…" (`p72-move-block`).
+  The dialog it was before is gone (2026-11-14).
 - (Closed 2026-11-14) Notion's view settings rows sit 8 px from the
   panel's edge and its page menu's 4 (`n93-menu-inset`); Pagecraft's
   menus take `isInset` for the view settings alone, the rest keep 4
