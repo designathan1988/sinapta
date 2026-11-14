@@ -2,7 +2,7 @@
 // each step may run a script, click, type, press a key, point at an
 // element with the real mouse, then photograph the window or a region
 // around an element, and print a value read from the page.
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { chromium, type Page } from "playwright-core";
 import type { CapturePlan, CaptureStep } from "./capture.schema.ts";
 import {
@@ -44,8 +44,21 @@ async function notionSession(plan: CapturePlan): Promise<Session> {
   return { page: await context.newPage(), end };
 }
 
+// Chrome's own switches for a microphone that plays a file.
+function microphoneArgs(plan: CapturePlan): string[] {
+  if (plan.microphone === undefined) return [];
+  return [
+    "--use-fake-device-for-media-stream",
+    "--use-fake-ui-for-media-stream",
+    `--use-file-for-fake-audio-capture=${resolve(plan.microphone)}`,
+  ];
+}
+
 async function headless(plan: CapturePlan): Promise<Session> {
-  const browser = await chromium.launch({ executablePath: CHROME });
+  const browser = await chromium.launch({
+    executablePath: CHROME,
+    args: microphoneArgs(plan),
+  });
   const context = await browser.newContext({
     ...WINDOW,
     colorScheme: plan.theme ?? "dark",

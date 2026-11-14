@@ -19,6 +19,7 @@
     "verify": "npm run check && npm run lint && npm run test"
   },
   "dependencies": {
+    "@huggingface/transformers": "4.3.2",
     "@tanstack/table-core": "9.3.1",
     "idb": "8.0.4",
     "lit-html": "3.3.3",

@@ -29,6 +29,9 @@ export const capturePlanSchema = v.object({
   theme: v.optional(v.picklist(["light", "dark"])),
   // Notion signed out: a clean context, for its sign-in pages.
   guest: v.optional(v.boolean()),
+  // A WAV file the headless browser hears as its microphone, allowed
+  // without asking: for AI Meeting Notes.
+  microphone: v.optional(v.string()),
   steps: v.array(stepSchema),
 });
 

@@ -184,7 +184,8 @@ owner listed here exists.
 | Settings › Notifications: the kinds of notice the inbox shows, kept per person | `src/features/settings/settings-notifications.view.ts`, `src/features/inbox/inbox.commands.ts` (`toggleNotices`) | 27 |
 | Desktop notifications: each new notice shown by the system while on | `src/features/inbox/inbox-notifier.ts` | 31 |
 | AI Meeting Notes: the block, its recording and transcript | `src/blocks/meeting-notes/` | 31 |
-| Listening while a meeting records: the browser's speech recognition | `src/features/meeting-notes/transcriber.ts` | 31 |
+| Listening while a meeting records: the microphone recorded for the server's speech model, or the browser's speech recognition | `src/features/meeting-notes/transcriber.ts`, `src/features/meeting-notes/recorder-listener.ts`, `src/app/services.ts` | 31 |
+| Speech to text on the server: a local Whisper model, its route | `server/transcription.ts`, `src/persistence/meeting-client.ts` | 31 |
 | A meeting's summary and action items asked of the server's AI | `src/persistence/meeting-client.ts`, `src/state/meeting.commands.ts` | 31 |
 | What runs beside the app once started | `src/app/services.ts` | 31 |
 | Reminder notifications while the app is open | `src/app/reminder-notices.ts` | 17 |

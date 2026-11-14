@@ -55,3 +55,23 @@ export function startMeetingSummaries(options: {
   });
   look();
 }
+
+// Sends a piece of the meeting's audio to the open workspace's speech
+// model and gives back its words; nothing while no workspace is open.
+export function serverTranscriber(
+  store: AppStore,
+  send: Fetch = (input, init) => fetch(input, init),
+): (audio: string) => Promise<string> {
+  return async (audio) => {
+    const { workspaceId } = store.getState().persistence.sync;
+    if (workspaceId === null) return "";
+    const response = await send(`/api/workspaces/${workspaceId}/transcribe`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
+      body: JSON.stringify({ audio }),
+    });
+    if (!response.ok) return "";
+    return readAiReply(parseReply(await response.text())) ?? "";
+  };
+}

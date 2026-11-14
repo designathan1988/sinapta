@@ -67,6 +67,10 @@ person can use offline.
   `PATCH /v1/blocks/:id/children`, reaching only the connected pages and
   the pages inside them. Bookmarks show the page's own title, description
   and image, read by the server.
+- **AI Meeting Notes.** `/meeting` records the microphone; signed in to
+  the server, a local Whisper model (`Xenova/whisper-base.en`, set with
+  `PAGECRAFT_SPEECH_MODEL`) writes the words, fetched once into
+  `.data/models`. Stopping asks the AI for a summary and action items.
 
 On macOS, use Command where this file says Ctrl.
 

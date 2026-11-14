@@ -10,10 +10,13 @@ import {
 } from "./meeting-notes.schema.ts";
 import { renderMeetingNotes } from "./meeting-notes.view.ts";
 
-// Whether this browser can listen (the Web Speech API); without it the
-// transcript is typed or pasted.
+// Whether this browser can listen: record its microphone for the
+// server's speech model, or use its own speech recognition. Without
+// either the transcript is typed or pasted.
 const CAN_LISTEN =
-  "SpeechRecognition" in globalThis || "webkitSpeechRecognition" in globalThis;
+  "MediaRecorder" in globalThis ||
+  "SpeechRecognition" in globalThis ||
+  "webkitSpeechRecognition" in globalThis;
 
 export const meetingNotesDefinition: BlockDefinition = {
   type: MEETING_NOTES_TYPE,
