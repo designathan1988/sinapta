@@ -20,6 +20,7 @@ import {
 import {
   DATABASE_TIDIERS,
   databaseCommands,
+  installAutomations,
   withPropertyConfigs,
 } from "../features/database/index.ts";
 import { editorCommands } from "../features/editor/index.ts";
@@ -164,6 +165,8 @@ async function startPersistence(
   // The workspace on the server, once someone signs in (ADR-0013).
   sync.start({ store, dispatch, propsSchemas, outbox: createOutbox(adapter) });
   startServices(store, dispatch);
+  // Database automations run right after the change that sets them off.
+  installAutomations(store, dispatch);
   openBillingOnReturn(store, dispatch);
   return { isFirstRun };
 }

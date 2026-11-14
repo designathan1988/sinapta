@@ -1,0 +1,27 @@
+@layer features {
+  /* Notion's Automations on the Free plan: the bolt, the name and what
+     they do, centered, over "Upgrade now". */
+  .view-settings__upsell {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xs);
+    align-items: center;
+    padding: var(--space-stack-xl) var(--space-inset-md) var(--space-inset-md);
+    text-align: center;
+
+    & .button {
+      align-self: stretch;
+      margin-block-start: var(--space-stack-xl);
+    }
+  }
+
+  .view-settings__upsell-icon {
+    color: var(--color-tone-orange);
+  }
+
+  .view-settings__upsell-title {
+    margin: var(--space-none);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-strong);
+  }
+}

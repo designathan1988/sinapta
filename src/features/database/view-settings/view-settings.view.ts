@@ -49,6 +49,8 @@ const SORT_KINDS: ReadonlySet<string> = new Set([
 ]);
 import { sourcePanel } from "./source-panel.ts";
 import { aiAutofillPanel } from "./ai-autofill-panel.ts";
+import { automationsPanel } from "./automations-panel.ts";
+import { automationPanelOf } from "./automation-edit-panel.ts";
 
 const PANELS: Readonly<
   Record<string, (context: TableContext) => SettingsPanel>
@@ -76,6 +78,7 @@ const PANELS: Readonly<
   color: colorPanel,
   source: sourcePanel,
   "ai-autofill": aiAutofillPanel,
+  automations: automationsPanel,
   [COLOR_PROPERTY_PANEL]: colorPropertyPanel,
   "chart-kind": chartKindPanel,
   "chart-x": chartXPanel,
@@ -123,7 +126,10 @@ function panelSearch(context: TableContext, placeholder: string | undefined) {
 export function renderViewSettings(context: TableContext): TemplateResult {
   const name = panelName(context);
   const build = name === undefined ? undefined : PANELS[name];
-  const panel = build?.(context) ?? rootPanel(context);
+  const panel =
+    build?.(context) ??
+    (name === undefined ? undefined : automationPanelOf(context, name)) ??
+    rootPanel(context);
   const { lead, tail } = panel;
   const back = backTo(context, panel, name);
   return renderMenu({

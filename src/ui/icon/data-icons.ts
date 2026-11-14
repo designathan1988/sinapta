@@ -3,6 +3,7 @@
 import { svg, type TemplateResult } from "lit-html";
 
 export const DATA_PATHS = {
+  bolt: svg`<path d="M9 1.5 3.5 9H8l-1 5.5L12.5 7H8z" />`,
   "peek-close": svg`<path d="M3.5 4l4 4-4 4M8.5 4l4 4-4 4" />`,
   "peek-side": svg`<rect x="2" y="3" width="12" height="10" rx="1.5" />
     <path d="M9 3v10" />`,

@@ -8,6 +8,7 @@ import {
   type TypedBlock,
 } from "../../model/index.ts";
 import { type DATABASE_TYPE } from "../page/index.ts";
+import { automationSchema } from "./automation.schema.ts";
 
 export const selectOptionSchema = v.object({
   id: v.string(),
@@ -47,6 +48,9 @@ export const databasePropsSchema = v.object({
   // from the default one.
   templateIds: v.array(blockIdSchema),
   defaultTemplateId: v.nullable(blockIdSchema),
+  // Its automations (version 30), as Notion's: each runs its action when
+  // its trigger happens.
+  automations: v.optional(v.array(automationSchema)),
 });
 
 // Property type name to the schema of that type's config, supplied by the

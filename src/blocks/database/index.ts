@@ -12,3 +12,8 @@ export {
   type SelectOption,
 } from "./database.schema.ts";
 export { rowIdsOf, selectDatabase } from "./database.selectors.ts";
+export {
+  automationSchema,
+  type Automation,
+  type AutomationTrigger,
+} from "./automation.schema.ts";

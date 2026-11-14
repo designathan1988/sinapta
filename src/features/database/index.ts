@@ -76,6 +76,7 @@ import { propertyTypeCommands } from "./property-type.commands.ts";
 import { createInlineDatabase } from "./inline-database.commands.ts";
 import { linkedViewCommands } from "./linked-view.commands.ts";
 import { buttonPressCommands } from "./button-press.commands.ts";
+import { automationCommands } from "./automation.commands.ts";
 import {
   relationCommands,
   relationTidier,
@@ -122,8 +123,10 @@ export const databaseCommands = [
   ...linkedViewCommands,
   ...relationCommands,
   ...buttonPressCommands,
+  ...automationCommands,
 ];
 
 // The rules that keep database data whole after any command.
 export const DATABASE_TIDIERS = [relationTidier];
 export { rowSelectionKeys } from "./row-selection-keys.ts";
+export { installAutomations } from "./automation-runner.ts";
