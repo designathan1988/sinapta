@@ -10,7 +10,9 @@
 // appear after the action (else it is done once more, then the step
 // fails with a photo), clip photographs a region around an element, drag
 // presses the real mouse on an element and moves it by "by" before
-// letting go, and read prints a value measured in the page.
+// letting go, and read prints a value measured in the page. A plan with
+// "human" does all of it with a person's hand (capture-gestures.ts) and
+// prints, after each photo, what the hand did and felt.
 import * as v from "valibot";
 
 const stepSchema = v.object({
@@ -36,7 +38,34 @@ const stepSchema = v.object({
   pad: v.optional(v.number()),
   wait: v.optional(v.number()),
   read: v.optional(v.string()),
+  // With "human" only (capture-gestures.ts): move the hand to a point,
+  // press and keep holding on an element, move to an element (held or
+  // not), let go, drag onto an element instead of by an offset, where in
+  // the last element reached to aim (fractions of its box), and turn
+  // the wheel by [dx, dy] pixels over where the hand is.
+  pointAt: v.optional(v.tuple([v.number(), v.number()])),
+  down: v.optional(v.string()),
+  moveTo: v.optional(v.string()),
+  up: v.optional(v.boolean()),
+  to: v.optional(v.string()),
+  aim: v.optional(v.tuple([v.number(), v.number()])),
+  wheel: v.optional(v.tuple([v.number(), v.number()])),
+  // A page expression read after every event the hand sends during the
+  // step; each change is printed with its time (capture-watch.ts).
+  watch: v.optional(v.string()),
 });
+
+// A person's hand and fingers instead of instant, straight input: curved,
+// uneven reaches that overshoot and correct, held clicks, typing with a
+// rhythm (and slips if "typos" > 0). The seed replays the same hand.
+const humanSchema = v.union([
+  v.boolean(),
+  v.object({
+    seed: v.optional(v.number()),
+    wpm: v.optional(v.number()),
+    typos: v.optional(v.number()),
+  }),
+]);
 
 export const capturePlanSchema = v.object({
   url: v.optional(v.string()),
@@ -51,6 +80,7 @@ export const capturePlanSchema = v.object({
   // A passkey authenticator in the browser, as a phone's or a laptop's,
   // that confirms each use: Chrome's virtual authenticator.
   passkey: v.optional(v.boolean()),
+  human: v.optional(humanSchema),
   steps: v.array(stepSchema),
 });
 
