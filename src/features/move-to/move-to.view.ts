@@ -19,7 +19,8 @@ import { COPY } from "../../ui/copy.ts";
 import { renderDialog } from "../../ui/dialog/index.ts";
 import { moveBlocksToPage, selectPageIdOf } from "../editor/index.ts";
 import { MOVE_TO_OVERLAY_KIND } from "../page-menu/index.ts";
-import { selectTreeRows } from "../sidebar/index.ts";
+import { selectPageRows, selectTreeRows } from "../sidebar/index.ts";
+import { selectTeamspaces } from "../../blocks/teamspace/index.ts";
 
 export const MOVE_TO_OVERLAY = MOVE_TO_OVERLAY_KIND;
 
@@ -33,10 +34,14 @@ function selectAllPages(state: AppState): PageBlock[] {
   const expanded = Object.keys(state.workspace.blocks).flatMap(
     (id) => parseBlockId(id) ?? [],
   );
-  const all = selectTreeRows({
-    ...state,
-    ui: { ...state.ui, expandedPageIds: expanded },
-  });
+  const open = { ...state, ui: { ...state.ui, expandedPageIds: expanded } };
+  const all = [
+    ...selectTeamspaces(state).flatMap((teamspace) =>
+      selectPageRows(open, teamspace.childIds, 2),
+    ),
+    ...selectTreeRows(open, "shared"),
+    ...selectTreeRows(open),
+  ];
   return all.flatMap((row) => selectPage(state, row.id) ?? []);
 }
 
@@ -65,7 +70,8 @@ function moveCommand(
   if (selectPage(state, movedId) === undefined && parentId !== null) {
     return moveBlocksToPage.create({ blockIds: [movedId], pageId: parentId });
   }
-  const parent = selectPage(state, parentId);
+  const parent =
+    parentId === null ? undefined : state.workspace.blocks[parentId];
   const index = parent?.childIds.length ?? state.workspace.rootIds.length;
   return movePage.create({ pageId: movedId, parentId, index });
 }
@@ -76,6 +82,18 @@ function renderOption(label: string, onChoose: () => void): TemplateResult {
       ${label}
     </button>
   </li>`;
+}
+
+// The teamspaces a page may go into, as Notion's Move to lists them.
+function renderTeamspaces(
+  state: AppState,
+  moveTo: (parentId: BlockId) => void,
+): TemplateResult[] {
+  return selectTeamspaces(state).map((teamspace) =>
+    renderOption(teamspace.props.name, () => {
+      moveTo(teamspace.id);
+    }),
+  );
 }
 
 // A single-pointer and keyboard alternative to dragging a page elsewhere.
@@ -99,17 +117,19 @@ export function renderMoveTo(
       moveTo(page.id);
     });
   });
-  // A page may become a top-level page; a block always needs a page.
+  // A page may become a top-level page or go into a teamspace; a block
+  // always needs a page.
   const topLevel = isPage
     ? renderOption(COPY.moveTo.topLevel, () => {
         moveTo(null);
       })
     : nothing;
+  const teamspaces = isPage ? renderTeamspaces(state, moveTo) : [];
   return renderDialog({
     title: COPY.moveTo.title,
     closeLabel: COPY.moveTo.close,
     content: html`<ul class="move-to__list">
-      ${topLevel}${options}
+      ${topLevel}${teamspaces}${options}
     </ul>`,
     onClose: () => dispatch(closeOverlay.create({})),
   });

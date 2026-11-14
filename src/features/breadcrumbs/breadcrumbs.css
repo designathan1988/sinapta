@@ -43,3 +43,43 @@
     }
   }
 }
+
+@layer features {
+  /* Notion's "🔒 Private ⌄" beside the title: quiet, opens Move to. */
+  .breadcrumbs {
+    display: flex;
+    align-items: center;
+  }
+
+  .breadcrumbs__place {
+    display: inline-flex;
+    flex: none;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    min-block-size: var(--size-target-min);
+    margin-inline-start: var(--space-inline-xs);
+    padding: var(--space-none) var(--space-inset-xs);
+    border: none;
+    border-radius: var(--radius-md);
+    background-color: transparent;
+    color: var(--color-text-tertiary);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    & .icon {
+      inline-size: var(--size-icon-xs);
+      block-size: var(--size-icon-xs);
+    }
+  }
+
+  .breadcrumbs__chevron {
+    display: inline-flex;
+    rotate: 90deg;
+  }
+}

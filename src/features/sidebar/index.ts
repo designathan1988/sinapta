@@ -1,4 +1,8 @@
-export { selectTreeRows, type TreeRow } from "./sidebar.selectors.ts";
+export {
+  selectPageRows,
+  selectTreeRows,
+  type TreeRow,
+} from "./sidebar.selectors.ts";
 export { renderSidebar } from "./sidebar.view.ts";
 export {
   renderSidebarMenu,

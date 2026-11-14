@@ -109,6 +109,7 @@ owner listed here exists.
 | Open page: title and icon | `src/features/editor/` | 2 |
 | Page actions menu, in Notion's groups | `src/features/page-menu/` (`page-menu-entries.ts` for the open page) | 2 |
 | Breadcrumbs | `src/features/breadcrumbs/` | 2 |
+| The page's place in the top bar: Private, Shared or its teamspace, opening Move to | `src/features/breadcrumbs/page-place.selectors.ts`, `breadcrumbs.view.ts` | 26 |
 | Trash panel beside the sidebar | `src/features/trash/` | 2 |
 | Move-to dialog | `src/features/move-to/` | 2 |
 | Settings dialog | `src/features/settings/` | 1 |

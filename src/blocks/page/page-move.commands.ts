@@ -9,6 +9,7 @@ import {
 import { defineCommand, type AppState } from "../../state/index.ts";
 import type { PageBlock } from "./page.schema.ts";
 import { selectPage } from "./page.selectors.ts";
+import { TEAMSPACE_TYPE } from "../teamspace/index.ts";
 
 export interface MovePagePayload {
   readonly pageId: BlockId;
@@ -22,14 +23,21 @@ function toPayload(move: BlockMove): MovePagePayload {
 }
 
 // Moves a page to a parent and position. A page cannot move into itself,
-// and it can only move into another page.
+// and it can only move into another page or a teamspace.
+// A page goes into another page or into a teamspace.
+function holdsPages(state: AppState, parentId: BlockId): boolean {
+  const parent = state.workspace.blocks[parentId];
+  return (
+    selectPage(state, parentId) !== undefined || parent?.type === TEAMSPACE_TYPE
+  );
+}
+
 export const movePage = defineCommand<MovePagePayload>({
   type: "page.move",
   handle(state, command) {
     const { pageId, parentId, index } = command;
     if (selectPage(state, pageId) === undefined) return {};
-    if (parentId !== null && selectPage(state, parentId) === undefined)
-      return {};
+    if (parentId !== null && !holdsPages(state, parentId)) return {};
     const operations = planMove(state.workspace, {
       blockId: pageId,
       parentId,

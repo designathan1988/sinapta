@@ -1446,8 +1446,11 @@ board measured in Notion (item 46).
 
 - (Closed 2026-11-14) Status pills carry Notion's dot and round ends in
   tables and boards (`p45-status-dot`), drawn by `src/ui/chip/chip.css`.
-- Notion's top bar names a private page's place, "🔒 Particular ⌄",
-  beside its title (`n87-collaborate/03-open`); Pagecraft's shows the
-  title alone.
+- (Closed 2026-11-14) The top bar names the page's place as Notion's
+  "🔒 Particular ⌄" (`n92-private-label`: 14 px, rgb(161, 158, 153),
+  radius 6, opening "Move page to…"): Private or Shared after the title,
+  a teamspace before the path, each opening Move to (`p65-place`).
+  Notion's Move to is a popover with a search under the control;
+  Pagecraft's is still a dialog.
 - Notion's view settings rows 8 px from the panel's edge against
   Pagecraft's 4 px on every menu (item 45).
