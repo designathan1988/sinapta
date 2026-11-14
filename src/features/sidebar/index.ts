@@ -4,6 +4,7 @@ export {
   type TreeRow,
 } from "./sidebar.selectors.ts";
 export { renderSidebar } from "./sidebar.view.ts";
+export { toggleSidebarKeepingFocus } from "./sidebar-focus.ts";
 export {
   renderSidebarMenu,
   SIDEBAR_APPS_OVERLAY,

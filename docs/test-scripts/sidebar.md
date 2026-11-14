@@ -126,9 +126,33 @@ Photos are in `.captures/pagecraft/ts-sidebar-NN/` and
   Redimensionar Arrastar"; the separator is named "Redimensione com as
   teclas de seta para a esquerda e para a direita".
 
+## Fixed after the run (commit "fix(sidebar): …", plans 02, 03, 05–08 and 12 again)
+
+- SB41–43: hiding the sidebar gives the focus to Show sidebar, showing it
+  to Hide sidebar (buttons and Ctrl+\, `sidebar-focus.ts`; 05/12–16).
+- SB44: a click on the sidebar's edge closes it, as Notion's; a drag
+  still resizes (05/17, 05/18). The hint is still missing.
+- SB17, SB27: Escape after a row's menu gives the focus back to the row,
+  with its ring (`ui/overlay` `focusOverlayAnchor`; 02/10, 02/12, 03/15).
+- SB23: ← on a child goes to its parent (03/08).
+- SB29: the sidebar is focusable only as the narrow drawer; a click on a
+  heading then Tab reaches the next control (12/02).
+- SB48: Escape in the trash closes its dialog, the focus back on
+  "Templates, trash and more" (06/14).
+- SB50, SB52, SB54: Customize takes the focus to its first control,
+  Escape gives it back to the menu's control, Done to Customize sidebar
+  (07/02, 07/06, 07/10, 07/13).
+- SB56, SB67: the Calendar tab and a teamspace's "+" show their hints
+  (08/01, 08/02).
+- SB11: a row ends with "+" then "…", as Notion's (02/03).
+- Also: each teamspace's tree has one tab stop (its rows had none).
+
+Still open: SB37 (the edge's grab area is cut on the page's side), SB44's
+hint, SB59 (favorites as tree rows).
+
 ## Summary
 
-67 cases: 46 pass, 17 findings, 4 not run.
+67 cases: 46 pass, 17 findings (14 fixed), 4 not run.
 
 Findings, most serious first: the focus lost to `body` when the sidebar
 hides or shows (SB41–43), after the trash closes (SB48) and in Customize

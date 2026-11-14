@@ -2,7 +2,6 @@
 import {
   openOverlay,
   REDO_COMMAND,
-  toggleSidebar,
   toggleTheme,
   UNDO_COMMAND,
   type Command,
@@ -28,7 +27,8 @@ export type ShortcutAction =
   | "copy-link"
   | "parent-page"
   | "comment"
-  | "move-to";
+  | "move-to"
+  | "toggle-sidebar";
 
 interface ShortcutKey {
   // Lower-case `KeyboardEvent.key`.
@@ -91,12 +91,8 @@ export const SHORTCUTS: readonly Shortcut[] = [
     withShift: false,
     command: { type: REDO_COMMAND },
   },
-  {
-    key: "\\",
-    withModifier: true,
-    withShift: false,
-    command: toggleSidebar.create({}),
-  },
+  // An action, as the focus follows the sidebar (features/sidebar).
+  navigation("\\", "toggle-sidebar"),
   {
     key: "k",
     withModifier: true,

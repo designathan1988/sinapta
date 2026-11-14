@@ -12,6 +12,7 @@ import {
   MOVE_TO_OVERLAY_KIND,
   MOVE_TO_PLACE_PANEL,
 } from "../features/page-menu/index.ts";
+import { toggleSidebarKeepingFocus } from "../features/sidebar/index.ts";
 import { announce } from "../ui/announcer/index.ts";
 import { COPY } from "../ui/copy.ts";
 import type { ShortcutAction } from "../ui/shortcuts/index.ts";
@@ -88,6 +89,9 @@ export function runShortcutAction(
       return;
     case "move-to":
       moveOpenPage(state, dispatch);
+      return;
+    case "toggle-sidebar":
+      toggleSidebarKeepingFocus(dispatch);
       return;
   }
 }

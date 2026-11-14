@@ -17,6 +17,7 @@ import {
   SIDEBAR_CUSTOMIZE_OVERLAY,
 } from "./sidebar-customize.view.ts";
 import { renderFavorites } from "./sidebar-favorites.view.ts";
+import { focusAfterRender } from "./sidebar-focus.ts";
 import { renderSidebarFooter } from "./sidebar-footer.view.ts";
 import { sectionViewId } from "./sidebar-layout.selectors.ts";
 import {
@@ -120,7 +121,10 @@ function renderCustomizeOpen(dispatch: Dispatch): TemplateResult {
   return html`<button
     type="button"
     class="sidebar__item sidebar__customize-open"
-    @click=${() => dispatch(openOverlay.create({ overlay }))}
+    @click=${() => {
+      dispatch(openOverlay.create({ overlay }));
+      focusAfterRender(".sidebar__edit .sidebar__edit-control");
+    }}
   >
     <span class="sidebar__icon" aria-hidden="true"
       >${renderIcon("sliders")}</span

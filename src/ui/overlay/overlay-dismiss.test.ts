@@ -6,7 +6,11 @@ import {
   uiCommands,
   type Command,
 } from "../../state/index.ts";
-import { closeOverlayOnEscape, revealAnchor } from "./overlay-dismiss.ts";
+import {
+  closeOverlayOnEscape,
+  focusOverlayAnchor,
+  revealAnchor,
+} from "./overlay-dismiss.ts";
 
 // An open overlay and the control that opened it, the focus left on the
 // control, as after a click.
@@ -85,5 +89,24 @@ describe("an overlay's control cut by the window's edge", () => {
     revealAnchor(button, 1440);
 
     expect(calls).toEqual([]);
+  });
+});
+
+describe("focusOverlayAnchor", () => {
+  it("gives the focus to the tree row of a control out of the tab order", () => {
+    document.body.innerHTML = `<ul role="tree"><li role="treeitem" tabindex="-1" id="row">Page
+      <button tabindex="-1" data-overlay-anchor aria-expanded="true">…</button></li></ul>`;
+
+    focusOverlayAnchor({ isWhole: true });
+
+    expect(document.activeElement?.id).toBe("row");
+  });
+
+  it("gives it to the open list's control when the overlay has none", () => {
+    document.body.innerHTML = `<button id="list" data-overlay-child-anchor aria-expanded="true">Shortcut menu</button>`;
+
+    focusOverlayAnchor({ isWhole: true });
+
+    expect(document.activeElement?.id).toBe("list");
   });
 });

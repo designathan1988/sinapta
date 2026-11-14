@@ -45,12 +45,27 @@ function onTreeClick(event: Event, dispatch: Dispatch): void {
   else dispatch(setActivePage.create({ pageId }));
 }
 
-function focusSibling(row: HTMLElement, offset: number): void {
-  const rows = [
+function rowsBeside(row: HTMLElement): HTMLElement[] {
+  return [
     ...(row.parentElement?.querySelectorAll<HTMLElement>("[role=treeitem]") ??
       []),
   ];
+}
+
+function focusSibling(row: HTMLElement, offset: number): void {
+  const rows = rowsBeside(row);
   rows[rows.indexOf(row) + offset]?.focus();
+}
+
+// The ARIA tree's ←: from a closed or childless row to the row it is in.
+function focusParent(row: HTMLElement): void {
+  const level = Number(row.getAttribute("aria-level"));
+  const rows = rowsBeside(row);
+  rows
+    .slice(0, rows.indexOf(row))
+    .reverse()
+    .find((other) => Number(other.getAttribute("aria-level")) === level - 1)
+    ?.focus();
 }
 
 const MOVE_KEYS: Record<string, MoveDirection> = {
@@ -69,9 +84,11 @@ function movePageByKey(event: KeyboardEvent, context: Context): boolean {
   }
   event.preventDefault();
   const target = selectStepTarget(context.state, pageId, direction);
+  // The same page may show in Favorites too: focus stays in this tree.
+  const tree = rowOf(event)?.closest("[role=tree]");
   if (target !== undefined) context.dispatch(movePage.create(target));
   // Moving the row in the document drops focus; give it back.
-  document.querySelector<HTMLElement>(`[data-page-id="${pageId}"]`)?.focus();
+  tree?.querySelector<HTMLElement>(`[data-page-id="${pageId}"]`)?.focus();
   announce(target === undefined ? COPY.moveTo.notMoved : COPY.moveTo.moved);
   return true;
 }
@@ -158,6 +175,7 @@ function onTreeKeyDown(event: KeyboardEvent, context: Context): void {
     },
     ArrowLeft() {
       if (isExpanded === "true") toggle();
+      else focusParent(row);
     },
     Enter: open,
     " ": open,

@@ -68,16 +68,30 @@ export function closeOverlayOnEscape(
 const OPEN_ANCHOR =
   "[data-overlay-anchor][aria-expanded='true'], [data-overlay-anchor='open']";
 
+// A control kept out of the tab order inside a tree's row, as a sidebar
+// row's "…", gives the focus to its row, as Notion's does: the row is the
+// stop the keyboard knows.
+function focusTarget(
+  control: HTMLElement | undefined,
+): HTMLElement | undefined {
+  const row = control?.closest<HTMLElement>("[role=treeitem]");
+  return control?.tabIndex === -1 && row !== null ? row : control;
+}
+
 // Puts focus back on the control that opened the innermost open list, or
-// on the one that opened the overlay when all of it closes.
+// on the one that opened the overlay when all of it closes; an overlay
+// with no control of its own, as Customize sidebar, gives it to the
+// control of its innermost list.
 export function focusOverlayAnchor(closing = { isWhole: false }): void {
-  const child = closing.isWhole
-    ? undefined
-    : [...document.querySelectorAll<HTMLElement>(OPEN_CHILD_ANCHOR)].at(-1);
-  const anchor = document.querySelector<HTMLElement>(
-    "[data-overlay-anchor][aria-expanded='true']",
-  );
-  (child ?? anchor)?.focus();
+  const children = [
+    ...document.querySelectorAll<HTMLElement>(OPEN_CHILD_ANCHOR),
+  ];
+  const child = closing.isWhole ? undefined : children.at(-1);
+  const anchor =
+    document.querySelector<HTMLElement>(
+      "[data-overlay-anchor][aria-expanded='true']",
+    ) ?? children.at(-1);
+  focusTarget(child ?? anchor)?.focus();
 }
 
 // A submenu opened under the pointer leaves focus where it is, as

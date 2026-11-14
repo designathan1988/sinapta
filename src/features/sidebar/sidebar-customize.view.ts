@@ -29,6 +29,7 @@ import {
   selectSections,
   selectShortcuts,
 } from "./sidebar-layout.selectors.ts";
+import { focusAfterRender } from "./sidebar-focus.ts";
 import { sectionLook } from "./sidebar-section-look.ts";
 import { renderShortcutIcon, shortcutLook } from "./sidebar-shortcuts.view.ts";
 
@@ -213,6 +214,10 @@ export function renderSidebarCustomize(
   dispatch: Dispatch,
 ): TemplateResult {
   const context = { state, dispatch };
+  const done = (): void => {
+    dispatch(closeOverlay.create({}));
+    focusAfterRender(".sidebar__customize-open");
+  };
   return html`<div class="sidebar__edit">
     <ul class="sidebar__edit-list" aria-label=${TEXT.open}>
       ${shortcutRows(context)}
@@ -235,7 +240,7 @@ export function renderSidebarCustomize(
       type="button"
       class="button sidebar__edit-done"
       data-variant="primary"
-      @click=${() => dispatch(closeOverlay.create({}))}
+      @click=${done}
     >
       ${TEXT.done}
     </button>

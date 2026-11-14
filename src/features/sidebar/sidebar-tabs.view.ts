@@ -2,7 +2,7 @@
 // shown with its icon and name, the others with their icon; and the
 // Calendar tab's "Upcoming" list of dated pages.
 import "./sidebar-tabs.css";
-import { html, type TemplateResult } from "lit-html";
+import { html, nothing, type TemplateResult } from "lit-html";
 import {
   openHome,
   setActivePage,
@@ -13,6 +13,7 @@ import {
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon, type IconName } from "../../ui/icon/index.ts";
+import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { selectSidebarTab, selectUpcoming } from "./sidebar-tabs.selectors.ts";
 
 const TEXT = COPY.sidebarTabs;
@@ -40,7 +41,8 @@ export function renderSidebarTabs(
           role="tab"
           aria-selected=${String(tab === shown)}
           aria-label=${TEXT[tab]}
-          title=${TEXT[tab]}
+          title=${tab === shown ? nothing : tooltipTitle(TEXT[tab])}
+          interestfor=${tab === shown ? nothing : TOOLTIP_TARGET}
           @click=${() => {
             dispatch(setSidebarTab.create({ tab }));
             // Home is a page too, as Notion's "Home" tab opens it.

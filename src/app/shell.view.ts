@@ -6,11 +6,11 @@ import { renderFormatToolbar } from "../features/format-toolbar/index.ts";
 import {
   selectIsHomeShown,
   selectIsSidebarShown,
-  toggleSidebar,
   type AppState,
   type Dispatch,
 } from "../state/index.ts";
 import { renderBreadcrumbs } from "../features/breadcrumbs/index.ts";
+import { toggleSidebarKeepingFocus } from "../features/sidebar/index.ts";
 import { renderHome } from "../features/home/index.ts";
 import { renderPageInfo } from "../features/page-info/index.ts";
 import {
@@ -52,7 +52,9 @@ function renderShowSidebar(
       label: COPY.shell.showSidebar,
       icon: "sidebar",
       isIconOnly: true,
-      onClick: () => dispatch(toggleSidebar.create({})),
+      onClick: () => {
+        toggleSidebarKeepingFocus(dispatch);
+      },
     })}</span
   >`;
 }

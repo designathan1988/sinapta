@@ -105,10 +105,12 @@ function renderTools(state: AppState, dispatch: Dispatch): TemplateResult {
       setFilter(dispatch, { ...filter, query: event.target.value });
   };
   // Escape closes the trash, as Notion's, instead of only clearing the
-  // words the way a search field does by itself.
+  // words the way a search field does by itself; the dialog closes, so
+  // the focus goes back to what opened it.
   const onKeydown = (event: KeyboardEvent): void => {
-    if (event.key !== "Escape") return;
+    if (event.key !== "Escape" || !(event.target instanceof Element)) return;
     event.preventDefault();
+    event.target.closest("dialog")?.close();
     dispatch(closeOverlay.create({}));
   };
   return html`<div class="trash__tools">

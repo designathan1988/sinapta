@@ -117,4 +117,21 @@ describe("renderShell", () => {
     expect(host.querySelector(".app__main")?.hasAttribute("inert")).toBe(false);
     expect(host.querySelector("[data-sidebar-open]")).not.toBeNull();
   });
+
+  it("closes the sidebar on a click on its edge, and resizes on a drag", () => {
+    const { host, sent } = rendered(createInitialState());
+    const edge = host.querySelector(".app__resizer");
+    const at = (type: string, clientX: number) =>
+      new PointerEvent(type, { clientX, pointerId: 1, bubbles: true });
+
+    edge?.dispatchEvent(at("pointerdown", 270));
+    edge?.dispatchEvent(at("pointerup", 271));
+    edge?.dispatchEvent(at("pointerdown", 270));
+    edge?.dispatchEvent(at("pointerup", 330));
+
+    expect(sent.map((command) => command.type)).toEqual([
+      "ui.toggleSidebar",
+      "ui.setSidebarWidth",
+    ]);
+  });
 });

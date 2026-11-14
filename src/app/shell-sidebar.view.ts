@@ -2,7 +2,10 @@
 // a drawer over it.
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
-import { renderSidebar } from "../features/sidebar/index.ts";
+import {
+  renderSidebar,
+  toggleSidebarKeepingFocus,
+} from "../features/sidebar/index.ts";
 import {
   selectIsSidebarShown,
   setSidebarWidth,
@@ -22,13 +25,27 @@ const KEY_STEPS: Record<string, (width: number) => number> = {
   End: () => SIDEBAR_WIDTH.max,
 };
 
+// How far, in CSS pixels, the pointer travels before a press on the edge
+// is a resize rather than a click, which closes the sidebar as Notion's.
+const CLICK_SLOP = 3;
+
 // The attribute tells the styles, and anyone looking, that a resize is
-// under way.
+// under way; where it started tells a click from a drag at the end.
 function capturePointer(event: PointerEvent): void {
-  if (event.currentTarget instanceof Element) {
+  if (event.currentTarget instanceof HTMLElement) {
     event.currentTarget.setPointerCapture(event.pointerId);
+    event.currentTarget.dataset.pressedAt = String(event.clientX);
     event.currentTarget.closest(".app")?.setAttribute("data-resizing", "");
   }
+}
+
+function isClick(event: PointerEvent): boolean {
+  const start = Number(
+    event.currentTarget instanceof HTMLElement
+      ? event.currentTarget.dataset.pressedAt
+      : Number.NaN,
+  );
+  return Math.abs(event.clientX - start) <= CLICK_SLOP;
 }
 
 // While dragging, the browser owns the width; the store gets it once.
@@ -45,7 +62,8 @@ function renderResizer(state: AppState, dispatch: Dispatch): TemplateResult {
     if (event.currentTarget instanceof Element) {
       event.currentTarget.closest(".app")?.removeAttribute("data-resizing");
     }
-    dispatch(setSidebarWidth.create({ width: widthAt(event) }));
+    if (isClick(event)) toggleSidebarKeepingFocus(dispatch);
+    else dispatch(setSidebarWidth.create({ width: widthAt(event) }));
   };
   const onKeyDown = (event: KeyboardEvent): void => {
     const step = KEY_STEPS[event.key];
@@ -98,7 +116,7 @@ export function renderSidebarPanel(
     <nav
       class="app__sidebar"
       aria-label=${COPY.shell.pagesLabel}
-      tabindex="-1"
+      tabindex=${isNarrow ? "-1" : nothing}
       ${isNarrow ? ref(focusOnce) : nothing}
       @keydown=${onKeyDown}
     >

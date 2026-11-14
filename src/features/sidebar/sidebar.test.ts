@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildWorkspace, toBlockId } from "../../model/index.ts";
 import { createInitialState, type AppState } from "../../state/index.ts";
-import { selectTreeRows } from "./sidebar.selectors.ts";
+import { selectPageRows, selectTreeRows } from "./sidebar.selectors.ts";
 
 const page = (title: string, isTrashed = false) => ({
   title: [{ text: title }],
@@ -124,5 +124,17 @@ describe("selectTreeRows", () => {
 
     expect(listed(["s"])).toEqual(["Tasks"]);
     expect(listed([])).toEqual(["Tasks", "New data source"]);
+  });
+});
+
+describe("selectPageRows", () => {
+  it("makes the rows of a teamspace one tab stop, as every tree", () => {
+    const state = createState();
+    const ids = state.workspace.rootIds;
+
+    const rows = selectPageRows(state, ids, 2);
+
+    expect(rows.filter((row) => row.isTabStop)).toHaveLength(1);
+    expect(rows[0]?.isTabStop).toBe(true);
   });
 });

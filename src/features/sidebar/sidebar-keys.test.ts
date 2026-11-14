@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { render } from "lit-html";
 import { describe, expect, it } from "vitest";
-import { buildWorkspace } from "../../model/index.ts";
+import { buildWorkspace, toBlockId } from "../../model/index.ts";
 import {
   createInitialState,
   type AppState,
@@ -46,7 +46,38 @@ function press(target: Element, key: string, init: KeyboardEventInit = {}) {
   return event;
 }
 
+// Alpha open, with Child inside it, then Beta.
+function mountNested() {
+  const workspace = buildWorkspace([
+    {
+      id: "a",
+      props: props("Alpha"),
+      children: [{ id: "c", props: props("Child") }],
+    },
+    { id: "b", props: props("Beta") },
+  ]);
+  const initial = createInitialState();
+  const ui = { ...initial.ui, expandedPageIds: [toBlockId("a")] };
+  const state: AppState = { ...initial, workspace, ui };
+  const container = document.createElement("div");
+  document.body.replaceChildren(container);
+  render(
+    renderSidebar(state, () => ({ ok: true })),
+    container,
+  );
+  return [...container.querySelectorAll<HTMLElement>("[role=treeitem]")];
+}
+
 describe("sidebar tree keys", () => {
+  it("moves the focus from a page to the page it is in with ArrowLeft", () => {
+    const [parent, child] = mountNested();
+    child?.focus();
+
+    press(child ?? document.body, "ArrowLeft");
+
+    expect(document.activeElement).toBe(parent);
+  });
+
   it("opens the focused page on Enter", () => {
     const { rows, commands } = mount();
 

@@ -80,6 +80,11 @@ export function selectTreeRows(
   );
   const rows: TreeRow[] = [];
   addRows(state, { ids, level: 1 }, rows);
+  return withTabStop(rows);
+}
+
+// Each tree is one stop for Tab: the open page's row, else its first.
+function withTabStop(rows: readonly TreeRow[]): TreeRow[] {
   const tabStop = Math.max(
     0,
     rows.findIndex((row) => row.isActive),
@@ -96,5 +101,5 @@ export function selectPageRows(
 ): TreeRow[] {
   const rows: TreeRow[] = [];
   addRows(state, { ids, level }, rows);
-  return rows;
+  return withTabStop(rows);
 }

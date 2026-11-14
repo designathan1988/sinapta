@@ -98,12 +98,12 @@ export function renderRow(row: TreeRow, context: Context): TemplateResult {
   >
     ${renderLead(row)}
     <span class="sidebar__title">${title}</span>
+    ${renderAddButton()}
     ${renderPageMenuButton({
       place: TREE_PLACE,
       pageId: row.id,
       isTabStop: false,
       ...context,
     })}
-    ${renderAddButton()}
   </li>`;
 }

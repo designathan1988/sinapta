@@ -10,6 +10,7 @@ import {
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
+import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import {
   selectTeamspaceRows,
   type TeamspaceRow,
@@ -41,6 +42,8 @@ function renderTeamspace(
         type="button"
         class="sidebar__add"
         aria-label=${TEXT.addPage}
+        title=${tooltipTitle(TEXT.addPage)}
+        interestfor=${TOOLTIP_TARGET}
         @click=${() => dispatch(createPage.create({ parentId: teamspace.id }))}
       >
         ${renderIcon("plus")}

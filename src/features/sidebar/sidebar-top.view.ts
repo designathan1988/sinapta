@@ -6,7 +6,6 @@ import { html, nothing, type TemplateResult } from "lit-html";
 import { createPage } from "../../blocks/page/index.ts";
 import {
   openOverlay,
-  toggleSidebar,
   type AppState,
   type Dispatch,
 } from "../../state/index.ts";
@@ -14,6 +13,7 @@ import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { PALETTE_OVERLAY_KIND } from "../../ui/shortcuts/index.ts";
 import { INBOX_OVERLAY, selectUnreadCount, todayOf } from "../inbox/index.ts";
+import { toggleSidebarKeepingFocus } from "./sidebar-focus.ts";
 
 // The inbox, with the count of unread reminders on its corner; the count
 // is part of its name for screen readers.
@@ -61,7 +61,9 @@ export function renderSidebarTop(
         label: COPY.shell.hideSidebar,
         icon: "sidebar",
         isIconOnly: true,
-        onClick: () => dispatch(toggleSidebar.create({})),
+        onClick: () => {
+          toggleSidebarKeepingFocus(dispatch);
+        },
       })}
       <span class="sidebar__spacer"></span>
       ${renderInbox(state, dispatch)}
