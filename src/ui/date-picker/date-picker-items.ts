@@ -46,8 +46,9 @@ export function datePickerItems(props: DatePickerProps): MenuEntry[] {
       check: "switch",
       isChecked: hasEnd,
       onSelect: () => {
-        const { end: _end, ...rest } = value ?? { start };
-        onChange(hasEnd ? rest : { ...rest, end: start });
+        const { end: _end, endTime: _endTime, ...rest } = value ?? { start };
+        const endTime = rest.time === undefined ? {} : { endTime: rest.time };
+        onChange(hasEnd ? rest : { ...rest, end: start, ...endTime });
       },
     },
     {
@@ -55,8 +56,9 @@ export function datePickerItems(props: DatePickerProps): MenuEntry[] {
       check: "switch",
       isChecked: hasTime,
       onSelect: () => {
-        const { time: _time, ...rest } = value ?? { start };
-        onChange(hasTime ? rest : { ...rest, time: DEFAULT_TIME });
+        const { time: _time, endTime: _endTime, ...rest } = value ?? { start };
+        const endTime = hasEnd ? { endTime: DEFAULT_TIME } : {};
+        onChange(hasTime ? rest : { ...rest, time: DEFAULT_TIME, ...endTime });
       },
     },
     remindItem(props),

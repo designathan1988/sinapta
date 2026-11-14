@@ -30,3 +30,31 @@ describe("renderRelationEditor", () => {
     expect(chosen).toEqual([["a", "b"], []]);
   });
 });
+
+describe("the related pages' search, as Notion's", () => {
+  it("shows the pages whose title holds the words, and asks for new words", () => {
+    const asked: string[] = [];
+    const host = document.createElement("div");
+    document.body.replaceChildren(host);
+    render(
+      renderRelationEditor({
+        selected: [],
+        choices: [
+          { id: toBlockId("a"), title: "Add a page of your own" },
+          { id: toBlockId("b"), title: "Move this card" },
+        ],
+        onChange: () => undefined,
+        search: { query: "PAGE", onQuery: (query) => asked.push(query) },
+      }),
+      host,
+    );
+    const field = host.querySelector<HTMLInputElement>("input[type=text]");
+
+    expect(field?.value).toBe("PAGE");
+    expect(host.querySelectorAll("li").length).toBe(1);
+    expect(host.textContent).toContain("Add a page of your own");
+    if (field) field.value = "card";
+    field?.dispatchEvent(new Event("input", { bubbles: true }));
+    expect(asked).toEqual(["card"]);
+  });
+});

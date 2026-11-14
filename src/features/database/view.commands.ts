@@ -21,6 +21,7 @@ import {
 } from "./view-holder.selectors.ts";
 import { emptyView } from "./database.commands.ts";
 import { layoutDefaults } from "./view-layout.commands.ts";
+import { withoutEmptyAdvanced } from "./filter-edit.ts";
 
 function updateView(
   state: AppState,
@@ -149,13 +150,16 @@ export const sortByProperty = defineCommand<SortByPayload>({
 });
 
 // Replaces the view's whole filter: its conditions and groups.
+
 export const setViewFilter = defineCommand<{
   viewId: ViewId;
   filter: FilterGroup;
 }>({
   type: "view.setFilter",
   handle: (state, command) =>
-    updateView(state, command.viewId, { filter: command.filter }),
+    updateView(state, command.viewId, {
+      filter: withoutEmptyAdvanced(command.filter),
+    }),
 });
 
 export const MIN_COLUMN_WIDTH = 80;

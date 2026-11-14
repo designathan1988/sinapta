@@ -15,6 +15,8 @@ export interface DateRangeValue {
   readonly start: string;
   readonly end?: string;
   readonly time?: string;
+  // The end's own time, with an end and a start time.
+  readonly endTime?: string;
   readonly remind?: Reminder;
 }
 

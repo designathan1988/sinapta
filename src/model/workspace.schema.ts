@@ -9,7 +9,7 @@ import {
 import type { RecordError, WorkspaceFileError } from "./parse-error.ts";
 import { viewSchema, type View } from "./view.schema.ts";
 
-export const SCHEMA_VERSION = 28;
+export const SCHEMA_VERSION = 29;
 
 // A view kept in the sidebar, as Notion's "Add view to sidebar": a section
 // under the database's name listing the view's first pages.

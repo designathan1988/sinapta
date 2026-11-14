@@ -52,17 +52,11 @@ function openRule(context: TableContext): OpenRule | undefined {
   return { index, rule };
 }
 
-// The rule moves into a group of its own, which makes the filter an
-// advanced one, and the advanced filter opens with it, as Notion's.
-function moveToAdvanced(context: TableContext, index: number): void {
+// The rule goes into the advanced filter, which opens with it, as
+// Notion's: the filter is marked advanced and its rules stay as they are.
+function moveToAdvanced(context: TableContext): void {
   const { model, dispatch } = context;
-  const top = model.view.filter;
-  const items = top.items.map((item, at) =>
-    at === index && !isFilterGroup(item)
-      ? { conjunction: "and" as const, items: [item] }
-      : item,
-  );
-  const filter = { ...top, items };
+  const filter = { ...model.view.filter, isAdvanced: true };
   dispatch(setViewFilter.create({ viewId: model.view.id, filter }));
   const overlay = { kind: VIEW_FILTER_PILL_OVERLAY, anchorId: model.holderId };
   dispatch(openOverlay.create({ overlay }));
@@ -84,7 +78,7 @@ function actions(context: TableContext, index: number) {
       dispatch(closeOverlay.create({}));
     },
     toAdvanced: (): void => {
-      moveToAdvanced(context, index);
+      moveToAdvanced(context);
     },
     // A typed value filters as it is typed, as Notion's.
     onChange: (event: Event): void => {

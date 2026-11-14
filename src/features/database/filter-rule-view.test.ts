@@ -132,7 +132,7 @@ describe("a filter rule opened from its pill", () => {
     );
   });
 
-  it("moves the rule into the advanced filter, kept, and opens it", () => {
+  it("moves the rule into the advanced filter, kept as a rule of its own, and opens it", () => {
     const { sent, first, second } = rendered("filter-rule-1-more");
 
     itemNamed("Add to advanced filter")?.click();
@@ -143,7 +143,8 @@ describe("a filter rule opened from its pill", () => {
           type: "view.setFilter",
           filter: {
             conjunction: "and",
-            items: [first, { conjunction: "and", items: [second] }],
+            isAdvanced: true,
+            items: [first, second],
           },
         }),
       ]),

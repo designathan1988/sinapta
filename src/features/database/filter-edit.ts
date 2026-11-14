@@ -84,3 +84,12 @@ export function addGroup(group: FilterGroup, filter: Filter): FilterGroup {
   const inner: InnerFilterGroup = { conjunction: "and", items: [filter] };
   return { ...group, items: [...group.items, inner] };
 }
+
+// An advanced filter whose last rule is gone is gone too, as Notion's.
+export function withoutEmptyAdvanced(filter: FilterGroup): FilterGroup {
+  if (filter.items.length > 0 || filter.isAdvanced === undefined) {
+    return filter;
+  }
+  const { isAdvanced: _isAdvanced, ...rest } = filter;
+  return rest;
+}

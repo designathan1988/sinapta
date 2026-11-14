@@ -987,6 +987,12 @@
     "planCard": {
       "$description": "The least width of a plan's card in Settings › Plans: four side by side in the dialog.",
       "$value": "{base.size.10}"
+    },
+    "filterLead": {
+      "width": {
+        "$description": "Before each rule of Notion's advanced filter, \"Where\" or the join: about 60 px.",
+        "$value": "{base.size.3x75}"
+      }
     }
   },
   "radius": {

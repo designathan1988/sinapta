@@ -35,59 +35,72 @@ function at(day: string): Date {
   return new Date(`${day}T00:00:00Z`);
 }
 
-// A chosen day as a field: a day typed into it, as "Dec 3" or
-// "12/3/2026", takes its place on Enter; text that is no day is put back.
+// A chosen day as a field, empty before one is chosen: a day typed into
+// it, as "Dec 3" or "12/3/2026", takes its place on Enter; text that is
+// no day is put back.
 function renderDayField(
   props: DatePickerProps,
-  value: DateRangeValue,
+  value: DateRangeValue | undefined,
   isEnd: boolean,
 ): TemplateResult {
-  const day = isEnd ? (value.end ?? value.start) : value.start;
+  const day = isEnd ? (value?.end ?? value?.start) : value?.start;
+  const shown = day === undefined ? "" : SHORT.format(at(day));
   const onDay = (event: Event): void => {
     event.stopPropagation();
     if (!(event.target instanceof HTMLInputElement)) return;
     const typed = parseTypedDate(event.target.value, props.today);
     if (typed === undefined) {
-      event.target.value = SHORT.format(at(day));
+      event.target.value = shown;
       return;
     }
-    props.onChange(withDay(value, typed, isEnd));
+    props.onChange(
+      value === undefined ? { start: typed } : withDay(value, typed, isEnd),
+    );
   };
   return html`<input
     class="date-picker__field"
     type="text"
     autocomplete="off"
     aria-label=${isEnd ? TEXT.endDate : TEXT.startDate}
-    .value=${SHORT.format(at(day))}
+    .value=${shown}
     @change=${onDay}
   />`;
 }
 
-// The chosen days as fields, and the time's own field when it has one.
-function renderFields(props: DatePickerProps): TemplateResult {
+// A time as a field: the start's, or the end's own.
+function renderTimeField(
+  props: DatePickerProps,
+  isEnd: boolean,
+): TemplateResult | typeof nothing {
   const { value } = props;
+  const time = isEnd ? value?.endTime : value?.time;
+  if (value === undefined || time === undefined) return nothing;
   // The time's change is the picker's own: no form around it reads it.
   const onTime = (event: Event): void => {
     event.stopPropagation();
-    if (!(event.target instanceof HTMLInputElement) || value === undefined)
-      return;
-    const time = event.target.value;
-    props.onChange(time === "" ? { ...value } : { ...value, time });
+    if (!(event.target instanceof HTMLInputElement)) return;
+    const typed = event.target.value;
+    if (typed === "") return;
+    props.onChange(
+      isEnd ? { ...value, endTime: typed } : { ...value, time: typed },
+    );
   };
+  return html`<input
+    class="date-picker__field"
+    type="time"
+    aria-label=${isEnd ? TEXT.endTime : TEXT.time}
+    .value=${time}
+    @change=${onTime}
+  />`;
+}
+
+// The chosen days as fields, each with its time when it has one.
+function renderFields(props: DatePickerProps): TemplateResult {
+  const { value } = props;
   return html`<div class="date-picker__fields">
-    ${value === undefined ? nothing : renderDayField(props, value, false)}
+    ${renderDayField(props, value, false)} ${renderTimeField(props, false)}
     ${value?.end === undefined ? nothing : renderDayField(props, value, true)}
-    ${
-      value?.time === undefined
-        ? nothing
-        : html`<input
-            class="date-picker__field"
-            type="time"
-            aria-label=${TEXT.time}
-            .value=${value.time}
-            @change=${onTime}
-          />`
-    }
+    ${renderTimeField(props, true)}
   </div>`;
 }
 

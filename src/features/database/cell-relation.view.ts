@@ -12,7 +12,7 @@ import {
   selectPeopleChoices,
 } from "./properties/person/index.ts";
 import { setRowValue } from "./row.commands.ts";
-import { closeOverlay } from "../../state/index.ts";
+import { closeOverlay, openOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import {
   focusOverlayAnchor,
@@ -74,12 +74,22 @@ function renderEditorOf(
   if (property.type === "person") {
     return renderPeoplePicker(context, { rowId, propertyId, stored });
   }
+  const { overlay } = context.state.ui;
   return renderRelationEditor({
     selected: readRelation(stored?.[propertyId]) ?? [],
     choices: selectRelationChoices(context.state, property),
     onChange: (ids) => {
       const value = ids.flatMap((id) => parseBlockId(id) ?? []);
       context.dispatch(setRelationValue.create({ rowId, propertyId, value }));
+    },
+    search: {
+      query: overlay?.query ?? "",
+      onQuery: (query) => {
+        if (overlay === null) return;
+        context.dispatch(
+          openOverlay.create({ overlay: { ...overlay, query } }),
+        );
+      },
     },
   });
 }

@@ -77,6 +77,7 @@ describe("a date on the row's page", () => {
       start: "2026-11-10",
       end: "2026-11-14",
       time: "09:00",
+      endTime: "09:00",
     });
   });
 

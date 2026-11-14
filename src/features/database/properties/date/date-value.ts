@@ -1,5 +1,6 @@
 // A date value: a first day, an optional last day, an optional time of
-// the first day and an optional reminder. Days are calendar days,
+// the first day, the last day's own time when both are set, and an
+// optional reminder. Days are calendar days,
 // "2026-11-10", with no zone.
 import {
   REMINDER_DAYS,
@@ -17,6 +18,7 @@ export interface DateValue {
   readonly start: string;
   readonly end?: string;
   readonly time?: string;
+  readonly endTime?: string;
   readonly remind?: Reminder;
 }
 
@@ -47,6 +49,13 @@ function isEndOf(end: unknown, start: string): end is string | undefined {
   return end === undefined || (isDay(end) && end >= start);
 }
 
+// The end's time goes with an end and a start time, else it is left.
+function endTimeOf(stored: Record<string, unknown>): { endTime?: string } {
+  const { end, time, endTime } = stored;
+  const fits = end !== undefined && time !== undefined && isTime(endTime);
+  return fits ? { endTime } : {};
+}
+
 export function readDateValue(stored: unknown): DateValue | undefined {
   if (!isRecord(stored) || !isDay(stored.start)) return undefined;
   const { start, end, time, remind } = stored;
@@ -56,6 +65,7 @@ export function readDateValue(stored: unknown): DateValue | undefined {
     start,
     ...(end !== undefined && { end }),
     ...(time !== undefined && { time }),
+    ...endTimeOf(stored),
     ...(isReminder(remind) && { remind }),
   };
 }
@@ -125,15 +135,15 @@ export function formatDateValue(
 ): string {
   const { dateFormat } = config;
   const start = formatDay(value.start, dateFormat, today);
-  const time =
-    value.time === undefined || config.timeFormat === "hidden"
+  const timeOf = (time: string | undefined): string =>
+    time === undefined || config.timeFormat === "hidden"
       ? ""
-      : ` ${formatTime(value.time, config)}`;
+      : ` ${formatTime(time, config)}`;
   const end =
     value.end === undefined
       ? ""
-      : ` → ${formatDay(value.end, dateFormat, today)}`;
-  return `${start}${time}${end}`;
+      : ` → ${formatDay(value.end, dateFormat, today)}${timeOf(value.endTime)}`;
+  return `${start}${timeOf(value.time)}${end}`;
 }
 
 // The days of a filter as its fields write them: "Nov 10, 2026".

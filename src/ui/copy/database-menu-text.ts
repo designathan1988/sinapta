@@ -38,6 +38,7 @@ export const DATABASE_MENU_TEXT = {
   csvColumn: (index: number) => `Column ${String(index)}`,
   exportCsv: "Export as CSV",
   lockView: "Lock view",
+  viewLocked: "Locked",
   subGroup: "Sub-group",
   noSubGroup: "None",
   subGroupBy: "Sub-group by",

@@ -17,6 +17,7 @@ export const DATE_TEXT = {
       "1-week": "1 week before",
     },
     time: "Time",
+    endTime: "End time",
     clear: "Clear",
   },
 } as const;

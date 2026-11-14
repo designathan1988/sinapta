@@ -68,6 +68,12 @@
     }
   }
 
+  /* A locked view's lock beside its name, quieter than the name. */
+  .database__tab-lock {
+    display: inline-flex;
+    color: var(--color-text-tertiary);
+  }
+
   /* The open view as one button, shown in place of the tabs where they do
      not fit, as Notion's beside a side peek. */
   .database__switch {

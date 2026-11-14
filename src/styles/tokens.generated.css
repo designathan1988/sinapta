@@ -314,6 +314,7 @@
     --base-size-16x875: 16.875rem;
     --base-size-44x25: 44.25rem;
     --base-size-2x75: 2.75rem;
+    --base-size-3x75: 3.75rem;
     --base-size-18x125: 18.125rem;
     --base-size-19x75: 19.75rem;
     --base-size-20x625: 20.625rem;
@@ -637,6 +638,7 @@
     --size-slash-menu-row: var(--base-size-8);
     --size-slash-menu-footer: var(--base-size-2x625);
     --size-plan-card: var(--base-size-10);
+    --size-filter-lead-width: var(--base-size-3x75);
     --radius-sm: var(--base-radius-1);
     --radius-md: var(--base-radius-2);
     --radius-full: var(--base-radius-pill);

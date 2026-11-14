@@ -4,6 +4,7 @@ import type { PropertyDefinition } from "../../blocks/database/index.ts";
 import type { CalculationKind } from "../../model/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { cellValue } from "./filter-match.ts";
+import { formatNumber, readNumberConfig } from "./properties/number/index.ts";
 import { applyRollup, writeRollupResult } from "./properties/rollup/index.ts";
 import { propertyType } from "./property-registry.ts";
 import { TITLE_PROPERTY_ID, type TableRow } from "./table-model.selectors.ts";
@@ -70,9 +71,25 @@ export function calculate(
     const text = value === undefined ? "" : type.format(value, property);
     return { value, text };
   });
-  const result = writeRollupResult(applyRollup(kind, cells));
+  const worked = applyRollup(kind, cells);
+  const result = NUMBERS.includes(kind)
+    ? writeNumber(worked, property)
+    : writeRollupResult(worked);
   known.set(key, result);
   return result;
+}
+
+// A sum, average or the like of a number column is written as the
+// column writes its values ("$1,500.00"), to two places at most.
+function writeNumber(
+  result: ReturnType<typeof applyRollup>,
+  property: PropertyDefinition,
+): string {
+  if (result?.kind !== "number" || property.type !== "number") {
+    return writeRollupResult(result);
+  }
+  const rounded = Math.round(result.value * 100) / 100;
+  return formatNumber(rounded, readNumberConfig(property.config));
 }
 
 // A count above 99 written "99+", as Notion's "Show large counts as 99+".

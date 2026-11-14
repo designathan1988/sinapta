@@ -59,6 +59,19 @@ describe("column calculations", () => {
     expect(calculate(rows, points, "range")).toBe("9");
   });
 
+  it("writes a sum in the column's own number format, as Notion's", () => {
+    const app = createApp();
+    const { rows } = modelOf(app);
+    const dollars = {
+      ...property(app, 0),
+      config: { format: "currency", currency: "USD", display: "number" },
+    };
+
+    expect(calculate(rows, dollars, "sum")).toBe("$13.00");
+    expect(calculate(rows, dollars, "average")).toBe("$4.33");
+    expect(calculate(rows, dollars, "count-all")).toBe("3");
+  });
+
   it("finds the earliest and latest dates and the range between them", () => {
     const app = createDatabaseApp(
       [{ name: "Due", type: "date" }],

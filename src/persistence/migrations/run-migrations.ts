@@ -27,6 +27,7 @@ import { addForm } from "./0025-form.ts";
 import { addOpenMode } from "./0026-open-mode.ts";
 import { addTemplates } from "./0027-templates.ts";
 import { addViewLock } from "./0028-view-lock.ts";
+import { addAdvancedFilters } from "./0029-advanced-filters.ts";
 
 // A pure function from format version n to n + 1.
 export type Migration = (
@@ -63,6 +64,7 @@ export const MIGRATIONS: readonly Migration[] = [
   addOpenMode,
   addTemplates,
   addViewLock,
+  addAdvancedFilters,
 ];
 
 export type MigrationResult =

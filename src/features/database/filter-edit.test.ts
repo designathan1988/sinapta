@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { FilterGroup } from "../../model/index.ts";
-import { toPropertyId } from "./database-builder.ts";
+import { createDatabaseApp, toPropertyId } from "./database-builder.ts";
+import { setViewFilter } from "./view.commands.ts";
 import {
   addFilter,
   addGroup,
@@ -56,5 +57,21 @@ describe("filter edits", () => {
       conjunction: "and",
       items: [b],
     });
+  });
+});
+
+describe("the advanced filter's mark", () => {
+  it("goes with its last rule, so the next filter starts simple", () => {
+    const app = createDatabaseApp([{ name: "Points", type: "number" }], []);
+    const viewId = app.view().id;
+
+    app.dispatch(
+      setViewFilter.create({
+        viewId,
+        filter: { conjunction: "and", isAdvanced: true, items: [] },
+      }),
+    );
+
+    expect(app.view().filter).toEqual({ conjunction: "and", items: [] });
   });
 });

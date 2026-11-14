@@ -67,6 +67,30 @@ describe("a date's reminder", () => {
   });
 });
 
+describe("a range with times, as Notion's", () => {
+  it("keeps the end's own time and writes it after the end", () => {
+    const stored = {
+      start: "2026-11-16",
+      end: "2026-11-20",
+      time: "09:00",
+      endTime: "17:30",
+    };
+
+    const value = readDateValue(stored);
+
+    expect(value).toEqual(stored);
+    expect(value && formatDateValue(value)).toBe(
+      "November 16, 2026 9:00 AM → November 20, 2026 5:30 PM",
+    );
+  });
+
+  it("drops an end time without an end or a start time", () => {
+    expect(
+      readDateValue({ start: "2026-11-16", time: "09:00", endTime: "10:00" }),
+    ).toEqual({ start: "2026-11-16", time: "09:00" });
+  });
+});
+
 describe("formatDateValue", () => {
   it("writes a day in the property's date format, Full date first, as Notion's", () => {
     const day = { start: "2026-11-10" };

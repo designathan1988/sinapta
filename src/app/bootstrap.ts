@@ -23,6 +23,7 @@ import {
   withPropertyConfigs,
 } from "../features/database/index.ts";
 import { editorCommands } from "../features/editor/index.ts";
+import { SCOPED_KEYS } from "./scoped-keys.ts";
 import { aiFeatureCommands } from "../features/ai/index.ts";
 import { peekCommands } from "../features/row-peek/index.ts";
 import { templateCommands } from "../features/templates/index.ts";
@@ -43,14 +44,10 @@ import {
   discussionTidier,
   valueDiscussionTidier,
 } from "../features/comments/index.ts";
-import { formatToolbarKeys } from "../features/format-toolbar/index.ts";
 import {
   onboardingCommands,
   seedGettingStarted,
 } from "../features/onboarding/index.ts";
-import { emojiMenuKeys } from "../features/emoji-menu/index.ts";
-import { mentionMenuKeys } from "../features/mention-menu/index.ts";
-import { slashMenuKeys } from "../features/slash-menu/index.ts";
 import {
   createAppStore,
   type AppStore,
@@ -136,14 +133,6 @@ const COMMANDS = [
   ...markdownImportCommands,
   ...pageVersionCommands,
   ...searchFilterCommands,
-];
-
-// Keys that apply while one part of the interface is active.
-const SCOPED_KEYS = [
-  slashMenuKeys,
-  mentionMenuKeys,
-  emojiMenuKeys,
-  formatToolbarKeys,
 ];
 
 // Loads the stored workspace, then keeps saving it, and keeps the files

@@ -24,6 +24,32 @@ function readableNames(
     .join("  ");
 }
 
+function keepFormula(
+  onChange: (config: unknown) => void,
+): (event: Event) => void {
+  return (event) => {
+    if (event.target instanceof HTMLTextAreaElement) {
+      onChange({ expression: event.target.value });
+    }
+  };
+}
+
+// Enter keeps the formula, as Notion's editor; Shift+Enter breaks the
+// line. Escape keeps it too before the settings close, as no change event
+// comes from a field taken away.
+function keepOnKey(
+  expression: string,
+  keep: (event: Event) => void,
+): (event: KeyboardEvent) => void {
+  return (event) => {
+    const keeps =
+      event.key === "Escape" || (event.key === "Enter" && !event.shiftKey);
+    if (!keeps || !(event.target instanceof HTMLTextAreaElement)) return;
+    if (event.key === "Enter") event.preventDefault();
+    if (event.target.value !== expression) keep(event);
+  };
+}
+
 export function renderFormulaConfig(
   property: PropertyDefinition,
   onChange: (config: unknown) => void,
@@ -39,11 +65,8 @@ export function renderFormulaConfig(
     expression === ""
       ? undefined
       : compileFormula(expression, properties, property.id);
-  const onInput = (event: Event): void => {
-    if (event.target instanceof HTMLTextAreaElement) {
-      onChange({ expression: event.target.value });
-    }
-  };
+  const onInput = keepFormula(onChange);
+  const onKey = keepOnKey(expression, onInput);
   const names = readableNames(properties, property);
   return html`<label class="database__view-name">
       ${TEXT.formula}
@@ -55,6 +78,7 @@ export function renderFormulaConfig(
         aria-invalid=${String(result?.ok === false)}
         .value=${expression}
         @change=${onInput}
+        @keydown=${onKey}
       ></textarea>
     </label>
     ${

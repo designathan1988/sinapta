@@ -22,6 +22,7 @@ export function ruleIndexOf(
 
 export function isSimpleFilter(filter: FilterGroup): boolean {
   return (
+    filter.isAdvanced !== true &&
     filter.conjunction === "and" &&
     !filter.items.some((item) => isFilterGroup(item))
   );

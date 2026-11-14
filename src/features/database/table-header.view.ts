@@ -6,6 +6,7 @@ import { ref } from "lit-html/directives/ref.js";
 import { closeOverlay, openOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
+import { viewIsLocked } from "../../blocks/page/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { COLUMN_MENU_OVERLAY, isOpenFor } from "./database-overlay.ts";
 import { propertyType } from "./property-registry.ts";
@@ -159,6 +160,10 @@ function renderHeader(
 }
 
 function renderAddProperty(context: TableContext): TemplateResult {
+  // A locked view takes no new property, as Notion's; its column stays.
+  if (viewIsLocked(context.state.workspace, context.model.view)) {
+    return html`<th class="database__header" scope="col" data-add></th>`;
+  }
   const overlay = {
     kind: PROPERTY_TYPES_OVERLAY,
     anchorId: context.model.holderId,

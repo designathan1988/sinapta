@@ -65,7 +65,11 @@ function changesLockedProps(block: Block | undefined, props: unknown): boolean {
   );
 }
 
-function viewIsLocked(workspace: Workspace, view: View | undefined): boolean {
+// A view is locked by its own lock or by its database's.
+export function viewIsLocked(
+  workspace: Workspace,
+  view: View | undefined,
+): boolean {
   if (view === undefined) return false;
   return view.isLocked || isLocked(workspace.blocks[view.databaseId]);
 }

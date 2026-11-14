@@ -17,6 +17,11 @@
     padding: var(--space-stack-sm) var(--space-inset-xs) var(--space-stack-hair);
   }
 
+  /* Each day with its time beside it, as Notion's. */
+  .date-picker__fields:has(input[type="time"]) {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
   .date-picker:has(> .date-picker__fields)::after {
     content: "";
     block-size: var(--size-border-thin);
@@ -27,6 +32,7 @@
 
   .date-picker__field {
     display: flex;
+    min-inline-size: 0;
     align-items: center;
     min-block-size: var(--size-menu-row);
     padding: var(--space-none) var(--space-inline-icon);

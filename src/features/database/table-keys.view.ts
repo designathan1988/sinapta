@@ -14,6 +14,8 @@ import { selectCellNeighbor, type CellStep } from "./table.selectors.ts";
 import { selectEntryIndex } from "./table-entries.selectors.ts";
 import { onRowKey } from "./table-row-keys.view.ts";
 import { toggleCell } from "./table-cell-toggle.ts";
+import { selectRows } from "./row-bulk.commands.ts";
+import { selectTickedRows } from "./row-selection.selectors.ts";
 
 function activate(
   cell: CellRef,
@@ -146,12 +148,23 @@ function onCellKey(
   event.preventDefault();
 }
 
+// Escape lets go of the selected rows, as Notion's, from a row's box.
+function letGoOfRows(event: KeyboardEvent, context: TableContext): void {
+  if (event.key !== "Escape") return;
+  if (selectTickedRows(context.state, context.model).length === 0) return;
+  event.preventDefault();
+  context.dispatch(selectRows.create({ rowIds: [] }));
+}
+
 export function onBodyKeyDown(
   event: KeyboardEvent,
   context: TableContext,
 ): void {
   const cell = cellOf(event.target);
-  if (cell === undefined) return;
+  if (cell === undefined) {
+    letGoOfRows(event, context);
+    return;
+  }
   if (event.target instanceof HTMLInputElement)
     onEditorKey(event, event.target, context);
   else if (onRowKey(event, cell, context)) event.preventDefault();

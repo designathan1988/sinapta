@@ -20,7 +20,7 @@
   /* "Where", or the join of a group's conditions, before each item. */
   .database__filter-lead {
     flex: none;
-    inline-size: var(--size-label-width);
+    inline-size: var(--size-filter-lead-width);
     color: var(--color-text-secondary);
     font-size: var(--font-size-sm);
   }

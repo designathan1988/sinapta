@@ -7,6 +7,7 @@ import type { View, ViewId, ViewTabStyle } from "../../model/index.ts";
 import { closeOverlay, openOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
+import { viewIsLocked } from "../../blocks/page/index.ts";
 import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { isOpenFor } from "./database-overlay.ts";
 import type { TableContext } from "./table-cell.view.ts";
@@ -119,6 +120,20 @@ function renderToggle(
   </button>`;
 }
 
+// A locked view's lock beside its name, as Notion's.
+function renderTabLock(
+  state: TableContext["state"],
+  view: View,
+): TemplateResult | typeof nothing {
+  if (!viewIsLocked(state.workspace, view)) return nothing;
+  return html`<span
+    class="database__tab-lock"
+    role="img"
+    aria-label=${COPY.database.viewLocked}
+    >${renderIcon("lock")}</span
+  >`;
+}
+
 // A tab, as the owner chose to show tabs; the open view's tab opens its
 // menu, as Notion's.
 function renderTab(view: View, context: TableContext): TemplateResult {
@@ -152,6 +167,7 @@ function renderTab(view: View, context: TableContext): TemplateResult {
   >
     ${style === "text" ? nothing : renderIcon(LAYOUT_ICONS[view.type])}
     ${style === "icon" ? nothing : html`<span>${view.name}</span>`}
+    ${renderTabLock(state, view)}
   </button>`;
 }
 

@@ -31,6 +31,10 @@ const innerFilterGroupSchema = v.object({
 
 export const filterGroupSchema = v.object({
   conjunction: conjunctionSchema,
+  // Notion's advanced filter: its rules in one panel behind one pill,
+  // even with no group and joined by and (version 29). Without it, a
+  // filter is advanced only when it has a group or is joined by or.
+  isAdvanced: v.optional(v.boolean()),
   items: v.array(v.union([filterSchema, innerFilterGroupSchema])),
 });
 
