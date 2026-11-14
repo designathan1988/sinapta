@@ -11,7 +11,7 @@ describe("the view settings' data source rows, as Notion's", () => {
     );
     const after = labels.slice(labels.indexOf("Conditional color"));
 
-    expect(after.slice(0, 9)).toEqual([
+    expect(after.slice(0, 10)).toEqual([
       "Conditional color",
       "Copy link to view",
       "Source",
@@ -20,6 +20,7 @@ describe("the view settings' data source rows, as Notion's", () => {
       "AI autofill",
       "Turn into",
       "Linked events",
+      "Manage data sources",
       "Lock database",
     ]);
     expect(host.textContent).toContain("Data source settings");

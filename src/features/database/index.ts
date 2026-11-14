@@ -78,6 +78,7 @@ import { linkedViewCommands } from "./linked-view.commands.ts";
 import { buttonPressCommands } from "./button-press.commands.ts";
 import { automationCommands } from "./automation.commands.ts";
 import { taskDatabaseCommands } from "./task-database.commands.ts";
+import { dataSourceCommands } from "./data-source.commands.ts";
 import {
   relationCommands,
   relationTidier,
@@ -126,6 +127,7 @@ export const databaseCommands = [
   ...buttonPressCommands,
   ...automationCommands,
   ...taskDatabaseCommands,
+  ...dataSourceCommands,
 ];
 
 // The rules that keep database data whole after any command.

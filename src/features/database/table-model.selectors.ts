@@ -27,7 +27,11 @@ import type { AppState } from "../../state/index.ts";
 import type { IconName } from "../../ui/icon/index.ts";
 import { cellValue, matchesGroup } from "./filter-match.ts";
 import { propertyType } from "./property-registry.ts";
-import { selectActiveView, selectViewHolder } from "./view-holder.selectors.ts";
+import {
+  selectActiveView,
+  selectViewHolder,
+  selectViewSource,
+} from "./view-holder.selectors.ts";
 import { selectRows } from "./row-values.selectors.ts";
 
 // The title column is every row's page title. It behaves as a text
@@ -215,7 +219,7 @@ export function selectTableModel(
   const title = titleProperty();
   if (holder === undefined || view === undefined || title === undefined)
     return undefined;
-  const { database, viewIds } = holder;
+  const database = selectViewSource(state, holder.database, view);
   const { blocks } = state.workspace;
   const cached = cache.get(holderId);
   if (
@@ -230,7 +234,7 @@ export function selectTableModel(
   const others = orderedProperties(view, database.props.properties);
   const model: TableModel = {
     holderId,
-    viewIds,
+    viewIds: holder.viewIds,
     database,
     view,
     columns: freeze(

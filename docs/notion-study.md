@@ -1508,7 +1508,14 @@ Groups, Notion and Pagecraft alike (Pagecraft changed to match):
     a page on that day, opened at once. "Manage data sources" lists the
     database's source (its name, "10 views"), Add data source, and under
     Linked, Link existing data source: a database of several sources.
-    Not yet in Pagecraft, whose databases hold one source each.
+    Since (`h3-data-sources`, by the human hand): Pagecraft's database
+    keeps linked sources (schema 35), Add data source makes "New data
+    source" beside it and links it, Link existing data source links
+    another database, and a view's Source chooses among them (its rows
+    and properties then those of the source); a linked source opens or
+    unlinks, its views going back to the database's own rows. One
+    difference: Pagecraft's added source is also a page in the sidebar,
+    where Notion keeps it inside the database.
 69. **done** [real-user-testing skill, the human hand: Pagecraft
     `h1-updates`, `h1c-tooltip-time`, `h2-view-settings`; Notion
     `n128-tooltip-time`, `n129-vs-hand`] Tested as a person does it

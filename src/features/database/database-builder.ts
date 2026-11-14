@@ -22,6 +22,7 @@ import { propertyTypeCommands } from "./property-type.commands.ts";
 import { buttonPressCommands } from "./button-press.commands.ts";
 import { automationCommands } from "./automation.commands.ts";
 import { taskDatabaseCommands } from "./task-database.commands.ts";
+import { dataSourceCommands } from "./data-source.commands.ts";
 import {
   relationCommands,
   relationTidier,
@@ -161,6 +162,7 @@ const DATABASE_TEST_COMMANDS = [
   ...buttonPressCommands,
   ...automationCommands,
   ...taskDatabaseCommands,
+  ...dataSourceCommands,
 ];
 
 // Commands and tidiers of other features a test needs beside the table's.

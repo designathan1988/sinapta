@@ -83,6 +83,16 @@ export const DATABASE_OPTIONS_TEXT = {
     `${page} in ${database}: ${what}`,
   turnInto: "Turn into",
   linkedEvents: "Linked events",
+  manageDataSources: "Manage data sources",
+  newDataSource: "New data source",
+  addDataSource: "Add data source",
+  linkedSources: "Linked",
+  linkExistingSource: "Link existing data source",
+  unlinkSource: "Unlink data source",
+  openSource: "Open data source",
+  viewCount: (count: number) =>
+    `${String(count)} ${count === 1 ? "view" : "views"}`,
+  noOtherDatabases: "No other database to link.",
   connectCalendarTitle: "Connect your calendar",
   connectCalendarNote:
     "Connect a calendar to choose meetings and automatically file their notes here.",

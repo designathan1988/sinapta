@@ -51,6 +51,9 @@ export const databasePropsSchema = v.object({
   // Its automations (version 30), as Notion's: each runs its action when
   // its trigger happens.
   automations: v.optional(v.array(automationSchema)),
+  // The other databases it holds as data sources (version 35), as
+  // Notion's Manage data sources: its views may show any of them.
+  sourceIds: v.optional(v.array(blockIdSchema)),
 });
 
 // Property type name to the schema of that type's config, supplied by the

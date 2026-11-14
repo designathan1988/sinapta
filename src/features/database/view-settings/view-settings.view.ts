@@ -52,6 +52,11 @@ import { aiAutofillPanel } from "./ai-autofill-panel.ts";
 import { automationsPanel } from "./automations-panel.ts";
 import { turnIntoPanel } from "./turn-into-panel.ts";
 import { linkedEventsPanel } from "./linked-events-panel.ts";
+import {
+  dataSourcePanelOf,
+  dataSourcesPanel,
+  linkSourcePanel,
+} from "./data-sources-panel.ts";
 import { automationPanelOf } from "./automation-panels.ts";
 
 const PANELS: Readonly<
@@ -83,6 +88,8 @@ const PANELS: Readonly<
   automations: automationsPanel,
   "turn-into": turnIntoPanel,
   "linked-events": linkedEventsPanel,
+  "data-sources": dataSourcesPanel,
+  "link-source": linkSourcePanel,
   [COLOR_PROPERTY_PANEL]: colorPropertyPanel,
   "chart-kind": chartKindPanel,
   "chart-x": chartXPanel,
@@ -127,13 +134,23 @@ function panelSearch(context: TableContext, placeholder: string | undefined) {
   };
 }
 
+// The panel a name stands for: a fixed one, or one of an automation's or
+// a data source's; none for the first panel.
+function panelNamed(
+  context: TableContext,
+  name: string | undefined,
+): SettingsPanel | undefined {
+  if (name === undefined) return undefined;
+  return (
+    PANELS[name]?.(context) ??
+    automationPanelOf(context, name) ??
+    dataSourcePanelOf(context, name)
+  );
+}
+
 export function renderViewSettings(context: TableContext): TemplateResult {
   const name = panelName(context);
-  const build = name === undefined ? undefined : PANELS[name];
-  const panel =
-    build?.(context) ??
-    (name === undefined ? undefined : automationPanelOf(context, name)) ??
-    rootPanel(context);
+  const panel = panelNamed(context, name) ?? rootPanel(context);
   const { lead, tail } = panel;
   const back = backTo(context, panel, name);
   return renderMenu({

@@ -206,6 +206,7 @@ owner listed here exists.
 | The view settings' data source rows: Source, Edit properties, Lock database | `src/features/database/view-settings/source-panel.ts` | 31 |
 | A database's automations: their commands, what sets them off, running them after a change | `src/features/database/automation.commands.ts`, `src/features/database/automation-runs.selectors.ts`, `src/features/database/automation-runner.ts`, `src/blocks/database/automation.schema.ts` | 31 |
 | The view settings' Automations: the list, the Free plan's card, the editor and its panels | `src/features/database/view-settings/automations-panel.ts`, `automation-edit-panel.ts`, `automation-add-panel.ts`, `automation-hook-panel.ts`, `automation-notify-panel.ts`, `automation-panels.ts`, `automation-words.ts` | 31 |
+| A database's data sources and the view's chosen source | `src/features/database/data-source.commands.ts`, `view-holder.selectors.ts` (selectViewSource), `view-settings/data-sources-panel.ts` | 31 |
 | The view settings' Turn into and Linked events | `src/features/database/task-database.commands.ts`, `view-settings/turn-into-panel.ts`, `view-settings/linked-events-panel.ts` | 31 |
 | What automations told people, in their inbox | `src/features/inbox/inbox-changes.selectors.ts` | 31 |
 | An automation's webhook, sent by the server | `server/automation-webhook.ts`, `src/persistence/automation-webhook-client.ts` | 31 |

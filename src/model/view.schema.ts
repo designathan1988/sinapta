@@ -129,6 +129,9 @@ export const calculationSchema = v.picklist(CALCULATION_KINDS);
 export const viewSchema = v.object({
   id: viewIdSchema,
   databaseId: blockIdSchema,
+  // The data source it shows (version 35), as Notion's: one of the
+  // database's linked sources; its own database when absent.
+  sourceId: v.optional(blockIdSchema),
   name: v.string(),
   type: viewTypeSchema,
   sorts: v.array(

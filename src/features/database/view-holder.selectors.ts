@@ -50,6 +50,19 @@ export function selectViewHolder(
   return { holderId, database, viewIds: linked.viewIds };
 }
 
+// The rows a view shows: those of the data source it chose among its
+// database's linked sources, or its own database's.
+export function selectViewSource(
+  state: AppState,
+  database: DatabaseBlock,
+  view: View,
+): DatabaseBlock {
+  const id = view.sourceId;
+  if (id === undefined || !(database.props.sourceIds ?? []).includes(id))
+    return database;
+  return selectDatabase(state, id) ?? database;
+}
+
 // The view that is shown: the one chosen for the holder, or its first.
 export function selectActiveView(
   state: AppState,
