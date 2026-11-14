@@ -8,6 +8,7 @@ import {
   type RichText,
   type TextSpan,
 } from "../../model/index.ts";
+import { localToday, nearDayLabel } from "./date-mention.ts";
 import { renderEquationInto } from "./equation.view.ts";
 
 // Innermost first, so bold wraps italic wraps the rest.
@@ -53,10 +54,26 @@ function mentionNode(span: TextSpan, mention: Mention): Node {
       linkMention(element, mention.href);
       break;
     default:
-      element.dataset.date = mention.date;
+      dateMention(element, mention.date);
       if (mention.isReminder === true) element.dataset.reminder = "";
   }
   return element;
+}
+
+// A day near today shows its word instead of the date it was written
+// with; that text stays in the document, hidden, so the caret counts it.
+function dateMention(element: HTMLElement, date: string): void {
+  element.dataset.date = date;
+  const label = nearDayLabel(date, localToday());
+  if (label === undefined) return;
+  // The word is drawn from an empty element, so it adds no characters.
+  const word = document.createElement("span");
+  word.className = "mention__label";
+  word.dataset.label = label;
+  const stored = wrap(element.firstChild ?? new Text(), "span");
+  stored.className = "mention__stored";
+  stored.setAttribute("aria-hidden", "true");
+  element.append(word, stored);
 }
 
 // A web page's mention opens it in a new tab, as a link does.

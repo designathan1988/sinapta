@@ -1337,6 +1337,17 @@ items above, found while photographing them:
     built-in ones), its preview shows the page's lines, and "Use this
     template" makes a top-level copy, opened, that is not itself a
     template. The row reads "Remove from templates" once saved.
+57. **done** [`n104-date-mention`, `n105-fix-heading`; Pagecraft
+    `p94-date-mention`] "@today" then Enter makes a date mention that
+    reads "@hoje" ("@Today" in English): the "@" fainter than the word,
+    the word in secondary text, and a space after it (the heading's text
+    became "Heading four @hoje "). Pagecraft's date mention now reads
+    Today, Tomorrow or Yesterday, worked out when drawn, and keeps the
+    date it was written with, unseen, so the caret's offsets hold. Every
+    mention typed with "@" is followed by a space unless one is there,
+    which also fixed typing straight after a mention at a line's end (the
+    letters were lost). Notion's heading was put back ("Heading four",
+    `n105-fix-heading`).
 
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,

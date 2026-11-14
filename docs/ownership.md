@@ -221,6 +221,7 @@ owner listed here exists.
 | Caret reading and restoring in the DOM, selection sync | `src/ui/caret/` | 3 |
 | Tooltips for icon-only controls | `src/ui/tooltip/` | 7 |
 | Reading pasted HTML as rich text | `src/ui/rich-text/pasted-html.ts` | 7 |
+| A date mention near today read as Today, Tomorrow or Yesterday | `src/ui/rich-text/date-mention.ts`, `rich-text-projection.ts` | 31 |
 | Reading pasted Markdown as blocks and marks | `src/ui/rich-text/pasted-markdown.ts` | 8 |
 | Projecting `RichText` into an editable element | `src/ui/rich-text/` | 3 |
 | `beforeinput` to command translation | `src/features/editor/editor-input.view.ts` | 3 |

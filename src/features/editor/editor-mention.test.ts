@@ -10,7 +10,7 @@ const span = {
 };
 
 describe("text.insertMention", () => {
-  it("puts the mention where @ and the query were and the caret after it", () => {
+  it("puts the mention where @ and the query were, a space, and the caret after it", () => {
     const { store, dispatch } = createApp([text("a", "see @pl")]);
 
     dispatch(insertMentionAt.create({ blockId: A, start: 4, end: 7, span }));
@@ -19,7 +19,22 @@ describe("text.insertMention", () => {
     expect(state.workspace.blocks[A]?.props.text).toEqual([
       { text: "see " },
       span,
+      { text: " " },
     ]);
-    expect(state.ui.selection?.focusOffset).toBe(8);
+    expect(state.ui.selection?.focusOffset).toBe(9);
+  });
+
+  it("adds no space when one follows already", () => {
+    const { store, dispatch } = createApp([text("a", "see @pl now")]);
+
+    dispatch(insertMentionAt.create({ blockId: A, start: 4, end: 7, span }));
+
+    const state = store.getState();
+    expect(state.workspace.blocks[A]?.props.text).toEqual([
+      { text: "see " },
+      span,
+      { text: " now" },
+    ]);
+    expect(state.ui.selection?.focusOffset).toBe(9);
   });
 });

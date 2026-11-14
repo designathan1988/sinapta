@@ -129,6 +129,20 @@
       content: "@";
     }
 
+    /* A day near today, as Notion's: "@Today", the "@" fainter. The date
+       it was written with stays in the text, unseen, for the caret. */
+    &[data-date]:has(.mention__label)::before {
+      color: var(--color-text-tertiary);
+    }
+
+    & .mention__label::before {
+      content: attr(data-label);
+    }
+
+    & .mention__stored {
+      font-size: 0;
+    }
+
     /* A web page's mention, as Notion's: a mark, then the page's name. */
     &[data-link]::before {
       content: "↗ ";
@@ -180,5 +194,6 @@
   /* A reminder: a date mention with an alarm clock before it. */
   .mention[data-reminder]::before {
     content: "⏰ ";
+    color: inherit;
   }
 }

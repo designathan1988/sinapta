@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
 import { toBlockId } from "../../model/index.ts";
+import { localToday } from "./date-mention.ts";
 import { projectRichText } from "./rich-text-projection.ts";
 
 describe("projectRichText", () => {
@@ -41,5 +42,24 @@ describe("projectRichText", () => {
     expect(element.querySelector<HTMLElement>(".mention")?.dataset.date).toBe(
       "2026-11-11",
     );
+  });
+
+  it("shows today's mention as Today, keeping its text for the caret", () => {
+    const element = document.createElement("p");
+    const mention = { kind: "date" as const, date: localToday() };
+
+    projectRichText(element, [
+      { text: "due " },
+      { text: "Nov 14, 2026", mention },
+    ]);
+
+    const piece = element.querySelector<HTMLElement>(".mention");
+    const word = piece?.querySelector<HTMLElement>(".mention__label");
+    expect(word?.dataset.label).toBe("Today");
+    expect(word?.textContent).toBe("");
+    expect(
+      piece?.querySelector(".mention__stored")?.getAttribute("aria-hidden"),
+    ).toBe("true");
+    expect(element.textContent).toBe("due Nov 14, 2026");
   });
 });

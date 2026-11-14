@@ -1,8 +1,12 @@
 // Mentions typed into a block's text: what was typed to find the page or
-// date gives way to the mention, and the caret goes after it.
+// date gives way to the mention, then a space, as Notion's (n104), unless
+// one follows already; the caret goes after it.
 import { isTextBlock } from "../../blocks/index.ts";
 import {
   insertMention,
+  insertText,
+  plainText,
+  splitRichText,
   type BlockId,
   type TextSpan,
 } from "../../model/index.ts";
@@ -20,7 +24,11 @@ export const insertMentionAt = defineCommand<{
     const block = state.workspace.blocks[command.blockId];
     if (!isTextBlock(block) || command.span.mention === undefined) return {};
     const { start, end, span } = command;
-    const text = insertMention(block.props.text, { start, end, span });
+    const rest = plainText(splitRichText(block.props.text, end)[1]);
+    const after = start + span.text.length;
+    const mentioned = insertMention(block.props.text, { start, end, span });
+    const isSpaced = /^\s/.test(rest);
+    const text = isSpaced ? mentioned : insertText(mentioned, after, " ");
     return {
       operations: setText(state, {
         blockId: block.id,
@@ -29,7 +37,7 @@ export const insertMentionAt = defineCommand<{
       }),
       ui: {
         ...state.ui,
-        selection: caretAt(block.id, start + span.text.length),
+        selection: caretAt(block.id, after + 1),
       },
     };
   },
