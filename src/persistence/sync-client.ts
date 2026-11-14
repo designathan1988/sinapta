@@ -29,6 +29,7 @@ import {
   type SyncOptions,
 } from "./sync-session.ts";
 import { replayOutbox, withLogged } from "./sync-outbox.ts";
+import { followPage } from "./sync-presence.ts";
 import * as reply from "./sync.schema.ts";
 import { readWorkspaceFile, serializeWorkspace } from "./workspace-file.ts";
 
@@ -155,36 +156,6 @@ function answer(link: Link, sync: Sync, request: SyncRequest): void {
   }
   const workspace = createEmptyWorkspace();
   void create(link, sync, { name: request.name, workspace, isEmpty: true });
-}
-
-const PRESENCE_MS = 30_000;
-
-// Tells the server which page this person has open and the block they
-// write in, so that the others see their face on it and beside it.
-function announce(link: Link, sync: Sync): void {
-  const session = link.session;
-  if (session?.isReady !== true) return;
-  const { activePageId: pageId, selection } = sync.store.getState().ui;
-  const blockId = selection?.blockId ?? null;
-  const path = `/api/workspaces/${session.id}/presence`;
-  getJson(sync.send, path, { pageId, blockId }).catch(() => undefined);
-}
-
-function followPage(link: Link, sync: Sync): void {
-  const placeOf = (state: AppState) =>
-    `${state.ui.activePageId ?? ""}/${state.ui.selection?.blockId ?? ""}`;
-  let place = placeOf(sync.store.getState());
-  let wasReady = false;
-  sync.store.subscribe((state) => {
-    const isReady = link.session?.isReady === true;
-    if (placeOf(state) === place && isReady === wasReady) return;
-    place = placeOf(state);
-    wasReady = isReady;
-    announce(link, sync);
-  });
-  setInterval(() => {
-    announce(link, sync);
-  }, PRESENCE_MS);
 }
 
 function follow(link: Link, sync: Sync): void {

@@ -4,7 +4,7 @@ import { blockDefinition } from "../../blocks/index.ts";
 import type { Block } from "../../model/index.ts";
 import { selectOverlayAt, type AppState } from "../../state/index.ts";
 import { selectBlockDiscussionCount } from "../comments/index.ts";
-import { selectWritersIn } from "../presence/index.ts";
+import { selectPresenceKey } from "../presence/index.ts";
 
 // The values a block's drawing depends on: the block, whether it is
 // selected, the menu open beside it, its comment count, and what its type
@@ -26,7 +26,7 @@ export function selectBlockDrawKey(
     selectOverlayAt(state, block.id),
     selectBlockDiscussionCount(state, block.id),
     state.persistence.sync.access,
-    selectWritersIn(state, block.id),
+    selectPresenceKey(state, block.id),
     ...definition.drawnFrom(block, state),
   ];
 }

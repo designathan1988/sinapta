@@ -14,8 +14,9 @@ interface Here {
   readonly userId: string;
   readonly name: string;
   readonly pageId: string | null;
-  // The block they are writing in, when any.
+  // The block they are writing in, when any, and where their caret is.
   readonly blockId: string | null;
+  readonly offset: number | null;
   readonly at: number;
 }
 
@@ -47,6 +48,16 @@ function textOf(body: unknown, key: "pageId" | "blockId"): string | null {
   return typeof value === "string" ? value : null;
 }
 
+function offsetOf(body: unknown): number | null {
+  if (typeof body !== "object" || body === null) return null;
+  const value: unknown = Object.entries(body).find(
+    ([name]) => name === "offset",
+  )?.[1];
+  return typeof value === "number" && Number.isInteger(value) && value >= 0
+    ? value
+    : null;
+}
+
 export const PRESENCE_ROUTES: RouteTable = {
   "POST /api/workspaces/:id/presence": (request, context) => {
     const user = sessionUser(context, request);
@@ -58,6 +69,7 @@ export const PRESENCE_ROUTES: RouteTable = {
       name: user.name,
       pageId: textOf(request.body, "pageId"),
       blockId: textOf(request.body, "blockId"),
+      offset: offsetOf(request.body),
       at: context.now(),
     });
     const people = presenceIn(context, workspace.id);

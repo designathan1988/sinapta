@@ -3,7 +3,11 @@ import { render } from "lit-html";
 import { describe, expect, it } from "vitest";
 import { buildWorkspace, parseBlockId } from "../../model/index.ts";
 import { createInitialState, type AppState } from "../../state/index.ts";
-import { renderBlockPresence, renderPresence } from "./presence.view.ts";
+import {
+  renderBlockPresence,
+  renderPresence,
+  selectCaretsIn,
+} from "./presence.view.ts";
 
 function stateOnPage(): AppState {
   const state = createInitialState();
@@ -23,7 +27,13 @@ function stateOnPage(): AppState {
         ...state.persistence.sync,
         presence: [
           { userId: "me", name: "Me", pageId: "p1", blockId: "b1" },
-          { userId: "u2", name: "Grace", pageId: "p1", blockId: "b1" },
+          {
+            userId: "u2",
+            name: "Grace",
+            pageId: "p1",
+            blockId: "b1",
+            offset: 4,
+          },
           { userId: "u3", name: "Linus", pageId: "elsewhere", blockId: null },
         ],
       },
@@ -65,5 +75,13 @@ describe("block presence", () => {
     render(renderBlockPresence(stateOnPage(), "b2"), host);
 
     expect(host.querySelector(".presence__block")).toBeNull();
+  });
+});
+
+describe("the others' carets", () => {
+  it("lists each other person's caret in a block, where it is", () => {
+    expect(selectCaretsIn(stateOnPage(), "b1")).toEqual([
+      { name: "Grace", offset: 4 },
+    ]);
   });
 });

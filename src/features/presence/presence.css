@@ -45,3 +45,30 @@
     user-select: none;
   }
 }
+
+@layer features {
+  /* Another person's caret: a line in the accent color over the text, at
+     the place its view measured, with their name above it. */
+  .presence__caret {
+    position: absolute;
+    inset-block-start: var(--caret-y, 0);
+    inset-inline-start: var(--caret-x, 0);
+    inline-size: var(--size-border-thick);
+    block-size: var(--caret-h, 1lh);
+    background-color: var(--color-accent-fill);
+    pointer-events: none;
+  }
+
+  .presence__flag {
+    position: absolute;
+    inset-block-end: 100%;
+    inset-inline-start: 0;
+    padding: var(--space-none) var(--space-inset-xxs);
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) 0;
+    background-color: var(--color-accent-fill);
+    color: var(--color-text-on-accent);
+    font-size: var(--font-size-xs);
+    line-height: var(--font-line-height-tight);
+    white-space: nowrap;
+  }
+}

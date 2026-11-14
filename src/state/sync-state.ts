@@ -43,8 +43,9 @@ export interface Presence {
   readonly userId: string;
   readonly name: string;
   readonly pageId: string | null;
-  // The block they write in, when any.
+  // The block they write in, when any, and where their caret is in it.
   readonly blockId: string | null;
+  readonly offset?: number | null;
 }
 
 export type SyncRequest =

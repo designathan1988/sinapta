@@ -5,6 +5,7 @@ import { html, nothing, type TemplateResult } from "lit-html";
 import type { AppState, Presence } from "../../state/index.ts";
 import { firstGrapheme } from "../../model/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { renderCaret, type Caret } from "./presence-caret.view.ts";
 
 const SHOWN = 3;
 
@@ -55,6 +56,25 @@ export function selectWritersIn(state: AppState, blockId: string): string {
     .join(", ");
 }
 
+// Their carets in the block, where the server knows them.
+export function selectCaretsIn(state: AppState, blockId: string): Caret[] {
+  return selectOthersHere(state).flatMap((person) =>
+    person.blockId === blockId &&
+    person.offset !== undefined &&
+    person.offset !== null
+      ? [{ name: person.name, offset: person.offset }]
+      : [],
+  );
+}
+
+// What the block's drawing of the others depends on.
+export function selectPresenceKey(state: AppState, blockId: string): string {
+  const carets = selectCaretsIn(state, blockId)
+    .map((caret) => `${caret.name}@${String(caret.offset)}`)
+    .join(",");
+  return `${selectWritersIn(state, blockId)}|${carets}`;
+}
+
 // Notion's mark of another person in a block: their face at the block's
 // end, named for the reader.
 export function renderBlockPresence(
@@ -63,12 +83,12 @@ export function renderBlockPresence(
 ): TemplateResult | typeof nothing {
   const names = selectWritersIn(state, blockId);
   if (names === "") return nothing;
-  return html`<span
-    class="presence__block"
-    role="img"
-    aria-label=${`${COPY.share.writing} ${names}`}
-    title=${names}
-    contenteditable="false"
-    >${firstGrapheme(names).toUpperCase()}</span
-  >`;
+  return html`${selectCaretsIn(state, blockId).map(renderCaret)}<span
+      class="presence__block"
+      role="img"
+      aria-label=${`${COPY.share.writing} ${names}`}
+      title=${names}
+      contenteditable="false"
+      >${firstGrapheme(names).toUpperCase()}</span
+    >`;
 }

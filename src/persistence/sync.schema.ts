@@ -100,6 +100,7 @@ const presenceSchema = v.object({
       name: v.string(),
       pageId: v.nullable(v.string()),
       blockId: v.optional(v.nullable(v.string())),
+      offset: v.optional(v.nullable(v.number())),
     }),
   ),
 });
@@ -113,6 +114,7 @@ export function readPresenceEvent(text: string) {
       name: person.name,
       pageId: person.pageId,
       blockId: person.blockId ?? null,
+      offset: person.offset ?? null,
     }));
   } catch {
     return undefined;
