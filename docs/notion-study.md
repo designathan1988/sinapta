@@ -1171,6 +1171,54 @@ items above, found while photographing them:
     opened nothing once did not happen again (`n75-col-probe`: one cell,
     off the window, scrolled in and opened both times); plans now find a
     cell under its header.
+45. **done** [T138–T139, `n77-light-menu`; Pagecraft `p33-light-menu`,
+    `p33-dark-menu`, `p19-number-tiles`] The menu reference by day, read
+    on the view settings menu without changing anything. The panel is
+    290 px, white, radius 10 px, its shade `0 20px 24px rgba(25, 25, 25,
+    0.05)`, `0 5px 8px rgba(25, 25, 25, 0.027)` and the ring
+    `0 0 0 1px rgba(42, 28, 0, 0.07)` (by night the two layers differ:
+    `0 14px 28px -6px` and `0 2px 4px -1px`). Rows 28 px, radius 6,
+    text rgb(44, 44, 43); a row pointed at `rgba(33, 27, 23, 0.051)`;
+    values rgb(161, 158, 153) and section labels 12 px weight 500
+    rgb(125, 122, 117), both under 4.5:1 on white, so Pagecraft keeps its
+    deeper secondary text (ADR-0012). The name field 28 px, radius 6,
+    fill `rgba(66, 35, 3, 0.03)`, ring `rgba(28, 19, 1, 0.11)`. Layout
+    tiles 83 × 57 px, 12 px from the panel's edge, 8 apart, radius 6, a
+    ring of rgb(230, 229, 227), names in 11 px rgb(125, 122, 117); the
+    chosen one a 2 px rgb(39, 131, 222) ring and blue name. Switches
+    30 × 18, on rgb(39, 131, 222). The layout panel's rows ("Open pages
+    in" too) have no icon and stand flush. Pagecraft had the night
+    shade by day, 86 × 56 tiles with 12 px names 8 px in, and an icon on
+    "Open pages in" that pushed every row of the panel in: all three
+    changed (`shadow.overlay` per theme, `size.menu.tile`,
+    `font.size.tile`). Left: Notion's view settings rows sit 8 px from
+    the panel's edge, Pagecraft's menus 4 px (the dark reference above
+    reads 4 on other menus; one width for every menu is kept).
+46. **done** [T140, `n78-board`, `n79-board-light`, `n80-vars-dark`,
+    `n81-tones-dark`, `n81-tones-light`; Pagecraft `p34-board`,
+    `p34-board-light`] A board measured by turning the test table's view
+    to Board and back in the same run (`n78-ungroup` removed the Status
+    grouping the board left on the table; `n79` did both in its run; the
+    view read back as an ungrouped table each time). Columns 276 px every
+    288, radius 10, padding 0 8 8 under the head, washed with Notion's
+    `--ca-<color>BacPriTra` (by night gray `rgba(252, 252, 252, 0.03)`,
+    blue `rgba(41, 139, 253, 0.063)`, green `rgba(83, 255, 140, 0.035)`;
+    by day `rgba(66, 35, 3, 0.03)`, `rgba(0, 128, 213, 0.047)`,
+    `rgba(3, 87, 31, 0.035)`; every color read from Notion's variables).
+    A card 260 × 40 for one line, radius 10, on `--c-bacEle` (rgb(32, 32,
+    32) by night, white by day), ringed with `--ca-borSecTra`, shaded
+    `0 2px 4px rgba(25, 25, 25, 0.08)` by night and `0 4px 12px` 0.027 and
+    `0 1px 2px` 0.02 by day; pointed at, rgb(37, 37, 37) by night and a
+    wash `rgba(54, 28, 2, 0.031)` by day. The title 10 px in, weight 500.
+    "New page" a 40 px row, radius 10, ringed with the column's
+    `--ca-<color>BorSecTra`, its words in the column's color (Pagecraft
+    takes the color's text token, which holds 4.5:1 on the wash where
+    Notion's falls to 2.6–4.4:1; ADR-0012). Pagecraft
+    had 256 px columns washed with the chip color at 45 %, 6 px corners,
+    a hover that made the card see-through, and a bare 28 px New page:
+    all changed (`color.board.*`, `shadow.boardCard`, `size.board.*`).
+    Left: Notion's group head is its option pill with a dot; Pagecraft's
+    pills draw no dot anywhere (tables included), a change of every pill.
 
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,
@@ -1355,12 +1403,11 @@ against the reference on every run.
 
 ## Open
 
-- (2026-11-13) Notion filters a checkbox with "Is" or "Is not"
-  (`collectionFilterMenuHelpers.operator.checkboxIs`, `.checkboxIsNot`)
-  and a Checked or Unchecked value; Pagecraft offers "Is checked" and "Is
-  not checked" with no value. Stored filters hold the ids "is-checked" and
-  "is-not-checked", so matching Notion means a migration of saved views.
+Closed on 2026-11-13: the checkbox filter (item 41, T127, the old ids
+read as retired conditions), the menu reference by day (item 45) and a
+board measured in Notion (item 46).
 
-- Light theme measurements of the menu reference.
-- A board in Notion to measure its columns and cards with a real pointer
-  (the test workspace has none).
+- Status pills with Notion's dot before the name (in tables, boards and
+  menus), seen in `n78-board` and `n79-board-light`.
+- Notion's view settings rows 8 px from the panel's edge against
+  Pagecraft's 4 px on every menu (item 45).

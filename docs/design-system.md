@@ -23,12 +23,13 @@ Three tiers. CSS uses the semantic tier only.
 | `color.border` | `subtle`, `default`, `strong`, `focus` | Hairlines, control borders, focus ring |
 | `color.accent` | `default`, `hover`, `subtle` | Primary action, active item |
 | `color.chip.<hue>` | `bg`, `text` for eight hues | Select options, callouts, and text color (`text`) and highlight (`bg`) in rich text |
+| `color.board` | `column.<hue>`, `line.<hue>`, `card`, `cardHover`, `cardRing`, `cardNear`, `cardFar`, `cardSoft` | A board column's wash and its New page ring per hue, and its cards: Notion's own values per theme |
 | `space.inline` | `xs`, `sm`, `md`, `lg` | Gaps along a row |
 | `space.stack` | `xxs` to `xxl` | Gaps between stacked items |
 | `space.inset` | `xs` to `xl`, `page` | Padding inside a container |
-| `size` | `border`, `focus`, `icon`, `control`, `row`, `target`, `sidebar`, `content`, `menu`, `dialog`, `board.column`, `card.cover` | Fixed measures |
+| `size` | `border`, `focus`, `icon`, `control`, `row`, `target`, `sidebar`, `content`, `menu`, `dialog`, `board.column`, `board.row`, `menu.tile`, `card.cover` | Fixed measures |
 | `radius` | `sm`, `md`, `full` | Controls, overlays, chips |
-| `shadow` | `overlay`, `dialog`, `card` | Top layer; `card` for cards on boards and galleries |
+| `shadow` | `overlay`, `dialog`, `card`, `boardCard` | Top layer (`overlay` takes Notion's menu shade per theme, its unused layers clear); `card` for gallery cards, `boardCard` for board cards |
 | `font` | `family`, `size`, `weight`, `lineHeight` | Type |
 | `duration`, `easing` | `fast`, `medium`; `standard` | Motion |
 | `layer` | `sticky`, `dragPreview` | The only z-order values |
