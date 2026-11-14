@@ -50,6 +50,7 @@ async function lookup(send: Fetch, email: string): Promise<AccountAnswer> {
 const REFUSALS: Readonly<Record<number, AccountAnswer>> = {
   401: { kind: "error", error: "wrong-password" },
   409: { kind: "error", error: "email-taken" },
+  429: { kind: "error", error: "too-many-tries" },
 };
 
 const PASSKEY_KINDS = new Set([
@@ -127,9 +128,10 @@ export async function startAccount(options: {
         dispatch(answerAccount.create({ answer }));
         if (answer.kind === "signed-out") void showProviders(send, dispatch);
       },
+      // A request that never reached the server: the connection is down.
       () =>
         dispatch(
-          answerAccount.create({ answer: { kind: "error", error: "network" } }),
+          answerAccount.create({ answer: { kind: "error", error: "offline" } }),
         ),
     );
   });

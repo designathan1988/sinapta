@@ -9,5 +9,5 @@ code as it is when the script is written), are run with the human hand of
 
 | Part | Script | Date | Cases | Pass | Findings | Not run |
 | --- | --- | --- | --- | --- | --- | --- |
-| sign-in | [sign-in.md](sign-in.md) | 2026-11-14 | 34 | 21 | 12 | 1 |
+| sign-in | [sign-in.md](sign-in.md) | 2026-11-14 | 34 | 21 | 12 (10 fixed) | 1 |
 | blocks/toggle | [blocks-toggle.md](blocks-toggle.md) | 2026-11-14 | 43 | 18 | 4 | 21 |

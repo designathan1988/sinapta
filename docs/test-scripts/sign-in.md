@@ -60,21 +60,35 @@ Part `features/sign-in`, 2026-11-14, by the `feature-test-scripts` skill.
 
 Photos are in `.captures/pagecraft/ts-sign-in-NN/` (`NN/step`).
 
+## Fixed after the run (commit "fix(sign-in): …", runs 01, 03, 06, 11 again)
+
+- S34: five wrong passwords for an address in fifteen minutes hold it
+  back (`server/login-failures.ts`, migration 17); run 11: the sixth gets
+  "Too many incorrect passwords. Wait 15 minutes, or email yourself a
+  login code." (11/07).
+- S8: with no page open, the server's workspace opens Home (01/11 shows
+  "Good afternoon").
+- S17, S18: while a passkey is asked the other ways in wait, disabled,
+  and "Waiting for your passkey…" shows (03/10).
+- S4, S5: the email form checks the address itself: "Please enter a
+  valid email address." in red under Continue, no browser bubble (01/03,
+  01/05).
+- S27: "You're offline. Check your connection, then try again." (06/02).
+- S13–S16: "<Name> sign-in isn't available on this server. Continue with
+  your email instead."
+- S7: every step's error sits right under its button.
+- S23: Sign up is a link-styled button that takes the person to the
+  address field.
+
 ## Summary
 
-34 cases: 21 pass, 12 findings (S4–S5 count as one), 1 not run.
+34 cases: 21 pass, 12 findings of which 10 fixed and checked again, 1
+not run (S11, the code is in the server's log).
 
-Findings, most serious first:
+Open:
 
-1. S34 — no limit on wrong passwords or codes (server, security).
-2. S8 — after signing in the main area is blank instead of Home or the
-   last page (UX).
-3. S17, S18 — a pending passkey shows nothing, and other buttons are lost
-   meanwhile (feedback, front end).
-4. S4, S5 — the browser's validation bubble in the browser's language
-   instead of the page's own line (interface).
-5. S27 — offline is told as "Something went wrong" (UX).
-6. S25 — Terms and Privacy lead nowhere (UX).
-7. S13–S16 — provider error words meant for the server's owner (copy).
-8. S7 — the error is three lines below the field; the wrong password stays.
-9. S23, S26 — Sign up is not a link; no language menu (Notion differences).
+- S25 — Terms and Privacy lead nowhere: a self-hosted server has no legal
+  pages; they need the server owner's addresses (a setting) or the
+  sentence goes.
+- S26 — no language menu: Pagecraft's interface is English only
+  (CLAUDE.md), a deliberate difference.

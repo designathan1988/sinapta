@@ -31,6 +31,7 @@ function renderError(account: AccountState): TemplateResult | typeof nothing {
 
 // A passkey signs in on this server; another company's sign-in goes to
 // it when this server is set up with it, and otherwise the screen says so.
+// While one is asked, the others wait, and a passkey says it is waiting.
 function chooseSignIn(
   provider: string,
   account: AccountState,
@@ -58,6 +59,7 @@ function renderProviders(
           html`<button
             class="sign-in__provider"
             type="button"
+            ?disabled=${account.request !== null}
             @click=${() => {
               chooseSignIn(provider, account, dispatch);
             }}
@@ -67,7 +69,29 @@ function renderProviders(
             >${provider}
           </button>`,
       )}
-    </div>`;
+    </div>
+    ${
+      account.request?.kind === "passkey-sign-in"
+        ? html`<p class="sign-in__hint" role="status">
+            ${TEXT.waitingForPasskey}
+          </p>`
+        : nothing
+    }`;
+}
+
+// "New user? Sign up": an address new to the server makes the account, so
+// Sign up takes the person to the address field.
+function renderNewUser(): TemplateResult {
+  return html`<p class="sign-in__new">
+    ${TEXT.newUser}
+    <button
+      class="sign-in__link"
+      type="button"
+      @click=${() => document.getElementById("sign-in-email")?.focus()}
+    >
+      ${TEXT.signUp}
+    </button>
+  </p>`;
 }
 
 function renderHeadline(account: AccountState): TemplateResult {
@@ -96,15 +120,10 @@ export function renderSignIn(
   return html`<main class="sign-in">
     <div class="sign-in__column">
       <img class="sign-in__logo" src="/icon.svg" alt=${PRODUCT_NAME} />
-      ${renderHeadline(account)} ${renderStepForm(account, dispatch)}
-      ${renderError(account)}
+      ${renderHeadline(account)}
+      ${renderStepForm(account, dispatch, renderError(account))}
       ${isEmail ? renderProviders(account, dispatch) : nothing}
-      ${
-        isEmail
-          ? html`<p class="sign-in__new">${TEXT.newUser} ${TEXT.signUp}</p>`
-          : nothing
-      }
-      ${renderFooter()}
+      ${isEmail ? renderNewUser() : nothing} ${renderFooter()}
     </div>
     <p class="sign-in__language">${TEXT.language}</p>
   </main>`;

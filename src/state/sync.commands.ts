@@ -42,10 +42,19 @@ export const loadServerWorkspace = defineCommand<{
     const { activePageId, sidebarWidth, isSidebarCollapsed } = state.ui;
     const sync = { ...state.persistence.sync, access: access ?? {} };
     const persistence = { ...state.persistence, sync };
-    const keepsPage =
-      activePageId === null || workspace.blocks[activePageId] !== undefined;
-    if (keepsPage) return { workspace, persistence };
-    const ui = { ...createInitialUiState(), sidebarWidth, isSidebarCollapsed };
+    // A page open before stays open; with none, Home opens, as Notion's
+    // does after signing in, not an empty window.
+    if (activePageId !== null && workspace.blocks[activePageId] !== undefined)
+      return { workspace, persistence };
+    const ui =
+      activePageId === null
+        ? { ...state.ui, isHomeOpen: true }
+        : {
+            ...createInitialUiState(),
+            sidebarWidth,
+            isSidebarCollapsed,
+            isHomeOpen: true,
+          };
     return { workspace, ui, persistence };
   },
 });

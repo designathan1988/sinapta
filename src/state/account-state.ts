@@ -23,6 +23,9 @@ export type AccountError =
   | "not-connected"
   | "passkey-refused"
   | "provider-failed"
+  | "too-many-tries"
+  | "invalid-email"
+  | "offline"
   | "network";
 
 export type AccountRequest =

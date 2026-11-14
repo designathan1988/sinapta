@@ -208,4 +208,12 @@ export const MIGRATIONS: readonly string[] = [
      user_id TEXT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
      PRIMARY KEY (workspace_id, user_id)
    );`,
+  // 17: wrong passwords, by address and time: five in fifteen minutes
+  // hold that address's sign-in back until the oldest is fifteen
+  // minutes old, so a password cannot be guessed without end.
+  `CREATE TABLE login_failures (
+     email TEXT NOT NULL COLLATE NOCASE,
+     at INTEGER NOT NULL
+   );
+   CREATE INDEX login_failures_by_email ON login_failures (email, at);`,
 ];

@@ -29,6 +29,7 @@ export const ACCOUNT_TEXT = {
     providers: ["Google", "ChatGPT", "Apple", "Microsoft", "Passkey", "SSO"],
     newUser: "New user?",
     signUp: "Sign up",
+    waitingForPasskey: "Waiting for your passkey…",
     termsBefore:
       "By continuing, you acknowledge that you understand and agree to the",
     terms: "Terms & Conditions",
@@ -40,11 +41,15 @@ export const ACCOUNT_TEXT = {
       "wrong-code": "Invalid login code. Please try again.",
       "email-taken": "An account with this email already exists.",
       "not-connected":
-        "sign-in is not set up on this server: its owner registers the server with that company and sets the client it gives.",
+        "sign-in isn't available on this server. Continue with your email instead.",
       "provider-failed": "sign-in did not work. Please try again.",
       "passkey-refused":
         "The passkey was not used. Try again, or continue with your email.",
       network: "Something went wrong. Please try again.",
+      "too-many-tries":
+        "Too many incorrect passwords. Wait 15 minutes, or email yourself a login code.",
+      "invalid-email": "Please enter a valid email address.",
+      offline: "You're offline. Check your connection, then try again.",
     },
     loggedInAs: "Logged in as",
     member: { one: "member", other: "members" },

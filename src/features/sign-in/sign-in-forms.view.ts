@@ -3,6 +3,7 @@
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import {
+  answerAccount,
   requestAccount,
   setAccountStep,
   type AccountRequest,
@@ -13,6 +14,8 @@ import { COPY } from "../../ui/copy.ts";
 import { focusOnce } from "../../ui/focus/index.ts";
 
 const TEXT = COPY.account;
+
+type Shown = TemplateResult | typeof nothing;
 
 function field(form: HTMLFormElement, name: string): string {
   const value = new FormData(form).get(name);
@@ -84,13 +87,34 @@ function renderLink(label: string, onClick: () => void): TemplateResult {
   </button>`;
 }
 
-function renderEmailStep(account: AccountState, dispatch: Dispatch) {
+// The address is checked here, so that what is wrong is said on the
+// page, in its own words, not in the browser's bubble.
+function onEmailSubmit(dispatch: Dispatch) {
+  const lookup = onSubmit(dispatch, (form) => ({
+    kind: "lookup",
+    email: field(form, "email"),
+  }));
+  return (event: SubmitEvent): void => {
+    const form = event.currentTarget;
+    if (form instanceof HTMLFormElement && !form.checkValidity()) {
+      event.preventDefault();
+      const answer = { kind: "error", error: "invalid-email" } as const;
+      dispatch(answerAccount.create({ answer }));
+      return;
+    }
+    lookup(event);
+  };
+}
+
+function renderEmailStep(
+  account: AccountState,
+  dispatch: Dispatch,
+  error: Shown,
+) {
   return html`<form
     class="sign-in__form"
-    @submit=${onSubmit(dispatch, (form) => ({
-      kind: "lookup",
-      email: field(form, "email"),
-    }))}
+    novalidate
+    @submit=${onEmailSubmit(dispatch)}
   >
     ${renderField({
       name: "email",
@@ -101,11 +125,15 @@ function renderEmailStep(account: AccountState, dispatch: Dispatch) {
       takesFocus: true,
     })}
     <p class="sign-in__hint">${TEXT.emailHint}</p>
-    ${renderSubmit(account, TEXT.continue)}
+    ${renderSubmit(account, TEXT.continue)} ${error}
   </form>`;
 }
 
-function renderPasswordStep(account: AccountState, dispatch: Dispatch) {
+function renderPasswordStep(
+  account: AccountState,
+  dispatch: Dispatch,
+  error: Shown,
+) {
   const { email } = account;
   return html`<form
       class="sign-in__form"
@@ -124,7 +152,7 @@ function renderPasswordStep(account: AccountState, dispatch: Dispatch) {
         autocomplete: "current-password",
         takesFocus: true,
       })}
-      ${renderSubmit(account, TEXT.continueWithPassword)}
+      ${renderSubmit(account, TEXT.continueWithPassword)} ${error}
     </form>
     ${renderLink(TEXT.sendCode, () =>
       dispatch(
@@ -133,7 +161,11 @@ function renderPasswordStep(account: AccountState, dispatch: Dispatch) {
     )}`;
 }
 
-function renderCodeStep(account: AccountState, dispatch: Dispatch) {
+function renderCodeStep(
+  account: AccountState,
+  dispatch: Dispatch,
+  error: Shown,
+) {
   const { email } = account;
   return html`<form
     class="sign-in__form"
@@ -153,11 +185,15 @@ function renderCodeStep(account: AccountState, dispatch: Dispatch) {
       autocomplete: "one-time-code",
       takesFocus: true,
     })}
-    ${renderSubmit(account, TEXT.continueWithCode)}
+    ${renderSubmit(account, TEXT.continueWithCode)} ${error}
   </form>`;
 }
 
-function renderProfileStep(account: AccountState, dispatch: Dispatch) {
+function renderProfileStep(
+  account: AccountState,
+  dispatch: Dispatch,
+  error: Shown,
+) {
   const { email } = account;
   return html`<form
     class="sign-in__form"
@@ -184,7 +220,7 @@ function renderProfileStep(account: AccountState, dispatch: Dispatch) {
       placeholder: TEXT.newPasswordPlaceholder,
       autocomplete: "new-password",
     })}
-    ${renderSubmit(account, TEXT.continue)}
+    ${renderSubmit(account, TEXT.continue)} ${error}
   </form>`;
 }
 
@@ -195,9 +231,11 @@ const STEPS = {
   profile: renderProfileStep,
 };
 
+// The step's form, with what went wrong right under its button.
 export function renderStepForm(
   account: AccountState,
   dispatch: Dispatch,
+  error: Shown,
 ): TemplateResult {
   const back =
     account.step === "email"
@@ -205,5 +243,5 @@ export function renderStepForm(
       : renderLink(TEXT.differentEmail, () =>
           dispatch(setAccountStep.create({ step: "email" })),
         );
-  return html`${STEPS[account.step](account, dispatch)}${back}`;
+  return html`${STEPS[account.step](account, dispatch, error)}${back}`;
 }

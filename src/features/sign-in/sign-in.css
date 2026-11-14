@@ -156,6 +156,12 @@
     &:hover {
       background-color: var(--color-bg-hover);
     }
+
+    /* While a sign-in is asked, the others wait. */
+    &:disabled {
+      color: var(--color-text-secondary);
+      cursor: progress;
+    }
   }
 
   .sign-in__provider-mark {

@@ -1,6 +1,7 @@
 // Notion's sign-in: an email first, then a password, or a code that Notion
 // mails and this server prints to its log (ADR-0013). A code for an
-// unknown address makes the account, as Notion's does.
+// unknown address makes the account, as Notion's does. Five wrong
+// passwords in fifteen minutes hold an address back (login-failures.ts).
 import {
   codeSchema,
   lookupSchema,
@@ -20,6 +21,7 @@ import {
   verifyPassword,
 } from "./secrets.ts";
 import { endSession, sessionUser, startSession } from "./sessions.ts";
+import { clearFailures, isHeldBack, noteFailure } from "./login-failures.ts";
 import {
   createUser,
   findUser,
@@ -95,6 +97,8 @@ export const ACCOUNT_ROUTES: RouteTable = {
   },
   "POST /api/account/sign-in": (request, context) => {
     const body = parseBody(signInSchema, request.body);
+    if (isHeldBack(context, body.email))
+      return answer(429, { error: "too-many-tries" });
     const user = findUser(context, body.email);
     const hash = user?.password_hash ?? null;
     if (
@@ -102,8 +106,10 @@ export const ACCOUNT_ROUTES: RouteTable = {
       hash === null ||
       !verifyPassword(body.password, hash)
     ) {
+      noteFailure(context, body.email);
       return answer(401, { error: "wrong-password" });
     }
+    clearFailures(context, body.email);
     return signedIn(context, user);
   },
   "POST /api/account/code": (request, context) => {
