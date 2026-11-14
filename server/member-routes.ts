@@ -2,6 +2,7 @@
 // icon, its members and invitations, which only its owner changes; and
 // deleting or leaving it.
 import * as v from "valibot";
+import { PLANS } from "../src/model/index.ts";
 import { answer, type ApiContext, type RouteTable } from "./api.ts";
 import type { ApiRequest, ApiResponse } from "./http-exchange.ts";
 import {
@@ -14,6 +15,7 @@ import {
   renameWorkspace,
   ROLES,
   setWorkspaceIcon,
+  setWorkspacePlan,
 } from "./members.ts";
 import type { WorkspaceRow } from "./rows.schema.ts";
 import { sessionUser } from "./sessions.ts";
@@ -27,6 +29,7 @@ const iconSchema = v.object({
     v.pipe(v.string(), v.trim(), v.minLength(1), v.maxLength(16)),
   ),
 });
+const planSchema = v.object({ plan: v.picklist(PLANS) });
 const inviteSchema = v.object({
   email: v.pipe(v.string(), v.trim(), v.toLowerCase(), v.email()),
   role: v.picklist(ROLES),
@@ -89,6 +92,13 @@ export const MEMBER_ROUTES: RouteTable = {
     if (!isWorkspace(workspace)) return workspace;
     const { icon } = v.parse(iconSchema, request.body);
     setWorkspaceIcon(context, workspace.id, icon);
+    return answer(204);
+  },
+  "POST /api/workspaces/:id/plan": (request, context) => {
+    const workspace = owned(request, context);
+    if (!isWorkspace(workspace)) return workspace;
+    const { plan } = v.parse(planSchema, request.body);
+    setWorkspacePlan(context, workspace.id, plan);
     return answer(204);
   },
   // Only when the workspace's name is typed again, as Notion asks.

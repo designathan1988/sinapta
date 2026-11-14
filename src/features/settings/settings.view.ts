@@ -66,7 +66,7 @@ const RENDERERS: Record<
   teamspaces: renderTeamspaceSettings,
   connections: renderConnections,
   data: (state, dispatch) => renderData(state, dispatch),
-  plans: () => renderPlans(),
+  plans: renderPlans,
 };
 
 function isSection(value: string | undefined): value is Section {

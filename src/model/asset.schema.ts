@@ -14,7 +14,8 @@ export type AssetId = v.InferOutput<typeof assetIdSchema>;
 // The largest file the asset store keeps.
 export const MAX_ASSET_BYTES = 50 * 1024 * 1024;
 
-export type AssetError = "too-large" | "quota-exceeded" | "unreadable";
+export type AssetError =
+  "too-large" | "plan-limit" | "quota-exceeded" | "unreadable";
 
 // What keeping a file comes to: its asset and the address it is shown
 // from, or why it could not be kept.

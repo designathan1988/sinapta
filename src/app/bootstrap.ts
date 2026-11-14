@@ -168,7 +168,7 @@ async function startPersistence(
     tabs: createTabCoordination(),
   });
   // Files people add to blocks are kept beside the workspace.
-  installAssetSaver(startAssetStore({ adapter, dispatch }));
+  installAssetSaver(startAssetStore({ adapter, dispatch, store }));
   // Versions of the pages being edited, for their history.
   startSnapshots({
     store,

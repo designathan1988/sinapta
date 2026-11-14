@@ -1,5 +1,6 @@
 // The workspaces on the server this person belongs to, the one joined,
 // and what was asked of them: Notion's workspace switcher (ADR-0013).
+import type { PageAccess, PlanId } from "../model/index.ts";
 
 export interface WorkspaceSummary {
   readonly id: string;
@@ -9,6 +10,7 @@ export interface WorkspaceSummary {
   readonly members: number;
   // 1 when only the workspace's owners may make teamspaces.
   readonly limitsTeamspaces?: number;
+  readonly plan?: PlanId;
 }
 
 export interface MemberSummary {
@@ -24,7 +26,6 @@ export interface InviteSummary {
 }
 
 // Notion's access levels on a page, and who else can open it.
-import type { PageAccess } from "../model/index.ts";
 
 export type { PageAccess };
 export type GeneralAccess = "invited" | "workspace" | "web";
@@ -80,6 +81,7 @@ export type SyncRequest =
   | { readonly kind: "switch"; readonly workspaceId: string }
   | { readonly kind: "create"; readonly name: string }
   | { readonly kind: "rename"; readonly name: string }
+  | { readonly kind: "plan"; readonly plan: PlanId }
   | { readonly kind: "workspace-icon"; readonly icon: string | null }
   | { readonly kind: "delete-workspace"; readonly name: string }
   | { readonly kind: "leave-workspace" }

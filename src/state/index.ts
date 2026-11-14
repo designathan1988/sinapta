@@ -202,6 +202,7 @@ export {
   type ChatMessage,
   type AiState,
 } from "./ai.commands.ts";
+export { selectPlanLimits, selectWorkspacePlan } from "./plan.selectors.ts";
 export {
   selectBlockAccess,
   selectIsEditable,

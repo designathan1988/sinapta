@@ -1,0 +1,48 @@
+@layer features {
+  /* The plans side by side, as Notion's Plans page lays them out. */
+  .settings-plans {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(var(--size-plan-card), 1fr));
+    gap: var(--space-inline-md);
+    margin: var(--space-stack-md) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .settings-plans__card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xs);
+    padding: var(--space-inset-md);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-lg);
+
+    &[data-current] {
+      border-color: var(--color-border-focus);
+    }
+
+    & > .button {
+      margin-block-start: auto;
+    }
+  }
+
+  .settings-plans__name {
+    margin: 0;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-strong);
+  }
+
+  .settings-plans__price {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+  }
+
+  .settings-plans__limits {
+    display: grid;
+    gap: var(--space-stack-xxs);
+    margin: 0;
+    padding-inline-start: var(--space-inset-md);
+    font-size: var(--font-size-sm);
+  }
+}

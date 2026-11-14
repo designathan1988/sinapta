@@ -28,12 +28,29 @@ export const INTEGRATION_TEXT = {
   },
   plans: {
     title: "Plans",
-    current: "Plan",
-    currentValue: "Free, on your own server",
-    currentHint:
-      "Everything Pagecraft has is yours on this server; there is nothing to buy.",
+    lead: "Every plan is free on this server: choosing one takes no payment. Each keeps Notion's limits on file size and page history.",
+    current: "Current plan",
     upgrade: "Upgrade",
-    upgradeHint:
-      "Payment is Notion's own service; this local server takes none.",
+    downgrade: "Downgrade",
+    price: "Free on this server",
+    ownersOnly: "Only the workspace's owners can change its plan.",
+    signedOut: "Sign in to a Pagecraft server to choose a workspace's plan.",
+    names: {
+      free: "Free",
+      plus: "Plus",
+      business: "Business",
+      enterprise: "Enterprise",
+    },
+    summaries: {
+      free: "For one person's notes and projects.",
+      plus: "For small teams working together.",
+      business: "For growing teams and companies.",
+      enterprise: "For whole organizations.",
+    },
+    upload: (megabytes: number) => `Files up to ${String(megabytes)} MB`,
+    history: (days: number | null) =>
+      days === null
+        ? "All of page history"
+        : `${String(days)} days of page history`,
   },
 } as const;

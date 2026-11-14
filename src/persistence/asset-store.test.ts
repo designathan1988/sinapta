@@ -33,6 +33,19 @@ describe("saveAsset", () => {
     expect(adapter.assets.size).toBe(0);
   });
 
+  it("keeps to the workspace's plan, saying so", async () => {
+    const adapter = createMemoryAdapter();
+
+    const result = await saveAsset(adapter, {
+      file,
+      name: "cat.png",
+      planLimit: 1,
+    });
+
+    expect(result).toEqual({ ok: false, error: "plan-limit" });
+    expect(adapter.assets.size).toBe(0);
+  });
+
   it("says when storage is full", async () => {
     const adapter = {
       ...createMemoryAdapter(),

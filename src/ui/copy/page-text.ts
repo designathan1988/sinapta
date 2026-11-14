@@ -29,6 +29,8 @@ export const PAGE_TEXT = {
     title: "Version history",
     close: "Close version history",
     versions: "Versions",
+    olderOnPlans:
+      "Older versions are kept on Plus and above. Choose a plan in Settings › Plans.",
     preview: "Version preview",
     restore: "Restore version",
     loading: "Reading the versions…",

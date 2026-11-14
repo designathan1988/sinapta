@@ -983,6 +983,10 @@
         "$description": "The Close menu line under the slash menu's list: 42 px.",
         "$value": "{base.size.2x625}"
       }
+    },
+    "planCard": {
+      "$description": "The least width of a plan's card in Settings › Plans: four side by side in the dialog.",
+      "$value": "{base.size.10}"
     }
   },
   "radius": {

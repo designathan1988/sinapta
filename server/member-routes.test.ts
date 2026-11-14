@@ -103,4 +103,38 @@ describe("a workspace's people", () => {
     expect(byMember.status).toBe(403);
     expect(byOwner.status).toBe(204);
   });
+
+  it("starts on Free and lets only the owner choose another plan", async () => {
+    const server = createTestServer();
+    const { ada, id } = await adasWorkspace(server);
+    const bia = await signUp(server, "bia@pagecraft.test");
+    await server.call(
+      `POST /api/workspaces/${id}/members`,
+      { email: "bia@pagecraft.test", role: "member" },
+      ada,
+    );
+    const planOf = async () => {
+      const list = await server.call("GET /api/workspaces", undefined, ada);
+      return list.body;
+    };
+
+    const before = await planOf();
+    const byMember = await server.call(
+      `POST /api/workspaces/${id}/plan`,
+      { plan: "plus" },
+      bia,
+    );
+    const byOwner = await server.call(
+      `POST /api/workspaces/${id}/plan`,
+      { plan: "business" },
+      ada,
+    );
+
+    expect(before).toMatchObject({ workspaces: [{ plan: "free" }] });
+    expect(byMember.status).toBe(403);
+    expect(byOwner.status).toBe(204);
+    expect(await planOf()).toMatchObject({
+      workspaces: [{ plan: "business" }],
+    });
+  });
 });

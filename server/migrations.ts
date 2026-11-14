@@ -117,4 +117,7 @@ export const MIGRATIONS: readonly string[] = [
      auth TEXT NOT NULL,
      created_at INTEGER NOT NULL
    );`,
+  // 9: a workspace's plan, as Notion's; every plan is free on this
+  // server, and each keeps Notion's limits.
+  `ALTER TABLE workspaces ADD COLUMN plan TEXT NOT NULL DEFAULT 'free';`,
 ];

@@ -1,5 +1,6 @@
 // A workspace's people (ADR-0013): its members with Notion's roles, the
 // addresses invited before they had an account, and the workspace's name.
+import type { PlanId } from "../src/model/index.ts";
 import type { ApiContext } from "./api.ts";
 import { inTransaction } from "./database.ts";
 import * as rows from "./rows.schema.ts";
@@ -106,6 +107,17 @@ export function setWorkspaceIcon(
   context.db
     .prepare("UPDATE workspaces SET icon = ? WHERE id = ?")
     .run(icon, workspaceId);
+}
+
+// Settings › Plans: the plan chosen, at no cost on this server.
+export function setWorkspacePlan(
+  context: ApiContext,
+  workspaceId: string,
+  plan: PlanId,
+): void {
+  context.db
+    .prepare("UPDATE workspaces SET plan = ? WHERE id = ?")
+    .run(plan, workspaceId);
 }
 
 // "Delete entire workspace": its members, pages and log go with it.

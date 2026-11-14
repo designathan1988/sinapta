@@ -636,6 +636,7 @@
     --size-slash-menu-max-height: var(--base-size-22x5);
     --size-slash-menu-row: var(--base-size-8);
     --size-slash-menu-footer: var(--base-size-2x625);
+    --size-plan-card: var(--base-size-10);
     --radius-sm: var(--base-radius-1);
     --radius-md: var(--base-radius-2);
     --radius-full: var(--base-radius-pill);

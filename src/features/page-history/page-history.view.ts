@@ -20,6 +20,7 @@ import { COPY } from "../../ui/copy.ts";
 import { renderDialog } from "../../ui/dialog/index.ts";
 import { restorePageVersion } from "./page-history.commands.ts";
 import {
+  selectShownVersions,
   selectVersionChanges,
   type BlockChange,
   selectVersionAuthor,
@@ -104,6 +105,29 @@ function renderVersions(
   </ul>`;
 }
 
+// Choosing a version to look at, and restoring the one chosen.
+function versionActions(
+  pageId: BlockId,
+  chosen: PageVersion,
+  dispatch: Dispatch,
+) {
+  return {
+    choose: (index: number): void => {
+      const overlay = {
+        kind: PAGE_HISTORY_OVERLAY,
+        anchorId: pageId,
+        activeIndex: index,
+      };
+      dispatch(openOverlay.create({ overlay }));
+    },
+    restore: (): void => {
+      dispatch(restorePageVersion.create({ pageId, blocks: chosen.blocks }));
+      dispatch(closeOverlay.create({}));
+      announce(TEXT.restored);
+    },
+  };
+}
+
 function renderBody(
   state: AppState,
   pageId: BlockId,
@@ -113,7 +137,11 @@ function renderBody(
   if (loaded?.pageId !== pageId) {
     return html`<p class="page-history__note">${TEXT.loading}</p>`;
   }
-  const { versions } = loaded;
+  const { shown: versions, hidden } = selectShownVersions(
+    state,
+    loaded.versions,
+    Date.now(),
+  );
   const activeIndex = Math.min(
     state.ui.overlay?.activeIndex ?? 0,
     versions.length - 1,
@@ -122,22 +150,15 @@ function renderBody(
   if (chosen === undefined) {
     return html`<p class="page-history__note">${TEXT.empty}</p>`;
   }
-  const choose = (index: number): void => {
-    const overlay = {
-      kind: PAGE_HISTORY_OVERLAY,
-      anchorId: pageId,
-      activeIndex: index,
-    };
-    dispatch(openOverlay.create({ overlay }));
-  };
-  const restore = (): void => {
-    dispatch(restorePageVersion.create({ pageId, blocks: chosen.blocks }));
-    dispatch(closeOverlay.create({}));
-    announce(TEXT.restored);
-  };
+  const { choose, restore } = versionActions(pageId, chosen, dispatch);
   const changes = selectVersionChanges(versions, activeIndex);
   return html`<div class="page-history__side">
       ${renderVersions(versions, activeIndex, choose)}
+      ${
+        hidden > 0
+          ? html`<p class="page-history__note">${TEXT.olderOnPlans}</p>`
+          : nothing
+      }
       ${renderButton({ label: TEXT.restore, variant: "primary", onClick: restore })}
     </div>
     ${renderPreview(chosen, changes)}`;

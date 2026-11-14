@@ -1,24 +1,83 @@
-// Settings › Plans, drawn as Notion's and saying so (specification §1):
-// the plan this server gives, and Upgrade, which needs Notion's payment.
+// Settings › Plans, as Notion's: a card for each plan with what it allows,
+// the workspace's own marked "Current plan", and Upgrade or Downgrade on
+// the others. On this server every plan is free, so a choice takes effect
+// at once; only the workspace's owners may make it.
+import "./settings-plans.css";
 import { html, type TemplateResult } from "lit-html";
+import { PLAN_LIMITS, PLANS, type PlanId } from "../../model/index.ts";
+import {
+  requestSync,
+  selectWorkspacePlan,
+  type AppState,
+  type Dispatch,
+} from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
-import { renderRow } from "./settings-row.view.ts";
 
 const TEXT = COPY.plans;
+const MB = 1024 * 1024;
 
-export function renderPlans(): TemplateResult {
-  const upgrade = html`<button
+interface PlanCard {
+  readonly plan: PlanId;
+  readonly current: PlanId;
+  readonly canChange: boolean;
+}
+
+function renderAction(card: PlanCard, dispatch: Dispatch): TemplateResult {
+  const { plan, current, canChange } = card;
+  if (plan === current) {
+    return html`<button
+      type="button"
+      class="button"
+      data-variant="outline"
+      disabled
+    >
+      ${TEXT.current}
+    </button>`;
+  }
+  const isUp = PLANS.indexOf(plan) > PLANS.indexOf(current);
+  return html`<button
     type="button"
     class="button"
-    data-variant="primary"
-    disabled
+    data-variant=${isUp ? "primary" : "outline"}
+    ?disabled=${!canChange}
+    @click=${() =>
+      dispatch(requestSync.create({ request: { kind: "plan", plan } }))}
   >
-    ${TEXT.upgrade}
+    ${isUp ? TEXT.upgrade : TEXT.downgrade}
   </button>`;
-  return html`${renderRow(
-    TEXT.current,
-    TEXT.currentHint,
-    html`<span>${TEXT.currentValue}</span>`,
-  )}
-  ${renderRow(TEXT.upgrade, TEXT.upgradeHint, upgrade)}`;
+}
+
+function renderCard(card: PlanCard, dispatch: Dispatch): TemplateResult {
+  const limits = PLAN_LIMITS[card.plan];
+  return html`<li
+    class="settings-plans__card"
+    ?data-current=${card.plan === card.current}
+  >
+    <h4 class="settings-plans__name">${TEXT.names[card.plan]}</h4>
+    <p class="settings-plans__price">${TEXT.price}</p>
+    <p class="settings__hint">${TEXT.summaries[card.plan]}</p>
+    <ul class="settings-plans__limits">
+      <li>${TEXT.upload(Math.round(limits.uploadBytes / MB))}</li>
+      <li>${TEXT.history(limits.historyDays)}</li>
+    </ul>
+    ${renderAction(card, dispatch)}
+  </li>`;
+}
+
+export function renderPlans(
+  state: AppState,
+  dispatch: Dispatch,
+): TemplateResult {
+  const current = selectWorkspacePlan(state);
+  if (current === undefined) {
+    return html`<p class="settings__hint">${TEXT.signedOut}</p>`;
+  }
+  const { workspaces, workspaceId } = state.persistence.sync;
+  const role = workspaces.find((each) => each.id === workspaceId)?.role;
+  const canChange = role === "owner";
+  return html`<p class="settings__hint">${TEXT.lead}</p>
+    ${canChange ? "" : html`<p class="settings__hint">${TEXT.ownersOnly}</p>`}
+    <ul class="settings-plans" role="list">
+      ${PLANS.map((plan) => renderCard({ plan, current, canChange }, dispatch))}
+    </ul>`;
 }

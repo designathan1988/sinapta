@@ -66,11 +66,19 @@ function routeOf(request: PeopleRequest, base: string): Asked | undefined {
 
 type WorkspaceRequest = Extract<
   PeopleRequest,
-  { kind: "rename" | "workspace-icon" | "delete-workspace" | "leave-workspace" }
+  {
+    kind:
+      | "rename"
+      | "plan"
+      | "workspace-icon"
+      | "delete-workspace"
+      | "leave-workspace";
+  }
 >;
 
 const WORKSPACE_KINDS: ReadonlySet<string> = new Set([
   "rename",
+  "plan",
   "workspace-icon",
   "delete-workspace",
   "leave-workspace",
@@ -87,6 +95,8 @@ function workspaceRoute(request: WorkspaceRequest, base: string): Asked {
   switch (request.kind) {
     case "rename":
       return [`${base}/name`, { name: request.name }];
+    case "plan":
+      return [`${base}/plan`, { plan: request.plan }];
     case "workspace-icon":
       return [`${base}/icon`, { icon: request.icon }];
     case "delete-workspace":
@@ -128,6 +138,7 @@ async function answerProfile(sync: Sync, name: string): Promise<void> {
 // Requests whose answer holds no people.
 const QUIET = new Set([
   "rename",
+  "plan",
   "ai-fill",
   "workspace-icon",
   "delete-workspace",

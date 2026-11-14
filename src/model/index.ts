@@ -183,6 +183,13 @@ export {
 } from "./asset.schema.ts";
 export { parseCsv, writeCsv } from "./csv.ts";
 export {
+  isPlan,
+  PLAN_LIMITS,
+  PLANS,
+  type PlanId,
+  type PlanLimits,
+} from "./plan.ts";
+export {
   addComment,
   removeComment,
   textOfRange,

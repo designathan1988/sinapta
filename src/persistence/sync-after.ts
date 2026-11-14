@@ -17,7 +17,7 @@ export async function afterAnswer(
   kind: SyncRequest["kind"],
   steps: AfterSteps,
 ): Promise<void> {
-  if (kind === "rename" || kind === "workspace-icon") {
+  if (kind === "rename" || kind === "plan" || kind === "workspace-icon") {
     await steps.relist();
     return;
   }

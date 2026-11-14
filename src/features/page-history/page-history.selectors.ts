@@ -3,7 +3,11 @@
 // against the version before it.
 import { isTextBlock, textOf } from "../../blocks/index.ts";
 import { diffText, type Block, type BlockId } from "../../model/index.ts";
-import type { PageVersion } from "../../state/index.ts";
+import {
+  selectPlanLimits,
+  type AppState,
+  type PageVersion,
+} from "../../state/index.ts";
 
 export type BlockChange =
   | { readonly kind: "new" }
@@ -47,4 +51,23 @@ export function selectVersionAuthor(version: PageVersion): string | undefined {
     .filter((block) => block.editedBy !== undefined)
     .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
   return edited[0]?.editedBy?.name;
+}
+
+const DAY_MS = 86_400_000;
+
+// The versions the workspace's plan shows, as Notion's: on Free the last
+// 7 days, on Plus 30, on Business 90, on Enterprise all; and how many
+// older ones it keeps out of view.
+export function selectShownVersions(
+  state: AppState,
+  versions: readonly PageVersion[],
+  now: number,
+): { readonly shown: readonly PageVersion[]; readonly hidden: number } {
+  const days = selectPlanLimits(state)?.historyDays ?? null;
+  if (days === null) return { shown: versions, hidden: 0 };
+  const since = now - days * DAY_MS;
+  const shown = versions.filter(
+    (version) => Date.parse(version.takenAt) >= since,
+  );
+  return { shown, hidden: versions.length - shown.length };
 }

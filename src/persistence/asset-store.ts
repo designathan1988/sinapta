@@ -8,7 +8,12 @@ import {
   type AssetFile,
   type AssetSaveResult,
 } from "../model/index.ts";
-import { addAssetUrls, type Dispatch } from "../state/index.ts";
+import {
+  addAssetUrls,
+  selectPlanLimits,
+  type AppStore,
+  type Dispatch,
+} from "../state/index.ts";
 import type { StorageAdapter, StoredAsset } from "./storage-adapter.ts";
 
 export interface AssetUpload {
@@ -16,6 +21,8 @@ export interface AssetUpload {
   readonly name: string;
   // The largest file allowed, in bytes; 50 MB unless a test says less.
   readonly limit?: number;
+  // The largest file the workspace's plan allows: 5 MB on Free.
+  readonly planLimit?: number;
 }
 
 // Only passive media is served under its own type. Anything else, such as
@@ -45,6 +52,9 @@ export async function saveAsset(
   const { file, name } = upload;
   if (file.size > (upload.limit ?? MAX_ASSET_BYTES)) {
     return { ok: false, error: "too-large" };
+  }
+  if (file.size > (upload.planLimit ?? Infinity)) {
+    return { ok: false, error: "plan-limit" };
   }
   const id = parseAssetId(crypto.randomUUID());
   if (id === undefined) return { ok: false, error: "unreadable" };
@@ -115,6 +125,8 @@ export function toStoredAssets(files: readonly AssetFile[]): StoredAsset[] {
 export interface AssetStoreOptions {
   readonly adapter: Pick<StorageAdapter, "loadAssets" | "putAssets">;
   readonly dispatch: Dispatch;
+  // Read when a file is added, for the open workspace's plan's limit.
+  readonly store?: AppStore;
 }
 
 // Gives the store the addresses of the assets kept so far, and returns
@@ -130,5 +142,14 @@ export function startAssetStore(
       }
     })
     .catch(() => undefined);
-  return (file, name) => saveAsset(adapter, { file, name });
+  return (file, name) => {
+    const state = options.store?.getState();
+    const planLimit =
+      state === undefined ? undefined : selectPlanLimits(state)?.uploadBytes;
+    return saveAsset(adapter, {
+      file,
+      name,
+      ...(planLimit === undefined ? {} : { planLimit }),
+    });
+  };
 }

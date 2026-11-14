@@ -174,6 +174,8 @@ export const EDITOR_TEXT = {
     imageTooLarge: "Choose an image smaller than 5 MB.",
     assetErrors: {
       "too-large": "Choose a file smaller than 50 MB.",
+      "plan-limit":
+        "On the Free plan a file can be up to 5 MB. Choose a smaller file, or another plan in Settings › Plans.",
       "quota-exceeded":
         "There is no room left to keep this file. Free some space on this device, then try again.",
       unreadable: "This file could not be read. Try another one.",

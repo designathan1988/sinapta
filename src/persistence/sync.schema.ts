@@ -1,5 +1,6 @@
 // The server's workspace answers and events, parsed at the boundary.
 import * as v from "valibot";
+import { PLANS } from "../model/index.ts";
 
 const workspaceSchema = v.object({
   id: v.string(),
@@ -8,6 +9,7 @@ const workspaceSchema = v.object({
   role: v.string(),
   members: v.number(),
   limitsTeamspaces: v.optional(v.number(), 0),
+  plan: v.optional(v.picklist(PLANS), "free"),
 });
 
 const loggedSchema = v.object({

@@ -1,6 +1,7 @@
 // Rows read from SQLite are parsed here, at the database's boundary, as
 // JSON is parsed at the client's.
 import * as v from "valibot";
+import { PLANS } from "../src/model/index.ts";
 
 export const countRowSchema = v.object({ count: v.number() });
 
@@ -45,6 +46,7 @@ export const workspaceRowSchema = v.object({
   members: v.number(),
   // 1 when only the workspace's owners may make teamspaces.
   limitsTeamspaces: v.number(),
+  plan: v.picklist(PLANS),
 });
 
 export type WorkspaceRow = v.InferOutput<typeof workspaceRowSchema>;
