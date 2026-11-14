@@ -17,7 +17,12 @@ export type AccountStatus = "local" | "checking" | "signed-out" | "signed-in";
 export type AccountStep = "email" | "password" | "code" | "profile";
 
 export type AccountError =
-  "wrong-password" | "wrong-code" | "email-taken" | "not-connected" | "network";
+  | "wrong-password"
+  | "wrong-code"
+  | "email-taken"
+  | "not-connected"
+  | "passkey-refused"
+  | "network";
 
 export type AccountRequest =
   | { readonly kind: "lookup"; readonly email: string }
@@ -38,7 +43,11 @@ export type AccountRequest =
       readonly name: string;
       readonly password: string;
     }
-  | { readonly kind: "sign-out" };
+  | { readonly kind: "sign-out" }
+  // A passkey: signing in with one, adding one, and how many there are.
+  | { readonly kind: "passkey-sign-in" }
+  | { readonly kind: "passkey-add" }
+  | { readonly kind: "passkeys" };
 
 // What the server's answer means for the screen.
 export type AccountAnswer =
@@ -46,7 +55,8 @@ export type AccountAnswer =
   | { readonly kind: "signed-out" }
   | { readonly kind: "offline" }
   | { readonly kind: "step"; readonly step: AccountStep }
-  | { readonly kind: "error"; readonly error: AccountError };
+  | { readonly kind: "error"; readonly error: AccountError }
+  | { readonly kind: "passkeys"; readonly count: number };
 
 export interface AccountState {
   readonly status: AccountStatus;
@@ -60,6 +70,8 @@ export interface AccountState {
   // persistence layer asks each one once.
   readonly request: AccountRequest | null;
   readonly requestCount: number;
+  // How many passkeys the account has, once the server has said.
+  readonly passkeys?: number;
 }
 
 export const SIGNED_OUT_LOCAL: AccountState = {

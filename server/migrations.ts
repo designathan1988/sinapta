@@ -130,4 +130,18 @@ export const MIGRATIONS: readonly string[] = [
      created_at INTEGER NOT NULL,
      PRIMARY KEY (workspace_id, app)
    );`,
+  // 11: passkeys, Notion's "Continue with passkey": each credential's
+  // public key, and the challenges handed out, used once.
+  `CREATE TABLE passkeys (
+     id TEXT PRIMARY KEY,
+     user_id TEXT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+     public_key TEXT NOT NULL,
+     sign_count INTEGER NOT NULL,
+     created_at INTEGER NOT NULL
+   );
+   CREATE TABLE passkey_challenges (
+     challenge TEXT PRIMARY KEY,
+     user_id TEXT,
+     expires_at INTEGER NOT NULL
+   );`,
 ];

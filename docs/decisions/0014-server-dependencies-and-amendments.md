@@ -70,6 +70,16 @@ the record should say so.
    payment runs here. Each plan keeps Notion's limits: files up to 5 MB on
    Free, and page history of 7, 30, 90 days or all.
 
+8. **Passkeys.** "Continue with passkey" and My account's "Add a
+   passkey" use Web Authentication with no third party: the server keeps
+   each passkey's P-256 public key from its attestation (format "none",
+   read by a small CBOR reader, `server/cbor.ts`), hands out challenges
+   used once within five minutes, and verifies each sign-in's signature
+   over the authenticator data and the client data, which must name this
+   host (`server/webauthn.ts`, migration 11). Signing in with Google,
+   ChatGPT, Apple, Microsoft or a company's SSO needs that company's
+   registration of this server, and stays out.
+
 ## Options Considered
 
 ### Speech: Chrome's `SpeechRecognition` only

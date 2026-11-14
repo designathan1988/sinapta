@@ -39,6 +39,7 @@ function requestOf(key: string, body: unknown, cookie?: string): ApiRequest {
         : [[SESSION_COOKIE, token]],
     ),
     sameOrigin: true,
+    host: "pagecraft.test",
     ...(cookie?.startsWith("Bearer ") === true && {
       bearer: cookie.slice("Bearer ".length),
     }),

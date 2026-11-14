@@ -50,6 +50,8 @@ function answered(answer: AccountAnswer): Partial<AccountState> {
       return { step: answer.step };
     case "error":
       return { error: answer.error };
+    case "passkeys":
+      return { passkeys: answer.count, error: null };
   }
 }
 

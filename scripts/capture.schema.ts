@@ -38,6 +38,9 @@ export const capturePlanSchema = v.object({
   microphone: v.optional(v.string()),
   // Browser permissions granted to the page, such as "notifications".
   permissions: v.optional(v.array(v.string())),
+  // A passkey authenticator in the browser, as a phone's or a laptop's,
+  // that confirms each use: Chrome's virtual authenticator.
+  passkey: v.optional(v.boolean()),
   steps: v.array(stepSchema),
 });
 

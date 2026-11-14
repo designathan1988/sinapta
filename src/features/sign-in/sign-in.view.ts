@@ -4,12 +4,15 @@ import "./sign-in.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import {
   chooseProvider,
+  requestAccount,
   type AccountState,
   type AppState,
   type Dispatch,
 } from "../../state/index.ts";
 import { COPY, PRODUCT_NAME } from "../../ui/copy.ts";
 import { renderStepForm } from "./sign-in-forms.view.ts";
+
+const PASSKEY = "Passkey";
 
 const TEXT = COPY.account;
 
@@ -23,6 +26,14 @@ function renderError(account: AccountState): TemplateResult | typeof nothing {
   return html`<p class="sign-in__error" role="alert">${text}</p>`;
 }
 
+// A passkey signs in on this server; the others need a third party's
+// registration, and the screen says so.
+function chooseSignIn(provider: string, dispatch: Dispatch): void {
+  if (provider === PASSKEY) {
+    dispatch(requestAccount.create({ request: { kind: "passkey-sign-in" } }));
+  } else dispatch(chooseProvider.create({ provider }));
+}
+
 function renderProviders(dispatch: Dispatch): TemplateResult {
   return html`<div class="sign-in__or" role="separator">
       <span>${TEXT.orContinueWith}</span>
@@ -33,7 +44,9 @@ function renderProviders(dispatch: Dispatch): TemplateResult {
           html`<button
             class="sign-in__provider"
             type="button"
-            @click=${() => dispatch(chooseProvider.create({ provider }))}
+            @click=${() => {
+              chooseSignIn(provider, dispatch);
+            }}
           >
             <span class="sign-in__provider-mark" aria-hidden="true"
               >${provider.slice(0, 1)}</span

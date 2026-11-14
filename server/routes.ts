@@ -16,6 +16,7 @@ import { localTranscriber, transcriptionRoutes } from "./transcription.ts";
 import { PUSH_ROUTES } from "./push.ts";
 import { WORKSPACE_ROUTES } from "./workspace-routes.ts";
 import { APP_ROUTES } from "./app-connections.ts";
+import { PASSKEY_ROUTES } from "./passkey-routes.ts";
 
 const HEALTH_ROUTES: RouteTable = {
   "GET /api/health": (_request, context) => {
@@ -40,6 +41,7 @@ export const ROUTES: RouteTable = {
   ...AI_STREAM_ROUTES,
   ...TEAMSPACE_ROUTES,
   ...APP_ROUTES,
+  ...PASSKEY_ROUTES,
   ...LINK_PREVIEW_ROUTES,
   ...INTEGRATION_ROUTES,
   ...PUBLIC_API_ROUTES,

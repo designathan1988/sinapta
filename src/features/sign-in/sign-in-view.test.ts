@@ -79,6 +79,22 @@ describe("the sign-in screen", () => {
     });
   });
 
+  it("signs in with a passkey on this server", () => {
+    const { host, commands } = rendered(stateWith({}));
+    const passkey = [
+      ...host.querySelectorAll<HTMLButtonElement>(".sign-in__provider"),
+    ].find((tile) => tile.textContent.includes("Passkey"));
+
+    passkey?.click();
+
+    expect(commands).toEqual([
+      expect.objectContaining({
+        type: "account.request",
+        request: { kind: "passkey-sign-in" },
+      }),
+    ]);
+  });
+
   it("signs in with the password on the password step", () => {
     const { host, commands } = rendered(
       stateWith({ step: "password", email: "ada@pagecraft.test" }),

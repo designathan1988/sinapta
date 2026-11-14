@@ -31,7 +31,7 @@ import {
 const CODE_MINUTES = 10;
 const CODE_TRIES = 5;
 
-function signedIn(
+export function signedIn(
   context: ApiContext,
   user: UserRow,
   status = 200,

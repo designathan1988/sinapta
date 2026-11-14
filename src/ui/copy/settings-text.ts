@@ -19,6 +19,12 @@ export const SETTINGS_TEXT = {
     },
     accountGroup: "Account",
     nameLabel: "Name",
+    passkeys: "Passkeys",
+    passkeysHint:
+      "Sign in with this device's fingerprint, face or PIN instead of a password.",
+    passkeyCount: (count: number) =>
+      count === 1 ? "1 passkey" : `${String(count)} passkeys`,
+    addPasskey: "Add a passkey",
     preferredName: "Preferred name",
     preferredNameHint: "The name others see on your pages and comments.",
     email: "Email",

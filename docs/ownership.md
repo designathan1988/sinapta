@@ -267,6 +267,7 @@ owner listed here exists.
 | Mounting the API in Vite's dev and preview servers | `server/vite-plugin.ts` | 22 |
 | The standalone server for the built app | `server/main.ts` | 22 |
 | Password hashing, tokens and sign-in codes | `server/secrets.ts` | 23 |
+| Passkeys: the server's challenges, checks and store, and the browser's Web Authentication calls | `server/passkey-routes.ts`, `server/webauthn.ts`, `server/cbor.ts`, `server/passkey.schema.ts`, `src/persistence/passkey-client.ts`, `src/persistence/passkey.schema.ts` | 31 |
 | Sessions in a cookie | `server/sessions.ts` | 23 |
 | The users table | `server/users.ts` | 23 |
 | Sign-in, sign-up, codes, sign-out, the signed-in user | `server/account-routes.ts` | 23 |

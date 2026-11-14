@@ -12,6 +12,9 @@ export interface ApiRequest {
   // The request came from the server's own page: its Origin, when it has
   // one, names the host it was sent to.
   readonly sameOrigin: boolean;
+  // The host the request was sent to, as "localhost:5190": a passkey's
+  // relying party, and the origin its browser must name.
+  readonly host?: string;
   // An integration's secret, sent as "Authorization: Bearer …" to the
   // public API.
   readonly bearer?: string;
@@ -93,6 +96,9 @@ export async function readRequest(
     query: url.searchParams,
     cookies: parseCookies(request.headers.cookie),
     sameOrigin: isSameOrigin(request),
+    ...(request.headers.host === undefined
+      ? {}
+      : { host: request.headers.host }),
     ...bearerOf(request.headers.authorization),
     body: hasBody ? await readBody(request) : undefined,
     params: {},

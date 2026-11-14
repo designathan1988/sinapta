@@ -2,9 +2,11 @@
 // records the answers (ADR-0013). A server that does not answer leaves the
 // app on the browser's copy, as before there was one.
 import * as account from "./account.schema.ts";
+import { askPasskey } from "./passkey-client.ts";
 import {
   answerAccount,
   checkAccount,
+  requestAccount,
   type AccountAnswer,
   type AccountRequest,
   type AppStore,
@@ -51,10 +53,22 @@ const REFUSALS: Readonly<Record<number, AccountAnswer>> = {
   409: { kind: "error", error: "email-taken" },
 };
 
+const PASSKEY_KINDS = new Set(["passkey-sign-in", "passkey-add", "passkeys"]);
+
+function isPasskeyRequest(
+  request: AccountRequest,
+): request is Extract<
+  AccountRequest,
+  { kind: "passkey-sign-in" | "passkey-add" | "passkeys" }
+> {
+  return PASSKEY_KINDS.has(request.kind);
+}
+
 async function ask(
   send: Fetch,
   request: AccountRequest,
 ): Promise<AccountAnswer> {
+  if (isPasskeyRequest(request)) return askPasskey(send, request.kind);
   switch (request.kind) {
     case "lookup":
       return lookup(send, request.email);
@@ -64,6 +78,7 @@ async function ask(
     case "sign-out":
       await post(send, "/api/account/sign-out", {});
       return { kind: "signed-out" };
+
     case "verify-code": {
       const reply = await post(send, "/api/account/code/verify", request);
       if (reply.status === 401) return { kind: "error", error: "wrong-code" };
@@ -99,7 +114,12 @@ export async function startAccount(options: {
         ),
     );
   });
-  dispatch(answerAccount.create({ answer: await whoIsSignedIn(send) }));
+  const answer = await whoIsSignedIn(send);
+  dispatch(answerAccount.create({ answer }));
+  // How many passkeys the account has, for My account.
+  if (answer.kind === "user") {
+    dispatch(requestAccount.create({ request: { kind: "passkeys" } }));
+  }
 }
 
 async function whoIsSignedIn(send: Fetch): Promise<AccountAnswer> {

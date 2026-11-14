@@ -64,4 +64,23 @@ describe("Settings › My account", () => {
 
     expect(sent).toEqual([]);
   });
+
+  it("counts the passkeys and adds one with this device", () => {
+    const state = signedIn();
+    const account = { ...state.persistence.account, passkeys: 2 };
+    const { host, sent } = rendered({
+      ...state,
+      persistence: { ...state.persistence, account },
+    });
+    const add = [...host.querySelectorAll<HTMLButtonElement>("button")].find(
+      (button) => button.textContent.includes("Add a passkey"),
+    );
+
+    add?.click();
+
+    expect(host.textContent).toContain("2 passkeys.");
+    expect(sent).toEqual([
+      expect.objectContaining({ request: { kind: "passkey-add" } }),
+    ]);
+  });
 });

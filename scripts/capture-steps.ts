@@ -84,7 +84,26 @@ async function headless(plan: CapturePlan): Promise<Session> {
     colorScheme: plan.theme ?? "dark",
     permissions: plan.permissions ?? [],
   });
-  return { page: await context.newPage(), end: () => browser.close() };
+  const page = await context.newPage();
+  if (plan.passkey === true) await addAuthenticator(page);
+  return { page, end: () => browser.close() };
+}
+
+// Chrome's virtual authenticator (DevTools' WebAuthn domain): it keeps
+// passkeys and confirms the person each time, as a fingerprint would.
+async function addAuthenticator(page: Page): Promise<void> {
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send("WebAuthn.enable");
+  await cdp.send("WebAuthn.addVirtualAuthenticator", {
+    options: {
+      protocol: "ctap2",
+      transport: "internal",
+      hasResidentKey: true,
+      hasUserVerification: true,
+      isUserVerified: true,
+      automaticPresenceSimulation: true,
+    },
+  });
 }
 
 async function region(page: Page, step: CaptureStep) {

@@ -3,6 +3,7 @@
 // with a field to invite by email.
 import { html, nothing, type TemplateResult } from "lit-html";
 import {
+  requestAccount,
   requestSync,
   type AppState,
   type Dispatch,
@@ -37,6 +38,27 @@ function renderNameField(
   />`;
 }
 
+// Passkeys: how many the account has, and "Add a passkey", which asks this
+// device's authenticator to make one.
+function renderPasskeys(state: AppState, dispatch: Dispatch) {
+  const { passkeys, error } = state.persistence.account;
+  const hint =
+    error === "passkey-refused"
+      ? COPY.account.errors["passkey-refused"]
+      : passkeys === undefined || passkeys === 0
+        ? TEXT.passkeysHint
+        : `${TEXT.passkeyCount(passkeys)}. ${TEXT.passkeysHint}`;
+  return renderRow(
+    TEXT.passkeys,
+    hint,
+    renderButton({
+      label: TEXT.addPasskey,
+      onClick: () =>
+        dispatch(requestAccount.create({ request: { kind: "passkey-add" } })),
+    }),
+  );
+}
+
 export function renderAccount(state: AppState, dispatch: Dispatch) {
   const { user } = state.persistence.account;
   if (user === null)
@@ -45,7 +67,8 @@ export function renderAccount(state: AppState, dispatch: Dispatch) {
     ask(dispatch, { kind: "profile", name: next }),
   );
   return html`${renderRow(TEXT.preferredName, TEXT.preferredNameHint, name)}
-  ${renderRow(TEXT.email, user.email, html`<span></span>`)}`;
+  ${renderRow(TEXT.email, user.email, html`<span></span>`)}
+  ${renderPasskeys(state, dispatch)}`;
 }
 
 export function renderGeneral(state: AppState, dispatch: Dispatch) {

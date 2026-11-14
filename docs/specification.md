@@ -66,7 +66,7 @@ ADR-0014) and planned as milestones 22 to 30 in
 `docs/superpowers/plans/2026-11-14-full-notion.md`. Only what needs a
 third party's registration stays out: signing in with Google, ChatGPT,
 Apple, Microsoft or a company's SSO, and payment; their buttons are drawn
-and say so. Notion's app connections connect the way each app lets anyone
+and say so. Passkeys sign in on this server (ADR-0014). Notion's app connections connect the way each app lets anyone
 in, and plans are chosen at no cost (ADR-0014).
 Milestone 31 there brings in what that list still held: link previews
 read by the server, integrations with the public API at `/v1`,

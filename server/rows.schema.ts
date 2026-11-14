@@ -122,6 +122,19 @@ export const integrationRowSchema = v.object({
 
 export const pageIdRowSchema = v.object({ page_id: v.string() });
 
+export const passkeyRowSchema = v.object({
+  id: v.string(),
+  user_id: v.string(),
+  public_key: v.string(),
+  sign_count: v.number(),
+  created_at: v.number(),
+});
+
+export const challengeRowSchema = v.object({
+  user_id: v.nullable(v.string()),
+  expires_at: v.number(),
+});
+
 export const appConnectionRowSchema = v.object({
   app: v.string(),
   address: v.nullable(v.string()),
