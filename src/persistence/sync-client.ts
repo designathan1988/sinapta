@@ -15,6 +15,7 @@ import {
   type Transaction,
 } from "../state/index.ts";
 import { parseReply } from "./account.schema.ts";
+import { answerPeople } from "./people-client.ts";
 import {
   flush,
   getJson,
@@ -123,8 +124,16 @@ function leave(link: Link): void {
   delete link.session;
 }
 
-// Joins another workspace or makes a new one, as the switcher asks.
+// Joins another workspace or makes a new one, as the switcher asks; the
+// other requests go to the people client and keep the workspace open.
 function answer(link: Link, sync: Sync, request: SyncRequest): void {
+  if (request.kind !== "switch" && request.kind !== "create") {
+    const { workspaceId } = sync.store.getState().persistence.sync;
+    void answerPeople(sync, request, workspaceId).then(() =>
+      request.kind === "rename" ? publishList(sync, workspaceId) : undefined,
+    );
+    return;
+  }
   leave(link);
   if (request.kind === "switch") {
     void join(link, sync, request.workspaceId);

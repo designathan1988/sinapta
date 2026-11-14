@@ -148,6 +148,7 @@ export {
   answerAccount,
   checkAccount,
   chooseProvider,
+  renameAccount,
   requestAccount,
   setAccountStep,
 } from "./account.commands.ts";
@@ -157,9 +158,11 @@ export {
   syncCommands,
 } from "./sync.commands.ts";
 export type { Transaction } from "./history.ts";
-export { requestSync, setWorkspaces } from "./sync.commands.ts";
+export { requestSync, setPeople, setWorkspaces } from "./sync.commands.ts";
 export {
   NOT_SYNCED,
+  type InviteSummary,
+  type MemberSummary,
   type SyncRequest,
   type SyncState,
   type WorkspaceSummary,

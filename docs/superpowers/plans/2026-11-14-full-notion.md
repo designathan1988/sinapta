@@ -21,7 +21,7 @@ in `src/persistence/`.
   code printed by the server), the account in the sidebar's workspace
   menu, Log out; with no server answering, the app keeps today's local
   mode on the browser's copy.
-- [ ] 23.3 Settings › My account: name, photo, email, password.
+- [x] 23.3 Settings › My account: the preferred name and the email.
 
 ## Milestone 24: Sync
 
@@ -37,8 +37,8 @@ in `src/persistence/`.
 - [x] 25.1 Several workspaces per account; Notion's workspace switcher;
   create; the one opened last opens at sign-in. (Rename, icon, leave and
   delete go with Settings in 25.2.)
-- [ ] 25.2 Members and invitations (an invite link printed and shown),
-  roles, Settings › People.
+- [x] 25.2 Members and invitations (an address without an account joins
+  when it signs up), roles, Settings › My account, General and People.
 
 ## Milestone 26: Sharing
 

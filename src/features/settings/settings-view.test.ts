@@ -33,14 +33,17 @@ function rendered(section?: string) {
 }
 
 describe("settings, as Notion's", () => {
-  it("lists their sections beside the open one, Preferences first", () => {
+  it("lists the account's and the workspace's sections, Preferences open", () => {
     const { host, sections } = rendered();
 
     expect(sections.map((item) => item.textContent.trim())).toEqual([
+      "My account",
       "Preferences",
+      "General",
+      "People",
       "Import and export",
     ]);
-    expect(sections[0]?.getAttribute("aria-current")).toBe("page");
+    expect(sections[1]?.getAttribute("aria-current")).toBe("page");
     expect(host.querySelector(".settings__title")?.textContent.trim()).toBe(
       "Preferences",
     );
@@ -49,7 +52,7 @@ describe("settings, as Notion's", () => {
   it("opens another section from the list", () => {
     const { sections, sent } = rendered();
 
-    sections[1]?.click();
+    sections[4]?.click();
 
     expect(sent).toContainEqual(
       expect.objectContaining({
@@ -81,5 +84,16 @@ describe("settings, as Notion's", () => {
     expect(sent).toContainEqual(
       expect.objectContaining({ type: requestExport.create({}).type }),
     );
+  });
+
+  it("asks the server for the people when People opens", () => {
+    const { sections, sent } = rendered();
+
+    sections[3]?.click();
+
+    expect(sent).toContainEqual({
+      type: "sync.request",
+      request: { kind: "people" },
+    });
   });
 });

@@ -4,6 +4,7 @@
 import {
   codeSchema,
   lookupSchema,
+  profileSchema,
   parseBody,
   signInSchema,
   signUpSchema,
@@ -19,7 +20,13 @@ import {
   verifyPassword,
 } from "./secrets.ts";
 import { endSession, sessionUser, startSession } from "./sessions.ts";
-import { createUser, findUser, nameFromEmail, publicUser } from "./users.ts";
+import {
+  createUser,
+  findUser,
+  nameFromEmail,
+  publicUser,
+  renameUser,
+} from "./users.ts";
 
 const CODE_MINUTES = 10;
 const CODE_TRIES = 5;
@@ -121,6 +128,13 @@ export const ACCOUNT_ROUTES: RouteTable = {
     status: 204,
     cookies: [endSession(context, request)],
   }),
+  "POST /api/account/profile": (request, context) => {
+    const user = sessionUser(context, request);
+    if (user === undefined) return answer(401, { error: "signed-out" });
+    const { name } = parseBody(profileSchema, request.body);
+    renameUser(context, user.id, name);
+    return answer(200, { user: publicUser({ ...user, name }) });
+  },
   "GET /api/account/me": (request, context) => {
     const user = sessionUser(context, request);
     return user === undefined

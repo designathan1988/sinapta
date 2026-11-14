@@ -23,6 +23,10 @@ export const signInSchema = v.object({
   password: v.pipe(v.string(), v.maxLength(200)),
 });
 
+export const profileSchema = v.object({
+  name: v.pipe(v.string(), v.trim(), v.minLength(1), v.maxLength(100)),
+});
+
 export const codeSchema = v.object({
   email,
   code: v.pipe(v.string(), v.trim(), v.regex(/^\d{6}$/)),

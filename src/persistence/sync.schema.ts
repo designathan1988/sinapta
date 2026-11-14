@@ -52,3 +52,22 @@ export function readLoggedEvent(text: string): Logged | undefined {
     return undefined;
   }
 }
+
+const peopleSchema = v.object({
+  members: v.array(
+    v.object({
+      id: v.string(),
+      name: v.string(),
+      email: v.string(),
+      role: v.string(),
+    }),
+  ),
+  invites: v.array(v.object({ email: v.string(), role: v.string() })),
+});
+
+export const readPeople = (value: unknown) => {
+  const people = read(peopleSchema, value);
+  return people === undefined
+    ? undefined
+    : { members: people.members, invites: people.invites };
+};

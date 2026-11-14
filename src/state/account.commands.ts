@@ -80,7 +80,17 @@ export const checkAccount = defineCommand<NoPayload>({
   handle: (state) => withAccount(state, { status: "checking" }),
 });
 
+// The account's new name, as the server keeps it.
+export const renameAccount = defineCommand<{ name: string }>({
+  type: "account.rename",
+  handle: (state, { name }) => {
+    const { user } = state.persistence.account;
+    return user === null ? {} : withAccount(state, { user: { ...user, name } });
+  },
+});
+
 export const accountCommands = [
+  renameAccount,
   requestAccount,
   answerAccount,
   setAccountStep,

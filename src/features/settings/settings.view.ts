@@ -8,6 +8,7 @@ import {
   closeOverlay,
   openOverlay,
   requestExport,
+  requestSync,
   selectTheme,
   setTheme,
   type AppState,
@@ -21,6 +22,11 @@ import { renderSelect } from "../../ui/select/index.ts";
 import { SETTINGS_OVERLAY_KIND } from "../../ui/shortcuts/index.ts";
 import { renderImportRow } from "./settings-import.view.ts";
 import { renderRow } from "./settings-row.view.ts";
+import {
+  renderAccount,
+  renderGeneral,
+  renderPeople,
+} from "./settings-people.view.ts";
 
 export const SETTINGS_OVERLAY = SETTINGS_OVERLAY_KIND;
 
@@ -28,10 +34,32 @@ const TEXT = COPY.settings;
 
 type Section = keyof typeof TEXT.sections;
 
-const SECTIONS: readonly { id: Section; icon: IconName }[] = [
-  { id: "preferences", icon: "settings" },
-  { id: "data", icon: "download" },
+const SECTIONS: readonly {
+  id: Section;
+  icon: IconName;
+  group: "account" | "workspace";
+}[] = [
+  { id: "account", icon: "person", group: "account" },
+  { id: "preferences", icon: "settings", group: "account" },
+  { id: "general", icon: "settings", group: "workspace" },
+  { id: "people", icon: "person", group: "workspace" },
+  { id: "data", icon: "download", group: "workspace" },
 ];
+
+const RENDERERS: Record<
+  Section,
+  (state: AppState, dispatch: Dispatch) => unknown
+> = {
+  account: renderAccount,
+  preferences: (state, dispatch) => renderPreferences(state, dispatch),
+  general: renderGeneral,
+  people: renderPeople,
+  data: (state, dispatch) => renderData(state, dispatch),
+};
+
+function isSection(value: string | undefined): value is Section {
+  return SECTIONS.some((section) => section.id === value);
+}
 
 const THEMES: readonly { value: Theme; label: string }[] = [
   { value: "system", label: TEXT.themeSystem },
@@ -44,28 +72,37 @@ function isTheme(value: string): value is Theme {
 }
 
 function sectionOf(state: AppState): Section {
-  return state.ui.overlay?.anchorId === "data" ? "data" : "preferences";
+  const anchorId = state.ui.overlay?.anchorId;
+  return isSection(anchorId) ? anchorId : "preferences";
 }
 
 function renderSections(current: Section, dispatch: Dispatch): TemplateResult {
-  const open = (anchorId: Section) => () =>
+  const open = (anchorId: Section) => () => {
     dispatch(
       openOverlay.create({ overlay: { kind: SETTINGS_OVERLAY, anchorId } }),
     );
+    // People are read from the server each time their section opens.
+    if (anchorId === "people") {
+      dispatch(requestSync.create({ request: { kind: "people" } }));
+    }
+  };
+  const button = (section: (typeof SECTIONS)[number]) =>
+    html`<button
+      type="button"
+      class="settings__section"
+      aria-current=${section.id === current ? "page" : "false"}
+      @click=${open(section.id)}
+    >
+      ${renderIcon(section.icon)}
+      <span>${TEXT.sections[section.id]}</span>
+    </button>`;
+  const group = (id: "account" | "workspace") =>
+    SECTIONS.filter((section) => section.group === id).map(button);
   return html`<nav class="settings__nav" aria-label=${TEXT.sectionsLabel}>
+    <p class="settings__group">${TEXT.accountGroup}</p>
+    ${group("account")}
     <p class="settings__group">${TEXT.groupLabel}</p>
-    ${SECTIONS.map(
-      (section) =>
-        html`<button
-          type="button"
-          class="settings__section"
-          aria-current=${section.id === current ? "page" : "false"}
-          @click=${open(section.id)}
-        >
-          ${renderIcon(section.icon)}
-          <span>${TEXT.sections[section.id]}</span>
-        </button>`,
-    )}
+    ${group("workspace")}
   </nav>`;
 }
 
@@ -106,11 +143,7 @@ export function renderSettings(
       <h3 class="settings__title" id="settings-title">
         ${TEXT.sections[section]}
       </h3>
-      ${
-        section === "data"
-          ? renderData(state, dispatch)
-          : renderPreferences(state, dispatch)
-      }
+      ${RENDERERS[section](state, dispatch)}
     </section>
   </div>`;
   return renderDialog({

@@ -54,4 +54,12 @@ export const MIGRATIONS: readonly string[] = [
    );`,
   // 3: the workspace each person opened last, opened again at sign-in.
   `ALTER TABLE users ADD COLUMN last_workspace_id TEXT;`,
+  // 4: addresses invited to a workspace before they had an account.
+  `CREATE TABLE invites (
+     workspace_id TEXT NOT NULL REFERENCES workspaces (id) ON DELETE CASCADE,
+     email TEXT NOT NULL COLLATE NOCASE,
+     role TEXT NOT NULL,
+     created_at INTEGER NOT NULL,
+     PRIMARY KEY (workspace_id, email)
+   );`,
 ];

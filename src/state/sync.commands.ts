@@ -4,7 +4,13 @@ import type { Operation, Workspace } from "../model/index.ts";
 import { createInitialUiState } from "./app-state.ts";
 import { defineCommand, type CommandEffect } from "./command-registry.ts";
 import type { AppState } from "./app-state.ts";
-import type { SyncRequest, SyncState, WorkspaceSummary } from "./sync-state.ts";
+import type {
+  InviteSummary,
+  MemberSummary,
+  SyncRequest,
+  SyncState,
+  WorkspaceSummary,
+} from "./sync-state.ts";
 
 // Another client's operations, with this client's unconfirmed ones taken
 // back before them and made again after them, as one transaction.
@@ -55,7 +61,18 @@ export const requestSync = defineCommand<{ request: SyncRequest }>({
     }),
 });
 
+// The open workspace's people as the server lists them.
+export const setPeople = defineCommand<{
+  members: readonly MemberSummary[];
+  invites: readonly InviteSummary[];
+}>({
+  type: "sync.setPeople",
+  handle: (state, { members, invites }) =>
+    withSync(state, { members, invites, request: null }),
+});
+
 export const syncCommands = [
+  setPeople,
   applyRemote,
   loadServerWorkspace,
   setWorkspaces,

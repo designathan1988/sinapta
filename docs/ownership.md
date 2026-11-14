@@ -60,6 +60,7 @@ owner listed here exists.
 | Joining the workspace on the server, uploading or downloading it, following the account | `src/persistence/sync-client.ts` | 24 |
 | One joined workspace: sending transactions in order, receiving the others' | `src/persistence/sync-session.ts` | 24 |
 | Putting this client's unconfirmed transactions after the others' | `src/persistence/sync-rebase.ts` | 24 |
+| Settings' requests to the server: the account's and workspace's names, members, invitations | `src/persistence/people-client.ts` | 25 |
 | Parsing the server's workspace answers and events | `src/persistence/sync.schema.ts` | 24 |
 | JSON export and import, and carrying out export and import requests | `src/persistence/workspace-file.ts` | 7 |
 | Keeping files beside the workspace: asset ids, blobs, base64 | `src/persistence/asset-store.ts` | 14 |
@@ -79,6 +80,7 @@ owner listed here exists.
 | Pages: schema, commands, selectors, tree moves, trash | `src/blocks/page/` | 2 |
 | Sidebar tree and favorites | `src/features/sidebar/` | 2 |
 | Notion's workspace menu: members, the account's workspaces, New workspace, Log out | `src/features/sidebar/workspace-menu.ts` | 25 |
+| Settings › My account, General and People | `src/features/settings/settings-people.view.ts` | 25 |
 | Notion's sign-in screen: the address, password, login code and profile steps, the other ways in | `src/features/sign-in/` | 23 |
 | A page as one HTML file | `src/features/markdown-export/html-export.selectors.ts` | 20 |
 | Repeating templates: the repeat, its days, and the check that adds their rows | `src/features/database/template-repeat.commands.ts`, `src/app/template-repeats.ts` | 20 |
@@ -244,6 +246,8 @@ owner listed here exists.
 | Workspaces, members, snapshots and the operation log | `server/workspaces.ts` | 24 |
 | The workspace routes | `server/workspace-routes.ts` | 24 |
 | The workspace routes' request bodies | `server/workspace.schema.ts` | 24 |
+| A workspace's members, invitations and name | `server/members.ts` | 25 |
+| Settings › General and People routes, the owner's alone | `server/member-routes.ts` | 25 |
 | A server on an in-memory database for tests | `server/test-context.ts` | 24 |
 | The root render: the sign-in page or the app | `src/app/root-render.ts` | 23 |
 

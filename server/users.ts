@@ -1,6 +1,7 @@
 // The users table: finding, creating and showing an account.
 import { randomUUID } from "node:crypto";
 import type { ApiContext } from "./api.ts";
+import { acceptInvites } from "./members.ts";
 import { readRow, userRowSchema, type UserRow } from "./rows.schema.ts";
 
 export interface PublicUser {
@@ -45,6 +46,7 @@ export function createUser(context: ApiContext, user: NewUser): UserRow {
       "INSERT INTO users (id, email, name, photo, password_hash, created_at) VALUES (?, ?, ?, ?, ?, ?)",
     )
     .run(row.id, row.email, row.name, null, row.password_hash, row.created_at);
+  acceptInvites(context, row);
   return row;
 }
 
@@ -52,4 +54,14 @@ export function createUser(context: ApiContext, user: NewUser): UserRow {
 // part of the address before the @.
 export function nameFromEmail(email: string): string {
   return email.split("@")[0] ?? email;
+}
+
+export function renameUser(
+  context: ApiContext,
+  userId: string,
+  name: string,
+): void {
+  context.db
+    .prepare("UPDATE users SET name = ? WHERE id = ?")
+    .run(name, userId);
 }

@@ -118,3 +118,60 @@
     }
   }
 }
+
+@layer features {
+  /* Settings › My account, General and People (ADR-0013). */
+  .settings__field {
+    inline-size: var(--size-menu-width);
+    min-block-size: var(--size-control-md);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: none;
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-hover);
+    box-shadow: inset 0 0 0 var(--size-border-thin) var(--color-border-default);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+  }
+
+  .settings__invite {
+    display: flex;
+    gap: var(--space-inline-sm);
+    margin-block-end: var(--space-stack-md);
+  }
+
+  .settings__invite-button {
+    padding: var(--space-none) var(--space-inset-md);
+    border: none;
+    border-radius: var(--radius-md);
+    background-color: var(--color-accent-fill);
+    color: var(--color-text-on-accent);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+  }
+
+  .settings__people {
+    inline-size: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-sm);
+
+    & th {
+      padding-block: var(--space-stack-xs);
+      border-block-end: var(--size-border-thin) solid
+        var(--color-border-default);
+      color: var(--color-text-secondary);
+      font-weight: var(--font-weight-regular);
+      text-align: start;
+    }
+
+    & td {
+      padding-block: var(--space-stack-sm);
+      border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
+      vertical-align: middle;
+    }
+
+    & td:first-child {
+      display: grid;
+    }
+  }
+}

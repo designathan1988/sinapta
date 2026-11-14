@@ -67,3 +67,17 @@ export function readRows<TSchema extends v.GenericSchema>(
 ): v.InferOutput<TSchema>[] {
   return rows.map((row) => v.parse(schema, row));
 }
+
+export const idRowSchema = v.object({ id: v.string() });
+
+export const memberRowSchema = v.object({
+  id: v.string(),
+  name: v.string(),
+  email: v.string(),
+  role: v.string(),
+});
+
+export const inviteRowSchema = v.object({
+  email: v.string(),
+  role: v.string(),
+});
