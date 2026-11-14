@@ -5,7 +5,7 @@ export const ONBOARDING_TEXT = {
     title: "Getting started",
     welcome: "Welcome to Pagecraft",
     intro:
-      "Your notes, plans and lists live in this browser. Nothing is sent anywhere, and this page is yours to change.",
+      "Your notes, plans and lists are kept in this browser and, once you log in, on your Pagecraft server, where the people you invite work on them with you. This page is yours to change.",
     tip: "Press Ctrl+K to find a page or run a command, and Ctrl+Shift+/ to see every shortcut.",
     writeHeading: "Write",
     slash: "Type / in an empty line to add any kind of block",
