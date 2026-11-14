@@ -13,7 +13,13 @@ import {
   selectRelationChoices,
   setRelationValue,
 } from "./properties/relation/index.ts";
+import {
+  readPeople,
+  renderPersonEditor,
+  selectPeopleChoices,
+} from "./properties/person/index.ts";
 import { setRowValue } from "./row.commands.ts";
+import { COPY } from "../../ui/copy.ts";
 
 export interface RowPage {
   readonly state: AppState;
@@ -67,6 +73,36 @@ export function renderRowButton(
   </div>`;
 }
 
+// A Person property on the row's page: the workspace's people to pick.
+function renderRowPeople(
+  row: PageBlock,
+  property: PropertyDefinition,
+  page: RowPage,
+): TemplateResult {
+  const rowId = row.id;
+  const propertyId = property.id;
+  return html`<fieldset
+    class="database__row-property"
+    data-property-id=${property.id}
+  >
+    <legend class="database__row-name">${property.name}</legend>
+    ${renderPersonEditor({
+      selected: readPeople(row.props.values?.[property.id]) ?? [],
+      choices: selectPeopleChoices(page.state),
+      label: COPY.database.people,
+      empty: COPY.database.noPeople,
+      onChange: (people) =>
+        page.dispatch(
+          setRowValue.create({
+            rowId,
+            propertyId,
+            value: people.length === 0 ? undefined : people,
+          }),
+        ),
+    })}
+  </fieldset>`;
+}
+
 export function renderRowRelation(
   row: PageBlock,
   property: PropertyDefinition,
@@ -75,6 +111,7 @@ export function renderRowRelation(
   const { dispatch, state } = page;
   const rowId = row.id;
   const propertyId = property.id;
+  if (property.type === "person") return renderRowPeople(row, property, page);
   return html`<fieldset
     class="database__row-property"
     data-property-id=${property.id}

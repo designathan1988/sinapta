@@ -74,7 +74,8 @@ in `src/persistence/`.
 - [x] 28.1 Created by and Last edited by: the dispatcher stamps the
   signed-in person on every block made or changed; filters and sorts.
 - [x] 28.1b The Person property: the workspace's people chosen in the
-  cell's popover; filters Contains, Is empty, Is not empty.
+  cell's popover and on the row's page; filters Contains, Is empty, Is
+  not empty; views group by it, a group per person.
 - [x] 28.2 Verify in the page menu, the verified badge in the top bar, and
   the Verification property with its filters.
 

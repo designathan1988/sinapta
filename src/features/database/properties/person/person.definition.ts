@@ -60,5 +60,14 @@ export const personProperty: PropertyType = {
     },
   ],
   defaultFilter: "contains",
+  // A group for each person, as Notion's; a row with two people is in
+  // both, and one with none in "No <name>".
+  grouping: {
+    keysOf: (value) =>
+      (readPeople(value) ?? []).map((person) => ({
+        key: person.id,
+        label: person.name,
+      })),
+  },
   renderCell: formatPeople,
 };

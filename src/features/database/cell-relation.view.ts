@@ -6,7 +6,11 @@ import {
   type BlockId,
   type PropertyId,
 } from "../../model/index.ts";
-import { readPeople, renderPersonEditor } from "./properties/person/index.ts";
+import {
+  readPeople,
+  renderPersonEditor,
+  selectPeopleChoices,
+} from "./properties/person/index.ts";
 import { setRowValue } from "./row.commands.ts";
 import { closeOverlay } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
@@ -28,19 +32,12 @@ interface PersonCell {
   readonly stored: Readonly<Record<string, unknown>> | undefined;
 }
 
-// A Person cell's people: the workspace's, or this person alone with no
-// server (ADR-0013).
+// A Person cell's people, chosen from the workspace's.
 function renderPeoplePicker(context: TableContext, cell: PersonCell) {
   const { state, dispatch } = context;
-  const { user } = state.persistence.account;
-  const members = state.persistence.sync.members;
-  const everyone =
-    members.length > 0 || user === null
-      ? members
-      : [{ id: user.id, name: user.name }];
   return renderPersonEditor({
     selected: readPeople(cell.stored?.[cell.propertyId]) ?? [],
-    choices: everyone.map((person) => ({ id: person.id, name: person.name })),
+    choices: selectPeopleChoices(state),
     label: COPY.database.people,
     empty: COPY.database.noPeople,
     onChange: (people) =>
