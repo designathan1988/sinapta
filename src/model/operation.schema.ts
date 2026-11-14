@@ -80,9 +80,33 @@ export interface CurrentRecords {
   readonly settings: Settings;
 }
 
+// A block's children as this update left them: the transaction's later
+// list operations on them are taken back (a later insert left out, a later
+// remove kept), so applying the update and then them gives what the
+// transaction gave, with no child twice.
+function childIdsAt(
+  block: Block,
+  later: readonly Operation[],
+): Block["childIds"] {
+  let childIds = [...block.childIds];
+  for (const operation of later) {
+    if (operation.type !== "list.insert" && operation.type !== "list.remove") {
+      continue;
+    }
+    const { list, id } = operation;
+    if (list.kind !== "childIds" || list.blockId !== block.id) continue;
+    childIds =
+      operation.type === "list.insert"
+        ? childIds.filter((each) => each !== id)
+        : [...childIds.filter((each) => each !== id), id];
+  }
+  return childIds;
+}
+
 function wholeUpdate(
   operation: Extract<Operation, { type: "record.update" }>,
   current: CurrentRecords,
+  later: readonly Operation[],
 ): Operation | undefined {
   if (operation.kind === "settings") {
     return { ...operation, patch: current.settings };
@@ -91,7 +115,10 @@ function wholeUpdate(
     const block = current.block(operation.id);
     if (block === undefined) return undefined;
     const { id, ...patch } = block;
-    return { ...operation, patch };
+    return {
+      ...operation,
+      patch: { ...patch, childIds: childIdsAt(block, later) },
+    };
   }
   const view = current.view(operation.id);
   if (view === undefined) return undefined;
@@ -106,9 +133,10 @@ export function toWireOperations(
   operations: readonly Operation[],
   current: CurrentRecords,
 ): readonly Operation[] {
-  return operations.flatMap((operation) => {
+  return operations.flatMap((operation, index) => {
     if (operation.type !== "record.update") return [operation];
-    const whole = wholeUpdate(operation, current);
+    const later = operations.slice(index + 1);
+    const whole = wholeUpdate(operation, current, later);
     return whole === undefined ? [] : [whole];
   });
 }

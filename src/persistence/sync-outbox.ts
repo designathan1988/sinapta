@@ -3,13 +3,33 @@
 // never confirmed.
 import {
   applyOperations,
+  findInvariantViolation,
   parseWireOperations,
+  type BlockId,
+  type Operation,
   type Workspace,
 } from "../model/index.ts";
 import { replayOffline } from "../state/index.ts";
 import type { Sync } from "./sync-session.ts";
 import * as reply from "./sync.schema.ts";
 
+// The blocks a transaction touches: its records and the lists it changes.
+function touched(operations: readonly Operation[]): Set<BlockId> {
+  const ids = new Set<BlockId>();
+  for (const operation of operations) {
+    if (operation.type === "list.insert" || operation.type === "list.remove") {
+      ids.add(operation.id);
+      if (operation.list.kind === "childIds") ids.add(operation.list.blockId);
+    } else if (operation.kind === "block") {
+      ids.add("record" in operation ? operation.record.id : operation.id);
+    }
+  }
+  return ids;
+}
+
+// Each logged transaction made again in turn; one that cannot be, or that
+// would break the workspace's rules (a child listed twice), is skipped, so
+// the rest still loads.
 export function withLogged(
   workspace: Workspace,
   logged: readonly reply.Logged[],
@@ -18,7 +38,10 @@ export function withLogged(
   for (const entry of logged) {
     const operations = parseWireOperations(entry.operations) ?? [];
     const result = applyOperations(current, operations);
-    if (result.ok) current = result.workspace;
+    if (!result.ok) continue;
+    const ids = touched(operations);
+    const broken = findInvariantViolation(current, result.workspace, ids);
+    if (broken === undefined) current = result.workspace;
   }
   return { workspace: current, seq: logged.at(-1)?.seq };
 }

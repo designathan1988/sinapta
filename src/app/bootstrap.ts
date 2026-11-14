@@ -214,10 +214,11 @@ export async function startApp(container: HTMLElement): Promise<void> {
   // Nothing is rendered until stored data is in the store, so the first
   // paint already has the saved theme and layout.
   const { isFirstRun } = await startPersistence(store, dispatch, sync);
+  // A first visit opens a short tour; it is saved like any other change.
+  // It comes first, so a workspace the server holds always replaces it.
+  if (isFirstRun) dispatch(seedGettingStarted.create({}));
   // Who is signed in to the server, before the first paint (ADR-0013).
   await startAccount({ store, dispatch });
-  // A first visit opens a short tour; it is saved like any other change.
-  if (isFirstRun) dispatch(seedGettingStarted.create({}));
   // The trash empties itself of pages kept there over 30 days.
   dispatch(emptyOldTrash.create({}));
   startReminderNotices(store);
