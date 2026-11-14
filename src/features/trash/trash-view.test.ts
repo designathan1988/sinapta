@@ -62,3 +62,33 @@ describe("a trashed page's row", () => {
     );
   });
 });
+
+describe("the trash's search", () => {
+  it("closes the trash on Escape even while it holds words, as Notion's", () => {
+    const initial = createInitialState();
+    const overlay = { kind: TRASH_OVERLAY, query: "Walk" };
+    const state = { ...initial, ui: { ...initial.ui, overlay } };
+    const sent: Command[] = [];
+    const host = document.createElement("div");
+    document.body.replaceChildren(host);
+    render(
+      renderTrash(state, (command) => {
+        sent.push(command);
+        return { ok: true };
+      }),
+      host,
+    );
+
+    const escape = new KeyboardEvent("keydown", {
+      key: "Escape",
+      bubbles: true,
+      cancelable: true,
+    });
+    host.querySelector(".trash__search")?.dispatchEvent(escape);
+
+    expect(escape.defaultPrevented).toBe(true);
+    expect(sent).toContainEqual(
+      expect.objectContaining({ type: "ui.closeOverlay" }),
+    );
+  });
+});

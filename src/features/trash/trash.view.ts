@@ -104,6 +104,13 @@ function renderTools(state: AppState, dispatch: Dispatch): TemplateResult {
     if (event.target instanceof HTMLInputElement)
       setFilter(dispatch, { ...filter, query: event.target.value });
   };
+  // Escape closes the trash, as Notion's, instead of only clearing the
+  // words the way a search field does by itself.
+  const onKeydown = (event: KeyboardEvent): void => {
+    if (event.key !== "Escape") return;
+    event.preventDefault();
+    dispatch(closeOverlay.create({}));
+  };
   return html`<div class="trash__tools">
     <input
       class="trash__search"
@@ -113,6 +120,7 @@ function renderTools(state: AppState, dispatch: Dispatch): TemplateResult {
       placeholder=${COPY.trash.search}
       .value=${filter.query}
       @input=${onInput}
+      @keydown=${onKeydown}
     />
     ${renderInFilter(state, dispatch)}
   </div>`;
