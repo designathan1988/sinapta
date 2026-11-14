@@ -168,6 +168,7 @@ export const DATABASE_TEXT = {
       map: "Map",
     },
     people: "People",
+    verified: "Verified",
     noPeople:
       "No people in this workspace yet. Invite them from Settings › People.",
     noPlaces:

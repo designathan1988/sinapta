@@ -20,6 +20,7 @@ import {
   SHARE_TEXT,
   SIDEBAR_VIEWS_TEXT,
   TEMPLATE_TEXT,
+  VERIFY_TEXT,
   WORKSPACE_TEXT,
 } from "./copy/index.ts";
 
@@ -47,6 +48,7 @@ export const COPY = {
   account: ACCOUNT_TEXT.account,
   share: SHARE_TEXT.share,
   ai: AI_TEXT.ai,
+  verify: VERIFY_TEXT.verify,
 } as const;
 
 export { pluralize } from "./copy/index.ts";

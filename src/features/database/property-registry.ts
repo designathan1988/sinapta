@@ -32,6 +32,7 @@ import { statusProperty } from "./properties/status/index.ts";
 import { textProperty } from "./properties/text/index.ts";
 import { uniqueIdProperty } from "./properties/unique-id/index.ts";
 import { urlProperty } from "./properties/url/index.ts";
+import { verificationProperty } from "./properties/verification/index.ts";
 
 export const PROPERTY_TYPES: readonly PropertyType[] = [
   textProperty,
@@ -55,6 +56,7 @@ export const PROPERTY_TYPES: readonly PropertyType[] = [
   createdByProperty,
   editedByProperty,
   placeProperty,
+  verificationProperty,
   uniqueIdProperty,
 ];
 

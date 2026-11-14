@@ -13,7 +13,10 @@ import {
 import { renderBreadcrumbs } from "../features/breadcrumbs/index.ts";
 import { renderHome } from "../features/home/index.ts";
 import { renderPageInfo } from "../features/page-info/index.ts";
-import { renderPageMenuButton } from "../features/page-menu/index.ts";
+import {
+  renderPageMenuButton,
+  renderVerifiedBadge,
+} from "../features/page-menu/index.ts";
 import { renderPageOutline } from "../features/page-outline/index.ts";
 import { renderPeek } from "../features/row-peek/index.ts";
 import { renderPresence } from "../features/presence/index.ts";
@@ -82,6 +85,7 @@ function renderStatusAndTools(
       selectIsHomeShown(state)
         ? nothing
         : [
+            renderVerifiedBadge(state),
             renderPageInfo(state, dispatch),
             renderPresence(state),
             renderShareButton(state, dispatch),

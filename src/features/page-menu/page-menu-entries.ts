@@ -9,6 +9,7 @@ import {
   DATABASE_TYPE,
   PAGE_TYPE,
   setPageLocked,
+  setPageVerified,
   trashPage,
   type PageBlock,
 } from "../../blocks/page/index.ts";
@@ -54,6 +55,21 @@ function lockItem(page: PageBlock, dispatch: Dispatch): MenuItem {
     isChecked: isLocked,
     onSelect: () =>
       dispatch(setPageLocked.create({ pageId, isLocked: !isLocked })),
+  };
+}
+
+// Notion's Verify: marks the page as verified, with no end, by the person
+// signed in; once verified, the row takes the verification off.
+function verifyItem(page: PageBlock, dispatch: Dispatch): MenuItem {
+  const isVerified = page.props.verification !== undefined;
+  const pageId = page.id;
+  return {
+    label: isVerified ? COPY.verify.unverify : COPY.verify.verify,
+    icon: "check",
+    onSelect: () =>
+      dispatch(
+        setPageVerified.create({ pageId, days: isVerified ? "off" : null }),
+      ),
   };
 }
 
@@ -149,7 +165,11 @@ export function pageMenuEntries(
       ...resolvedItems(state, page.id, dispatch),
     ],
     appearanceItem(page, dispatch),
-    [lockItem(page, dispatch), trashItem(page, dispatch)],
+    [
+      verifyItem(page, dispatch),
+      lockItem(page, dispatch),
+      trashItem(page, dispatch),
+    ],
     [moreItem(state, page)],
   ]);
 }

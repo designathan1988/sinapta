@@ -67,7 +67,8 @@ in `src/persistence/`.
   signed-in person on every block made or changed; filters and sorts.
 - [x] 28.1b The Person property: the workspace's people chosen in the
   cell's popover; filters Contains, Is empty, Is not empty.
-- [ ] 28.2 Verification on pages and the Verification property.
+- [x] 28.2 Verify in the page menu, the verified badge in the top bar, and
+  the Verification property with its filters.
 
 ## Milestone 29: Map
 

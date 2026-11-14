@@ -126,6 +126,11 @@ export const pagePropsSchema = v.object({
   discussions: v.optional(v.array(discussionSchema)),
   // A database template's repeat: it makes a row from itself on its days.
   repeat: v.optional(repeatSchema),
+  // Notion's verification: who verified the page, when, and until when
+  // (null: no end) (ADR-0013).
+  verification: v.optional(
+    v.object({ by: v.string(), at: v.string(), until: v.nullable(v.string()) }),
+  ),
 });
 
 export type PageProps = v.InferOutput<typeof pagePropsSchema>;

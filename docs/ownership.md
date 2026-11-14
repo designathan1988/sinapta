@@ -89,6 +89,9 @@ owner listed here exists.
 | Created by and Last edited by properties | `src/features/database/properties/created-by/` | 28 |
 | The Place property: a name and coordinates | `src/features/database/properties/place/` | 29 |
 | The Person property and its people picker | `src/features/database/properties/person/` | 28 |
+| Page verification: the command | `src/blocks/page/page-verify.ts` | 28 |
+| The verified badge in the top bar | `src/features/page-menu/verified-badge.view.ts` | 28 |
+| The Verification property | `src/features/database/properties/verification/` | 28 |
 | The Map view: OpenStreetMap tiles, a pin per row with a place | `src/features/database/layouts/map/` | 29 |
 | Notion AI: Ask AI in the block menu, the answer with Insert below, Replace, Discard | `src/features/ai/` | 30 |
 | Notion AI's state: the question and the answer | `src/state/ai.commands.ts` | 30 |

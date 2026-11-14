@@ -82,3 +82,18 @@
     }
   }
 }
+
+@layer features {
+  /* Notion's verified badge: a blue check and the word, beside "Edited". */
+  .page-menu__verified {
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    padding: var(--space-none) var(--space-inset-xs);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-accent-subtle);
+    color: var(--color-text-accent);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+  }
+}

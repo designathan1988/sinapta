@@ -18,3 +18,4 @@ export { SHARE_TEXT } from "./share-text.ts";
 export { SIDEBAR_VIEWS_TEXT } from "./sidebar-views-text.ts";
 export { WORKSPACE_TEXT } from "./workspace-text.ts";
 export { TEMPLATE_TEXT } from "./template-text.ts";
+export { VERIFY_TEXT } from "./verify-text.ts";

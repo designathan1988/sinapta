@@ -23,7 +23,10 @@ export function selectRowValues(
   const stored = page.props.values ?? {};
   const computed = properties.flatMap((property) => {
     const field = propertyType(property.type).computedFrom;
-    return field === undefined ? [] : [[property.id, page[field]] as const];
+    if (field === undefined) return [];
+    const value =
+      field === "verification" ? page.props.verification : page[field];
+    return [[property.id, value] as const];
   });
   return computed.length === 0
     ? stored

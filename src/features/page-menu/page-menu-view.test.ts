@@ -106,6 +106,7 @@ describe("the page menu, as Notion's", () => {
       expect.stringContaining("Move to"),
       expect.stringContaining("Version history"),
       expect.stringContaining("Appearance and layout"),
+      expect.stringContaining("Verify"),
       expect.stringContaining("Lock page"),
       expect.stringContaining("Move to Trash"),
       expect.stringContaining("More"),

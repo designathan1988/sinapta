@@ -40,6 +40,7 @@ export {
   trashPage,
 } from "./page-trash.commands.ts";
 export { lockGuard, pageLockCommands, setPageLocked } from "./page-lock.ts";
+export { pageVerifyCommands, setPageVerified } from "./page-verify.ts";
 export {
   COVER_PRESETS,
   DATABASE_TYPE,

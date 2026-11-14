@@ -139,7 +139,8 @@ export interface PropertyType {
   readonly editorFor?: (property: PropertyDefinition) => CellEditor;
   readonly input?: InputKind;
   // A value that is not stored but read from the row's own record.
-  readonly computedFrom?: "createdAt" | "updatedAt" | "createdBy" | "editedBy";
+  readonly computedFrom?:
+    "createdAt" | "updatedAt" | "createdBy" | "editedBy" | "verification";
   // The stored value in this type's form; undefined when the cell is
   // empty or holds something this type cannot use.
   readonly read: (stored: unknown) => unknown;
