@@ -1,6 +1,7 @@
-// "Turn into › Tasks database" and "› Meetings database", as Notion's: a
+// "Turn into › Tasks database", "› Meetings" and "› Skills", as Notion's: a
 // task database has someone it is for (Assignee, a person), a Status and
-// a Due date; a meetings database its Attendees, a Date and a Type.
+// a Due date; a meetings database its Attendees, a Date and a Type; a
+// skills database a Description and Files.
 // Turning a database into one adds whichever of these it lacks, in one
 // step, and keeps the ones it has, whatever their names.
 import {
@@ -19,7 +20,7 @@ interface TaskProperty {
   readonly name: string;
 }
 
-export type DatabaseKind = "tasks" | "meetings";
+export type DatabaseKind = "tasks" | "meetings" | "skills";
 
 const KIND_PROPERTIES: Readonly<Record<DatabaseKind, readonly TaskProperty[]>> =
   {
@@ -34,6 +35,12 @@ const KIND_PROPERTIES: Readonly<Record<DatabaseKind, readonly TaskProperty[]>> =
       { type: "person", name: COPY.database.meetingAttendees },
       { type: "date", name: COPY.database.meetingDate },
       { type: "select", name: COPY.database.meetingType },
+    ],
+    // As Notion's help on skills: a skill page has a Description, which
+    // says what it does and when, and Files it works from.
+    skills: [
+      { type: "text", name: COPY.database.skillDescription },
+      { type: "files", name: COPY.database.skillFiles },
     ],
   };
 

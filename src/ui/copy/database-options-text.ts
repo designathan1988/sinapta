@@ -104,11 +104,14 @@ export const DATABASE_OPTIONS_TEXT = {
   turnIntoTasksNote:
     "Adds the properties that kind of database has, whichever this one lacks.",
   isTaskDatabase:
-    "This database has the properties of a Tasks and a Meetings database.",
+    "This database has the properties of a Tasks, a Meetings and a Skills database.",
   taskAssignee: "Assignee",
   taskStatus: "Status",
   taskDue: "Due date",
   turnIntoMeetings: "Turn into Meetings database",
+  turnIntoSkills: "Turn into Skills database",
+  skillDescription: "Description",
+  skillFiles: "Files",
   meetingAttendees: "Attendees",
   meetingDate: "Date",
   meetingType: "Type",

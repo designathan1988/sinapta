@@ -237,7 +237,7 @@ Paths: `blk/` is `src/blocks/`, `db/` is `src/features/database/`.
 | Database automations: Page added or a property edited; Edit property, Add page to, Send webhook, Send Slack notification, Send notification to; plan-gated as Notion's | Done | `src/features/database/automation.test.ts`, `view-settings/automations-panel-view.test.ts`, `server/automation-webhook.test.ts`, `src/persistence/automation-webhook-client.test.ts`; walk `w16-automations` |
 | Manage data sources: add or link a source, a view showing it, unlink | Done | `src/features/database/data-source.test.ts`; hand walk `h3-data-sources` |
 | Linked events: connect a calendar, file a coming meeting's notes as a page | Done | `view-settings/linked-events-panel-view.test.ts`; walk `w17-linked-events` |
-| Turn into Tasks database | Done | `src/features/database/task-database.test.ts`; walk `w16-automations` |
+| Turn into Tasks, Meetings or Skills database | Done | `src/features/database/task-database.test.ts`; walk `w16-automations` |
 | Updates & analytics: a page's runs of edits, its views by day, viewers and editors | Done | `src/features/page-updates/page-updates*.test.ts`, `src/state/page-updates.test.ts`, `src/persistence/page-views.test.ts`, `server/page-views.test.ts`; walk `w14-updates` |
 | Comments on a page and on text, resolve; Ctrl+Shift+M | Done | `comment.test.ts`, `comments-view.test.ts`, `shortcut-registry.test.ts` |
 | Page notification settings: the Discussions bell and Get notified | Done | `src/features/inbox/comment-notices.test.ts`, `page-menu-view.test.ts`; photos `n102-bell`, `p89-bell` |

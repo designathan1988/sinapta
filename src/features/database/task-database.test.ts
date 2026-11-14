@@ -51,4 +51,17 @@ describe("Turn into Tasks database, as Notion's", () => {
     ]);
     expect(missingProperties(app.database(), "meetings")).toEqual([]);
   });
+
+  it("adds Description and Files for a Skills database, as Notion's help says", () => {
+    const app = createDatabaseApp([], []);
+    const add = missingProperties(app.database(), "skills");
+
+    app.dispatch(turnIntoTasks.create({ databaseId: app.databaseId, add }));
+
+    expect(add.map((item) => [item.name, item.type])).toEqual([
+      ["Description", "text"],
+      ["Files", "files"],
+    ]);
+    expect(missingProperties(app.database(), "skills")).toEqual([]);
+  });
 });

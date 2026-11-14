@@ -1496,8 +1496,11 @@ Groups, Notion and Pagecraft alike (Pagecraft changed to match):
     connected Slack ("<page> in <database>: Page added"), or "Connect"
     to Settings › Connections without one; and (`w19-notify`) Send
     notification to, the workspace's people each switched on, who find
-    "Automation in <database>: <trigger>" in their inbox. Not yet:
-    Meetings and Skills, Manage data sources.
+    "Automation in <database>: <trigger>" in their inbox. Turn into now
+    offers Meetings (Attendees, Date, Type, from Notion's guide to a
+    meeting notes database) and Skills (Description and Files, from
+    Notion's help on skills; `n130-skills` read Notion's three options
+    without choosing one; Pagecraft `h4-skills`).
 68. **done** [`n127-sources`; Pagecraft `w17-linked-events`] Notion's
     "Linked events": without a calendar, "Connect your calendar", "Connect
     a calendar to choose meetings and automatically file their notes
