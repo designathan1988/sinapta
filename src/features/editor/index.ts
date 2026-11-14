@@ -7,6 +7,7 @@ import { editorMoveCommands } from "./editor-move.commands.ts";
 import { editorPlusCommands } from "./editor-plus.commands.ts";
 import { editorPasteBlocksCommands } from "./editor-paste-blocks.commands.ts";
 import { editorPasteAsCommands } from "./editor-paste-as.commands.ts";
+import { editorStartCommands } from "./editor-start.commands.ts";
 import { editorPasteCommands } from "./editor-paste.commands.ts";
 import { editorSelectionCommands } from "./editor-selection.commands.ts";
 import { editorStructureCommands } from "./editor-structure.commands.ts";
@@ -47,6 +48,7 @@ export const editorCommands = [
   ...editorMoveCommands,
   ...editorPasteCommands,
   ...editorPasteAsCommands,
+  ...editorStartCommands,
   ...editorPasteBlocksCommands,
   ...editorSelectionCommands,
   ...editorEquationCommands,

@@ -108,6 +108,13 @@ export const EDITOR_TEXT = {
     pink: "Pink",
     red: "Red",
   },
+  pageStart: {
+    ai: "Ask AI",
+    transcribe: "Transcribe",
+    database: "Database",
+    templates: "Templates",
+    more: "More ways to start",
+  },
   pasteAs: {
     title: "Paste as",
     mention: "Mention",

@@ -14,10 +14,31 @@
   .editor__start-options {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-inline-xs);
+    gap: var(--space-inline-sm);
+  }
 
-    & .button {
-      color: var(--color-text-secondary);
+  /* A choice as Notion draws it: a round gray pill, its icon then its
+     name; "…" is a round pill of its own. */
+  .editor__start-pill {
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    min-block-size: var(--size-control-md);
+    padding: var(--space-none) var(--space-inset-md);
+    border: none;
+    border-radius: var(--radius-full);
+    background-color: var(--color-bg-hover);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover-strong);
+    }
+
+    &[aria-label] {
+      padding: var(--space-none) var(--space-inset-sm);
     }
   }
 

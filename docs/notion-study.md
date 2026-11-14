@@ -1317,6 +1317,15 @@ items above, found while photographing them:
     it opens the tab's menu: Renomear, Excluir guia, Gerenciar
     predefinição, Redefinir guia, Ocultar nomes das guias), not a page
     with a favorites section; see item 37.
+54. **done** [`n101-empty-page`; Pagecraft `p86-start`] A new empty page
+    shows "Get started with" and a row of round pills: Ask AI,
+    Transcribe, Database, Form, Templates and "…" (the page was moved to
+    Notion's trash afterwards). Pagecraft has the same row: Ask AI adds a
+    line with the AI prompt open, Transcribe adds AI Meeting Notes,
+    Database and Form turn the page into a database of that layout,
+    Templates opens the gallery, and "…" lists Board, Timeline,
+    Calendar, List, Gallery, Chart, Feed and Map. Notion's row sits at
+    the window's foot; Pagecraft's under the page's first line.
 
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,

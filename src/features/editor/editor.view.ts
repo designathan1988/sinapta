@@ -34,6 +34,7 @@ import {
 } from "./editor-color-menu.view.ts";
 import { LINK_OVERLAY, renderLinkField } from "./editor-link.view.ts";
 import { PASTE_AS_OVERLAY, renderPasteAs } from "./editor-paste-as.view.ts";
+import { renderStartMore, START_MORE_OVERLAY } from "./editor-start.view.ts";
 import type { InputContext } from "./editor-input.view.ts";
 import { renderAddCover, renderCover } from "./editor-cover.view.ts";
 import { renderBacklinks } from "../backlinks/index.ts";
@@ -193,22 +194,25 @@ export function renderEditor(
   )}`;
 }
 
-// The editor's own overlays: the block menus and the link field.
+type OverlayView = (
+  state: AppState,
+  dispatch: Dispatch,
+) => TemplateResult | typeof nothing;
+
+const EDITOR_OVERLAYS: Readonly<Record<string, OverlayView>> = {
+  [LINK_OVERLAY]: renderLinkField,
+  [BLOCK_COLOR_OVERLAY]: renderColorMenu,
+  [START_MORE_OVERLAY]: renderStartMore,
+  [PASTE_AS_OVERLAY]: renderPasteAs,
+  [INLINE_EQUATION_OVERLAY]: renderInlineEquationEditor,
+};
+
+// The editor's own overlays: the block menus, the link field and the
+// others above.
 export function renderEditorOverlay(
   state: AppState,
   dispatch: Dispatch,
 ): TemplateResult | typeof nothing {
-  if (state.ui.overlay?.kind === LINK_OVERLAY) {
-    return renderLinkField(state, dispatch);
-  }
-  if (state.ui.overlay?.kind === BLOCK_COLOR_OVERLAY) {
-    return renderColorMenu(state, dispatch);
-  }
-  if (state.ui.overlay?.kind === PASTE_AS_OVERLAY) {
-    return renderPasteAs(state, dispatch);
-  }
-  if (state.ui.overlay?.kind === INLINE_EQUATION_OVERLAY) {
-    return renderInlineEquationEditor(state, dispatch);
-  }
-  return renderBlockMenu(state, dispatch);
+  const view = EDITOR_OVERLAYS[state.ui.overlay?.kind ?? ""] ?? renderBlockMenu;
+  return view(state, dispatch);
 }
