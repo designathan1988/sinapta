@@ -14,6 +14,13 @@ import type { CommandEffect } from "./command-registry.ts";
 const isMember = (state: AppState) =>
   Object.keys(state.persistence.sync.access).length === 0;
 
+// A guest reaches only the pages shared with them; a member also their own
+// pages and the workspace's, outside the pages shared with them.
+function isGuest(state: AppState): boolean {
+  const { workspaces, workspaceId } = state.persistence.sync;
+  return workspaces.find((each) => each.id === workspaceId)?.role === "guest";
+}
+
 export function selectBlockAccess(state: AppState, id: BlockId): PageAccess {
   if (isMember(state)) return "full";
   const { access } = state.persistence.sync;
@@ -26,7 +33,7 @@ export function selectBlockAccess(state: AppState, id: BlockId): PageAccess {
         ? undefined
         : state.workspace.blocks[block.parentId];
   }
-  return "view";
+  return isGuest(state) ? "view" : "full";
 }
 
 // Whether the block's words and blocks may be changed here.

@@ -50,7 +50,10 @@ in `src/persistence/`.
   pages they may edit. The client knows each shared page's access: a page
   they may only view or comment on reads as a locked page, and the
   dispatcher refuses its changes, comments excepted where they may
-  comment. (Members' "Only people invited" pages remain.)
+  comment. Members too read only what they may: the teamspaces, their own
+  top pages, pages open to the workspace, older pages made before pages
+  had makers, and pages shared with them; another member's private
+  pages are neither sent to them nor changed by them.
 - [x] 26.3 Publish to web: a read-only page served by the server and the
   Publish tab, and the sidebar's Shared section: the top pages shared
   with people, and "Start collaborating" while none is. Teamspaces:

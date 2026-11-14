@@ -79,7 +79,7 @@ function changedBlockOf(
   return workspace.views[operation.id]?.databaseId;
 }
 
-function blockOf(
+export function blockOf(
   operation: Operation,
   workspace: Workspace,
 ): string | undefined {

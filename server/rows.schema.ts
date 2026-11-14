@@ -97,3 +97,8 @@ export const sharedPageRowSchema = v.object({
   id: v.string(),
   access: v.picklist(["full", "edit", "comment", "view"]),
 });
+
+export const generalRowSchema = v.object({
+  id: v.string(),
+  general: v.picklist(["invited", "workspace", "web"]),
+});

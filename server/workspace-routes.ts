@@ -1,25 +1,16 @@
 // Workspaces on the server (ADR-0013): the list, the first upload, the
 // snapshot with the operations since, a client's transactions, and the
 // stream that brings the others' transactions.
-import * as v from "valibot";
-import {
-  parseWireOperations,
-  SCHEMA_VERSION,
-  type Operation,
-} from "../src/model/index.ts";
 import { answer, type ApiContext, type RouteTable } from "./api.ts";
 import {
-  guestWorkspace,
-  mayWrite,
-  reachOf,
-  sharedWith,
-  visibleTo,
-} from "./guest-access.ts";
-import type { Access } from "./sharing.ts";
-import type { Listener } from "./workspace-events.ts";
-import { currentState, currentWorkspace } from "./workspace-state.ts";
+  mayChangeAll,
+  OPERATIONS_EVENT,
+  partialDownload,
+  seenOperations,
+  streamFilter,
+  type Member,
+} from "./workspace-access.ts";
 import type { ApiRequest, ApiResponse } from "./http-exchange.ts";
-import type { UserRow, WorkspaceRow } from "./rows.schema.ts";
 import { sessionUser } from "./sessions.ts";
 import {
   createWorkspaceSchema,
@@ -38,12 +29,6 @@ import {
 
 const SIGNED_OUT = answer(401, { error: "signed-out" });
 const NOT_FOUND = answer(404, { error: "not-found" });
-const OPERATIONS_EVENT = "operations";
-
-interface Member {
-  readonly user: UserRow;
-  readonly workspace: WorkspaceRow;
-}
 
 // The signed-in member of the workspace the path names, or the answer
 // that refuses the request.
@@ -66,75 +51,6 @@ function afterOf(request: ApiRequest): number {
   return Number.isInteger(after) && after >= 0 ? after : 0;
 }
 
-// A guest reads the pages shared with them, as a workspace of their own.
-function guestDownload(member: Member, context: ApiContext): ApiResponse {
-  const { id } = member.workspace;
-  const state = currentState(context, id);
-  if (state === undefined) return NOT_FOUND;
-  const shared = sharedWith(context, id, member.user.email);
-  const reach = reachOf(state.workspace, shared);
-  const snapshot = {
-    schemaVersion: SCHEMA_VERSION,
-    ...guestWorkspace(state.workspace, reach),
-  };
-  return answer(200, {
-    workspace: member.workspace,
-    seq: state.seq,
-    snapshot,
-    operations: [],
-    access: Object.fromEntries(shared),
-  });
-}
-
-function mayGuestWrite(
-  member: Member,
-  context: ApiContext,
-  operations: readonly Operation[],
-): boolean {
-  if (member.workspace.role !== "guest") return true;
-  const { id } = member.workspace;
-  const workspace = currentWorkspace(context, id);
-  if (workspace === undefined) return false;
-  const reach = reachOf(workspace, sharedWith(context, id, member.user.email));
-  return mayWrite(operations, reach, workspace);
-}
-
-// A guest's stream carries only the operations inside their reach; the
-// others' events still come, empty, so that no number is missing.
-function guestFilter(
-  member: Member,
-  context: ApiContext,
-  send: Listener,
-): Listener {
-  if (member.workspace.role !== "guest") return send;
-  const { id } = member.workspace;
-  const start = currentWorkspace(context, id);
-  const reach =
-    start === undefined
-      ? new Map<string, Access>()
-      : reachOf(start, sharedWith(context, id, member.user.email));
-  return (event, data) => {
-    if (event !== OPERATIONS_EVENT) {
-      send(event, data);
-      return;
-    }
-    const logged = v.safeParse(loggedSchema, data);
-    const workspace = currentWorkspace(context, id);
-    if (!logged.success || workspace === undefined) return;
-    const operations = parseWireOperations(logged.output.operations) ?? [];
-    send(event, {
-      ...logged.output,
-      operations: visibleTo(operations, reach, workspace),
-    });
-  };
-}
-
-const loggedSchema = v.object({
-  seq: v.number(),
-  clientId: v.string(),
-  operations: v.unknown(),
-});
-
 export const WORKSPACE_ROUTES: RouteTable = {
   "GET /api/workspaces": (request, context) => {
     const user = sessionUser(context, request);
@@ -154,8 +70,8 @@ export const WORKSPACE_ROUTES: RouteTable = {
   "GET /api/workspaces/:id": (request, context) => {
     const member = memberOf(request, context);
     if (!isMember(member)) return member;
-    if (member.workspace.role === "guest")
-      return guestDownload(member, context);
+    const partial = partialDownload(member, context);
+    if (partial !== undefined) return partial;
     const { id } = member.workspace;
     const snapshot = snapshotOf(context, id);
     if (snapshot === undefined) return NOT_FOUND;
@@ -176,8 +92,9 @@ export const WORKSPACE_ROUTES: RouteTable = {
     const member = memberOf(request, context);
     if (!isMember(member)) return member;
     const { id } = member.workspace;
+    const logged = operationsAfter(context, id, afterOf(request));
     return answer(200, {
-      operations: operationsAfter(context, id, afterOf(request)),
+      operations: seenOperations(member, context, logged),
     });
   },
   "POST /api/workspaces/:id/operations": (request, context) => {
@@ -186,7 +103,7 @@ export const WORKSPACE_ROUTES: RouteTable = {
     const parsed = parseOperations(request.body);
     if (parsed === undefined) return answer(400, { error: "bad-operations" });
     const workspaceId = member.workspace.id;
-    if (!mayGuestWrite(member, context, parsed.operations)) {
+    if (!mayChangeAll(member, context, parsed.operations)) {
       return answer(403, { error: "read-only" });
     }
     const seq = logOperations(context, {
@@ -207,7 +124,7 @@ export const WORKSPACE_ROUTES: RouteTable = {
         start: (send) =>
           context.events.listen(
             workspaceId,
-            guestFilter(member, context, send),
+            streamFilter(member, context, send),
           ),
       },
     };
