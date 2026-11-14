@@ -91,7 +91,8 @@ in `src/persistence/`.
 
 - [x] 30.1 AI on the server: Ollama when it answers on 127.0.0.1:11434
   (model from PAGECRAFT_AI_MODEL, llama3.2 by default), else a local
-  provider for summaries, shorter text and action items. (Streaming remains.)
+  provider for summaries, shorter text and action items; the answer is
+  streamed as Server-Sent Events and shown as it is written.
 - [x] 30.2 Ask AI in the block menu with Notion's actions, the answer with
   Insert below, Replace, Discard; Space on an empty line opens "Ask AI
   anything…", whose plain-text requests the local provider answers too.

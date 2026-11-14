@@ -101,7 +101,9 @@ function renderButtons(state: AppState, dispatch: Dispatch): TemplateResult {
 function renderBody(state: AppState, dispatch: Dispatch): TemplateResult {
   const { status, answer, error } = state.persistence.ai;
   if (status === "thinking") {
-    return html`<p class="ai__thinking" role="status">${TEXT.thinking}</p>`;
+    return answer === ""
+      ? html`<p class="ai__thinking" role="status">${TEXT.thinking}</p>`
+      : html`<p class="ai__answer" aria-busy="true">${answer}</p>`;
   }
   if (status === "failed") {
     return html`<p class="ai__error" role="alert">

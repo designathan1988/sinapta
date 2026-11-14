@@ -277,6 +277,7 @@ owner listed here exists.
 | What a guest reaches: the pages shared with them, read and written at their access | `server/guest-access.ts` | 26 |
 | Who is where: each person's open page, kept a minute, sent to the workspace | `server/presence.ts` | 27 |
 | Notion AI: a local Ollama model, or what plain text allows | `server/ai.ts` | 30 |
+| The AI's answer streamed as it is written: the route, its frames, the client | `server/ai-stream.ts`, `src/persistence/ai-stream.schema.ts`, `src/persistence/ai-client.ts` | 30 |
 | AI autofill: a property of every row filled from its page, sent as the server's transaction | `server/ai-fill.ts` | 30 |
 | A server on an in-memory database for tests | `server/test-context.ts` | 24 |
 | The root render: the sign-in page or the app | `src/app/root-render.ts` | 23 |

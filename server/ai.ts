@@ -24,7 +24,7 @@ const askSchema = v.object({
   text: v.pipe(v.string(), v.maxLength(20_000)),
 });
 
-const INSTRUCTIONS: Readonly<Record<Action, string>> = {
+export const INSTRUCTIONS: Readonly<Record<Action, string>> = {
   ask: "Answer this request. Answer with the text to put in the page only.",
   improve: "Improve the writing of this text. Answer with the new text only.",
   fix: "Fix the spelling and grammar of this text. Answer with the fixed text only.",
@@ -40,8 +40,8 @@ const INSTRUCTIONS: Readonly<Record<Action, string>> = {
   continue: "Continue writing this text, in the same voice.",
 };
 
-const MODEL = process.env.PAGECRAFT_AI_MODEL ?? "llama3.2";
-const OLLAMA = "http://127.0.0.1:11434/api/generate";
+export const MODEL = process.env.PAGECRAFT_AI_MODEL ?? "llama3.2";
+export const OLLAMA = "http://127.0.0.1:11434/api/generate";
 
 async function askOllama(
   action: Action,

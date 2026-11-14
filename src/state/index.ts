@@ -188,6 +188,7 @@ export {
   aiCommands,
   answerAi,
   askAi,
+  answerAiPart,
   discardAi,
   sendChat,
   type AiAction,

@@ -18,9 +18,12 @@ export interface ApiRequest {
 }
 
 // A response that stays open and sends events (Server-Sent Events): the
-// route sends, and is told when the client leaves.
+// route sends, may end it, and is told when the client leaves.
 export interface EventStream {
-  readonly start: (send: (event: string, data: unknown) => void) => () => void;
+  readonly start: (
+    send: (event: string, data: unknown) => void,
+    end: () => void,
+  ) => () => void;
 }
 
 export interface ApiResponse {
@@ -95,9 +98,14 @@ function writeStream(response: ServerResponse, stream: EventStream): void {
   });
   const END = "\n\n";
   response.write(`: open${END}`);
-  const stop = stream.start((event, data) => {
-    response.write(`event: ${event}\ndata: ${JSON.stringify(data)}${END}`);
-  });
+  const stop = stream.start(
+    (event, data) => {
+      response.write(`event: ${event}\ndata: ${JSON.stringify(data)}${END}`);
+    },
+    () => {
+      response.end();
+    },
+  );
   response.on("close", stop);
 }
 

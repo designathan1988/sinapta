@@ -26,11 +26,21 @@ function renderMessage(message: ChatMessage): TemplateResult {
   return html`<li class="ai__message" data-from=${message.from}>${text}</li>`;
 }
 
+// The answer being written, or "Thinking…" before its first words.
+function renderPending(isThinking: boolean, answer: string) {
+  if (!isThinking) return nothing;
+  return answer === ""
+    ? html`<li class="ai__thinking">${TEXT.thinking}</li>`
+    : html`<li class="ai__message" data-from="ai" aria-busy="true">
+        ${answer}
+      </li>`;
+}
+
 export function renderAiChat(
   state: AppState,
   dispatch: Dispatch,
 ): TemplateResult | typeof nothing {
-  const { chat, status, blockId } = state.persistence.ai;
+  const { chat, status, blockId, answer } = state.persistence.ai;
   const isThinking = status === "thinking" && blockId === null;
   return html`<form
     class="ai ai__chat"
@@ -50,8 +60,7 @@ export function renderAiChat(
     <p class="ai__title">${TEXT.chat}</p>
     <ul class="ai__messages" aria-live="polite">
       ${chat.length === 0 ? html`<li class="ai__hint">${TEXT.chatHint}</li>` : nothing}
-      ${chat.map(renderMessage)}
-      ${isThinking ? html`<li class="ai__thinking">${TEXT.thinking}</li>` : nothing}
+      ${chat.map(renderMessage)} ${renderPending(isThinking, answer)}
     </ul>
     <input
       class="ai__prompt"

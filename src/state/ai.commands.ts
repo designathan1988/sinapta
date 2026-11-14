@@ -87,6 +87,17 @@ export const answerAi = defineCommand<{
         }),
 });
 
+// The next words of an answer being written; the answer is complete when
+// "ai.answer" records it.
+export const answerAiPart = defineCommand<{ part: string }>({
+  type: "ai.answerPart",
+  handle: (state, { part }) => {
+    const { ai } = state.persistence;
+    if (ai.status !== "thinking") return {};
+    return withAi(state, { answer: ai.answer + part });
+  },
+});
+
 function chatAnswer(
   state: AppState,
   answer: string | null,
@@ -113,6 +124,7 @@ export const sendChat = defineCommand<{ text: string }>({
       blockId: null,
       action: "ask",
       text,
+      answer: "",
       chat: [...ai.chat, { from: "you", text }],
       requestCount: ai.requestCount + 1,
     });
@@ -129,4 +141,4 @@ export const discardAi = defineCommand<NoPayload>({
     }),
 });
 
-export const aiCommands = [askAi, answerAi, discardAi, sendChat];
+export const aiCommands = [askAi, answerAi, answerAiPart, discardAi, sendChat];
