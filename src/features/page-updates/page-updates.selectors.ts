@@ -111,12 +111,14 @@ export function selectDailyViews(
   return { days, total: views.length };
 }
 
-// Each viewer once, at their latest view, the latest first.
+// Each viewer once, at their latest view, the latest first; those who do
+// not show their view history are left out.
 export function selectViewers(
   views: readonly PageView[],
 ): { readonly viewer: string | null; readonly viewedAt: string }[] {
   const latest = new Map<string | null, string>();
-  for (const { viewer, viewedAt } of views) {
+  for (const { viewer, viewedAt, isHidden } of views) {
+    if (isHidden === true) continue;
     const seen = latest.get(viewer);
     if (seen === undefined || viewedAt > seen) latest.set(viewer, viewedAt);
   }

@@ -131,6 +131,7 @@ export {
   pageVersionCommands,
   setPageVersions,
   setPageViews,
+  setShowsHistory,
   setViewsPeriod,
   showPageUpdates,
   type PageUpdates,

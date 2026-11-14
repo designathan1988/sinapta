@@ -103,4 +103,54 @@
     flex: 1;
     font-weight: var(--font-weight-medium);
   }
+
+  /* "Show your view history": a tinted box, its choice at the end. */
+  .page-updates__history-box {
+    display: flex;
+    gap: var(--space-inline-md);
+    align-items: center;
+    margin: var(--space-inset-xs) var(--space-inset-md);
+    padding: var(--space-inset-lg);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-bg-sidebar);
+  }
+
+  .page-updates__history-title,
+  .page-updates__history-text {
+    margin: var(--space-none);
+  }
+
+  .page-updates__history-title {
+    font-weight: var(--font-weight-strong);
+  }
+
+  .page-updates__history-text {
+    margin-block-start: var(--space-stack-xxs);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+  }
+
+  .page-updates__history-choice {
+    display: inline-flex;
+    flex: none;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    padding: var(--space-inset-xxs) var(--space-inset-sm);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-app);
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: var(--color-bg-hover);
+    }
+
+    & .icon:last-child {
+      rotate: 90deg;
+    }
+  }
 }

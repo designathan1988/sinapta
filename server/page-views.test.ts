@@ -40,7 +40,7 @@ async function workspaceOfTwo() {
     ada,
   );
   const path = `/api/workspaces/${id}/pages/plan/views`;
-  return { server, path, ada, bia, eve };
+  return { server, path, ada, bia, eve, id };
 }
 
 describe("page views on the server", () => {
@@ -64,7 +64,34 @@ describe("page views on the server", () => {
         { viewedAt: "2026-11-14T10:00:00Z", viewer: "bia@pagecraft.test" },
         { viewedAt: "2026-11-14T09:00:00Z", viewer: "ada@pagecraft.test" },
       ],
+      showsHistory: true,
     });
+  });
+
+  it("counts a member who does not allow their view history, unnamed", async () => {
+    const { server, path, ada, bia, id } = await workspaceOfTwo();
+    await server.call(
+      `POST ${path}`,
+      { viewedAt: "2026-11-14T10:00:00Z" },
+      bia,
+    );
+
+    const set = await server.call(
+      `POST /api/workspaces/${id}/view-history`,
+      { allowed: false },
+      bia,
+    );
+    const byAda = await server.call(`GET ${path}`, undefined, ada);
+    const byBia = await server.call(`GET ${path}`, undefined, bia);
+
+    expect(set.status).toBe(200);
+    expect(byAda.body).toEqual({
+      views: [
+        { viewedAt: "2026-11-14T10:00:00Z", viewer: null, isHidden: true },
+      ],
+      showsHistory: true,
+    });
+    expect(field(byBia.body, "showsHistory")).toBe(false);
   });
 
   it("refuses someone outside the workspace, and a view without a time", async () => {

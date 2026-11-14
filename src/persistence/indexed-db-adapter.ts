@@ -164,7 +164,8 @@ async function listViews(pageId: string) {
   const database = await open();
   const list = await database.getAllFromIndex("pageViews", "pageId", pageId);
   database.close();
-  return list.map(({ viewedAt }) => ({ viewedAt, viewer: null }));
+  const views = list.map(({ viewedAt }) => ({ viewedAt, viewer: null }));
+  return { views, showsHistory: null };
 }
 
 async function putView(pageId: string, viewedAt: string): Promise<void> {
@@ -174,7 +175,9 @@ async function putView(pageId: string, viewedAt: string): Promise<void> {
 }
 
 export function createIndexedDbPageViews(): PageViewStorage {
-  return { listViews, putView };
+  // One person in this browser: their history is theirs alone to see.
+  const setShowsHistory = () => Promise.resolve();
+  return { listViews, putView, setShowsHistory };
 }
 
 export function createIndexedDbSnapshots(): SnapshotStorage {

@@ -13,4 +13,7 @@ export const viewBodySchema = v.object({
 export const viewRowSchema = v.object({
   viewed_at: v.string(),
   name: v.string(),
+  hidden: v.number(),
 });
+
+export const historyBodySchema = v.object({ allowed: v.boolean() });

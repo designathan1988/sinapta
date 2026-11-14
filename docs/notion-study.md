@@ -1456,7 +1456,11 @@ Groups, Notion and Pagecraft alike (Pagecraft changed to match):
     same opening within half an hour counted once. The period chip
     (`n121-period`) opens Last 7 days, Last 28 days, Last 90 days, All
     time, with no check beside the chosen one; Pagecraft has the same.
-    Not yet: the "Show your view history" setting, and suggestion runs
+    Under Viewers, "Show your view history" (`n122-view-history`): a
+    tinted box, "Page editors can see your view history for this page.",
+    and a choice Allow ✓ / Don't allow. Pagecraft has it on server
+    workspaces (migration 16): Don't allow keeps the person's views in
+    the total and takes their name off Viewers. Not yet: suggestion runs
     among the updates.
 
 ## Controls
@@ -1552,10 +1556,15 @@ against the reference on every run.
 
 2026-11-14, Notion's "Updates & analytics": the signed-in Notion window
 and the review server, 1440 × 900 (`n119-updates`, `n120-close-updates`,
-`n121-period`, `w14-updates`).
+`n121-period`, `n122-view-history`, `n123-refavorite`, `w14-updates`).
 
 - Notion: the panel opened from the page menu, both tabs read, then
   closed; nothing on the page changed.
+- An accident in `n122`: Notion's top bar had not finished loading, so
+  the page menu's fixed click landed on the star and took "Teste blocos"
+  out of Favorites. Put back at once with the star (`n123-refavorite`,
+  "Favorited", Favorites listed again). The plans now click the menu by
+  its label ("Ações" / "Actions"), never by position.
 - Finding 65 below.
 
 2026-11-14, Notion's advanced filter and code colors: the signed-in

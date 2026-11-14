@@ -3,11 +3,16 @@ import * as v from "valibot";
 
 const viewsSchema = v.object({
   views: v.array(
-    v.object({ viewedAt: v.string(), viewer: v.nullable(v.string()) }),
+    v.object({
+      viewedAt: v.string(),
+      viewer: v.nullable(v.string()),
+      isHidden: v.optional(v.boolean()),
+    }),
   ),
+  showsHistory: v.optional(v.boolean()),
 });
 
 export function readPageViews(value: unknown) {
   const parsed = v.safeParse(viewsSchema, value);
-  return parsed.success ? parsed.output.views : undefined;
+  return parsed.success ? parsed.output : undefined;
 }

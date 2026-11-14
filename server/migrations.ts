@@ -201,4 +201,11 @@ export const MIGRATIONS: readonly string[] = [
    );
    CREATE INDEX page_views_page
      ON page_views (workspace_id, page_id, viewed_at);`,
+  // 16: Notion's "Show your view history" set to Don't allow: the member's
+  // views still count, without their name.
+  `CREATE TABLE view_history_hidden (
+     workspace_id TEXT NOT NULL REFERENCES workspaces (id) ON DELETE CASCADE,
+     user_id TEXT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+     PRIMARY KEY (workspace_id, user_id)
+   );`,
 ];

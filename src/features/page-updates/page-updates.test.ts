@@ -91,7 +91,9 @@ describe("the page's analytics", () => {
   });
 
   it("name each viewer once, at their latest view", () => {
-    expect(selectViewers(views)).toEqual([
+    const hidden = { viewedAt: "2026-11-14T09:30:00.000Z", viewer: null };
+
+    expect(selectViewers([...views, { ...hidden, isHidden: true }])).toEqual([
       { viewer: "Ada", viewedAt: "2026-11-14T09:00:00.000Z" },
       { viewer: "Bia", viewedAt: "2026-11-14T08:00:00.000Z" },
     ]);

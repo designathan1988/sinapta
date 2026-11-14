@@ -22,7 +22,9 @@ describe("the Updates & analytics panel", () => {
 
     app.dispatch(showPageUpdates.create({ pageId: DOC }));
     const opened = app.store.getState().ui.pageUpdates;
-    app.dispatch(setPageViews.create({ pageId: DOC, views: [VIEW] }));
+    app.dispatch(
+      setPageViews.create({ pageId: DOC, views: [VIEW], showsHistory: true }),
+    );
     app.dispatch(showPageUpdates.create({ pageId: DOC, tab: "analytics" }));
 
     expect(opened).toEqual({ pageId: DOC, tab: "updates" });
@@ -30,6 +32,7 @@ describe("the Updates & analytics panel", () => {
       pageId: DOC,
       tab: "analytics",
       views: [VIEW],
+      showsHistory: true,
     });
   });
 
@@ -38,7 +41,11 @@ describe("the Updates & analytics panel", () => {
     app.dispatch(showPageUpdates.create({ pageId: DOC }));
 
     app.dispatch(
-      setPageViews.create({ pageId: toBlockId("other"), views: [VIEW] }),
+      setPageViews.create({
+        pageId: toBlockId("other"),
+        views: [VIEW],
+        showsHistory: null,
+      }),
     );
     const kept = app.store.getState().ui.pageUpdates;
     app.dispatch(showPageUpdates.create({ pageId: null }));

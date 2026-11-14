@@ -4,6 +4,7 @@ import {
   createTestApp,
   pageVersionCommands,
   setActivePage,
+  setShowsHistory,
   showPageUpdates,
   uiCommands,
 } from "../state/index.ts";
@@ -49,7 +50,7 @@ describe("page views", () => {
     open(DOC, 40);
     await settled();
 
-    const views = await storage.listViews(DOC);
+    const { views } = await storage.listViews(DOC);
     expect(views.map((view) => view.viewedAt)).toEqual([
       "2026-11-14T09:00:00.000Z",
       "2026-11-14T09:43:00.000Z",
@@ -69,5 +70,25 @@ describe("page views", () => {
       tab: "analytics",
       views: [{ viewedAt: "2026-11-14T09:00:00.000Z", viewer: null }],
     });
+  });
+});
+
+describe("Show your view history", () => {
+  it("is sent once when chosen in the open panel", async () => {
+    const { app, storage } = setup();
+    const sent: boolean[] = [];
+    const keep = storage.setShowsHistory.bind(storage);
+    storage.setShowsHistory = (allowed) => {
+      sent.push(allowed);
+      return keep(allowed);
+    };
+    app.dispatch(showPageUpdates.create({ pageId: DOC, tab: "analytics" }));
+    await settled();
+
+    app.dispatch(setShowsHistory.create({ allowed: false }));
+    app.dispatch(showPageUpdates.create({ pageId: DOC, tab: "updates" }));
+    await settled();
+
+    expect(sent).toEqual([false]);
   });
 });

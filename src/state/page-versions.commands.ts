@@ -14,10 +14,12 @@ export interface PageVersion {
 }
 
 // One opening of a page; the viewer's name, or null for this browser's
-// own person while no one is signed in.
+// own person while no one is signed in, or for a member who does not
+// allow their view history (isHidden): counted, not named.
 export interface PageView {
   readonly viewedAt: string;
   readonly viewer: string | null;
+  readonly isHidden?: boolean;
 }
 
 export type PageUpdatesTab = "updates" | "analytics";
@@ -31,6 +33,10 @@ export interface PageUpdates {
   readonly tab: PageUpdatesTab;
   readonly views?: readonly PageView[];
   readonly period?: ViewsPeriod;
+  // "Show your view history", as the server keeps it for this person; and
+  // the choice just made in the panel, which is sent to it.
+  readonly showsHistory?: boolean;
+  readonly historyChoice?: boolean;
 }
 
 export const setPageVersions = defineCommand<{
@@ -46,8 +52,13 @@ export const setPageVersions = defineCommand<{
   }),
 });
 
+function withoutChoice(open: PageUpdates): PageUpdates {
+  const { historyChoice: _sent, ...kept } = open;
+  return kept;
+}
+
 // Opens the panel on a tab, moves it to another, or closes it (null);
-// the views read stay while the page is the same.
+// what was read and chosen stays while the page is the same.
 export const showPageUpdates = defineCommand<{
   pageId: BlockId | null;
   tab?: PageUpdatesTab;
@@ -56,13 +67,13 @@ export const showPageUpdates = defineCommand<{
   handle(state, command) {
     const { pageUpdates: old, ...ui } = state.ui;
     if (command.pageId === null) return { ui };
-    const kept = old?.pageId === command.pageId ? old : undefined;
-    const pageUpdates: PageUpdates = {
-      pageId: command.pageId,
-      tab: command.tab ?? "updates",
-      ...(kept?.views !== undefined && { views: kept.views }),
-      ...(kept?.period !== undefined && { period: kept.period }),
-    };
+    const tab = command.tab ?? "updates";
+    // The same page keeps what was read and chosen, but not a choice
+    // still to send.
+    const pageUpdates: PageUpdates =
+      old?.pageId === command.pageId
+        ? { ...withoutChoice(old), tab }
+        : { pageId: command.pageId, tab };
     return { ui: { ...ui, pageUpdates } };
   },
 });
@@ -71,14 +82,27 @@ export const showPageUpdates = defineCommand<{
 export const setPageViews = defineCommand<{
   pageId: BlockId;
   views: readonly PageView[];
+  showsHistory: boolean | null;
 }>({
   type: "ui.setPageViews",
   handle(state, command) {
     const open = state.ui.pageUpdates;
     if (open?.pageId !== command.pageId) return {};
-    return {
-      ui: { ...state.ui, pageUpdates: { ...open, views: command.views } },
-    };
+    const { views, showsHistory } = command;
+    const read = showsHistory === null ? { views } : { views, showsHistory };
+    return { ui: { ...state.ui, pageUpdates: { ...open, ...read } } };
+  },
+});
+
+// "Show your view history": Allow or Don't allow.
+export const setShowsHistory = defineCommand<{ allowed: boolean }>({
+  type: "ui.setShowsHistory",
+  handle(state, command) {
+    const open = state.ui.pageUpdates;
+    if (open === undefined) return {};
+    const { allowed } = command;
+    const chosen = { showsHistory: allowed, historyChoice: allowed };
+    return { ui: { ...state.ui, pageUpdates: { ...open, ...chosen } } };
   },
 });
 
@@ -94,6 +118,7 @@ export const setViewsPeriod = defineCommand<{ period: ViewsPeriod }>({
 });
 
 export const pageVersionCommands = [
+  setShowsHistory,
   setViewsPeriod,
   setPageVersions,
   showPageUpdates,

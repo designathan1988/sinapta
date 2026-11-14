@@ -15,6 +15,7 @@ import {
 } from "./page-updates.selectors.ts";
 import { renderPersonMark } from "./page-updates-person.view.ts";
 import { renderPeriodButton } from "./page-updates-period.view.ts";
+import { renderHistoryBox } from "./page-updates-history.view.ts";
 
 const TEXT = COPY.pageUpdates;
 const TICKS = 5;
@@ -141,6 +142,7 @@ export function renderAnalytics(
     </div>
     ${renderChart(days)}
     <h3 class="page-updates__heading">${TEXT.viewers}</h3>
+    ${renderHistoryBox(state, dispatch)}
     ${
       views.length === 0
         ? html`<p class="page-updates__empty">${TEXT.noViews}</p>`
