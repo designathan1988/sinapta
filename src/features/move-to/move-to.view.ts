@@ -1,5 +1,5 @@
 import "./move-to.css";
-import { html, nothing, type TemplateResult } from "lit-html";
+import { html, type TemplateResult } from "lit-html";
 import {
   movePage,
   PAGE_TYPE,
@@ -19,6 +19,10 @@ import { COPY } from "../../ui/copy.ts";
 import { renderDialog } from "../../ui/dialog/index.ts";
 import { moveBlocksToPage, selectPageIdOf } from "../editor/index.ts";
 import { MOVE_TO_OVERLAY_KIND } from "../page-menu/index.ts";
+import {
+  MOVE_TO_PLACE_PANEL,
+  renderMovePopover,
+} from "./move-to-popover.view.ts";
 import { selectPageRows, selectTreeRows } from "../sidebar/index.ts";
 import { selectTeamspaces } from "../../blocks/teamspace/index.ts";
 
@@ -76,60 +80,59 @@ function moveCommand(
   return movePage.create({ pageId: movedId, parentId, index });
 }
 
-function renderOption(label: string, onChoose: () => void): TemplateResult {
+export interface MoveEntry {
+  readonly label: string;
+  readonly onChoose: () => void;
+}
+
+export function renderOption(entry: MoveEntry): TemplateResult {
   return html`<li>
-    <button type="button" class="move-to__option" @click=${onChoose}>
-      ${label}
+    <button type="button" class="move-to__option" @click=${entry.onChoose}>
+      ${entry.label}
     </button>
   </li>`;
 }
 
-// The teamspaces a page may go into, as Notion's Move to lists them.
-function renderTeamspaces(
-  state: AppState,
-  moveTo: (parentId: BlockId) => void,
-): TemplateResult[] {
-  return selectTeamspaces(state).map((teamspace) =>
-    renderOption(teamspace.props.name, () => {
-      moveTo(teamspace.id);
-    }),
-  );
-}
-
-// A single-pointer and keyboard alternative to dragging a page elsewhere.
-export function renderMoveTo(
-  state: AppState,
-  dispatch: Dispatch,
-): TemplateResult {
+// Where the moved page or block may go: the top level and the teamspaces
+// for a page, then every page it may go into, by its path.
+function selectEntries(state: AppState, dispatch: Dispatch): MoveEntry[] {
   const movedId = parseBlockId(state.ui.overlay?.anchorId ?? "");
-  const isPage = selectPage(state, movedId ?? null) !== undefined;
-  const moveTo = (parentId: BlockId | null): void => {
-    if (movedId === undefined) return;
+  if (movedId === undefined) return [];
+  const isPage = selectPage(state, movedId) !== undefined;
+  const moveTo = (parentId: BlockId | null) => () => {
     dispatch(moveCommand(state, movedId, parentId));
     dispatch(closeOverlay.create({}));
     if (!isPage) announce(COPY.blockMenu.movedToPage);
   };
-  const destinations =
-    movedId === undefined ? [] : selectDestinations(state, movedId);
-  const options = destinations.map((page) => {
-    const path = selectBreadcrumbs(state, page.id).map(titleOf).join(" / ");
-    return renderOption(path, () => {
-      moveTo(page.id);
-    });
-  });
-  // A page may become a top-level page or go into a teamspace; a block
-  // always needs a page.
-  const topLevel = isPage
-    ? renderOption(COPY.moveTo.topLevel, () => {
-        moveTo(null);
-      })
-    : nothing;
-  const teamspaces = isPage ? renderTeamspaces(state, moveTo) : [];
+  const pages = selectDestinations(state, movedId).map((page) => ({
+    label: selectBreadcrumbs(state, page.id).map(titleOf).join(" / "),
+    onChoose: moveTo(page.id),
+  }));
+  if (!isPage) return pages;
+  const teamspaces = selectTeamspaces(state).map((teamspace) => ({
+    label: teamspace.props.name,
+    onChoose: moveTo(teamspace.id),
+  }));
+  const top = { label: COPY.moveTo.topLevel, onChoose: moveTo(null) };
+  return [top, ...teamspaces, ...pages];
+}
+
+// A single-pointer and keyboard alternative to dragging a page elsewhere:
+// a dialog, or Notion's popover with a search under the place in the top
+// bar that opened it.
+export function renderMoveTo(
+  state: AppState,
+  dispatch: Dispatch,
+): TemplateResult {
+  const entries = selectEntries(state, dispatch);
+  if (state.ui.overlay?.panel === MOVE_TO_PLACE_PANEL) {
+    return renderMovePopover(state, dispatch, entries);
+  }
   return renderDialog({
     title: COPY.moveTo.title,
     closeLabel: COPY.moveTo.close,
     content: html`<ul class="move-to__list">
-      ${topLevel}${teamspaces}${options}
+      ${entries.map(renderOption)}
     </ul>`,
     onClose: () => dispatch(closeOverlay.create({})),
   });

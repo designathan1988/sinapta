@@ -29,3 +29,44 @@
     }
   }
 }
+
+@layer features {
+  /* Notion's "Move page to…" under the top bar's place: a search field,
+     "Suggested", then the places, scrolling within the panel. */
+  .move-to__popover {
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    gap: var(--space-stack-xs);
+    inline-size: var(--size-menu-move);
+    max-block-size: var(--size-menu-move-height);
+  }
+
+  .move-to__popover .move-to__option {
+    min-block-size: var(--size-menu-row);
+  }
+
+  .move-to__search {
+    inline-size: 100%;
+    min-block-size: var(--size-control-sm);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-field);
+    background-color: var(--color-bg-field);
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+  }
+
+  .move-to__heading {
+    margin: var(--space-none);
+    padding-inline: var(--space-inset-sm);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .move-to__none {
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    color: var(--color-text-secondary);
+  }
+}

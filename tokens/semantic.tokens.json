@@ -709,6 +709,14 @@
       "row": {
         "$description": "A menu row, as tall as Notion's.",
         "$value": "{base.size.7}"
+      },
+      "move": {
+        "$description": "Notion's Move page to: 330 px wide (n92-private-label).",
+        "$value": "{base.size.20x625}"
+      },
+      "moveHeight": {
+        "$description": "Notion's Move page to: at most 440 px tall (n92-private-label).",
+        "$value": "{base.size.27x5}"
       }
     },
     "dialog": {

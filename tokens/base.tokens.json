@@ -2160,6 +2160,18 @@
           "unit": "rem"
         }
       },
+      "20x625": {
+        "$value": {
+          "value": 20.625,
+          "unit": "rem"
+        }
+      },
+      "27x5": {
+        "$value": {
+          "value": 27.5,
+          "unit": "rem"
+        }
+      },
       "29x375": {
         "$value": {
           "value": 29.375,

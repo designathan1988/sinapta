@@ -314,6 +314,8 @@
     --base-size-16x875: 16.875rem;
     --base-size-2x75: 2.75rem;
     --base-size-18x125: 18.125rem;
+    --base-size-20x625: 20.625rem;
+    --base-size-27x5: 27.5rem;
     --base-size-29x375: 29.375rem;
     --base-size-28x3125: 28.3125rem;
     --base-size-12x5: 12.5rem;
@@ -570,6 +572,8 @@
     --size-menu-tile: var(--base-size-3x5625);
     --size-menu-narrow: var(--base-size-12x5);
     --size-menu-row: var(--base-size-7);
+    --size-menu-move: var(--base-size-20x625);
+    --size-menu-move-height: var(--base-size-27x5);
     --size-dialog-width: var(--base-size-32);
     --size-dialog-wide: var(--base-size-36);
     --size-sign-in-column: var(--base-size-22x5);

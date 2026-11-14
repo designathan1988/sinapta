@@ -13,6 +13,7 @@ import {
   DATE_FORMAT_TEXT,
   DATE_TEXT,
   EDITOR_TEXT,
+  MOVE_TEXT,
   ONBOARDING_TEXT,
   PAGE_TEXT,
   PROPERTY_TEXT,
@@ -51,6 +52,7 @@ export const COPY = {
   ai: AI_TEXT.ai,
   verify: VERIFY_TEXT.verify,
   teamspace: TEAMSPACE_TEXT.teamspace,
+  moveTo: MOVE_TEXT.moveTo,
 } as const;
 
 export { pluralize } from "./copy/index.ts";

@@ -75,14 +75,6 @@ export const WORKSPACE_TEXT = {
     unlock: "Unlock",
     refused: "This is locked. Unlock it to make changes.",
   },
-  moveTo: {
-    action: "Move to",
-    title: "Move to",
-    close: "Close",
-    topLevel: "Top level",
-    moved: "Page moved.",
-    notMoved: "The page cannot move further that way.",
-  },
   menu: {
     back: "Back",
     close: "Close",

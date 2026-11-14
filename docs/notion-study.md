@@ -1450,7 +1450,9 @@ board measured in Notion (item 46).
   "🔒 Particular ⌄" (`n92-private-label`: 14 px, rgb(161, 158, 153),
   radius 6, opening "Move page to…"): Private or Shared after the title,
   a teamspace before the path, each opening Move to (`p65-place`).
-  Notion's Move to is a popover with a search under the control;
-  Pagecraft's is still a dialog.
+  Opened from the place, Move to is Notion's popover too, 330 × 440 at
+  most, its search field focused, "Suggested", then the places that
+  match what is typed (`p66-move-popover`); from the page menu it stays
+  a dialog. Left: each place's icon and chevron, the workspace at its foot.
 - Notion's view settings rows 8 px from the panel's edge against
   Pagecraft's 4 px on every menu (item 45).
