@@ -85,7 +85,7 @@ version 3 scope of ADR-0013 and the plan
 | Callout icon and color; image width, alignment, full screen | Done | `callout.test.ts`, `src/blocks/image/image*.test.ts` |
 | Nested numbered list styles | Done | `numbered-list.test.ts` |
 | Word and character count of the page | Done | `src/features/page-info/page-info.test.ts` |
-| Word count of a block selection | n/a | Notion shows none (finding 53, `n99-home-customize`) |
+| Word count of a block selection | n/a | Notion shows none: blocks selected (finding 53, `n99-home-customize`) or text highlighted (finding 55, `n103-selection-words`) leave the page menu's foot on the page's total, as Pagecraft's |
 
 ## S2 §4.3: blocks
 
@@ -140,7 +140,7 @@ Paths: `blk/` is `src/blocks/`, `db/` is `src/features/database/`.
 | --- | --- | --- |
 | Search on Ctrl+K and Ctrl+P, recent pages, filters | Done | `shortcut-registry.test.ts`, `command-palette.test.ts`, `search-filters.test.ts` |
 | Template gallery | Done | `src/features/templates/template*.test.ts` |
-| Save a page as a template | n/a | Notion has no page "Save as template" (plan Task 17.2); database row templates: `src/features/database/template*.test.ts` |
+| Save a page as a template | Done | Page menu "More › Save as template", the gallery's "Your templates": `src/features/templates/own-template.test.ts`; photo `p92-save-template` (finding 56); database row templates: `src/features/database/template*.test.ts` |
 | Page history with preview, restore and who wrote each version | Done | `src/features/page-history/page-history*.test.ts` |
 | Comments on a page and on text, resolve; Ctrl+Shift+M | Done | `comment.test.ts`, `comments-view.test.ts`, `shortcut-registry.test.ts` |
 | Page notification settings: the Discussions bell and Get notified | Done | `src/features/inbox/comment-notices.test.ts`, `page-menu-view.test.ts`; photos `n102-bell`, `p89-bell` |
@@ -174,6 +174,8 @@ Paths: `blk/` is `src/blocks/`, `db/` is `src/features/database/`.
 | Map view | Done | `layouts/map/map.test.ts`; photos `p44-map`, `p58-map-move` |
 | AI: Ask AI, Space prompt, streaming, autofill, chat | Done | `server/ai.test.ts`, `ai-stream.test.ts`, `ai-fill.test.ts`, `src/persistence/ai-client.test.ts`; photos `p43-ai`, `p49`–`p51`, `p60-ai-stream`, `p86-start` |
 | Integrations and the public API | Done | `server/public-api.test.ts`; photo `p74-integrations` |
+| Notion's app connections (Slack, Google Drive, GitHub, Jira, Figma, Asana) | Shown, not available | Settings › Connections › "Connect apps", each "Connect" disabled with "Needs Notion's servers": they run on Notion's servers, which a local server cannot reach; `src/features/integrations/third-party-view.test.ts`; photo `p93-plans-apps` |
+| Plans and Upgrade | Shown, not available | Workspace menu "Upgrade" opens Settings › Plans: "Free, on your own server"; Upgrade is disabled, as payment is Notion's own service; `src/features/settings/settings-plans-view.test.ts`; photo `p93-plans-apps` |
 | Link previews from a server | Done | `server/link-preview.test.ts`, `src/state/link-preview.test.ts`; photo `p73-bookmark` |
 | AI Meeting Notes with transcription from the microphone | Done | `transcriber.test.ts`, `recorder-listener.test.ts`, `src/persistence/meeting-client.test.ts`, `server/transcription.test.ts`; photo `p87-meeting-mic`: Chrome's microphone played a spoken WAV (made with Windows' speech synthesizer), the app recorded it in 6-second pieces, the server's local Whisper model (`Xenova/whisper-base.en`, Transformers.js) wrote the words, and the AI summed them up. The small model mishears some words of a synthetic voice ("lunch" for "launch") |
 

@@ -1326,6 +1326,17 @@ items above, found while photographing them:
     Templates opens the gallery, and "…" lists Board, Timeline,
     Calendar, List, Gallery, Chart, Feed and Map. Notion's row sits at
     the window's foot; Pagecraft's under the page's first line.
+55. **n/a** [`n103-selection-words`; Pagecraft `p92-save-template`]
+    With "Heading two" highlighted (Home, Shift+End), Notion's page menu
+    foot still reads the page's total, "23 palavras"; no count of the
+    selection shows anywhere. Pagecraft's foot reads the page's words and
+    characters the same way, so a selection count stays out.
+56. **done** [Pagecraft `p92-save-template`] "Save as template" sits in
+    the page menu's "More", beside Export; the page joins the template
+    gallery under "Your templates" (names in the same column as the
+    built-in ones), its preview shows the page's lines, and "Use this
+    template" makes a top-level copy, opened, that is not itself a
+    template. The row reads "Remove from templates" once saved.
 
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,

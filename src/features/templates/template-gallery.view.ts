@@ -18,6 +18,12 @@ import {
   type PageTemplate,
 } from "./template-gallery.ts";
 import { useTemplate } from "./template.commands.ts";
+import {
+  renderOwnItems,
+  renderOwnPreview,
+  selectOwnTemplates,
+} from "./own-templates.view.ts";
+import type { PageBlock } from "../../blocks/page/index.ts";
 
 export const TEMPLATE_GALLERY_OVERLAY = "template-gallery";
 
@@ -97,8 +103,12 @@ interface ItemPlace {
 }
 
 // The arrow keys, Home and End move through the list, as Notion's.
-function nextIndex(key: string, activeIndex: number): number | undefined {
-  const last = PAGE_TEMPLATES.length - 1;
+function nextIndex(
+  key: string,
+  activeIndex: number,
+  count: number,
+): number | undefined {
+  const last = count - 1;
   const moves: Record<string, number> = {
     ArrowDown: Math.min(activeIndex + 1, last),
     ArrowUp: Math.max(activeIndex - 1, 0),
@@ -108,13 +118,14 @@ function nextIndex(key: string, activeIndex: number): number | undefined {
   return moves[key];
 }
 
-function renderList(activeIndex: number, dispatch: Dispatch) {
-  const choose = (index: number): void => {
-    const overlay = { kind: TEMPLATE_GALLERY_OVERLAY, activeIndex: index };
-    dispatch(openOverlay.create({ overlay }));
-  };
-  const onKeyDown = (event: KeyboardEvent): void => {
-    const next = nextIndex(event.key, activeIndex);
+// The list's keys: the next template chosen, and focused.
+function listKeys(
+  activeIndex: number,
+  count: number,
+  choose: (index: number) => void,
+) {
+  return (event: KeyboardEvent): void => {
+    const next = nextIndex(event.key, activeIndex, count);
     if (next === undefined) return;
     event.preventDefault();
     choose(next);
@@ -124,6 +135,19 @@ function renderList(activeIndex: number, dispatch: Dispatch) {
         .querySelector<HTMLElement>(`[data-index="${String(next)}"]`)
         ?.focus();
   };
+}
+
+function renderList(
+  activeIndex: number,
+  own: readonly PageBlock[],
+  dispatch: Dispatch,
+) {
+  const choose = (index: number): void => {
+    const overlay = { kind: TEMPLATE_GALLERY_OVERLAY, activeIndex: index };
+    dispatch(openOverlay.create({ overlay }));
+  };
+  const count = PAGE_TEMPLATES.length + own.length;
+  const onKeyDown = listKeys(activeIndex, count, choose);
   return html`<div
     class="template-gallery__list"
     role="group"
@@ -145,26 +169,45 @@ function renderList(activeIndex: number, dispatch: Dispatch) {
           </ul>
         </section>`,
     )}
+    ${renderOwnItems(own, { first: PAGE_TEMPLATES.length, activeIndex, choose })}
   </div>`;
+}
+
+function chosenPreview(
+  state: AppState,
+  picked: {
+    readonly chosen: PageTemplate | undefined;
+    readonly ownChosen: PageBlock | undefined;
+  },
+  dispatch: Dispatch,
+) {
+  if (picked.chosen !== undefined)
+    return renderPreview(picked.chosen, dispatch);
+  if (picked.ownChosen !== undefined) {
+    return renderOwnPreview(state, picked.ownChosen, dispatch);
+  }
+  return nothing;
 }
 
 export function renderTemplateGallery(
   state: AppState,
   dispatch: Dispatch,
 ): TemplateResult {
+  const own = selectOwnTemplates(state);
   const activeIndex = Math.min(
     state.ui.overlay?.activeIndex ?? 0,
-    PAGE_TEMPLATES.length - 1,
+    PAGE_TEMPLATES.length + own.length - 1,
   );
   const chosen = PAGE_TEMPLATES[activeIndex];
+  const ownChosen = own[activeIndex - PAGE_TEMPLATES.length];
   return renderDialog({
     title: TEXT.title,
     closeLabel: TEXT.close,
     variant: "search",
     content: html`<div class="template-gallery">
       <h2 class="template-gallery__heading">${TEXT.title}</h2>
-      ${renderList(activeIndex, dispatch)}
-      ${chosen === undefined ? nothing : renderPreview(chosen, dispatch)}
+      ${renderList(activeIndex, own, dispatch)}
+      ${chosenPreview(state, { chosen, ownChosen }, dispatch)}
     </div>`,
     onClose: () => dispatch(closeOverlay.create({})),
   });

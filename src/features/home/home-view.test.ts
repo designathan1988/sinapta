@@ -67,3 +67,34 @@ describe("renderHome", () => {
     expect(rendered([]).host.textContent).toContain("No pages visited yet");
   });
 });
+
+describe("Home's favorites", () => {
+  it("shows the favorite pages as cards, and nothing when there are none", () => {
+    const props = {
+      title: [{ text: "Starred" }],
+      icon: null,
+      isTrashed: false,
+    };
+    const initial = createInitialState();
+    const withFavorite = {
+      ...initial,
+      workspace: buildWorkspace([
+        { id: "s", props: { ...props, isFavorite: true } },
+        {
+          id: "o",
+          props: { ...props, title: [{ text: "Other" }], isFavorite: false },
+        },
+      ]),
+    };
+    const host = document.createElement("div");
+    render(
+      renderHome(withFavorite, () => ({ ok: true })),
+      host,
+    );
+
+    const section = host.querySelector("[aria-labelledby=home-favorites]");
+    expect(section?.textContent).toContain("Starred");
+    expect(section?.textContent).not.toContain("Other");
+    expect(rendered([]).host.querySelector("#home-favorites")).toBeNull();
+  });
+});

@@ -45,6 +45,7 @@ describe("settings, as Notion's", () => {
       "Teamspaces",
       "Connections",
       "Import and export",
+      "Plans",
     ]);
     expect(sections[1]?.getAttribute("aria-current")).toBe("page");
     expect(host.querySelector(".settings__title")?.textContent.trim()).toBe(

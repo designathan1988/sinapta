@@ -64,6 +64,15 @@
     }
   }
 
+  /* An emoji or a drawn icon: the same column, so the names line up. */
+  .template-gallery__item-icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    inline-size: var(--size-icon-action);
+    block-size: var(--size-icon-action);
+  }
+
   .template-gallery__item-text {
     display: grid;
     gap: var(--space-stack-xxs);

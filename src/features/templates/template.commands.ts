@@ -3,6 +3,7 @@
 import { listOf, siblingIds, type Operation } from "../../model/index.ts";
 import { defineCommand } from "../../state/index.ts";
 import { countSeedBlocks, placeSeed } from "../onboarding/index.ts";
+import { useOwnTemplate } from "./own-template.commands.ts";
 import { templateNamed } from "./template-gallery.ts";
 
 export const useTemplate = defineCommand<{ templateId: string }>({
@@ -38,4 +39,4 @@ export const useTemplate = defineCommand<{ templateId: string }>({
   },
 });
 
-export const templateCommands = [useTemplate];
+export const templateCommands = [useTemplate, useOwnTemplate];

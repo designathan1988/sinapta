@@ -116,6 +116,8 @@ export const pagePropsSchema = v.object({
   // Locked: its text, blocks and settings stay as they are; a locked
   // database keeps its properties and views, its rows free.
   isLocked: v.optional(v.boolean()),
+  // Saved as a template: listed in the gallery's "Your templates".
+  isTemplate: v.optional(v.boolean()),
   // When it went to the trash, which empties itself of pages kept there
   // over 30 days, as Notion's does.
   trashedAt: v.optional(v.string()),

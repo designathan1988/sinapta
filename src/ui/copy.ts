@@ -56,6 +56,8 @@ export const COPY = {
   teamspace: TEAMSPACE_TEXT.teamspace,
   moveTo: MOVE_TEXT.moveTo,
   integration: INTEGRATION_TEXT.integration,
+  thirdParty: INTEGRATION_TEXT.thirdParty,
+  plans: INTEGRATION_TEXT.plans,
   meeting: MEETING_TEXT.meeting,
 } as const;
 

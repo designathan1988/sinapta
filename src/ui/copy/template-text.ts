@@ -8,6 +8,11 @@ export const TEMPLATE_TEXT = {
     list: "Templates",
     preview: "Preview",
     categories: { work: "Work", personal: "Personal" },
+    yours: "Your templates",
+    yoursDescription: "Saved from a page of this workspace.",
+    save: "Save as template",
+    unsave: "Remove from templates",
+    saved: "The page is in Templates, under Your templates.",
     used: "A new page was made from the template.",
     meetingNotes: {
       name: "Meeting notes",

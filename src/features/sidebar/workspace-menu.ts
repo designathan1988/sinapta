@@ -63,6 +63,35 @@ function workspaceItems(state: AppState, dispatch: Dispatch): MenuEntry[] {
   ];
 }
 
+// The workspace with its members, which opens its settings, and Upgrade.
+function headEntries(open: WorkspaceSummary, dispatch: Dispatch): MenuEntry[] {
+  return [
+    {
+      label: open.name,
+      description: membersOf(open),
+      // As Notion's, the workspace opens its settings.
+      onSelect: () =>
+        dispatch(
+          openOverlay.create({
+            overlay: { kind: SETTINGS_OVERLAY_KIND },
+          }),
+        ),
+    },
+    // Notion's "Upgrade": its plans, which say why none is sold here.
+    {
+      label: COPY.plans.upgrade,
+      icon: "star",
+      onSelect: () =>
+        dispatch(
+          openOverlay.create({
+            overlay: { kind: SETTINGS_OVERLAY_KIND, anchorId: "plans" },
+          }),
+        ),
+    },
+    { kind: "divider" },
+  ];
+}
+
 // The menu's rows: the base items alone while no one is signed in.
 export function workspaceMenuEntries(
   state: AppState,
@@ -72,23 +101,7 @@ export function workspaceMenuEntries(
   const { user } = state.persistence.account;
   const open = selectOpenWorkspace(state);
   if (user === null) return base;
-  const head: MenuEntry[] =
-    open === undefined
-      ? []
-      : [
-          {
-            label: open.name,
-            description: membersOf(open),
-            // As Notion's, the workspace opens its settings.
-            onSelect: () =>
-              dispatch(
-                openOverlay.create({
-                  overlay: { kind: SETTINGS_OVERLAY_KIND },
-                }),
-              ),
-          },
-          { kind: "divider" },
-        ];
+  const head = open === undefined ? [] : headEntries(open, dispatch);
   return [
     ...head,
     ...base,

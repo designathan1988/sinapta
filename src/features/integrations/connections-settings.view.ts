@@ -1,6 +1,7 @@
 // Settings › Connections, as Notion's (ADR-0013): make an internal
 // integration and copy its secret once, see the pages connected to each,
 // and remove one.
+import { renderThirdPartyApps } from "./third-party.view.ts";
 import "./integrations.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import {
@@ -93,7 +94,8 @@ export function renderConnections(
   dispatch: Dispatch,
 ): TemplateResult {
   if (state.persistence.account.user === null) {
-    return html`<p class="settings__hint">${TEXT.signedOut}</p>`;
+    return html`<p class="settings__hint">${TEXT.signedOut}</p>
+      ${renderThirdPartyApps()}`;
   }
   const { integrations } = state.persistence.sync;
   return html`<p class="settings__hint">${TEXT.lead}</p>
@@ -115,5 +117,6 @@ export function renderConnections(
             : integrations.map((each) => renderRow(each, dispatch))
         }
       </tbody>
-    </table>`;
+    </table>
+    ${renderThirdPartyApps()}`;
 }

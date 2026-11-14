@@ -1,14 +1,13 @@
 // The open page's menu, in the groups Notion's has today: copy the link
 // or the contents, duplicate and move; the page's versions; "Appearance
-// and layout" beside it; the lock and the trash; and "More", which holds
-// the page's export. Rows of Notion's that need a server or other people
-// (analytics, AI, suggested edits, notifications, wiki, connections) are
-// left out.
+// and layout" beside it; "Get notified"; verify, lock and trash; the
+// connections; and "More", which holds the export and "Save as template".
 import { nothing } from "lit-html";
 import {
   DATABASE_TYPE,
   PAGE_TYPE,
   setPageLocked,
+  setPageTemplate,
   setPageVerified,
   trashPage,
   type PageBlock,
@@ -134,8 +133,28 @@ function appearanceItem(page: PageBlock, dispatch: Dispatch): MenuItem[] {
   ];
 }
 
-// "More": the page as files.
-function moreItem(state: AppState, page: PageBlock): MenuItem {
+// "Save as template": the page joins the gallery's "Your templates";
+// once there, the row takes it out again.
+function templateItem(page: PageBlock, dispatch: Dispatch): MenuItem {
+  const isTemplate = page.props.isTemplate === true;
+  return {
+    label: isTemplate ? COPY.templates.unsave : COPY.templates.save,
+    icon: "templates",
+    onSelect: () => {
+      dispatch(
+        setPageTemplate.create({ pageId: page.id, isTemplate: !isTemplate }),
+      );
+      if (!isTemplate) announce(COPY.templates.saved);
+    },
+  };
+}
+
+// "More": the page as files, and as a template.
+function moreItem(
+  state: AppState,
+  page: PageBlock,
+  dispatch: Dispatch,
+): MenuItem {
   return {
     label: TEXT.more,
     icon: "more",
@@ -155,6 +174,7 @@ function moreItem(state: AppState, page: PageBlock): MenuItem {
               }),
             },
           },
+          templateItem(page, dispatch),
         ],
       }),
     },
@@ -196,6 +216,6 @@ export function pageMenuEntries(
       trashItem(page, dispatch),
     ],
     connectionsItem(state, page.id, dispatch),
-    [moreItem(state, page)],
+    [moreItem(state, page, dispatch)],
   ]);
 }

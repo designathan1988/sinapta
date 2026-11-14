@@ -1,8 +1,10 @@
-// Home: a greeting, the pages visited lately, and the dates coming up.
+// Home: a greeting, the pages visited lately, the favorites, and the
+// dates coming up.
 import "./home.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import {
   COVER_PRESETS,
+  selectFavoritePages,
   selectPageTitle,
   type PageBlock,
 } from "../../blocks/page/index.ts";
@@ -86,6 +88,18 @@ function renderDate(item: UpcomingDate, dispatch: Dispatch): TemplateResult {
   </li>`;
 }
 
+// The favorites, as cards; nothing while there are none.
+function renderFavorites(state: AppState, dispatch: Dispatch) {
+  const favorites = selectFavoritePages(state).slice(0, RECENT_SHOWN);
+  if (favorites.length === 0) return nothing;
+  return html`<section class="home__section" aria-labelledby="home-favorites">
+    <h2 class="home__heading" id="home-favorites">${TEXT.favorites}</h2>
+    <ul class="home__cards">
+      ${favorites.map((page) => renderCard(page, state, dispatch))}
+    </ul>
+  </section>`;
+}
+
 export function renderHome(
   state: AppState,
   dispatch: Dispatch,
@@ -106,6 +120,7 @@ export function renderHome(
             </ul>`
       }
     </section>
+    ${renderFavorites(state, dispatch)}
     <section class="home__section" aria-labelledby="home-upcoming">
       <h2 class="home__heading" id="home-upcoming">${TEXT.upcoming}</h2>
       ${

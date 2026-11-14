@@ -24,6 +24,7 @@ import { renderConnections } from "../integrations/index.ts";
 import { renderTeamspaceSettings } from "../teamspaces/index.ts";
 import { renderImportRow } from "./settings-import.view.ts";
 import { renderNotifications } from "./settings-notifications.view.ts";
+import { renderPlans } from "./settings-plans.view.ts";
 import { renderRow } from "./settings-row.view.ts";
 import {
   renderAccount,
@@ -50,6 +51,7 @@ const SECTIONS: readonly {
   { id: "teamspaces", icon: "building", group: "workspace" },
   { id: "connections", icon: "link", group: "workspace" },
   { id: "data", icon: "download", group: "workspace" },
+  { id: "plans", icon: "star", group: "workspace" },
 ];
 
 const RENDERERS: Record<
@@ -64,6 +66,7 @@ const RENDERERS: Record<
   teamspaces: renderTeamspaceSettings,
   connections: renderConnections,
   data: (state, dispatch) => renderData(state, dispatch),
+  plans: () => renderPlans(),
 };
 
 function isSection(value: string | undefined): value is Section {

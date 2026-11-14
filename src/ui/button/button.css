@@ -49,6 +49,17 @@
       color: var(--color-text-primary);
     }
 
+    /* An offer that cannot be taken here: tertiary text, no pointer. */
+    &:disabled {
+      background-color: transparent;
+      color: var(--color-text-tertiary);
+      cursor: default;
+    }
+
+    &[data-variant="primary"]:disabled {
+      background-color: var(--color-bg-hover);
+    }
+
     @media (prefers-reduced-motion: reduce) {
       transition: none;
     }

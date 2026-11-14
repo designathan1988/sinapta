@@ -68,3 +68,7 @@ export {
   selectPageTitle,
   selectTrashedPages,
 } from "./page.selectors.ts";
+export {
+  pageTemplateCommands,
+  setPageTemplate,
+} from "./page-template.commands.ts";

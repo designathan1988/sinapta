@@ -85,4 +85,11 @@
     font-size: var(--font-size-sm);
     cursor: pointer;
   }
+
+  /* "Connect apps": a plain list of settings rows. */
+  .integrations__apps {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
 }

@@ -115,6 +115,7 @@ export const PAGE_TEXT = {
     evening: "Good evening",
     recent: "Recently visited",
     noRecent: "No pages visited yet. Open a page and it shows here.",
+    favorites: "Favorites",
     upcoming: "Upcoming",
     noUpcoming: "Nothing dated in the next 7 days.",
   },

@@ -176,6 +176,9 @@ owner listed here exists.
 | Backlinks: the pages that link to a page, and showing them under its title | `src/features/backlinks/` | 17 |
 | Seeds: block trees that become pages with new ids | `src/features/onboarding/seed.ts` | 17 |
 | The template gallery and its built-in page templates | `src/features/templates/` | 17 |
+| A page saved as a template (the flag) and the gallery's "Your templates" | `src/blocks/page/page-template.commands.ts`, `src/features/templates/own-template.commands.ts`, `own-templates.view.ts` | 31 |
+| Connections' "Connect apps" (Notion's app connections, shown and not available here) | `src/features/integrations/third-party.view.ts` | 31 |
+| Settings › Plans and the workspace menu's Upgrade | `src/features/settings/settings-plans.view.ts`, `src/features/sidebar/workspace-menu.ts` | 31 |
 | Comments: discussions on a page, a block, its text or a row's property value; replies, resolving, deleting after a question | `src/features/comments/` | 17 |
 | Value discussions leaving with their property | `src/features/comments/value-discussion-tidy.ts` | 20 |
 | Keeping page versions in storage | `src/persistence/snapshot-store.ts` | 17 |
