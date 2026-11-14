@@ -88,6 +88,22 @@ function isSame(a: TextSelection | null, b: TextSelection): boolean {
   );
 }
 
+// Puts the caret in a block's text even when the document's selection is
+// already there and only the focus left, as after pressing a button.
+export function focusSelection(
+  root: ParentNode,
+  selection: TextSelection,
+): void {
+  const text = textElementFor(root, selection.blockId);
+  if (text === null) return;
+  const anchor = positionAt(text, selection.anchorOffset);
+  const focus = positionAt(text, selection.focusOffset);
+  text.focus({ preventScroll: true });
+  document
+    .getSelection()
+    ?.setBaseAndExtent(anchor.node, anchor.offset, focus.node, focus.offset);
+}
+
 // Makes the document's selection match the store's. Does nothing when it
 // already matches, so the browser's own caret movement is left alone. A
 // block that was moved in the document keeps its selection but loses

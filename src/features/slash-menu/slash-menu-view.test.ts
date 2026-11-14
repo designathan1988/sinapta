@@ -53,4 +53,19 @@ describe("renderSlashMenu", () => {
       expect.objectContaining({ type: "ui.closeOverlay" }),
     ]);
   });
+
+  it("opens a new block equation's TeX editor, as Notion's", () => {
+    const sent: Command[] = [];
+    const option = rendered("/block equation", sent).querySelector(
+      "[role=option]",
+    );
+
+    option?.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+
+    expect(sent.map((command) => command.type)).toContain("block.convert");
+    expect(sent.at(-1)).toMatchObject({
+      type: "ui.openOverlay",
+      overlay: { kind: "equation-editor" },
+    });
+  });
 });

@@ -1,9 +1,12 @@
+import { EQUATION_EDITOR, EQUATION_TYPE } from "../../blocks/equation/index.ts";
+import { afterRender } from "../../ui/focus/index.ts";
 import "./slash-menu.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import {
   closeOverlay,
   openOverlay,
+  setSelection,
   type AppState,
   type Dispatch,
 } from "../../state/index.ts";
@@ -63,6 +66,37 @@ function choose(
     const { blockType, extraProps } = item;
     const extra = extraProps && { extraProps };
     dispatch(convertBlock.create({ blockId, blockType, ...extra }));
+    followUp(blockType, blockId, dispatch);
+  }
+}
+
+// Blocks that take an address go on to it.
+const ADDRESSED = new Set([
+  "image",
+  "video",
+  "audio",
+  "file",
+  "pdf",
+  "embed",
+  "bookmark",
+]);
+
+// What a new block asks for next, as Notion's: a block equation opens its
+// TeX editor, a block that takes an address puts the caret in its field.
+function followUp(blockType: string, blockId: string, dispatch: Dispatch) {
+  if (blockType === EQUATION_TYPE) {
+    const overlay = { kind: EQUATION_EDITOR, anchorId: blockId };
+    dispatch(openOverlay.create({ overlay }));
+  } else if (ADDRESSED.has(blockType)) {
+    // The caret leaves the text, so the field keeps the focus.
+    dispatch(setSelection.create({ selection: null }));
+    afterRender(() => {
+      document
+        .querySelector<HTMLInputElement>(
+          `[data-block-id="${CSS.escape(blockId)}"] input`,
+        )
+        ?.focus();
+    });
   }
 }
 

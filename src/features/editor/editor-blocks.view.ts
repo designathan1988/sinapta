@@ -1,3 +1,5 @@
+import { focusSelection } from "../../ui/caret/index.ts";
+import { afterRender } from "../../ui/focus/index.ts";
 import "./editor-containers.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { guard } from "lit-html/directives/guard.js";
@@ -34,7 +36,6 @@ import {
   startPointerSelection,
 } from "./editor-selection.view.ts";
 import {
-  selectBlockOrder,
   selectContentBlocks,
   selectSelectedBlocks,
 } from "./editor.selectors.ts";
@@ -143,10 +144,19 @@ function setComposing(event: Event, isComposing: boolean): void {
 }
 
 // Puts the caret in the last block, or in a new paragraph after it.
+// The page's own last block, not one inside it: after a table or a toggle
+// the click adds a line to the page, as Notion's.
 export function continueWriting(pageId: BlockId, context: InputContext): void {
-  const last = selectBlockOrder(context.state, pageId).at(-1);
+  const { blocks } = context.state.workspace;
+  const lastId = blocks[pageId]?.childIds.at(-1);
+  const last = lastId === undefined ? undefined : blocks[lastId];
   if (isTextBlock(last) && textOf(last) === "") {
-    context.dispatch(setSelection.create({ selection: caretAt(last.id, 0) }));
+    const selection = caretAt(last.id, 0);
+    context.dispatch(setSelection.create({ selection }));
+    // The store may already hold this caret; the focus is on the button.
+    afterRender(() => {
+      focusSelection(document, selection);
+    });
   } else {
     context.dispatch(appendParagraph.create({ pageId }));
   }
