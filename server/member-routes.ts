@@ -1,15 +1,19 @@
-// Settings › General and People on the server: the workspace's name, its
-// members and invitations. Only the workspace's owner changes them.
+// Settings › General and People on the server: the workspace's name and
+// icon, its members and invitations, which only its owner changes; and
+// deleting or leaving it.
 import * as v from "valibot";
 import { answer, type ApiContext, type RouteTable } from "./api.ts";
 import type { ApiRequest, ApiResponse } from "./http-exchange.ts";
 import {
+  deleteWorkspace,
   invite,
+  leaveWorkspace,
   membersOf,
   removeInvite,
   removeMember,
   renameWorkspace,
   ROLES,
+  setWorkspaceIcon,
 } from "./members.ts";
 import type { WorkspaceRow } from "./rows.schema.ts";
 import { sessionUser } from "./sessions.ts";
@@ -17,6 +21,11 @@ import { membership } from "./workspaces.ts";
 
 const nameSchema = v.object({
   name: v.pipe(v.string(), v.trim(), v.minLength(1), v.maxLength(100)),
+});
+const iconSchema = v.object({
+  icon: v.nullable(
+    v.pipe(v.string(), v.trim(), v.minLength(1), v.maxLength(16)),
+  ),
 });
 const inviteSchema = v.object({
   email: v.pipe(v.string(), v.trim(), v.toLowerCase(), v.email()),
@@ -74,5 +83,30 @@ export const MEMBER_ROUTES: RouteTable = {
     const { name } = v.parse(nameSchema, request.body);
     renameWorkspace(context, workspace.id, name);
     return answer(204);
+  },
+  "POST /api/workspaces/:id/icon": (request, context) => {
+    const workspace = owned(request, context);
+    if (!isWorkspace(workspace)) return workspace;
+    const { icon } = v.parse(iconSchema, request.body);
+    setWorkspaceIcon(context, workspace.id, icon);
+    return answer(204);
+  },
+  // Only when the workspace's name is typed again, as Notion asks.
+  "POST /api/workspaces/:id/delete": (request, context) => {
+    const workspace = owned(request, context);
+    if (!isWorkspace(workspace)) return workspace;
+    const { name } = v.parse(nameSchema, request.body);
+    if (name !== workspace.name) return answer(400, { error: "wrong-name" });
+    deleteWorkspace(context, workspace.id);
+    return answer(204);
+  },
+  "POST /api/workspaces/:id/leave": (request, context) => {
+    const user = sessionUser(context, request);
+    if (user === undefined) return answer(401, { error: "signed-out" });
+    const workspace = membership(context, request.params.id ?? "", user.id);
+    if (workspace === undefined) return answer(404, { error: "not-found" });
+    return leaveWorkspace(context, workspace, user.id)
+      ? answer(204)
+      : answer(409, { error: "last-owner" });
   },
 };

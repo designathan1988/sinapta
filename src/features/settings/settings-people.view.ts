@@ -10,6 +10,7 @@ import {
 } from "../../state/index.ts";
 import { renderButton } from "../../ui/button/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { renderDangerZone } from "./settings-general.view.ts";
 import { renderRow } from "./settings-row.view.ts";
 
 const TEXT = COPY.settings;
@@ -55,7 +56,8 @@ export function renderGeneral(state: AppState, dispatch: Dispatch) {
   const name = renderNameField("settings-workspace-name", open.name, (next) =>
     ask(dispatch, { kind: "rename", name: next }),
   );
-  return renderRow(TEXT.workspaceName, TEXT.workspaceNameHint, name);
+  return html`${renderRow(TEXT.workspaceName, TEXT.workspaceNameHint, name)}
+  ${renderDangerZone(state, dispatch, open)}`;
 }
 
 function renderInvite(dispatch: Dispatch): TemplateResult {

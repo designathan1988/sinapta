@@ -1,0 +1,37 @@
+@layer features {
+  /* The workspace's icon: its emoji, or its name's first letter, on a
+     square tile that opens the emoji picker. */
+  .settings__icon {
+    display: inline-grid;
+    place-items: center;
+    inline-size: var(--size-control-md);
+    block-size: var(--size-control-md);
+    padding: var(--space-none);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-sidebar);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-lg);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
+  .settings__picker {
+    margin-block-end: var(--space-stack-sm);
+  }
+
+  /* Delete entire workspace: the name typed again, then the red button. */
+  .settings__confirm {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    margin-block-end: var(--space-stack-sm);
+
+    & .settings__field {
+      flex: 1;
+    }
+  }
+}

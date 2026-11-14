@@ -30,6 +30,7 @@ type Asked = readonly [path: string, body: unknown];
 
 // The route and body each request goes to, under the open workspace.
 function routeOf(request: PeopleRequest, base: string): Asked | undefined {
+  if (isWorkspaceRequest(request)) return workspaceRoute(request, base);
   switch (request.kind) {
     case "people":
       return [`${base}/members`, undefined];
@@ -47,8 +48,6 @@ function routeOf(request: PeopleRequest, base: string): Asked | undefined {
         `${base}/members/remove`,
         { kind: "invite", email: request.email },
       ];
-    case "rename":
-      return [`${base}/name`, { name: request.name }];
     case "profile":
       return undefined;
     case "ai-fill":
@@ -62,6 +61,38 @@ function routeOf(request: PeopleRequest, base: string): Asked | undefined {
       ];
     default:
       return sharingRoute(request, base);
+  }
+}
+
+type WorkspaceRequest = Extract<
+  PeopleRequest,
+  { kind: "rename" | "workspace-icon" | "delete-workspace" | "leave-workspace" }
+>;
+
+const WORKSPACE_KINDS: ReadonlySet<string> = new Set([
+  "rename",
+  "workspace-icon",
+  "delete-workspace",
+  "leave-workspace",
+]);
+
+function isWorkspaceRequest(
+  request: PeopleRequest,
+): request is WorkspaceRequest {
+  return WORKSPACE_KINDS.has(request.kind);
+}
+
+// Settings › General: the workspace's name and icon, deleting or leaving it.
+function workspaceRoute(request: WorkspaceRequest, base: string): Asked {
+  switch (request.kind) {
+    case "rename":
+      return [`${base}/name`, { name: request.name }];
+    case "workspace-icon":
+      return [`${base}/icon`, { icon: request.icon }];
+    case "delete-workspace":
+      return [`${base}/delete`, { name: request.name }];
+    case "leave-workspace":
+      return [`${base}/leave`, {}];
   }
 }
 
@@ -94,6 +125,15 @@ async function answerProfile(sync: Sync, name: string): Promise<void> {
   }
 }
 
+// Requests whose answer holds no people.
+const QUIET = new Set([
+  "rename",
+  "ai-fill",
+  "workspace-icon",
+  "delete-workspace",
+  "leave-workspace",
+]);
+
 // Records what the server answered a request about the workspace.
 function record(sync: Sync, request: PeopleRequest, reply: unknown): void {
   if ("pageId" in request) {
@@ -102,7 +142,7 @@ function record(sync: Sync, request: PeopleRequest, reply: unknown): void {
   } else if (request.kind === "shared") {
     const pageIds = readSharedIds(reply);
     if (pageIds !== undefined) sync.dispatch(setShared.create({ pageIds }));
-  } else if (request.kind !== "rename" && request.kind !== "ai-fill") {
+  } else if (!QUIET.has(request.kind)) {
     publishPeople(sync, reply);
   }
 }

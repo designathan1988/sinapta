@@ -19,7 +19,11 @@ import { TOOLTIP_TARGET, tooltipTitle } from "../../ui/tooltip/index.ts";
 import { TEMPLATE_GALLERY_OVERLAY } from "../templates/index.ts";
 import { TRASH_OVERLAY } from "../trash/index.ts";
 import { chooseImportFiles } from "./sidebar-import.ts";
-import { selectWorkspaceName, workspaceMenuEntries } from "./workspace-menu.ts";
+import {
+  selectWorkspaceMark,
+  selectWorkspaceName,
+  workspaceMenuEntries,
+} from "./workspace-menu.ts";
 
 export const SIDEBAR_WORKSPACE_OVERLAY = "sidebar-workspace";
 export const SIDEBAR_APPS_OVERLAY = "sidebar-apps";
@@ -73,7 +77,7 @@ export function renderSidebarFooter(
   const context = { state, dispatch };
   const name = selectWorkspaceName(state);
   const workspace = html`<span class="sidebar__mark" aria-hidden="true"
-      >${name.slice(0, 1)}</span
+      >${selectWorkspaceMark(state)}</span
     >
     <span class="sidebar__workspace-name">${name}</span>
     ${renderIcon("chevron")}`;

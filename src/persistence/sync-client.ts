@@ -21,6 +21,8 @@ import {
   isIntegrationRequest,
 } from "./integration-client.ts";
 import { answerPeople } from "./people-client.ts";
+import { afterAnswer, type AfterSteps } from "./sync-after.ts";
+import { currentRecords } from "./sync-records.ts";
 import { answerTeamspaces, isTeamspaceRequest } from "./teamspace-client.ts";
 import {
   flush,
@@ -43,14 +45,6 @@ export type { EventsLike, SyncOptions } from "./sync-session.ts";
 export interface SyncLink {
   readonly onTransaction: (transaction: Transaction, state: AppState) => void;
   readonly start: (options: SyncOptions) => void;
-}
-
-function currentRecords(workspace: Workspace) {
-  return {
-    block: (id: keyof Workspace["blocks"]) => workspace.blocks[id],
-    view: (id: keyof Workspace["views"]) => workspace.views[id],
-    settings: workspace.settings,
-  };
 }
 
 // Reads the server's workspace, replaces the browser's copy with it, then
@@ -145,6 +139,23 @@ function leave(link: Link): void {
   delete link.session;
 }
 
+function stepsOf(link: Link, sync: Sync, joined: string | null): AfterSteps {
+  const name = `${sync.store.getState().persistence.account.user?.name ?? ""}'s Pagecraft`;
+  return {
+    relist: async () =>
+      ((await publishList(sync, joined))?.workspaces.length ?? 0) > 0,
+    rejoin: () => (leave(link), join(link, sync)),
+    startEmpty: () => (
+      leave(link),
+      create(link, sync, {
+        name,
+        workspace: createEmptyWorkspace(),
+        isEmpty: true,
+      })
+    ),
+  };
+}
+
 // Joins another workspace or makes a new one, as the switcher asks; the
 // other requests go to the people client and keep the workspace open.
 function answer(link: Link, sync: Sync, request: SyncRequest): void {
@@ -166,9 +177,9 @@ function answer(link: Link, sync: Sync, request: SyncRequest): void {
     return;
   }
   if (request.kind !== "switch" && request.kind !== "create") {
-    void answerPeople(sync, request, workspaceId).then(() =>
-      request.kind === "rename" ? publishList(sync, workspaceId) : undefined,
-    );
+    void answerPeople(sync, request, workspaceId)
+      .then(() => afterAnswer(request.kind, stepsOf(link, sync, workspaceId)))
+      .catch(() => undefined);
     return;
   }
   leave(link);

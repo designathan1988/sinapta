@@ -96,3 +96,45 @@ export function renameWorkspace(
     .prepare("UPDATE workspaces SET name = ? WHERE id = ?")
     .run(name, workspaceId);
 }
+
+// Settings › General's icon: one emoji, or none for the name's letter.
+export function setWorkspaceIcon(
+  context: ApiContext,
+  workspaceId: string,
+  icon: string | null,
+): void {
+  context.db
+    .prepare("UPDATE workspaces SET icon = ? WHERE id = ?")
+    .run(icon, workspaceId);
+}
+
+// "Delete entire workspace": its members, pages and log go with it.
+export function deleteWorkspace(
+  context: ApiContext,
+  workspaceId: string,
+): void {
+  context.db.prepare("DELETE FROM workspaces WHERE id = ?").run(workspaceId);
+}
+
+// "Leave workspace": refused to its last owner, who would leave it to no one.
+export function leaveWorkspace(
+  context: ApiContext,
+  workspace: { readonly id: string; readonly role: string },
+  userId: string,
+): boolean {
+  const { db } = context;
+  const owners = rows.readRow(
+    rows.countRowSchema,
+    db
+      .prepare(
+        "SELECT COUNT(*) AS count FROM members WHERE workspace_id = ? AND role = 'owner' AND user_id <> ?",
+      )
+      .get(workspace.id, userId),
+  );
+  if (workspace.role === "owner" && (owners?.count ?? 0) === 0) return false;
+  db.prepare("DELETE FROM members WHERE workspace_id = ? AND user_id = ?").run(
+    workspace.id,
+    userId,
+  );
+  return true;
+}

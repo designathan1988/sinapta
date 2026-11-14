@@ -80,6 +80,9 @@ export type SyncRequest =
   | { readonly kind: "switch"; readonly workspaceId: string }
   | { readonly kind: "create"; readonly name: string }
   | { readonly kind: "rename"; readonly name: string }
+  | { readonly kind: "workspace-icon"; readonly icon: string | null }
+  | { readonly kind: "delete-workspace"; readonly name: string }
+  | { readonly kind: "leave-workspace" }
   | { readonly kind: "people" }
   | { readonly kind: "shared" }
   | { readonly kind: "teamspaces" }

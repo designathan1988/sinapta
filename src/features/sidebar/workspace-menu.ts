@@ -25,6 +25,13 @@ export function selectWorkspaceName(state: AppState): string {
   return selectOpenWorkspace(state)?.name ?? PRODUCT_NAME;
 }
 
+// The workspace's mark: its emoji from Settings › General, else its
+// name's first letter.
+export function selectWorkspaceMark(state: AppState): string {
+  const icon = selectOpenWorkspace(state)?.icon ?? null;
+  return icon ?? selectWorkspaceName(state).slice(0, 1);
+}
+
 function membersOf(workspace: WorkspaceSummary): string {
   const noun = pluralize(workspace.members, COPY.account.member);
   return `${String(workspace.members)} ${noun}`;
