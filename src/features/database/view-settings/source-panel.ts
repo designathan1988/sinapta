@@ -1,6 +1,7 @@
 // The view settings' "Data source settings", as Notion's: Source, the
 // database the view reads (a linked view may choose another), Edit
-// properties, Automations, AI Autofill, Turn into, and Lock database.
+// properties, Automations, AI Autofill, Turn into, Linked events, and
+// Lock database.
 import { setPageLocked } from "../../../blocks/page/index.ts";
 import { COPY } from "../../../ui/copy.ts";
 import type { MenuEntry } from "../../../ui/menu/index.ts";
@@ -10,6 +11,7 @@ import { sourceChoices } from "../view-tab-source.ts";
 import { choiceItems, panelRow, type SettingsPanel } from "./settings-panel.ts";
 import { automationsRow } from "./automations-panel.ts";
 import { turnIntoRow } from "./turn-into-panel.ts";
+import { linkedEventsRow } from "./linked-events-panel.ts";
 
 const TEXT = COPY.database;
 
@@ -36,12 +38,25 @@ export function sourcePanel(context: TableContext): SettingsPanel {
   };
 }
 
-export function sourceRows(context: TableContext): MenuEntry[] {
-  const { model, dispatch } = context;
-  const name = model.database.props.title.map((span) => span.text).join("");
-  const block = context.state.workspace.blocks[model.database.id];
+// Lock database: its properties and views stay as they are while on.
+function lockRow(context: TableContext): MenuEntry {
+  const pageId = context.model.database.id;
+  const block = context.state.workspace.blocks[pageId];
   const isLocked = block?.props.isLocked === true;
-  const pageId = model.database.id;
+  return {
+    label: COPY.pageMenu.lockDatabase,
+    icon: "lock",
+    check: "switch",
+    isChecked: isLocked,
+    onSelect: () =>
+      context.dispatch(setPageLocked.create({ pageId, isLocked: !isLocked })),
+  };
+}
+
+export function sourceRows(context: TableContext): MenuEntry[] {
+  const name = context.model.database.props.title
+    .map((span) => span.text)
+    .join("");
   return [
     { kind: "divider" },
     { kind: "section", label: TEXT.dataSourceSettings },
@@ -66,13 +81,7 @@ export function sourceRows(context: TableContext): MenuEntry[] {
       "ai-autofill",
     ),
     turnIntoRow(context),
-    {
-      label: COPY.pageMenu.lockDatabase,
-      icon: "lock",
-      check: "switch",
-      isChecked: isLocked,
-      onSelect: () =>
-        dispatch(setPageLocked.create({ pageId, isLocked: !isLocked })),
-    },
+    linkedEventsRow(context),
+    lockRow(context),
   ];
 }

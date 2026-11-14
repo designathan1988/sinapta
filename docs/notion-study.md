@@ -1494,6 +1494,17 @@ Groups, Notion and Pagecraft alike (Pagecraft changed to match):
     Tasks (Assignee, Status, Due date). Not yet: Meetings and Skills,
     Linked events, Manage data sources, Notion's other automation actions
     (notifications, Slack).
+68. **done** [`n127-sources`; Pagecraft `w17-linked-events`] Notion's
+    "Linked events": without a calendar, "Connect your calendar", "Connect
+    a calendar to choose meetings and automatically file their notes
+    here." and a blue "Connect calendar", with Workspace filing settings.
+    Pagecraft has the same card (one calendar icon where Notion shows the
+    calendar apps' logos), leading to Settings › Connections; with a
+    calendar connected, its coming meetings each file their notes here as
+    a page on that day, opened at once. "Manage data sources" lists the
+    database's source (its name, "10 views"), Add data source, and under
+    Linked, Link existing data source: a database of several sources.
+    Not yet in Pagecraft, whose databases hold one source each.
 
 ## Controls
 
@@ -1589,7 +1600,7 @@ against the reference on every run.
 2026-11-14, Notion's "Updates & analytics": the signed-in Notion window
 and the review server, 1440 × 900 (`n119-updates`, `n120-close-updates`,
 `n121-period`, `n122-view-history`, `n123-refavorite`, `n124-view-settings`,
-`n125-turn-into`, `n126-automations`, `w14-updates`, `w15-view-settings`, `w16-automations`).
+`n125-turn-into`, `n126-automations`, `n127-sources`, `w14-updates`, `w15-view-settings`, `w16-automations`, `w17-linked-events`).
 
 - Notion: the panel opened from the page menu, both tabs read, then
   closed; nothing on the page changed.

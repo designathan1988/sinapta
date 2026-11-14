@@ -72,6 +72,14 @@ export const DATABASE_OPTIONS_TEXT = {
     "Webhooks are sent by a workspace's server: sign in to send them.",
   removeWebhook: "Remove webhook",
   turnInto: "Turn into",
+  linkedEvents: "Linked events",
+  connectCalendarTitle: "Connect your calendar",
+  connectCalendarNote:
+    "Connect a calendar to choose meetings and automatically file their notes here.",
+  connectCalendar: "Connect calendar",
+  chooseMeeting: "Choose a meeting to file its notes here.",
+  noMeetings: "No meetings coming up in the connected calendars.",
+  filingSettings: "Workspace filing settings",
   turnIntoTasks: "Turn into Tasks database",
   turnIntoTasksNote:
     "Adds Assignee, Status and Due date, whichever the database lacks.",

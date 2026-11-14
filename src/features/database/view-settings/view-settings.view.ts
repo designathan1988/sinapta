@@ -51,6 +51,7 @@ import { sourcePanel } from "./source-panel.ts";
 import { aiAutofillPanel } from "./ai-autofill-panel.ts";
 import { automationsPanel } from "./automations-panel.ts";
 import { turnIntoPanel } from "./turn-into-panel.ts";
+import { linkedEventsPanel } from "./linked-events-panel.ts";
 import { automationPanelOf } from "./automation-edit-panel.ts";
 
 const PANELS: Readonly<
@@ -81,6 +82,7 @@ const PANELS: Readonly<
   "ai-autofill": aiAutofillPanel,
   automations: automationsPanel,
   "turn-into": turnIntoPanel,
+  "linked-events": linkedEventsPanel,
   [COLOR_PROPERTY_PANEL]: colorPropertyPanel,
   "chart-kind": chartKindPanel,
   "chart-x": chartXPanel,
