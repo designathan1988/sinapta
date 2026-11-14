@@ -174,6 +174,9 @@ export const DATABASE_TEXT = {
     noPlaces:
       "A map shows rows by a place property. Add one to this database and show it in this view.",
     mapCredit: "© OpenStreetMap contributors",
+    zoomIn: "Zoom in",
+    zoomOut: "Zoom out",
+    mapHint: "Double-click the map to add a row there",
     layout: "Layout",
     groupBy: "Group by",
     dateBy: "Date property",

@@ -1,4 +1,5 @@
 import { databaseCommands as columnCommands } from "./database.commands.ts";
+import { mapCommands } from "./layouts/map/map.commands.ts";
 import { databaseStartCommands } from "./database-start.commands.ts";
 import { rowCommands } from "./row.commands.ts";
 import { tableCommands } from "./table.commands.ts";
@@ -82,6 +83,7 @@ import {
 
 // Every command of the database feature, registered in one line at startup.
 export const databaseCommands = [
+  ...mapCommands,
   ...columnCommands,
   ...databaseStartCommands,
   ...rowCommands,

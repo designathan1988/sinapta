@@ -9,6 +9,7 @@ export {
   type ImportError,
   type CopiedBlocks,
   type LastTone,
+  type MapCamera,
   type OpenOverlay,
   type OverlayChild,
   type PersistenceState,

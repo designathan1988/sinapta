@@ -62,3 +62,44 @@
     text-align: end;
   }
 }
+
+@layer features {
+  .map__canvas {
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  /* Notion's zoom buttons, stacked at the map's lower end. */
+  .map__zoom {
+    position: absolute;
+    inset-block-end: var(--space-inset-sm);
+    inset-inline-end: var(--space-inset-sm);
+    display: grid;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-raised);
+    box-shadow: var(--shadow-card);
+  }
+
+  .map__zoom-button {
+    display: grid;
+    place-items: center;
+    inline-size: var(--size-control-md);
+    block-size: var(--size-control-md);
+    padding: var(--space-none);
+    border: none;
+    background-color: transparent;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-lg);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
+}

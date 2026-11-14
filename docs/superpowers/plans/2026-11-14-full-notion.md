@@ -81,9 +81,10 @@ in `src/persistence/`.
 ## Milestone 29: Map
 
 - [x] 29.1 Place property, typed as "Name @ latitude, longitude" (address
-  search needs a geocoding service; picking on the map remains).
+  search needs a geocoding service), or picked on the map: a double-click
+  adds a row at that place.
 - [x] 29.2 Map view: OpenStreetMap tiles framed to every pin, a pin per
-  row that opens it. (Zoom and pan controls remain.)
+  row that opens it; drag to move, scroll or "+"/"−" to zoom.
 
 ## Milestone 30: AI
 

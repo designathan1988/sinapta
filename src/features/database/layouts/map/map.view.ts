@@ -7,7 +7,16 @@ import { COPY } from "../../../../ui/copy.ts";
 import { openRow } from "../../row-open.commands.ts";
 import type { TableContext } from "../../table-cell.view.ts";
 import {
-  frameOf,
+  onMapDoubleClick,
+  onMapPointerDown,
+  onMapPointerMove,
+  onMapWheel,
+  renderMapControls,
+} from "./map-controls.view.ts";
+import {
+  MAP_HEIGHT,
+  MAP_WIDTH,
+  selectFrame,
   selectPins,
   TILE,
   worldPixel,
@@ -15,9 +24,8 @@ import {
   type Pin,
 } from "./map.selectors.ts";
 
-// The map's drawn size; the view scales it to its width.
-const WIDTH = 960;
-const HEIGHT = 480;
+const WIDTH = MAP_WIDTH;
+const HEIGHT = MAP_HEIGHT;
 
 // Places an element on the map, in shares of its width and height, so
 // the map keeps its frame at any width.
@@ -74,18 +82,32 @@ function renderPin(pin: Pin, frame: MapFrame, context: TableContext) {
 
 export function renderMap(context: TableContext): TemplateResult {
   const pins = selectPins(context.model);
-  if (pins.length === 0) {
-    return html`<p class="database__empty">${COPY.database.noPlaces}</p>`;
-  }
-  const frame = frameOf(pins, WIDTH, HEIGHT);
+  const viewId = context.model.view.id;
+  const frame = selectFrame(context.state.ui.mapCamera, viewId, pins);
   return html`<div
     class="map"
     role="region"
     aria-label=${COPY.database.layouts.map}
   >
-    <div class="map__canvas">
+    <div
+      class="map__canvas"
+      @pointerdown=${onMapPointerDown}
+      @pointermove=${(event: PointerEvent) => {
+        onMapPointerMove(event, context, frame);
+      }}
+      @wheel=${(event: WheelEvent) => {
+        onMapWheel(event, context, frame);
+      }}
+      @dblclick=${(event: MouseEvent) => {
+        onMapDoubleClick(event, context, frame);
+      }}
+    >
       ${renderTiles(frame)} ${pins.map((pin) => renderPin(pin, frame, context))}
+      ${renderMapControls(context, frame)}
     </div>
-    <p class="map__credit">${COPY.database.mapCredit}</p>
+    <p class="map__credit">
+      ${pins.length === 0 ? COPY.database.noPlaces : COPY.database.mapHint} ·
+      ${COPY.database.mapCredit}
+    </p>
   </div>`;
 }

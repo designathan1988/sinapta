@@ -143,6 +143,16 @@ export interface UiState {
   // for them: a paste of that text rebuilds the blocks.
   readonly clipboard: CopiedBlocks | null;
   readonly suggestingPageId?: BlockId; // the page in Suggesting, unsaved
+  // Where a map view was zoomed and moved to; the others frame their pins.
+  readonly mapCamera?: MapCamera;
+}
+
+export interface MapCamera {
+  readonly viewId: string;
+  readonly zoom: number;
+  // The world pixel at the map's centre, at that zoom.
+  readonly centerX: number;
+  readonly centerY: number;
 }
 
 export interface CopiedBlocks {
