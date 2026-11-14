@@ -43,6 +43,12 @@
     inset-inline-end: var(--space-inset-md);
   }
 
+  /* Its close button round and gray, as Notion's. */
+  .dialog[data-variant="card"] .dialog__header .button {
+    border-radius: var(--radius-full);
+    background-color: var(--color-bg-hover);
+  }
+
   /* A dialog to fill in, as Notion's button automation: its title in the
      page's text size and weight, over a line. */
   .dialog[data-variant="form"] .dialog__header {

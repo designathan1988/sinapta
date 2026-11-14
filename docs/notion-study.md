@@ -1191,7 +1191,7 @@ items above, found while photographing them:
     shade by day, 86 × 56 tiles with 12 px names 8 px in, and an icon on
     "Open pages in" that pushed every row of the panel in: all three
     changed (`shadow.overlay` per theme, `size.menu.tile`,
-    `font.size.tile`). Left: Notion's view settings rows sit 8 px from
+    `font.size.tile`). Then left, closed since (`p67-menu-inset`): Notion's view settings rows sit 8 px from
     the panel's edge, Pagecraft's menus 4 px (the dark reference above
     reads 4 on other menus; one width for every menu is kept).
 46. **done** [T140, `n78-board`, `n79-board-light`, `n80-vars-dark`,
@@ -1217,7 +1217,7 @@ items above, found while photographing them:
     had 256 px columns washed with the chip color at 45 %, 6 px corners,
     a hover that made the card see-through, and a bare 28 px New page:
     all changed (`color.board.*`, `shadow.boardCard`, `size.board.*`).
-    Left: Notion's group head is its option pill with a dot; Pagecraft's
+    Then left, closed since (`p45-status-dot`): Notion's group head is its option pill with a dot; Pagecraft's
     pills draw no dot anywhere (tables included), a change of every pill.
 
 47. **done** [`n86-teamspaces`, `n87-collaborate`, `n88-undo-collaborate`;
@@ -1258,7 +1258,7 @@ items above, found while photographing them:
     search over it (`p68-teamspace-filters`), closed teamspaces with their
     own members (`p63-closed-teamspace`). Left: Notion's Active and
     Security filters (Pagecraft archives no teamspace and has no security
-    settings) and the round gray close button.
+    settings). The round gray close button is drawn too.
 
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,
