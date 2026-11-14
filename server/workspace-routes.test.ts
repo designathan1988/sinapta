@@ -127,4 +127,39 @@ describe("workspaces on the server", () => {
     expect(bad.status).toBe(400);
     expect(outsider.status).toBe(404);
   });
+
+  it("lists a person's workspaces and opens the last one they opened", async () => {
+    const server = createTestServer();
+    const ada = await signedUp(server, "ada@pagecraft.test");
+    const make = async (name: string) =>
+      workspaceId(
+        (
+          await server.call(
+            "POST /api/workspaces",
+            { name, snapshot: { rootIds: [] } },
+            ada,
+          )
+        ).body,
+      );
+    const first = await make("Home");
+    const second = await make("Work");
+
+    const afterMaking = await server.call(
+      "GET /api/workspaces",
+      undefined,
+      ada,
+    );
+    await server.call(`POST /api/workspaces/${first}/open`, {}, ada);
+    const afterSwitch = await server.call(
+      "GET /api/workspaces",
+      undefined,
+      ada,
+    );
+
+    expect(afterMaking.body).toMatchObject({
+      workspaces: [{ name: "Home" }, { name: "Work" }],
+      lastWorkspaceId: second,
+    });
+    expect(afterSwitch.body).toMatchObject({ lastWorkspaceId: first });
+  });
 });

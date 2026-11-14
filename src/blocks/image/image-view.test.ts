@@ -57,6 +57,31 @@ describe("renderImage", () => {
     ]);
   });
 
+  it("follows the pointer while dragged, and keeps the width on release", () => {
+    const { host, sent } = rendered();
+    const figure = host.querySelector<HTMLElement>(".image");
+    const handle = host.querySelector<HTMLElement>("[role=slider]");
+    if (figure === null || handle === null) throw new Error("no handle");
+    figure.getBoundingClientRect = () => new DOMRect(0, 0, 400, 300);
+    handle.setPointerCapture = () => undefined;
+    handle.hasPointerCapture = () => true;
+    const pointer = (type: string, clientX: number) =>
+      handle.dispatchEvent(
+        new PointerEvent(type, { clientX, pointerId: 1, bubbles: true }),
+      );
+
+    pointer("pointerdown", 300);
+    pointer("pointermove", 300);
+    const dragged = figure.style.getPropertyValue("--image-width");
+    pointer("pointerup", 350);
+
+    // Centered: twice the distance from the middle, of the figure's width.
+    expect(dragged).toBe("50%");
+    expect(sent).toEqual([
+      expect.objectContaining({ type: "image.setWidth", width: 75 }),
+    ]);
+  });
+
   it("aligns the image from its toolbar", () => {
     const { sent, button } = rendered();
 

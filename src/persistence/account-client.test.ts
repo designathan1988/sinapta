@@ -155,4 +155,23 @@ describe("the account client", () => {
       user: ADA,
     });
   });
+
+  it("logs out, ending the session on the server", async () => {
+    const { send, calls } = fakeServer({
+      "/api/account/me": [200, { user: ADA }],
+      "/api/account/sign-out": [204],
+    });
+    const { store, start, ask } = setup(send);
+    await start;
+    const before = store.getState().persistence.account.status;
+
+    await ask({ kind: "sign-out" });
+
+    expect(before).toBe("signed-in");
+    expect(calls.map((call) => call.path)).toContain("/api/account/sign-out");
+    expect(store.getState().persistence.account).toMatchObject({
+      status: "signed-out",
+      user: null,
+    });
+  });
 });
