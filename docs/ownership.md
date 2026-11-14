@@ -268,6 +268,7 @@ owner listed here exists.
 | The standalone server for the built app | `server/main.ts` | 22 |
 | Password hashing, tokens and sign-in codes | `server/secrets.ts` | 23 |
 | Passkeys: the server's challenges, checks and store, and the browser's Web Authentication calls | `server/passkey-routes.ts`, `server/webauthn.ts`, `server/cbor.ts`, `server/passkey.schema.ts`, `src/persistence/passkey-client.ts`, `src/persistence/passkey.schema.ts` | 31 |
+| Signing in through another company (OpenID Connect): providers set up, the flow, the ID token's checks, and the test provider | `server/oidc.ts`, `server/oidc-token.ts`, `server/oidc-config.ts`, `server/oidc.schema.ts`, `server/oidc-dev.ts`, `src/persistence/account-client.ts` | 31 |
 | Sessions in a cookie | `server/sessions.ts` | 23 |
 | The users table | `server/users.ts` | 23 |
 | Sign-in, sign-up, codes, sign-out, the signed-in user | `server/account-routes.ts` | 23 |

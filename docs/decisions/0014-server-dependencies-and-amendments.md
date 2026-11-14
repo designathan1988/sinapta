@@ -76,9 +76,21 @@ the record should say so.
    read by a small CBOR reader, `server/cbor.ts`), hands out challenges
    used once within five minutes, and verifies each sign-in's signature
    over the authenticator data and the client data, which must name this
-   host (`server/webauthn.ts`, migration 11). Signing in with Google,
-   ChatGPT, Apple, Microsoft or a company's SSO needs that company's
-   registration of this server, and stays out.
+   host (`server/webauthn.ts`, migration 11).
+9. **Signing in through another company.** Google, ChatGPT, Apple,
+   Microsoft and a company's SSO sign in by OpenID Connect (authorization
+   code with PKCE): the server sends the browser to the provider with a
+   state, a nonce and a proof key, trades the code for an ID token, and
+   checks its RS256 or ES256 signature with the provider's published keys
+   and its claims (issuer, audience, expiry, nonce, verified email) before
+   signing the person in, making the account the first time
+   (`server/oidc.ts`, `oidc-token.ts`, migration 12). Each provider needs
+   this server registered with it: its owner sets the client it is given
+   (`PAGECRAFT_OIDC_GOOGLE_CLIENT_ID`, `..._CLIENT_SECRET`, and
+   `PAGECRAFT_OIDC_SSO_ISSUER` for SSO); a provider not set up says so on
+   the sign-in screen. `PAGECRAFT_DEV_OIDC=1` puts a test provider inside
+   the server (`server/oidc-dev.ts`) so the whole flow runs on one machine.
+   Payment is the one thing left out: every plan is free on this server.
 
 ## Options Considered
 

@@ -64,9 +64,10 @@ the list under "Out of scope" comes in, served by a local server in
 server's only dependencies are Transformers.js for speech and `web-push`,
 ADR-0014) and planned as milestones 22 to 30 in
 `docs/superpowers/plans/2026-11-14-full-notion.md`. Only what needs a
-third party's registration stays out: signing in with Google, ChatGPT,
-Apple, Microsoft or a company's SSO, and payment; their buttons are drawn
-and say so. Passkeys sign in on this server (ADR-0014). Notion's app connections connect the way each app lets anyone
+Signing in with Google, ChatGPT, Apple, Microsoft or a company's SSO
+works once the server's owner registers it with that company (ADR-0014);
+passkeys sign in with no third party. Payment is left out: every plan is
+free on this server. Notion's app connections connect the way each app lets anyone
 in, and plans are chosen at no cost (ADR-0014).
 Milestone 31 there brings in what that list still held: link previews
 read by the server, integrations with the public API at `/v1`,

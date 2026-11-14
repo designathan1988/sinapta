@@ -37,6 +37,10 @@ export interface ApiResponse {
   readonly body?: unknown;
   readonly cookies?: readonly string[];
   readonly stream?: EventStream;
+  // Where a redirect sends the browser, as a sign-in's provider does.
+  readonly location?: string;
+  // A page of the server's own, served as it is.
+  readonly html?: string;
 }
 
 function parseCookies(header: string | undefined): Map<string, string> {
@@ -136,6 +140,14 @@ export function writeResponse(
   response.setHeader("Cache-Control", "no-store");
   if (result.cookies !== undefined && result.cookies.length > 0) {
     response.setHeader("Set-Cookie", [...result.cookies]);
+  }
+  if (result.location !== undefined) {
+    response.setHeader("Location", result.location);
+  }
+  if (result.html !== undefined) {
+    response.setHeader("Content-Type", "text/html; charset=utf-8");
+    response.end(result.html);
+    return;
   }
   if (result.body === undefined) {
     response.end();

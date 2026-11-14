@@ -144,4 +144,13 @@ export const MIGRATIONS: readonly string[] = [
      user_id TEXT,
      expires_at INTEGER NOT NULL
    );`,
+  // 12: a sign-in through another company's identity provider (OpenID
+  // Connect) under way: its state, nonce and proof key, used once.
+  `CREATE TABLE oidc_states (
+     state TEXT PRIMARY KEY,
+     provider TEXT NOT NULL,
+     nonce TEXT NOT NULL,
+     verifier TEXT NOT NULL,
+     expires_at INTEGER NOT NULL
+   );`,
 ];

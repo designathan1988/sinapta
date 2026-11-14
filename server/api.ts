@@ -1,5 +1,6 @@
 // The server's request handler: finds the route for a request under /api,
 // refuses cross-site changes, and turns failures into answers.
+import type { IdentityWeb } from "./oidc-config.ts";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Database } from "./database.ts";
 import type { PushSender } from "./push.ts";
@@ -26,6 +27,8 @@ export interface ApiContext {
   readonly push?: PushSender;
   // Reaches a connected app's address; none, and nothing leaves.
   readonly outside?: Outside;
+  // Reaches identity providers for "Continue with Google" and the like.
+  readonly identity?: IdentityWeb;
 }
 
 // What the server asks of the web for a connected app: a calendar's text,

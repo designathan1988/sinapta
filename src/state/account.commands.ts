@@ -52,6 +52,10 @@ function answered(answer: AccountAnswer): Partial<AccountState> {
       return { error: answer.error };
     case "passkeys":
       return { passkeys: answer.passkeys, error: null };
+    case "providers":
+      return { providers: answer.providers };
+    case "provider-failed":
+      return { provider: answer.provider, error: "provider-failed" };
   }
 }
 

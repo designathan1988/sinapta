@@ -39,7 +39,9 @@ export const ACCOUNT_TEXT = {
       "wrong-password": "Incorrect password. Please try again.",
       "wrong-code": "Invalid login code. Please try again.",
       "email-taken": "An account with this email already exists.",
-      "not-connected": "sign-in is not connected on this server.",
+      "not-connected":
+        "sign-in is not set up on this server: its owner registers the server with that company and sets the client it gives.",
+      "provider-failed": "sign-in did not work. Please try again.",
       "passkey-refused":
         "The passkey was not used. Try again, or continue with your email.",
       network: "Something went wrong. Please try again.",

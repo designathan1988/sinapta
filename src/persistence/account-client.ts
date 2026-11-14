@@ -6,7 +6,6 @@ import { askPasskey, type PasskeyRequest } from "./passkey-client.ts";
 import {
   answerAccount,
   checkAccount,
-  requestAccount,
   type AccountAnswer,
   type AccountRequest,
   type AppStore,
@@ -64,11 +63,28 @@ function isPasskeyRequest(request: AccountRequest): request is PasskeyRequest {
   return PASSKEY_KINDS.has(request.kind);
 }
 
-async function ask(
+type ProviderRequest = Extract<AccountRequest, { kind: "provider-sign-in" }>;
+
+// Another company's sign-in: the browser goes to it and comes back signed in.
+function goToProvider(request: ProviderRequest): Promise<AccountAnswer> {
+  window.location.assign(`/api/account/oidc/${request.provider}/start`);
+  return Promise.resolve({ kind: "step", step: "email" });
+}
+
+// Each request to where it is answered.
+function answerOf(
   send: Fetch,
   request: AccountRequest,
 ): Promise<AccountAnswer> {
   if (isPasskeyRequest(request)) return askPasskey(send, request);
+  if (request.kind === "provider-sign-in") return goToProvider(request);
+  return ask(send, request);
+}
+
+async function ask(
+  send: Fetch,
+  request: Exclude<AccountRequest, PasskeyRequest | ProviderRequest>,
+): Promise<AccountAnswer> {
   switch (request.kind) {
     case "lookup":
       return lookup(send, request.email);
@@ -106,8 +122,11 @@ export async function startAccount(options: {
     const { request, requestCount } = state.persistence.account;
     if (request === null || requestCount === asked) return;
     asked = requestCount;
-    void ask(send, request).then(
-      (answer) => dispatch(answerAccount.create({ answer })),
+    void answerOf(send, request).then(
+      (answer) => {
+        dispatch(answerAccount.create({ answer }));
+        if (answer.kind === "signed-out") void showProviders(send, dispatch);
+      },
       () =>
         dispatch(
           answerAccount.create({ answer: { kind: "error", error: "network" } }),
@@ -116,10 +135,60 @@ export async function startAccount(options: {
   });
   const answer = await whoIsSignedIn(send);
   dispatch(answerAccount.create({ answer }));
-  // How many passkeys the account has, for My account.
-  if (answer.kind === "user") {
-    dispatch(requestAccount.create({ request: { kind: "passkeys" } }));
+  await afterCheck(answer, send, dispatch);
+}
+
+// After the first answer: the sign-in screen's providers and a failed
+// provider's sign-in, or the signed-in account's passkeys.
+async function afterCheck(
+  answer: AccountAnswer,
+  send: Fetch,
+  dispatch: Dispatch,
+): Promise<void> {
+  if (answer.kind === "signed-out") {
+    await showProviders(send, dispatch);
+    const failed = failedProvider();
+    if (failed !== undefined) {
+      dispatch(
+        answerAccount.create({
+          answer: { kind: "provider-failed", provider: failed },
+        }),
+      );
+    }
   }
+  // The account's passkeys, for My account, known before start settles.
+  if (answer.kind === "user") {
+    const passkeys = await askPasskey(send, { kind: "passkeys" });
+    dispatch(answerAccount.create({ answer: passkeys }));
+  }
+}
+
+// The sign-in screen's other companies, asked whenever it shows.
+async function showProviders(send: Fetch, dispatch: Dispatch): Promise<void> {
+  dispatch(answerAccount.create({ answer: await providersOf(send) }));
+}
+
+// The other companies this server signs in with.
+async function providersOf(send: Fetch): Promise<AccountAnswer> {
+  const response = await send("/api/account/providers", {
+    credentials: "same-origin",
+  });
+  const providers = account.readProviders(
+    account.parseReply(await response.text()),
+  );
+  return { kind: "providers", providers: providers ?? [] };
+}
+
+// A provider's sign-in that came back failed (?signin-error=google): read
+// once, and taken out of the address.
+function failedProvider(): string | undefined {
+  if (!("location" in globalThis)) return undefined;
+  const url = new URL(window.location.href);
+  const provider = url.searchParams.get("signin-error");
+  if (provider === null) return undefined;
+  url.searchParams.delete("signin-error");
+  window.history.replaceState(null, "", url.href);
+  return provider;
 }
 
 async function whoIsSignedIn(send: Fetch): Promise<AccountAnswer> {

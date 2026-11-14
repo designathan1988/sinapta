@@ -22,6 +22,7 @@ export type AccountError =
   | "email-taken"
   | "not-connected"
   | "passkey-refused"
+  | "provider-failed"
   | "network";
 
 export type AccountRequest =
@@ -48,7 +49,9 @@ export type AccountRequest =
   | { readonly kind: "passkey-sign-in" }
   | { readonly kind: "passkey-add" }
   | { readonly kind: "passkeys" }
-  | { readonly kind: "remove-passkey"; readonly id: string };
+  | { readonly kind: "remove-passkey"; readonly id: string }
+  // Another company's sign-in, as Google: the browser goes to it.
+  | { readonly kind: "provider-sign-in"; readonly provider: string };
 
 // What the server's answer means for the screen.
 export type AccountAnswer =
@@ -57,7 +60,9 @@ export type AccountAnswer =
   | { readonly kind: "offline" }
   | { readonly kind: "step"; readonly step: AccountStep }
   | { readonly kind: "error"; readonly error: AccountError }
-  | { readonly kind: "passkeys"; readonly passkeys: readonly PasskeySummary[] };
+  | { readonly kind: "passkeys"; readonly passkeys: readonly PasskeySummary[] }
+  | { readonly kind: "providers"; readonly providers: readonly string[] }
+  | { readonly kind: "provider-failed"; readonly provider: string };
 
 export interface PasskeySummary {
   readonly id: string;
@@ -77,6 +82,8 @@ export interface AccountState {
   // persistence layer asks each one once.
   readonly request: AccountRequest | null;
   readonly requestCount: number;
+  // The other companies this server signs in with, as "google".
+  readonly providers?: readonly string[];
   // The account's passkeys, once the server has said.
   readonly passkeys?: readonly PasskeySummary[];
 }

@@ -46,3 +46,10 @@ export function readAiReply(body: unknown): string | undefined {
   const reply = v.safeParse(aiReplySchema, body);
   return reply.success ? reply.output.text : undefined;
 }
+
+const providersSchema = v.object({ providers: v.array(v.string()) });
+
+export function readProviders(body: unknown): string[] | undefined {
+  const parsed = v.safeParse(providersSchema, body);
+  return parsed.success ? parsed.output.providers : undefined;
+}

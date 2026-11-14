@@ -95,6 +95,28 @@ describe("the sign-in screen", () => {
     ]);
   });
 
+  it("goes to a provider this server is set up with", () => {
+    const { host, commands } = rendered(stateWith({ providers: ["google"] }));
+
+    host.querySelector<HTMLButtonElement>(".sign-in__provider")?.click();
+
+    expect(commands).toEqual([
+      expect.objectContaining({
+        request: { kind: "provider-sign-in", provider: "google" },
+      }),
+    ]);
+  });
+
+  it("says a provider's sign-in did not work", () => {
+    const { host } = rendered(
+      stateWith({ error: "provider-failed", provider: "google" }),
+    );
+
+    expect(host.querySelector(".sign-in__error")?.textContent).toBe(
+      "Google sign-in did not work. Please try again.",
+    );
+  });
+
   it("signs in with the password on the password step", () => {
     const { host, commands } = rendered(
       stateWith({ step: "password", email: "ada@pagecraft.test" }),

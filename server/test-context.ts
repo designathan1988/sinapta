@@ -1,6 +1,7 @@
 // A server on an in-memory database for tests: a clock that can move, the
 // log kept, and requests made as a browser would.
-import type { ApiContext } from "./api.ts";
+import type { ApiContext, Outside } from "./api.ts";
+import type { IdentityWeb } from "./oidc-config.ts";
 import { openDatabase } from "./database.ts";
 import type { ApiRequest, ApiResponse } from "./http-exchange.ts";
 import { matchRoute } from "./route-match.ts";
@@ -16,8 +17,13 @@ export interface TestServer {
   readonly pushed: { endpoint: string; payload: string }[];
   // What was posted to connected apps' addresses.
   readonly posted: { url: string; body: unknown }[];
-  // The text each address answers with, for a calendar.
+  // The text each address answers with, for a calendar or a provider.
   readonly pages: Map<string, string>;
+  // What each address answers a posted form with, as a token endpoint.
+  readonly forms: Map<
+    string,
+    (fields: Readonly<Record<string, string>>) => string | undefined
+  >;
   readonly call: (
     key: string,
     body?: unknown,
@@ -48,11 +54,29 @@ function requestOf(key: string, body: unknown, cookie?: string): ApiRequest {
   };
 }
 
+// The web as tests see it: pages and forms they set, posts they read.
+function testWeb() {
+  const posted: TestServer["posted"] = [];
+  const pages = new Map<string, string>();
+  const forms: TestServer["forms"] = new Map();
+  const identity: IdentityWeb = {
+    getText: (url) => Promise.resolve(pages.get(url.href)),
+    postForm: (url, fields) => Promise.resolve(forms.get(url.href)?.(fields)),
+  };
+  const outside: Outside = {
+    getText: (url) => Promise.resolve(pages.get(url.href)),
+    postJson: (url, body) => {
+      posted.push({ url: url.href, body });
+      return Promise.resolve();
+    },
+  };
+  return { posted, pages, forms, identity, outside };
+}
+
 export function createTestServer(clock = { now: Date.UTC(2026, 10, 14) }) {
   const logged: string[] = [];
   const pushed: TestServer["pushed"] = [];
-  const posted: TestServer["posted"] = [];
-  const pages = new Map<string, string>();
+  const { posted, pages, forms, identity, outside } = testWeb();
   const context: ApiContext = {
     db: openDatabase(":memory:"),
     now: () => clock.now,
@@ -64,13 +88,8 @@ export function createTestServer(clock = { now: Date.UTC(2026, 10, 14) }) {
       pushed.push({ endpoint: subscription.endpoint, payload });
       return Promise.resolve();
     },
-    outside: {
-      getText: (url) => Promise.resolve(pages.get(url.href)),
-      postJson: (url, body) => {
-        posted.push({ url: url.href, body });
-        return Promise.resolve();
-      },
-    },
+    identity,
+    outside,
   };
   const call: TestServer["call"] = async (key, body, cookie) => {
     const request = requestOf(key, body, cookie);
@@ -78,5 +97,13 @@ export function createTestServer(clock = { now: Date.UTC(2026, 10, 14) }) {
     if (match === undefined) throw new Error(`no route ${key}`);
     return match.route({ ...request, params: match.params }, context);
   };
-  return { context, logged, pushed, posted, pages, call } satisfies TestServer;
+  return {
+    context,
+    logged,
+    pushed,
+    posted,
+    pages,
+    forms,
+    call,
+  } satisfies TestServer;
 }

@@ -19,22 +19,36 @@ const TEXT = COPY.account;
 function renderError(account: AccountState): TemplateResult | typeof nothing {
   if (account.error === null) return nothing;
   const message = TEXT.errors[account.error];
+  const named = TEXT.providers.find(
+    (provider) => provider.toLowerCase() === account.provider?.toLowerCase(),
+  );
   const text =
-    account.error === "not-connected"
-      ? `${account.provider ?? ""} ${message}`
+    account.error === "not-connected" || account.error === "provider-failed"
+      ? `${named ?? account.provider ?? ""} ${message}`
       : message;
   return html`<p class="sign-in__error" role="alert">${text}</p>`;
 }
 
-// A passkey signs in on this server; the others need a third party's
-// registration, and the screen says so.
-function chooseSignIn(provider: string, dispatch: Dispatch): void {
+// A passkey signs in on this server; another company's sign-in goes to
+// it when this server is set up with it, and otherwise the screen says so.
+function chooseSignIn(
+  provider: string,
+  account: AccountState,
+  dispatch: Dispatch,
+): void {
+  const id = provider.toLowerCase();
   if (provider === PASSKEY) {
     dispatch(requestAccount.create({ request: { kind: "passkey-sign-in" } }));
+  } else if (account.providers?.includes(id) === true) {
+    const request = { kind: "provider-sign-in" as const, provider: id };
+    dispatch(requestAccount.create({ request }));
   } else dispatch(chooseProvider.create({ provider }));
 }
 
-function renderProviders(dispatch: Dispatch): TemplateResult {
+function renderProviders(
+  account: AccountState,
+  dispatch: Dispatch,
+): TemplateResult {
   return html`<div class="sign-in__or" role="separator">
       <span>${TEXT.orContinueWith}</span>
     </div>
@@ -45,7 +59,7 @@ function renderProviders(dispatch: Dispatch): TemplateResult {
             class="sign-in__provider"
             type="button"
             @click=${() => {
-              chooseSignIn(provider, dispatch);
+              chooseSignIn(provider, account, dispatch);
             }}
           >
             <span class="sign-in__provider-mark" aria-hidden="true"
@@ -83,7 +97,8 @@ export function renderSignIn(
     <div class="sign-in__column">
       <img class="sign-in__logo" src="/icon.svg" alt=${PRODUCT_NAME} />
       ${renderHeadline(account)} ${renderStepForm(account, dispatch)}
-      ${renderError(account)} ${isEmail ? renderProviders(dispatch) : nothing}
+      ${renderError(account)}
+      ${isEmail ? renderProviders(account, dispatch) : nothing}
       ${
         isEmail
           ? html`<p class="sign-in__new">${TEXT.newUser} ${TEXT.signUp}</p>`

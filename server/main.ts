@@ -2,6 +2,7 @@
 // The port is PORT, or 5199.
 import { webPushSender } from "./push.ts";
 import { webOutside } from "./outside.ts";
+import { webIdentity } from "./oidc-config.ts";
 import { readFile } from "node:fs/promises";
 import { createServer, type ServerResponse } from "node:http";
 import { extname, join, normalize, resolve } from "node:path";
@@ -56,6 +57,7 @@ const api = createApi(ROUTES, {
   passwordCost: PASSWORD_COST,
   push: webPushSender,
   outside: webOutside,
+  identity: webIdentity,
 });
 const port = Number(process.env.PORT ?? "5199");
 
