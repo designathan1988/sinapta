@@ -152,6 +152,15 @@
       "soft": {
         "$value": "{base.color.day.shadowSoft}"
       },
+      "menuDeep": {
+        "$value": "{base.color.day.menuDeep}"
+      },
+      "menuSoft": {
+        "$value": "{base.color.day.menuSoft}"
+      },
+      "menuFar": {
+        "$value": "{base.color.day.menuFar}"
+      },
       "raisedRing": {
         "$value": "{base.color.day.raisedRing}"
       },
@@ -262,6 +271,90 @@
       },
       "punctuation": {
         "$value": "{base.color.neutral.650}"
+      }
+    },
+    "board": {
+      "column": {
+        "default": {
+          "$value": "{base.color.board.column.default.day}"
+        },
+        "gray": {
+          "$value": "{base.color.board.column.gray.day}"
+        },
+        "brown": {
+          "$value": "{base.color.board.column.brown.day}"
+        },
+        "orange": {
+          "$value": "{base.color.board.column.orange.day}"
+        },
+        "yellow": {
+          "$value": "{base.color.board.column.yellow.day}"
+        },
+        "green": {
+          "$value": "{base.color.board.column.green.day}"
+        },
+        "blue": {
+          "$value": "{base.color.board.column.blue.day}"
+        },
+        "purple": {
+          "$value": "{base.color.board.column.purple.day}"
+        },
+        "pink": {
+          "$value": "{base.color.board.column.pink.day}"
+        },
+        "red": {
+          "$value": "{base.color.board.column.red.day}"
+        }
+      },
+      "line": {
+        "default": {
+          "$value": "{base.color.board.line.default.day}"
+        },
+        "gray": {
+          "$value": "{base.color.board.line.gray.day}"
+        },
+        "brown": {
+          "$value": "{base.color.board.line.brown.day}"
+        },
+        "orange": {
+          "$value": "{base.color.board.line.orange.day}"
+        },
+        "yellow": {
+          "$value": "{base.color.board.line.yellow.day}"
+        },
+        "green": {
+          "$value": "{base.color.board.line.green.day}"
+        },
+        "blue": {
+          "$value": "{base.color.board.line.blue.day}"
+        },
+        "purple": {
+          "$value": "{base.color.board.line.purple.day}"
+        },
+        "pink": {
+          "$value": "{base.color.board.line.pink.day}"
+        },
+        "red": {
+          "$value": "{base.color.board.line.red.day}"
+        }
+      },
+      "card": {
+        "$value": "{base.color.board.card.day}"
+      },
+      "cardHover": {
+        "$value": "{base.color.board.cardHover.day}"
+      },
+      "cardRing": {
+        "$value": "{base.color.board.cardRing.day}"
+      },
+      "cardNear": {
+        "$value": "{base.color.board.cardNear.day}"
+      },
+      "cardFar": {
+        "$value": "{base.color.board.cardFar.day}"
+      },
+      "cardSoft": {
+        "$value": "{base.color.board.cardSoft.day}"
       }
     },
     "tone": {

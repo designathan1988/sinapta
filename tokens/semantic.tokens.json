@@ -158,6 +158,15 @@
       "soft": {
         "$value": "{base.color.day.shadowSoft}"
       },
+      "menuDeep": {
+        "$value": "{base.color.day.menuDeep}"
+      },
+      "menuSoft": {
+        "$value": "{base.color.day.menuSoft}"
+      },
+      "menuFar": {
+        "$value": "{base.color.day.menuFar}"
+      },
       "raisedRing": {
         "$value": "{base.color.day.raisedRing}"
       },
@@ -268,6 +277,90 @@
       },
       "punctuation": {
         "$value": "{base.color.neutral.650}"
+      }
+    },
+    "board": {
+      "column": {
+        "default": {
+          "$value": "{base.color.board.column.default.day}"
+        },
+        "gray": {
+          "$value": "{base.color.board.column.gray.day}"
+        },
+        "brown": {
+          "$value": "{base.color.board.column.brown.day}"
+        },
+        "orange": {
+          "$value": "{base.color.board.column.orange.day}"
+        },
+        "yellow": {
+          "$value": "{base.color.board.column.yellow.day}"
+        },
+        "green": {
+          "$value": "{base.color.board.column.green.day}"
+        },
+        "blue": {
+          "$value": "{base.color.board.column.blue.day}"
+        },
+        "purple": {
+          "$value": "{base.color.board.column.purple.day}"
+        },
+        "pink": {
+          "$value": "{base.color.board.column.pink.day}"
+        },
+        "red": {
+          "$value": "{base.color.board.column.red.day}"
+        }
+      },
+      "line": {
+        "default": {
+          "$value": "{base.color.board.line.default.day}"
+        },
+        "gray": {
+          "$value": "{base.color.board.line.gray.day}"
+        },
+        "brown": {
+          "$value": "{base.color.board.line.brown.day}"
+        },
+        "orange": {
+          "$value": "{base.color.board.line.orange.day}"
+        },
+        "yellow": {
+          "$value": "{base.color.board.line.yellow.day}"
+        },
+        "green": {
+          "$value": "{base.color.board.line.green.day}"
+        },
+        "blue": {
+          "$value": "{base.color.board.line.blue.day}"
+        },
+        "purple": {
+          "$value": "{base.color.board.line.purple.day}"
+        },
+        "pink": {
+          "$value": "{base.color.board.line.pink.day}"
+        },
+        "red": {
+          "$value": "{base.color.board.line.red.day}"
+        }
+      },
+      "card": {
+        "$value": "{base.color.board.card.day}"
+      },
+      "cardHover": {
+        "$value": "{base.color.board.cardHover.day}"
+      },
+      "cardRing": {
+        "$value": "{base.color.board.cardRing.day}"
+      },
+      "cardNear": {
+        "$value": "{base.color.board.cardNear.day}"
+      },
+      "cardFar": {
+        "$value": "{base.color.board.cardFar.day}"
+      },
+      "cardSoft": {
+        "$value": "{base.color.board.cardSoft.day}"
       }
     },
     "tone": {
@@ -601,6 +694,10 @@
         "$description": "A long list kept short and scrolled, as Notion's list of times (maxHeight 250 in its code).",
         "$value": "{base.size.15x625}"
       },
+      "tile": {
+        "$description": "A layout or show-as tile, as Notion's: 57 px high (83 px wide from the grid).",
+        "$value": "{base.size.3x5625}"
+      },
       "narrow": {
         "$description": "A submenu that is a short list, as Notion's Sort or Calculate: 200 px.",
         "$value": "{base.size.12x5}"
@@ -620,7 +717,12 @@
     },
     "board": {
       "column": {
-        "$value": "{base.size.18}"
+        "$description": "A board column at the medium card size, as Notion's: 276 px, its cards 260 (n78-board).",
+        "$value": "{base.size.17x25}"
+      },
+      "row": {
+        "$description": "A one-line board card and a column's New page, as Notion's: 40 px.",
+        "$value": "{base.size.2x5}"
       }
     },
     "card": {
@@ -876,9 +978,10 @@
   "shadow": {
     "$type": "shadow",
     "overlay": {
+      "$description": "Notion's menu: by night the deep and soft layers, by day the far and near ones (n77-light-menu); the others are clear in each theme.",
       "$value": [
         {
-          "color": "{color.shadow.ring}",
+          "color": "{color.shadow.raisedRing}",
           "offsetX": {
             "value": 0,
             "unit": "px"
@@ -897,7 +1000,7 @@
           }
         },
         {
-          "color": "{color.shadow.overlay}",
+          "color": "{color.shadow.menuDeep}",
           "offsetX": {
             "value": 0,
             "unit": "px"
@@ -916,7 +1019,7 @@
           }
         },
         {
-          "color": "{color.shadow.soft}",
+          "color": "{color.shadow.menuSoft}",
           "offsetX": {
             "value": 0,
             "unit": "px"
@@ -931,6 +1034,125 @@
           },
           "spread": {
             "value": -1,
+            "unit": "px"
+          }
+        },
+        {
+          "color": "{color.shadow.menuFar}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 20,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 24,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": "{color.shadow.raisedFar}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 5,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 8,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        }
+      ]
+    },
+    "boardCard": {
+      "$description": "Notion's board card: by night a ring and one near layer, by day a ring and two far ones (n78-board, n79-board-light).",
+      "$value": [
+        {
+          "color": "{color.board.cardRing}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 0,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 0,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 1,
+            "unit": "px"
+          }
+        },
+        {
+          "color": "{color.board.cardNear}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 2,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 4,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": "{color.board.cardFar}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 4,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 12,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": "{color.board.cardSoft}",
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 2,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
             "unit": "px"
           }
         }
@@ -1175,6 +1397,10 @@
       },
       "key": {
         "$description": "A key in a shortcut hint, as Notion's: 11 px.",
+        "$value": "{base.font.size.0x6875}"
+      },
+      "tile": {
+        "$description": "A tile's name, as Notion's layout tiles: 11 px.",
         "$value": "{base.font.size.0x6875}"
       }
     },

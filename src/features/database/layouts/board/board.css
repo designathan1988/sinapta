@@ -1,6 +1,6 @@
 @layer features {
   .board {
-    --board-card-width: var(--size-card-medium);
+    --board-card-width: var(--size-board-column);
 
     display: flex;
     flex: 1;
@@ -19,9 +19,12 @@
     }
   }
 
-  /* Each column is tinted with its group's color, as in Notion. */
+  /* Each column washed with its group's color, as Notion's
+     --ca-<color>BacPriTra; its New page ringed with the color's line. */
   .board__column {
-    --board-tint: var(--color-chip-gray-bg);
+    --board-tint: var(--color-board-column-gray);
+    --board-line: var(--color-board-line-gray);
+    --board-ink: var(--color-text-secondary);
 
     display: grid;
     flex: none;
@@ -29,47 +32,79 @@
     align-content: start;
     inline-size: var(--board-card-width);
     padding: var(--space-inset-sm);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     background-color: transparent;
 
     .board[data-colored] & {
-      background-color: color-mix(in oklch, var(--board-tint) 45%, transparent);
+      background-color: var(--board-tint);
     }
 
     &[data-color="brown"] {
-      --board-tint: var(--color-chip-brown-bg);
+      --board-tint: var(--color-board-column-brown);
+      --board-line: var(--color-board-line-brown);
+      --board-ink: var(--color-chip-brown-text);
     }
 
     &[data-color="orange"] {
-      --board-tint: var(--color-chip-orange-bg);
+      --board-tint: var(--color-board-column-orange);
+      --board-line: var(--color-board-line-orange);
+      --board-ink: var(--color-chip-orange-text);
     }
 
     &[data-color="yellow"] {
-      --board-tint: var(--color-chip-yellow-bg);
+      --board-tint: var(--color-board-column-yellow);
+      --board-line: var(--color-board-line-yellow);
+      --board-ink: var(--color-chip-yellow-text);
     }
 
     &[data-color="green"] {
-      --board-tint: var(--color-chip-green-bg);
+      --board-tint: var(--color-board-column-green);
+      --board-line: var(--color-board-line-green);
+      --board-ink: var(--color-chip-green-text);
     }
 
     &[data-color="blue"] {
-      --board-tint: var(--color-chip-blue-bg);
+      --board-tint: var(--color-board-column-blue);
+      --board-line: var(--color-board-line-blue);
+      --board-ink: var(--color-chip-blue-text);
     }
 
     &[data-color="purple"] {
-      --board-tint: var(--color-chip-purple-bg);
+      --board-tint: var(--color-board-column-purple);
+      --board-line: var(--color-board-line-purple);
+      --board-ink: var(--color-chip-purple-text);
     }
 
     &[data-color="pink"] {
-      --board-tint: var(--color-chip-pink-bg);
+      --board-tint: var(--color-board-column-pink);
+      --board-line: var(--color-board-line-pink);
+      --board-ink: var(--color-chip-pink-text);
     }
 
     &[data-color="red"] {
-      --board-tint: var(--color-chip-red-bg);
+      --board-tint: var(--color-board-column-red);
+      --board-line: var(--color-board-line-red);
+      --board-ink: var(--color-chip-red-text);
     }
 
     &[data-drop] {
       background-color: var(--color-bg-selected);
+    }
+  }
+
+  /* A card as Notion's: raised on its own surface, 10 px corners, one
+     line 40 px high. A conditional color keeps its own background. */
+  .board .row-card {
+    min-block-size: var(--size-board-row);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-board-card);
+
+    &:not([data-color]) {
+      background-color: var(--color-board-card);
+
+      &:hover {
+        background-color: var(--color-board-card-hover);
+      }
     }
   }
 
@@ -95,14 +130,20 @@
     list-style: none;
   }
 
-  /* "+ New page" at a column's foot, as Notion's: quiet, at the start. */
+  /* "+ New page" at a column's foot, as Notion's: a 40 px row ringed with
+     the column's line, in the column's color when columns are colored. */
   .board__column > .button {
     justify-content: flex-start;
-    min-block-size: var(--size-control-action);
-    padding-inline: var(--space-inset-xs);
-    border-radius: var(--radius-md);
-    color: var(--color-text-tertiary);
+    min-block-size: var(--size-board-row);
+    padding-inline: var(--space-inset-sm);
+    border-radius: var(--radius-lg);
+    box-shadow: inset 0 0 0 var(--size-border-thin) var(--board-line);
+    color: var(--color-text-secondary);
     font-weight: var(--font-weight-regular);
+
+    .board[data-colored] & {
+      color: var(--board-ink);
+    }
   }
 
   .board__menu {

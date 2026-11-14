@@ -152,6 +152,15 @@
       "soft": {
         "$value": "{base.color.night.shadowSoft}"
       },
+      "menuDeep": {
+        "$value": "{base.color.night.menuDeep}"
+      },
+      "menuSoft": {
+        "$value": "{base.color.night.menuSoft}"
+      },
+      "menuFar": {
+        "$value": "{base.color.night.menuFar}"
+      },
       "raisedRing": {
         "$value": "{base.color.night.raisedRing}"
       },
@@ -262,6 +271,90 @@
       },
       "punctuation": {
         "$value": "{base.color.neutral.350}"
+      }
+    },
+    "board": {
+      "column": {
+        "default": {
+          "$value": "{base.color.board.column.default.night}"
+        },
+        "gray": {
+          "$value": "{base.color.board.column.gray.night}"
+        },
+        "brown": {
+          "$value": "{base.color.board.column.brown.night}"
+        },
+        "orange": {
+          "$value": "{base.color.board.column.orange.night}"
+        },
+        "yellow": {
+          "$value": "{base.color.board.column.yellow.night}"
+        },
+        "green": {
+          "$value": "{base.color.board.column.green.night}"
+        },
+        "blue": {
+          "$value": "{base.color.board.column.blue.night}"
+        },
+        "purple": {
+          "$value": "{base.color.board.column.purple.night}"
+        },
+        "pink": {
+          "$value": "{base.color.board.column.pink.night}"
+        },
+        "red": {
+          "$value": "{base.color.board.column.red.night}"
+        }
+      },
+      "line": {
+        "default": {
+          "$value": "{base.color.board.line.default.night}"
+        },
+        "gray": {
+          "$value": "{base.color.board.line.gray.night}"
+        },
+        "brown": {
+          "$value": "{base.color.board.line.brown.night}"
+        },
+        "orange": {
+          "$value": "{base.color.board.line.orange.night}"
+        },
+        "yellow": {
+          "$value": "{base.color.board.line.yellow.night}"
+        },
+        "green": {
+          "$value": "{base.color.board.line.green.night}"
+        },
+        "blue": {
+          "$value": "{base.color.board.line.blue.night}"
+        },
+        "purple": {
+          "$value": "{base.color.board.line.purple.night}"
+        },
+        "pink": {
+          "$value": "{base.color.board.line.pink.night}"
+        },
+        "red": {
+          "$value": "{base.color.board.line.red.night}"
+        }
+      },
+      "card": {
+        "$value": "{base.color.board.card.night}"
+      },
+      "cardHover": {
+        "$value": "{base.color.board.cardHover.night}"
+      },
+      "cardRing": {
+        "$value": "{base.color.board.cardRing.night}"
+      },
+      "cardNear": {
+        "$value": "{base.color.board.cardNear.night}"
+      },
+      "cardFar": {
+        "$value": "{base.color.board.cardFar.night}"
+      },
+      "cardSoft": {
+        "$value": "{base.color.board.cardSoft.night}"
       }
     },
     "tone": {

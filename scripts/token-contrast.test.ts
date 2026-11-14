@@ -34,6 +34,23 @@ const FILLS = [
   ["text.primary", ["accent.range"]],
   ["text.pill", ["accent.pill"]],
   ["text.pill", ["accent.pillOpen"]],
+  // A board (n78, n79): a card's values on the card, and a column's New
+  // page in the column's color over its wash.
+  ["text.secondary", ["board.card"]],
+  ["text.secondary", ["board.cardHover"]],
+  ["text.secondary", ["board.column.gray", "bg.app"]],
+  ...[
+    "brown",
+    "orange",
+    "yellow",
+    "green",
+    "blue",
+    "purple",
+    "pink",
+    "red",
+  ].map(
+    (hue) => [`chip.${hue}.text`, [`board.column.${hue}`, "bg.app"]] as const,
+  ),
 ] as const;
 const PAIRS: readonly (readonly [string, readonly string[]])[] = [
   ...TEXTS.flatMap((text) =>

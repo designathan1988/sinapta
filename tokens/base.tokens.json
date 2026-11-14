@@ -798,6 +798,30 @@
             "alpha": 0.06
           }
         },
+        "menuDeep": {
+          "$description": "Unused by day: Notion's day menu has no deep layer.",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.0, 0.0, 0],
+            "alpha": 0
+          }
+        },
+        "menuSoft": {
+          "$description": "Unused by day: Notion's day menu has no soft layer.",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.0, 0.0, 0],
+            "alpha": 0
+          }
+        },
+        "menuFar": {
+          "$description": "Notion's day menu shade, 0 20px 24px rgba(25, 25, 25, 0.05).",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.2134, 0.0, 89.9],
+            "alpha": 0.05
+          }
+        },
         "raisedRing": {
           "$description": "Notion's --c-shaOutMd ring, #2a1c0012.",
           "$value": {
@@ -1129,6 +1153,30 @@
             "alpha": 0.118
           }
         },
+        "menuDeep": {
+          "$description": "Notion's night menu shade, 0 14px 28px -6px rgb(25 25 25 / 0.2).",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.2134, 0.0, 0],
+            "alpha": 0.2
+          }
+        },
+        "menuSoft": {
+          "$description": "Notion's night menu shade, 0 2px 4px -1px rgb(25 25 25 / 0.12).",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.2134, 0.0, 0],
+            "alpha": 0.118
+          }
+        },
+        "menuFar": {
+          "$description": "Unused by night: Notion's night menu has no far layer.",
+          "$value": {
+            "colorSpace": "oklch",
+            "components": [0.0, 0.0, 0],
+            "alpha": 0
+          }
+        },
         "raisedRing": {
           "$description": "Notion's --c-shaOutMd ring, #383836.",
           "$value": {
@@ -1163,6 +1211,476 @@
           "$value": {
             "colorSpace": "oklch",
             "components": [0.4, 0.008, 230]
+          }
+        }
+      },
+      "board": {
+        "column": {
+          "default": {
+            "day": {
+              "$description": "Notion's --ca-graBacPriTra by day: a board column's wash.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.2916, 0.064, 61.3],
+                "alpha": 0.03
+              }
+            },
+            "night": {
+              "$description": "Notion's --ca-graBacPriTra by night.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.9911, 0.0, 0],
+                "alpha": 0.03
+              }
+            }
+          },
+          "gray": {
+            "day": {
+              "$description": "Notion's --ca-graBacPriTra by day: a board column's wash.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.2916, 0.064, 61.3],
+                "alpha": 0.03
+              }
+            },
+            "night": {
+              "$description": "Notion's --ca-graBacPriTra by night.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.9911, 0.0, 0],
+                "alpha": 0.03
+              }
+            }
+          },
+          "brown": {
+            "day": {
+              "$description": "Notion's --ca-broBacPriTra by day: a board column's wash.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.4156, 0.099, 56.7],
+                "alpha": 0.035
+              }
+            },
+            "night": {
+              "$description": "Notion's --ca-broBacPriTra by night.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.7847, 0.1348, 50.7],
+                "alpha": 0.05
+              }
+            }
+          },
+          "orange": {
+            "day": {
+              "$description": "Notion's --ca-oraBacPriTra by day: a board column's wash.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.5487, 0.161, 43.1],
+                "alpha": 0.043
+              }
+            },
+            "night": {
+              "$description": "Notion's --ca-oraBacPriTra by night.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.7512, 0.1613, 48.8],
+                "alpha": 0.043
+              }
+            }
+          },
+          "yellow": {
+            "day": {
+              "$description": "Notion's --ca-yelBacPriTra by day: a board column's wash.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.7595, 0.1562, 95.8],
+                "alpha": 0.063
+              }
+            },
+            "night": {
+              "$description": "Notion's --ca-yelBacPriTra by night.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.9219, 0.1827, 101.6],
+                "alpha": 0.043
+              }
+            }
+          },
+          "green": {
+            "day": {
+              "$description": "Notion's --ca-greBacPriTra by day: a board column's wash.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.3989, 0.1143, 147.8],
+                "alpha": 0.035
+              }
+            },
+            "night": {
+              "$description": "Notion's --ca-greBacPriTra by night.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.8866, 0.2101, 150.4],
+                "alpha": 0.035
+              }
+            }
+          },
+          "blue": {
+            "day": {
+              "$description": "Notion's --ca-bluBacPriTra by day: a board column's wash.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.5866, 0.1592, 248.4],
+                "alpha": 0.047
+              }
+            },
+            "night": {
+              "$description": "Notion's --ca-bluBacPriTra by night.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.6419, 0.1911, 255.5],
+                "alpha": 0.063
+              }
+            }
+          },
+          "purple": {
+            "day": {
+              "$description": "Notion's --ca-purBacPriTra by day: a board column's wash.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.4026, 0.2089, 303.4],
+                "alpha": 0.03
+              }
+            },
+            "night": {
+              "$description": "Notion's --ca-purBacPriTra by night.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.6821, 0.2251, 310.6],
+                "alpha": 0.05
+              }
+            }
+          },
+          "pink": {
+            "day": {
+              "$description": "Notion's --ca-pinBacPriTra by day: a board column's wash.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.455, 0.1805, 8.6],
+                "alpha": 0.03
+              }
+            },
+            "night": {
+              "$description": "Notion's --ca-pinBacPriTra by night.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.6897, 0.219, 0.3],
+                "alpha": 0.055
+              }
+            }
+          },
+          "red": {
+            "day": {
+              "$description": "Notion's --ca-redBacPriTra by day: a board column's wash.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.5219, 0.2129, 29.1],
+                "alpha": 0.035
+              }
+            },
+            "night": {
+              "$description": "Notion's --ca-redBacPriTra by night.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.7058, 0.1769, 22.7],
+                "alpha": 0.047
+              }
+            }
+          }
+        },
+        "line": {
+          "default": {
+            "day": {
+              "$description": "Notion's --ca-graBorSecTra by day: the ring of a column's New page.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.2378, 0.0489, 82.5],
+                "alpha": 0.07
+              }
+            },
+            "night": {
+              "$description": "Notion's --ca-graBorSecTra by night.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.9968, 0.0157, 106.7],
+                "alpha": 0.082
+              }
+            }
+          },
+          "gray": {
+            "day": {
+              "$description": "Notion's --ca-graBorSecTra by day: the ring of a column's New page.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.2378, 0.0489, 82.5],
+                "alpha": 0.07
+              }
+            },
+            "night": {
+              "$description": "Notion's --ca-graBorSecTra by night.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.9968, 0.0157, 106.7],
+                "alpha": 0.082
+              }
+            }
+          },
+          "brown": {
+            "day": {
+              "$description": "Notion's --ca-broBorSecTra by day: the ring of a column's New page.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.435, 0.1353, 40.5],
+                "alpha": 0.086
+              }
+            },
+            "night": {
+              "$description": "Notion's --ca-broBorSecTra by night.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.818, 0.1167, 53.1],
+                "alpha": 0.133
+              }
+            }
+          },
+          "orange": {
+            "day": {
+              "$description": "Notion's --ca-oraBorSecTra by day: the ring of a column's New page.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.6478, 0.1756, 48.2],
+                "alpha": 0.13
+              }
+            },
+            "night": {
+              "$description": "Notion's --ca-oraBorSecTra by night.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.743, 0.1727, 50.6],
+                "alpha": 0.157
+              }
+            }
+          },
+          "yellow": {
+            "day": {
+              "$description": "Notion's --ca-yelBorSecTra by day: the ring of a column's New page.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.7493, 0.1531, 90.2],
+                "alpha": 0.137
+              }
+            },
+            "night": {
+              "$description": "Notion's --ca-yelBorSecTra by night.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.9133, 0.1318, 94.1],
+                "alpha": 0.13
+              }
+            }
+          },
+          "green": {
+            "day": {
+              "$description": "Notion's --ca-greBorSecTra by day: the ring of a column's New page.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.4402, 0.1191, 150.7],
+                "alpha": 0.09
+              }
+            },
+            "night": {
+              "$description": "Notion's --ca-greBorSecTra by night.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.9044, 0.1607, 156.5],
+                "alpha": 0.118
+              }
+            }
+          },
+          "blue": {
+            "day": {
+              "$description": "Notion's --ca-bluBorSecTra by day: the ring of a column's New page.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.5787, 0.1659, 250.5],
+                "alpha": 0.094
+              }
+            },
+            "night": {
+              "$description": "Notion's --ca-bluBorSecTra by night.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.6898, 0.1667, 253.8],
+                "alpha": 0.173
+              }
+            }
+          },
+          "purple": {
+            "day": {
+              "$description": "Notion's --ca-purBorSecTra by day: the ring of a column's New page.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.4232, 0.2253, 300.5],
+                "alpha": 0.08
+              }
+            },
+            "night": {
+              "$description": "Notion's --ca-purBorSecTra by night.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.7174, 0.1983, 309.7],
+                "alpha": 0.165
+              }
+            }
+          },
+          "pink": {
+            "day": {
+              "$description": "Notion's --ca-pinBorSecTra by day: the ring of a column's New page.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.5301, 0.2132, 4.2],
+                "alpha": 0.086
+              }
+            },
+            "night": {
+              "$description": "Notion's --ca-pinBorSecTra by night.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.7241, 0.1945, 355.4],
+                "alpha": 0.165
+              }
+            }
+          },
+          "red": {
+            "day": {
+              "$description": "Notion's --ca-redBorSecTra by day: the ring of a column's New page.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.573, 0.2276, 30.3],
+                "alpha": 0.094
+              }
+            },
+            "night": {
+              "$description": "Notion's --ca-redBorSecTra by night.",
+              "$value": {
+                "colorSpace": "oklch",
+                "components": [0.7081, 0.1842, 27.3],
+                "alpha": 0.173
+              }
+            }
+          }
+        },
+        "card": {
+          "day": {
+            "$description": "Notion's --c-bacEle by day: a board card.",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [1, 0.0, 0]
+            }
+          },
+          "night": {
+            "$description": "Notion's --c-bacEle by night, rgb(32, 32, 32).",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.2435, 0.0, 0]
+            }
+          }
+        },
+        "cardHover": {
+          "day": {
+            "$description": "A board card pointed at by day: white under Notion's wash rgba(54, 28, 2, 0.031).",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.9796, 0.0017, 67.8]
+            }
+          },
+          "night": {
+            "$description": "A board card pointed at by night, rgb(37, 37, 37).",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.2645, 0.0, 0]
+            }
+          }
+        },
+        "cardRing": {
+          "day": {
+            "$description": "Notion's --ca-borSecTra by day.",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.2378, 0.0489, 82.5],
+              "alpha": 0.07
+            }
+          },
+          "night": {
+            "$description": "Notion's --ca-borSecTra by night.",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.9968, 0.0157, 106.7],
+              "alpha": 0.082
+            }
+          }
+        },
+        "cardNear": {
+          "day": {
+            "$description": "Unused by day: Notion's day card has two far layers.",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0, 0.0, 0],
+              "alpha": 0
+            }
+          },
+          "night": {
+            "$description": "Notion's night card shade, 0 2px 4px rgba(25, 25, 25, 0.08).",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.2134, 0.0, 0],
+              "alpha": 0.08
+            }
+          }
+        },
+        "cardFar": {
+          "day": {
+            "$description": "Notion's day card shade, 0 4px 12px rgba(25, 25, 25, 0.027).",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.2134, 0.0, 0],
+              "alpha": 0.027
+            }
+          },
+          "night": {
+            "$description": "Unused by night.",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0, 0.0, 0],
+              "alpha": 0
+            }
+          }
+        },
+        "cardSoft": {
+          "day": {
+            "$description": "Notion's day card shade, 0 1px 2px rgba(25, 25, 25, 0.02).",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.2134, 0.0, 0],
+              "alpha": 0.02
+            }
+          },
+          "night": {
+            "$description": "Unused by night.",
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0, 0.0, 0],
+              "alpha": 0
+            }
           }
         }
       },
@@ -1591,6 +2109,18 @@
       "15x625": {
         "$value": {
           "value": 15.625,
+          "unit": "rem"
+        }
+      },
+      "3x5625": {
+        "$value": {
+          "value": 3.5625,
+          "unit": "rem"
+        }
+      },
+      "17x25": {
+        "$value": {
+          "value": 17.25,
           "unit": "rem"
         }
       },
