@@ -22,4 +22,14 @@ export const toggleNotices = defineCommand<{ kind: NoticeKind }>({
   },
 });
 
-export const inboxCommands = [markRemindersRead, toggleNotices];
+// Shows new notices as the system's notifications too, or stops.
+export const setDesktopNotices = defineCommand<{ isOn: boolean }>({
+  type: "inbox.setDesktopNotices",
+  handle: (state, { isOn }) => ({ ui: { ...state.ui, desktopNotices: isOn } }),
+});
+
+export const inboxCommands = [
+  markRemindersRead,
+  toggleNotices,
+  setDesktopNotices,
+];

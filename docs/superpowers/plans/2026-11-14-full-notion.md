@@ -123,3 +123,6 @@ transcription.
   search, pages, databases and their query, block children read and
   appended) for the connected pages alone; its changes reach every client
   (`p74-integrations`).
+- [x] 31.3 Notifications to this device: Settings › Notifications turns on
+  desktop notifications, asking the browser; each new notice is then shown
+  by the system and opens its page when clicked (`p75-desktop-notices`).

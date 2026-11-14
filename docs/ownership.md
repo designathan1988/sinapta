@@ -182,6 +182,7 @@ owner listed here exists.
 | The inbox: due reminders, read state, the dialog and the sidebar's count | `src/features/inbox/` | 17 |
 | The inbox's notices from people: mentions, replies, edits to one's pages, pages shared with a guest | `src/features/inbox/inbox-notices.selectors.ts`, `inbox-changes.selectors.ts` | 27 |
 | Settings › Notifications: the kinds of notice the inbox shows, kept per person | `src/features/settings/settings-notifications.view.ts`, `src/features/inbox/inbox.commands.ts` (`toggleNotices`) | 27 |
+| Desktop notifications: each new notice shown by the system while on | `src/features/inbox/inbox-notifier.ts` | 31 |
 | Reminder notifications while the app is open | `src/app/reminder-notices.ts` | 17 |
 | A page's history: its content, restoring a version, the full-window view, what each version changed | `src/features/page-history/` | 17 |
 | Marking commented text | `src/model/rich-text-comments.ts`, `src/ui/rich-text/rich-text-projection.ts` | 17 |

@@ -25,7 +25,11 @@ import { editorCommands } from "../features/editor/index.ts";
 import { aiFeatureCommands } from "../features/ai/index.ts";
 import { peekCommands } from "../features/row-peek/index.ts";
 import { templateCommands } from "../features/templates/index.ts";
-import { inboxCommands } from "../features/inbox/index.ts";
+import {
+  browserNotifier,
+  inboxCommands,
+  startDesktopNotices,
+} from "../features/inbox/index.ts";
 import { markdownImportCommands } from "../features/markdown-import/index.ts";
 import { searchFilterCommands } from "../features/command-palette/index.ts";
 import { startReminderNotices } from "./reminder-notices.ts";
@@ -177,6 +181,7 @@ async function startPersistence(
   sync.start({ store, dispatch, propsSchemas, outbox: createOutbox(adapter) });
   startAi({ store, dispatch });
   startLinkPreviews({ store, dispatch });
+  startDesktopNotices(store, browserNotifier());
   return { isFirstRun };
 }
 

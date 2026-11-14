@@ -10,7 +10,7 @@ import {
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderSwitchMark } from "../../ui/switch/index.ts";
-import { toggleNotices } from "../inbox/index.ts";
+import { setDesktopNotices, toggleNotices } from "../inbox/index.ts";
 import { renderRow } from "./settings-row.view.ts";
 
 const TEXT = COPY.settings;
@@ -46,5 +46,40 @@ export function renderNotifications(
         hint,
         renderSwitch(kind, !muted.has(kind), dispatch),
       );
-    })}`;
+    })}
+    <h4 class="settings__subtitle">${TEXT.desktop}</h4>
+    ${renderRow(TEXT.desktopName, desktopHint(), renderDesktop(state, dispatch))}`;
+}
+
+// The browser's word on notifications from this site.
+function desktopHint(): string {
+  if (typeof Notification === "undefined") return TEXT.desktopMissing;
+  return Notification.permission === "denied"
+    ? TEXT.desktopBlocked
+    : TEXT.desktopHint;
+}
+
+// Turning them on asks the browser first, as Notion's desktop app asks
+// the system.
+function renderDesktop(state: AppState, dispatch: Dispatch): TemplateResult {
+  const isOn = state.ui.desktopNotices;
+  return html`<button
+    type="button"
+    class="settings__switch"
+    role="switch"
+    aria-checked=${String(isOn)}
+    aria-label=${TEXT.desktopName}
+    ?disabled=${typeof Notification === "undefined"}
+    @click=${() => {
+      if (isOn) {
+        dispatch(setDesktopNotices.create({ isOn: false }));
+        return;
+      }
+      void Notification.requestPermission().then((answer) => {
+        dispatch(setDesktopNotices.create({ isOn: answer === "granted" }));
+      });
+    }}
+  >
+    ${renderSwitchMark(isOn)}
+  </button>`;
 }

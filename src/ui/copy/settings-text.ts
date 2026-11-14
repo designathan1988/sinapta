@@ -38,6 +38,13 @@ export const SETTINGS_TEXT = {
     },
     notificationsLead: "Decide when and how you want to be notified",
     inApp: "In-app notifications",
+    desktop: "Desktop notifications",
+    desktopName: "Show notifications on this device",
+    desktopHint:
+      "New notices appear in your system’s notifications, as Notion’s desktop app shows them.",
+    desktopBlocked:
+      "This browser blocks notifications from this site. Allow them in its site settings.",
+    desktopMissing: "This browser cannot show notifications.",
     notices: {
       mention: [
         "Mentions and replies",

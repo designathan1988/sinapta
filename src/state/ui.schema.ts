@@ -19,6 +19,7 @@ const persistedUiSchema = v.object({
   isHomeOpen: v.optional(v.boolean(), false),
   readReminders: v.optional(v.array(v.string()), []),
   mutedNotices: v.optional(v.array(v.picklist(NOTICE_KINDS)), []),
+  desktopNotices: v.optional(v.boolean(), false),
 });
 
 export type PersistedUi = v.InferOutput<typeof persistedUiSchema>;
@@ -35,6 +36,7 @@ export function toPersistedUi(ui: UiState): PersistedUi {
     isHomeOpen: ui.isHomeOpen,
     readReminders: [...ui.readReminders],
     mutedNotices: [...ui.mutedNotices],
+    desktopNotices: ui.desktopNotices,
   };
 }
 

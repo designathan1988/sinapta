@@ -115,6 +115,8 @@ export interface UiState {
   readonly readReminders: readonly string[];
   // The kinds of notice this person turned off in Settings › Notifications.
   readonly mutedNotices: readonly NoticeKind[];
+  // New notices also shown by the system, as Notion's desktop notifications.
+  readonly desktopNotices: boolean;
   // The versions of the page whose history is open, once read.
   readonly pageVersions: {
     readonly pageId: BlockId;
@@ -214,6 +216,7 @@ export function createInitialUiState(): UiState {
     pageVersions: null,
     readReminders: [],
     mutedNotices: [],
+    desktopNotices: false,
     viewSearches: {},
     searchFilters: NO_SEARCH_FILTERS,
     sidebarWidth: SIDEBAR_WIDTH.initial,
