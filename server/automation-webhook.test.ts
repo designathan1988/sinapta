@@ -89,3 +89,26 @@ describe("an automation's webhook, sent by the server", () => {
     expect(server.posted).toEqual([]);
   });
 });
+
+describe("an automation's Slack notification, sent by the server", () => {
+  it("posts its text to the workspace's connected Slack", async () => {
+    const { server, ada, id } = await workspaceOfTwo();
+    const hook = "https://hooks.slack.com/services/T0/B0/secret";
+    await server.call(
+      `POST /api/workspaces/${id}/apps`,
+      { app: "slack", address: hook },
+      ada,
+    );
+
+    const reply = await server.call(
+      `POST /api/workspaces/${id}/automation-slack`,
+      { text: "Ship it in Tasks: Page added" },
+      ada,
+    );
+
+    expect(reply.status).toBe(200);
+    expect(server.posted).toEqual([
+      { url: hook, body: { text: "Ship it in Tasks: Page added" } },
+    ]);
+  });
+});

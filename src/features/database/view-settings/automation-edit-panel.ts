@@ -23,6 +23,7 @@ import {
 } from "./automation-add-panel.ts";
 import {
   HOOK_PANEL,
+  slackItem,
   webhookItem,
   webhookPanel,
 } from "./automation-hook-panel.ts";
@@ -130,6 +131,7 @@ function actionItems(context: TableContext, automation: Automation) {
     add,
     addPageItem(context, automation),
     webhookItem(context, automation),
+    slackItem(context, automation),
   ];
 }
 

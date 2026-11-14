@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { isPageLike } from "../../blocks/page/index.ts";
 import type { BlockId } from "../../model/index.ts";
 import { installAutomations } from "./automation-runner.ts";
-import { selectWebhook } from "./automation-runs.selectors.ts";
+import { selectSlackText, selectWebhook } from "./automation-runs.selectors.ts";
 import {
   addAutomation,
   deleteAutomation,
@@ -207,6 +207,25 @@ describe("a database's automations, as Notion's", () => {
 
     expect(app.database().props.automations?.[0]).not.toHaveProperty(
       "webhookUrl",
+    );
+  });
+
+  it("say in Slack what set them off, once switched on", () => {
+    const { app, first, databaseId, automationId } = setup();
+    const run = { databaseId, automationId, rowId: first, adds: 0 };
+    const off = selectSlackText(app.store.getState(), run);
+
+    app.dispatch(
+      setAutomation.create({
+        databaseId,
+        automationId,
+        patch: { sendsSlack: true },
+      }),
+    );
+
+    expect(off).toBeUndefined();
+    expect(selectSlackText(app.store.getState(), run)).toBe(
+      "First in Untitled database: Page added",
     );
   });
 

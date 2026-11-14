@@ -1491,9 +1491,11 @@ Groups, Notion and Pagecraft alike (Pagecraft changed to match):
     Tasks took Status Done from "Page added → Set Status to Done"; the
     automation, the row, the plan and the test card were then undone.
     Turn into offers Tasks, Meetings and Skills databases; Pagecraft has
-    Tasks (Assignee, Status, Due date). Not yet: Meetings and Skills,
-    Linked events, Manage data sources, Notion's other automation actions
-    (notifications, Slack).
+    Tasks (Assignee, Status, Due date). Since then (`w18-slack`): Send
+    Slack notification, posted by the server to the workspace's
+    connected Slack ("<page> in <database>: Page added"), or "Connect"
+    to Settings › Connections without one. Not yet: Meetings and Skills,
+    Manage data sources, an in-app notification action.
 68. **done** [`n127-sources`; Pagecraft `w17-linked-events`] Notion's
     "Linked events": without a calendar, "Connect your calendar", "Connect
     a calendar to choose meetings and automatically file their notes

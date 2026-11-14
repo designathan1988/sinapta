@@ -59,6 +59,23 @@ describe("an automation's webhook from the client", () => {
     ]);
   });
 
+  it("asks the server to post a Slack notification's text", async () => {
+    const { sync, sent } = setup();
+
+    await answerWebhook(
+      sync,
+      { kind: "automation-slack", text: "Ship it in Tasks: Page added" },
+      "w1",
+    );
+
+    expect(sent).toEqual([
+      {
+        path: "/api/workspaces/w1/automation-slack",
+        body: { text: "Ship it in Tasks: Page added" },
+      },
+    ]);
+  });
+
   it("sends nothing without a server workspace", async () => {
     const { sync, sent } = setup();
 

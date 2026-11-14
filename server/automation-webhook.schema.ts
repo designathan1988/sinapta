@@ -2,6 +2,10 @@
 // it, parsed at the boundary: the address, and the page it ran on.
 import * as v from "valibot";
 
+export const slackBodySchema = v.object({
+  text: v.pipe(v.string(), v.minLength(1), v.maxLength(2000)),
+});
+
 export const webhookBodySchema = v.object({
   url: v.pipe(v.string(), v.minLength(1), v.maxLength(2000)),
   payload: v.object({

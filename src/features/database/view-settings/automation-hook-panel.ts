@@ -1,10 +1,12 @@
 // An automation's "Send webhook", as Notion's: the row under Do, and the
 // panel with the address the page is posted to (by the workspace's
 // server), and Remove webhook. The browser's own workspace has no server
-// to send it, which the panel says.
+// to send it, which the panel says. And Send Slack notification.
 import { html } from "lit-html";
 import type { Automation } from "../../../blocks/database/index.ts";
+import { openOverlay } from "../../../state/index.ts";
 import { COPY } from "../../../ui/copy.ts";
+import { SETTINGS_OVERLAY_KIND } from "../../../ui/shortcuts/index.ts";
 import { renderMenuName, type MenuEntry } from "../../../ui/menu/index.ts";
 import { AUTOMATION_PANEL, setAutomation } from "../automation.commands.ts";
 import type { TableContext } from "../table-cell.view.ts";
@@ -64,4 +66,43 @@ export function webhookPanel(
   };
   const items = automation.webhookUrl === undefined ? [] : [remove];
   return { title: TEXT.sendWebhook, back, lead, items };
+}
+
+// "Send Slack notification": a switch while Slack is connected (Settings ›
+// Connections), else a row that leads there.
+export function slackItem(
+  context: TableContext,
+  automation: Automation,
+): MenuEntry {
+  const hasSlack = context.state.persistence.sync.apps.some(
+    (app) => app.app === "slack",
+  );
+  if (!hasSlack)
+    return {
+      label: TEXT.sendSlack,
+      icon: "bell",
+      value: TEXT.connectSlack,
+      onSelect: () =>
+        context.dispatch(
+          openOverlay.create({
+            overlay: { kind: SETTINGS_OVERLAY_KIND, anchorId: "connections" },
+          }),
+        ),
+    };
+  const isOn = automation.sendsSlack === true;
+  return {
+    label: TEXT.sendSlack,
+    icon: "bell",
+    check: "switch",
+    isChecked: isOn,
+    keepsOpen: true,
+    onSelect: () =>
+      context.dispatch(
+        setAutomation.create({
+          databaseId: context.model.database.id,
+          automationId: automation.id,
+          patch: { sendsSlack: !isOn },
+        }),
+      ),
+  };
 }

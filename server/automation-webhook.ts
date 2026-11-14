@@ -1,10 +1,15 @@
 // A database automation's "Send webhook", as Notion's: a member's client
 // asks, and the server posts the page the automation ran on to the
 // address, as JSON, with the same guards as a connected app's webhook (a
-// time limit, no redirects, no host on this machine or its network).
+// time limit, no redirects, no host on this machine or its network); and
+// its "Send Slack notification", posted to the connected channels.
 import * as v from "valibot";
 import { answer, type ApiContext, type RouteTable } from "./api.ts";
-import { webhookBodySchema } from "./automation-webhook.schema.ts";
+import {
+  slackBodySchema,
+  webhookBodySchema,
+} from "./automation-webhook.schema.ts";
+import { notifyChannels } from "./app-connections.ts";
 import type { ApiRequest, ApiResponse } from "./http-exchange.ts";
 import { isFetchable } from "./link-preview.ts";
 import { sessionUser } from "./sessions.ts";
@@ -35,6 +40,23 @@ async function send(
   return answer(200, { sent: true });
 }
 
+// "Send Slack notification": the text, posted to each channel the
+// workspace connected (Settings › Connections), as its notices are.
+async function slack(
+  request: ApiRequest,
+  context: ApiContext,
+): Promise<ApiResponse> {
+  const user = sessionUser(context, request);
+  if (user === undefined) return answer(401, { error: "signed-out" });
+  const workspace = membership(context, request.params.id ?? "", user.id);
+  if (workspace === undefined) return answer(404, { error: "not-found" });
+  const parsed = v.safeParse(slackBodySchema, request.body);
+  if (!parsed.success) return answer(400, { error: "bad-request" });
+  await notifyChannels(context, workspace.id, parsed.output.text);
+  return answer(200, { sent: true });
+}
+
 export const AUTOMATION_WEBHOOK_ROUTES: RouteTable = {
+  "POST /api/workspaces/:id/automation-slack": slack,
   "POST /api/workspaces/:id/automation-webhook": send,
 };

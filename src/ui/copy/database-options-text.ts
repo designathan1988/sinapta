@@ -71,6 +71,10 @@ export const DATABASE_OPTIONS_TEXT = {
   webhookNeedsServer:
     "Webhooks are sent by a workspace's server: sign in to send them.",
   removeWebhook: "Remove webhook",
+  sendSlack: "Send Slack notification",
+  connectSlack: "Connect",
+  slackText: (page: string, database: string, what: string) =>
+    `${page} in ${database}: ${what}`,
   turnInto: "Turn into",
   linkedEvents: "Linked events",
   connectCalendarTitle: "Connect your calendar",

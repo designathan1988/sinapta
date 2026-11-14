@@ -23,6 +23,9 @@ export const automationSchema = v.object({
   addPageTo: v.optional(v.string()),
   // Send webhook (version 32): the address the page is posted to.
   webhookUrl: v.optional(v.string()),
+  // Send Slack notification (version 33): to the workspace's connected
+  // Slack.
+  sendsSlack: v.optional(v.boolean()),
 });
 
 export type Automation = v.InferOutput<typeof automationSchema>;

@@ -5,6 +5,7 @@ import { DATABASE_TYPE, isPageLike } from "../../blocks/page/index.ts";
 import type { Automation, DatabaseBlock } from "../../blocks/database/index.ts";
 import type { Block, BlockId } from "../../model/index.ts";
 import type { AppState, WebhookPayload } from "../../state/index.ts";
+import { COPY } from "../../ui/copy.ts";
 
 export interface AutomationRun {
   readonly databaseId: BlockId;
@@ -71,12 +72,8 @@ export function selectAutomationRuns(
   });
 }
 
-// What Send webhook posts for a run: the page, its title and its values by
-// property name; none when the automation sends no webhook.
-export function selectWebhook(
-  state: AppState,
-  run: AutomationRun,
-): { readonly url: string; readonly payload: WebhookPayload } | undefined {
+// The database, the page and the automation of a run, while all are.
+function partsOf(state: AppState, run: AutomationRun) {
   const database = state.workspace.blocks[run.databaseId];
   const row = state.workspace.blocks[run.rowId];
   if (database === undefined || !isDatabase(database)) return undefined;
@@ -84,7 +81,33 @@ export function selectWebhook(
   const automation = database.props.automations?.find(
     (item) => item.id === run.automationId,
   );
-  const url = automation?.webhookUrl;
+  return automation === undefined ? undefined : { database, row, automation };
+}
+
+function nameOf(rich: readonly { readonly text: string }[]): string {
+  return rich.map((span) => span.text).join("") || COPY.database.untitled;
+}
+
+// "Page added", or "<property> edited".
+function triggerText(database: DatabaseBlock, automation: Automation): string {
+  const { trigger } = automation;
+  if (trigger.kind === "page-added") return COPY.database.pageAdded;
+  const property = database.props.properties.find(
+    (item) => item.id === trigger.propertyId,
+  );
+  return COPY.database.propertyEdited(property?.name ?? "");
+}
+
+// What Send webhook posts for a run: the page, its title and its values by
+// property name; none when the automation sends no webhook.
+export function selectWebhook(
+  state: AppState,
+  run: AutomationRun,
+): { readonly url: string; readonly payload: WebhookPayload } | undefined {
+  const parts = partsOf(state, run);
+  if (parts === undefined) return undefined;
+  const { database, row, automation } = parts;
+  const url = automation.webhookUrl;
   if (url === undefined || url === "") return undefined;
   const values: Readonly<Record<string, unknown>> = row.props.values ?? {};
   const properties = Object.fromEntries(
@@ -100,4 +123,21 @@ export function selectWebhook(
       data: { object: "page", id: row.id, title, properties },
     },
   };
+}
+
+// What Send Slack notification posts for a run: the page, its database
+// and what set it off; none when the automation sends none.
+export function selectSlackText(
+  state: AppState,
+  run: AutomationRun,
+): string | undefined {
+  const parts = partsOf(state, run);
+  if (parts === undefined) return undefined;
+  const { database, row, automation } = parts;
+  if (automation.sendsSlack !== true) return undefined;
+  return COPY.database.slackText(
+    nameOf(row.props.title),
+    nameOf(database.props.title),
+    triggerText(database, automation),
+  );
 }

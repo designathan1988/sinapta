@@ -11,6 +11,7 @@ import {
 } from "../../state/index.ts";
 import {
   selectAutomationRuns,
+  selectSlackText,
   selectWebhook,
   type AutomationRun,
 } from "./automation-runs.selectors.ts";
@@ -26,7 +27,8 @@ function isLocalChange(before: AppState, after: AppState): boolean {
   return undo.at(-1) !== earlier.at(-1);
 }
 
-// Send webhook goes through the open workspace's server; the browser's
+// Send webhook and Send Slack notification go through the open
+// workspace's server; the browser's
 // own workspace has none to send it.
 function sendWebhook(
   state: AppState,
@@ -35,10 +37,17 @@ function sendWebhook(
 ): void {
   if (state.persistence.sync.workspaceId === null) return;
   const webhook = selectWebhook(state, run);
-  if (webhook === undefined) return;
-  dispatch(
-    requestSync.create({ request: { kind: "automation-webhook", ...webhook } }),
-  );
+  if (webhook !== undefined)
+    dispatch(
+      requestSync.create({
+        request: { kind: "automation-webhook", ...webhook },
+      }),
+    );
+  const text = selectSlackText(state, run);
+  if (text !== undefined)
+    dispatch(
+      requestSync.create({ request: { kind: "automation-slack", text } }),
+    );
 }
 
 export function installAutomations(store: AppStore, dispatch: Dispatch): void {

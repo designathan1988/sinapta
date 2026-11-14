@@ -84,6 +84,7 @@ export type SyncRequest =
   | { readonly kind: "rename"; readonly name: string }
   | { readonly kind: "plan"; readonly plan: PlanId }
   | { readonly kind: "billing" }
+  | { readonly kind: "automation-slack"; readonly text: string }
   | {
       readonly kind: "automation-webhook";
       readonly url: string;
