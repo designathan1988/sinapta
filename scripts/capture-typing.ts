@@ -58,7 +58,11 @@ function needsShift(char: string): boolean {
 }
 
 // The gap before this character, from the speed and what is around it.
-function gapBefore(text: string, index: number, typist: Typist): number {
+function gapBefore(
+  text: readonly string[],
+  index: number,
+  typist: Typist,
+): number {
   const mean = 60000 / (typist.wpm * 5);
   const before = text[index - 1] ?? " ";
   const char = text[index] ?? "";
@@ -121,11 +125,11 @@ function strike(pen: Pen, char: string): void {
 
 // A slip: the wrong key, one or two more keys of the word, a pause to
 // notice, Backspace for each, then the word goes on as meant.
-function slip(pen: Pen, text: string, index: number): void {
+function slip(pen: Pen, text: readonly string[], index: number): void {
   const { typist } = pen;
   const { random } = typist;
   const more = text.slice(index + 1, index + 1 + Math.floor(random() * 3));
-  const extra = more.includes(" ") ? "" : more;
+  const extra = more.includes(" ") ? [] : more;
   strike(pen, neighbour(text[index] ?? "", random));
   for (const char of extra) {
     pen.t += gapBefore(text, index + 1, typist);
@@ -143,13 +147,21 @@ export interface Typing {
   readonly typos: number;
 }
 
-export function planTyping(text: string, typist: Typist): Typing {
+// What a person types one at a time: a letter, an accented letter, an
+// emoji with its skin tone or a flag, never half of one.
+function graphemes(text: string): string[] {
+  const segmenter = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+  return [...segmenter.segment(text)].map((part) => part.segment);
+}
+
+export function planTyping(typed: string, typist: Typist): Typing {
+  const text = graphemes(typed);
   const pen: Pen = { typist, events: [], t: 0, lastDown: -1, shiftUp: -1 };
   let typos = 0;
   for (let index = 0; index < text.length; index += 1) {
     if (index > 0) pen.t += gapBefore(text, index, typist);
     const char = text[index] ?? "";
-    if (/[a-z]/i.test(char) && typist.random() < typist.typos) {
+    if (/^[a-z]$/i.test(char) && typist.random() < typist.typos) {
       slip(pen, text, index);
       typos += 1;
     }

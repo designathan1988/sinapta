@@ -107,6 +107,17 @@ describe("typing", () => {
     }
   });
 
+  it("types emoji, flags and combining accents whole, never half", () => {
+    const text = "Café 🎉 👍🏽 🇧🇷 é";
+    for (const seed of [1, 2, 3]) {
+      const typist = { random: seededRandom(seed), wpm: 60, typos: 0.2 };
+      const { events } = planTyping(text, typist);
+      expect(typedText(events)).toBe(text);
+      const loneHalf = /^[\uD800-\uDFFF]$/;
+      expect(events.some((event) => loneHalf.test(event.key))).toBe(false);
+    }
+  });
+
   it("slips sometimes when asked to", () => {
     const typist = { random: seededRandom(5), wpm: 60, typos: 0.2 };
     expect(
