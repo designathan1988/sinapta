@@ -1,5 +1,6 @@
-// What the mention menu offers for the text typed after "@" or "[[": pages
-// whose title matches and, after "@", dates.
+// What the mention menu offers for the text typed after "@", "[[" or "+":
+// pages whose title matches; after "@", people and dates; after "+", a new
+// subpage first, then the pages to link to.
 import { isTextBlock, textOf } from "../../blocks/index.ts";
 import {
   isPageLike,
@@ -12,6 +13,7 @@ import { COPY } from "../../ui/copy.ts";
 
 export const MENTION_MENU_OVERLAY = "mention-menu";
 export const PAGE_LINK_MENU_OVERLAY = "page-link-menu";
+export const PLUS_MENU_OVERLAY = "page-plus-menu";
 
 const PAGE_LIMIT = 8;
 const DAY_MS = 86_400_000;
@@ -23,10 +25,18 @@ const DATE_FORMAT = new Intl.DateTimeFormat("en-US", {
   timeZone: "UTC",
 });
 
+// What a "+" item makes in place of the line: a subpage, or a link.
+export type PlusAction =
+  | { readonly kind: "subpage"; readonly title: string }
+  | { readonly kind: "link"; readonly pageId: BlockId };
+
 export interface MentionItem {
   readonly label: string;
   // The span that takes the place of what was typed.
   readonly span: TextSpan;
+  readonly action?: PlusAction;
+  // The heading the item is listed under, if any.
+  readonly section?: string;
 }
 
 function fold(text: string): string {
@@ -115,6 +125,40 @@ function personItems(state: AppState, needle: string): MentionItem[] {
     }));
 }
 
+// After "+": "New subpage" named as typed, then "Link to page". A space
+// right after the "+" closes the menu: "+ " starts a bulleted list.
+function plusItems(state: AppState, typed: Typed): MentionItem[] {
+  if (typed.raw.trimStart() !== typed.raw) return [];
+  const title = typed.raw.trim();
+  const subpage: MentionItem[] =
+    title === ""
+      ? []
+      : [
+          {
+            label: TEXT.newSubpage(title),
+            span: { text: title },
+            action: { kind: "subpage", title },
+          },
+        ];
+  const links = pageItems(state, typed.needle).map((item) => {
+    const pageId =
+      item.span.mention?.kind === "page" ? item.span.mention.pageId : undefined;
+    if (pageId === undefined) return item;
+    const action = { kind: "link" as const, pageId };
+    return { ...item, action, section: TEXT.linkToPage };
+  });
+  return [...subpage, ...links];
+}
+
+function itemsFor(state: AppState, typed: Typed, today: string) {
+  const { marker, needle } = typed;
+  if (marker === "+") return plusItems(state, typed);
+  const pages = pageItems(state, needle);
+  return marker === "@"
+    ? [...personItems(state, needle), ...pages, ...dateItems(today, needle)]
+    : pages;
+}
+
 export interface OpenMentionMenu {
   readonly blockId: BlockId;
   // Offsets of the "@" or "[[" and of the caret in the block's text.
@@ -127,6 +171,7 @@ export interface OpenMentionMenu {
 const MARKERS: Readonly<Record<string, string>> = {
   [MENTION_MENU_OVERLAY]: "@",
   [PAGE_LINK_MENU_OVERLAY]: "[[",
+  [PLUS_MENU_OVERLAY]: "+",
 };
 
 interface Typed {
@@ -134,8 +179,9 @@ interface Typed {
   readonly start: number;
   readonly end: number;
   readonly marker: string;
-  // What was typed after the marker, folded for matching.
+  // What was typed after the marker, folded for matching, and as typed.
   readonly needle: string;
+  readonly raw: string;
 }
 
 // The marker and what follows it up to the caret, while both are there.
@@ -158,8 +204,8 @@ function typedQuery(state: AppState): Typed | undefined {
   const text = textOf(block);
   const isThere = text.slice(start, start + marker.length) === marker;
   if (!isThere || end < start + marker.length) return;
-  const needle = fold(text.slice(start + marker.length, end));
-  return { blockId: block.id, start, end, marker, needle };
+  const raw = text.slice(start + marker.length, end);
+  return { blockId: block.id, start, end, marker, needle: fold(raw), raw };
 }
 
 // The open menu, or undefined when it is closed, its marker is gone, the
@@ -170,12 +216,8 @@ export function selectOpenMentionMenu(
 ): OpenMentionMenu | undefined {
   const typed = typedQuery(state);
   if (typed === undefined) return;
-  const { blockId, start, end, marker, needle } = typed;
-  const pages = pageItems(state, needle);
-  const items =
-    marker === "@"
-      ? [...personItems(state, needle), ...pages, ...dateItems(today, needle)]
-      : pages;
+  const { blockId, start, end } = typed;
+  const items = itemsFor(state, typed, today);
   if (items.length === 0) return;
   const activeIndex = Math.min(
     state.ui.overlay?.activeIndex ?? 0,

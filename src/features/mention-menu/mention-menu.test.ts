@@ -3,6 +3,7 @@ import { createState, TODAY } from "./mention-menu-builder.ts";
 import {
   MENTION_MENU_OVERLAY,
   PAGE_LINK_MENU_OVERLAY,
+  PLUS_MENU_OVERLAY,
   selectOpenMentionMenu,
 } from "./mention-menu.selectors.ts";
 
@@ -66,5 +67,33 @@ describe("selectOpenMentionMenu", () => {
       date: "2026-11-12",
       isReminder: true,
     });
+  });
+});
+
+describe("the + menu", () => {
+  it("offers a new subpage named as typed, then pages to link to", () => {
+    const menu = selectOpenMentionMenu(
+      createState("+Road", PLUS_MENU_OVERLAY),
+      TODAY,
+    );
+
+    expect(menu?.items).toEqual([
+      {
+        label: "New subpage “Road”",
+        span: { text: "Road" },
+        action: { kind: "subpage", title: "Road" },
+      },
+      expect.objectContaining({
+        label: "Roadmap plan",
+        action: { kind: "link", pageId: "plan" },
+        section: "Link to page",
+      }),
+    ]);
+  });
+
+  it("closes when a space follows the +, which starts a list", () => {
+    expect(
+      selectOpenMentionMenu(createState("+ ", PLUS_MENU_OVERLAY), TODAY),
+    ).toBeUndefined();
   });
 });

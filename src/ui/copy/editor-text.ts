@@ -36,6 +36,8 @@ export const EDITOR_TEXT = {
     remindToday: "Remind me today",
     remindTomorrow: "Remind me tomorrow",
     remindNextWeek: "Remind me next week",
+    newSubpage: (title: string) => `New subpage “${title}”`,
+    linkToPage: "Link to page",
   },
   blockMenu: {
     open: "Block actions",
@@ -105,6 +107,13 @@ export const EDITOR_TEXT = {
     purple: "Purple",
     pink: "Pink",
     red: "Red",
+  },
+  pasteAs: {
+    title: "Paste as",
+    mention: "Mention",
+    url: "URL",
+    bookmark: "Create bookmark",
+    embed: "Embed",
   },
   link: {
     fieldLabel: "Link address",

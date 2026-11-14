@@ -4,6 +4,7 @@
 import { blockDefinition } from "../../blocks/index.ts";
 import {
   BLOCK_CLIPBOARD_TYPE,
+  graphemeCount,
   parseBlockClipboard,
   safeHref,
   type BlockId,
@@ -20,6 +21,7 @@ import {
 import type { AppState } from "../../state/index.ts";
 import type { InputContext } from "./editor-input.view.ts";
 import { pasteBlocks } from "./editor-paste-blocks.commands.ts";
+import { openPasteAs } from "./editor-paste-as.view.ts";
 import { pasteLines } from "./editor-paste.commands.ts";
 import { replaceText, setTextLink } from "./editor.commands.ts";
 
@@ -107,7 +109,8 @@ function addressOf(event: InputEvent) {
 }
 
 // An address pasted over selected text links that text; pasted anywhere
-// else it becomes a link that shows the address.
+// else it becomes a link that shows the address, and a web address opens
+// Notion's "Paste as" menu under it.
 function pasteAddress(
   target: PasteTarget,
   address: { text: string; href: string },
@@ -119,6 +122,9 @@ function pasteAddress(
   }
   const lines = [[{ text: address.text, href: address.href }]];
   dispatch(pasteLines.create({ ...target, lines }));
+  if (!address.href.startsWith("http")) return;
+  const end = target.start + graphemeCount(address.text);
+  openPasteAs({ ...target, end, href: address.href }, dispatch);
 }
 
 // A block that keeps line breaks itself, such as code, takes the plain

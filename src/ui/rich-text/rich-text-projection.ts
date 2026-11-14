@@ -38,16 +38,35 @@ function toned(node: Node, span: TextSpan): Node {
 // A mention is one piece the caret steps over; its data attributes say
 // what it points to.
 function mentionNode(span: TextSpan, mention: Mention): Node {
-  const element = wrap(document.createTextNode(span.text), "span");
+  const tag = mention.kind === "link" ? "a" : "span";
+  const element = wrap(document.createTextNode(span.text), tag);
   element.className = "mention";
   element.setAttribute("contenteditable", "false");
-  if (mention.kind === "page") element.dataset.pageId = mention.pageId;
-  else if (mention.kind === "person") element.dataset.personId = mention.userId;
-  else {
-    element.dataset.date = mention.date;
-    if (mention.isReminder === true) element.dataset.reminder = "";
+  switch (mention.kind) {
+    case "page":
+      element.dataset.pageId = mention.pageId;
+      break;
+    case "person":
+      element.dataset.personId = mention.userId;
+      break;
+    case "link":
+      linkMention(element, mention.href);
+      break;
+    default:
+      element.dataset.date = mention.date;
+      if (mention.isReminder === true) element.dataset.reminder = "";
   }
   return element;
+}
+
+// A web page's mention opens it in a new tab, as a link does.
+function linkMention(element: HTMLElement, href: string): void {
+  const safe = safeHref(href);
+  if (safe === undefined) return;
+  element.setAttribute("href", safe);
+  element.setAttribute("target", "_blank");
+  element.setAttribute("rel", "noopener noreferrer");
+  element.dataset.link = "";
 }
 
 // An inline equation is one piece too; it is drawn in its own shadow

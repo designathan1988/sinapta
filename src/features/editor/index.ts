@@ -4,7 +4,9 @@ import { editorEquationCommands } from "./editor-equation.commands.ts";
 import { editorMentionCommands } from "./editor-mention.commands.ts";
 import { editorInsertCommands } from "./editor-insert.commands.ts";
 import { editorMoveCommands } from "./editor-move.commands.ts";
+import { editorPlusCommands } from "./editor-plus.commands.ts";
 import { editorPasteBlocksCommands } from "./editor-paste-blocks.commands.ts";
+import { editorPasteAsCommands } from "./editor-paste-as.commands.ts";
 import { editorPasteCommands } from "./editor-paste.commands.ts";
 import { editorSelectionCommands } from "./editor-selection.commands.ts";
 import { editorStructureCommands } from "./editor-structure.commands.ts";
@@ -13,6 +15,7 @@ import { editorCommands as textCommands } from "./editor.commands.ts";
 export { setBlockColor } from "./editor-color.commands.ts";
 export { writeSystemClipboard } from "./editor-clipboard.view.ts";
 export { insertMentionAt } from "./editor-mention.commands.ts";
+export { createSubpageAt, linkPageAt } from "./editor-plus.commands.ts";
 export { convertBlock } from "./editor-convert.commands.ts";
 export { moveBlocksToPage } from "./editor-move.commands.ts";
 export { propsFor as pastedBlockProps } from "./editor-paste-blocks.commands.ts";
@@ -39,9 +42,11 @@ export const editorCommands = [
   ...editorConvertCommands,
   ...editorColorCommands,
   ...editorMentionCommands,
+  ...editorPlusCommands,
   ...editorInsertCommands,
   ...editorMoveCommands,
   ...editorPasteCommands,
+  ...editorPasteAsCommands,
   ...editorPasteBlocksCommands,
   ...editorSelectionCommands,
   ...editorEquationCommands,

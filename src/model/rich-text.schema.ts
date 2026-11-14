@@ -1,5 +1,6 @@
 import * as v from "valibot";
 import { blockIdSchema } from "./id.schema.ts";
+import { safeHref } from "./link-href.ts";
 
 // The nine named tones of Notion's palette, shared by text color,
 // highlight and select options.
@@ -29,6 +30,14 @@ export const mentionSchema = v.variant("kind", [
     kind: v.literal("person"),
     userId: v.pipe(v.string(), v.minLength(1)),
     name: v.string(),
+  }),
+  // A web page, as Notion's "Paste as › Mention": shown by its title.
+  v.object({
+    kind: v.literal("link"),
+    href: v.pipe(
+      v.string(),
+      v.check((href) => safeHref(href) !== undefined),
+    ),
   }),
 ]);
 

@@ -33,6 +33,7 @@ import {
   renderColorMenu,
 } from "./editor-color-menu.view.ts";
 import { LINK_OVERLAY, renderLinkField } from "./editor-link.view.ts";
+import { PASTE_AS_OVERLAY, renderPasteAs } from "./editor-paste-as.view.ts";
 import type { InputContext } from "./editor-input.view.ts";
 import { renderAddCover, renderCover } from "./editor-cover.view.ts";
 import { renderBacklinks } from "../backlinks/index.ts";
@@ -199,6 +200,9 @@ export function renderEditorOverlay(
   }
   if (state.ui.overlay?.kind === BLOCK_COLOR_OVERLAY) {
     return renderColorMenu(state, dispatch);
+  }
+  if (state.ui.overlay?.kind === PASTE_AS_OVERLAY) {
+    return renderPasteAs(state, dispatch);
   }
   if (state.ui.overlay?.kind === INLINE_EQUATION_OVERLAY) {
     return renderInlineEquationEditor(state, dispatch);

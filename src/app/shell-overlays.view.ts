@@ -27,6 +27,7 @@ import {
 import {
   MENTION_MENU_OVERLAY,
   PAGE_LINK_MENU_OVERLAY,
+  PLUS_MENU_OVERLAY,
   renderMentionMenu,
 } from "../features/mention-menu/index.ts";
 import { MOVE_TO_OVERLAY, renderMoveTo } from "../features/move-to/index.ts";
@@ -104,6 +105,7 @@ const OVERLAYS: Readonly<Record<string, OverlayView>> = {
   [SLASH_MENU_OVERLAY]: renderSlashMenu,
   [MENTION_MENU_OVERLAY]: renderMentionMenu,
   [PAGE_LINK_MENU_OVERLAY]: renderMentionMenu,
+  [PLUS_MENU_OVERLAY]: renderMentionMenu,
   [EMOJI_MENU_OVERLAY]: renderEmojiMenu,
   [PAGE_MENU_OVERLAY]: renderPageMenu,
   [TONE_OVERLAY]: renderTonePicker,

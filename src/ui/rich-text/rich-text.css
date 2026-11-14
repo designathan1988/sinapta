@@ -128,6 +128,12 @@
     &[data-date]::before {
       content: "@";
     }
+
+    /* A web page's mention, as Notion's: a mark, then the page's name. */
+    &[data-link]::before {
+      content: "↗ ";
+      color: var(--color-text-tertiary);
+    }
   }
 
   /* An inline equation is drawn in its own shadow root; this is the box

@@ -1,4 +1,5 @@
-// The menu that "@" and "[[" open: pages and dates to mention. Focus stays
+// The menu that "@", "[[" and "+" open: pages and dates to mention, and
+// after "+", a new subpage or a page to link to. Focus stays
 // in the text, as with the slash menu; its keys are scoped keys.
 import "./mention-menu.css";
 import { html, nothing, type TemplateResult } from "lit-html";
@@ -11,9 +12,14 @@ import {
 } from "../../state/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { renderIcon } from "../../ui/icon/index.ts";
 import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
 import type { ScopedKeyHandler, ScopedKeys } from "../../ui/shortcuts/index.ts";
-import { insertMentionAt } from "../editor/index.ts";
+import {
+  createSubpageAt,
+  insertMentionAt,
+  linkPageAt,
+} from "../editor/index.ts";
 import {
   selectOpenMentionMenu,
   type MentionItem,
@@ -31,8 +37,16 @@ function choose(
   dispatch: Dispatch,
 ): void {
   const { blockId, start, end } = menu;
+  const typed = { blockId, start, end };
   dispatch(closeOverlay.create({}));
-  dispatch(insertMentionAt.create({ blockId, start, end, span: item.span }));
+  const { action } = item;
+  if (action?.kind === "subpage") {
+    dispatch(createSubpageAt.create({ ...typed, title: action.title }));
+  } else if (action?.kind === "link") {
+    dispatch(linkPageAt.create({ ...typed, pageId: action.pageId }));
+  } else {
+    dispatch(insertMentionAt.create({ ...typed, span: item.span }));
+  }
 }
 
 function highlight(
@@ -91,13 +105,31 @@ function renderOption(
       if (isActive) option?.scrollIntoView({ block: "nearest" });
     })}
   >
-    <span>${item.label}</span>
+    ${
+      item.action === undefined
+        ? nothing
+        : html`<span class="mention-menu__icon" aria-hidden="true"
+            >${renderIcon(item.action.kind === "subpage" ? "plus" : "page")}</span
+          >`
+    }
+    <span class="mention-menu__label">${item.label}</span>
     ${
       isDate
         ? html`<span class="mention-menu__detail">${item.span.text}</span>`
         : nothing
     }
   </div>`;
+}
+
+// The heading of a section, before its first item.
+function sectionBefore(menu: OpenMentionMenu, index: number) {
+  const section = menu.items[index]?.section;
+  if (section === undefined || menu.items[index - 1]?.section === section) {
+    return nothing;
+  }
+  const rule = index === 0 ? nothing : html`<hr class="mention-menu__rule" />`;
+  return html`${rule}
+    <div class="mention-menu__section" role="presentation">${section}</div>`;
 }
 
 export function renderMentionMenu(
@@ -125,8 +157,13 @@ export function renderMentionMenu(
     ${ref(showPopoverWhenConnected)}
     @pointerdown=${onPointerDown}
   >
-    ${menu.items.map((item, index) =>
-      renderOption(item, index, index === menu.activeIndex),
+    ${menu.items.map(
+      (item, index) =>
+        html`${sectionBefore(menu, index)}${renderOption(
+          item,
+          index,
+          index === menu.activeIndex,
+        )}`,
     )}
   </div>`;
 }

@@ -1266,6 +1266,31 @@ items above, found while photographing them:
     guests, both refused by the server), Closed listed to everyone with
     Request to join and its owners' Approve, Private known to its members
     alone, and the limit the server keeps.
+49. **done** [`n95-paste-plus`; Pagecraft `p79-paste-as`] A lone web
+    address pasted into a line stays a link and opens "Colar como"
+    (Paste as) under its end: a 200 × 123 panel, 10 px radius, a gray
+    heading, then Menção (Mention, highlighted), URL, Criar marcador
+    (Create bookmark) and Incorporar (Embed). Pagecraft has the same
+    menu under the line: Mention makes a link mention (the address
+    without its scheme, after a "↗"), URL keeps the link, Create
+    bookmark and Embed turn a line holding only the link into that block
+    or add it after the line. Embed is offered for the hosts Pagecraft
+    frames only (its content security policy); Notion offers it for any
+    address. Notion's panel is 200 px wide, Pagecraft's the 282 px of its
+    other menus; a mention in Notion shows the page's own title. The
+    paste was undone in Notion.
+50. **done** [`n97-plus`; Pagecraft `p78-plus`] "+" then words opens a
+    330 px menu over the line: "Nova subpágina “te”" with a plus, "Nova
+    página “te” em…" with an arrow, a rule, "Link para a página" and the
+    pages that match, each with its path, and a feedback line at the
+    foot. Pagecraft offers "New subpage “…”" and "Link to page" with the
+    matching pages; a subpage made so takes the line's place (or follows
+    a line with other words), a page picked becomes a link to page; "+"
+    then a space still starts a bulleted list. Not built: "New page in…"
+    and the feedback line. Undone in Notion (16 blocks as before).
+51. **open** [`n97-plus/02-plus`] Notion's top bar has a comments button
+    (a speech bubble) between Copy link and the star, which opens the
+    page's comments; Pagecraft's top bar has none yet.
 
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,

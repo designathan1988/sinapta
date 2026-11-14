@@ -119,6 +119,20 @@ describe("pasteInto", () => {
       lines: [[{ text: "https://example.com", href: "https://example.com/" }]],
     });
   });
+
+  it("opens Notion's Paste as menu under a pasted web address", () => {
+    const sent = paste({ "text/plain": "https://example.com" });
+
+    expect(sent[1]).toMatchObject({
+      type: "ui.openOverlay",
+      overlay: {
+        kind: "paste-as",
+        start: 0,
+        end: 19,
+        values: { href: ["https://example.com/"] },
+      },
+    });
+  });
 });
 
 describe("pasting many lines", () => {

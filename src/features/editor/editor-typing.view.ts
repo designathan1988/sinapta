@@ -1,5 +1,5 @@
 // What a typed key does besides adding its text: a space after a block
-// prefix converts the block; "/", "@" and "[[" open their menus, which
+// prefix converts the block; "/", "@", "[[" and "+" open their menus, which
 // their own features show; a closing marker formats inline Markdown.
 import { isTextBlock, textOf } from "../../blocks/index.ts";
 import { CODE_TYPE } from "../../blocks/code/index.ts";
@@ -31,11 +31,12 @@ export function shortcutFor(target: Target, text: string, state: AppState) {
 }
 
 // The menus' features show them; the editor only says where the "/", the
-// "@" or the "[[" is.
+// "@", the "[[" or the "+" is.
 const SLASH_MENU_OVERLAY = "slash-menu";
 const MENTION_MENU_OVERLAY = "mention-menu";
 const PAGE_LINK_MENU_OVERLAY = "page-link-menu";
 const EMOJI_MENU_OVERLAY = "emoji-menu";
+const PLUS_MENU_OVERLAY = "page-plus-menu";
 
 // The key that opens a menu at once.
 const MENU_KEYS: Readonly<Record<string, string>> = {
@@ -49,13 +50,20 @@ function openMenu(target: Target, kind: string, dispatch: Dispatch): void {
   dispatch(openOverlay.create({ overlay }));
 }
 
-// "/" and "@" open their menu at once; "[" does after another "[".
+// "/" and "@" open their menu at once; "[" does after another "[", and
+// "+" at a word's start.
 function menuFor(target: Target, text: string, state: AppState) {
   const kind = MENU_KEYS[text];
   if (kind !== undefined) return { kind, start: target.start };
   const block = state.workspace.blocks[target.blockId];
-  if (text !== "[" || !isTextBlock(block)) return undefined;
-  const isSecond = textOf(block)[target.start - 1] === "[";
+  if (!isTextBlock(block)) return undefined;
+  const before = textOf(block)[target.start - 1];
+  const isWordStart = before === undefined || /\s/.test(before);
+  if (text === "+" && isWordStart && block.type !== CODE_TYPE) {
+    return { kind: PLUS_MENU_OVERLAY, start: target.start };
+  }
+  if (text !== "[") return undefined;
+  const isSecond = before === "[";
   return isSecond
     ? { kind: PAGE_LINK_MENU_OVERLAY, start: target.start - 1 }
     : undefined;

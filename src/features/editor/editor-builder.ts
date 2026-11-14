@@ -1,5 +1,7 @@
 // Builds a page of blocks for the editor's tests.
 import { editorMentionCommands } from "./editor-mention.commands.ts";
+import { editorPasteAsCommands } from "./editor-paste-as.commands.ts";
+import { editorPlusCommands } from "./editor-plus.commands.ts";
 import { editorColorCommands } from "./editor-color.commands.ts";
 import { BLOCK_TIDIERS, isTextBlock, textOf } from "../../blocks/index.ts";
 import {
@@ -41,6 +43,8 @@ export function createApp(blocks: BlockSpec[], otherPages: BlockSpec[] = []) {
     ...editorConvertCommands,
     ...editorColorCommands,
     ...editorMentionCommands,
+    ...editorPlusCommands,
+    ...editorPasteAsCommands,
     ...editorInsertCommands,
     ...editorMoveCommands,
     ...editorPasteCommands,

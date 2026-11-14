@@ -27,6 +27,35 @@
     }
   }
 
+  .mention-menu__icon {
+    display: inline-flex;
+    flex: none;
+    color: var(--color-text-secondary);
+  }
+
+  .mention-menu__label {
+    flex: 1;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mention-menu__section {
+    padding: var(--space-stack-xxs) var(--space-inset-sm);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .mention-menu__rule {
+    inline-size: 100%;
+    margin: var(--space-stack-xxs) var(--space-none);
+    border: none;
+    border-block-start: var(--size-border-thin) solid
+      var(--color-border-default);
+  }
+
   .mention-menu__detail {
     color: var(--color-text-tertiary);
     font-size: var(--font-size-xs);
