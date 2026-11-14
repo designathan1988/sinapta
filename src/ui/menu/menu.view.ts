@@ -25,6 +25,7 @@ import {
   renderSubmenuOf,
 } from "./menu-submenu.ts";
 import { afterRender } from "../focus/index.ts";
+import { keepKeys } from "./menu-keep-keys.ts";
 import type { MenuOptions, MenuSearch } from "./menu-options.ts";
 import { menuPointPlace, type Point } from "./menu-point.ts";
 
@@ -60,7 +61,12 @@ function renderHeader(
 ): TemplateResult | typeof nothing {
   if (options.title === undefined) return nothing;
   const { onBack } = options;
-  return html`<div class="menu__header">
+  return html`<div
+    class="menu__header"
+    ${ref((header) => {
+      keepKeys(header);
+    })}
+  >
     ${
       onBack === undefined
         ? nothing

@@ -42,4 +42,31 @@ describe("installTooltip", () => {
     expect(shown.defaultPrevented).toBe(false);
     expect(empty.defaultPrevented).toBe(true);
   });
+
+  it("says nothing over a control whose menu is open", () => {
+    document.body.innerHTML = `<button aria-label="View settings" aria-expanded="true"></button>
+      <div id="tooltip"></div>`;
+    const hint = document.querySelector("#tooltip");
+    if (hint === null) throw new Error("setup");
+    installTooltip();
+
+    const shown = showInterest(hint, document.querySelector("button"));
+
+    expect(shown.defaultPrevented).toBe(true);
+  });
+
+  it("puts an open hint away when the person presses", () => {
+    document.body.innerHTML = `<button aria-label="View settings"></button>
+      <div id="tooltip" popover="manual"></div>`;
+    const hint = document.querySelector<HTMLElement>("#tooltip");
+    if (hint === null) throw new Error("setup");
+    installTooltip();
+    hint.showPopover();
+
+    document
+      .querySelector("button")
+      ?.dispatchEvent(new Event("pointerdown", { bubbles: true }));
+
+    expect(hint.matches(":popover-open")).toBe(false);
+  });
 });

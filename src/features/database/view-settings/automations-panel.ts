@@ -4,6 +4,8 @@
 // editor, and "New automation".
 import "./automations.css";
 import { html, type TemplateResult } from "lit-html";
+import { ref } from "lit-html/directives/ref.js";
+import { focusOnce } from "../../../ui/focus/index.ts";
 import type { Automation } from "../../../blocks/database/index.ts";
 import { openOverlay, selectPlanLimits } from "../../../state/index.ts";
 import { COPY } from "../../../ui/copy.ts";
@@ -28,6 +30,7 @@ function renderUpgrade(context: TableContext): TemplateResult {
       class="button view-settings__upgrade"
       data-variant="outline"
       data-autofocus
+      ${ref(focusOnce)}
       @click=${() => context.dispatch(openOverlay.create({ overlay }))}
     >
       <span class="view-settings__upgrade-icon">${renderIcon("up")}</span>

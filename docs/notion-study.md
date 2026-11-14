@@ -1509,6 +1509,28 @@ Groups, Notion and Pagecraft alike (Pagecraft changed to match):
     database's source (its name, "10 views"), Add data source, and under
     Linked, Link existing data source: a database of several sources.
     Not yet in Pagecraft, whose databases hold one source each.
+69. **done** [real-user-testing skill, the human hand: Pagecraft
+    `h1-updates`, `h1c-tooltip-time`, `h2-view-settings`; Notion
+    `n128-tooltip-time`, `n129-vs-hand`] Tested as a person does it
+    (seeds 41 and 7, bent reaches, held clicks, 50 wpm typing with slips):
+    - Page actions tooltip: Pagecraft "Page actions" and Notion
+      "Configurações e ações da página" both appear 1.4 s into the step
+      (the reach included): the same delay.
+    - Updates & analytics: every key typed arrived; the panel, its tabs,
+      the period menu (open, ArrowDown, Enter keeps the focus on the chip)
+      and » (focus back in the text) behaved.
+    - Finding, fixed: a panel with nothing to choose (Automations on Free,
+      Turn into with nothing to add, AI autofill signed out) let the focus
+      fall out of the menu onto "Skip to content"; now its card's button,
+      or else the panel's Back, takes it (`src/ui/menu/menu-keep-keys.ts`).
+    - Finding, fixed: the toolbar button's tooltip stayed over the open
+      view settings, covering the panel's close button; Notion's "Settings"
+      tooltip is gone once its panel opens. A press now puts the hint
+      away, and a control whose menu is open shows none
+      (`src/ui/tooltip/tooltip.ts`).
+    - Notion leaves the focus on the page when the view settings open;
+      Pagecraft puts it in View name, which keeps the keys in the panel.
+      Escape gives it back to the button in both.
 
 ## Controls
 

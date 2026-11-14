@@ -4,6 +4,8 @@
 // files its notes here as a new page on that day, opened at once; and
 // "Workspace filing settings".
 import { html, type TemplateResult } from "lit-html";
+import { ref } from "lit-html/directives/ref.js";
+import { focusOnce } from "../../../ui/focus/index.ts";
 import { appSpec } from "../../../model/index.ts";
 import {
   openOverlay,
@@ -30,6 +32,7 @@ function renderConnect(context: TableContext): TemplateResult {
       class="button"
       data-variant="primary"
       data-autofocus
+      ${ref(focusOnce)}
       @click=${() =>
         context.dispatch(openOverlay.create({ overlay: CONNECTIONS }))}
     >

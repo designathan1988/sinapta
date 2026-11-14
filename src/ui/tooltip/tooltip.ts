@@ -33,7 +33,9 @@ export function installTooltip(): void {
       source.getAttribute("data-tooltip") ??
       source.getAttribute("aria-label") ??
       "";
-    if (words === "") {
+    // A control whose menu is open says nothing over it, as Notion's.
+    const isOpen = source.getAttribute("aria-expanded") === "true";
+    if (words === "" || isOpen) {
       event.preventDefault();
       return;
     }
@@ -41,4 +43,13 @@ export function installTooltip(): void {
   };
   // The event does not bubble out of the hint in every browser.
   document.addEventListener("interest", onInterest, true);
+  // A press puts the hint away, as Notion's: the control is answering.
+  document.addEventListener(
+    "pointerdown",
+    () => {
+      const hint = document.getElementById(TOOLTIP_ID);
+      if (hint?.matches(":popover-open") === true) hint.hidePopover();
+    },
+    true,
+  );
 }
