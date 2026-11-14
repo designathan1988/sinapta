@@ -73,7 +73,7 @@ async function workspaceOfTwo() {
     { email: "bia@pagecraft.test", role: "member" },
     ada,
   );
-  return { server, id, bia };
+  return { server, id, ada, bia };
 }
 
 // A whole record, as updates travel.
@@ -83,20 +83,17 @@ function patchOf(id: string) {
 }
 
 describe("what a member sees", () => {
-  it("keeps another member's private pages from them", async () => {
+  it("keeps another member's private pages from them, and the owner's older pages", async () => {
     const { server, id, bia } = await workspaceOfTwo();
 
     const seen = await server.call(`GET /api/workspaces/${id}`, undefined, bia);
 
-    expect(field(field(seen.body, "snapshot"), "rootIds")).toEqual([
-      "old",
-      "team",
-    ]);
+    expect(field(field(seen.body, "snapshot"), "rootIds")).toEqual(["team"]);
   });
 
-  it("refuses their changes to it, and takes the others", async () => {
-    const { server, id, bia } = await workspaceOfTwo();
-    const retitle = (blockId: string) =>
+  it("refuses their changes to it, and takes the owner's", async () => {
+    const { server, id, ada, bia } = await workspaceOfTwo();
+    const retitle = (blockId: string, cookie: string) =>
       server.call(
         `POST /api/workspaces/${id}/operations`,
         {
@@ -110,10 +107,11 @@ describe("what a member sees", () => {
             },
           ],
         },
-        bia,
+        cookie,
       );
 
-    expect((await retitle("diary")).status).toBe(403);
-    expect((await retitle("old")).status).toBe(200);
+    expect((await retitle("diary", bia)).status).toBe(403);
+    expect((await retitle("old", bia)).status).toBe(403);
+    expect((await retitle("old", ada)).status).toBe(200);
   });
 });

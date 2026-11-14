@@ -17,7 +17,13 @@ import {
   type Reach,
 } from "./guest-access.ts";
 import type { ApiResponse } from "./http-exchange.ts";
-import { mayMemberWrite, memberReach, memberVisible } from "./member-access.ts";
+import {
+  mayMemberWrite,
+  memberReach,
+  memberVisible,
+  type Seeing,
+  type Who,
+} from "./member-access.ts";
 import type { UserRow, WorkspaceRow } from "./rows.schema.ts";
 import type { Access } from "./sharing.ts";
 import type { Listener } from "./workspace-events.ts";
@@ -37,6 +43,10 @@ interface Sight {
   readonly isGuest: boolean;
 }
 
+function whoOf(member: Member): Who {
+  return { userId: member.user.id, isOwner: member.workspace.role === "owner" };
+}
+
 function sightOf(member: Member, context: ApiContext, workspace: Workspace) {
   const { id } = member.workspace;
   if (member.workspace.role === "guest") {
@@ -45,8 +55,8 @@ function sightOf(member: Member, context: ApiContext, workspace: Workspace) {
   }
   const viewer = {
     workspaceId: id,
-    userId: member.user.id,
     email: member.user.email,
+    ...whoOf(member),
   };
   return { ...memberReach(context, viewer, workspace), isGuest: false };
 }
@@ -58,7 +68,7 @@ function isWhole(sight: Sight, workspace: Workspace): boolean {
 function seen(
   operations: readonly Operation[],
   sight: Sight,
-  context: { readonly workspace: Workspace; readonly userId: string },
+  context: Seeing,
 ): Operation[] {
   return sight.isGuest
     ? visibleTo(operations, sight.reach, context.workspace)
@@ -100,8 +110,8 @@ export function mayChangeAll(
   if (workspace === undefined) return member.workspace.role !== "guest";
   const sight = sightOf(member, context, workspace);
   if (sight.isGuest) return mayWrite(operations, sight.reach, workspace);
-  const userId = member.user.id;
-  return mayMemberWrite(operations, sight.reach, { workspace, userId });
+  const who = whoOf(member);
+  return mayMemberWrite(operations, sight.reach, { workspace, ...who });
 }
 
 // The operations of a catch-up read, as this person sees them.
@@ -113,12 +123,12 @@ export function seenOperations<T extends { readonly operations: unknown }>(
   const workspace = currentWorkspace(context, member.workspace.id);
   if (workspace === undefined) return [];
   const sight = sightOf(member, context, workspace);
-  const userId = member.user.id;
+  const who = whoOf(member);
   return logged.map((entry) => ({
     ...entry,
     operations: seen(parseWireOperations(entry.operations) ?? [], sight, {
       workspace,
-      userId,
+      ...who,
     }),
   }));
 }
@@ -140,7 +150,7 @@ export function streamFilter(
   const start = currentWorkspace(context, id);
   if (start === undefined) return send;
   const sight = sightOf(member, context, start);
-  const userId = member.user.id;
+  const who = whoOf(member);
   return (event, data) => {
     if (event !== OPERATIONS_EVENT) {
       send(event, data);
@@ -152,7 +162,7 @@ export function streamFilter(
     const operations = parseWireOperations(logged.output.operations) ?? [];
     send(event, {
       ...logged.output,
-      operations: seen(operations, sight, { workspace, userId }),
+      operations: seen(operations, sight, { workspace, ...who }),
     });
   };
 }

@@ -1,7 +1,7 @@
 // What a member sees (ADR-0013), as Notion's: the teamspaces and their
-// pages, the top pages they made, those every member may open, older pages
-// made before pages had makers, and the pages shared with them. Another
-// member's private pages stay theirs.
+// pages, the top pages they made, those every member may open, and the
+// pages shared with them; the owner also sees the pages made before pages
+// had makers. Another member's private pages stay theirs.
 import {
   isCommentChange,
   mayChange,
@@ -17,10 +17,20 @@ import type { Access } from "./sharing.ts";
 
 const TEAMSPACE = "teamspace";
 
-export interface Viewer {
-  readonly workspaceId: string;
+// Who reads: a member, and whether they own the workspace, whose are the
+// pages made before pages had makers (the browser's copy they uploaded).
+export interface Who {
   readonly userId: string;
+  readonly isOwner: boolean;
+}
+
+export interface Viewer extends Who {
+  readonly workspaceId: string;
   readonly email: string;
+}
+
+export interface Seeing extends Who {
+  readonly workspace: Workspace;
 }
 
 function openToAll(context: ApiContext, workspaceId: string): Set<string> {
@@ -33,10 +43,14 @@ function openToAll(context: ApiContext, workspaceId: string): Set<string> {
 }
 
 // A top block every member sees, or this one alone.
-function isSeenAtTop(block: Block, userId: string, open: Set<string>): boolean {
+function isSeenAtTop(block: Block, who: Who, open: Set<string>): boolean {
   const isMaker =
-    block.createdBy === undefined || block.createdBy.id === userId;
-  if (block.type === TEAMSPACE) return isMaker || isInTeamspace(block, userId);
+    block.createdBy === undefined
+      ? who.isOwner
+      : block.createdBy.id === who.userId;
+  if (block.type === TEAMSPACE) {
+    return isMaker || isInTeamspace(block, who.userId);
+  }
   return open.has(block.id) || isMaker;
 }
 
@@ -56,7 +70,7 @@ export function memberReach(
   const seen = new Map<string, Access>();
   for (const id of workspace.rootIds) {
     const block = workspace.blocks[id];
-    if (block !== undefined && isSeenAtTop(block, viewer.userId, open)) {
+    if (block !== undefined && isSeenAtTop(block, viewer, open)) {
       seen.set(id, "full");
     }
   }
@@ -77,7 +91,7 @@ function blockIn(workspace: Workspace, id: string | undefined) {
 function topSeen(
   operation: Operation,
   reach: Reach,
-  userId: string,
+  who: Who,
 ): boolean | undefined {
   if (operation.type === "record.update" && operation.kind === "settings") {
     return true;
@@ -85,7 +99,7 @@ function topSeen(
   if (operation.type === "record.create" && operation.kind === "block") {
     const { record } = operation;
     if (record.parentId !== null) return undefined;
-    const isSeen = isSeenAtTop(record, userId, new Set());
+    const isSeen = isSeenAtTop(record, who, new Set());
     if (isSeen) reach.set(record.id, "full");
     return isSeen;
   }
@@ -99,10 +113,10 @@ function topSeen(
 export function memberVisible(
   operations: readonly Operation[],
   reach: Reach,
-  context: { readonly workspace: Workspace; readonly userId: string },
+  context: Seeing,
 ): Operation[] {
   return operations.filter((operation) => {
-    const top = topSeen(operation, reach, context.userId);
+    const top = topSeen(operation, reach, context);
     if (top !== undefined) return top;
     const target = blockOf(operation, context.workspace);
     const access = target === undefined ? undefined : reach.get(target);
@@ -120,11 +134,11 @@ export function memberVisible(
 export function mayMemberWrite(
   operations: readonly Operation[],
   reach: Reach,
-  context: { readonly workspace: Workspace; readonly userId: string },
+  context: Seeing,
 ): boolean {
   const scratch: Reach = new Map(reach);
   return operations.every((operation) => {
-    const top = topSeen(operation, scratch, context.userId);
+    const top = topSeen(operation, scratch, context);
     if (top !== undefined) return top;
     const target = blockOf(operation, context.workspace);
     const access = target === undefined ? undefined : scratch.get(target);
