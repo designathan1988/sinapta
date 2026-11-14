@@ -135,12 +135,12 @@ function onCellKey(
     context.dispatch(openRow.create({ rowId, viewId: context.model.view.id }));
   } else if (event.key === "Enter" || event.key === "F2" || event.key === " ") {
     startEditing(cell, context);
-  } else if (
-    (event.key === "Delete" || event.key === "Backspace") &&
-    propertyId !== null
-  ) {
+  } else if (event.key === "Delete" || event.key === "Backspace") {
+    // As Notion's, a name is cleared like any value.
     context.dispatch(
-      setRowValue.create({ rowId, propertyId, value: undefined }),
+      propertyId === null
+        ? renamePage.create({ pageId: rowId, title: "" })
+        : setRowValue.create({ rowId, propertyId, value: undefined }),
     );
   } else {
     return;

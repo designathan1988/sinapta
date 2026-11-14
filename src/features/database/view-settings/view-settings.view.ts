@@ -4,7 +4,6 @@
 import "./view-settings.css";
 import type { TemplateResult } from "lit-html";
 import { closeOverlay, setOverlayQuery } from "../../../state/index.ts";
-import { COPY } from "../../../ui/copy.ts";
 import { renderMenu } from "../../../ui/menu/index.ts";
 import type { TableContext } from "../table-cell.view.ts";
 import {
@@ -154,7 +153,9 @@ export function renderViewSettings(context: TableContext): TemplateResult {
   const { lead, tail } = panel;
   const back = backTo(context, panel, name);
   return renderMenu({
-    label: COPY.database.viewSettings,
+    // Named as the panel shown, as "Sort", so a screen reader says what
+    // opened rather than "View settings" for every panel.
+    label: panel.title,
     title: panel.title,
     isInset: true,
     items: panel.items,

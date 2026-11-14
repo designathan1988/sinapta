@@ -6,6 +6,7 @@ import { ref } from "lit-html/directives/ref.js";
 import { repeat } from "lit-html/directives/repeat.js";
 import { COPY } from "../../ui/copy.ts";
 import { renderCell, type TableContext } from "./table-cell.view.ts";
+import { onCellCopy, onCellPaste } from "./table-clipboard.view.ts";
 import { onRowContextMenu } from "./table-context-menu.view.ts";
 import { renderHeaderRow, setColumnWidth } from "./table-header.view.ts";
 import {
@@ -107,6 +108,8 @@ function renderBody(context: TableContext): TemplateResult {
     }}
     @click=${on(onBodyClick)}
     @keydown=${on(onBodyKeyDown)}
+    @copy=${on(onCellCopy)}
+    @paste=${on(onCellPaste)}
     @contextmenu=${(event: Event) => {
       onRowContextMenu(event, context.dispatch);
     }}
