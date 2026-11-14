@@ -3,6 +3,7 @@
 // to" and "Delete"; then "Comment"; then Pagecraft's own. Each shows the
 // keys that do the same.
 import { blockDefinition, isTextBlock } from "../../blocks/index.ts";
+import { askAiItem } from "../ai/index.ts";
 import { countBlockTree, type Block } from "../../model/index.ts";
 import {
   openOverlay,
@@ -117,6 +118,7 @@ export function blockActionEntries(
   return [
     { kind: "section", label: blockTypeName(block) },
     ...grouped([
+      isTextBlock(block) ? [askAiItem(context.overlay, dispatch)] : [],
       textItems(block, context),
       editItems(block, context),
       [commentItem(block, dispatch)],

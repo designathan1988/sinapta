@@ -3,6 +3,7 @@
 // place the rest of the app reads it from.
 import {
   ACCOUNT_TEXT,
+  AI_TEXT,
   AUTOMATION_TEXT,
   BLOCK_TEXT,
   CADENCE_TEXT,
@@ -45,6 +46,7 @@ export const COPY = {
   onboarding: ONBOARDING_TEXT.onboarding,
   account: ACCOUNT_TEXT.account,
   share: SHARE_TEXT.share,
+  ai: AI_TEXT.ai,
 } as const;
 
 export { pluralize } from "./copy/index.ts";

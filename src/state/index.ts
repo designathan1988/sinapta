@@ -178,3 +178,12 @@ export {
   type SyncState,
   type WorkspaceSummary,
 } from "./sync-state.ts";
+export {
+  AI_IDLE,
+  aiCommands,
+  answerAi,
+  askAi,
+  discardAi,
+  type AiAction,
+  type AiState,
+} from "./ai.commands.ts";

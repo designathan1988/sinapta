@@ -68,6 +68,7 @@ describe("the block menu", () => {
     const { host, rows } = opened();
 
     expect(rows.map((row) => row.replace(/\s+/g, " "))).toEqual([
+      "Ask AI",
       "Turn into",
       "Color",
       "Copy link to block",
@@ -78,7 +79,7 @@ describe("the block menu", () => {
       "Turn into page",
       "Move to new column",
     ]);
-    expect(host.querySelectorAll(".menu__divider")).toHaveLength(3);
+    expect(host.querySelectorAll(".menu__divider")).toHaveLength(4);
   });
 
   it("keeps the actions that match what is typed", () => {

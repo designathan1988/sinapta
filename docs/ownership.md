@@ -86,6 +86,9 @@ owner listed here exists.
 | The faces of the others on the open page | `src/features/presence/` | 27 |
 | The inbox's notices from others: mentions of the person, replies to them | `src/features/inbox/inbox-notices.selectors.ts` | 27 |
 | Created by and Last edited by properties | `src/features/database/properties/created-by/` | 28 |
+| Notion AI: Ask AI in the block menu, the answer with Insert below, Replace, Discard | `src/features/ai/` | 30 |
+| Notion AI's state: the question and the answer | `src/state/ai.commands.ts` | 30 |
+| Asking the server's AI | `src/persistence/ai-client.ts` | 30 |
 | A page published to the web, shown alone and read only | `src/app/public-page.ts` | 26 |
 | Notion's sign-in screen: the address, password, login code and profile steps, the other ways in | `src/features/sign-in/` | 23 |
 | A page as one HTML file | `src/features/markdown-export/html-export.selectors.ts` | 20 |
@@ -259,6 +262,7 @@ owner listed here exists.
 | The Share menu's routes and published pages read by anyone | `server/sharing-routes.ts` | 26 |
 | What a guest reaches: the pages shared with them, read and written at their access | `server/guest-access.ts` | 26 |
 | Who is where: each person's open page, kept a minute, sent to the workspace | `server/presence.ts` | 27 |
+| Notion AI: a local Ollama model, or what plain text allows | `server/ai.ts` | 30 |
 | A server on an in-memory database for tests | `server/test-context.ts` | 24 |
 | The root render: the sign-in page or the app | `src/app/root-render.ts` | 23 |
 

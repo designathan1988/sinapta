@@ -38,3 +38,11 @@ export function readLookup(
   const result = v.safeParse(lookupReplySchema, body);
   return result.success ? result.output : undefined;
 }
+
+const aiReplySchema = v.object({ text: v.string() });
+
+// The AI's answer, or undefined when the server sent none.
+export function readAiReply(body: unknown): string | undefined {
+  const reply = v.safeParse(aiReplySchema, body);
+  return reply.success ? reply.output.text : undefined;
+}

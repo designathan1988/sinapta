@@ -21,6 +21,7 @@ import {
   withPropertyConfigs,
 } from "../features/database/index.ts";
 import { editorCommands } from "../features/editor/index.ts";
+import { aiFeatureCommands } from "../features/ai/index.ts";
 import { peekCommands } from "../features/row-peek/index.ts";
 import { templateCommands } from "../features/templates/index.ts";
 import { inboxCommands } from "../features/inbox/index.ts";
@@ -52,6 +53,7 @@ import {
   type AppStore,
   type Dispatch,
   accountCommands,
+  aiCommands,
   syncCommands,
   createCommandRegistry,
   createDispatcher,
@@ -68,6 +70,7 @@ import {
   createTabCoordination,
   createIndexedDbSnapshots,
   startAccount,
+  startAi,
   createSyncLink,
   type SyncLink,
   startAssetStore,
@@ -97,6 +100,8 @@ const COMMANDS = [
   ...uiCommands,
   ...accountCommands,
   ...syncCommands,
+  ...aiCommands,
+  ...aiFeatureCommands,
   ...settingsCommands,
   ...persistenceCommands,
   ...assetCommands,
@@ -164,6 +169,7 @@ async function startPersistence(
   });
   // The workspace on the server, once someone signs in (ADR-0013).
   sync.start({ store, dispatch, propsSchemas });
+  startAi({ store, dispatch });
   return { isFirstRun };
 }
 

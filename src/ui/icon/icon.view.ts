@@ -10,6 +10,7 @@ export type BaseIconName =
   | "close"
   | "plus"
   | "person"
+  | "sparkles"
   | "chevron"
   | "more"
   | "star"
@@ -87,6 +88,7 @@ const PATHS: Record<BaseIconName, TemplateResult<2>> = {
     <path d="M6 14h4M8 11.5V14" />`,
   redo: svg`<path d="M13 8a5 5 0 1 1-1.6-3.7M13 3v3h-3" />`,
   plus: svg`<path d="M8 3v10M3 8h10" />`,
+  sparkles: svg`<path d="M8 2.5l1.2 3.3 3.3 1.2-3.3 1.2L8 11.5 6.8 8.2 3.5 7l3.3-1.2zM12.5 10.5l.5 1.5 1.5.5-1.5.5-.5 1.5-.5-1.5-1.5-.5 1.5-.5z" />`,
   person: svg`<circle cx="8" cy="5.5" r="2.5" /><path d="M3 13.5c.8-2.4 2.7-3.5 5-3.5s4.2 1.1 5 3.5" />`,
   chevron: svg`<path d="M6 4l4 4-4 4" />`,
   back: svg`<path d="M10 4L6 8l4 4" />`,

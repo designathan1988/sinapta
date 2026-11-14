@@ -17,6 +17,7 @@ import { renderPageMenuButton } from "../features/page-menu/index.ts";
 import { renderPageOutline } from "../features/page-outline/index.ts";
 import { renderPeek } from "../features/row-peek/index.ts";
 import { renderPresence } from "../features/presence/index.ts";
+import { renderAiPanel } from "../features/ai/index.ts";
 import { renderShareButton } from "../features/share/index.ts";
 import { renderButton } from "../ui/button/index.ts";
 import { COPY } from "../ui/copy.ts";
@@ -120,6 +121,7 @@ export function renderShell(
         ${selectIsHomeShown(state) ? nothing : renderPageOutline(state, dispatch)}
       </div>
       ${renderFormatToolbar(state, dispatch)} ${renderOverlay(state, dispatch)}
+      ${renderAiPanel(state, dispatch)}
     </main>
     <div class="app__peek" ?inert=${isBehind}>
       ${renderPeek(state, dispatch)}

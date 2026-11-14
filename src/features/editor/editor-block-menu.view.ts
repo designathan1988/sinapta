@@ -1,7 +1,8 @@
 // The handle beside each block and the menus it opens: block actions and
 // the list of types to turn the block into.
+import { AI_MENU_OVERLAY, renderAskAiMenu } from "../ai/index.ts";
 import { html, nothing, type TemplateResult } from "lit-html";
-import { BLOCK_DEFINITIONS } from "../../blocks/index.ts";
+import { BLOCK_DEFINITIONS, isTextBlock, textOf } from "../../blocks/index.ts";
 import { parseBlockId, type Block, type BlockId } from "../../model/index.ts";
 import {
   closeOverlay,
@@ -173,8 +174,25 @@ export function renderBlockMenu(
       ...(overlay.point ? { point: overlay.point } : { placement: "before" }),
     });
   }
+  return renderPanel({ block, overlay, dispatch }, onClose);
+}
+
+// The panels the block menu opens in its place: Turn into and Ask AI.
+function renderPanel(
+  at: {
+    readonly block: Block;
+    readonly overlay: OpenOverlay;
+    readonly dispatch: Dispatch;
+  },
+  onClose: () => void,
+): TemplateResult | typeof nothing {
+  const { block, overlay, dispatch } = at;
   if (overlay.kind === TURN_INTO_OVERLAY) {
     return renderTurnInto({ blockId: block.id, overlay, dispatch }, onClose);
+  }
+  if (overlay.kind === AI_MENU_OVERLAY && isTextBlock(block)) {
+    const text = textOf(block);
+    return renderAskAiMenu({ id: block.id, text }, dispatch, onClose);
   }
   return nothing;
 }

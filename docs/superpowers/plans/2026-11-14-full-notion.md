@@ -74,10 +74,10 @@ in `src/persistence/`.
 
 ## Milestone 30: AI
 
-- [ ] 30.1 `AiProvider` on the server: Ollama when present, the local
-  provider otherwise; streaming answers over SSE.
-- [ ] 30.2 Notion AI in the editor: Ask AI on space and in the block
-  menu, its actions (improve, fix spelling, shorter, longer, summarize,
-  translate, explain), Insert below, Replace, Discard.
+- [x] 30.1 AI on the server: Ollama when it answers on 127.0.0.1:11434
+  (model from PAGECRAFT_AI_MODEL, llama3.2 by default), else a local
+  provider for summaries, shorter text and action items. (Streaming remains.)
+- [x] 30.2 Ask AI in the block menu with Notion's actions, the answer with
+  Insert below, Replace, Discard. (Ask AI on space remains.)
 - [ ] 30.3 AI autofill for database properties; the AI chat in the
   sidebar ("New chat").

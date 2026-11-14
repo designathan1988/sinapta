@@ -12,3 +12,4 @@ export { readWorkspaceFile, startFileTools } from "./workspace-file.ts";
 export { startAssetStore } from "./asset-store.ts";
 export { startAccount, type Fetch } from "./account-client.ts";
 export { createSyncLink, type SyncLink } from "./sync-client.ts";
+export { startAi } from "./ai-client.ts";

@@ -1,4 +1,5 @@
 export { ACCOUNT_TEXT } from "./account-text.ts";
+export { AI_TEXT } from "./ai-text.ts";
 export { AUTOMATION_TEXT } from "./automation-text.ts";
 export { CADENCE_TEXT } from "./cadence-text.ts";
 export { BLOCK_TEXT } from "./block-text.ts";

@@ -1,5 +1,6 @@
 // Every route of the API, by method and path.
 import { ACCOUNT_ROUTES } from "./account-routes.ts";
+import { AI_ROUTES } from "./ai.ts";
 import { answer, type RouteTable } from "./api.ts";
 import { countRowSchema, readRow } from "./rows.schema.ts";
 import { MEMBER_ROUTES } from "./member-routes.ts";
@@ -24,4 +25,5 @@ export const ROUTES: RouteTable = {
   ...MEMBER_ROUTES,
   ...SHARING_ROUTES,
   ...PRESENCE_ROUTES,
+  ...AI_ROUTES,
 };

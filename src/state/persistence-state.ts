@@ -3,6 +3,7 @@
 import type { AssetError, BlockId } from "../model/index.ts";
 import { SIGNED_OUT_LOCAL, type AccountState } from "./account-state.ts";
 import { NOT_SYNCED, type SyncState } from "./sync-state.ts";
+import { AI_IDLE, type AiState } from "./ai.commands.ts";
 
 export type SaveStatus = "idle" | "saving" | "saved" | "failed";
 
@@ -36,6 +37,8 @@ export interface PersistenceState {
   readonly sync: SyncState;
   // A page published to the web, shown to anyone: read only, alone.
   readonly isPublic: boolean;
+  // Notion AI: the question about a block and its answer.
+  readonly ai: AiState;
 }
 
 export const INITIAL_PERSISTENCE: PersistenceState = {
@@ -50,4 +53,5 @@ export const INITIAL_PERSISTENCE: PersistenceState = {
   account: SIGNED_OUT_LOCAL,
   sync: NOT_SYNCED,
   isPublic: false,
+  ai: AI_IDLE,
 };

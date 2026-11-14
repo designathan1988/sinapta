@@ -1,0 +1,71 @@
+@layer features {
+  /* Notion AI's answer, floating at the foot of the page's column. */
+  .ai {
+    position: fixed;
+    inset-block-end: var(--space-stack-lg);
+    inset-inline-start: 50%;
+    inline-size: min(
+      calc(100% - var(--space-inset-lg) * 2),
+      var(--size-content-max)
+    );
+    translate: -50% 0;
+    display: grid;
+    gap: var(--space-stack-sm);
+    padding: var(--space-inset-md);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-bg-raised);
+    box-shadow: var(--shadow-overlay);
+  }
+
+  .ai__title {
+    margin: var(--space-none);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .ai__answer,
+  .ai__thinking,
+  .ai__error {
+    margin: var(--space-none);
+    font-size: var(--font-size-sm);
+    white-space: pre-wrap;
+  }
+
+  .ai__thinking {
+    color: var(--color-text-secondary);
+  }
+
+  .ai__error {
+    color: var(--color-text-danger);
+  }
+
+  .ai__buttons {
+    display: flex;
+    gap: var(--space-inline-sm);
+  }
+
+  .ai__primary,
+  .ai__quiet {
+    min-block-size: var(--size-control-sm);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+  }
+
+  .ai__primary {
+    background-color: var(--color-accent-fill);
+    color: var(--color-text-on-accent);
+  }
+
+  .ai__quiet {
+    background: none;
+    color: var(--color-text-secondary);
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
+}
