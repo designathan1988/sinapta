@@ -45,3 +45,24 @@ describe("a page's archive", () => {
     expect(files[0]?.text).toContain("Intro");
   });
 });
+
+describe("a page's HTML archive", () => {
+  it("holds HTML files in the same folders, as Notion's HTML export", () => {
+    const workspace = buildWorkspace([
+      {
+        id: "plan",
+        props: page("Plan"),
+        children: [{ id: "sub", props: page("Sub") }],
+      },
+    ]);
+    const state = { ...createInitialState(), workspace };
+
+    const files = selectPageArchive(state, toBlockId("plan"), "html");
+
+    expect(files.map((file) => file.path)).toEqual([
+      "Plan.html",
+      "Plan/Sub.html",
+    ]);
+    expect(files[0]?.text).toContain("<html");
+  });
+});

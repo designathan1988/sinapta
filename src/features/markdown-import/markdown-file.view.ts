@@ -10,6 +10,7 @@ import {
   markdownPage,
   type ArchiveText,
 } from "./archive-pages.ts";
+import { htmlPage } from "./html-page.ts";
 import { importMarkdown } from "./markdown-import.commands.ts";
 
 const STORED = 0;
@@ -22,6 +23,14 @@ export async function importMarkdownFile(
 ): Promise<void> {
   dispatch(importMarkdown.create(markdownPage(file.name, await file.text())));
   announce(COPY.sidebar.importedMarkdown);
+}
+
+export async function importHtmlFile(
+  file: File,
+  dispatch: Dispatch,
+): Promise<void> {
+  dispatch(importMarkdown.create(htmlPage(file.name, await file.text())));
+  announce(COPY.sidebar.importedHtml);
 }
 
 // A file's bytes as stored, inflated by the browser when deflated.

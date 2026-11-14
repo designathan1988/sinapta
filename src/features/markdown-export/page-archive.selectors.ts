@@ -1,5 +1,5 @@
 // A page and its subpages as files, as Notion exports them: the page's
-// Markdown, and beside it a folder of the same name holding its
+// Markdown or HTML, and beside it a folder of the same name holding its
 // subpages' files and folders. Names that meet in a folder are numbered.
 import {
   isPageLike,
@@ -9,10 +9,18 @@ import {
 } from "../../blocks/page/index.ts";
 import type { BlockId } from "../../model/index.ts";
 import type { AppState } from "../../state/index.ts";
+import { selectPageHtml } from "./html-export.selectors.ts";
 import {
   markdownFileName,
   selectPageMarkdown,
 } from "./markdown-export.selectors.ts";
+
+export type ArchiveFormat = "markdown" | "html";
+
+const FORMATS = {
+  markdown: { extension: ".md", textOf: selectPageMarkdown },
+  html: { extension: ".html", textOf: selectPageHtml },
+} as const;
 
 export interface ArchiveFile {
   readonly path: string;
@@ -46,14 +54,19 @@ function freeName(base: string, taken: Set<string>): string {
 function pageFiles(
   state: AppState,
   page: PageBlock,
-  place: { readonly folder: string; readonly taken: Set<string> },
+  place: {
+    readonly folder: string;
+    readonly taken: Set<string>;
+    readonly format: ArchiveFormat;
+  },
 ): ArchiveFile[] {
   const base = markdownFileName(selectPageTitle(page)).replace(/\.md$/, "");
   const name = freeName(base, place.taken);
   const path = `${place.folder}${name}`;
-  const inner = { folder: `${path}/`, taken: new Set<string>() };
+  const inner = { ...place, folder: `${path}/`, taken: new Set<string>() };
+  const { extension, textOf } = FORMATS[place.format];
   return [
-    { path: `${path}.md`, text: selectPageMarkdown(state, page.id) },
+    { path: `${path}${extension}`, text: textOf(state, page.id) },
     ...selectSubpages(state, page.id).flatMap((child) =>
       pageFiles(state, child, inner),
     ),
@@ -63,8 +76,9 @@ function pageFiles(
 export function selectPageArchive(
   state: AppState,
   pageId: BlockId,
+  format: ArchiveFormat = "markdown",
 ): ArchiveFile[] {
   const page = selectPage(state, pageId);
   if (page === undefined) return [];
-  return pageFiles(state, page, { folder: "", taken: new Set() });
+  return pageFiles(state, page, { folder: "", taken: new Set(), format });
 }

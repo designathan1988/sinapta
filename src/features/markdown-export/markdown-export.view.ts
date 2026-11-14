@@ -10,7 +10,11 @@ import type { AppState } from "../../state/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { downloadFile, downloadTextFile } from "../../ui/download/index.ts";
-import { selectPageArchive, selectSubpages } from "./page-archive.selectors.ts";
+import {
+  selectPageArchive,
+  selectSubpages,
+  type ArchiveFormat,
+} from "./page-archive.selectors.ts";
 import { htmlFileName, selectPageHtml } from "./html-export.selectors.ts";
 import {
   markdownFileName,
@@ -23,7 +27,7 @@ export function exportPageAsMarkdown(state: AppState, pageId: BlockId): void {
   const page = selectPage(state, pageId);
   if (page === undefined) return;
   if (selectSubpages(state, pageId).length > 0) {
-    exportArchive(state, page);
+    exportArchive(state, page, "markdown");
     return;
   }
   downloadTextFile({
@@ -34,10 +38,15 @@ export function exportPageAsMarkdown(state: AppState, pageId: BlockId): void {
   announce(COPY.pageMenu.exportedMarkdown);
 }
 
-// The page as one HTML file.
+// The page as one HTML file, or with its subpages a ZIP of HTML files in
+// folders as the pages nest.
 export function exportPageAsHtml(state: AppState, pageId: BlockId): void {
   const page = selectPage(state, pageId);
   if (page === undefined) return;
+  if (selectSubpages(state, pageId).length > 0) {
+    exportArchive(state, page, "html");
+    return;
+  }
   downloadTextFile({
     name: htmlFileName(selectPageTitle(page)),
     type: "text/html",
@@ -46,9 +55,13 @@ export function exportPageAsHtml(state: AppState, pageId: BlockId): void {
   announce(COPY.pageMenu.exportedHtml);
 }
 
-function exportArchive(state: AppState, page: PageBlock): void {
+function exportArchive(
+  state: AppState,
+  page: PageBlock,
+  format: ArchiveFormat,
+): void {
   const encoder = new TextEncoder();
-  const files = selectPageArchive(state, page.id).map((file) => ({
+  const files = selectPageArchive(state, page.id, format).map((file) => ({
     path: file.path,
     data: encoder.encode(file.text),
   }));
