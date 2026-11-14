@@ -3,10 +3,15 @@
 // person confirms (a fingerprint, a face, a PIN), and the signature goes
 // back to the server. "Continue with passkey" and My account's "Add a
 // passkey".
-import type { AccountAnswer } from "../state/index.ts";
+import type { AccountAnswer, AccountRequest } from "../state/index.ts";
+
+export type PasskeyRequest = Extract<
+  AccountRequest,
+  { kind: "passkey-sign-in" | "passkey-add" | "passkeys" | "remove-passkey" }
+>;
 import type { Fetch } from "./account-client.ts";
 import { parseReply, readUser } from "./account.schema.ts";
-import { readPasskeyCount, readPasskeyOptions } from "./passkey.schema.ts";
+import { readPasskeyOptions, readPasskeys } from "./passkey.schema.ts";
 
 const REFUSED: AccountAnswer = { kind: "error", error: "passkey-refused" };
 
@@ -92,27 +97,31 @@ async function add(send: Fetch): Promise<AccountAnswer> {
     clientDataJSON: textOf(response.clientDataJSON),
     attestationObject: textOf(response.attestationObject),
   });
-  const count = readPasskeyCount(reply.body);
-  return count === undefined ? REFUSED : { kind: "passkeys", count };
+  const passkeys = readPasskeys(reply.body);
+  return passkeys === undefined ? REFUSED : { kind: "passkeys", passkeys };
 }
 
-async function count(send: Fetch): Promise<AccountAnswer> {
-  const reply = await json(send, "/api/account/passkeys");
-  const found = readPasskeyCount(reply.body);
-  return found === undefined
-    ? { kind: "passkeys", count: 0 }
-    : { kind: "passkeys", count: found };
+// The account's passkeys, or them after one is removed.
+async function list(send: Fetch, removedId?: string): Promise<AccountAnswer> {
+  const reply =
+    removedId === undefined
+      ? await json(send, "/api/account/passkeys")
+      : await json(send, "/api/account/passkeys/remove", { id: removedId });
+  return { kind: "passkeys", passkeys: readPasskeys(reply.body) ?? [] };
 }
 
 // A passkey request; a person who cancels the device's prompt is told the
 // passkey was not used.
 export async function askPasskey(
   send: Fetch,
-  kind: "passkey-sign-in" | "passkey-add" | "passkeys",
+  request: PasskeyRequest,
 ): Promise<AccountAnswer> {
   try {
-    if (kind === "passkeys") return await count(send);
-    return kind === "passkey-add" ? await add(send) : await signIn(send);
+    if (request.kind === "passkeys") return await list(send);
+    if (request.kind === "remove-passkey") return await list(send, request.id);
+    return request.kind === "passkey-add"
+      ? await add(send)
+      : await signIn(send);
   } catch {
     return REFUSED;
   }

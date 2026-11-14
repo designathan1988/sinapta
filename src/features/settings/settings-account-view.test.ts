@@ -65,22 +65,31 @@ describe("Settings › My account", () => {
     expect(sent).toEqual([]);
   });
 
-  it("counts the passkeys and adds one with this device", () => {
+  it("lists the passkeys, adds one with this device, and removes one", () => {
     const state = signedIn();
-    const account = { ...state.persistence.account, passkeys: 2 };
+    const passkeys = [
+      { id: "k1", createdAt: Date.UTC(2026, 10, 14, 12) },
+      { id: "k2", createdAt: Date.UTC(2026, 10, 14, 13) },
+    ];
+    const account = { ...state.persistence.account, passkeys };
     const { host, sent } = rendered({
       ...state,
       persistence: { ...state.persistence, account },
     });
-    const add = [...host.querySelectorAll<HTMLButtonElement>("button")].find(
-      (button) => button.textContent.includes("Add a passkey"),
-    );
+    const buttons = [...host.querySelectorAll<HTMLButtonElement>("button")];
+    const named = (text: string) =>
+      buttons.filter((button) => button.textContent.includes(text));
 
-    add?.click();
+    named("Add a passkey")[0]?.click();
+    named("Remove")[1]?.click();
 
-    expect(host.textContent).toContain("2 passkeys.");
+    expect(host.textContent).toContain("Passkey 2");
+    expect(host.textContent).toContain("Added Nov 14, 2026");
     expect(sent).toEqual([
       expect.objectContaining({ request: { kind: "passkey-add" } }),
+      expect.objectContaining({
+        request: { kind: "remove-passkey", id: "k2" },
+      }),
     ]);
   });
 });

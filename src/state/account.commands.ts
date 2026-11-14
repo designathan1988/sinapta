@@ -51,7 +51,7 @@ function answered(answer: AccountAnswer): Partial<AccountState> {
     case "error":
       return { error: answer.error };
     case "passkeys":
-      return { passkeys: answer.count, error: null };
+      return { passkeys: answer.passkeys, error: null };
   }
 }
 

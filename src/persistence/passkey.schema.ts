@@ -21,7 +21,7 @@ export function readPasskeyOptions(value: unknown) {
   return parsed.success ? parsed.output : undefined;
 }
 
-export function readPasskeyCount(value: unknown): number | undefined {
+export function readPasskeys(value: unknown) {
   const parsed = v.safeParse(listSchema, value);
-  return parsed.success ? parsed.output.passkeys.length : undefined;
+  return parsed.success ? parsed.output.passkeys : undefined;
 }

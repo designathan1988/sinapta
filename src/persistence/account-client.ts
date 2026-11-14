@@ -2,7 +2,7 @@
 // records the answers (ADR-0013). A server that does not answer leaves the
 // app on the browser's copy, as before there was one.
 import * as account from "./account.schema.ts";
-import { askPasskey } from "./passkey-client.ts";
+import { askPasskey, type PasskeyRequest } from "./passkey-client.ts";
 import {
   answerAccount,
   checkAccount,
@@ -53,14 +53,14 @@ const REFUSALS: Readonly<Record<number, AccountAnswer>> = {
   409: { kind: "error", error: "email-taken" },
 };
 
-const PASSKEY_KINDS = new Set(["passkey-sign-in", "passkey-add", "passkeys"]);
+const PASSKEY_KINDS = new Set([
+  "passkey-sign-in",
+  "passkey-add",
+  "passkeys",
+  "remove-passkey",
+]);
 
-function isPasskeyRequest(
-  request: AccountRequest,
-): request is Extract<
-  AccountRequest,
-  { kind: "passkey-sign-in" | "passkey-add" | "passkeys" }
-> {
+function isPasskeyRequest(request: AccountRequest): request is PasskeyRequest {
   return PASSKEY_KINDS.has(request.kind);
 }
 
@@ -68,7 +68,7 @@ async function ask(
   send: Fetch,
   request: AccountRequest,
 ): Promise<AccountAnswer> {
-  if (isPasskeyRequest(request)) return askPasskey(send, request.kind);
+  if (isPasskeyRequest(request)) return askPasskey(send, request);
   switch (request.kind) {
     case "lookup":
       return lookup(send, request.email);

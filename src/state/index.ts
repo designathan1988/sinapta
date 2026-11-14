@@ -147,6 +147,7 @@ export {
   type AccountStatus,
   type AccountStep,
   type AccountUser,
+  type PasskeySummary,
 } from "./account-state.ts";
 export {
   accountCommands,

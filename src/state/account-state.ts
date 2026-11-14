@@ -47,7 +47,8 @@ export type AccountRequest =
   // A passkey: signing in with one, adding one, and how many there are.
   | { readonly kind: "passkey-sign-in" }
   | { readonly kind: "passkey-add" }
-  | { readonly kind: "passkeys" };
+  | { readonly kind: "passkeys" }
+  | { readonly kind: "remove-passkey"; readonly id: string };
 
 // What the server's answer means for the screen.
 export type AccountAnswer =
@@ -56,7 +57,13 @@ export type AccountAnswer =
   | { readonly kind: "offline" }
   | { readonly kind: "step"; readonly step: AccountStep }
   | { readonly kind: "error"; readonly error: AccountError }
-  | { readonly kind: "passkeys"; readonly count: number };
+  | { readonly kind: "passkeys"; readonly passkeys: readonly PasskeySummary[] };
+
+export interface PasskeySummary {
+  readonly id: string;
+  // When it was added, in milliseconds.
+  readonly createdAt: number;
+}
 
 export interface AccountState {
   readonly status: AccountStatus;
@@ -70,8 +77,8 @@ export interface AccountState {
   // persistence layer asks each one once.
   readonly request: AccountRequest | null;
   readonly requestCount: number;
-  // How many passkeys the account has, once the server has said.
-  readonly passkeys?: number;
+  // The account's passkeys, once the server has said.
+  readonly passkeys?: readonly PasskeySummary[];
 }
 
 export const SIGNED_OUT_LOCAL: AccountState = {

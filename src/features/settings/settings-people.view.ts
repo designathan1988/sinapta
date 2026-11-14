@@ -38,26 +38,38 @@ function renderNameField(
   />`;
 }
 
-// Passkeys: how many the account has, and "Add a passkey", which asks this
-// device's authenticator to make one.
+// Passkeys: "Add a passkey", which asks this device's authenticator to
+// make one, then each passkey with the day it was added and Remove.
 function renderPasskeys(state: AppState, dispatch: Dispatch) {
-  const { passkeys, error } = state.persistence.account;
+  const { passkeys = [], error } = state.persistence.account;
   const hint =
     error === "passkey-refused"
       ? COPY.account.errors["passkey-refused"]
-      : passkeys === undefined || passkeys === 0
-        ? TEXT.passkeysHint
-        : `${TEXT.passkeyCount(passkeys)}. ${TEXT.passkeysHint}`;
-  return renderRow(
-    TEXT.passkeys,
-    hint,
-    renderButton({
-      label: TEXT.addPasskey,
-      onClick: () =>
-        dispatch(requestAccount.create({ request: { kind: "passkey-add" } })),
-    }),
-  );
+      : TEXT.passkeysHint;
+  const add = renderButton({
+    label: TEXT.addPasskey,
+    onClick: () =>
+      dispatch(requestAccount.create({ request: { kind: "passkey-add" } })),
+  });
+  return html`${renderRow(TEXT.passkeys, hint, add)}
+  ${passkeys.map((passkey, index) =>
+    renderRow(
+      TEXT.passkeyName(index + 1),
+      TEXT.passkeyAdded(DAY.format(passkey.createdAt)),
+      renderButton({
+        label: TEXT.removePasskey,
+        onClick: () =>
+          dispatch(
+            requestAccount.create({
+              request: { kind: "remove-passkey", id: passkey.id },
+            }),
+          ),
+      }),
+    ),
+  )}`;
 }
+
+const DAY = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" });
 
 export function renderAccount(state: AppState, dispatch: Dispatch) {
   const { user } = state.persistence.account;

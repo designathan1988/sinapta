@@ -22,8 +22,9 @@ export const SETTINGS_TEXT = {
     passkeys: "Passkeys",
     passkeysHint:
       "Sign in with this device's fingerprint, face or PIN instead of a password.",
-    passkeyCount: (count: number) =>
-      count === 1 ? "1 passkey" : `${String(count)} passkeys`,
+    passkeyName: (index: number) => `Passkey ${String(index)}`,
+    passkeyAdded: (day: string) => `Added ${day}`,
+    removePasskey: "Remove",
     addPasskey: "Add a passkey",
     preferredName: "Preferred name",
     preferredNameHint: "The name others see on your pages and comments.",
