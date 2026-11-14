@@ -1478,8 +1478,9 @@ Groups, Notion and Pagecraft alike (Pagecraft changed to match):
     context from your workspace and the web") over "New AI autofill";
     Pagecraft's panel says the same and lists each text property's kinds
     (Summary, Key info, Translation), each filling that column. Turn into
-    offers Notion's typed databases (Tasks, Meetings, Skills). Not yet:
-    database Automations, Turn into, Linked events, Manage data sources.
+    offers Notion's typed databases (Tasks, Meetings, Skills). Since built:
+    Automations and Turn into (finding 67), Linked events and Manage data
+    sources (finding 68).
 67. **done** [`n126-automations`; Pagecraft `w16-automations`,
     `w16b-automation-run`, `w16e-free-card`] Notion's database Automations on
     the Free plan: the bolt, "Automations", "Edit properties, create pages,

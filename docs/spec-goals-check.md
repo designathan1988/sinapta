@@ -283,7 +283,7 @@ Paths: `blk/` is `src/blocks/`, `db/` is `src/features/database/`.
 | --- | --- | --- |
 | Typing under 16 ms on 1,000 blocks | Done | `src/features/editor/editor-typing-speed.test.ts`: a keystroke's command and the page drawn again |
 | A 5,000-row table responsive | Done | `table-model-speed.test.ts` (sort, filter, group, formulas, rollups under 100 ms), `table-render-speed.test.ts` (drawn window, a change redrawn under 50 ms) |
-| Full tests under 10 s; verify under 30 s | Done | the suite: 7.4 to 7.6 s for 2,456 tests (each speed check stops at its first run under budget); `npm run verify` (types, lint, styles, format, tests): about 25 s |
+| Full tests under 10 s; verify under 30 s | Done | the suite: 8.2 to 9.8 s for 2,587 tests (each speed check stops at its first run under budget); `npm run verify` (types, lint, styles, format, tests): about 25 s |
 | WCAG 2.2 AA contrast | Done | `scripts/token-contrast.test.ts` |
 | Every action by keyboard; focus visible | Done | `scoped-keys.test.ts`, `table-keys.test.ts`, `slash-menu-keys.test.ts`, `mention-menu-keys.test.ts`; `:focus-visible` in every control's CSS; photo `sc4-keyboard`; every control of the main screen takes the focus and rings are left out only on text fields and script-focused panels, listed: `src/app/focus-rings.test.ts`; Ctrl+/ opens the block menu: `editor-keys-controls.test.ts` |
 | Reload restores the open page and the sidebar | Done | `workspace-repository.test.ts`; photos `s05-reload`, `sc3-reload` |
