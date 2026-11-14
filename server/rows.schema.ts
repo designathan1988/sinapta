@@ -92,3 +92,8 @@ export const pageShareRowSchema = v.object({
   access: v.picklist(["full", "edit", "comment", "view"]),
   name: v.nullable(v.string()),
 });
+
+export const sharedPageRowSchema = v.object({
+  id: v.string(),
+  access: v.picklist(["full", "edit", "comment", "view"]),
+});

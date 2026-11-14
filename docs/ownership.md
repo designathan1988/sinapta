@@ -253,6 +253,7 @@ owner listed here exists.
 | Each workspace as it stands now, built by the model; a page alone | `server/workspace-state.ts` | 26 |
 | A page's sharing: invited people, general access, published | `server/sharing.ts` | 26 |
 | The Share menu's routes and published pages read by anyone | `server/sharing-routes.ts` | 26 |
+| What a guest reaches: the pages shared with them, read and written at their access | `server/guest-access.ts` | 26 |
 | A server on an in-memory database for tests | `server/test-context.ts` | 24 |
 | The root render: the sign-in page or the app | `src/app/root-render.ts` | 23 |
 

@@ -52,6 +52,12 @@ function blockIdsOf(body: unknown): string[] {
     : [];
 }
 
+function snapshotIn(body: unknown): unknown {
+  return typeof body === "object" && body !== null && "snapshot" in body
+    ? body.snapshot
+    : undefined;
+}
+
 async function published() {
   const server = createTestServer();
   const signUp = await server.call("POST /api/account/sign-up", {
@@ -115,5 +121,50 @@ describe("published pages", () => {
     expect(people.body).toMatchObject({
       invites: [{ email: "bia@pagecraft.test", role: "guest" }],
     });
+  });
+
+  it("gives a guest the pages shared with them alone, at their access", async () => {
+    const { server, ada, id } = await published();
+    const signUp = await server.call("POST /api/account/sign-up", {
+      email: "bia@pagecraft.test",
+      password: "long enough",
+      name: "Bia",
+    });
+    const bia = signUp.cookies?.[0] ?? "";
+    const share = (access: string) =>
+      server.call(
+        `POST /api/workspaces/${id}/pages/shown/sharing`,
+        { email: "bia@pagecraft.test", access },
+        ada,
+      );
+    const retitle = (blockId: string) =>
+      server.call(
+        `POST /api/workspaces/${id}/operations`,
+        {
+          clientId: "bia-client-1",
+          operations: [
+            {
+              type: "record.update",
+              kind: "block",
+              id: blockId,
+              patch: page(blockId, null),
+            },
+          ],
+        },
+        bia,
+      );
+    await share("view");
+
+    const seen = await server.call(`GET /api/workspaces/${id}`, undefined, bia);
+    const whileViewing = await retitle("shown");
+    const secret = await retitle("secret");
+    await share("edit");
+    const whileEditing = await retitle("inner");
+
+    expect(seen.body).toMatchObject({ snapshot: { rootIds: ["shown"] } });
+    expect(blockIdsOf(snapshotIn(seen.body))).toEqual(["inner", "shown"]);
+    expect(whileViewing.status).toBe(403);
+    expect(secret.status).toBe(403);
+    expect(whileEditing.status).toBe(200);
   });
 });

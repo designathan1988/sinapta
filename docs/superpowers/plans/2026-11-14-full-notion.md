@@ -44,8 +44,10 @@ in `src/persistence/`.
 
 - [x] 26.1 Notion's Share menu: invite by email, page permissions (Full
   access, Can edit, Can comment, Can view), guests, General access.
-- [ ] 26.2 Permissions enforced on the server for every command and read;
-  the client shows read-only pages as Notion does.
+- [x] 26.2 Guests: the server sends them only the pages shared with them,
+  passes on only the operations inside, and refuses their changes outside
+  pages they may edit. (Members' "Only people invited" pages and the
+  client's read-only look remain.)
 - [x] 26.3 Publish to web: a read-only page served by the server and the
   Publish tab. (Teamspaces and the Shared section remain.)
 

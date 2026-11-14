@@ -30,7 +30,7 @@ const PROPS: PropsSchemas = {
     new Map<string, typeof anyProps>()[Symbol.iterator](),
 };
 
-interface Kept {
+export interface Kept {
   readonly seq: number;
   readonly workspace: Workspace;
 }
@@ -67,6 +67,14 @@ export function currentWorkspace(
   context: ApiContext,
   workspaceId: string,
 ): Workspace | undefined {
+  return currentState(context, workspaceId)?.workspace;
+}
+
+// The workspace now with the last operation applied to it.
+export function currentState(
+  context: ApiContext,
+  workspaceId: string,
+): Kept | undefined {
   const cache = cacheOf(context);
   const known = cache.get(workspaceId);
   const base =
@@ -84,8 +92,9 @@ export function currentWorkspace(
     workspace = applyLogged(workspace, logged.operations);
     seq = logged.seq;
   }
-  cache.set(workspaceId, { seq, workspace });
-  return workspace;
+  const now = { seq, workspace };
+  cache.set(workspaceId, now);
+  return now;
 }
 
 // A page and everything inside it, as a workspace of its own whose root it
