@@ -41,11 +41,16 @@ export const INTEGRATION_TEXT = {
 
   plans: {
     title: "Plans",
-    lead: "Every plan is free on this server: choosing one takes no payment. Each keeps Notion's limits on file size and page history.",
+    lead: "Each plan keeps Notion's limits on file size and page history. Upgrading charges the workspace's card for each member, every month.",
     current: "Current plan",
     upgrade: "Upgrade",
     downgrade: "Downgrade",
-    price: "Free on this server",
+    prices: {
+      free: "$0 per member / month",
+      plus: "$12 per member / month",
+      business: "$24 per member / month",
+      enterprise: "Custom pricing",
+    },
     ownersOnly: "Only the workspace's owners can change its plan.",
     signedOut: "Sign in to a Pagecraft server to choose a workspace's plan.",
     names: {

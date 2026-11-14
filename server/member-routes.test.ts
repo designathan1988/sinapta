@@ -124,6 +124,17 @@ describe("a workspace's people", () => {
       { plan: "plus" },
       bia,
     );
+    await server.call(
+      `POST /api/workspaces/${id}/billing/card`,
+      {
+        number: "4242424242424242",
+        expMonth: 12,
+        expYear: 2030,
+        cvc: "123",
+        name: "Ada",
+      },
+      ada,
+    );
     const byOwner = await server.call(
       `POST /api/workspaces/${id}/plan`,
       { plan: "business" },

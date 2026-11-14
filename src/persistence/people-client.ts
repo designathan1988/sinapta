@@ -8,6 +8,7 @@ import {
   type SyncRequest,
 } from "../state/index.ts";
 import { readUser } from "./account.schema.ts";
+import type { BillingRequest } from "./billing-client.ts";
 import type { IntegrationRequest } from "./integration-client.ts";
 import type { TeamspaceRequest } from "./teamspace-client.ts";
 import { getJson, type Sync } from "./sync-session.ts";
@@ -19,6 +20,7 @@ export type PeopleRequest = Exclude<
   | { kind: "create" }
   | TeamspaceRequest
   | IntegrationRequest
+  | BillingRequest
 >;
 
 function publishPeople(sync: Sync, body: unknown): void {
@@ -67,18 +69,12 @@ function routeOf(request: PeopleRequest, base: string): Asked | undefined {
 type WorkspaceRequest = Extract<
   PeopleRequest,
   {
-    kind:
-      | "rename"
-      | "plan"
-      | "workspace-icon"
-      | "delete-workspace"
-      | "leave-workspace";
+    kind: "rename" | "workspace-icon" | "delete-workspace" | "leave-workspace";
   }
 >;
 
 const WORKSPACE_KINDS: ReadonlySet<string> = new Set([
   "rename",
-  "plan",
   "workspace-icon",
   "delete-workspace",
   "leave-workspace",
@@ -95,8 +91,6 @@ function workspaceRoute(request: WorkspaceRequest, base: string): Asked {
   switch (request.kind) {
     case "rename":
       return [`${base}/name`, { name: request.name }];
-    case "plan":
-      return [`${base}/plan`, { plan: request.plan }];
     case "workspace-icon":
       return [`${base}/icon`, { icon: request.icon }];
     case "delete-workspace":
@@ -138,7 +132,6 @@ async function answerProfile(sync: Sync, name: string): Promise<void> {
 // Requests whose answer holds no people.
 const QUIET = new Set([
   "rename",
-  "plan",
   "ai-fill",
   "workspace-icon",
   "delete-workspace",

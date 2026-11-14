@@ -71,6 +71,8 @@ export const DATA_PATHS = {
     <circle cx="7" cy="4.5" r="1.5" /><circle cx="11" cy="11.5" r="1.5" />`,
   swap: svg`<path d="M2.5 5.5h10M10 3l2.5 2.5L10 8M13.5 10.5h-10M6 8l-2.5 2.5L6 13" />`,
   sigma: svg`<path d="M12 3.5H4l4 4.5-4 4.5h8" />`,
+  card: svg`<rect x="1.5" y="3.5" width="13" height="9" rx="1.5" />
+    <path d="M1.5 6.5h13M4 10h3" />`,
   "insert-left": svg`<path d="M13.5 2.5v11M10.5 8h-8M5 5.5L2.5 8 5 10.5" />`,
   "insert-right": svg`<path d="M2.5 2.5v11M5.5 8h8M11 5.5l2.5 2.5-2.5 2.5" />`,
 } satisfies Record<string, TemplateResult<2>>;

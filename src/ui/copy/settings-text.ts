@@ -16,6 +16,7 @@ export const SETTINGS_TEXT = {
       connections: "Connections",
       data: "Import and export",
       plans: "Plans",
+      billing: "Billing",
     },
     accountGroup: "Account",
     nameLabel: "Name",

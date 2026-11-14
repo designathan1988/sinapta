@@ -46,6 +46,7 @@ describe("settings, as Notion's", () => {
       "Connections",
       "Import and export",
       "Plans",
+      "Billing",
     ]);
     expect(sections[1]?.getAttribute("aria-current")).toBe("page");
     expect(host.querySelector(".settings__title")?.textContent.trim()).toBe(

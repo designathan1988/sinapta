@@ -24,3 +24,4 @@ export { TEAMSPACE_TEXT } from "./teamspace-text.ts";
 export { MOVE_TEXT } from "./move-text.ts";
 export { INTEGRATION_TEXT } from "./integration-text.ts";
 export { MEETING_TEXT } from "./meeting-text.ts";
+export { BILLING_TEXT } from "./billing-text.ts";

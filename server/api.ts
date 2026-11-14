@@ -6,6 +6,7 @@ import type { Database } from "./database.ts";
 import type { PushSender } from "./push.ts";
 import { matchRoute } from "./route-match.ts";
 import type { EventHub } from "./workspace-events.ts";
+import type { PaymentProcessor } from "./payments.ts";
 import {
   readRequest,
   writeResponse,
@@ -29,6 +30,8 @@ export interface ApiContext {
   readonly outside?: Outside;
   // Reaches identity providers for "Continue with Google" and the like.
   readonly identity?: IdentityWeb;
+  // Takes card payments for plans; none, and the server's own does.
+  readonly payments?: PaymentProcessor;
 }
 
 // What the server asks of the web for a connected app: a calendar's text,

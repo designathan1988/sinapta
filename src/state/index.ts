@@ -164,6 +164,17 @@ export {
   syncCommands,
 } from "./sync.commands.ts";
 export { setApps } from "./app-connections.commands.ts";
+export {
+  BILLING_ERRORS,
+  NO_BILLING,
+  setBilling,
+  setBillingError,
+  type BillingCard,
+  type BillingError,
+  type BillingInvoice,
+  type BillingState,
+  type CardInput,
+} from "./billing.commands.ts";
 export type { Transaction } from "./history.ts";
 export {
   replayOffline,

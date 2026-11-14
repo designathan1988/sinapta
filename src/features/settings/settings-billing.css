@@ -1,0 +1,45 @@
+@layer features {
+  /* Settings › Billing: the card form's fields one above another, the
+     expiry beside the CVC, as Notion's. */
+  .settings-billing__form {
+    display: grid;
+    gap: var(--space-stack-sm);
+    justify-items: start;
+    margin-block: var(--space-stack-sm) var(--space-stack-md);
+  }
+
+  .settings-billing__label {
+    display: grid;
+    gap: var(--space-stack-xxs);
+  }
+
+  .settings-billing__pair {
+    display: flex;
+    gap: var(--space-inline-sm);
+
+    & .settings__field {
+      inline-size: auto;
+    }
+  }
+
+  .settings-billing__card {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+  }
+
+  .settings-billing__invoices {
+    inline-size: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-sm);
+
+    & td {
+      padding: var(--space-stack-xs) var(--space-inline-sm);
+      border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
+    }
+
+    & td[data-status="failed"] {
+      color: var(--color-text-danger);
+    }
+  }
+}

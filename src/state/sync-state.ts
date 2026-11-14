@@ -1,5 +1,6 @@
 // The workspaces on the server this person belongs to, the one joined,
 // and what was asked of them: Notion's workspace switcher (ADR-0013).
+import type { BillingState, CardInput } from "./billing.commands.ts";
 import type { PageAccess, PlanId } from "../model/index.ts";
 
 export interface WorkspaceSummary {
@@ -82,6 +83,9 @@ export type SyncRequest =
   | { readonly kind: "create"; readonly name: string }
   | { readonly kind: "rename"; readonly name: string }
   | { readonly kind: "plan"; readonly plan: PlanId }
+  | { readonly kind: "billing" }
+  | { readonly kind: "add-card"; readonly card: CardInput }
+  | { readonly kind: "remove-card" }
   | { readonly kind: "workspace-icon"; readonly icon: string | null }
   | { readonly kind: "delete-workspace"; readonly name: string }
   | { readonly kind: "leave-workspace" }
@@ -173,6 +177,8 @@ export interface SyncState {
   // the connected calendars, for Home.
   readonly apps: readonly ConnectedApp[];
   readonly calendarEvents: readonly CalendarEventSummary[];
+  // Settings › Billing, once read; null before.
+  readonly billing: BillingState | null;
 }
 
 export interface ConnectedApp {
@@ -204,4 +210,5 @@ export const NOT_SYNCED: SyncState = {
   newSecret: null,
   apps: [],
   calendarEvents: [],
+  billing: null,
 };

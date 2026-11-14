@@ -166,4 +166,30 @@ export const MIGRATIONS: readonly string[] = [
    );
    CREATE INDEX page_versions_page
      ON page_versions (workspace_id, page_id, taken_at);`,
+  // 14: Billing, as Notion's: the workspace's card as the processor knows
+  // it (its brand, last four digits and expiry, never its number), and
+  // each charge for a plan.
+  `CREATE TABLE payment_methods (
+     workspace_id TEXT PRIMARY KEY REFERENCES workspaces (id) ON DELETE CASCADE,
+     brand TEXT NOT NULL,
+     last4 TEXT NOT NULL,
+     exp_month INTEGER NOT NULL,
+     exp_year INTEGER NOT NULL,
+     name TEXT NOT NULL,
+     token TEXT NOT NULL,
+     added_by TEXT NOT NULL,
+     created_at INTEGER NOT NULL
+   );
+   CREATE TABLE invoices (
+     id TEXT PRIMARY KEY,
+     workspace_id TEXT NOT NULL REFERENCES workspaces (id) ON DELETE CASCADE,
+     plan TEXT NOT NULL,
+     seats INTEGER NOT NULL,
+     amount_cents INTEGER NOT NULL,
+     currency TEXT NOT NULL,
+     status TEXT NOT NULL,
+     last4 TEXT NOT NULL,
+     created_at INTEGER NOT NULL
+   );
+   CREATE INDEX invoices_by_workspace ON invoices (workspace_id, created_at);`,
 ];

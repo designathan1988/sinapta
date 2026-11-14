@@ -19,6 +19,7 @@ import { APP_ROUTES } from "./app-connections.ts";
 import { PASSKEY_ROUTES } from "./passkey-routes.ts";
 import { OIDC_ROUTES } from "./oidc.ts";
 import { PAGE_VERSION_ROUTES } from "./page-versions.ts";
+import { BILLING_ROUTES } from "./billing.ts";
 
 const HEALTH_ROUTES: RouteTable = {
   "GET /api/health": (_request, context) => {
@@ -46,6 +47,7 @@ export const ROUTES: RouteTable = {
   ...PASSKEY_ROUTES,
   ...OIDC_ROUTES,
   ...PAGE_VERSION_ROUTES,
+  ...BILLING_ROUTES,
   ...LINK_PREVIEW_ROUTES,
   ...INTEGRATION_ROUTES,
   ...PUBLIC_API_ROUTES,

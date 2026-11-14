@@ -16,11 +16,8 @@ import {
   type Transaction,
 } from "../state/index.ts";
 import { parseReply } from "./account.schema.ts";
-import {
-  answerIntegrations,
-  isIntegrationRequest,
-} from "./integration-client.ts";
 import { answerPeople } from "./people-client.ts";
+import { answerSide } from "./side-requests.ts";
 import { afterAnswer, type AfterSteps } from "./sync-after.ts";
 import { currentRecords } from "./sync-records.ts";
 import { answerTeamspaces, isTeamspaceRequest } from "./teamspace-client.ts";
@@ -160,10 +157,10 @@ function stepsOf(link: Link, sync: Sync, joined: string | null): AfterSteps {
 // other requests go to the people client and keep the workspace open.
 function answer(link: Link, sync: Sync, request: SyncRequest): void {
   const { workspaceId } = sync.store.getState().persistence.sync;
-  if (isIntegrationRequest(request)) {
-    void answerIntegrations(sync, request, workspaceId);
-    return;
-  }
+  const relist = async () => {
+    await publishList(sync, workspaceId);
+  };
+  if (answerSide(sync, request, { workspaceId, relist })) return;
   if (isTeamspaceRequest(request)) {
     const afterwards = {
       reload: () => {
