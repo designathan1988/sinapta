@@ -5,6 +5,7 @@ import {
   ACCOUNT_TEXT,
   AI_TEXT,
   AUTOMATION_TEXT,
+  BILLING_TEXT,
   BLOCK_TEXT,
   CADENCE_TEXT,
   DATABASE_MENU_TEXT,
@@ -58,6 +59,7 @@ export const COPY = {
   integration: INTEGRATION_TEXT.integration,
   thirdParty: INTEGRATION_TEXT.thirdParty,
   plans: INTEGRATION_TEXT.plans,
+  billing: BILLING_TEXT.billing,
   meeting: MEETING_TEXT.meeting,
 } as const;
 
