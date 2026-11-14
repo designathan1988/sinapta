@@ -60,8 +60,9 @@ coming.
 
 Version 3 widens it to everything Notion offers (ADR-0013, 2026-11-14):
 the list under "Out of scope" comes in, served by a local server in
-`server/` (Node's own `node:http`, `node:sqlite` and `node:crypto`, no new
-dependency) and planned as milestones 22 to 30 in
+`server/` (Node's own `node:http`, `node:sqlite` and `node:crypto`; the
+server's only dependencies are Transformers.js for speech and `web-push`,
+ADR-0014) and planned as milestones 22 to 30 in
 `docs/superpowers/plans/2026-11-14-full-notion.md`. Only third parties a
 local server cannot run (Google, Apple, Microsoft and SSO sign-in, Slack,
 Google Drive, payment) stay out; their menus are drawn and say so.
@@ -188,7 +189,9 @@ defect. `docs/ownership.md` holds the full, current table.
   `describe` callback is one long function; default exports are allowed in
   root `*.config.*` files, where the tools require them; and the file limit
   does not apply to `tokens/*.tokens.json`, which hold values, not behavior
-  (`docs/decisions/0009-token-file-size.md`).
+  (`docs/decisions/0009-token-file-size.md`), nor to
+  `src/styles/tokens.generated.css`, which `npm run tokens` builds from
+  them (ADR-0014).
 - New block type: one new folder under `src/blocks/` and one line in the
   registry. New feature: one new folder under `src/features/` and one line
   in `src/app/bootstrap.ts`. A change that needs edits in more places than
@@ -223,7 +226,7 @@ in the official docs first, and record the exact version in its ADR.
 | Data table | `@tanstack/table-core` | Row models only, state controlled from the store |
 | Schemas | Valibot | Imported only in `src/model/` and in `*.schema.ts` files |
 | Storage | IndexedDB through `idb` | Used only in `src/persistence/` |
-| Server | Node 24's `node:http`, `node:sqlite`, `node:crypto`, in `server/` (ADR-0013) | Mounted in Vite's dev server; imports only `src/model/` from the app; nothing in `src/` imports it |
+| Server | Node 24's `node:http`, `node:sqlite`, `node:crypto`, in `server/` (ADR-0013); `@huggingface/transformers` for speech to text and `web-push` for Web Push, server only (ADR-0014) | Mounted in Vite's dev server; imports only `src/model/` from the app; nothing in `src/` imports it |
 | Tokens | Design Tokens Format 2025.10 JSON, built to CSS by `scripts/build-tokens.ts` | See section 5.4 |
 | Lint and format | ESLint with typescript-eslint, Stylelint, Prettier | Zero warnings allowed |
 
