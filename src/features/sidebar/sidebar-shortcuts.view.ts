@@ -16,6 +16,7 @@ import {
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon, type IconName } from "../../ui/icon/index.ts";
 import { SETTINGS_OVERLAY_KIND } from "../../ui/shortcuts/index.ts";
+import { AI_CHAT_OVERLAY } from "../ai/index.ts";
 import { createDatabase } from "../database/index.ts";
 import { selectShortcuts, shortcutPageId } from "./sidebar-layout.selectors.ts";
 
@@ -29,6 +30,7 @@ export interface ShortcutLook {
 const BUILT_IN_LOOKS: Readonly<Record<string, ShortcutLook>> = {
   "new-page": { label: COPY.sidebar.newPage, icon: "compose" },
   "new-database": { label: COPY.database.newDatabase, icon: "table" },
+  "new-chat": { label: COPY.ai.chat, icon: "sparkles" },
   settings: { label: COPY.shell.openSettings, icon: "settings" },
 };
 
@@ -65,6 +67,8 @@ export function runShortcut(
   if (key === "new-page") dispatch(createPage.create({ parentId: null }));
   else if (key === "new-database") {
     dispatch(createDatabase.create({ parentId: null }));
+  } else if (key === "new-chat") {
+    dispatch(openOverlay.create({ overlay: { kind: AI_CHAT_OVERLAY } }));
   } else if (key === "settings") {
     dispatch(openOverlay.create({ overlay: { kind: SETTINGS_OVERLAY_KIND } }));
   } else {

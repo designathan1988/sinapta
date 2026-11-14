@@ -9,10 +9,15 @@ import type { AppState } from "../../state/index.ts";
 export const BUILT_IN_SHORTCUTS = [
   "new-page",
   "new-database",
+  "new-chat",
   "settings",
 ] as const;
 export type BuiltInShortcut = (typeof BUILT_IN_SHORTCUTS)[number];
-const DEFAULT_SHORTCUTS: readonly string[] = ["new-page", "new-database"];
+const DEFAULT_SHORTCUTS: readonly string[] = [
+  "new-page",
+  "new-chat",
+  "new-database",
+];
 
 export const BUILT_IN_SECTIONS = ["favorites", "private"] as const;
 export type BuiltInSection = (typeof BUILT_IN_SECTIONS)[number];

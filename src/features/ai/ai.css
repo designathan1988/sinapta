@@ -81,3 +81,36 @@
     font-size: var(--font-size-sm);
   }
 }
+
+@layer features {
+  .ai__messages {
+    display: grid;
+    gap: var(--space-stack-xs);
+    max-block-size: var(--size-menu-max-height);
+    margin: var(--space-none);
+    padding: var(--space-none);
+    overflow: auto;
+    list-style: none;
+  }
+
+  .ai__message {
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    white-space: pre-wrap;
+
+    &[data-from="you"] {
+      justify-self: end;
+      background-color: var(--color-bg-hover);
+    }
+
+    &[data-from="failed"] {
+      color: var(--color-text-danger);
+    }
+  }
+
+  .ai__hint {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+  }
+}

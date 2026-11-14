@@ -1,6 +1,11 @@
 // The view of each overlay kind. At most one overlay is open at a time.
 import { renderSharePanel, SHARE_OVERLAY } from "../features/share/index.ts";
-import { AI_PROMPT_OVERLAY, renderAiPrompt } from "../features/ai/index.ts";
+import {
+  AI_CHAT_OVERLAY,
+  AI_PROMPT_OVERLAY,
+  renderAiChat,
+  renderAiPrompt,
+} from "../features/ai/index.ts";
 import { type nothing, type TemplateResult } from "lit-html";
 import {
   PALETTE_OVERLAY,
@@ -77,6 +82,7 @@ type OverlayView = (
 // The view of each overlay kind; the editor shows the rest.
 const OVERLAYS: Readonly<Record<string, OverlayView>> = {
   [AI_PROMPT_OVERLAY]: renderAiPrompt,
+  [AI_CHAT_OVERLAY]: renderAiChat,
   [SHARE_OVERLAY]: renderSharePanel,
   [SETTINGS_OVERLAY]: renderSettings,
   [TRASH_OVERLAY]: renderTrash,

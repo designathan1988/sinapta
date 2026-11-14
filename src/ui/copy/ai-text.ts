@@ -4,6 +4,9 @@ export const AI_TEXT = {
     ask: "Ask AI",
     promptPlaceholder: "Ask AI anything…",
     panel: "AI",
+    chat: "New chat",
+    chatHint:
+      "Ask anything about your work. Answers come from this computer's AI.",
     thinking: "AI is writing…",
     failed: "Something went wrong. Try again.",
     modelMissing:

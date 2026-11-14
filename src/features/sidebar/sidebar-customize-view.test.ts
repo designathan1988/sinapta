@@ -74,11 +74,12 @@ describe("Customize sidebar", () => {
 
     expect(titles).toEqual([
       "New page",
+      "New chat",
       "New database",
       "Favorites",
       "Private",
     ]);
-    expect(host.querySelectorAll(".sidebar__grip")).toHaveLength(4);
+    expect(host.querySelectorAll(".sidebar__grip")).toHaveLength(5);
     expect(host.querySelector(".sidebar__edit-done")?.textContent.trim()).toBe(
       "Done",
     );
@@ -95,7 +96,7 @@ describe("Customize sidebar", () => {
     expect(sent).toEqual([
       expect.objectContaining({
         type: "settings.setSidebarShortcuts",
-        keys: ["new-page"],
+        keys: ["new-page", "new-chat"],
       }),
       expect.objectContaining({ type: "ui.closeOverlay" }),
     ]);
@@ -128,7 +129,7 @@ describe("Customize sidebar", () => {
     expect(sent).toContainEqual(
       expect.objectContaining({
         type: "settings.setSidebarShortcuts",
-        keys: ["new-page", "new-database", "settings"],
+        keys: ["new-page", "new-chat", "new-database", "settings"],
       }),
     );
   });

@@ -125,7 +125,8 @@ export function renderAiPanel(
   state: AppState,
   dispatch: Dispatch,
 ): TemplateResult | typeof nothing {
-  if (state.persistence.ai.status === "idle") return nothing;
+  const { status, blockId } = state.persistence.ai;
+  if (status === "idle" || blockId === null) return nothing;
   return html`<section class="ai" aria-label=${TEXT.panel}>
     <p class="ai__title">${TEXT.panel}</p>
     ${renderBody(state, dispatch)}

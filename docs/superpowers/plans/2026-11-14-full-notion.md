@@ -85,5 +85,5 @@ in `src/persistence/`.
 - [x] 30.2 Ask AI in the block menu with Notion's actions, the answer with
   Insert below, Replace, Discard; Space on an empty line opens "Ask AI
   anything…", whose plain-text requests the local provider answers too.
-- [ ] 30.3 AI autofill for database properties; the AI chat in the
-  sidebar ("New chat").
+- [x] 30.3 AI autofill for a text property (summary, action items), done
+  by the server for every row; the AI chat from the sidebar's "New chat".

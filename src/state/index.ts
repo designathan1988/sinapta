@@ -186,6 +186,8 @@ export {
   answerAi,
   askAi,
   discardAi,
+  sendChat,
   type AiAction,
+  type ChatMessage,
   type AiState,
 } from "./ai.commands.ts";

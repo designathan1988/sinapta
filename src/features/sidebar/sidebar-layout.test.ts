@@ -20,10 +20,14 @@ function withSettings(settings: Partial<AppState["workspace"]["settings"]>) {
 }
 
 describe("the sidebar's arrangement", () => {
-  it("starts as Notion's: New page and New database, Favorites and Private", () => {
+  it("starts as Notion's: New page, New chat and New database, Favorites and Private", () => {
     const state = createInitialState();
 
-    expect(selectShortcuts(state)).toEqual(["new-page", "new-database"]);
+    expect(selectShortcuts(state)).toEqual([
+      "new-page",
+      "new-chat",
+      "new-database",
+    ]);
     expect(selectSections(state)).toEqual(["favorites", "private"]);
     expect(selectHiddenSections(state)).toEqual([]);
   });
