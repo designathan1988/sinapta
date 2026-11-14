@@ -44,7 +44,12 @@ interface Sight {
 }
 
 function whoOf(member: Member): Who {
-  return { userId: member.user.id, isOwner: member.workspace.role === "owner" };
+  const isOwner = member.workspace.role === "owner";
+  return {
+    userId: member.user.id,
+    isOwner,
+    mayMakeTeamspaces: isOwner || member.workspace.limitsTeamspaces !== 1,
+  };
 }
 
 function sightOf(member: Member, context: ApiContext, workspace: Workspace) {

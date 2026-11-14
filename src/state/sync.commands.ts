@@ -16,6 +16,7 @@ import type {
   SyncRequest,
   SyncState,
   WorkspaceSummary,
+  ListedTeamspace,
 } from "./sync-state.ts";
 
 // Another client's operations, with this client's unconfirmed ones taken
@@ -86,6 +87,14 @@ export const requestOpenSharing = defineCommand<NoPayload>({
   },
 });
 
+// The teamspaces as the server lists them.
+export const setTeamspaceList = defineCommand<{
+  teamspaces: readonly ListedTeamspace[];
+}>({
+  type: "sync.setTeamspaceList",
+  handle: (state, { teamspaces }) => withSync(state, { teamspaces }),
+});
+
 // The open workspace's people as the server lists them.
 export const setPeople = defineCommand<{
   members: readonly MemberSummary[];
@@ -141,6 +150,7 @@ export const setConnection = defineCommand<{
 });
 
 export const syncCommands = [
+  setTeamspaceList,
   requestOpenSharing,
   setShared,
   setConnection,

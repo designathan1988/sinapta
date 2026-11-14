@@ -22,6 +22,8 @@ const TEAMSPACE = "teamspace";
 export interface Who {
   readonly userId: string;
   readonly isOwner: boolean;
+  // False while only the workspace's owners may make teamspaces.
+  readonly mayMakeTeamspaces?: boolean;
 }
 
 export interface Viewer extends Who {
@@ -128,6 +130,14 @@ export function memberVisible(
   });
 }
 
+function makesTeamspace(operation: Operation): boolean {
+  return (
+    operation.type === "record.create" &&
+    operation.kind === "block" &&
+    operation.record.type === TEAMSPACE
+  );
+}
+
 // True when every change stays where the member may make it: the top of
 // the workspace, their reach at an access that allows it, or blocks the
 // server does not hold yet.
@@ -138,6 +148,9 @@ export function mayMemberWrite(
 ): boolean {
   const scratch: Reach = new Map(reach);
   return operations.every((operation) => {
+    if (makesTeamspace(operation) && context.mayMakeTeamspaces === false) {
+      return false;
+    }
     const top = topSeen(operation, scratch, context);
     if (top !== undefined) return top;
     const target = blockOf(operation, context.workspace);

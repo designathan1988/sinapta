@@ -1,11 +1,7 @@
-// Notion's filters over Settings › Teamspaces (n89-settings-teamspaces):
-// by access, and a search by name; what they keep is kept in the open
-// settings overlay.
+// Notion's filters over Settings › Teamspaces (n94-teamspace-filters):
+// status, owner, access and security, then a search by name; what they
+// keep is kept in the open settings overlay.
 import { html, type TemplateResult } from "lit-html";
-import {
-  selectTeamspaces,
-  type TeamspaceBlock,
-} from "../../blocks/teamspace/index.ts";
 import {
   setOverlayQuery,
   setOverlayValues,
@@ -14,42 +10,42 @@ import {
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderSelect } from "../../ui/select/index.ts";
+import {
+  filterOf,
+  selectTeamspaceOwners,
+} from "./teamspace-table.selectors.ts";
 
 const TEXT = COPY.teamspace;
-const ALL = "all";
+const ANY = "any";
 
-// The teamspaces the filters keep, in their order.
-export function selectShownTeamspaces(state: AppState): TeamspaceBlock[] {
-  const words = (state.ui.overlay?.query ?? "").trim().toLowerCase();
-  const access = state.ui.overlay?.values?.access?.[0];
-  return selectTeamspaces(state).filter(
-    (teamspace) =>
-      teamspace.props.name.toLowerCase().includes(words) &&
-      (access === undefined || (teamspace.props.access ?? "open") === access),
-  );
+interface Filter {
+  readonly name: string;
+  readonly label: string;
+  // The choice that leaves the filter unset, and its words.
+  readonly unset: string;
+  readonly options: readonly {
+    readonly value: string;
+    readonly label: string;
+  }[];
 }
 
-function renderAccessFilter(
+function renderFilter(
   state: AppState,
   dispatch: Dispatch,
+  filter: Filter,
 ): TemplateResult {
-  const access = state.ui.overlay?.values?.access?.[0] ?? ALL;
   return renderSelect(
     {
-      id: "teamspace-filter-access",
-      label: TEXT.columnAccess,
-      value: access,
-      options: [
-        { value: ALL, label: `${TEXT.columnAccess}: ${TEXT.all}` },
-        { value: "open", label: `${TEXT.columnAccess}: ${TEXT.open}` },
-        { value: "closed", label: `${TEXT.columnAccess}: ${TEXT.closed}` },
-      ],
+      id: `teamspace-filter-${filter.name}`,
+      label: filter.label,
+      value: filterOf(state, filter.name) ?? filter.unset,
+      options: filter.options,
       variant: "quiet",
       onChoose: (value) =>
         dispatch(
           setOverlayValues.create({
-            name: "access",
-            values: value === ALL ? null : [value],
+            name: filter.name,
+            values: value === filter.unset ? null : [value],
           }),
         ),
     },
@@ -57,13 +53,60 @@ function renderAccessFilter(
   );
 }
 
+const STATUS: Filter = {
+  name: "status",
+  label: TEXT.status,
+  unset: "active",
+  options: [
+    { value: "active", label: TEXT.active },
+    { value: "archived", label: TEXT.archived },
+  ],
+};
+
+const ACCESS: Filter = {
+  name: "access",
+  label: TEXT.columnAccess,
+  unset: ANY,
+  options: [
+    { value: ANY, label: TEXT.columnAccess },
+    { value: "open", label: TEXT.open },
+    { value: "closed", label: TEXT.closed },
+    { value: "private", label: TEXT.private },
+  ],
+};
+
+const SECURITY: Filter = {
+  name: "security",
+  label: TEXT.security,
+  unset: ANY,
+  options: [
+    { value: ANY, label: TEXT.security },
+    { value: "overrides", label: TEXT.hasOverrides },
+  ],
+};
+
+function filtersOf(state: AppState): Filter[] {
+  const owners = selectTeamspaceOwners(state).map((owner) => ({
+    value: owner,
+    label: owner,
+  }));
+  const owner: Filter = {
+    name: "owner",
+    label: TEXT.columnOwners,
+    unset: ANY,
+    options: [{ value: ANY, label: TEXT.columnOwners }, ...owners],
+  };
+  return [STATUS, owner, ACCESS, SECURITY];
+}
+
 export function renderTeamspaceFilters(
   state: AppState,
   dispatch: Dispatch,
 ): TemplateResult {
-  const select = renderAccessFilter(state, dispatch);
   return html`<div class="teamspaces__filters">
-    ${select}
+    <div class="teamspaces__filter-row">
+      ${filtersOf(state).map((filter) => renderFilter(state, dispatch, filter))}
+    </div>
     <input
       class="teamspaces__search"
       type="search"

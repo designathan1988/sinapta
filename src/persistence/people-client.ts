@@ -8,12 +8,13 @@ import {
   type SyncRequest,
 } from "../state/index.ts";
 import { readUser } from "./account.schema.ts";
+import type { TeamspaceRequest } from "./teamspace-client.ts";
 import { getJson, type Sync } from "./sync-session.ts";
 import { readPeople, readSharedIds, readSharing } from "./sync.schema.ts";
 
 export type PeopleRequest = Exclude<
   SyncRequest,
-  { kind: "switch" } | { kind: "create" }
+  { kind: "switch" } | { kind: "create" } | TeamspaceRequest
 >;
 
 function publishPeople(sync: Sync, body: unknown): void {

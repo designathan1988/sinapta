@@ -21,6 +21,7 @@ import {
   unsharePage,
   type PageRef,
 } from "./sharing.ts";
+import { isInWorkspace, isOverridden } from "./teamspace-security.ts";
 import { currentWorkspace, pageAlone } from "./workspace-state.ts";
 import { membership } from "./workspaces.ts";
 
@@ -51,18 +52,30 @@ function isPage(value: PageRef | ApiResponse): value is PageRef {
 
 const BASE = "/api/workspaces/:id/pages/:page/sharing";
 
+type Change<TSchema extends v.GenericSchema> = (
+  context: ApiContext,
+  page: PageRef,
+  body: v.InferOutput<TSchema>,
+) => void;
+
+// A change to a page's sharing; one its teamspace's security refuses is
+// answered 403 with the override that refused it.
 function changing<TSchema extends v.GenericSchema>(
   schema: TSchema,
-  change: (
+  change: Change<TSchema>,
+  refused?: (
     context: ApiContext,
     page: PageRef,
     body: v.InferOutput<TSchema>,
-  ) => void,
+  ) => string | undefined,
 ) {
   return (request: ApiRequest, context: ApiContext): ApiResponse => {
     const page = pageOf(request, context);
     if (!isPage(page)) return page;
-    change(context, page, v.parse(schema, request.body));
+    const body = v.parse(schema, request.body);
+    const refusal = refused?.(context, page, body);
+    if (refusal !== undefined) return answer(403, { error: refusal });
+    change(context, page, body);
     return answer(200, sharingOf(context, page));
   };
 }
@@ -88,18 +101,40 @@ export const SHARING_ROUTES: RouteTable = {
     const page = pageOf(request, context);
     return isPage(page) ? answer(200, sharingOf(context, page)) : page;
   },
-  [`POST ${BASE}`]: changing(shareSchema, (context, page, body) => {
-    sharePage(context, page, body);
-  }),
+  [`POST ${BASE}`]: changing(
+    shareSchema,
+    (context, page, body) => {
+      sharePage(context, page, body);
+    },
+    (context, page, body) =>
+      isOverridden(context, page, "noGuests") &&
+      !isInWorkspace(context, page.workspaceId, body.email)
+        ? "no-guests"
+        : undefined,
+  ),
   [`POST ${BASE}/remove`]: changing(removeSchema, (context, page, body) => {
     unsharePage(context, page, body.email);
   }),
-  [`POST ${BASE}/general`]: changing(generalSchema, (context, page, body) => {
-    setGeneral(context, page, body.general);
-  }),
-  [`POST ${BASE}/publish`]: changing(publishSchema, (context, page, body) => {
-    setPublished(context, page, body.published);
-  }),
+  [`POST ${BASE}/general`]: changing(
+    generalSchema,
+    (context, page, body) => {
+      setGeneral(context, page, body.general);
+    },
+    (context, page, body) =>
+      body.general === "web" && isOverridden(context, page, "noPublishing")
+        ? "no-publishing"
+        : undefined,
+  ),
+  [`POST ${BASE}/publish`]: changing(
+    publishSchema,
+    (context, page, body) => {
+      setPublished(context, page, body.published);
+    },
+    (context, page, body) =>
+      body.published && isOverridden(context, page, "noPublishing")
+        ? "no-publishing"
+        : undefined,
+  ),
   // The pages shared with people, for the sidebar's Shared section.
   "GET /api/workspaces/:id/shared": (request, context) => {
     const user = sessionUser(context, request);

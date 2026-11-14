@@ -1,6 +1,6 @@
 // The sidebar's Teamspaces section: each teamspace, open or closed, and
 // the pages inside an open one.
-import { selectTeamspaces } from "../../blocks/teamspace/index.ts";
+import { selectSidebarTeamspaces } from "../../blocks/teamspace/index.ts";
 import { firstGrapheme, type BlockId } from "../../model/index.ts";
 import type { AppState } from "../../state/index.ts";
 import { selectPageRows, type TreeRow } from "./sidebar.selectors.ts";
@@ -15,7 +15,7 @@ export interface TeamspaceRow {
 }
 
 export function selectTeamspaceRows(state: AppState): TeamspaceRow[] {
-  return selectTeamspaces(state).map((teamspace) => {
+  return selectSidebarTeamspaces(state).map((teamspace) => {
     const { name, icon } = teamspace.props;
     const isExpanded = state.ui.expandedPageIds.includes(teamspace.id);
     return {

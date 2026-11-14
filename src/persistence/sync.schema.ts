@@ -7,6 +7,7 @@ const workspaceSchema = v.object({
   icon: v.nullable(v.string()),
   role: v.string(),
   members: v.number(),
+  limitsTeamspaces: v.optional(v.number(), 0),
 });
 
 const loggedSchema = v.object({
@@ -133,3 +134,27 @@ const sharedSchema = v.object({ pageIds: v.array(v.string()) });
 
 export const readSharedIds = (value: unknown) =>
   read(sharedSchema, value)?.pageIds;
+
+const listedSchema = v.object({
+  teamspaces: v.array(
+    v.object({
+      id: v.string(),
+      name: v.string(),
+      access: v.string(),
+      owner: v.string(),
+      isMember: v.boolean(),
+      hasAsked: v.boolean(),
+      isArchived: v.boolean(),
+      hasOverrides: v.boolean(),
+      requests: v.array(v.object({ userId: v.string(), name: v.string() })),
+    }),
+  ),
+});
+
+export const readTeamspaceList = (value: unknown) =>
+  read(listedSchema, value)?.teamspaces;
+
+const joinedSchema = v.object({ joined: v.boolean() });
+
+// True once the server put this person in the teamspace.
+export const readJoined = (value: unknown) => read(joinedSchema, value)?.joined;

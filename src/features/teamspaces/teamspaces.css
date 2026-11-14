@@ -189,3 +189,40 @@
     font-size: var(--font-size-sm);
   }
 }
+
+@layer features {
+  /* Notion's four filters side by side, the search at the end. */
+  .teamspaces__filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-inline-xs);
+  }
+
+  .teamspaces__more-button {
+    display: inline-grid;
+    place-items: center;
+    inline-size: var(--size-target-min);
+    block-size: var(--size-target-min);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
+  .teamspaces__asked {
+    color: var(--color-text-secondary);
+  }
+
+  /* Who asks to join, under the teamspace, for its owners. */
+  .teamspaces__request td {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+  }
+}

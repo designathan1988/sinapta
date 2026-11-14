@@ -17,6 +17,7 @@ import {
 } from "../state/index.ts";
 import { parseReply } from "./account.schema.ts";
 import { answerPeople } from "./people-client.ts";
+import { answerTeamspaces, isTeamspaceRequest } from "./teamspace-client.ts";
 import {
   flush,
   getJson,
@@ -142,8 +143,20 @@ function leave(link: Link): void {
 // Joins another workspace or makes a new one, as the switcher asks; the
 // other requests go to the people client and keep the workspace open.
 function answer(link: Link, sync: Sync, request: SyncRequest): void {
+  const { workspaceId } = sync.store.getState().persistence.sync;
+  if (isTeamspaceRequest(request)) {
+    const afterwards = {
+      reload: () => {
+        if (workspaceId === null) return;
+        leave(link);
+        void join(link, sync, workspaceId);
+      },
+      relist: () => void publishList(sync, workspaceId),
+    };
+    void answerTeamspaces(sync, request, { workspaceId, afterwards });
+    return;
+  }
   if (request.kind !== "switch" && request.kind !== "create") {
-    const { workspaceId } = sync.store.getState().persistence.sync;
     void answerPeople(sync, request, workspaceId).then(() =>
       request.kind === "rename" ? publishList(sync, workspaceId) : undefined,
     );

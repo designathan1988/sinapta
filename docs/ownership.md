@@ -270,6 +270,8 @@ owner listed here exists.
 | Each workspace as it stands now, built by the model; a page alone | `server/workspace-state.ts` | 26 |
 | A page's sharing: invited people, general access, published | `server/sharing.ts` | 26 |
 | What a member reads and may change: the others' private pages kept from them | `server/member-access.ts` | 26 |
+| Teamspaces on the server: the list, joining, requests and approval, the creation limit | `server/teamspaces.ts`, `server/teamspace-routes.ts`, `src/persistence/teamspace-client.ts` | 26 |
+| A teamspace's security overrides, refused by the sharing routes | `server/teamspace-security.ts` | 26 |
 | Each person's view of a workspace on the server: downloads, writes, streams and catch-up reads for guests and members | `server/workspace-access.ts` | 26 |
 | The Share menu's routes, the shared pages listed for the sidebar, and published pages read by anyone | `server/sharing-routes.ts` | 26 |
 | The sidebar's Shared section: the top pages shared with people | `src/features/sidebar/sidebar.selectors.ts` (`selectTreeRows`), `sidebar.view.ts` | 26 |

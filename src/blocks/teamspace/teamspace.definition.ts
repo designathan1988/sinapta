@@ -1,7 +1,9 @@
 import type { BlockDefinition } from "../block-definition.ts";
 import {
+  archiveTeamspace,
   createTeamspace,
   setTeamspaceAccess,
+  setTeamspaceSecurity,
   toggleTeamspaceMember,
 } from "./teamspace.commands.ts";
 import { TEAMSPACE_TYPE, teamspacePropsSchema } from "./teamspace.schema.ts";
@@ -12,5 +14,11 @@ export const teamspaceDefinition: BlockDefinition = {
   propsSchema: teamspacePropsSchema,
   continuesAs: "paragraph",
   createProps: () => ({ name: "", icon: null, description: "" }),
-  commands: [createTeamspace, setTeamspaceAccess, toggleTeamspaceMember],
+  commands: [
+    createTeamspace,
+    setTeamspaceAccess,
+    toggleTeamspaceMember,
+    archiveTeamspace,
+    setTeamspaceSecurity,
+  ],
 };

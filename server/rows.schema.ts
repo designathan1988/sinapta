@@ -43,6 +43,8 @@ export const workspaceRowSchema = v.object({
   icon: v.nullable(v.string()),
   role: v.string(),
   members: v.number(),
+  // 1 when only the workspace's owners may make teamspaces.
+  limitsTeamspaces: v.number(),
 });
 
 export type WorkspaceRow = v.InferOutput<typeof workspaceRowSchema>;
@@ -101,4 +103,10 @@ export const sharedPageRowSchema = v.object({
 export const generalRowSchema = v.object({
   id: v.string(),
   general: v.picklist(["invited", "workspace", "web"]),
+});
+
+export const requestRowSchema = v.object({
+  teamspace_id: v.string(),
+  user_id: v.string(),
+  name: v.string(),
 });

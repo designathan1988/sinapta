@@ -1,6 +1,7 @@
-// A teamspace's row in Settings › Teamspaces: its name, whether it is open
-// to the workspace or closed to its members, its members with Join or
-// Leave for this person, and when it last changed.
+// A teamspace's row in Settings › Teamspaces: its name and owner, its
+// access, its members with Join or Leave, when it last changed and its
+// "…"; a closed one this person is not in shows Request to join; an
+// owner sees who asks to join and approves them.
 import { html, nothing, type TemplateResult } from "lit-html";
 import {
   setTeamspaceAccess,
@@ -10,13 +11,24 @@ import {
   type TeamspaceBlock,
 } from "../../blocks/teamspace/index.ts";
 import { firstGrapheme } from "../../model/index.ts";
-import type { AppState, Dispatch } from "../../state/index.ts";
+import {
+  requestSync,
+  type AppState,
+  type Dispatch,
+  type ListedTeamspace,
+} from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderSelect } from "../../ui/select/index.ts";
+import { renderTeamspaceMenu } from "./teamspace-menu.view.ts";
+import type { TeamspaceTableRow } from "./teamspace-table.selectors.ts";
 
 const TEXT = COPY.teamspace;
-
 const DAY = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" });
+const ACCESS_WORDS: Record<TeamspaceAccess, string> = {
+  open: TEXT.open,
+  closed: TEXT.closed,
+  private: TEXT.private,
+};
 
 const isAccess = (value: string): value is TeamspaceAccess =>
   TEAMSPACE_ACCESS.some((access) => access === value);
@@ -31,10 +43,10 @@ function renderAccess(
       id: `teamspace-access-${teamspace.id}`,
       label: TEXT.columnAccess,
       value: teamspace.props.access ?? "open",
-      options: [
-        { value: "open", label: TEXT.open },
-        { value: "closed", label: TEXT.closed },
-      ],
+      options: TEAMSPACE_ACCESS.map((value) => ({
+        value,
+        label: ACCESS_WORDS[value],
+      })),
       variant: "quiet",
       onChoose: (value) => {
         if (!isAccess(value)) return;
@@ -54,12 +66,12 @@ function renderMembers(
   teamspace: TeamspaceBlock,
   state: AppState,
   dispatch: Dispatch,
-): TemplateResult {
+): TemplateResult | typeof nothing {
+  if ((teamspace.props.access ?? "open") === "open") return nothing;
   const members = teamspace.props.memberIds ?? [];
   const me = state.persistence.account.user?.id;
   const count = `${String(members.length)} ${TEXT.membersCount}`;
-  if (me === undefined) return html`${count}`;
-  const isIn = members.includes(me);
+  if (me === undefined || teamspace.createdBy?.id === me) return html`${count}`;
   return html`${count}
     <button
       type="button"
@@ -72,27 +84,88 @@ function renderMembers(
           }),
         )}
     >
-      ${isIn ? TEXT.leave : TEXT.join}
+      ${members.includes(me) ? TEXT.leave : TEXT.join}
     </button>`;
 }
 
+// A closed teamspace this person is not in: ask to join it, once.
+function renderAsk(listed: ListedTeamspace, dispatch: Dispatch) {
+  if (listed.hasAsked)
+    return html`<span class="teamspaces__asked">${TEXT.asked}</span>`;
+  return html`<button
+    type="button"
+    class="teamspaces__join"
+    @click=${() =>
+      dispatch(
+        requestSync.create({
+          request: { kind: "join-teamspace", teamspaceId: listed.id },
+        }),
+      )}
+  >
+    ${TEXT.askToJoin}
+  </button>`;
+}
+
+function renderRequests(row: TeamspaceTableRow, dispatch: Dispatch) {
+  return (row.listed?.requests ?? []).map(
+    (asking) =>
+      html`<tr class="teamspaces__request">
+        <td colspan="6">
+          ${asking.name} ${TEXT.asksToJoin} ${row.name}
+          <button
+            type="button"
+            class="teamspaces__join"
+            @click=${() =>
+              dispatch(
+                requestSync.create({
+                  request: {
+                    kind: "approve-teamspace",
+                    teamspaceId: row.id,
+                    userId: asking.userId,
+                  },
+                }),
+              )}
+          >
+            ${TEXT.approve}
+          </button>
+        </td>
+      </tr>`,
+  );
+}
+
+function renderName(row: TeamspaceTableRow): TemplateResult {
+  return html`<td class="teamspaces__cell">
+    <span class="teamspaces__letter" aria-hidden="true"
+      >${row.teamspace?.props.icon ?? firstGrapheme(row.name).toUpperCase()}</span
+    >
+    ${row.name}
+  </td>`;
+}
+
 export function renderTeamspaceRow(
-  teamspace: TeamspaceBlock,
+  row: TeamspaceTableRow,
   state: AppState,
   dispatch: Dispatch,
 ): TemplateResult {
-  const { name, icon } = teamspace.props;
-  const isClosed = teamspace.props.access === "closed";
+  const { teamspace, listed } = row;
+  if (teamspace === undefined) {
+    const access = isAccess(row.access) ? ACCESS_WORDS[row.access] : row.access;
+    return html`<tr>
+      ${renderName(row)}
+      <td>${row.owner}</td>
+      <td>${access}</td>
+      <td>${listed === undefined ? nothing : renderAsk(listed, dispatch)}</td>
+      <td></td>
+      <td></td>
+    </tr>`;
+  }
   return html`<tr>
-    <td class="teamspaces__cell">
-      <span class="teamspaces__letter" aria-hidden="true"
-        >${icon ?? firstGrapheme(name).toUpperCase()}</span
-      >
-      ${name}
-    </td>
-    <td>${teamspace.createdBy?.name ?? ""}</td>
-    <td>${renderAccess(teamspace, state, dispatch)}</td>
-    <td>${isClosed ? renderMembers(teamspace, state, dispatch) : nothing}</td>
-    <td>${DAY.format(new Date(teamspace.updatedAt))}</td>
-  </tr>`;
+      ${renderName(row)}
+      <td>${row.owner}</td>
+      <td>${renderAccess(teamspace, state, dispatch)}</td>
+      <td>${renderMembers(teamspace, state, dispatch)}</td>
+      <td>${DAY.format(new Date(teamspace.updatedAt))}</td>
+      <td>${renderTeamspaceMenu(teamspace, state, dispatch)}</td>
+    </tr>
+    ${renderRequests(row, dispatch)}`;
 }

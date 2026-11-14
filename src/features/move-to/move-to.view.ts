@@ -30,7 +30,7 @@ import {
   renderMovePopover,
 } from "./move-to-popover.view.ts";
 import { selectPageRows, selectTreeRows } from "../sidebar/index.ts";
-import { selectTeamspaces } from "../../blocks/teamspace/index.ts";
+import { selectSidebarTeamspaces } from "../../blocks/teamspace/index.ts";
 
 export const MOVE_TO_OVERLAY = MOVE_TO_OVERLAY_KIND;
 
@@ -46,7 +46,7 @@ function selectAllPages(state: AppState): PageBlock[] {
   );
   const open = { ...state, ui: { ...state.ui, expandedPageIds: expanded } };
   const all = [
-    ...selectTeamspaces(state).flatMap((teamspace) =>
+    ...selectSidebarTeamspaces(state).flatMap((teamspace) =>
       selectPageRows(open, teamspace.childIds, 2),
     ),
     ...selectTreeRows(open, "shared"),
@@ -126,7 +126,7 @@ function selectEntries(state: AppState, dispatch: Dispatch): MoveEntry[] {
     onChoose: moveTo(page.id),
   }));
   if (!isPage) return pages;
-  const teamspaces = selectTeamspaces(state).map((teamspace) => ({
+  const teamspaces = selectSidebarTeamspaces(state).map((teamspace) => ({
     icon: firstGrapheme(teamspace.props.name).toUpperCase(),
     label: teamspace.props.name,
     onChoose: moveTo(teamspace.id),

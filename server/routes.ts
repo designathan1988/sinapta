@@ -2,6 +2,7 @@
 import { ACCOUNT_ROUTES } from "./account-routes.ts";
 import { AI_ROUTES } from "./ai.ts";
 import { AI_STREAM_ROUTES } from "./ai-stream.ts";
+import { TEAMSPACE_ROUTES } from "./teamspace-routes.ts";
 import { AI_FILL_ROUTES } from "./ai-fill.ts";
 import { answer, type RouteTable } from "./api.ts";
 import { countRowSchema, readRow } from "./rows.schema.ts";
@@ -29,5 +30,6 @@ export const ROUTES: RouteTable = {
   ...PRESENCE_ROUTES,
   ...AI_ROUTES,
   ...AI_STREAM_ROUTES,
+  ...TEAMSPACE_ROUTES,
   ...AI_FILL_ROUTES,
 };

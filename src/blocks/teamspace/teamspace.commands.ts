@@ -15,6 +15,7 @@ import {
   type TeamspaceAccess,
   type TeamspaceBlock,
   type TeamspaceProps,
+  type TeamspaceSecurity,
 } from "./teamspace.schema.ts";
 
 export const createTeamspace = defineCommand<{
@@ -102,5 +103,28 @@ export const toggleTeamspaceMember = defineCommand<{
       memberIds: memberIds.includes(userId)
         ? memberIds.filter((id) => id !== userId)
         : [...memberIds, userId],
+    })),
+});
+
+// Archives a teamspace, or brings it back.
+export const archiveTeamspace = defineCommand<{
+  teamspaceId: BlockId;
+  isArchived: boolean;
+}>({
+  type: "teamspace.archive",
+  handle: (state, { teamspaceId, isArchived }) =>
+    teamspaceUpdate(state, teamspaceId, () => ({ isArchived })),
+});
+
+// Turns one of a teamspace's security overrides on or off.
+export const setTeamspaceSecurity = defineCommand<{
+  teamspaceId: BlockId;
+  key: TeamspaceSecurity;
+  isOn: boolean;
+}>({
+  type: "teamspace.setSecurity",
+  handle: (state, { teamspaceId, key, isOn }) =>
+    teamspaceUpdate(state, teamspaceId, ({ security = {} }) => ({
+      security: { ...security, [key]: isOn },
     })),
 });

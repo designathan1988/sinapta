@@ -61,8 +61,10 @@ in `src/persistence/`.
   Settings › Teamspaces with its Owners, Access filter and search, and
   its "Create a teamspace", the sidebar's
   Teamspaces section, pages added inside; a teamspace open to the
-  workspace or closed to its members, who join and leave in Settings, and
-  the server sends a closed one to its members and maker alone.
+  workspace, closed (listed to all, joined on its owners' approval) or
+  private (known to its members alone); archived and restored; security
+  overrides against publishing and guests; creation limited to owners;
+  the server keeps each of these.
 
 ## Milestone 27: Collaboration
 

@@ -1256,9 +1256,16 @@ items above, found while photographing them:
     teamspace a row with its letter that opens and closes it and "+" for
     a page inside. Since then: the table's Owners, an Access filter and a
     search over it (`p68-teamspace-filters`), closed teamspaces with their
-    own members (`p63-closed-teamspace`). Left: Notion's Active and
-    Security filters (Pagecraft archives no teamspace and has no security
-    settings). The round gray close button is drawn too.
+    own members (`p63-closed-teamspace`), the round gray close button.
+    Notion's filters read in `n94-teamspace-filters`: Ativo (Active,
+    Archived), Proprietário, Acesso (Any, Open, Closed, Private) and
+    Segurança (Show all, Has overrides), with "Limit teamspace creation to
+    workspace owners" above. Pagecraft has them all (`p69-teamspace-admin`,
+    `p70-teamspace-restore`): a teamspace archived or restored from its
+    "…", its security overrides there (no publishing to the web, no
+    guests, both refused by the server), Closed listed to everyone with
+    Request to join and its owners' Approve, Private known to its members
+    alone, and the limit the server keeps.
 
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,

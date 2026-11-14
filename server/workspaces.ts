@@ -21,7 +21,7 @@ export interface LoggedOperations {
 }
 
 const WORKSPACE_COLUMNS =
-  "SELECT w.id, w.name, w.icon, m.role, (SELECT COUNT(*) FROM members c WHERE c.workspace_id = w.id) AS members FROM workspaces w JOIN members m ON m.workspace_id = w.id";
+  "SELECT w.id, w.name, w.icon, m.role, (SELECT COUNT(*) FROM members c WHERE c.workspace_id = w.id) AS members, w.limits_teamspaces AS limitsTeamspaces FROM workspaces w JOIN members m ON m.workspace_id = w.id";
 
 export function workspacesOf(
   context: ApiContext,
@@ -68,7 +68,14 @@ export function createWorkspace(
     ).run(id, JSON.stringify(workspace.snapshot));
   });
   markOpened(context, workspace.ownerId, id);
-  return { id, name: workspace.name, icon: null, role: "owner", members: 1 };
+  return {
+    id,
+    name: workspace.name,
+    icon: null,
+    role: "owner",
+    members: 1,
+    limitsTeamspaces: 0,
+  };
 }
 
 function parsed(text: string): unknown {

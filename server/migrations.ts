@@ -78,4 +78,14 @@ export const MIGRATIONS: readonly string[] = [
      access TEXT NOT NULL,
      PRIMARY KEY (workspace_id, page_id, email)
    );`,
+  // 6: teamspaces: whether only the workspace's owners may make them, and
+  // the requests to join a closed teamspace, waiting for its owners.
+  `ALTER TABLE workspaces ADD COLUMN limits_teamspaces INTEGER NOT NULL DEFAULT 0;
+   CREATE TABLE teamspace_requests (
+     workspace_id TEXT NOT NULL REFERENCES workspaces (id) ON DELETE CASCADE,
+     teamspace_id TEXT NOT NULL,
+     user_id TEXT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+     created_at INTEGER NOT NULL,
+     PRIMARY KEY (workspace_id, teamspace_id, user_id)
+   );`,
 ];

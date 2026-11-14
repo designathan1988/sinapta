@@ -7,6 +7,8 @@ export interface WorkspaceSummary {
   readonly icon: string | null;
   readonly role: string;
   readonly members: number;
+  // 1 when only the workspace's owners may make teamspaces.
+  readonly limitsTeamspaces?: number;
 }
 
 export interface MemberSummary {
@@ -38,6 +40,24 @@ export interface PageSharing {
   }[];
 }
 
+// A teamspace as the server lists it in Settings: those this person is
+// not in come only from here, as a closed one they may ask to join.
+export interface ListedTeamspace {
+  readonly id: string;
+  readonly name: string;
+  readonly access: string;
+  readonly owner: string;
+  readonly isMember: boolean;
+  readonly hasAsked: boolean;
+  readonly isArchived: boolean;
+  readonly hasOverrides: boolean;
+  // Who asks to join, shown to its owners.
+  readonly requests: readonly {
+    readonly userId: string;
+    readonly name: string;
+  }[];
+}
+
 // Someone with the workspace open, and the page they are on.
 export interface Presence {
   readonly userId: string;
@@ -54,6 +74,14 @@ export type SyncRequest =
   | { readonly kind: "rename"; readonly name: string }
   | { readonly kind: "people" }
   | { readonly kind: "shared" }
+  | { readonly kind: "teamspaces" }
+  | { readonly kind: "join-teamspace"; readonly teamspaceId: string }
+  | {
+      readonly kind: "approve-teamspace";
+      readonly teamspaceId: string;
+      readonly userId: string;
+    }
+  | { readonly kind: "teamspace-limit"; readonly limited: boolean }
   | { readonly kind: "invite"; readonly email: string; readonly role: string }
   | { readonly kind: "remove-member"; readonly userId: string }
   | { readonly kind: "remove-invite"; readonly email: string }
@@ -107,6 +135,8 @@ export interface SyncState {
   readonly shared: readonly string[];
   // A guest's access to each page shared with them; empty for a member.
   readonly access: Readonly<Record<string, PageAccess>>;
+  // The teamspaces the server lists in Settings › Teamspaces.
+  readonly teamspaces: readonly ListedTeamspace[];
 }
 
 export const NOT_SYNCED: SyncState = {
@@ -121,4 +151,5 @@ export const NOT_SYNCED: SyncState = {
   connection: "synced",
   shared: [],
   access: {},
+  teamspaces: [],
 };

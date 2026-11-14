@@ -91,6 +91,10 @@ function renderSections(current: Section, dispatch: Dispatch): TemplateResult {
     if (anchorId === "people") {
       dispatch(requestSync.create({ request: { kind: "people" } }));
     }
+    // Teamspaces too: the server lists those this person is not in.
+    if (anchorId === "teamspaces") {
+      dispatch(requestSync.create({ request: { kind: "teamspaces" } }));
+    }
   };
   const button = (section: (typeof SECTIONS)[number]) =>
     html`<button
