@@ -1807,3 +1807,27 @@ board measured in Notion (item 46).
   panel's edge and its page menu's 4 (`n93-menu-inset`); Pagecraft's
   menus take `isInset` for the view settings alone, the rest keep 4
   (`p67-menu-inset`).
+
+## Remaining parts (n138-rest, 2026-11-14)
+
+Read only, on the test page, with the human hand (`n138-rest.json`,
+written by `.captures/plans/gen-n138.mjs`):
+
+- Share: a popover 456 × 349 at 854, 44, its field focused (01). Escape
+  closes it and the focus goes back to Share, :focus-visible, with its
+  hint "Somente você pode acessar ⌃+⇧+O" (02). Pagecraft now does the
+  same (`ts-rest-03/07`).
+- Updates & analytics: chosen from "…" by the pointer, the focus stays
+  on "…" (not :focus-visible) and no hint shows (04); Escape leaves the
+  panel open (05); it closes from its "»" (06).
+- Inbox: a panel beside the sidebar, about 389 wide, "Você leu tudo"
+  when empty (07); Escape gives the focus back to the inbox button (08).
+- Trash: a popover 414 × 450 at 234, 409 from "Biblioteca, Lixeira,
+  mais…", its search focused, three filters (Last edited by, In,
+  Teamspaces); the list scrolls inside and the 30-day note stays at the
+  foot (10). Escape gives the focus back to the button that opened it
+  (11).
+- Settings: a dialog 1296 × 800 at 72, 50 with a "Search settings" field
+  first in its side list, focused on opening, and a × at its top right
+  (13, 14). Tab moves through the section's switches and buttons (15,
+  16). Escape closes it and leaves the focus on the page's body (17).
