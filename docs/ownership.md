@@ -183,6 +183,7 @@ owner listed here exists.
 | The inbox's notices from people: mentions, replies, edits to one's pages, pages shared with a guest | `src/features/inbox/inbox-notices.selectors.ts`, `inbox-changes.selectors.ts` | 27 |
 | Settings › Notifications: the kinds of notice the inbox shows, kept per person | `src/features/settings/settings-notifications.view.ts`, `src/features/inbox/inbox.commands.ts` (`toggleNotices`) | 27 |
 | Desktop notifications: each new notice shown by the system while on | `src/features/inbox/inbox-notifier.ts` | 31 |
+| Push notifications to a person's other browsers: keys, subscriptions, mentions and shares pushed, the service worker showing them, the setting | `server/push.ts`, `server/push-mentions.ts`, `src/persistence/push-client.ts`, `src/app/service-worker-push.ts`, `src/app/push-notice.schema.ts` | 31 |
 | AI Meeting Notes: the block, its recording and transcript | `src/blocks/meeting-notes/` | 31 |
 | Listening while a meeting records: the microphone recorded for the server's speech model, or the browser's speech recognition | `src/features/meeting-notes/transcriber.ts`, `src/features/meeting-notes/recorder-listener.ts`, `src/app/services.ts` | 31 |
 | Speech to text on the server: a local Whisper model, its route | `server/transcription.ts`, `src/persistence/meeting-client.ts` | 31 |

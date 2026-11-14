@@ -9,6 +9,7 @@ import {
   oldCaches,
   servingOf,
 } from "./offline-cache.ts";
+import { isPushScope, listenForPush } from "./service-worker-push.ts";
 
 const BUILD = "__PAGECRAFT_BUILD__";
 const FILES = "__PAGECRAFT_FILES__";
@@ -103,3 +104,4 @@ function start(scope: WorkerScope): void {
 
 const scope: unknown = globalThis;
 if (isWorkerScope(scope)) start(scope);
+if (isPushScope(scope)) listenForPush(scope);

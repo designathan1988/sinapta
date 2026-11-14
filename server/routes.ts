@@ -13,6 +13,7 @@ import { MEMBER_ROUTES } from "./member-routes.ts";
 import { PRESENCE_ROUTES } from "./presence.ts";
 import { SHARING_ROUTES } from "./sharing-routes.ts";
 import { localTranscriber, transcriptionRoutes } from "./transcription.ts";
+import { PUSH_ROUTES } from "./push.ts";
 import { WORKSPACE_ROUTES } from "./workspace-routes.ts";
 
 const HEALTH_ROUTES: RouteTable = {
@@ -27,6 +28,7 @@ const HEALTH_ROUTES: RouteTable = {
 
 export const ROUTES: RouteTable = {
   ...HEALTH_ROUTES,
+  ...PUSH_ROUTES,
   ...transcriptionRoutes(localTranscriber()),
   ...ACCOUNT_ROUTES,
   ...WORKSPACE_ROUTES,

@@ -1,6 +1,7 @@
 // What runs beside the app once it has started, each a subscription of its
 // own (ADR-0013): the AI's answers, web bookmarks' previews, desktop
-// notifications, meeting notes heard and summed up.
+// notifications, meeting notes heard and summed up, and the push
+// subscription that brings notices while the app is closed.
 import {
   browserNotifier,
   startDesktopNotices,
@@ -16,6 +17,7 @@ import {
   startLinkPreviews,
   serverTranscriber,
   startMeetingSummaries,
+  startPushSubscription,
 } from "../persistence/index.ts";
 import type { AppStore, Dispatch } from "../state/index.ts";
 
@@ -40,4 +42,5 @@ export function startServices(store: AppStore, dispatch: Dispatch): void {
   startDesktopNotices(store, browserNotifier());
   startMeetingSummaries({ store, dispatch });
   startTranscriber(store, dispatch, meetingListener(store));
+  startPushSubscription({ store });
 }

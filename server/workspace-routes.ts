@@ -1,6 +1,7 @@
 // Workspaces on the server (ADR-0013): the list, the first upload, the
 // snapshot with the operations since, a client's transactions, and the
 // stream that brings the others' transactions.
+import { pushMentions } from "./push-mentions.ts";
 import { answer, type ApiContext, type RouteTable } from "./api.ts";
 import {
   mayChangeAll,
@@ -112,6 +113,12 @@ export const WORKSPACE_ROUTES: RouteTable = {
       ...parsed,
     });
     context.events.publish(workspaceId, OPERATIONS_EVENT, { seq, ...parsed });
+    const { user } = member;
+    void pushMentions(context, {
+      workspaceId,
+      author: user,
+      operations: parsed.operations,
+    });
     return answer(200, { seq });
   },
   "GET /api/workspaces/:id/events": (request, context) => {

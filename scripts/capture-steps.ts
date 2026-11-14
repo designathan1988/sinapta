@@ -3,6 +3,8 @@
 // element with the real mouse, then photograph the window or a region
 // around an element, and print a value read from the page.
 import { join, resolve } from "node:path";
+
+const PUSH_PROFILE = resolve(".captures/profiles/push");
 import { chromium, type Page } from "playwright-core";
 import type { CapturePlan, CaptureStep } from "./capture.schema.ts";
 import {
@@ -54,7 +56,25 @@ function microphoneArgs(plan: CapturePlan): string[] {
   ];
 }
 
+// Push needs a real profile: Chrome turns it off in the private contexts
+// the other photos use. Its own profile, in Chrome's full headless mode.
+async function withProfile(plan: CapturePlan): Promise<Session> {
+  const context = await chromium.launchPersistentContext(PUSH_PROFILE, {
+    executablePath: CHROME,
+    headless: false,
+    args: ["--headless=new", ...microphoneArgs(plan)],
+    ...WINDOW,
+    colorScheme: plan.theme ?? "dark",
+    permissions: plan.permissions ?? [],
+  });
+  const page = context.pages()[0] ?? (await context.newPage());
+  return { page, end: () => context.close() };
+}
+
 async function headless(plan: CapturePlan): Promise<Session> {
+  if (plan.permissions?.includes("notifications") === true) {
+    return withProfile(plan);
+  }
   const browser = await chromium.launch({
     executablePath: CHROME,
     args: microphoneArgs(plan),
@@ -62,6 +82,7 @@ async function headless(plan: CapturePlan): Promise<Session> {
   const context = await browser.newContext({
     ...WINDOW,
     colorScheme: plan.theme ?? "dark",
+    permissions: plan.permissions ?? [],
   });
   return { page: await context.newPage(), end: () => browser.close() };
 }

@@ -7,6 +7,7 @@ import {
   type BlockId,
 } from "../src/model/index.ts";
 import { answer, type ApiContext, type RouteTable } from "./api.ts";
+import { pushShared } from "./push-mentions.ts";
 import type { ApiRequest, ApiResponse } from "./http-exchange.ts";
 import { idRowSchema, readRows } from "./rows.schema.ts";
 import { sessionUser } from "./sessions.ts";
@@ -105,6 +106,7 @@ export const SHARING_ROUTES: RouteTable = {
     shareSchema,
     (context, page, body) => {
       sharePage(context, page, body);
+      void pushShared(context, body.email);
     },
     (context, page, body) =>
       isOverridden(context, page, "noGuests") &&

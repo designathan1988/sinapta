@@ -2,6 +2,7 @@ export {
   inboxCommands,
   markRemindersRead,
   setDesktopNotices,
+  setPushNotices,
   toggleNotices,
 } from "./inbox.commands.ts";
 export {

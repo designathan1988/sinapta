@@ -10,7 +10,11 @@ import {
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderSwitchMark } from "../../ui/switch/index.ts";
-import { setDesktopNotices, toggleNotices } from "../inbox/index.ts";
+import {
+  setDesktopNotices,
+  setPushNotices,
+  toggleNotices,
+} from "../inbox/index.ts";
 import { renderRow } from "./settings-row.view.ts";
 
 const TEXT = COPY.settings;
@@ -48,7 +52,9 @@ export function renderNotifications(
       );
     })}
     <h4 class="settings__subtitle">${TEXT.desktop}</h4>
-    ${renderRow(TEXT.desktopName, desktopHint(), renderDesktop(state, dispatch))}`;
+    ${renderRow(TEXT.desktopName, desktopHint(), renderDesktop(state, dispatch))}
+    <h4 class="settings__subtitle">${TEXT.push}</h4>
+    ${renderRow(TEXT.pushName, pushHint(state), renderPush(state, dispatch))}`;
 }
 
 // The browser's word on notifications from this site.
@@ -77,6 +83,43 @@ function renderDesktop(state: AppState, dispatch: Dispatch): TemplateResult {
       }
       void Notification.requestPermission().then((answer) => {
         dispatch(setDesktopNotices.create({ isOn: answer === "granted" }));
+      });
+    }}
+  >
+    ${renderSwitchMark(isOn)}
+  </button>`;
+}
+
+// Push needs a server to send from, a service worker and the browser's
+// leave to show notifications.
+function canPush(state: AppState): boolean {
+  return (
+    state.persistence.account.status === "signed-in" &&
+    typeof PushManager !== "undefined" &&
+    typeof Notification !== "undefined"
+  );
+}
+
+function pushHint(state: AppState): string {
+  return canPush(state) ? TEXT.pushHint : TEXT.pushMissing;
+}
+
+function renderPush(state: AppState, dispatch: Dispatch): TemplateResult {
+  const isOn = state.ui.pushNotices;
+  return html`<button
+    type="button"
+    class="settings__switch"
+    role="switch"
+    aria-checked=${String(isOn)}
+    aria-label=${TEXT.pushName}
+    ?disabled=${!isOn && !canPush(state)}
+    @click=${() => {
+      if (isOn) {
+        dispatch(setPushNotices.create({ isOn: false }));
+        return;
+      }
+      void Notification.requestPermission().then((answer) => {
+        dispatch(setPushNotices.create({ isOn: answer === "granted" }));
       });
     }}
   >

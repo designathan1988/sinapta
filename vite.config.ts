@@ -5,7 +5,6 @@ import type { Plugin } from "vite";
 import { defineConfig } from "vitest/config";
 import { buildTokens } from "./scripts/build-tokens.ts";
 import { apiPlugin } from "./server/vite-plugin.ts";
-import { FRAME_HOSTS } from "./src/blocks/embed/embed-hosts.ts";
 
 function isTokenFile(file: string): boolean {
   const path = relative(process.cwd(), file).replaceAll("\\", "/");
@@ -53,8 +52,8 @@ const CONTENT_SECURITY_POLICY = [
   // asset store from blob addresses; media and frames will too.
   "img-src 'self' data: blob: https:",
   "media-src 'self' blob: https:",
-  // Stored PDFs, and embeds from the allowed hosts only.
-  `frame-src blob: ${FRAME_HOSTS.join(" ")}`,
+  // Stored PDFs, and embeds of any https page, as Notion's.
+  "frame-src blob: https:",
   "object-src 'none'",
   // The service worker and the install manifest come from the app.
   "worker-src 'self'",

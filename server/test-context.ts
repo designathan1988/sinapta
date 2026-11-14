@@ -12,6 +12,8 @@ import { createEventHub } from "./workspace-events.ts";
 export interface TestServer {
   readonly context: ApiContext;
   readonly logged: string[];
+  // The Web Push notices sent: the endpoint and the notice.
+  readonly pushed: { endpoint: string; payload: string }[];
   readonly call: (
     key: string,
     body?: unknown,
@@ -43,6 +45,7 @@ function requestOf(key: string, body: unknown, cookie?: string): ApiRequest {
 
 export function createTestServer(clock = { now: Date.UTC(2026, 10, 14) }) {
   const logged: string[] = [];
+  const pushed: TestServer["pushed"] = [];
   const context: ApiContext = {
     db: openDatabase(":memory:"),
     now: () => clock.now,
@@ -50,6 +53,10 @@ export function createTestServer(clock = { now: Date.UTC(2026, 10, 14) }) {
     secure: false,
     events: createEventHub(),
     passwordCost: TEST_PASSWORD_COST,
+    push: (subscription, payload) => {
+      pushed.push({ endpoint: subscription.endpoint, payload });
+      return Promise.resolve();
+    },
   };
   const call: TestServer["call"] = async (key, body, cookie) => {
     const request = requestOf(key, body, cookie);
@@ -57,5 +64,5 @@ export function createTestServer(clock = { now: Date.UTC(2026, 10, 14) }) {
     if (match === undefined) throw new Error(`no route ${key}`);
     return match.route({ ...request, params: match.params }, context);
   };
-  return { context, logged, call } satisfies TestServer;
+  return { context, logged, pushed, call } satisfies TestServer;
 }

@@ -72,12 +72,17 @@ describe("toEmbedUrl", () => {
     expect(toEmbedUrl(url)).toBe(embed);
   });
 
-  it.each([
-    "https://example.com/page",
-    "http://www.youtube.com/watch?v=x",
-    "not a url",
-  ])("refuses %s", (url) => {
-    expect(toEmbedUrl(url)).toBeUndefined();
+  it.each(["http://www.youtube.com/watch?v=x", "not a url"])(
+    "refuses %s",
+    (url) => {
+      expect(toEmbedUrl(url)).toBeUndefined();
+    },
+  );
+
+  it("frames any other https page as it is, as Notion's Embed", () => {
+    expect(toEmbedUrl("https://example.com/page?a=1")).toBe(
+      "https://example.com/page?a=1",
+    );
   });
 });
 
@@ -91,12 +96,10 @@ function createApp() {
 }
 
 describe("embed commands", () => {
-  it("take an address from an allowed host and refuse any other", () => {
+  it("take any https address and refuse any other", () => {
     const { dispatch, props } = createApp();
 
-    dispatch(
-      setEmbedUrl.create({ blockId: EMBED, url: "https://example.com" }),
-    );
+    dispatch(setEmbedUrl.create({ blockId: EMBED, url: "http://example.com" }));
     expect(props()?.url).toBe("");
     dispatch(
       setEmbedUrl.create({ blockId: EMBED, url: "https://vimeo.com/1" }),
@@ -170,7 +173,7 @@ describe("renderEmbed", () => {
     const form = host.querySelector("form");
     if (input === null || form === null) throw new Error("no field");
 
-    input.value = "https://example.com";
+    input.value = "http://example.com";
     form.dispatchEvent(new SubmitEvent("submit", { cancelable: true }));
 
     expect(input.getAttribute("aria-invalid")).toBe("true");

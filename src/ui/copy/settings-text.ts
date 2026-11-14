@@ -58,6 +58,11 @@ export const SETTINGS_TEXT = {
     desktopBlocked:
       "This browser blocks notifications from this site. Allow them in its site settings.",
     desktopMissing: "This browser cannot show notifications.",
+    push: "Push notifications",
+    pushName: "Push notices to this browser",
+    pushHint:
+      "Mentions and pages shared with you reach this browser even while Pagecraft is closed, as Notion’s mobile push notifications.",
+    pushMissing: "Log in to a Pagecraft server, in a browser that has push.",
     notices: {
       mention: [
         "Mentions and replies",

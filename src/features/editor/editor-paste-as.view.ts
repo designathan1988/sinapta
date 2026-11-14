@@ -1,8 +1,6 @@
 // The "Paste as" menu Notion opens under a pasted web address: Mention,
-// URL (the link as pasted), Create bookmark and, for a host that can be
-// framed, Embed.
+// URL (the link as pasted), Create bookmark and Embed.
 import { nothing, type TemplateResult } from "lit-html";
-import { toEmbedUrl } from "../../blocks/embed/index.ts";
 import { parseBlockId } from "../../model/index.ts";
 import {
   closeOverlay,
@@ -49,9 +47,7 @@ function entries(
     { label: TEXT.mention, onSelect: choose("mention") },
     { label: TEXT.url, onSelect: close },
     { label: TEXT.bookmark, onSelect: choose("bookmark") },
-    ...(toEmbedUrl(typed.href) === undefined
-      ? []
-      : [{ label: TEXT.embed, onSelect: choose("embed") }]),
+    { label: TEXT.embed, onSelect: choose("embed") },
   ];
 }
 

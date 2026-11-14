@@ -103,4 +103,18 @@ export const MIGRATIONS: readonly string[] = [
      page_id TEXT NOT NULL,
      PRIMARY KEY (integration_id, page_id)
    );`,
+  // 8: Web Push, Notion's notices on a person's other devices: the
+  // server's keys, made once, and each browser's subscription.
+  `CREATE TABLE push_keys (
+     id INTEGER PRIMARY KEY CHECK (id = 1),
+     public_key TEXT NOT NULL,
+     private_key TEXT NOT NULL
+   );
+   CREATE TABLE push_subscriptions (
+     endpoint TEXT PRIMARY KEY,
+     user_id TEXT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+     p256dh TEXT NOT NULL,
+     auth TEXT NOT NULL,
+     created_at INTEGER NOT NULL
+   );`,
 ];

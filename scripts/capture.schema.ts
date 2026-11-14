@@ -32,6 +32,8 @@ export const capturePlanSchema = v.object({
   // A WAV file the headless browser hears as its microphone, allowed
   // without asking: for AI Meeting Notes.
   microphone: v.optional(v.string()),
+  // Browser permissions granted to the page, such as "notifications".
+  permissions: v.optional(v.array(v.string())),
   steps: v.array(stepSchema),
 });
 

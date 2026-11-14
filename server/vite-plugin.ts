@@ -1,5 +1,6 @@
 // Mounts the API inside Vite's dev and preview servers, so one process on
 // one port serves the app and its server (ADR-0013).
+import { webPushSender } from "./push.ts";
 import { resolve } from "node:path";
 import type { Connect, Plugin } from "vite";
 import { createApi } from "./api.ts";
@@ -22,6 +23,7 @@ function apiMiddleware(log: (line: string) => void): {
     secure: false,
     events: createEventHub(),
     passwordCost: PASSWORD_COST,
+    push: webPushSender,
   });
   return {
     handle: (request, response, next) => {

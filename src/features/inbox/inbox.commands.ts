@@ -28,8 +28,16 @@ export const setDesktopNotices = defineCommand<{ isOn: boolean }>({
   handle: (state, { isOn }) => ({ ui: { ...state.ui, desktopNotices: isOn } }),
 });
 
+// Has the server push notices to this browser even while it is closed,
+// as Notion's mobile push notifications, or stops.
+export const setPushNotices = defineCommand<{ isOn: boolean }>({
+  type: "inbox.setPushNotices",
+  handle: (state, { isOn }) => ({ ui: { ...state.ui, pushNotices: isOn } }),
+});
+
 export const inboxCommands = [
   markRemindersRead,
   toggleNotices,
   setDesktopNotices,
+  setPushNotices,
 ];

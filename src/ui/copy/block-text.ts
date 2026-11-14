@@ -11,10 +11,9 @@ export const BLOCK_TEXT = {
   embed: {
     name: "Embed",
     label: "Address to embed",
-    placeholder: "Paste a YouTube, Vimeo, Figma, Loom or other link",
+    placeholder: "Paste in https://…",
     submit: "Embed",
-    invalid:
-      "This address cannot be embedded. Use a link from YouTube, Vimeo, Figma, Loom, CodePen, Google Maps or Docs, Spotify, SoundCloud or X.",
+    invalid: "Enter a link that starts with https.",
     frame: "Embedded page",
     height: "Embed height",
     heightValue: "pixels",

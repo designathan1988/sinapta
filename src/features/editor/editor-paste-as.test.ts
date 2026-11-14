@@ -59,12 +59,12 @@ describe("Paste as", () => {
     expect(first(app)).toMatchObject({ type: "embed", props: { url: HREF } });
   });
 
-  it("does not embed a host that cannot be framed", () => {
+  it("embeds any other https page as it is, as Notion's", () => {
     const app = createApp([text("a", "link")]);
     const href = "https://example.com/";
 
     app.dispatch(pasteAs({ blockId: A, start: 0, end: 4, href }, "embed"));
 
-    expect(first(app)?.type).toBe("paragraph");
+    expect(first(app)).toMatchObject({ type: "embed", props: { url: href } });
   });
 });

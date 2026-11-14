@@ -117,6 +117,8 @@ export interface UiState {
   readonly mutedNotices: readonly NoticeKind[];
   // New notices also shown by the system, as Notion's desktop notifications.
   readonly desktopNotices: boolean;
+  // Notices pushed to this browser by the server even while it is closed.
+  readonly pushNotices: boolean;
   // The versions of the page whose history is open, once read.
   readonly pageVersions: {
     readonly pageId: BlockId;
@@ -217,6 +219,7 @@ export function createInitialUiState(): UiState {
     readReminders: [],
     mutedNotices: [],
     desktopNotices: false,
+    pushNotices: false,
     viewSearches: {},
     searchFilters: NO_SEARCH_FILTERS,
     sidebarWidth: SIDEBAR_WIDTH.initial,

@@ -1,7 +1,7 @@
-// The hosts whose pages can be embedded, and how each turns an address
-// people paste into the address its player or viewer lives at. The
-// content security policy in vite.config.ts lists exactly the hosts in
-// FRAME_HOSTS.
+// How the hosts Notion knows turn an address people paste into the
+// address their player or viewer lives at. Any other https page is
+// framed as it is, as Notion's Embed frames any address; a site that
+// refuses to be framed shows its own refusal in the frame.
 import { TOOL_FRAME_HOSTS, toolRuleOf, type Rule } from "./embed-tools.ts";
 
 function segments(url: URL): string[] {
@@ -124,11 +124,11 @@ export const FRAME_HOSTS = [
   ...TOOL_FRAME_HOSTS,
 ] as const;
 
-// The address to frame for a pasted https address, or undefined for an
-// address of a host that is not on the list.
+// The address to frame for a pasted https address: a known host's player
+// or viewer, else the page itself; nothing for any other address.
 export function toEmbedUrl(address: string): string | undefined {
   const url = URL.parse(address.trim());
   if (url?.protocol !== "https:") return undefined;
   const rule = RULES.get(url.hostname) ?? toolRuleOf(url.hostname);
-  return rule?.(url);
+  return rule?.(url) ?? url.href;
 }

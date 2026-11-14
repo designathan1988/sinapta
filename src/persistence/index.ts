@@ -16,3 +16,4 @@ export { startAi } from "./ai-client.ts";
 export { createOutbox, type Outbox } from "./workspace-repository.ts";
 export { startLinkPreviews } from "./link-preview-client.ts";
 export { serverTranscriber, startMeetingSummaries } from "./meeting-client.ts";
+export { startPushSubscription } from "./push-client.ts";

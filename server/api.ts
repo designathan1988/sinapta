@@ -2,6 +2,7 @@
 // refuses cross-site changes, and turns failures into answers.
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Database } from "./database.ts";
+import type { PushSender } from "./push.ts";
 import { matchRoute } from "./route-match.ts";
 import type { EventHub } from "./workspace-events.ts";
 import {
@@ -21,6 +22,8 @@ export interface ApiContext {
   readonly events: EventHub;
   // scrypt's cost for new password hashes.
   readonly passwordCost: number;
+  // Sends Web Push notices; none, and no notice leaves the server.
+  readonly push?: PushSender;
 }
 
 export type Route = (
