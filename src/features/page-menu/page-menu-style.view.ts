@@ -23,28 +23,31 @@ export function renderFontTiles(
 ): TemplateResult | typeof nothing {
   if (page.type !== PAGE_TYPE) return nothing;
   const current = page.props.font ?? "default";
-  return html`<div
-    class="page-menu__fonts"
-    role="group"
-    aria-label=${COPY.pageMenu.style}
-  >
-    ${PAGE_FONTS.map(
-      (font) =>
-        html`<button
-          type="button"
-          class="page-menu__font"
-          data-font=${font}
-          aria-pressed=${String(font === current)}
-          @click=${() =>
-            dispatch(setPageFont.create({ pageId: page.id, font }))}
-        >
-          <span class="page-menu__font-sample" aria-hidden="true"
-            >${FONT_SAMPLE}</span
+  return html`<div class="menu__section" aria-hidden="true">
+      ${COPY.pageLayout.fontStyle}
+    </div>
+    <div
+      class="page-menu__fonts"
+      role="group"
+      aria-label=${COPY.pageMenu.style}
+    >
+      ${PAGE_FONTS.map(
+        (font) =>
+          html`<button
+            type="button"
+            class="page-menu__font"
+            data-font=${font}
+            aria-pressed=${String(font === current)}
+            @click=${() =>
+              dispatch(setPageFont.create({ pageId: page.id, font }))}
           >
-          <span>${COPY.pageMenu.fonts[font]}</span>
-        </button>`,
-    )}
-  </div>`;
+            <span class="page-menu__font-sample" aria-hidden="true"
+              >${FONT_SAMPLE}</span
+            >
+            <span>${COPY.pageMenu.fonts[font]}</span>
+          </button>`,
+      )}
+    </div>`;
 }
 
 const DISPLAYS = ["expanded", "popover", "off"] as const;

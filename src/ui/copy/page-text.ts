@@ -72,6 +72,14 @@ export const PAGE_TEXT = {
     addReaction: "Add reaction",
     removeReaction: "Remove reaction",
   },
+  pageLayout: {
+    fontStyle: "Font style",
+    outline: "Table of contents",
+    pageDiscussions: "Page discussions",
+    inlineComments: "Inline comments",
+    inlineDefault: "Default",
+    inlineMinimal: "Minimal",
+  },
   backlinks: {
     label: "Backlinks",
     count: { one: "backlink", other: "backlinks" },

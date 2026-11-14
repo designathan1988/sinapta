@@ -31,6 +31,7 @@ import {
   renderFontTiles,
   styleItems,
 } from "./page-menu-style.view.ts";
+import { layoutItems } from "./page-menu-layout.view.ts";
 
 const TEXT = COPY.pageMenu;
 const DIVIDER: MenuEntry = { kind: "divider" };
@@ -103,6 +104,7 @@ function appearanceItem(page: PageBlock, dispatch: Dispatch): MenuItem[] {
           items: [
             { kind: "section", label: TEXT.appearanceSection },
             ...styleItems(page, dispatch),
+            ...layoutItems(page, dispatch),
             backlinksItem(page, dispatch),
           ],
         }),

@@ -27,6 +27,8 @@ export function selectPageOutline(
   state: AppState,
   pageId: BlockId,
 ): readonly OutlineEntry[] {
+  // Appearance and layout's Table of contents switch turns it off.
+  if (state.workspace.blocks[pageId]?.props.showOutline === false) return [];
   const headings = selectTableOfContents(state, pageId);
   if (headings.length < OUTLINE_THRESHOLD) return [];
   const levels = [...new Set(headings.map((entry) => entry.level))].sort(

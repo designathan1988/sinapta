@@ -174,6 +174,7 @@ export function renderEditor(
       ?data-full-width=${page.props.isFullWidth === true}
       data-font=${page.props.font ?? "default"}
       ?data-small-text=${page.props.isSmallText === true}
+      ?data-minimal-comments=${page.props.inlineComments === "minimal"}
       ?data-locked=${selectIsPageFrozen(state, page)}
     >
       ${renderBanners(state, page, dispatch)}
@@ -181,7 +182,9 @@ export function renderEditor(
       ${renderPageActions(state, page, dispatch)} ${renderTitle(page, context)}
       ${isPage ? renderBacklinks(state, dispatch, page) : nothing}
       ${
-        isPage && !isRow(state, page)
+        isPage &&
+        !isRow(state, page) &&
+        page.props.showPageDiscussions !== false
           ? renderPageDiscussions(state, dispatch, page)
           : nothing
       }

@@ -167,6 +167,12 @@
     color: var(--color-text-accent);
   }
 
+  /* Inline comments set to Minimal: the text keeps only a faint line. */
+  [data-minimal-comments] .comment-mark:not([data-suggestion]) {
+    border-block-end-color: var(--color-border-default);
+    background-color: transparent;
+  }
+
   .comment-mark[data-suggestion="delete"] {
     text-decoration: line-through;
   }

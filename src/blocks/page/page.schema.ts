@@ -122,6 +122,12 @@ export const pagePropsSchema = v.object({
   // Where the page shows the pages that link to it: a count that opens
   // them (the default), always open, or not at all.
   backlinks: v.optional(v.picklist(["expanded", "popover", "off"])),
+  // Notion's Appearance and layout: the floating outline (Table of
+  // contents), the page's own discussions under its title, and inline
+  // comments in full or minimal; each shown unless set otherwise.
+  showOutline: v.optional(v.boolean()),
+  showPageDiscussions: v.optional(v.boolean()),
+  inlineComments: v.optional(v.picklist(["default", "minimal"])),
   // The discussions on the page and its blocks.
   discussions: v.optional(v.array(discussionSchema)),
   // A database template's repeat: it makes a row from itself on its days.

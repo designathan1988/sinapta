@@ -7,6 +7,7 @@ import {
   setCoverPosition,
   setPageCover,
   setPageFont,
+  setPageLayout,
   togglePageSmallText,
   togglePageFullWidth,
 } from "./page-style.commands.ts";
@@ -123,5 +124,27 @@ describe("page.toggleSmallText", () => {
 
     dispatch(togglePageSmallText.create({ pageId: A }));
     expect(props()?.isSmallText).toBe(false);
+  });
+});
+
+describe("page.setLayout", () => {
+  it("sets Appearance and layout's switches one at a time", () => {
+    const { dispatch, props } = createApp();
+
+    dispatch(
+      setPageLayout.create({ pageId: A, layout: { showOutline: false } }),
+    );
+    dispatch(
+      setPageLayout.create({
+        pageId: A,
+        layout: { inlineComments: "minimal" },
+      }),
+    );
+
+    expect(props()).toMatchObject({
+      showOutline: false,
+      inlineComments: "minimal",
+    });
+    expect(props()?.showPageDiscussions).toBeUndefined();
   });
 });

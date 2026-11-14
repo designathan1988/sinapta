@@ -1298,6 +1298,25 @@ items above, found while photographing them:
     up" and View all, which lists the resolved ones too with Reopen. Not
     built: the bell (Pagecraft's page notices are set in Settings ›
     Notifications). Pagecraft's empty panel is 254 px high.
+52. **done** [`n99-home-customize`, `n100-inline-home`; Pagecraft
+    `p81-layout`] The page's "…" › Aparência e layout: "Estilo da
+    fonte" with the Padrão, Serifada and Mono tiles, then "Aparência":
+    Texto pequeno, Largura completa, Índice (the floating outline, on),
+    Discussões da página (on) as switches, and "Comentários in-line ›"
+    with Padrão and Mínimo. Pagecraft has them all: Font style, Small
+    text, Full width, Table of contents (hides the outline), Page
+    discussions (hides the page's discussions under the title), Inline
+    comments › Default or Minimal (the commented text keeps a faint line
+    and no wash), and its Backlinks › as well, which Notion shows on a
+    page with backlinks.
+53. **n/a** [`n99-home-customize`, `n100-inline-home`] Two goals of the
+    2026-11-11 plan are not Notion's today: blocks selected with
+    Shift+Arrow show no word count (their block menu opens on "2
+    blocos", with no count; the page's words show in the page menu's
+    foot only), and "Página inicial" is a tab of the sidebar (a click on
+    it opens the tab's menu: Renomear, Excluir guia, Gerenciar
+    predefinição, Redefinir guia, Ocultar nomes das guias), not a page
+    with a favorites section; see item 37.
 
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,

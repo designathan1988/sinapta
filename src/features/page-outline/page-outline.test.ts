@@ -61,6 +61,19 @@ describe("selectPageOutline", () => {
   });
 });
 
+describe("the Table of contents switch", () => {
+  it("hides the outline when turned off", () => {
+    const state = stateOf([heading("A", 2), heading("B", 3), heading("C", 4)]);
+    const page = state.workspace.blocks[PAGE];
+    if (page === undefined) throw new Error("no page");
+    const props = { ...page.props, showOutline: false };
+    const blocks = { ...state.workspace.blocks, [PAGE]: { ...page, props } };
+    const hidden = { ...state, workspace: { ...state.workspace, blocks } };
+
+    expect(selectPageOutline(hidden, PAGE)).toEqual([]);
+  });
+});
+
 describe("selectClosedHolders", () => {
   it("lists the closed toggles holding a heading, outermost first", () => {
     const inner: BlockSpec = {

@@ -6,6 +6,7 @@ export {
   setCoverPosition,
   setPageCover,
   setPageBacklinks,
+  setPageLayout,
   setPageFont,
   togglePageFullWidth,
   togglePageSmallText,

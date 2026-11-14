@@ -112,8 +112,29 @@ export const setPageBacklinks = defineCommand<{
     })),
 });
 
+export interface PageLayout {
+  readonly showOutline?: boolean;
+  readonly showPageDiscussions?: boolean;
+  readonly inlineComments?: "default" | "minimal";
+}
+
+// One of Appearance and layout's settings: the outline, the page's
+// discussions, or how inline comments show.
+export const setPageLayout = defineCommand<{
+  pageId: BlockId;
+  layout: PageLayout;
+}>({
+  type: "page.setLayout",
+  handle: (state, command) =>
+    updatePage(state, command.pageId, (props) => ({
+      ...props,
+      ...command.layout,
+    })),
+});
+
 export const pageStyleCommands = [
   setPageBacklinks,
+  setPageLayout,
   setPageCover,
   togglePageFullWidth,
   setCoverPosition,
