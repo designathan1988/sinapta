@@ -77,14 +77,9 @@ describe("a card's right click", () => {
       }),
     );
 
-    expect(sent).toContainEqual(
-      expect.objectContaining({
-        type: "ui.openOverlay",
-        overlay: expect.objectContaining({
-          kind: "page-menu",
-          point: { x: 40, y: 60 },
-        }),
-      }),
-    );
+    expect(sent.at(-1)).toMatchObject({
+      type: "ui.openOverlay",
+      overlay: { kind: "page-menu", point: { x: 40, y: 60 } },
+    });
   });
 });
