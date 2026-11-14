@@ -63,7 +63,7 @@ version 3 scope of ADR-0013 and the plan
 | Favorites and Private sections, a page glyph | Done | `sidebar-view.test.ts`; photos `p25-section`, `p27-customize` |
 | Right-click menus on blocks, sidebar rows, table rows, board and gallery cards | Done | `editor-context-menu.test.ts`, `sidebar-view.test.ts`, `table-context-menu.test.ts`, `layouts/row-card/row-card-view.test.ts`; photo `p85-card-menu` |
 | An empty page's start list | Done | `src/features/editor/editor-start.test.ts`; photos `n101-empty-page`, `p86-start`; finding 54 |
-| Placeholder in a focused empty block | Done | `editor-block-menu.test.ts` |
+| Placeholder in a focused empty block | Done | `editor-block-menu.test.ts`; `src/blocks/paragraph/paragraph-view.test.ts` |
 | Home: recent pages, upcoming dates | Done | `src/features/home/home.test.ts` |
 | Home: favorites | n/a | Notion's Home is a sidebar tab today (finding 53, item 37) |
 
@@ -75,14 +75,14 @@ version 3 scope of ADR-0013 and the plan
 | Esc, Ctrl+A, Ctrl+D, Ctrl+Shift+Arrow, Ctrl+Enter, Ctrl+Alt+T, Ctrl+Shift+H, Ctrl+Shift+0–9 | Done | `editor-block-keys.test.ts`, `editor-selection-keys.test.ts`, `editor-move.test.ts` |
 | Block color and background; /red, /red background, /default | Done | `editor-color.test.ts`, `slash-menu.test.ts` |
 | Heading 4, toggle headings, subpages as blocks, /page | Done | `src/blocks/heading/heading.test.ts`, `editor-subpages.test.ts` |
-| @ pages, dates, people, reminders; [[ links | Done | `src/features/mention-menu/mention-menu.test.ts` (people after @), `src/app/reminder-notices.test.ts` |
+| @ pages, dates, people, reminders; [[ links | Done | `src/features/mention-menu/mention-menu.test.ts` (people after @), `src/app/reminder-notices.test.ts`; a date near today reads @Today, @Tomorrow, @Yesterday and every mention is followed by a space, as Notion's: `src/ui/rich-text/date-mention.test.ts`, `rich-text-projection.test.ts`, `editor-mention.test.ts`; photos `n104-date-mention`, `p94-date-mention` (finding 57) |
 | "+" for a new subpage, a new page in a chosen place, or a link to a page | Done | `src/features/editor/editor-plus.test.ts`, `mention-menu.test.ts`; photos `n97-plus`, `p78-plus`, `p91-page-in`; finding 50 |
 | :emoji and the emoji picker | Done | `src/features/emoji-menu/emoji-menu.test.ts`, `src/ui/emoji/emoji-picker.test.ts` |
 | Copy blocks with their structure; paste web HTML as blocks | Done | `editor-selection-keys.test.ts`, `src/ui/rich-text/pasted-html-blocks.test.ts` |
 | A URL pasted over text links it; alone it offers Mention, URL, bookmark, embed | Done | `editor-paste-view.test.ts`, `editor-paste-as.test.ts`; photos `n95-paste-plus`, `p79-paste-as`; finding 49 |
 | Alt+drag duplicates, drag onto a sidebar page, Move to, Turn into page, Copy link to block | Done | `editor-block-drag.test.ts`, `editor-move-page.test.ts`, `editor-block-menu.test.ts`; photos `p66-move-popover`, `p72-move-block` |
 | Code: language, highlighting, wrap, copy, caption | Done | `src/blocks/code/code*.test.ts` |
-| Callout icon and color; image width, alignment, full screen | Done | `callout.test.ts`, `src/blocks/image/image*.test.ts` |
+| Callout icon and color; image width, alignment, full screen | Done | `callout.test.ts`, `src/blocks/image/image*.test.ts`; dragging the width handle: `image-view.test.ts` |
 | Nested numbered list styles | Done | `numbered-list.test.ts` |
 | Word and character count of the page | Done | `src/features/page-info/page-info.test.ts` |
 | Word count of a block selection | n/a | Notion shows none: blocks selected (finding 53, `n99-home-customize`) or text highlighted (finding 55, `n103-selection-words`) leave the page menu's foot on the page's total, as Pagecraft's |
@@ -162,22 +162,22 @@ Paths: `blk/` is `src/blocks/`, `db/` is `src/features/database/`.
 | --- | --- | --- |
 | Local server, SQLite, migrations, health route | Done | `server/api-origin.test.ts` (health), `src/app/architecture.test.ts` (server and app kept apart); photo `s01-health` |
 | Accounts, scrypt, session cookie, same-origin check, sign-in screens | Done | `server/account-routes.test.ts`, `server/api-origin.test.ts` (a foreign page's change refused), `sign-in-view.test.ts`; photos `p35-sign-in`, `p36-log-out` |
-| Sync: snapshot, operation log, live events, rebase, outbox | Done | `server/workspace-routes.test.ts`, `src/persistence/sync-rebase.test.ts`; photo `s02-sync` |
-| Several workspaces: create, switch, rename, icon, delete, leave | Done | `server/workspace-delete.test.ts`, `server/member-routes.test.ts`, `src/features/settings/settings-general-view.test.ts`; photos `p37-workspaces`, `p83-workspace-general`, `p84-delete-workspace` |
+| Sync: snapshot, operation log, live events, rebase, outbox | Done | `server/workspace-routes.test.ts`, `src/persistence/sync-rebase.test.ts`; photo `s02-sync`; the outbox retried after the server cannot be reached, with Syncing… and Offline: `src/persistence/sync-session.test.ts`, `src/app/shell-view.test.ts` |
+| Several workspaces: create, switch, rename, icon, delete, leave | Done | `server/workspace-delete.test.ts`, `server/member-routes.test.ts`, `src/features/settings/settings-general-view.test.ts`; photos `p37-workspaces`, `p83-workspace-general`, `p84-delete-workspace`; the list and the last one opened: `server/workspace-routes.test.ts`; Log out: `account-client.test.ts`, profile name: `server/account-routes.test.ts` |
 | Members, invitations, roles | Done | `member-routes.test.ts`, `settings-view.test.ts`; photo `p38-people` |
-| Sharing, permissions, guests, publishing | Done | `server/sharing-routes.test.ts`, `server/member-access.test.ts`, `src/state/page-access.test.ts`, `src/model/page-access.test.ts`; photos `p52-shared`, `p53-view-guest`, `p62-member-private` |
-| Teamspaces: open, closed, private, requests, archive, security, limit | Done | `server/teamspace-routes.test.ts`, `teamspace-filters.test.ts`; photos `p55`, `p63`, `p68`–`p70`; findings 47, 48 |
+| Sharing, permissions, guests, publishing | Done | `server/sharing-routes.test.ts`, `server/member-access.test.ts`, `src/state/page-access.test.ts`, `src/model/page-access.test.ts`; photos `p52-shared`, `p53-view-guest`, `p62-member-private`; General access and who may change it, and Start collaborating: `server/sharing-routes.test.ts`, `src/features/sidebar/start-collaborating.test.ts` |
+| Teamspaces: open, closed, private, requests, archive, security, limit | Done | `server/teamspace-routes.test.ts`, `teamspace-filters.test.ts`; photos `p55`, `p63`, `p68`–`p70`; findings 47, 48; archive and restore: `src/blocks/teamspace/teamspace.test.ts` |
 | Real-time collaboration: presence, faces and carets | Done | `server/presence.test.ts`, `presence-view.test.ts`; photos `p54-collaborate`, `p56-block-presence`, `p64-caret` |
 | Notifications to others: mentions, edits, shares; Settings › Notifications | Done | `inbox-notices.test.ts` (mentions, replies, edits, shares, kinds turned off); photos `p57-edit-notice`, `p61-notifications` |
 | Notifications to this device and to the person's other devices | Done | `inbox-notifier.test.ts`; `server/push.test.ts` (a mention pushed once, a share pushed, a browser that turns push off forgotten), `src/persistence/push-client.test.ts`, `src/app/service-worker-push.test.ts`; photos `p75-desktop-notices`, `p88-push`: the built app on the real server, Settings › Notifications › Push notices, a subscription with the browser's push service (FCM), a page shared, and the service worker's notification "A page was shared with you" read back |
-| Person, Created by, Last edited by, Verification, Place | Done | `row-groups-person.test.ts`, `src/model/author-stamp.test.ts`, `src/blocks/page/page-verify.test.ts`, `properties/place/place.test.ts`; photos `p46`, `p47`, `p59` |
-| Map view | Done | `layouts/map/map.test.ts`; photos `p44-map`, `p58-map-move` |
-| AI: Ask AI, Space prompt, streaming, autofill, chat | Done | `server/ai.test.ts`, `ai-stream.test.ts`, `ai-fill.test.ts`, `src/persistence/ai-client.test.ts`; photos `p43-ai`, `p49`–`p51`, `p60-ai-stream`, `p86-start` |
+| Person, Created by, Last edited by, Verification, Place | Done | `row-groups-person.test.ts`, `src/model/author-stamp.test.ts`, `src/blocks/page/page-verify.test.ts`, `properties/place/place.test.ts`; photos `p46`, `p47`, `p59`; their filters: `properties/person/person.test.ts`, `created-by/created-by.test.ts`, `verification/verification.test.ts`; the top bar's badge: `verified-badge-view.test.ts` |
+| Map view | Done | `layouts/map/map.test.ts`; photos `p44-map`, `p58-map-move`; the first frame from the pins: `map.test.ts` |
+| AI: Ask AI, Space prompt, streaming, autofill, chat | Done | `server/ai.test.ts`, `ai-stream.test.ts`, `ai-fill.test.ts`, `src/persistence/ai-client.test.ts`; photos `p43-ai`, `p49`–`p51`, `p60-ai-stream`, `p86-start`; Insert below, Replace, Discard and the chat: `src/features/ai/ai.test.ts`; Space on an empty line: `editor-input.test.ts`; the Ollama branch: `server/ai.test.ts` |
 | Integrations and the public API | Done | `server/public-api.test.ts`; photo `p74-integrations` |
 | Notion's app connections (Slack, Google Drive, GitHub, Jira, Figma, Asana) | Shown, not available | Settings › Connections › "Connect apps", each "Connect" disabled with "Needs Notion's servers": they run on Notion's servers, which a local server cannot reach; `src/features/integrations/third-party-view.test.ts`; photo `p93-plans-apps` |
 | Plans and Upgrade | Shown, not available | Workspace menu "Upgrade" opens Settings › Plans: "Free, on your own server"; Upgrade is disabled, as payment is Notion's own service; `src/features/settings/settings-plans-view.test.ts`; photo `p93-plans-apps` |
-| Link previews from a server | Done | `server/link-preview.test.ts`, `src/state/link-preview.test.ts`; photo `p73-bookmark` |
-| AI Meeting Notes with transcription from the microphone | Done | `transcriber.test.ts`, `recorder-listener.test.ts`, `src/persistence/meeting-client.test.ts`, `server/transcription.test.ts`; photo `p87-meeting-mic`: Chrome's microphone played a spoken WAV (made with Windows' speech synthesizer), the app recorded it in 6-second pieces, the server's local Whisper model (`Xenova/whisper-base.en`, Transformers.js) wrote the words, and the AI summed them up. The small model mishears some words of a synthetic voice ("lunch" for "launch") |
+| Link previews from a server | Done | `server/link-preview.test.ts`, `src/state/link-preview.test.ts`; photo `p73-bookmark`; no host on this machine or its network is fetched: `server/link-preview.test.ts`; the card: `src/blocks/bookmark/bookmark-view.test.ts` |
+| AI Meeting Notes with transcription from the microphone | Done | `transcriber.test.ts`, `recorder-listener.test.ts`, `src/persistence/meeting-client.test.ts`, `server/transcription.test.ts`; photo `p87-meeting-mic`: Chrome's microphone played a spoken WAV (made with Windows' speech synthesizer), the app recorded it in 6-second pieces, the server's local Whisper model (`Xenova/whisper-base.en`, Transformers.js) wrote the words, and the AI summed them up. The small model mishears some words of a synthetic voice ("lunch" for "launch"); typed notes and a refused microphone: `meeting-notes.test.ts`, `transcriber.test.ts` |
 
 ## Quality targets
 
@@ -185,9 +185,9 @@ Paths: `blk/` is `src/blocks/`, `db/` is `src/features/database/`.
 | --- | --- | --- |
 | Typing under 16 ms on 1,000 blocks | Done | `src/features/editor/editor-typing-speed.test.ts`: a keystroke's command and the page drawn again |
 | A 5,000-row table responsive | Done | `table-model-speed.test.ts` (sort, filter, group, formulas, rollups under 100 ms), `table-render-speed.test.ts` (drawn window, a change redrawn under 50 ms) |
-| Full tests under 10 s; verify under 30 s | Done | the suite: about 8 s for 2,272 tests; `npm run verify` (types, lint, styles, format, tests): 25 s |
+| Full tests under 10 s; verify under 30 s | Done | the suite: about 9 s for 2,359 tests; `npm run verify` (types, lint, styles, format, tests): about 25 s |
 | WCAG 2.2 AA contrast | Done | `scripts/token-contrast.test.ts` |
-| Every action by keyboard; focus visible | Done | `scoped-keys.test.ts`, `table-keys.test.ts`, `slash-menu-keys.test.ts`, `mention-menu-keys.test.ts`; `:focus-visible` in every control's CSS; photo `sc4-keyboard` |
+| Every action by keyboard; focus visible | Done | `scoped-keys.test.ts`, `table-keys.test.ts`, `slash-menu-keys.test.ts`, `mention-menu-keys.test.ts`; `:focus-visible` in every control's CSS; photo `sc4-keyboard`; every control of the main screen takes the focus and rings are left out only on text fields and script-focused panels, listed: `src/app/focus-rings.test.ts`; Ctrl+/ opens the block menu: `editor-keys-controls.test.ts` |
 | Reload restores the open page and the sidebar | Done | `workspace-repository.test.ts`; photos `s05-reload`, `sc3-reload` |
 | 250 lines per file, 40 per function, no lint warnings, tokens only in CSS | Done | `eslint.config.js`, `stylelint.config.js`, `architecture.test.ts`; `npm run verify` passes |
 | `setState` only in `dispatch.ts`; storage only in `persistence` | Done | ESLint rules in `eslint.config.js` |
