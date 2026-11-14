@@ -61,7 +61,8 @@ in `src/persistence/`.
 ## Milestone 27: Collaboration
 
 - [x] 27.1 Presence: the faces of the others on the open page in the top
-  bar. (Others' cursors and the block they edit remain.)
+  bar, and beside the block each writes in. (Their caret inside the
+  text remains.)
 - [x] 27.2 People mentions ("@" lists the workspace's people), each
   comment's author, the inbox's mentions and replies. (Invites, page
   changes and notification settings remain.)

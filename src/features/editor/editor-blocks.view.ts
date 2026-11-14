@@ -13,6 +13,7 @@ import { renderInlineDatabase, renderLinkedView } from "../database/index.ts";
 import { appendParagraph } from "./editor-structure.commands.ts";
 import { renderAddButton, renderHandle } from "./editor-block-menu.view.ts";
 import { renderBlockComments } from "../comments/index.ts";
+import { renderBlockPresence } from "../presence/index.ts";
 import { startBlockDrag } from "./editor-block-drag.view.ts";
 import { onSelectionCopy } from "./editor-clipboard.view.ts";
 import { onBlockContextMenu } from "./editor-context-menu.view.ts";
@@ -108,7 +109,7 @@ function renderBlock(block: Block, context: BlockContext): TemplateResult {
     ?data-selected=${context.selected.has(block.id)}
   >
     ${renderAddButton(block, context)} ${renderHandle(block, context)}
-    ${content ?? nothing}
+    ${content ?? nothing} ${renderBlockPresence(state, block.id)}
     ${renderBlockComments(state, context.dispatch, block.id)}
     ${renderChildren(block, context)}
   </div>`;

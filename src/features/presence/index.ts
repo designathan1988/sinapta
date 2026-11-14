@@ -1,1 +1,6 @@
-export { renderPresence, selectOthersHere } from "./presence.view.ts";
+export {
+  renderBlockPresence,
+  renderPresence,
+  selectOthersHere,
+  selectWritersIn,
+} from "./presence.view.ts";

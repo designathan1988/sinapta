@@ -3,7 +3,7 @@ import { render } from "lit-html";
 import { describe, expect, it } from "vitest";
 import { buildWorkspace, parseBlockId } from "../../model/index.ts";
 import { createInitialState, type AppState } from "../../state/index.ts";
-import { renderPresence } from "./presence.view.ts";
+import { renderBlockPresence, renderPresence } from "./presence.view.ts";
 
 function stateOnPage(): AppState {
   const state = createInitialState();
@@ -22,9 +22,9 @@ function stateOnPage(): AppState {
       sync: {
         ...state.persistence.sync,
         presence: [
-          { userId: "me", name: "Me", pageId: "p1" },
-          { userId: "u2", name: "Grace", pageId: "p1" },
-          { userId: "u3", name: "Linus", pageId: "elsewhere" },
+          { userId: "me", name: "Me", pageId: "p1", blockId: "b1" },
+          { userId: "u2", name: "Grace", pageId: "p1", blockId: "b1" },
+          { userId: "u3", name: "Linus", pageId: "elsewhere", blockId: null },
         ],
       },
     },
@@ -45,5 +45,25 @@ describe("presence", () => {
     expect(host.querySelector(".presence")?.getAttribute("aria-label")).toBe(
       "Also on this page: Grace",
     );
+  });
+});
+
+describe("block presence", () => {
+  it("shows the others writing in a block beside it, named", () => {
+    const host = document.createElement("div");
+
+    render(renderBlockPresence(stateOnPage(), "b1"), host);
+
+    const face = host.querySelector(".presence__block");
+    expect(face?.textContent).toBe("G");
+    expect(face?.getAttribute("aria-label")).toBe("Writing here: Grace");
+  });
+
+  it("shows nothing beside a block no one else writes in", () => {
+    const host = document.createElement("div");
+
+    render(renderBlockPresence(stateOnPage(), "b2"), host);
+
+    expect(host.querySelector(".presence__block")).toBeNull();
   });
 });

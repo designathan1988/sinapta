@@ -26,3 +26,22 @@
     color: var(--color-text-secondary);
   }
 }
+
+@layer features {
+  /* Another person writing in a block: their face just past its end. */
+  .presence__block {
+    position: absolute;
+    inset-block-start: var(--space-stack-xxs);
+    inset-inline-end: calc(var(--size-icon-md) * -1 - var(--space-inline-sm));
+    display: grid;
+    place-items: center;
+    inline-size: var(--size-icon-md);
+    block-size: var(--size-icon-md);
+    border-radius: var(--radius-full);
+    background-color: var(--color-accent-fill);
+    color: var(--color-text-on-accent);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    user-select: none;
+  }
+}

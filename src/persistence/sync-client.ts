@@ -159,23 +159,26 @@ function answer(link: Link, sync: Sync, request: SyncRequest): void {
 
 const PRESENCE_MS = 30_000;
 
-// Tells the server which page this person has open, so that the others
-// see their face on it.
+// Tells the server which page this person has open and the block they
+// write in, so that the others see their face on it and beside it.
 function announce(link: Link, sync: Sync): void {
   const session = link.session;
   if (session?.isReady !== true) return;
-  const pageId = sync.store.getState().ui.activePageId;
+  const { activePageId: pageId, selection } = sync.store.getState().ui;
+  const blockId = selection?.blockId ?? null;
   const path = `/api/workspaces/${session.id}/presence`;
-  getJson(sync.send, path, { pageId }).catch(() => undefined);
+  getJson(sync.send, path, { pageId, blockId }).catch(() => undefined);
 }
 
 function followPage(link: Link, sync: Sync): void {
-  let pageId = sync.store.getState().ui.activePageId;
+  const placeOf = (state: AppState) =>
+    `${state.ui.activePageId ?? ""}/${state.ui.selection?.blockId ?? ""}`;
+  let place = placeOf(sync.store.getState());
   let wasReady = false;
   sync.store.subscribe((state) => {
     const isReady = link.session?.isReady === true;
-    if (state.ui.activePageId === pageId && isReady === wasReady) return;
-    pageId = state.ui.activePageId;
+    if (placeOf(state) === place && isReady === wasReady) return;
+    place = placeOf(state);
     wasReady = isReady;
     announce(link, sync);
   });

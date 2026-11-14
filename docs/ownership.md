@@ -84,7 +84,7 @@ owner listed here exists.
 | Notion's workspace menu: members, the account's workspaces, New workspace, Log out | `src/features/sidebar/workspace-menu.ts` | 25 |
 | Settings › My account, General and People | `src/features/settings/settings-people.view.ts` | 25 |
 | Notion's Share menu: Share and Publish tabs, the top bar's Share | `src/features/share/` | 26 |
-| The faces of the others on the open page | `src/features/presence/` | 27 |
+| The faces of the others on the open page, and beside the block each writes in | `src/features/presence/` | 27 |
 | The inbox's notices from others: mentions of the person, replies to them | `src/features/inbox/inbox-notices.selectors.ts` | 27 |
 | Created by and Last edited by properties | `src/features/database/properties/created-by/` | 28 |
 | The Place property: a name and coordinates | `src/features/database/properties/place/` | 29 |

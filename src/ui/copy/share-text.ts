@@ -35,5 +35,6 @@ export const SHARE_TEXT = {
       "When published to web, anyone with the link can view this page’s content and see contributor names.",
     published: "Live on the web",
     viewing: "Also on this page:",
+    writing: "Writing here:",
   },
 } as const;

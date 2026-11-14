@@ -43,6 +43,8 @@ export interface Presence {
   readonly userId: string;
   readonly name: string;
   readonly pageId: string | null;
+  // The block they write in, when any.
+  readonly blockId: string | null;
 }
 
 export type SyncRequest =
