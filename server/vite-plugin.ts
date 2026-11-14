@@ -3,6 +3,7 @@
 import { webPushSender } from "./push.ts";
 import { webOutside } from "./outside.ts";
 import { webIdentity } from "./oidc-config.ts";
+import { registeredProcessor } from "./stripe.ts";
 import { resolve } from "node:path";
 import type { Connect, Plugin } from "vite";
 import { createApi } from "./api.ts";
@@ -28,6 +29,7 @@ function apiMiddleware(log: (line: string) => void): {
     push: webPushSender,
     outside: webOutside,
     identity: webIdentity,
+    payments: registeredProcessor(),
   });
   return {
     handle: (request, response, next) => {

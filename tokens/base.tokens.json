@@ -2,6 +2,85 @@
   "base": {
     "color": {
       "$type": "color",
+      "prism": {
+        "$description": "Notion's code colors, read from its stylesheet: day for the light theme, night for the dark.",
+        "day": {
+          "keyword": {
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.5395, 0.118, 237.1]
+            }
+          },
+          "string": {
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.6228, 0.166, 129.4]
+            }
+          },
+          "number": {
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.4444, 0.1814, 357.0]
+            }
+          },
+          "comment": {
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.5925, 0.0309, 248.3]
+            }
+          },
+          "function": {
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.6201, 0.1828, 12.2]
+            }
+          },
+          "punctuation": {
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.683, 0.0, 89.9]
+            }
+          }
+        },
+        "night": {
+          "keyword": {
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.6877, 0.0881, 240.3]
+            }
+          },
+          "string": {
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.8544, 0.1706, 121.9]
+            }
+          },
+          "number": {
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.7286, 0.0746, 8.2]
+            }
+          },
+          "comment": {
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.6163, 0.0484, 67.8]
+            }
+          },
+          "function": {
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.9236, 0.111, 108.4]
+            }
+          },
+          "punctuation": {
+            "$value": {
+              "colorSpace": "oklch",
+              "components": [0.6895, 0.0, 89.9]
+            }
+          }
+        }
+      },
       "neutral": {
         "0": {
           "$value": {

@@ -1,3 +1,5 @@
+import { pluralize } from "./pluralize.ts";
+
 // Text of a database's menus: the column menu and its submenus, and the
 // view settings' sorts.
 export const DATABASE_MENU_TEXT = {
@@ -99,8 +101,10 @@ export const DATABASE_MENU_TEXT = {
   feedEmpty: "Nothing written yet.",
   moreViews: (count: number) => `${String(count)} more…`,
   sortsAndFilters: "Sorts and filters",
-  sortCount: (count: number) => `${String(count)} sorts`,
-  ruleCount: (count: number) => `${String(count)} rules`,
+  sortCount: (count: number) =>
+    `${String(count)} ${pluralize(count, { one: "sort", other: "sorts" })}`,
+  ruleCount: (count: number) =>
+    `${String(count)} ${pluralize(count, { one: "rule", other: "rules" })}`,
   // A filter rule's pill: "Stage: Done", "Stage: Is not Done".
   rulePill: (name: string, rule: string) => `${name}: ${rule}`,
   ruleWithOperator: (operator: string, operand: string) =>

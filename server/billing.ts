@@ -14,74 +14,26 @@ import {
   type PlanId,
 } from "../src/model/index.ts";
 import { answer, type ApiContext, type RouteTable } from "./api.ts";
+import { CHECKOUT_ROUTES } from "./billing-checkout.ts";
+import {
+  billingOf,
+  isOwner,
+  ownerOf,
+  processorOf,
+  type Owner,
+} from "./billing-owner.ts";
 import { cardBodySchema } from "./billing.schema.ts";
 import {
   addInvoice,
   cardOf,
-  invoicesOf,
   keepCard,
   removeCard,
   seatsOf,
 } from "./billing-store.ts";
 import type { ApiRequest, ApiResponse } from "./http-exchange.ts";
-import { askerOf, isAsker } from "./member-asker.ts";
 import { setWorkspacePlan } from "./members.ts";
-import { localProcessor, type PaymentProcessor } from "./payments.ts";
 
 const planSchema = v.object({ plan: v.picklist(PLANS) });
-
-interface Owner {
-  readonly workspaceId: string;
-  readonly userId: string;
-  readonly plan: PlanId;
-}
-
-function ownerOf(
-  request: ApiRequest,
-  context: ApiContext,
-): Owner | ApiResponse {
-  const asker = askerOf(request, context);
-  if (!isAsker(asker)) return asker;
-  if (asker.workspace.role !== "owner") {
-    return answer(403, { error: "owners-only" });
-  }
-  const { id, plan } = asker.workspace;
-  return { workspaceId: id, userId: asker.user.id, plan };
-}
-
-const isOwner = (value: Owner | ApiResponse): value is Owner =>
-  "workspaceId" in value;
-
-function processorOf(context: ApiContext): PaymentProcessor {
-  return context.payments ?? localProcessor;
-}
-
-function billingOf(context: ApiContext, owner: Owner) {
-  const card = cardOf(context, owner.workspaceId);
-  return {
-    plan: owner.plan,
-    card:
-      card === undefined
-        ? null
-        : {
-            brand: card.brand,
-            last4: card.last4,
-            expMonth: card.exp_month,
-            expYear: card.exp_year,
-            name: card.name,
-          },
-    invoices: invoicesOf(context, owner.workspaceId).map((row) => ({
-      id: row.id,
-      plan: row.plan,
-      seats: row.seats,
-      amountCents: row.amount_cents,
-      currency: row.currency,
-      status: row.status,
-      last4: row.last4,
-      createdAt: new Date(row.created_at).toISOString(),
-    })),
-  };
-}
 
 // The card's own checks, before the processor sees it.
 function cardError(
@@ -100,9 +52,16 @@ function cardError(
   return undefined;
 }
 
-function addCard(request: ApiRequest, context: ApiContext): ApiResponse {
+// A card typed into the app, for the server's own processor; with one
+// that takes cards on its own page, the app sends the person there.
+async function addCard(
+  request: ApiRequest,
+  context: ApiContext,
+): Promise<ApiResponse> {
   const owner = ownerOf(request, context);
   if (!isOwner(owner)) return owner;
+  const { authorize } = processorOf(context);
+  if (authorize === undefined) return answer(409, { error: "hosted-checkout" });
   const parsed = v.safeParse(cardBodySchema, request.body);
   if (!parsed.success) return answer(400, { error: "invalid-card" });
   const card = parsed.output;
@@ -110,41 +69,42 @@ function addCard(request: ApiRequest, context: ApiContext): ApiResponse {
   if (error !== undefined) return answer(400, { error });
   const digits = cardDigits(card.number);
   const { expMonth, expYear, cvc, name } = card;
-  const authorized = processorOf(context).authorize({
-    digits,
-    expMonth,
-    expYear,
-    cvc,
-  });
+  const authorized = await authorize({ digits, expMonth, expYear, cvc });
   if (!authorized.ok) return answer(402, { error: authorized.error });
-  const brand = cardBrand(digits);
-  const last4 = digits.slice(-4);
-  const kept = { brand, last4, expMonth, expYear, name };
-  keepCard(context, owner, { ...kept, token: authorized.token });
-  return answer(200, { card: kept });
+  const kept = { brand: cardBrand(digits), last4: digits.slice(-4) };
+  const shown = { ...kept, expMonth, expYear, name };
+  keepCard(context, owner, { ...shown, token: authorized.token });
+  return answer(200, { card: shown });
 }
 
 // A paid plan above the current one is charged first; a plan without a
 // price, or a move down, is not charged.
-function chargeFor(context: ApiContext, owner: Owner, plan: PlanId) {
+async function chargeFor(
+  context: ApiContext,
+  owner: Owner,
+  plan: PlanId,
+): Promise<ApiResponse | undefined> {
   const seats = seatsOf(context, owner.workspaceId);
   const amountCents = planCharge(plan, seats) ?? 0;
   const isUp = PLANS.indexOf(plan) > PLANS.indexOf(owner.plan);
   if (amountCents === 0 || !isUp) return undefined;
   const card = cardOf(context, owner.workspaceId);
   if (card === undefined) return answer(402, { error: "payment-required" });
-  const charged = processorOf(context).charge(card.token, amountCents);
+  const charged = await processorOf(context).charge(card.token, amountCents);
   const status = charged.ok ? ("paid" as const) : ("failed" as const);
   const invoice = { plan, seats, amountCents, status, last4: card.last4 };
   addInvoice(context, owner.workspaceId, invoice);
   return charged.ok ? undefined : answer(402, { error: charged.error });
 }
 
-function changePlan(request: ApiRequest, context: ApiContext): ApiResponse {
+async function changePlan(
+  request: ApiRequest,
+  context: ApiContext,
+): Promise<ApiResponse> {
   const owner = ownerOf(request, context);
   if (!isOwner(owner)) return owner;
   const { plan } = v.parse(planSchema, request.body);
-  const refused = chargeFor(context, owner, plan);
+  const refused = await chargeFor(context, owner, plan);
   if (refused !== undefined) return refused;
   setWorkspacePlan(context, owner.workspaceId, plan);
   return answer(204);
@@ -164,4 +124,5 @@ export const BILLING_ROUTES: RouteTable = {
     return answer(200, billingOf(context, owner));
   },
   "POST /api/workspaces/:id/plan": changePlan,
+  ...CHECKOUT_ROUTES,
 };

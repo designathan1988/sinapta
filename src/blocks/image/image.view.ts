@@ -157,6 +157,7 @@ export function renderImage(
   return html`<figure
     class="image"
     data-align=${block.props.align ?? "center"}
+    ?data-sized=${block.props.width !== undefined}
     ${sized}
   >
     <div class="image__frame">

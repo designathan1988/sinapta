@@ -16,7 +16,6 @@ import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
 import { renderSelect } from "../../ui/select/index.ts";
 import {
   addFilter,
-  addGroup,
   removeAt,
   setConjunction,
   updateAt,
@@ -26,6 +25,7 @@ import { changedFilter, newFilter } from "./filter-fields.ts";
 import { isFilterGroup } from "./filter-match.ts";
 import { renderFilterRow, type FieldChange } from "./filter-row.view.ts";
 import { renderFilterStart } from "./filter-start.view.ts";
+import { renderFilterActions } from "./filter-panel-actions.view.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import { setViewFilter } from "./view.commands.ts";
 
@@ -196,14 +196,6 @@ export function renderFilters(context: TableContext): TemplateResult {
   const { model, dispatch } = context;
   const top = model.view.filter;
   if (top.items.length === 0) return renderFilterStart(context);
-  const add = (isGroup: boolean) => (): void => {
-    const filter = newFilter(context);
-    if (filter === undefined) return;
-    setFilter(
-      context,
-      isGroup ? addGroup(top, filter) : addFilter(top, [], filter),
-    );
-  };
   return html`<div
     class="database__popover"
     popover="manual"
@@ -219,9 +211,6 @@ export function renderFilters(context: TableContext): TemplateResult {
     <ul class="database__filters">
       ${top.items.map((item, index) => renderItem(item, index, context))}
     </ul>
-    <div class="database__filter-actions">
-      ${renderButton({ label: COPY.database.addFilter, icon: "plus", onClick: add(false) })}
-      ${renderButton({ label: COPY.database.addFilterGroup, icon: "plus", onClick: add(true) })}
-    </div>
+    ${renderFilterActions(context)}
   </div>`;
 }

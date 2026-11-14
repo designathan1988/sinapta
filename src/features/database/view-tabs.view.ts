@@ -171,7 +171,9 @@ function renderTab(view: View, context: TableContext): TemplateResult {
   </button>`;
 }
 
-export function renderViewTabs(context: TableContext): TemplateResult {
+export function renderViewTabs(
+  context: TableContext,
+): TemplateResult | typeof nothing {
   const { model, state } = context;
   const all = model.viewIds.flatMap((id) => state.workspace.views[id] ?? []);
   const { shown, more } = splitViews(all, model.view.id, tabLayout(context));
@@ -204,7 +206,10 @@ export function renderViewTabs(context: TableContext): TemplateResult {
     </div>`;
 }
 
-function renderNewView(context: TableContext): TemplateResult {
+// A locked database takes no new view, as Notion's.
+function renderNewView(context: TableContext): TemplateResult | typeof nothing {
+  const database = context.state.workspace.blocks[context.model.database.id];
+  if (database?.props.isLocked === true) return nothing;
   return renderToggle(context, {
     kind: NEW_VIEW_OVERLAY,
     label: COPY.database.newView,

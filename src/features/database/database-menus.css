@@ -46,6 +46,21 @@
     background-color: var(--color-bg-hover);
   }
 
+  /* Between adding rules and deleting the filter, as Notion's. */
+  .database__filter-rule {
+    inline-size: 100%;
+    margin: var(--space-stack-xxs) 0;
+    border: none;
+    border-block-start: var(--size-border-thin) solid
+      var(--color-border-default);
+  }
+
+  /* "Delete filter" as a menu row, its icon at the start, as Notion's. */
+  .database__filter-foot > .button {
+    justify-content: start;
+    inline-size: 100%;
+  }
+
   .database__filter-actions {
     display: flex;
     flex-wrap: wrap;

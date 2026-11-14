@@ -138,6 +138,17 @@ function renderGrid(options: EmojiPickerOptions): TemplateResult {
   </div>`;
 }
 
+// Enter in the search chooses the first emoji shown, as Notion's.
+function chooseFirstOnEnter(options: EmojiPickerOptions) {
+  return (event: KeyboardEvent): void => {
+    if (event.key !== "Enter" || event.isComposing) return;
+    const first = tonedGroups(options).flatMap((group) => group.emoji)[0];
+    if (first === undefined) return;
+    event.preventDefault();
+    options.onChoose(first.char);
+  };
+}
+
 function renderBar(options: EmojiPickerOptions): TemplateResult {
   const onInput = (event: Event): void => {
     if (event.target instanceof HTMLInputElement) {
@@ -153,6 +164,7 @@ function renderBar(options: EmojiPickerOptions): TemplateResult {
       .value=${options.query}
       data-autofocus
       @input=${onInput}
+      @keydown=${chooseFirstOnEnter(options)}
     />
     <button
       type="button"

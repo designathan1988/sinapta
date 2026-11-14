@@ -1,6 +1,7 @@
 // A server on an in-memory database for tests: a clock that can move, the
 // log kept, and requests made as a browser would.
 import type { ApiContext, Outside } from "./api.ts";
+import type { PaymentProcessor } from "./payments.ts";
 import type { IdentityWeb } from "./oidc-config.ts";
 import { openDatabase } from "./database.ts";
 import type { ApiRequest, ApiResponse } from "./http-exchange.ts";
@@ -73,7 +74,10 @@ function testWeb() {
   return { posted, pages, forms, identity, outside };
 }
 
-export function createTestServer(clock = { now: Date.UTC(2026, 10, 14) }) {
+export function createTestServer(
+  clock = { now: Date.UTC(2026, 10, 14) },
+  payments?: PaymentProcessor,
+) {
   const logged: string[] = [];
   const pushed: TestServer["pushed"] = [];
   const { posted, pages, forms, identity, outside } = testWeb();
@@ -90,6 +94,7 @@ export function createTestServer(clock = { now: Date.UTC(2026, 10, 14) }) {
     },
     identity,
     outside,
+    ...(payments !== undefined && { payments }),
   };
   const call: TestServer["call"] = async (key, body, cookie) => {
     const request = requestOf(key, body, cookie);

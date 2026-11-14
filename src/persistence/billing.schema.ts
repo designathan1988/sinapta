@@ -3,6 +3,7 @@ import * as v from "valibot";
 import { BILLING_ERRORS } from "../state/index.ts";
 
 const billingSchema = v.object({
+  processor: v.optional(v.picklist(["local", "stripe"]), "local"),
   card: v.nullable(
     v.object({
       brand: v.string(),

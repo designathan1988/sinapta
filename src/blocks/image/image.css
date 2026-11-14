@@ -30,6 +30,18 @@
     border-radius: var(--radius-md);
   }
 
+  /* Until a width is chosen the image keeps its own size, never wider
+     than the page, as Notion's: a small icon is not blown up. */
+  .image:not([data-sized]) .image__frame {
+    inline-size: fit-content;
+    max-inline-size: 100%;
+  }
+
+  .image:not([data-sized]) .image__picture {
+    inline-size: auto;
+    max-inline-size: 100%;
+  }
+
   /* Bars on both sides that resize the image; they show on hover or
      while focused. */
   .image__handle {

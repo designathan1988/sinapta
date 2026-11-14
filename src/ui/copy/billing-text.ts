@@ -33,6 +33,8 @@ export const BILLING_TEXT = {
         "Add a payment method to upgrade. The upgrade goes through as soon as the card is saved.",
       "owners-only": "Only the workspace's owners can change its billing.",
     },
+    stripeNote:
+      "The card is typed on Stripe's secure page, and Stripe keeps it. Pagecraft keeps only its brand, last four digits and expiry.",
     processorNote:
       "Cards are checked and charged by this server's payment processor, which keeps only the card's brand, last four digits and expiry.",
   },

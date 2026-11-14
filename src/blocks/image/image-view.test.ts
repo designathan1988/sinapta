@@ -40,6 +40,22 @@ function rendered(
   return { host, sent, button };
 }
 
+describe("an image's size, as Notion's", () => {
+  it("keeps the image's own size until a width is chosen", () => {
+    const { props } = block;
+    const { width: _width, ...unsized } = props;
+    const plain = rendered(createInitialState(), { ...block, props: unsized });
+    const sized = rendered();
+
+    expect(plain.host.querySelector(".image")?.hasAttribute("data-sized")).toBe(
+      false,
+    );
+    expect(sized.host.querySelector(".image")?.hasAttribute("data-sized")).toBe(
+      true,
+    );
+  });
+});
+
 describe("renderImage", () => {
   it.each([
     ["ArrowRight", 55],

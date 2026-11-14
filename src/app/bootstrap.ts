@@ -24,6 +24,7 @@ import {
 } from "../features/database/index.ts";
 import { editorCommands } from "../features/editor/index.ts";
 import { SCOPED_KEYS } from "./scoped-keys.ts";
+import { openBillingOnReturn } from "./billing-return.ts";
 import { aiFeatureCommands } from "../features/ai/index.ts";
 import { peekCommands } from "../features/row-peek/index.ts";
 import { templateCommands } from "../features/templates/index.ts";
@@ -173,6 +174,7 @@ async function startPersistence(
   // The workspace on the server, once someone signs in (ADR-0013).
   sync.start({ store, dispatch, propsSchemas, outbox: createOutbox(adapter) });
   startServices(store, dispatch);
+  openBillingOnReturn(store, dispatch);
   return { isFirstRun };
 }
 

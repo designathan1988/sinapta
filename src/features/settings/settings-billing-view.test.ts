@@ -81,6 +81,7 @@ describe("Settings › Billing", () => {
   it("shows the card kept and the invoices, and why the last try failed", () => {
     const { host } = rendered(
       owner({
+        processor: "local",
         card: {
           brand: "visa",
           last4: "4242",
@@ -119,5 +120,20 @@ describe("Settings › Billing", () => {
 
     expect(host.textContent).toContain("Only the workspace's owners");
     expect(host.querySelector("form")).toBeNull();
+  });
+
+  it("sends the owner to Stripe's page to add a card when Stripe takes them", () => {
+    const { host, sent } = rendered(
+      owner({ ...NO_BILLING, processor: "stripe" }),
+    );
+
+    expect(host.querySelector("form")).toBeNull();
+    [...host.querySelectorAll("button")]
+      .find((button) => button.textContent.trim() === "Add card")
+      ?.click();
+
+    expect(sent).toEqual([
+      expect.objectContaining({ request: { kind: "checkout" } }),
+    ]);
   });
 });

@@ -35,6 +35,29 @@ export function openedRule(holderId: string, filter: FilterGroup): OpenOverlay {
   };
 }
 
+// Below the properties, as Notion's: a rule in the advanced filter.
+function advancedItem(context: TableContext): MenuItem {
+  const { model, state, dispatch } = context;
+  const title = titleProperty();
+  return {
+    label: COPY.database.addAdvancedFilter,
+    icon: "plus",
+    keepsOpen: true,
+    onSelect: () => {
+      if (title === undefined) return;
+      const condition = newCondition(title, state);
+      const filter = {
+        ...addFilter(model.view.filter, [], condition),
+        isAdvanced: true,
+      };
+      dispatch(setViewFilter.create({ viewId: model.view.id, filter }));
+      dispatch(
+        openOverlay.create({ overlay: openedRule(model.holderId, filter) }),
+      );
+    },
+  };
+}
+
 export function renderFilterStart(context: TableContext): TemplateResult {
   const { model, state, dispatch } = context;
   const title = titleProperty();
@@ -53,9 +76,10 @@ export function renderFilterStart(context: TableContext): TemplateResult {
       );
     },
   }));
+  const advanced = advancedItem(context);
   return renderMenu({
     label: COPY.database.filter,
-    items,
+    items: [...items, { kind: "divider" }, advanced],
     search: {
       placeholder: COPY.database.filterBy,
       query: state.ui.overlay?.query ?? "",

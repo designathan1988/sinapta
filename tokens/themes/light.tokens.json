@@ -255,22 +255,22 @@
     },
     "code": {
       "keyword": {
-        "$value": "{base.color.chip.purple.ink}"
+        "$value": "{base.color.prism.day.keyword}"
       },
       "string": {
-        "$value": "{base.color.chip.green.ink}"
+        "$value": "{base.color.prism.day.string}"
       },
       "number": {
-        "$value": "{base.color.chip.orange.ink}"
+        "$value": "{base.color.prism.day.number}"
       },
       "comment": {
-        "$value": "{base.color.neutral.600}"
+        "$value": "{base.color.prism.day.comment}"
       },
       "function": {
-        "$value": "{base.color.chip.blue.ink}"
+        "$value": "{base.color.prism.day.function}"
       },
       "punctuation": {
-        "$value": "{base.color.neutral.650}"
+        "$value": "{base.color.prism.day.punctuation}"
       }
     },
     "board": {

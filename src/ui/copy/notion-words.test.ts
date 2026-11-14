@@ -186,3 +186,12 @@ describe("the copy of the new controls", () => {
     expect(COPY.operators.atLeast).toBe("≥");
   });
 });
+
+describe("counts on a view's pills", () => {
+  it("say one rule and one sort in the singular, as Notion's", () => {
+    expect(COPY.database.ruleCount(1)).toBe("1 rule");
+    expect(COPY.database.ruleCount(2)).toBe("2 rules");
+    expect(COPY.database.sortCount(1)).toBe("1 sort");
+    expect(COPY.database.sortCount(3)).toBe("3 sorts");
+  });
+});

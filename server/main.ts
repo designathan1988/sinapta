@@ -3,6 +3,7 @@
 import { webPushSender } from "./push.ts";
 import { webOutside } from "./outside.ts";
 import { webIdentity } from "./oidc-config.ts";
+import { registeredProcessor } from "./stripe.ts";
 import { readFile } from "node:fs/promises";
 import { createServer, type ServerResponse } from "node:http";
 import { extname, join, normalize, resolve } from "node:path";
@@ -58,6 +59,7 @@ const api = createApi(ROUTES, {
   push: webPushSender,
   outside: webOutside,
   identity: webIdentity,
+  payments: registeredProcessor(),
 });
 const port = Number(process.env.PORT ?? "5199");
 

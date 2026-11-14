@@ -13,7 +13,7 @@ import type { Sync } from "./sync-session.ts";
 
 export type BillingRequest = Extract<
   SyncRequest,
-  { kind: "billing" | "add-card" | "remove-card" | "plan" }
+  { kind: "billing" | "add-card" | "remove-card" | "plan" | "checkout" }
 >;
 
 const KINDS: ReadonlySet<string> = new Set([
@@ -21,6 +21,7 @@ const KINDS: ReadonlySet<string> = new Set([
   "add-card",
   "remove-card",
   "plan",
+  "checkout",
 ]);
 
 export function isBillingRequest(
@@ -121,6 +122,10 @@ export async function answerBilling(
       return;
     case "plan":
       await changePlan(place, request);
+      return;
+    case "checkout":
+      // To the payment processor's own page, which sends the person back.
+      window.location.assign(`${base}/billing/checkout`);
       return;
   }
 }

@@ -9,6 +9,7 @@ import {
   VIEW_FILTER_RULE_OVERLAY,
 } from "./filter-rule-anchor.ts";
 import { renderDatabase } from "./database.view.ts";
+import { ADD_RULE_ID } from "./filter-panel-actions.view.ts";
 import { TITLE_PROPERTY_ID } from "./table-model.selectors.ts";
 import { setViewFilter } from "./view.commands.ts";
 
@@ -57,16 +58,35 @@ function change(control: Element | null, value: string): void {
   control.dispatchEvent(new Event(type, { bubbles: true }));
 }
 
+describe("the advanced filter's foot", () => {
+  it("deletes the whole filter and closes, as Notion's", () => {
+    const { host, sent } = rendered();
+    const remove = [...host.querySelectorAll("button")].find(
+      (item) => item.textContent.trim() === "Delete filter",
+    );
+
+    remove?.click();
+
+    expect(sent).toEqual([
+      expect.objectContaining({
+        type: "view.setFilter",
+        filter: { conjunction: "and", items: [] },
+      }),
+      expect.objectContaining({ type: "ui.closeOverlay" }),
+    ]);
+  });
+});
+
 describe("the filter editor", () => {
-  it("adds a group holding one new condition", () => {
-    const { host, sent, rule } = rendered();
-    const add = [...host.querySelectorAll("button")].find(
-      (item) => item.textContent.trim() === "Add filter group",
+  it("adds a group holding one new condition from Add filter rule's list, as Notion's", () => {
+    const { host, sent, rule } = rendered(ADD_RULE_ID);
+    const add = [...host.querySelectorAll<HTMLElement>("[role=menuitem]")].find(
+      (item) => item.textContent.includes("Add filter group"),
     );
 
     add?.click();
 
-    expect(sent).toEqual([
+    expect(sent).toContainEqual(
       expect.objectContaining({
         type: "view.setFilter",
         filter: {
@@ -87,7 +107,7 @@ describe("the filter editor", () => {
           ],
         },
       }),
-    ]);
+    );
   });
 
   it("opens the join's list inside the popover and joins with or", () => {
@@ -157,6 +177,7 @@ describe("the filter editor of a view with no filter", () => {
     expect(rows.map((row) => row.textContent.trim())).toEqual([
       "Name",
       "Notes",
+      "Add advanced filter",
     ]);
     expect(sent).toEqual([
       expect.objectContaining({
@@ -175,5 +196,36 @@ describe("the filter editor of a view with no filter", () => {
         },
       }),
     ]);
+  });
+});
+
+describe("Add advanced filter", () => {
+  it("starts the advanced filter with a rule on the name, as Notion's", () => {
+    const app = createDatabaseApp([{ name: "Notes", type: "text" }], [["A"]]);
+    const built = app.store.getState();
+    const overlay = { kind: FILTERS_OVERLAY, anchorId: app.databaseId };
+    const state = { ...built, ui: { ...built.ui, overlay } };
+    const sent: Command[] = [];
+    const host = document.createElement("div");
+    document.body.replaceChildren(host);
+    render(
+      renderDatabase(state, (command) => {
+        sent.push(command);
+        return { ok: true };
+      }),
+      host,
+    );
+
+    [...host.querySelectorAll<HTMLElement>(".menu [data-index]")]
+      .find((row) => row.textContent.trim() === "Add advanced filter")
+      ?.click();
+
+    expect(sent[0]).toMatchObject({
+      type: "view.setFilter",
+      filter: {
+        isAdvanced: true,
+        items: [{ propertyId: TITLE_PROPERTY_ID, value: "" }],
+      },
+    });
   });
 });

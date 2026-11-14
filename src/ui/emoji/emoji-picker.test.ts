@@ -36,6 +36,21 @@ describe("renderEmojiPicker", () => {
     expect(chosen).toEqual(["🚀"]);
   });
 
+  it("chooses the first emoji shown on Enter in its search field, as Notion's", () => {
+    const { host, chosen } = rendered({ query: "rocket" });
+    const field = host.querySelector(".emoji__search");
+
+    const enter = new KeyboardEvent("keydown", {
+      key: "Enter",
+      bubbles: true,
+      cancelable: true,
+    });
+    field?.dispatchEvent(enter);
+
+    expect(chosen).toEqual(["🚀"]);
+    expect(enter.defaultPrevented).toBe(true);
+  });
+
   it("reports what is typed in its search field", () => {
     const { host, queries } = rendered();
     const field = host.querySelector("input");

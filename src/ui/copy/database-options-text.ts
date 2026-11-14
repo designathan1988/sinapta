@@ -28,6 +28,9 @@ export const DATABASE_OPTIONS_TEXT = {
   countCapped: "99+",
   typeValue: "Type a value…",
   deleteFilter: "Delete filter",
+  addFilterRule: "Add filter rule",
+  filterGroupHint: "A group to nest more filters",
+  addAdvancedFilter: "Add advanced filter",
   addToAdvanced: "Add to advanced filter",
   // database.filterValue.dotsIcon.ariaLabel
   filterActions: "More actions",

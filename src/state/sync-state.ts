@@ -86,6 +86,7 @@ export type SyncRequest =
   | { readonly kind: "billing" }
   | { readonly kind: "add-card"; readonly card: CardInput }
   | { readonly kind: "remove-card" }
+  | { readonly kind: "checkout" }
   | { readonly kind: "workspace-icon"; readonly icon: string | null }
   | { readonly kind: "delete-workspace"; readonly name: string }
   | { readonly kind: "leave-workspace" }

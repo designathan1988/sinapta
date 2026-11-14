@@ -14,4 +14,46 @@
       text-align: center;
     }
   }
+
+  /* Inside another bulleted item the marker turns, as Notion's: a disc,
+     then a circle, then a square, and round again. */
+  [data-type="bulleted-list"]
+    [data-type="bulleted-list"]
+    > .bulleted-list::before {
+    content: "◦";
+  }
+
+  [data-type="bulleted-list"]
+    [data-type="bulleted-list"]
+    [data-type="bulleted-list"]
+    > .bulleted-list::before {
+    content: "▪";
+  }
+
+  [data-type="bulleted-list"]
+    [data-type="bulleted-list"]
+    [data-type="bulleted-list"]
+    [data-type="bulleted-list"]
+    > .bulleted-list::before {
+    content: "•";
+  }
+
+  [data-type="bulleted-list"]
+    [data-type="bulleted-list"]
+    [data-type="bulleted-list"]
+    [data-type="bulleted-list"]
+    [data-type="bulleted-list"]
+    > .bulleted-list::before {
+    content: "◦";
+  }
+
+  [data-type="bulleted-list"]
+    [data-type="bulleted-list"]
+    [data-type="bulleted-list"]
+    [data-type="bulleted-list"]
+    [data-type="bulleted-list"]
+    [data-type="bulleted-list"]
+    > .bulleted-list::before {
+    content: "▪";
+  }
 }

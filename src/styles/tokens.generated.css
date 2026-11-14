@@ -2,6 +2,18 @@
 @layer tokens {
   :root {
     color-scheme: light dark;
+    --base-color-prism-day-keyword: oklch(0.5395 0.118 237.1);
+    --base-color-prism-day-string: oklch(0.6228 0.166 129.4);
+    --base-color-prism-day-number: oklch(0.4444 0.1814 357);
+    --base-color-prism-day-comment: oklch(0.5925 0.0309 248.3);
+    --base-color-prism-day-function: oklch(0.6201 0.1828 12.2);
+    --base-color-prism-day-punctuation: oklch(0.683 0 89.9);
+    --base-color-prism-night-keyword: oklch(0.6877 0.0881 240.3);
+    --base-color-prism-night-string: oklch(0.8544 0.1706 121.9);
+    --base-color-prism-night-number: oklch(0.7286 0.0746 8.2);
+    --base-color-prism-night-comment: oklch(0.6163 0.0484 67.8);
+    --base-color-prism-night-function: oklch(0.9236 0.111 108.4);
+    --base-color-prism-night-punctuation: oklch(0.6895 0 89.9);
     --base-color-neutral-0: oklch(0.995 0.003 85);
     --base-color-neutral-50: oklch(0.985 0.005 85);
     --base-color-neutral-100: oklch(0.965 0.007 85);
@@ -458,12 +470,12 @@
     --color-chip-pink-text: light-dark(var(--base-color-chip-pink-ink), var(--base-color-chip-pink-glow));
     --color-chip-red-bg: light-dark(var(--base-color-chip-red-tint), var(--base-color-chip-red-shade));
     --color-chip-red-text: light-dark(var(--base-color-chip-red-ink), var(--base-color-chip-red-glow));
-    --color-code-keyword: light-dark(var(--base-color-chip-purple-ink), var(--base-color-chip-purple-glow));
-    --color-code-string: light-dark(var(--base-color-chip-green-ink), var(--base-color-chip-green-glow));
-    --color-code-number: light-dark(var(--base-color-chip-orange-ink), var(--base-color-chip-orange-glow));
-    --color-code-comment: light-dark(var(--base-color-neutral-600), var(--base-color-neutral-400));
-    --color-code-function: light-dark(var(--base-color-chip-blue-ink), var(--base-color-chip-blue-glow));
-    --color-code-punctuation: light-dark(var(--base-color-neutral-650), var(--base-color-neutral-350));
+    --color-code-keyword: light-dark(var(--base-color-prism-day-keyword), var(--base-color-prism-night-keyword));
+    --color-code-string: light-dark(var(--base-color-prism-day-string), var(--base-color-prism-night-string));
+    --color-code-number: light-dark(var(--base-color-prism-day-number), var(--base-color-prism-night-number));
+    --color-code-comment: light-dark(var(--base-color-prism-day-comment), var(--base-color-prism-night-comment));
+    --color-code-function: light-dark(var(--base-color-prism-day-function), var(--base-color-prism-night-function));
+    --color-code-punctuation: light-dark(var(--base-color-prism-day-punctuation), var(--base-color-prism-night-punctuation));
     --color-board-column-default: light-dark(var(--base-color-board-column-default-day), var(--base-color-board-column-default-night));
     --color-board-column-gray: light-dark(var(--base-color-board-column-gray-day), var(--base-color-board-column-gray-night));
     --color-board-column-brown: light-dark(var(--base-color-board-column-brown-day), var(--base-color-board-column-brown-night));

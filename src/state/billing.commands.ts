@@ -43,6 +43,8 @@ export const BILLING_ERRORS = [
 export type BillingError = (typeof BILLING_ERRORS)[number];
 
 export interface BillingState {
+  // Who takes the card: this server, or Stripe on its own page.
+  readonly processor: "local" | "stripe";
   readonly card: BillingCard | null;
   readonly invoices: readonly BillingInvoice[];
   readonly error: BillingError | null;
@@ -51,6 +53,7 @@ export interface BillingState {
 }
 
 export const NO_BILLING: BillingState = {
+  processor: "local",
   card: null,
   invoices: [],
   error: null,
@@ -58,14 +61,21 @@ export const NO_BILLING: BillingState = {
 };
 
 export const setBilling = defineCommand<{
+  processor?: "local" | "stripe";
   card: BillingCard | null;
   invoices: readonly BillingInvoice[];
 }>({
   type: "sync.setBilling",
-  handle: (state, { card, invoices }) => {
+  handle: (state, { processor, card, invoices }) => {
     const { sync } = state.persistence;
     const isCardSent = sync.request?.kind === "add-card";
-    const billing = { ...(sync.billing ?? NO_BILLING), card, invoices };
+    const known = sync.billing ?? NO_BILLING;
+    const billing = {
+      ...known,
+      processor: processor ?? known.processor,
+      card,
+      invoices,
+    };
     const next = {
       ...sync,
       billing: { ...billing, error: null },

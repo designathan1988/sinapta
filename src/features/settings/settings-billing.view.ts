@@ -11,6 +11,7 @@ import {
   type BillingCard,
   type BillingError,
   type BillingInvoice,
+  type BillingState,
   type Dispatch,
 } from "../../state/index.ts";
 import { renderButton } from "../../ui/button/index.ts";
@@ -152,7 +153,7 @@ export function renderBilling(
   }
   const shown = billing ?? NO_BILLING;
   return html`<h4 class="settings__subtitle">${TEXT.paymentMethod}</h4>
-    ${renderError(shown.error)} ${renderMethod(shown.card, dispatch)}
+    ${renderError(shown.error)} ${renderMethod(shown, dispatch)}
     <h4 class="settings__subtitle">${TEXT.invoices}</h4>
     ${renderInvoices(shown.invoices)}`;
 }
@@ -164,9 +165,21 @@ function renderError(error: BillingError | null) {
   </p>`;
 }
 
-// The card kept, or the form to add one.
-function renderMethod(card: BillingCard | null, dispatch: Dispatch) {
-  if (card !== null) return renderCard(card, dispatch);
+// The card kept, or a way to add one: the form, or with Stripe its own
+// page, where the card's number is typed.
+function renderMethod(billing: BillingState, dispatch: Dispatch) {
+  if (billing.card !== null) return renderCard(billing.card, dispatch);
+  if (billing.processor === "stripe") {
+    return html`<p class="settings__hint">${TEXT.noCard}</p>
+      ${renderButton({
+        label: TEXT.addCard,
+        icon: "card",
+        variant: "primary",
+        onClick: () =>
+          dispatch(requestSync.create({ request: { kind: "checkout" } })),
+      })}
+      <p class="settings__hint">${TEXT.stripeNote}</p>`;
+  }
   return html`<p class="settings__hint">${TEXT.noCard}</p>
     ${renderCardForm(dispatch)}`;
 }
