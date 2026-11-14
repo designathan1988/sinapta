@@ -98,6 +98,7 @@ function propertyItems(
   return [
     editPropertyItem(column.property, context),
     changeTypeItem(column.property, context),
+    ...aiFillItem(column, context),
     { kind: "divider" },
   ];
 }
@@ -131,7 +132,6 @@ function columnItems(column: TableColumn, context: TableContext): MenuEntry[] {
     ...groupItems(column, context),
     calculateItem(column, context),
     ...showItems(column, context),
-    ...aiFillItem(column, context),
     ...statusShowAsItems(column, context),
     ...placeItems(column, context),
   ];

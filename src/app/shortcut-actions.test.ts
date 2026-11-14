@@ -11,7 +11,7 @@ const page = (title: string) => ({
 });
 
 // A page inside a toggle inside a page: its parent page is the outer one.
-function run(action: "new-page" | "parent-page") {
+function run(action: "new-page" | "parent-page" | "move-to") {
   const workspace = buildWorkspace([
     {
       id: "outer",
@@ -45,6 +45,15 @@ describe("the navigation keys", () => {
     expect(run("parent-page")).toEqual([
       { type: "ui.setActivePage", pageId: "outer" },
     ]);
+  });
+
+  it("move the open page with Ctrl+Shift+P, as Notion's", () => {
+    const [opened] = run("move-to");
+
+    expect(opened).toMatchObject({
+      type: "ui.openOverlay",
+      overlay: { kind: "move-to", anchorId: "inner" },
+    });
   });
 
   it("make a new page", () => {

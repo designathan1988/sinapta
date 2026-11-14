@@ -100,18 +100,38 @@ describe("the page menu, as Notion's", () => {
     const labels = rows.map((row) => row.textContent.trim());
 
     expect(labels).toEqual([
-      expect.stringContaining("Copy link"),
+      expect.stringMatching(/^Copy link\s+Ctrl\+Alt\+L$/),
       expect.stringContaining("Copy page contents"),
-      expect.stringContaining("Duplicate"),
-      expect.stringContaining("Move to"),
+      expect.stringMatching(/^Duplicate\s+Ctrl\+D$/),
+      expect.stringMatching(/^Move to\s+Ctrl\+Shift\+P$/),
       expect.stringContaining("Version history"),
       expect.stringContaining("Appearance and layout"),
+      expect.stringContaining("Suggest edits"),
       expect.stringContaining("Get notified"),
-      expect.stringContaining("Verify"),
       expect.stringContaining("Lock page"),
       expect.stringContaining("Move to Trash"),
       expect.stringContaining("More"),
     ]);
+  });
+
+  it("keeps Export, Verify and Save as template under More, as Notion's", () => {
+    const { host } = rendered(false, "bar", "more:page");
+
+    const more = [...host.querySelectorAll(".menu")].at(-1)?.textContent ?? "";
+
+    expect(more).toContain("Export");
+    expect(more).toContain("Verify");
+    expect(more).toContain("Save as template");
+  });
+
+  it("turns on suggesting for the page from Suggest edits", () => {
+    const { sent, row } = rendered(false);
+
+    row("Suggest edits")?.click();
+
+    expect(sent).toContainEqual(
+      expect.objectContaining({ type: "ui.setSuggesting", pageId: "page" }),
+    );
   });
 
   it("ends with the last edit over the word count", () => {

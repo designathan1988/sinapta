@@ -21,6 +21,16 @@ describe("Notion's navigation keys", () => {
     ["Ctrl+]", stroke({ key: "]", ctrlKey: true }), "forward"],
     ["Ctrl+L", stroke({ key: "l", ctrlKey: true }), "copy-link"],
     [
+      "Ctrl+Alt+L, as Notion's page menu shows it",
+      stroke({ key: "l", ctrlKey: true, altKey: true }),
+      "copy-link",
+    ],
+    [
+      "Ctrl+Shift+P, Notion's Move to",
+      stroke({ key: "P", ctrlKey: true, shiftKey: true }),
+      "move-to",
+    ],
+    [
       "Ctrl+Shift+U",
       stroke({ key: "U", ctrlKey: true, shiftKey: true }),
       "parent-page",

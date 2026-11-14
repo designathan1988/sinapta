@@ -127,8 +127,9 @@ export function groupItems(
 
 // How the table shows the column: frozen with the ones before it, hidden
 // in this view, its text wrapped.
-// Notion's AI autofill: fills a text property of every row from the row's
-// page, on the server (ADR-0013).
+// Notion's AI autofill, one row after Change type that opens its kinds:
+// fills a text property of every row from the row's page, on the server
+// (ADR-0013).
 export function aiFillItem(
   column: TableColumn,
   context: TableContext,
@@ -136,7 +137,7 @@ export function aiFillItem(
   const { property } = column;
   const isSignedIn = context.state.persistence.account.user !== null;
   if (property.type !== "text" || column.isTitle || !isSignedIn) return [];
-  const fill = (action: "summarize" | "action-items") => () =>
+  const fill = (action: "summarize" | "action-items" | "translate") => () =>
     context.dispatch(
       requestSync.create({
         request: {
@@ -147,16 +148,19 @@ export function aiFillItem(
         },
       }),
     );
+  const kinds = ["summarize", "action-items", "translate"] as const;
+  const items = kinds.map((action) => ({
+    label: COPY.ai.autofillKinds[action],
+    onSelect: fill(action),
+  }));
   return [
     {
-      label: COPY.ai.fillSummary,
+      label: COPY.ai.autofill,
       icon: "sparkles",
-      onSelect: fill("summarize"),
-    },
-    {
-      label: COPY.ai.fillActions,
-      icon: "sparkles",
-      onSelect: fill("action-items"),
+      submenu: {
+        id: `${property.id}:ai-fill`,
+        menu: () => ({ label: COPY.ai.autofill, items }),
+      },
     },
   ];
 }

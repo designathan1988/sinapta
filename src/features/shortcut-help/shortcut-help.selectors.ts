@@ -31,6 +31,8 @@ export const SHORTCUT_GROUPS: readonly ShortcutGroup[] = [
       entry(TEXT.back, "Mod", "["),
       entry(TEXT.forward, "Mod", "]"),
       entry(TEXT.copyLink, "Mod", "L"),
+      entry(TEXT.copyLink, "Mod", "Alt", "L"),
+      entry(TEXT.moveTo, "Mod", "Shift", "P"),
       entry(TEXT.parentPage, "Mod", "Shift", "U"),
       entry(TEXT.comment, "Mod", "Shift", "M"),
       entry(TEXT.settings, "Mod", ","),

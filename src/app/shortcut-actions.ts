@@ -8,6 +8,10 @@ import {
   type Dispatch,
 } from "../state/index.ts";
 import { COMMENT_COMPOSER_OVERLAY } from "../features/comments/index.ts";
+import {
+  MOVE_TO_OVERLAY_KIND,
+  MOVE_TO_PLACE_PANEL,
+} from "../features/page-menu/index.ts";
 import { announce } from "../ui/announcer/index.ts";
 import { COPY } from "../ui/copy.ts";
 import type { ShortcutAction } from "../ui/shortcuts/index.ts";
@@ -46,6 +50,18 @@ function copyLink(): void {
   });
 }
 
+// Notion's Move to for the open page, as its page menu opens it.
+function moveOpenPage(state: AppState, dispatch: Dispatch): void {
+  const pageId = state.ui.activePageId;
+  if (pageId === null) return;
+  const overlay = {
+    kind: MOVE_TO_OVERLAY_KIND,
+    anchorId: pageId,
+    panel: MOVE_TO_PLACE_PANEL,
+  };
+  dispatch(openOverlay.create({ overlay }));
+}
+
 export function runShortcutAction(
   action: ShortcutAction,
   state: AppState,
@@ -69,6 +85,9 @@ export function runShortcutAction(
       return;
     case "comment":
       commentOnSelection(state, dispatch);
+      return;
+    case "move-to":
+      moveOpenPage(state, dispatch);
       return;
   }
 }

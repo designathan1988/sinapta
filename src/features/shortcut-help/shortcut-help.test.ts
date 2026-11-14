@@ -23,6 +23,7 @@ describe("the shortcut reference", () => {
     const registered = SHORTCUTS.map((shortcut) =>
       [
         ...(shortcut.withModifier ? ["Mod"] : []),
+        ...(shortcut.withAlt === true ? ["Alt"] : []),
         ...(shortcut.withShift ? ["Shift"] : []),
         shortcut.key.toUpperCase(),
       ].join("+"),

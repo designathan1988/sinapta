@@ -22,7 +22,13 @@ export interface KeyStroke {
 // What a shortcut does that is not a command: Notion's navigation keys,
 // which the app carries out with the browser and the open page.
 export type ShortcutAction =
-  "new-page" | "back" | "forward" | "copy-link" | "parent-page" | "comment";
+  | "new-page"
+  | "back"
+  | "forward"
+  | "copy-link"
+  | "parent-page"
+  | "comment"
+  | "move-to";
 
 interface ShortcutKey {
   // Lower-case `KeyboardEvent.key`.
@@ -30,6 +36,8 @@ interface ShortcutKey {
   // Ctrl on Windows and Linux, Command on macOS.
   readonly withModifier: boolean;
   readonly withShift: boolean;
+  // Alt as well, as Notion's Ctrl+Alt+L.
+  readonly withAlt?: boolean;
 }
 
 export type Shortcut = ShortcutKey &
@@ -53,6 +61,16 @@ export const SHORTCUTS: readonly Shortcut[] = [
   navigation("[", "back"),
   navigation("]", "forward"),
   navigation("l", "copy-link"),
+  // Notion's page menu shows Ctrl+Alt+L for Copy link, and Ctrl+Shift+P
+  // for Move to.
+  {
+    key: "l",
+    withModifier: true,
+    withShift: false,
+    withAlt: true,
+    action: "copy-link",
+  },
+  navigation("p", "move-to", true),
   navigation("u", "parent-page", true),
   navigation("m", "comment", true),
   {
@@ -125,12 +143,13 @@ export function matchShortcut(
   shortcuts: readonly Shortcut[] = SHORTCUTS,
 ): Shortcut | undefined {
   // Keys pressed while composing belong to the input method.
-  if (stroke.isComposing || stroke.altKey) return undefined;
+  if (stroke.isComposing) return undefined;
   const hasModifier = stroke.ctrlKey || stroke.metaKey;
   return shortcuts.find(
     (shortcut) =>
       shortcut.key === keyOf(stroke) &&
       shortcut.withModifier === hasModifier &&
-      shortcut.withShift === stroke.shiftKey,
+      shortcut.withShift === stroke.shiftKey &&
+      (shortcut.withAlt === true) === stroke.altKey,
   );
 }

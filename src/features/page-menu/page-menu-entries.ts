@@ -1,14 +1,13 @@
 // The open page's menu, in the groups Notion's has today: copy the link
 // or the contents, duplicate and move; the page's versions; "Appearance
-// and layout" beside it; "Get notified"; verify, lock and trash; the
-// connections; and "More", which holds the export and "Save as template".
+// and layout" beside it with "Suggest edits"; "Get notified"; lock and
+// trash; and "More", which holds the export, the connections, Verify and
+// "Save as template".
 import { nothing } from "lit-html";
 import {
   DATABASE_TYPE,
   PAGE_TYPE,
   setPageLocked,
-  setPageTemplate,
-  setPageVerified,
   trashPage,
   type PageBlock,
 } from "../../blocks/page/index.ts";
@@ -19,13 +18,11 @@ import type { MenuEntry, MenuItem } from "../../ui/menu/index.ts";
 import { writeSystemClipboard } from "../editor/index.ts";
 import { selectPageMarkdown } from "../markdown-export/index.ts";
 import {
-  exportItems,
   historyItem,
   pageActionItems,
   resolvedItems,
 } from "./page-menu-items.ts";
 import { commentNoticeItems, commentNoticeLabel } from "../comments/index.ts";
-import { connectionsItem } from "../integrations/index.ts";
 import {
   backlinksItem,
   renderFontTiles,
@@ -33,6 +30,7 @@ import {
 } from "./page-menu-style.view.ts";
 import { layoutItems } from "./page-menu-layout.view.ts";
 import { emailItem } from "./page-menu-email.view.ts";
+import { moreItem, suggestItem } from "./page-menu-more.ts";
 
 const TEXT = COPY.pageMenu;
 const DIVIDER: MenuEntry = { kind: "divider" };
@@ -81,21 +79,6 @@ function lockItem(page: PageBlock, dispatch: Dispatch): MenuItem {
   };
 }
 
-// Notion's Verify: marks the page as verified, with no end, by the person
-// signed in; once verified, the row takes the verification off.
-function verifyItem(page: PageBlock, dispatch: Dispatch): MenuItem {
-  const isVerified = page.props.verification !== undefined;
-  const pageId = page.id;
-  return {
-    label: isVerified ? COPY.verify.unverify : COPY.verify.verify,
-    icon: "check",
-    onSelect: () =>
-      dispatch(
-        setPageVerified.create({ pageId, days: isVerified ? "off" : null }),
-      ),
-  };
-}
-
 // "Copy page contents": the page's text as Markdown on the clipboard.
 function copyContentsItem(state: AppState, page: PageBlock): MenuItem {
   return {
@@ -134,54 +117,6 @@ function appearanceItem(page: PageBlock, dispatch: Dispatch): MenuItem[] {
   ];
 }
 
-// "Save as template": the page joins the gallery's "Your templates";
-// once there, the row takes it out again.
-function templateItem(page: PageBlock, dispatch: Dispatch): MenuItem {
-  const isTemplate = page.props.isTemplate === true;
-  return {
-    label: isTemplate ? COPY.templates.unsave : COPY.templates.save,
-    icon: "templates",
-    onSelect: () => {
-      dispatch(
-        setPageTemplate.create({ pageId: page.id, isTemplate: !isTemplate }),
-      );
-      if (!isTemplate) announce(COPY.templates.saved);
-    },
-  };
-}
-
-// "More": the page as files, and as a template.
-function moreItem(
-  state: AppState,
-  page: PageBlock,
-  dispatch: Dispatch,
-): MenuItem {
-  return {
-    label: TEXT.more,
-    icon: "more",
-    submenu: {
-      id: `more:${page.id}`,
-      menu: () => ({
-        label: TEXT.more,
-        items: [
-          {
-            label: TEXT.export,
-            icon: "download",
-            submenu: {
-              id: `export:${page.id}`,
-              menu: () => ({
-                label: TEXT.export,
-                items: exportItems(state, page.id),
-              }),
-            },
-          },
-          templateItem(page, dispatch),
-        ],
-      }),
-    },
-  };
-}
-
 function trashItem(page: PageBlock, dispatch: Dispatch): MenuItem {
   return {
     label: TEXT.trash,
@@ -215,14 +150,9 @@ export function pageMenuEntries(
       historyItem(page.id, dispatch),
       ...resolvedItems(state, page.id, dispatch),
     ],
-    appearanceItem(page, dispatch),
+    [...appearanceItem(page, dispatch), suggestItem(state, page, dispatch)],
     [notifyItem(state, page, dispatch)],
-    [
-      verifyItem(page, dispatch),
-      lockItem(page, dispatch),
-      trashItem(page, dispatch),
-    ],
-    connectionsItem(state, page.id, dispatch),
+    [lockItem(page, dispatch), trashItem(page, dispatch)],
     [moreItem(state, page, dispatch)],
   ]);
 }

@@ -47,6 +47,7 @@ function moveToItem(
   return {
     label: COPY.pageMenu.moveToAction,
     icon: "move",
+    shortcut: COPY.pageMenu.moveToKeys,
     onSelect: () =>
       dispatch(
         openOverlay.create({
@@ -82,6 +83,7 @@ export function pageActionItems(
     {
       label: COPY.pageMenu.duplicate,
       icon: "duplicate",
+      shortcut: COPY.pageMenu.duplicateKeys,
       onSelect: () => {
         const size = selectPageCopySize(state, pageId);
         dispatch(duplicatePage.create({ pageId, ...size }));
