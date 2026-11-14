@@ -62,8 +62,9 @@ in `src/persistence/`.
 
 ## Milestone 28: People properties
 
-- [ ] 28.1 Person, Created by, Last edited by properties; filters, sorts,
-  groups by person.
+- [x] 28.1 Created by and Last edited by: the dispatcher stamps the
+  signed-in person on every block made or changed; filters and sorts.
+- [ ] 28.1b The editable Person property and grouping by person.
 - [ ] 28.2 Verification on pages and the Verification property.
 
 ## Milestone 29: Map

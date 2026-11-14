@@ -27,6 +27,7 @@ import {
 import type { AppStore } from "./store.ts";
 import { applyTidily, type Tidier } from "./tidy.ts";
 import { loadWorkspace } from "./workspace.commands.ts";
+import { authored } from "./authorship.ts";
 
 export type DispatchError =
   | { readonly kind: "unknown-command"; readonly type: string }
@@ -108,9 +109,9 @@ function applyOperationsEffect(
   effect: CommandEffect,
   { now, tidiers }: EffectContext,
 ): Next {
-  const operations = effect.operations ?? [];
   const ui = effect.ui ?? state.ui;
   const persistence = effect.persistence ?? state.persistence;
+  const operations = authored(state, effect);
   const result = applyTidily(state.workspace, operations, tidiers);
   if (!result.ok) {
     return { error: { kind: "operation-failed", error: result.error } };

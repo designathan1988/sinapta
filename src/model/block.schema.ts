@@ -11,6 +11,10 @@ export const blockSchema = v.object({
   props: v.record(v.string(), v.unknown()),
   createdAt: v.string(),
   updatedAt: v.string(),
+  // Who made it and who changed it last, once there is a server
+  // (ADR-0013).
+  createdBy: v.optional(v.object({ id: v.string(), name: v.string() })),
+  editedBy: v.optional(v.object({ id: v.string(), name: v.string() })),
 });
 
 export type Block = v.InferOutput<typeof blockSchema>;

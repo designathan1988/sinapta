@@ -9,6 +9,10 @@ import { DATABASE_TYPE } from "../../blocks/page/index.ts";
 import type { PropsSchemas } from "../../model/index.ts";
 import type { CellEditor, PropertyType } from "./property-definition.ts";
 import { checkboxProperty } from "./properties/checkbox/index.ts";
+import {
+  createdByProperty,
+  editedByProperty,
+} from "./properties/created-by/index.ts";
 import { createdTimeProperty } from "./properties/created-time/index.ts";
 import { dateProperty } from "./properties/date/index.ts";
 import { editedTimeProperty } from "./properties/edited-time/index.ts";
@@ -45,6 +49,8 @@ export const PROPERTY_TYPES: readonly PropertyType[] = [
   buttonProperty,
   createdTimeProperty,
   editedTimeProperty,
+  createdByProperty,
+  editedByProperty,
   uniqueIdProperty,
 ];
 

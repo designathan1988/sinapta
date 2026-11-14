@@ -32,6 +32,7 @@ owner listed here exists.
 | Test store and dispatcher | `src/state/state-builder.ts` | 1 |
 | Domain types and JSON schemas | `src/model/` | 1 |
 | Operation types and inverses | `src/model/operation.ts` | 1 |
+| Stamping who made and who last changed a block | `src/model/author-stamp.ts` (stamped by `src/state/authorship.ts`) | 28 |
 | Operations as they travel between clients: whole records, parsed | `src/model/operation.schema.ts` | 24 |
 | Applying operations to workspace data | `src/model/apply-operation.ts` | 1 |
 | Workspace invariants (parent and child agreement, no cycles) | `src/model/workspace-invariants.ts` | 1 |
@@ -84,6 +85,7 @@ owner listed here exists.
 | Notion's Share menu: Share and Publish tabs, the top bar's Share | `src/features/share/` | 26 |
 | The faces of the others on the open page | `src/features/presence/` | 27 |
 | The inbox's notices from others: mentions of the person, replies to them | `src/features/inbox/inbox-notices.selectors.ts` | 27 |
+| Created by and Last edited by properties | `src/features/database/properties/created-by/` | 28 |
 | A page published to the web, shown alone and read only | `src/app/public-page.ts` | 26 |
 | Notion's sign-in screen: the address, password, login code and profile steps, the other ways in | `src/features/sign-in/` | 23 |
 | A page as one HTML file | `src/features/markdown-export/html-export.selectors.ts` | 20 |
