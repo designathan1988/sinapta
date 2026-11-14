@@ -715,6 +715,24 @@
         "$value": "{base.size.36}"
       }
     },
+    "signIn": {
+      "column": {
+        "$description": "The sign-in column, as Notion's login: 360 px (n82-login).",
+        "$value": "{base.size.22x5}"
+      },
+      "field": {
+        "$description": "A sign-in field and its Continue button: 40 px.",
+        "$value": "{base.size.2x5}"
+      },
+      "logo": {
+        "$description": "The mark over the sign-in headline: 40 px.",
+        "$value": "{base.size.2x5}"
+      },
+      "tile": {
+        "$description": "A sign-in provider tile's height: 72 px, three to a row.",
+        "$value": "{base.size.4x5}"
+      }
+    },
     "board": {
       "column": {
         "$description": "A board column at the medium card size, as Notion's: 276 px, its cards 260 (n78-board).",
@@ -1398,6 +1416,10 @@
       "key": {
         "$description": "A key in a shortcut hint, as Notion's: 11 px.",
         "$value": "{base.font.size.0x6875}"
+      },
+      "headline": {
+        "$description": "The sign-in headline, as Notion's login: 22 px.",
+        "$value": "{base.font.size.1x375}"
       },
       "tile": {
         "$description": "A tile's name, as Notion's layout tiles: 11 px.",

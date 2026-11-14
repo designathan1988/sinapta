@@ -2,6 +2,7 @@
 // The text is kept in parts by area in src/ui/copy/; this file is the one
 // place the rest of the app reads it from.
 import {
+  ACCOUNT_TEXT,
   AUTOMATION_TEXT,
   BLOCK_TEXT,
   CADENCE_TEXT,
@@ -41,6 +42,7 @@ export const COPY = {
     ...DATE_FORMAT_TEXT,
   },
   onboarding: ONBOARDING_TEXT.onboarding,
+  account: ACCOUNT_TEXT.account,
 } as const;
 
 export { pluralize } from "./copy/index.ts";

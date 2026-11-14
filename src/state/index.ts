@@ -133,3 +133,21 @@ export {
   setSidebarTab,
   type SidebarTab,
 } from "./sidebar-tabs.commands.ts";
+export {
+  SIGNED_OUT_LOCAL,
+  type AccountAnswer,
+  type AccountError,
+  type AccountRequest,
+  type AccountState,
+  type AccountStatus,
+  type AccountStep,
+  type AccountUser,
+} from "./account-state.ts";
+export {
+  accountCommands,
+  answerAccount,
+  checkAccount,
+  chooseProvider,
+  requestAccount,
+  setAccountStep,
+} from "./account.commands.ts";

@@ -5,6 +5,7 @@ import { html, nothing, type TemplateResult } from "lit-html";
 import {
   closeOverlay,
   openOverlay,
+  requestAccount,
   type AppState,
   type Dispatch,
 } from "../../state/index.ts";
@@ -94,6 +95,29 @@ function item(label: string, icon: IconName, onSelect: () => void): MenuItem {
   return { label, icon, onSelect };
 }
 
+// The workspace's menu, with the account's address and Log out at its
+// foot while one is signed in, as Notion's (ADR-0013).
+function renderWorkspaceMenu(
+  state: AppState,
+  dispatch: Dispatch,
+  items: readonly MenuItem[],
+): TemplateResult {
+  const { user } = state.persistence.account;
+  const logOut: MenuItem = {
+    label: COPY.account.logOut,
+    onSelect: () =>
+      dispatch(requestAccount.create({ request: { kind: "sign-out" } })),
+  };
+  return renderMenu({
+    label: COPY.sidebar.workspaceMenu,
+    items: user === null ? items : [...items, logOut],
+    ...(user === null
+      ? {}
+      : { footer: `${COPY.account.loggedInAs} ${user.email}` }),
+    onClose: () => dispatch(closeOverlay.create({})),
+  });
+}
+
 // The menu of the foot's button that is open, if one is.
 export function renderSidebarMenu(
   state: AppState,
@@ -102,20 +126,16 @@ export function renderSidebarMenu(
   const kind = state.ui.overlay?.kind;
   const onClose = () => dispatch(closeOverlay.create({}));
   if (kind === SIDEBAR_WORKSPACE_OVERLAY) {
-    return renderMenu({
-      label: COPY.sidebar.workspaceMenu,
-      items: [
-        item(
-          COPY.shell.openSettings,
-          "settings",
-          open(SETTINGS_OVERLAY_KIND, dispatch),
-        ),
-        item(COPY.sidebar.import, "download", () => {
-          chooseImportFiles(dispatch);
-        }),
-      ],
-      onClose,
-    });
+    return renderWorkspaceMenu(state, dispatch, [
+      item(
+        COPY.shell.openSettings,
+        "settings",
+        open(SETTINGS_OVERLAY_KIND, dispatch),
+      ),
+      item(COPY.sidebar.import, "download", () => {
+        chooseImportFiles(dispatch);
+      }),
+    ]);
   }
   if (kind !== SIDEBAR_APPS_OVERLAY) return nothing;
   return renderMenu({

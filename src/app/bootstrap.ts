@@ -52,6 +52,7 @@ import {
   createAppStore,
   type AppStore,
   type Dispatch,
+  accountCommands,
   createCommandRegistry,
   createDispatcher,
   createInitialState,
@@ -67,6 +68,7 @@ import {
   createIndexedDbAdapter,
   createTabCoordination,
   createIndexedDbSnapshots,
+  startAccount,
   startAssetStore,
   startFileTools,
   startSnapshots,
@@ -90,9 +92,11 @@ import { startOffline } from "./offline.ts";
 import { runShortcutAction } from "./shortcut-actions.ts";
 import { applyTheme } from "./theme.ts";
 import { renderShell } from "./shell.view.ts";
+import { renderSignIn } from "../features/sign-in/index.ts";
 
 const COMMANDS = [
   ...uiCommands,
+  ...accountCommands,
   ...settingsCommands,
   ...persistenceCommands,
   ...assetCommands,
@@ -183,18 +187,36 @@ function createAppDispatch(store: AppStore): Dispatch {
   };
 }
 
+// The one root render: Notion's sign-in page while no one is signed in to
+// the server, else the app.
+function rootRenderer(
+  store: AppStore,
+  dispatch: Dispatch,
+  container: HTMLElement,
+): () => void {
+  return () => {
+    const state = store.getState();
+    applyTheme(selectTheme(state));
+    const isSignedOut = state.persistence.account.status === "signed-out";
+    render(
+      isSignedOut
+        ? renderSignIn(state, dispatch)
+        : renderShell(state, dispatch),
+      container,
+    );
+    restoreSelection(container, state.ui.selection);
+  };
+}
+
 export async function startApp(container: HTMLElement): Promise<void> {
   const store = createAppStore(createInitialState());
   const dispatch = createAppDispatch(store);
-  const renderRoot = (): void => {
-    const state = store.getState();
-    applyTheme(selectTheme(state));
-    render(renderShell(state, dispatch), container);
-    restoreSelection(container, state.ui.selection);
-  };
+  const renderRoot = rootRenderer(store, dispatch, container);
   // Nothing is rendered until stored data is in the store, so the first
   // paint already has the saved theme and layout.
   const { isFirstRun } = await startPersistence(store, dispatch);
+  // Who is signed in to the server, before the first paint (ADR-0013).
+  await startAccount({ store, dispatch });
   // A first visit opens a short tour; it is saved like any other change.
   if (isFirstRun) dispatch(seedGettingStarted.create({}));
   // The trash empties itself of pages kept there over 30 days.

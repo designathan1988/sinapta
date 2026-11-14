@@ -1,0 +1,190 @@
+@layer features {
+  /* Notion's login page: one 360 px column centred under its mark, the
+     language at the foot (n82-login). */
+  .sign-in {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    justify-items: center;
+    min-block-size: 100%;
+    padding: var(--space-stack-xxl) var(--space-inset-lg) var(--space-stack-md);
+    background-color: var(--color-bg-app);
+    color: var(--color-text-primary);
+  }
+
+  .sign-in__column {
+    display: grid;
+    gap: var(--space-stack-sm);
+    align-content: start;
+    inline-size: min(100%, var(--size-sign-in-column));
+  }
+
+  .sign-in__logo {
+    justify-self: center;
+    inline-size: var(--size-sign-in-logo);
+    block-size: var(--size-sign-in-logo);
+    margin-block-end: var(--space-stack-lg);
+  }
+
+  .sign-in__headline,
+  .sign-in__subhead {
+    margin: var(--space-none);
+    font-size: var(--font-size-headline);
+    font-weight: var(--font-weight-strong);
+    line-height: var(--font-line-height-tight);
+    text-align: center;
+  }
+
+  .sign-in__subhead {
+    margin-block-end: var(--space-stack-xl);
+    color: var(--color-text-secondary);
+  }
+
+  .sign-in__form {
+    display: grid;
+    gap: var(--space-stack-xs);
+  }
+
+  .sign-in__label {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .sign-in__input {
+    min-block-size: var(--size-sign-in-field);
+    margin-block-end: var(--space-stack-sm);
+    padding: var(--space-none) var(--space-inset-md);
+    border: none;
+    border-radius: var(--radius-field);
+    background-color: var(--color-bg-app);
+    box-shadow: inset 0 0 0 var(--size-border-thin) var(--color-border-default);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: inset 0 0 0 var(--size-focus-width) var(--color-border-focus);
+    }
+
+    &[readonly] {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
+  .sign-in__hint {
+    margin: calc(var(--space-stack-xs) * -1) var(--space-none)
+      var(--space-stack-sm);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+  }
+
+  .sign-in__continue {
+    min-block-size: var(--size-sign-in-field);
+    border: none;
+    border-radius: var(--radius-field);
+    background-color: var(--color-accent-fill);
+    color: var(--color-text-on-accent);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-accent-fill-hover);
+    }
+
+    &:disabled {
+      cursor: progress;
+    }
+  }
+
+  .sign-in__link {
+    justify-self: center;
+    padding: var(--space-none);
+    border: none;
+    background: none;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .sign-in__error {
+    margin: var(--space-none);
+    color: var(--color-text-danger);
+    font-size: var(--font-size-sm);
+    text-align: center;
+  }
+
+  .sign-in__or {
+    display: flex;
+    gap: var(--space-inline-md);
+    align-items: center;
+    margin-block: var(--space-stack-md);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+
+    &::before,
+    &::after {
+      content: "";
+      flex: 1;
+      border-block-start: var(--size-border-thin) solid
+        var(--color-border-default);
+    }
+  }
+
+  .sign-in__providers {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-inline-md);
+  }
+
+  .sign-in__provider {
+    display: grid;
+    gap: var(--space-stack-xxs);
+    place-content: center;
+    justify-items: center;
+    min-block-size: var(--size-sign-in-tile);
+    border: none;
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-app);
+    box-shadow: var(--shadow-board-card);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
+  .sign-in__provider-mark {
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-strong);
+  }
+
+  .sign-in__new,
+  .sign-in__terms,
+  .sign-in__language {
+    margin: var(--space-none);
+    color: var(--color-text-secondary);
+    text-align: center;
+  }
+
+  .sign-in__new {
+    margin-block: var(--space-stack-lg);
+    font-size: var(--font-size-sm);
+  }
+
+  .sign-in__terms {
+    font-size: var(--font-size-xs);
+
+    & a {
+      color: inherit;
+    }
+  }
+
+  .sign-in__language {
+    font-size: var(--font-size-sm);
+  }
+}
