@@ -1476,6 +1476,21 @@ against the reference on every run.
 
 ## Last run
 
+2026-11-14, later: the signed-in Notion window and the review server,
+1440 × 900, light theme (`n95`–`n101`, `p77`–`p87`).
+
+- Notion: Paste as, the "+" menu, the comments button's Discussions,
+  Appearance and layout with Inline comments, the Home tab's menu, a
+  block selection's menu, a new page's "Get started with". Changes were
+  undone: the pasted link (undo), "+te" typed in the title by a missed
+  focus (deleted, `n96-fix-title`), the "+" line (undo, 16 blocks as
+  before), and the new page went to Notion's trash.
+- Pagecraft: Notion 2.0 formulas, "+" and Paste as, the Discussions
+  panel, Appearance and layout's switches, HTML import, the workspace's
+  icon, deleting a throwaway workspace, a board card's right click,
+  "Get started with", and AI Meeting Notes hearing a microphone that
+  played a spoken WAV, written by the server's local Whisper model.
+
 2026-11-14, review server and the signed-in Notion window, 1440 × 900,
 light theme (`n86`–`n93`, `p52`–`p68`).
 
