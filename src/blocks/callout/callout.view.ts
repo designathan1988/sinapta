@@ -6,6 +6,7 @@ import {
   openOverlay,
   type AppState,
   type Dispatch,
+  selectIsEditable,
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderEmojiPicker } from "../../ui/emoji/index.ts";
@@ -89,6 +90,11 @@ export function renderCallout(
       ${icon}
     </button>
     ${isOpen ? renderPicker(block, state, dispatch) : nothing}
-    ${renderRichText({ text, tag: "div", placeholder: COPY.blocks.callout })}
+    ${renderRichText({
+      isEditable: selectIsEditable(state, block.id),
+      text,
+      tag: "div",
+      placeholder: COPY.blocks.callout,
+    })}
   </div>`;
 }

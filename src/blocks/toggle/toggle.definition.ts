@@ -9,6 +9,7 @@ import {
   type ToggleBlock,
 } from "./toggle.schema.ts";
 import { renderToggle } from "./toggle.view.ts";
+import { selectIsEditable } from "../../state/index.ts";
 
 export const toggleDefinition: BlockDefinition = {
   type: TOGGLE_TYPE,
@@ -20,8 +21,8 @@ export const toggleDefinition: BlockDefinition = {
   showsChildren: (block) =>
     !isBlockOfType<ToggleBlock>(block, TOGGLE_TYPE) || block.props.isOpen,
   drawnFrom: () => [],
-  render: (block, dispatch) =>
+  render: (block, dispatch, state) =>
     isBlockOfType<ToggleBlock>(block, TOGGLE_TYPE)
-      ? renderToggle(block, dispatch)
+      ? renderToggle(block, dispatch, selectIsEditable(state, block.id))
       : undefined,
 };

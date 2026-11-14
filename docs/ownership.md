@@ -268,6 +268,8 @@ owner listed here exists.
 | A page's sharing: invited people, general access, published | `server/sharing.ts` | 26 |
 | The Share menu's routes, the shared pages listed for the sidebar, and published pages read by anyone | `server/sharing-routes.ts` | 26 |
 | The sidebar's Shared section: the top pages shared with people | `src/features/sidebar/sidebar.selectors.ts` (`selectTreeRows`), `sidebar.view.ts` | 26 |
+| Which changes each access allows (comments for "Can comment"), for the server and the client alike | `src/model/page-access.ts` | 26 |
+| A guest's access to each page, the editable blocks, and the dispatcher's refusal of the rest | `src/state/page-access.selectors.ts` | 26 |
 | What a guest reaches: the pages shared with them, read and written at their access | `server/guest-access.ts` | 26 |
 | Who is where: each person's open page, kept a minute, sent to the workspace | `server/presence.ts` | 27 |
 | Notion AI: a local Ollama model, or what plain text allows | `server/ai.ts` | 30 |

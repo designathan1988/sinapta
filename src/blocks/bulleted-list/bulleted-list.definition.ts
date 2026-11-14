@@ -7,6 +7,7 @@ import {
   type BulletedListBlock,
 } from "./bulleted-list.schema.ts";
 import { renderBulletedList } from "./bulleted-list.view.ts";
+import { selectIsEditable } from "../../state/index.ts";
 
 export const bulletedListDefinition: BlockDefinition = {
   type: BULLETED_LIST_TYPE,
@@ -15,8 +16,8 @@ export const bulletedListDefinition: BlockDefinition = {
   continuesAs: BULLETED_LIST_TYPE,
   createProps: (text) => ({ text }),
   drawnFrom: () => [],
-  render: (block) =>
+  render: (block, _dispatch, state) =>
     isBlockOfType<BulletedListBlock>(block, BULLETED_LIST_TYPE)
-      ? renderBulletedList(block)
+      ? renderBulletedList(block, selectIsEditable(state, block.id))
       : undefined,
 };

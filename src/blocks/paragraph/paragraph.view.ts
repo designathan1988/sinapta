@@ -4,9 +4,13 @@ import { COPY } from "../../ui/copy.ts";
 import { renderRichText } from "../../ui/rich-text/index.ts";
 import type { ParagraphBlock } from "./paragraph.schema.ts";
 
-export function renderParagraph(block: ParagraphBlock): TemplateResult {
+export function renderParagraph(
+  block: ParagraphBlock,
+  isEditable = true,
+): TemplateResult {
   return html`<div class="paragraph">
     ${renderRichText({
+      isEditable,
       text: block.props.text,
       tag: "p",
       placeholder: COPY.blocks.paragraph,

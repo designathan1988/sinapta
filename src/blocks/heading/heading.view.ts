@@ -37,11 +37,13 @@ function renderArrow(
 export function renderHeading(
   block: HeadingBlock,
   dispatch: Dispatch,
+  isEditable = true,
 ): TemplateResult {
   const { level, text } = block.props;
   return html`<div class="heading" data-level=${level}>
     ${renderArrow(block, dispatch)}
     ${renderRichText({
+      isEditable,
       text,
       tag: TAGS[level],
       placeholder: `${COPY.blocks.heading} ${String(level)}`,

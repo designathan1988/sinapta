@@ -43,6 +43,7 @@ import {
 } from "../comments/index.ts";
 import { renderIconControl } from "./editor-icon.view.ts";
 import { renderTrashedBanner } from "./editor-trashed.view.ts";
+import { selectIsPageFrozen } from "./editor.selectors.ts";
 
 // A page that opens without a title, such as one just created, takes the
 // caret in its title, so typing names it. The page element is keyed by page
@@ -76,7 +77,7 @@ function renderTitle(page: PageBlock, context: InputContext): TemplateResult {
       rows="1"
       aria-label=${COPY.editor.titleLabel}
       placeholder=${COPY.sidebar.untitled}
-      ?readonly=${page.props.isLocked === true || page.props.isTrashed}
+      ?readonly=${selectIsPageFrozen(context.state, page)}
       .value=${selectPageTitle(page)}
       @input=${onInput}
       @keydown=${onKeyDown}
@@ -172,7 +173,7 @@ export function renderEditor(
       ?data-full-width=${page.props.isFullWidth === true}
       data-font=${page.props.font ?? "default"}
       ?data-small-text=${page.props.isSmallText === true}
-      ?data-locked=${page.props.isLocked === true || page.props.isTrashed}
+      ?data-locked=${selectIsPageFrozen(state, page)}
     >
       ${renderBanners(state, page, dispatch)}
       ${isPage ? renderCover(state, page, dispatch) : nothing}

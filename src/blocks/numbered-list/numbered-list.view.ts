@@ -8,10 +8,12 @@ import type { NumberedListBlock } from "./numbered-list.schema.ts";
 export function renderNumberedList(
   block: NumberedListBlock,
   marker: string,
+  isEditable = true,
 ): TemplateResult {
   return html`<div class="numbered-list">
     <span class="numbered-list__marker">${marker}</span>
     ${renderRichText({
+      isEditable,
       text: block.props.text,
       tag: "div",
       placeholder: COPY.blocks.listItem,

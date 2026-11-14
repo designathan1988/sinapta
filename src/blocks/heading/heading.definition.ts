@@ -9,6 +9,7 @@ import {
 } from "./heading.schema.ts";
 import { headingCommands } from "./heading.commands.ts";
 import { renderHeading } from "./heading.view.ts";
+import { selectIsEditable } from "../../state/index.ts";
 
 export const headingDefinition: BlockDefinition = {
   type: HEADING_TYPE,
@@ -24,8 +25,8 @@ export const headingDefinition: BlockDefinition = {
     block.props.isToggleable !== true ||
     block.props.isOpen !== false,
   drawnFrom: () => [],
-  render: (block, dispatch) =>
+  render: (block, dispatch, state) =>
     isBlockOfType<HeadingBlock>(block, HEADING_TYPE)
-      ? renderHeading(block, dispatch)
+      ? renderHeading(block, dispatch, selectIsEditable(state, block.id))
       : undefined,
 };

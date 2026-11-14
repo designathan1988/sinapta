@@ -10,6 +10,7 @@ import type { ToDoBlock } from "./to-do.schema.ts";
 export function renderToDo(
   block: ToDoBlock,
   dispatch: Dispatch,
+  isEditable = true,
 ): TemplateResult {
   const { isChecked, text } = block.props;
   return html`<div class="to-do" ?data-checked=${isChecked}>
@@ -21,6 +22,11 @@ export function renderToDo(
       .checked=${isChecked}
       @change=${() => dispatch(toggleToDo.create({ blockId: block.id }))}
     />
-    ${renderRichText({ text, tag: "div", placeholder: COPY.blocks.toDo })}
+    ${renderRichText({
+      isEditable,
+      text,
+      tag: "div",
+      placeholder: COPY.blocks.toDo,
+    })}
   </div>`;
 }

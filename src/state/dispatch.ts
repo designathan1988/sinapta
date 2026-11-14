@@ -28,6 +28,7 @@ import type { AppStore } from "./store.ts";
 import { applyTidily, type Tidier } from "./tidy.ts";
 import { loadWorkspace } from "./workspace.commands.ts";
 import { authored } from "./authorship.ts";
+import { isRefusedByAccess } from "./page-access.selectors.ts";
 
 export type DispatchError =
   | { readonly kind: "unknown-command"; readonly type: string }
@@ -176,6 +177,7 @@ function isRefusedWhileReadOnly(
   command: Command,
   effect: CommandEffect,
 ): boolean {
+  if (isRefusedByAccess(state, effect)) return true;
   if (!state.persistence.isReadOnly) return false;
   if (effect.workspace !== undefined)
     return command.type !== loadWorkspace.type;

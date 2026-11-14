@@ -22,7 +22,9 @@ export interface InviteSummary {
 }
 
 // Notion's access levels on a page, and who else can open it.
-export type PageAccess = "full" | "edit" | "comment" | "view";
+import type { PageAccess } from "../model/index.ts";
+
+export type { PageAccess };
 export type GeneralAccess = "invited" | "workspace" | "web";
 
 export interface PageSharing {
@@ -100,6 +102,8 @@ export interface SyncState {
   readonly connection: "synced" | "syncing" | "offline";
   // The pages shared with people: the sidebar lists them under Shared.
   readonly shared: readonly string[];
+  // A guest's access to each page shared with them; empty for a member.
+  readonly access: Readonly<Record<string, PageAccess>>;
 }
 
 export const NOT_SYNCED: SyncState = {
@@ -113,4 +117,5 @@ export const NOT_SYNCED: SyncState = {
   presence: [],
   connection: "synced",
   shared: [],
+  access: {},
 };

@@ -24,6 +24,7 @@ export function selectBlockDrawKey(
     isSelected,
     selectOverlayAt(state, block.id),
     selectBlockDiscussionCount(state, block.id),
+    state.persistence.sync.access,
     ...definition.drawnFrom(block, state),
   ];
 }

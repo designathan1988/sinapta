@@ -1,6 +1,6 @@
 // Changes that come from the server (ADR-0013). They change the workspace
 // like any transaction but stay out of this client's undo history.
-import type { Operation, Workspace } from "../model/index.ts";
+import type { Operation, PageAccess, Workspace } from "../model/index.ts";
 import { createInitialUiState } from "./app-state.ts";
 import { defineCommand, type CommandEffect } from "./command-registry.ts";
 import type { AppState } from "./app-state.ts";
@@ -25,15 +25,20 @@ export const applyRemote = defineCommand<{
 
 // The workspace as the server holds it, read when this client joins it.
 // The open page stays open when the server's workspace has it.
-export const loadServerWorkspace = defineCommand<{ workspace: Workspace }>({
+export const loadServerWorkspace = defineCommand<{
+  workspace: Workspace;
+  access?: Readonly<Record<string, PageAccess>>;
+}>({
   type: "sync.loadServerWorkspace",
-  handle: (state, { workspace }) => {
+  handle: (state, { workspace, access }) => {
     const { activePageId, sidebarWidth, isSidebarCollapsed } = state.ui;
+    const sync = { ...state.persistence.sync, access: access ?? {} };
+    const persistence = { ...state.persistence, sync };
     const keepsPage =
       activePageId === null || workspace.blocks[activePageId] !== undefined;
-    if (keepsPage) return { workspace };
+    if (keepsPage) return { workspace, persistence };
     const ui = { ...createInitialUiState(), sidebarWidth, isSidebarCollapsed };
-    return { workspace, ui };
+    return { workspace, ui, persistence };
   },
 });
 

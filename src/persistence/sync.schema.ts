@@ -25,6 +25,10 @@ const downloadSchema = v.object({
   seq: v.number(),
   snapshot: v.unknown(),
   operations: v.array(loggedSchema),
+  // A guest's access to each page shared with them.
+  access: v.optional(
+    v.record(v.string(), v.picklist(["full", "edit", "comment", "view"])),
+  ),
 });
 
 export type ServerWorkspace = v.InferOutput<typeof workspaceSchema>;

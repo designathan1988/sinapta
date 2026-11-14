@@ -209,3 +209,4 @@ export {
   type CurrentRecords,
 } from "./operation.schema.ts";
 export { stampAuthor, type Author } from "./author-stamp.ts";
+export { isCommentChange, mayChange, type PageAccess } from "./page-access.ts";

@@ -59,7 +59,12 @@ async function download(link: Link, sync: Sync, session: Session) {
   // The workspace as it stands now, built before it is shown, so that the
   // open page, made after the snapshot, is there when it is.
   const now = withLogged(file.workspace, loaded.operations);
-  sync.dispatch(loadServerWorkspace.create({ workspace: now.workspace }));
+  sync.dispatch(
+    loadServerWorkspace.create({
+      workspace: now.workspace,
+      ...(loaded.access !== undefined && { access: loaded.access }),
+    }),
+  );
   ready(link, session, now.seq ?? loaded.seq);
   await replayOutbox(sync, session.id);
 }

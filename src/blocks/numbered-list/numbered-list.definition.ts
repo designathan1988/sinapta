@@ -8,6 +8,7 @@ import {
 } from "./numbered-list.schema.ts";
 import { selectListMarker } from "./numbered-list.selectors.ts";
 import { renderNumberedList } from "./numbered-list.view.ts";
+import { selectIsEditable } from "../../state/index.ts";
 
 export const numberedListDefinition: BlockDefinition = {
   type: NUMBERED_LIST_TYPE,
@@ -18,6 +19,10 @@ export const numberedListDefinition: BlockDefinition = {
   drawnFrom: (block, state) => [selectListMarker(state, block.id)],
   render: (block, _dispatch, state) =>
     isBlockOfType<NumberedListBlock>(block, NUMBERED_LIST_TYPE)
-      ? renderNumberedList(block, selectListMarker(state, block.id))
+      ? renderNumberedList(
+          block,
+          selectListMarker(state, block.id),
+          selectIsEditable(state, block.id),
+        )
       : undefined,
 };

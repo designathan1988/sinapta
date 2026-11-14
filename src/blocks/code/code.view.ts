@@ -2,7 +2,12 @@ import "./code.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
 import { plainText } from "../../model/index.ts";
-import type { AppState, Dispatch, OpenOverlay } from "../../state/index.ts";
+import {
+  type AppState,
+  type Dispatch,
+  type OpenOverlay,
+  selectIsEditable,
+} from "../../state/index.ts";
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { afterRender } from "../../ui/focus/index.ts";
@@ -141,7 +146,12 @@ export function renderCode(
     <div class="code__frame">
       ${renderBar(block, { dispatch, overlay: state.ui.overlay })}
       <div class="code__body" spellcheck="false" ${paint}>
-        ${renderRichText({ text, tag: "div", placeholder: COPY.blocks.code })}
+        ${renderRichText({
+          isEditable: selectIsEditable(state, block.id),
+          text,
+          tag: "div",
+          placeholder: COPY.blocks.code,
+        })}
       </div>
     </div>
     ${renderCaption(block, dispatch)}

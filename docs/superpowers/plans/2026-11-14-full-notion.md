@@ -47,8 +47,10 @@ in `src/persistence/`.
   access, Can edit, Can comment, Can view), guests, General access.
 - [x] 26.2 Guests: the server sends them only the pages shared with them,
   passes on only the operations inside, and refuses their changes outside
-  pages they may edit. (Members' "Only people invited" pages and the
-  client's read-only look remain.)
+  pages they may edit. The client knows each shared page's access: a page
+  they may only view or comment on reads as a locked page, and the
+  dispatcher refuses its changes, comments excepted where they may
+  comment. (Members' "Only people invited" pages remain.)
 - [x] 26.3 Publish to web: a read-only page served by the server and the
   Publish tab, and the sidebar's Shared section: the top pages shared
   with people. (Teamspaces remain.)

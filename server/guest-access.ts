@@ -2,6 +2,8 @@
 // them and everything inside, at the access each was shared with; nothing
 // else is sent to them, and they change nothing else.
 import {
+  isCommentChange,
+  mayChange,
   parseBlockId,
   type Block,
   type BlockId,
@@ -115,7 +117,8 @@ export function visibleTo(
   });
 }
 
-// True when every operation stays inside pages the guest may edit.
+// True when every operation stays inside pages the guest may edit, or
+// only comments on pages they may comment on.
 export function mayWrite(
   operations: readonly Operation[],
   reach: Reach,
@@ -124,6 +127,8 @@ export function mayWrite(
   return operations.every((operation) => {
     const target = blockOf(operation, workspace);
     const access = target === undefined ? undefined : reach.get(target);
-    return access === "full" || access === "edit";
+    const id = target === undefined ? undefined : parseBlockId(target);
+    const current = id === undefined ? undefined : workspace.blocks[id];
+    return mayChange(access, isCommentChange(operation, current));
   });
 }

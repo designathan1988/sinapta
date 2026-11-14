@@ -8,6 +8,7 @@ import {
   type QuoteBlock,
 } from "./quote.schema.ts";
 import { renderQuote } from "./quote.view.ts";
+import { selectIsEditable } from "../../state/index.ts";
 
 export const quoteDefinition: BlockDefinition = {
   type: QUOTE_TYPE,
@@ -16,8 +17,8 @@ export const quoteDefinition: BlockDefinition = {
   continuesAs: PARAGRAPH_TYPE,
   createProps: (text) => ({ text }),
   drawnFrom: () => [],
-  render: (block) =>
+  render: (block, _dispatch, state) =>
     isBlockOfType<QuoteBlock>(block, QUOTE_TYPE)
-      ? renderQuote(block)
+      ? renderQuote(block, selectIsEditable(state, block.id))
       : undefined,
 };

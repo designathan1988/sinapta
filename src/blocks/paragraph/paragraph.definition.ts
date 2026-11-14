@@ -7,6 +7,7 @@ import {
   type ParagraphBlock,
 } from "./paragraph.schema.ts";
 import { renderParagraph } from "./paragraph.view.ts";
+import { selectIsEditable } from "../../state/index.ts";
 
 export const paragraphDefinition: BlockDefinition = {
   type: PARAGRAPH_TYPE,
@@ -15,8 +16,8 @@ export const paragraphDefinition: BlockDefinition = {
   continuesAs: PARAGRAPH_TYPE,
   createProps: (text) => ({ text }),
   drawnFrom: () => [],
-  render: (block) =>
+  render: (block, _dispatch, state) =>
     isBlockOfType<ParagraphBlock>(block, PARAGRAPH_TYPE)
-      ? renderParagraph(block)
+      ? renderParagraph(block, selectIsEditable(state, block.id))
       : undefined,
 };

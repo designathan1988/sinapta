@@ -10,6 +10,7 @@ import type { ToggleBlock } from "./toggle.schema.ts";
 export function renderToggle(
   block: ToggleBlock,
   dispatch: Dispatch,
+  isEditable = true,
 ): TemplateResult {
   const { isOpen, text } = block.props;
   const onClick = (): void => {
@@ -25,6 +26,11 @@ export function renderToggle(
     >
       ${renderIcon("chevron")}
     </button>
-    ${renderRichText({ text, tag: "div", placeholder: COPY.blocks.toggle })}
+    ${renderRichText({
+      isEditable,
+      text,
+      tag: "div",
+      placeholder: COPY.blocks.toggle,
+    })}
   </div>`;
 }

@@ -192,3 +192,7 @@ export {
   type ChatMessage,
   type AiState,
 } from "./ai.commands.ts";
+export {
+  selectBlockAccess,
+  selectIsEditable,
+} from "./page-access.selectors.ts";

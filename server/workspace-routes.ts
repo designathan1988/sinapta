@@ -71,10 +71,8 @@ function guestDownload(member: Member, context: ApiContext): ApiResponse {
   const { id } = member.workspace;
   const state = currentState(context, id);
   if (state === undefined) return NOT_FOUND;
-  const reach = reachOf(
-    state.workspace,
-    sharedWith(context, id, member.user.email),
-  );
+  const shared = sharedWith(context, id, member.user.email);
+  const reach = reachOf(state.workspace, shared);
   const snapshot = {
     schemaVersion: SCHEMA_VERSION,
     ...guestWorkspace(state.workspace, reach),
@@ -84,6 +82,7 @@ function guestDownload(member: Member, context: ApiContext): ApiResponse {
     seq: state.seq,
     snapshot,
     operations: [],
+    access: Object.fromEntries(shared),
   });
 }
 

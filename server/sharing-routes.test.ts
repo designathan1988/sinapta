@@ -161,7 +161,10 @@ describe("published pages", () => {
     await share("edit");
     const whileEditing = await retitle("inner");
 
-    expect(seen.body).toMatchObject({ snapshot: { rootIds: ["shown"] } });
+    expect(seen.body).toMatchObject({
+      snapshot: { rootIds: ["shown"] },
+      access: { shown: "view" },
+    });
     expect(blockIdsOf(snapshotIn(seen.body))).toEqual(["inner", "shown"]);
     expect(whileViewing.status).toBe(403);
     expect(secret.status).toBe(403);

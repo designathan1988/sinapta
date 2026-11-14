@@ -1,7 +1,7 @@
-import { isPageLike } from "../../blocks/page/index.ts";
+import { isPageLike, type PageBlock } from "../../blocks/page/index.ts";
 import { isTextBlock, type TextBlock } from "../../blocks/index.ts";
 import type { Block, BlockId } from "../../model/index.ts";
-import type { AppState } from "../../state/index.ts";
+import { selectIsEditable, type AppState } from "../../state/index.ts";
 
 // The content blocks directly inside a block, in order. Pages inside a
 // page belong to the sidebar tree, not to the page's text.
@@ -76,4 +76,14 @@ export function selectSelectedBlocks(state: AppState): Block[] {
   const focus = order.findIndex((block) => block.id === range.focusId);
   if (anchor === -1 || focus === -1) return [];
   return order.slice(Math.min(anchor, focus), Math.max(anchor, focus) + 1);
+}
+
+// A page that reads as text: locked, in the trash, or shared with this
+// person to view or comment on only.
+export function selectIsPageFrozen(state: AppState, page: PageBlock): boolean {
+  return (
+    page.props.isLocked === true ||
+    page.props.isTrashed ||
+    !selectIsEditable(state, page.id)
+  );
 }

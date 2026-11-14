@@ -12,6 +12,8 @@ export interface RichTextOptions {
   readonly tag: RichTextTag;
   // Shown while the text is empty and focused.
   readonly placeholder: string;
+  // False on a page this person may only view or comment on.
+  readonly isEditable?: boolean;
 }
 
 type Project = DirectiveResult;
@@ -20,52 +22,56 @@ type Project = DirectiveResult;
 // template per tag.
 const TEMPLATES: Record<
   RichTextTag,
-  (placeholder: string, project: Project) => TemplateResult
+  (
+    placeholder: string,
+    project: Project,
+    editable: "true" | "false",
+  ) => TemplateResult
 > = {
-  p: (placeholder, project) =>
+  p: (placeholder, project, editable) =>
     html`<p
       class="rich-text"
-      contenteditable="true"
+      contenteditable=${editable}
       data-text
       data-placeholder=${placeholder}
       ${project}
     ></p>`,
-  h2: (placeholder, project) =>
+  h2: (placeholder, project, editable) =>
     html`<h2
       class="rich-text"
-      contenteditable="true"
+      contenteditable=${editable}
       data-text
       data-placeholder=${placeholder}
       ${project}
     ></h2>`,
-  h3: (placeholder, project) =>
+  h3: (placeholder, project, editable) =>
     html`<h3
       class="rich-text"
-      contenteditable="true"
+      contenteditable=${editable}
       data-text
       data-placeholder=${placeholder}
       ${project}
     ></h3>`,
-  h4: (placeholder, project) =>
+  h4: (placeholder, project, editable) =>
     html`<h4
       class="rich-text"
-      contenteditable="true"
+      contenteditable=${editable}
       data-text
       data-placeholder=${placeholder}
       ${project}
     ></h4>`,
-  h5: (placeholder, project) =>
+  h5: (placeholder, project, editable) =>
     html`<h5
       class="rich-text"
-      contenteditable="true"
+      contenteditable=${editable}
       data-text
       data-placeholder=${placeholder}
       ${project}
     ></h5>`,
-  div: (placeholder, project) =>
+  div: (placeholder, project, editable) =>
     html`<div
       class="rich-text"
-      contenteditable="true"
+      contenteditable=${editable}
       data-text
       data-placeholder=${placeholder}
       ${project}
@@ -77,5 +83,6 @@ export function renderRichText(options: RichTextOptions): TemplateResult {
   const project = ref((element) => {
     projectRichText(element, options.text);
   });
-  return TEMPLATES[options.tag](options.placeholder, project);
+  const editable = options.isEditable === false ? "false" : "true";
+  return TEMPLATES[options.tag](options.placeholder, project, editable);
 }
