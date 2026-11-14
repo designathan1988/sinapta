@@ -47,6 +47,7 @@ const SORT_KINDS: ReadonlySet<string> = new Set([
   VIEW_SORTS_OVERLAY,
   "view-sort-pill",
 ]);
+import { sourcePanel } from "./source-panel.ts";
 
 const PANELS: Readonly<
   Record<string, (context: TableContext) => SettingsPanel>
@@ -72,6 +73,7 @@ const PANELS: Readonly<
   "timeline-date": timelineDatePanel,
   "timeline-end": timelineEndPanel,
   color: colorPanel,
+  source: sourcePanel,
   [COLOR_PROPERTY_PANEL]: colorPropertyPanel,
   "chart-kind": chartKindPanel,
   "chart-x": chartXPanel,

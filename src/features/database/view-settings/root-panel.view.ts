@@ -1,5 +1,6 @@
-// The first panel of the view settings: the view's name, then a row per
-// setting with its current value, and the view's own actions.
+// The first panel of the view settings, as Notion's: the view's name, a
+// row per setting with its current value and Copy link to view; the data
+// source's settings; and the view's own actions.
 import { exportViewAsCsv } from "../csv-file.view.ts";
 import type { TemplateResult } from "lit-html";
 import { openOverlay } from "../../../state/index.ts";
@@ -13,6 +14,8 @@ import { setViewLocked } from "../view-lock.commands.ts";
 import { deleteView, renameView } from "../view.commands.ts";
 import { groupPropertyOf } from "../row-groups.selectors.ts";
 import { panelRow, type SettingsPanel } from "./settings-panel.ts";
+import { copyViewLinkItem } from "../view-link.ts";
+import { sourceRows } from "./source-panel.ts";
 
 function renderName(context: TableContext): TemplateResult {
   const { model, dispatch } = context;
@@ -130,13 +133,18 @@ function settingRows(context: TableContext): MenuEntry[] {
     panelRow(context, sort, sortCount > 0 ? "sort" : "sort-add"),
     ...groupRows(context),
     panelRow(context, colorRow(view), "color"),
+    copyViewLinkItem(context),
   ];
 }
 
 export function rootPanel(context: TableContext): SettingsPanel {
   return {
     title: COPY.database.viewSettings,
-    items: [...settingRows(context), ...viewActions(context)],
+    items: [
+      ...settingRows(context),
+      ...sourceRows(context),
+      ...viewActions(context),
+    ],
     lead: renderName(context),
   };
 }

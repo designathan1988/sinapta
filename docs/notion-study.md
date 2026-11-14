@@ -1465,6 +1465,16 @@ Groups, Notion and Pagecraft alike (Pagecraft changed to match):
     each adds or deletes ("Add: “ zz”") and Reply; text only suggested is
     left out of the edit runs until accepted. Pagecraft now has all of
     it.
+66. **done** [`n124-view-settings`; Pagecraft `w15-view-settings`]
+    Notion's view settings today: Layout, Property visibility, Filter,
+    Sort, Group, Conditional color, Copy link to view; a "Data source
+    settings" section (Source › with the database's name, Edit
+    properties, Automations, AI Autofill, Turn into, Linked events, More
+    settings); then Manage data sources, Lock database, Manage in Notion
+    Calendar. Pagecraft now has Copy link to view and the section with
+    Source (its own panel, a linked view choosing among databases), Edit
+    properties and Lock database. Not yet: database Automations, an AI
+    Autofill list, Turn into, Linked events, Manage data sources.
 
 ## Controls
 
@@ -1559,7 +1569,8 @@ against the reference on every run.
 
 2026-11-14, Notion's "Updates & analytics": the signed-in Notion window
 and the review server, 1440 × 900 (`n119-updates`, `n120-close-updates`,
-`n121-period`, `n122-view-history`, `n123-refavorite`, `w14-updates`).
+`n121-period`, `n122-view-history`, `n123-refavorite`, `n124-view-settings`,
+`w14-updates`, `w15-view-settings`).
 
 - Notion: the panel opened from the page menu, both tabs read, then
   closed; nothing on the page changed.

@@ -17,7 +17,7 @@ const TEXT = COPY.database;
 
 // The databases a view can read: its own alone, or, for a linked view,
 // every database outside the trash.
-function sourceChoices(
+export function sourceChoices(
   state: AppState,
   context: TableContext,
 ): readonly { id: BlockId; title: string }[] {

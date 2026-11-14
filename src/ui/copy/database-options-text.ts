@@ -47,6 +47,8 @@ export const DATABASE_OPTIONS_TEXT = {
   copyViewLink: "Copy link to view",
   openFullPage: "Open as full page",
   viewSource: "Source",
+  dataSourceSettings: "Data source settings",
+  editProperties: "Edit properties",
   addViewToSidebar: "Add view to sidebar",
   hideSourceTitles: "Hide data source titles",
   showSourceTitles: "Show data source titles",

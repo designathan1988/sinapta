@@ -12,8 +12,6 @@ import {
   setActivePage,
   setViewTabStyle,
 } from "../../state/index.ts";
-import { announce } from "../../ui/announcer/index.ts";
-import { linkToBlock, linkToPage } from "../../ui/address/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import {
   renderMenu,
@@ -22,6 +20,7 @@ import {
   type MenuItem,
 } from "../../ui/menu/index.ts";
 import { LAYOUT_ICONS } from "./layout-icons.ts";
+import { copyViewLinkItem } from "./view-link.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import { duplicateView } from "./view-duplicate.commands.ts";
 import {
@@ -59,26 +58,6 @@ function showAsItem(context: TableContext): MenuItem {
   };
 }
 
-// The address of the database the view belongs to: its page, or the
-// block holding it on the open page.
-function viewLink(context: TableContext): string {
-  const { model, state } = context;
-  const pageId = state.ui.activePageId;
-  return pageId === null || pageId === model.holderId
-    ? linkToPage(model.holderId)
-    : linkToBlock(pageId, model.holderId);
-}
-
-function copyLink(context: TableContext): void {
-  if (typeof navigator === "undefined" || !("clipboard" in navigator)) return;
-  navigator.clipboard.writeText(viewLink(context)).then(
-    () => {
-      announce(COPY.database.viewLinkCopied);
-    },
-    () => undefined,
-  );
-}
-
 function linkItems(context: TableContext): MenuItem[] {
   const { model, dispatch } = context;
   const isInside = isInsidePage(context);
@@ -88,13 +67,7 @@ function linkItems(context: TableContext): MenuItem[] {
     onSelect: () => dispatch(setActivePage.create({ pageId: model.holderId })),
   };
   return [
-    {
-      label: COPY.database.copyViewLink,
-      icon: "link",
-      onSelect: () => {
-        copyLink(context);
-      },
-    },
+    copyViewLinkItem(context),
     sidebarItem(context),
     ...(isInside ? [full, sourceTitleItem(context)] : []),
   ];
