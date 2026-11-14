@@ -53,7 +53,10 @@ in `src/persistence/`.
   comment. (Members' "Only people invited" pages remain.)
 - [x] 26.3 Publish to web: a read-only page served by the server and the
   Publish tab, and the sidebar's Shared section: the top pages shared
-  with people. (Teamspaces remain.)
+  with people, and "Start collaborating" while none is. Teamspaces:
+  Settings › Teamspaces and its "Create a teamspace", the sidebar's
+  Teamspaces section, pages added inside. (Closed teamspaces and their
+  own members remain: every teamspace is open to the workspace.)
 
 ## Milestone 27: Collaboration
 

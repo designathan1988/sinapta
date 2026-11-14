@@ -20,6 +20,7 @@ import { renderDialog } from "../../ui/dialog/index.ts";
 import { renderIcon, type IconName } from "../../ui/icon/index.ts";
 import { renderSelect } from "../../ui/select/index.ts";
 import { SETTINGS_OVERLAY_KIND } from "../../ui/shortcuts/index.ts";
+import { renderTeamspaceSettings } from "../teamspaces/index.ts";
 import { renderImportRow } from "./settings-import.view.ts";
 import { renderRow } from "./settings-row.view.ts";
 import {
@@ -43,6 +44,7 @@ const SECTIONS: readonly {
   { id: "preferences", icon: "settings", group: "account" },
   { id: "general", icon: "settings", group: "workspace" },
   { id: "people", icon: "person", group: "workspace" },
+  { id: "teamspaces", icon: "building", group: "workspace" },
   { id: "data", icon: "download", group: "workspace" },
 ];
 
@@ -54,6 +56,7 @@ const RENDERERS: Record<
   preferences: (state, dispatch) => renderPreferences(state, dispatch),
   general: renderGeneral,
   people: renderPeople,
+  teamspaces: renderTeamspaceSettings,
   data: (state, dispatch) => renderData(state, dispatch),
 };
 

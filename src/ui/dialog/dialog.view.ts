@@ -18,9 +18,11 @@ export interface DialogOptions {
   // trash, over the page without dimming it. "flyout" is as tall as the
   // window beside the sidebar, as Notion's inbox, and heads itself.
   // "form" is a dialog to fill in, as Notion's button automation: its
-  // title quiet over a line.
+  // title quiet over a line. "card" is Notion's centered card, as its
+  // Create a teamspace: its content heads itself, the close button alone
+  // at the corner.
   readonly variant?:
-    "search" | "settings" | "panel" | "flyout" | "full" | "form";
+    "search" | "settings" | "panel" | "flyout" | "full" | "form" | "card";
 }
 
 function showWhenConnected(element: Element | undefined): void {
@@ -52,15 +54,33 @@ function onClosed(event: Event, onClose: () => void): void {
   if (dialog.isConnected && !dialog.open) onClose();
 }
 
-// A modal dialog. It is rendered only while it is open; closing it by any
-// means fires `close`, which the caller turns into a command.
-export function renderDialog(options: DialogOptions): TemplateResult {
-  // A search or settings shows its own heading; the dialog's is read only.
-  // A full-window dialog shows the dialog's heading and close button.
+// The dialog's heading and close button: read only on a bare dialog, the
+// title read only on a card.
+function renderHeader(options: DialogOptions): TemplateResult {
   const isBare =
     options.variant !== undefined &&
     options.variant !== "full" &&
-    options.variant !== "form";
+    options.variant !== "form" &&
+    options.variant !== "card";
+  return html`<header class=${isBare ? "visually-hidden" : "dialog__header"}>
+    <h2
+      class=${options.variant === "card" ? "visually-hidden" : "dialog__title"}
+      id="dialog-title"
+    >
+      ${options.title}
+    </h2>
+    ${renderButton({
+      label: options.closeLabel,
+      icon: "close",
+      isIconOnly: true,
+      onClick: closeFrom,
+    })}
+  </header>`;
+}
+
+// A modal dialog. It is rendered only while it is open; closing it by any
+// means fires `close`, which the caller turns into a command.
+export function renderDialog(options: DialogOptions): TemplateResult {
   const dialog = html`<dialog
     class="dialog"
     data-variant=${options.variant ?? nothing}
@@ -72,18 +92,7 @@ export function renderDialog(options: DialogOptions): TemplateResult {
     }}
     @click=${closeOnBackdrop}
   >
-    <div class="dialog__panel">
-      <header class=${isBare ? "visually-hidden" : "dialog__header"}>
-        <h2 class="dialog__title" id="dialog-title">${options.title}</h2>
-        ${renderButton({
-          label: options.closeLabel,
-          icon: "close",
-          isIconOnly: true,
-          onClick: closeFrom,
-        })}
-      </header>
-      ${options.content}
-    </div>
+    <div class="dialog__panel">${renderHeader(options)} ${options.content}</div>
   </dialog>`;
   // Each dialog gets its own element. A dialog that the browser has just
   // closed still reports its close a moment later, and that report must

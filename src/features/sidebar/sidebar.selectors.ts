@@ -75,3 +75,15 @@ export function selectTreeRows(
   );
   return rows.map((row, index) => ({ ...row, isTabStop: index === tabStop }));
 }
+
+// The rows of the given pages at a level, with their open children: the
+// pages of a teamspace under its row.
+export function selectPageRows(
+  state: AppState,
+  ids: readonly BlockId[],
+  level: number,
+): TreeRow[] {
+  const rows: TreeRow[] = [];
+  addRows(state, { ids, level }, rows);
+  return rows;
+}

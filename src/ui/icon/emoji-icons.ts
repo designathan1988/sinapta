@@ -26,6 +26,8 @@ export const EMOJI_PATHS = {
       d="M3.5 3h9A1.5 1.5 0 0 1 14 4.5V6H2V4.5A1.5 1.5 0 0 1 3.5 3zM2 7h12v5.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 12.5z"
     />
     <path d="M5 1.5V4M11 1.5V4" />`,
+  // Notion's teamspace: a building with its windows.
+  building: svg`<path d="M2.5 13.5V3.5h6v10M8.5 6.5h5v7M1.5 13.5h13M4.5 5.5h.01M6.5 5.5h.01M4.5 8h.01M6.5 8h.01M4.5 10.5h.01M6.5 10.5h.01M10.5 9h.01M10.5 11.5h.01" />`,
   "plus-circle": svg`<circle cx="8" cy="8" r="5.5" /><path d="M8 5.5v5M5.5 8h5" />`,
   // A view's menu, as Notion's: Rename's pencil over a line, Display as's
   // brush, Source's path, and Manage in Calendar's dated sheet.

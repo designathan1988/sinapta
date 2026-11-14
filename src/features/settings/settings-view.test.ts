@@ -41,6 +41,7 @@ describe("settings, as Notion's", () => {
       "Preferences",
       "General",
       "People",
+      "Teamspaces",
       "Import and export",
     ]);
     expect(sections[1]?.getAttribute("aria-current")).toBe("page");
@@ -52,7 +53,7 @@ describe("settings, as Notion's", () => {
   it("opens another section from the list", () => {
     const { sections, sent } = rendered();
 
-    sections[4]?.click();
+    sections[5]?.click();
 
     expect(sent).toContainEqual(
       expect.objectContaining({

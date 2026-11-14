@@ -32,6 +32,17 @@
     line-height: var(--font-line-height-tight);
   }
 
+  /* Notion's centered card: the close button alone at the corner. */
+  .dialog[data-variant="card"] .dialog__panel {
+    position: relative;
+  }
+
+  .dialog[data-variant="card"] .dialog__header {
+    position: absolute;
+    inset-block-start: var(--space-inset-md);
+    inset-inline-end: var(--space-inset-md);
+  }
+
   /* A dialog to fill in, as Notion's button automation: its title in the
      page's text size and weight, over a line. */
   .dialog[data-variant="form"] .dialog__header {

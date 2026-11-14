@@ -1,0 +1,38 @@
+@layer features {
+  /* Notion's "Start collaborating": muted, as an invitation. */
+  .sidebar__collaborate {
+    color: var(--color-text-tertiary);
+  }
+}
+
+@layer features {
+  /* A teamspace's row: the whole row opens and closes it. */
+  .sidebar__teamspace-toggle {
+    display: flex;
+    flex: 1;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    min-inline-size: 0;
+    padding: var(--space-none);
+    border: none;
+    background-color: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .sidebar__teamspace-mark {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    inline-size: var(--size-sidebar-icon);
+    block-size: var(--size-sidebar-icon);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-active);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+  }
+}

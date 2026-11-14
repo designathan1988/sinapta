@@ -11,6 +11,7 @@ export const SETTINGS_TEXT = {
       preferences: "Preferences",
       general: "General",
       people: "People",
+      teamspaces: "Teamspaces",
       data: "Import and export",
     },
     accountGroup: "Account",

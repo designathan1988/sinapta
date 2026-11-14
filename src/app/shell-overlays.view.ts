@@ -1,6 +1,10 @@
 // The view of each overlay kind. At most one overlay is open at a time.
 import { renderSharePanel, SHARE_OVERLAY } from "../features/share/index.ts";
 import {
+  renderTeamspaceCreate,
+  TEAMSPACE_CREATE_OVERLAY,
+} from "../features/teamspaces/index.ts";
+import {
   AI_CHAT_OVERLAY,
   AI_PROMPT_OVERLAY,
   renderAiChat,
@@ -84,6 +88,7 @@ const OVERLAYS: Readonly<Record<string, OverlayView>> = {
   [AI_PROMPT_OVERLAY]: renderAiPrompt,
   [AI_CHAT_OVERLAY]: renderAiChat,
   [SHARE_OVERLAY]: renderSharePanel,
+  [TEAMSPACE_CREATE_OVERLAY]: renderTeamspaceCreate,
   [SETTINGS_OVERLAY]: renderSettings,
   [TRASH_OVERLAY]: renderTrash,
   [PAGE_HISTORY_OVERLAY]: renderPageHistory,

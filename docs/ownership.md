@@ -268,6 +268,9 @@ owner listed here exists.
 | A page's sharing: invited people, general access, published | `server/sharing.ts` | 26 |
 | The Share menu's routes, the shared pages listed for the sidebar, and published pages read by anyone | `server/sharing-routes.ts` | 26 |
 | The sidebar's Shared section: the top pages shared with people | `src/features/sidebar/sidebar.selectors.ts` (`selectTreeRows`), `sidebar.view.ts` | 26 |
+| Teamspaces: the block at the workspace's top that holds pages, made by `teamspace.create` | `src/blocks/teamspace/` | 26 |
+| Settings › Teamspaces and "Create a teamspace" | `src/features/teamspaces/` | 26 |
+| The sidebar's Teamspaces section | `src/features/sidebar/sidebar-teamspaces.selectors.ts`, `sidebar-teamspaces.view.ts`, `sidebar-sections.css` | 26 |
 | Which changes each access allows (comments for "Can comment"), for the server and the client alike | `src/model/page-access.ts` | 26 |
 | A guest's access to each page, the editable blocks, and the dispatcher's refusal of the rest | `src/state/page-access.selectors.ts` | 26 |
 | What a guest reaches: the pages shared with them, read and written at their access | `server/guest-access.ts` | 26 |

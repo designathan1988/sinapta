@@ -1,0 +1,149 @@
+@layer features {
+  /* Settings › Teamspaces: the list's title and "New teamspace" across. */
+  .teamspaces__head {
+    display: flex;
+    gap: var(--space-inline-md);
+    align-items: center;
+    justify-content: space-between;
+    margin-block-start: var(--space-stack-lg);
+  }
+
+  .teamspaces__title {
+    margin: var(--space-none);
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .teamspaces__table {
+    inline-size: 100%;
+    margin-block-start: var(--space-stack-md);
+    border-collapse: collapse;
+    font-size: var(--font-size-sm);
+
+    & th {
+      padding: var(--space-inset-xs);
+      border-block-end: var(--size-border-thin) solid
+        var(--color-border-default);
+      color: var(--color-text-secondary);
+      font-weight: var(--font-weight-regular);
+      text-align: start;
+    }
+
+    & td {
+      padding: var(--space-inset-xs);
+      color: var(--color-text-primary);
+    }
+  }
+
+  .teamspaces__cell {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+  }
+
+  .teamspaces__none {
+    color: var(--color-text-secondary);
+    text-align: center;
+  }
+
+  /* A teamspace with no icon shows its first letter on a gray tile. */
+  .teamspaces__letter {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    inline-size: var(--size-icon-md);
+    block-size: var(--size-icon-md);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-active);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+  }
+
+  /* "Create a teamspace": centered head, a gray note, the fields. */
+  .teamspaces__form {
+    display: grid;
+    gap: var(--space-stack-xs);
+    color: var(--color-text-primary);
+  }
+
+  .teamspaces__mark {
+    justify-self: center;
+    color: var(--color-text-secondary);
+  }
+
+  .teamspaces__create-title {
+    margin: var(--space-none);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-medium);
+    text-align: center;
+  }
+
+  .teamspaces__lead {
+    margin: var(--space-none) var(--space-none) var(--space-stack-md);
+    color: var(--color-text-secondary);
+    text-align: center;
+  }
+
+  .teamspaces__note {
+    margin-block-end: var(--space-stack-md);
+    padding: var(--space-inset-md);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-bg-hover);
+  }
+
+  .teamspaces__note-title {
+    margin: var(--space-none);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .teamspaces__note-text {
+    margin: var(--space-none);
+    color: var(--color-text-secondary);
+  }
+
+  .teamspaces__label {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+  }
+
+  .teamspaces__name {
+    display: flex;
+    gap: var(--space-inline-sm);
+    margin-block-end: var(--space-stack-sm);
+
+    & .teamspaces__letter {
+      inline-size: var(--size-control-md);
+      block-size: var(--size-control-md);
+      font-size: var(--font-size-md);
+      font-weight: var(--font-weight-regular);
+    }
+  }
+
+  .teamspaces__field {
+    flex: 1;
+    min-block-size: var(--size-control-md);
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-field);
+    background-color: var(--color-bg-field);
+    color: inherit;
+    font-family: inherit;
+    font-size: var(--font-size-md);
+  }
+
+  .teamspaces__description {
+    margin-block-end: var(--space-stack-md);
+    resize: vertical;
+  }
+
+  /* Quiet until the teamspace has a name, as Notion's. */
+  .teamspaces__create {
+    justify-self: end;
+  }
+
+  .teamspaces__form:invalid .teamspaces__create {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+}

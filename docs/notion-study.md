@@ -1240,6 +1240,23 @@ items above, found while photographing them:
     until Notion empties it; Private reads as before
     (`n86-teamspaces/00-page`).
 
+48. **done** [`n89-settings-teamspaces`, `n90-new-teamspace`; Pagecraft
+    `p55-teamspaces`] Settings › Administrador › Espaços de equipe
+    (Teamspaces): "Manage teamspaces in this workspace", then a table of
+    Teamspace, Owners, Access and Updated ("No teamspaces found." when
+    empty) beside a blue "New teamspace". Its dialog, 480 × 538 at the
+    window's middle, has no title bar, only a round close button at the
+    corner: a building glyph, "Create a teamspace" centered, a line on
+    what teamspaces are, a gray note that everyone in the workspace joins,
+    "Icon & name" (a "T" tile and "e.g. Engineering"), "Description",
+    and a pale "Create teamspace" until a name is typed. Nothing was
+    created in Notion (Escape closed it). Pagecraft has the same section
+    and dialog (a new "card" dialog: the title read only, the close
+    button alone), a Teamspaces section in the sidebar above Shared, each
+    teamspace a row with its letter that opens and closes it and "+" for
+    a page inside. Left: Owners and the filters of Notion's table, closed
+    teamspaces with their own members, the round gray close button.
+
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,
 `n45-history/04-updates`: "Há 4 horas", ID 1, Nome, the box ticked). A

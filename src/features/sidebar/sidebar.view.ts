@@ -25,6 +25,7 @@ import {
 } from "./sidebar-tabs.selectors.ts";
 import { renderSidebarTabs, renderUpcoming } from "./sidebar-tabs.view.ts";
 import { renderShortcuts } from "./sidebar-shortcuts.view.ts";
+import { renderTeamspaces } from "./sidebar-teamspaces.view.ts";
 import { renderSidebarTop } from "./sidebar-top.view.ts";
 import { renderTree } from "./sidebar-tree.view.ts";
 import { selectTreeRows } from "./sidebar.selectors.ts";
@@ -85,7 +86,7 @@ function renderShared(
 
 function renderPrivate(state: AppState, dispatch: Dispatch): TemplateResult {
   const rows = selectTreeRows(state);
-  return html`${renderShared(state, dispatch)}
+  return html`${renderTeamspaces(state, dispatch)}${renderShared(state, dispatch)}
     <section class="sidebar__section">
       <h2 class="sidebar__heading" id="sidebar-private">
         ${COPY.sidebar.private}

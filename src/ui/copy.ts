@@ -19,6 +19,7 @@ import {
   SETTINGS_TEXT,
   SHARE_TEXT,
   SIDEBAR_VIEWS_TEXT,
+  TEAMSPACE_TEXT,
   TEMPLATE_TEXT,
   VERIFY_TEXT,
   WORKSPACE_TEXT,
@@ -49,6 +50,7 @@ export const COPY = {
   share: SHARE_TEXT.share,
   ai: AI_TEXT.ai,
   verify: VERIFY_TEXT.verify,
+  teamspace: TEAMSPACE_TEXT.teamspace,
 } as const;
 
 export { pluralize } from "./copy/index.ts";
