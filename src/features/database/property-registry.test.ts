@@ -49,6 +49,7 @@ describe("the property registry", () => {
       "edited-time",
       "created-by",
       "edited-by",
+      "place",
       "unique-id",
     ]);
   });

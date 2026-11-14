@@ -165,7 +165,11 @@ export const DATABASE_TEXT = {
       gallery: "Gallery",
       list: "List",
       calendar: "Calendar",
+      map: "Map",
     },
+    noPlaces:
+      "A map shows rows by a place property. Add one to this database and show it in this view.",
+    mapCredit: "© OpenStreetMap contributors",
     layout: "Layout",
     groupBy: "Group by",
     dateBy: "Date property",

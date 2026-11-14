@@ -69,8 +69,10 @@ in `src/persistence/`.
 
 ## Milestone 29: Map
 
-- [ ] 29.1 Place property with a picker on a map.
-- [ ] 29.2 Map view: tiles on a canvas, pins, zoom, pan, card on click.
+- [x] 29.1 Place property, typed as "Name @ latitude, longitude" (address
+  search needs a geocoding service; picking on the map remains).
+- [x] 29.2 Map view: OpenStreetMap tiles framed to every pin, a pin per
+  row that opens it. (Zoom and pan controls remain.)
 
 ## Milestone 30: AI
 

@@ -21,6 +21,7 @@ import { filesProperty } from "./properties/files/index.ts";
 import { multiSelectProperty } from "./properties/multi-select/index.ts";
 import { numberProperty } from "./properties/number/index.ts";
 import { phoneProperty } from "./properties/phone/index.ts";
+import { placeProperty } from "./properties/place/index.ts";
 import { relationProperty } from "./properties/relation/index.ts";
 import { buttonProperty } from "./properties/button/index.ts";
 import { formulaProperty } from "./properties/formula/index.ts";
@@ -51,6 +52,7 @@ export const PROPERTY_TYPES: readonly PropertyType[] = [
   editedTimeProperty,
   createdByProperty,
   editedByProperty,
+  placeProperty,
   uniqueIdProperty,
 ];
 

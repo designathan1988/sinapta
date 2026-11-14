@@ -12,6 +12,7 @@ import { renderForm } from "./layouts/form/index.ts";
 import { renderCalendar } from "./layouts/calendar/index.ts";
 import { renderGallery } from "./layouts/gallery/index.ts";
 import { renderList } from "./layouts/list/index.ts";
+import { renderMap } from "./layouts/map/index.ts";
 import { renderTimeline } from "./layouts/timeline/index.ts";
 import type { TableContext } from "./table-cell.view.ts";
 import { renderTable } from "./table.view.ts";
@@ -30,6 +31,7 @@ const RENDERERS: Record<ViewType, (context: TableContext) => TemplateResult> = {
   chart: renderChart,
   form: renderForm,
   feed: renderFeed,
+  map: renderMap,
 };
 
 export function renderLayout(context: TableContext): TemplateResult {

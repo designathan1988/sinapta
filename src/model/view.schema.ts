@@ -46,6 +46,7 @@ export const viewTypeSchema = v.picklist([
   "gallery",
   "chart",
   "feed",
+  "map",
   "form",
 ]);
 

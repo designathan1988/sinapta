@@ -125,7 +125,7 @@ describe("viewSchema", () => {
   });
 
   it("rejects a layout it does not know", () => {
-    expect(v.safeParse(viewSchema, { ...TABLE, type: "map" }).success).toBe(
+    expect(v.safeParse(viewSchema, { ...TABLE, type: "kanban" }).success).toBe(
       false,
     );
   });

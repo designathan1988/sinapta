@@ -1,0 +1,64 @@
+@layer features {
+  /* Notion's map: tiles under pins, framed two to one, scaled to the
+     view's width; positions come in shares of the frame (map.view.ts). */
+  .map {
+    display: grid;
+    gap: var(--space-stack-xs);
+  }
+
+  .map__canvas {
+    position: relative;
+    inline-size: 100%;
+    aspect-ratio: 2;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    background-color: var(--color-bg-hover);
+    box-shadow: var(--shadow-card);
+  }
+
+  .map__tile {
+    position: absolute;
+    inset-inline-start: var(--map-x);
+    inset-block-start: var(--map-y);
+    inline-size: calc(100% * 256 / 960);
+    aspect-ratio: 1;
+  }
+
+  .map__pin {
+    position: absolute;
+    inset-inline-start: var(--map-x);
+    inset-block-start: var(--map-y);
+    display: grid;
+    place-items: center;
+    inline-size: var(--size-icon-md);
+    block-size: var(--size-icon-md);
+    padding: var(--space-none);
+    border: none;
+    border-radius: var(--radius-full) var(--radius-full) var(--radius-full) 0;
+    background-color: var(--color-text-danger);
+    box-shadow: var(--shadow-card);
+    rotate: -45deg;
+    translate: -50% -100%;
+    cursor: pointer;
+  }
+
+  .map__label {
+    position: absolute;
+    inset-inline-start: 100%;
+    padding: var(--space-none) var(--space-inset-xs);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-raised);
+    box-shadow: var(--shadow-card);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-xs);
+    white-space: nowrap;
+    rotate: 45deg;
+  }
+
+  .map__credit {
+    margin: var(--space-none);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    text-align: end;
+  }
+}

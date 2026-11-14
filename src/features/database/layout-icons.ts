@@ -12,4 +12,5 @@ export const LAYOUT_ICONS: Readonly<Record<ViewType, IconName>> = {
   chart: "chart",
   form: "form",
   feed: "feed",
+  map: "map",
 };

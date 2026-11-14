@@ -35,6 +35,7 @@ describe("the New view menu", () => {
       "gallery",
       "chart",
       "feed",
+      "map",
       "form",
     ]);
   });

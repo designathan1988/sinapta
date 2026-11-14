@@ -57,6 +57,7 @@ describe("renderStartList", () => {
       "gallery",
       "chart",
       "feed",
+      "map",
       "form",
     ]);
   });
