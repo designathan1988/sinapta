@@ -17,12 +17,16 @@ import { renderOption, type MoveEntry } from "./move-to.view.ts";
 
 export { MOVE_TO_PLACE_PANEL } from "../page-menu/index.ts";
 
-function renderSearch(query: string, dispatch: Dispatch): TemplateResult {
+function renderSearch(
+  query: string,
+  dispatch: Dispatch,
+  words: string,
+): TemplateResult {
   return html`<input
     class="move-to__search"
     type="search"
-    aria-label=${COPY.moveTo.search}
-    placeholder=${COPY.moveTo.search}
+    aria-label=${words}
+    placeholder=${words}
     .value=${query}
     @input=${(event: Event) => {
       if (!(event.currentTarget instanceof HTMLInputElement)) return;
@@ -35,8 +39,9 @@ function renderSearch(query: string, dispatch: Dispatch): TemplateResult {
 export function renderMovePopover(
   state: AppState,
   dispatch: Dispatch,
-  entries: readonly MoveEntry[],
+  moving: { readonly entries: readonly MoveEntry[]; readonly isPage: boolean },
 ): TemplateResult {
+  const { entries, isPage } = moving;
   const query = state.ui.overlay?.query ?? "";
   const words = query.trim().toLowerCase();
   const shown = entries.filter((entry) =>
@@ -53,7 +58,7 @@ export function renderMovePopover(
       if (event.key === "Escape") dispatch(closeOverlay.create({}));
     }}
   >
-    ${renderSearch(query, dispatch)}
+    ${renderSearch(query, dispatch, isPage ? COPY.moveTo.search : COPY.moveTo.searchBlock)}
     <p class="move-to__heading">${COPY.moveTo.suggested}</p>
     <ul class="move-to__list">
       ${

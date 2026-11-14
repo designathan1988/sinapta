@@ -30,7 +30,11 @@ import {
   TREE_PLACE,
 } from "./page-menu-anchor.ts";
 import { renameItem } from "./page-rename.view.ts";
-import { pageActionItems } from "./page-menu-items.ts";
+import {
+  MOVE_TO_FROM,
+  MOVE_TO_OVERLAY_KIND,
+  pageActionItems,
+} from "./page-menu-items.ts";
 
 export const PAGE_MENU_OVERLAY = "page-menu";
 export { pageMenuAnchorId, TREE_PLACE } from "./page-menu-anchor.ts";
@@ -52,6 +56,10 @@ export function renderPageMenuButton(
   const { overlay } = state.ui;
   const isOpen =
     overlay?.kind === PAGE_MENU_OVERLAY && overlay.anchorId === anchorId;
+  // Move to, opened from this button's menu, stays anchored to it.
+  const isMoveFromHere =
+    overlay?.kind === MOVE_TO_OVERLAY_KIND &&
+    overlay.values?.[MOVE_TO_FROM]?.[0] === anchorId;
   const onClick = (event: Event): void => {
     event.stopPropagation();
     dispatch(
@@ -69,7 +77,7 @@ export function renderPageMenuButton(
     tabindex=${options.isTabStop === false ? "-1" : "0"}
     data-overlay-anchor
     aria-haspopup="menu"
-    aria-expanded=${String(isOpen)}
+    aria-expanded=${String(isOpen || isMoveFromHere)}
     aria-label=${COPY.pageMenu.open}
     title=${tooltipTitle(COPY.pageMenu.open)}
     interestfor=${TOOLTIP_TARGET}

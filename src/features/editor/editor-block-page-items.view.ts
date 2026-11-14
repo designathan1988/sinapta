@@ -21,6 +21,8 @@ import { selectPageIdOf } from "./editor.selectors.ts";
 
 // The move-to feature shows the dialog; the editor names the block.
 const MOVE_TO_OVERLAY = "move-to";
+// Move to's popover, under the block (the move-to feature names it so).
+const MOVE_TO_PLACE_PANEL = "place";
 
 // Only a text block that sits directly on a page can become a page.
 function turnIntoPageItem(block: Block, state: AppState, dispatch: Dispatch) {
@@ -50,9 +52,14 @@ export function copyLinkItem(block: Block, state: AppState): MenuItem {
   return { label: COPY.blockMenu.copyLink, icon: "link", onSelect: copyLink };
 }
 
-// "Move to", the dialog that moves the block to another page.
+// "Move to", Notion's popover under the block that moves it to another
+// page.
 export function moveToItem(block: Block, dispatch: Dispatch): MenuItem {
-  const overlay = { kind: MOVE_TO_OVERLAY, anchorId: block.id };
+  const overlay = {
+    kind: MOVE_TO_OVERLAY,
+    anchorId: block.id,
+    panel: MOVE_TO_PLACE_PANEL,
+  };
   return {
     label: COPY.blockMenu.moveTo,
     icon: "move",

@@ -148,7 +148,9 @@ export function renderMoveTo(
 ): TemplateResult {
   const entries = selectEntries(state, dispatch);
   if (state.ui.overlay?.panel === MOVE_TO_PLACE_PANEL) {
-    return renderMovePopover(state, dispatch, entries);
+    const movedId = parseBlockId(state.ui.overlay.anchorId ?? "");
+    const isPage = selectPage(state, movedId ?? null) !== undefined;
+    return renderMovePopover(state, dispatch, { entries, isPage });
   }
   return renderDialog({
     title: COPY.moveTo.title,

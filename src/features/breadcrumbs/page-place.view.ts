@@ -10,6 +10,7 @@ import {
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
 import { MOVE_TO_OVERLAY, MOVE_TO_PLACE_PANEL } from "../move-to/index.ts";
+import { MOVE_TO_FROM } from "../page-menu/index.ts";
 import type { PagePlace } from "./page-place.selectors.ts";
 
 interface Toggle {
@@ -20,8 +21,11 @@ interface Toggle {
 function toggleOf(state: AppState, dispatch: Dispatch): Toggle {
   const pageId = state.ui.activePageId ?? "";
   const { overlay } = state.ui;
+  // Opened from a menu, Move to sits under that menu's "…" instead.
   const isOpen =
-    overlay?.kind === MOVE_TO_OVERLAY && overlay.anchorId === pageId;
+    overlay?.kind === MOVE_TO_OVERLAY &&
+    overlay.anchorId === pageId &&
+    overlay.values?.[MOVE_TO_FROM] === undefined;
   const panel = MOVE_TO_PLACE_PANEL;
   const open = () =>
     dispatch(

@@ -29,17 +29,18 @@ import {
 
 // Opened from this menu; rendered by the move-to feature.
 export const MOVE_TO_OVERLAY_KIND = "move-to";
-// Move to as Notion's popover under the top bar's place of the open page.
+// Move to as Notion's popover: under the "…" whose menu opened it (its
+// anchor kept under MOVE_TO_FROM), or under the open page's place.
 export const MOVE_TO_PLACE_PANEL = "place";
+export const MOVE_TO_FROM = "from";
 
-// Move to: for the open page, Notion's popover under its place in the top
-// bar; for another, the dialog.
+// Move to: Notion's popover, under the "…" whose menu holds this item.
 function moveToItem(
   state: AppState,
   pageId: BlockId,
   dispatch: Dispatch,
 ): MenuItem {
-  const isOpenPage = pageId === state.ui.activePageId;
+  const menuAnchor = state.ui.overlay?.anchorId;
   return {
     label: COPY.pageMenu.moveToAction,
     icon: "move",
@@ -49,7 +50,10 @@ function moveToItem(
           overlay: {
             kind: MOVE_TO_OVERLAY_KIND,
             anchorId: pageId,
-            ...(isOpenPage && { panel: MOVE_TO_PLACE_PANEL }),
+            panel: MOVE_TO_PLACE_PANEL,
+            ...(menuAnchor !== undefined && {
+              values: { [MOVE_TO_FROM]: [menuAnchor] },
+            }),
           },
         }),
       ),
