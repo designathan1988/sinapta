@@ -10,7 +10,7 @@ Built with TypeScript, HTML and CSS, without a UI framework.
 
 ## Quick start
 
-Requires Node 22.12 or later.
+Requires Node 24 or later (the server uses Node's own `node:sqlite`).
 
 ```bash
 npm install
