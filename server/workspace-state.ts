@@ -6,12 +6,12 @@ import {
   applyOperations,
   parseWireOperations,
   parseWorkspaceFile,
-  SCHEMA_VERSION,
   type Block,
   type BlockId,
   type PropsSchemas,
   type Workspace,
 } from "../src/model/index.ts";
+import { runMigrations } from "../src/persistence/migrations/run-migrations.ts";
 import type { ApiContext } from "./api.ts";
 import { operationsAfter, snapshotOf } from "./workspaces.ts";
 
@@ -43,15 +43,13 @@ function cacheOf(context: ApiContext): Map<string, Kept> {
   return cache;
 }
 
+// A snapshot kept by an older version of the app is brought up to the
+// current format by the same migrations the browser runs (ADR-0014,
+// decision 11).
 function readSnapshot(snapshot: unknown): Workspace | undefined {
-  const file = v.safeParse(
-    v.object({ schemaVersion: v.literal(SCHEMA_VERSION) }),
-    snapshot,
-  );
-  if (!file.success || typeof snapshot !== "object" || snapshot === null) {
-    return undefined;
-  }
-  const parsed = parseWorkspaceFile(snapshot, PROPS);
+  const migrated = runMigrations(snapshot);
+  if (!migrated.ok) return undefined;
+  const parsed = parseWorkspaceFile(migrated.file, PROPS);
   return parsed.ok ? parsed.workspace : undefined;
 }
 

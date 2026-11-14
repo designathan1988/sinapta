@@ -105,7 +105,8 @@ describe("architecture", () => {
   });
 
   // ADR-0013: the app never imports the server, and the server reaches
-  // into src/ only for the model's schemas.
+  // into src/ only for the model's schemas and, to read a snapshot an
+  // older app kept, the format's migrations (ADR-0014, decision 11).
   it("keeps the server and the app apart", () => {
     const server = listFiles(resolve(SRC, "../server")).filter((path) =>
       path.endsWith(".ts"),
@@ -119,7 +120,10 @@ describe("architecture", () => {
       importsOf(path).flatMap((specifier) => {
         const target = fromSrc(resolve(dirname(path), specifier));
         const isApp = !target.startsWith("../");
-        return isApp && layerOf(target) !== "model" ? [target] : [];
+        const isAllowed =
+          layerOf(target) === "model" ||
+          target.startsWith("persistence/migrations/");
+        return isApp && !isAllowed ? [target] : [];
       }),
     );
     expect([...fromApp, ...fromServer]).toEqual([]);
