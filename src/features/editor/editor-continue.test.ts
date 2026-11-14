@@ -4,6 +4,7 @@ import { toBlockId, type BlockSpec } from "../../model/index.ts";
 import type { Command } from "../../state/index.ts";
 import { continueWriting } from "./editor-blocks.view.ts";
 import { createApp, text } from "./editor-builder.ts";
+import { appendParagraph } from "./editor-structure.commands.ts";
 
 function clicked(blocks: BlockSpec[]): Command[] {
   const { store } = createApp(blocks);
@@ -41,5 +42,28 @@ describe("clicking below a page's blocks", () => {
         selection: { blockId: "b", anchorOffset: 0, focusOffset: 0 },
       }),
     ]);
+  });
+
+  it("adds no line inside a database, which holds rows only", () => {
+    const { store, dispatch } = createApp([
+      {
+        id: "db",
+        type: "database",
+        props: {
+          title: [],
+          icon: null,
+          properties: [],
+          viewIds: [],
+          templateIds: [],
+          defaultTemplateId: null,
+        },
+      },
+    ]);
+
+    dispatch(appendParagraph.create({ pageId: toBlockId("db") }));
+
+    expect(
+      store.getState().workspace.blocks[toBlockId("db")]?.childIds,
+    ).toEqual([]);
   });
 });

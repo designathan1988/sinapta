@@ -1,9 +1,10 @@
 // Values that property types give rows by themselves, such as a unique
 // ID's numbers, worked out as operations for the commands that add a
 // property or a row. See RowNumbering in property-definition.ts.
-import type {
-  DatabaseBlock,
-  PropertyDefinition,
+import {
+  rowIdsOf,
+  type DatabaseBlock,
+  type PropertyDefinition,
 } from "../../blocks/database/index.ts";
 import { selectPage } from "../../blocks/page/index.ts";
 import type { Operation } from "../../model/index.ts";
@@ -23,7 +24,10 @@ export function numberExistingRows(
 ): Numbered {
   const numbering = propertyType(property.type).numbering;
   if (numbering === undefined) return { property, operations: [] };
-  const rowIds = database.childIds;
+  // Its rows only: no template, and nothing that is not a page.
+  const rowIds = rowIdsOf(database).filter(
+    (rowId) => selectPage(state, rowId) !== undefined,
+  );
   const started = numbering.start(property, rowIds.length);
   const operations = rowIds.flatMap((rowId, index): Operation[] => {
     const row = selectPage(state, rowId);

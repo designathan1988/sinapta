@@ -8,6 +8,8 @@ import { createDatabaseApp, toPropertyId } from "../../database-builder.ts";
 import { addProperty } from "../../database.commands.ts";
 import { propertyType } from "../../property-registry.ts";
 import { addRow } from "../../row.commands.ts";
+import { numberExistingRows } from "../../row-numbering.ts";
+import { toBlockId } from "../../../../model/index.ts";
 
 function valuesOf(app: ReturnType<typeof createDatabaseApp>) {
   const state = app.store.getState();
@@ -70,5 +72,45 @@ describe("the unique ID property", () => {
     expect(type.renderCell(3, property)).toBe("TASK-3");
     expect(type.format(3, { ...property, config: undefined })).toBe("3");
     expect(type.editor).toBe("none");
+  });
+
+  it("numbers rows only, not a block that is not a row", () => {
+    const app = createDatabaseApp([], [["A"], ["B"]]);
+    const state = app.store.getState();
+    const database = app.database();
+    const stray = toBlockId("stray");
+    const withStray = {
+      ...state,
+      workspace: {
+        ...state.workspace,
+        blocks: {
+          ...state.workspace.blocks,
+          [stray]: {
+            id: stray,
+            type: "paragraph",
+            parentId: database.id,
+            childIds: [],
+            props: { text: [] },
+            createdAt: "",
+            updatedAt: "",
+          },
+        },
+      },
+    };
+    const property = {
+      id: toPropertyId("id"),
+      name: "ID",
+      type: "unique-id",
+      config: { prefix: "", next: 1 },
+    };
+
+    const numbered = numberExistingRows(
+      withStray,
+      { ...database, childIds: [stray, ...database.childIds] },
+      property,
+    );
+
+    expect(numbered.operations).toHaveLength(2);
+    expect(numbered.property.config).toEqual({ prefix: "", next: 3 });
   });
 });

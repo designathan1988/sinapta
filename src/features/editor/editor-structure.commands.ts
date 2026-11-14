@@ -5,6 +5,7 @@ import {
   type TextBlock,
   textOf,
 } from "../../blocks/index.ts";
+import { DATABASE_TYPE } from "../../blocks/page/index.ts";
 import { PARAGRAPH_TYPE } from "../../blocks/paragraph/index.ts";
 import {
   concatRichText,
@@ -33,7 +34,8 @@ import {
   selectNeighborTextBlock,
 } from "./editor.selectors.ts";
 
-// Adds an empty paragraph at the end of a page and puts the caret in it.
+// Adds an empty paragraph at the end of a page and puts the caret in it;
+// a database holds rows only, so it takes none.
 export const appendParagraph = defineCommand<{ pageId: BlockId }>({
   type: "block.append",
   newBlockIds: 1,
@@ -41,6 +43,7 @@ export const appendParagraph = defineCommand<{ pageId: BlockId }>({
     const page = state.workspace.blocks[command.pageId];
     const id = command.meta.blockIds[0];
     if (page === undefined || id === undefined) return {};
+    if (page.type === DATABASE_TYPE) return {};
     const { now } = command.meta;
     const record = createBlock({
       id,
