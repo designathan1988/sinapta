@@ -126,3 +126,8 @@ transcription.
 - [x] 31.3 Notifications to this device: Settings › Notifications turns on
   desktop notifications, asking the browser; each new notice is then shown
   by the system and opens its page when clicked (`p75-desktop-notices`).
+- [x] 31.4 Transcription: the AI Meeting Notes block listens through the
+  browser's speech recognition, writes each sentence down as it is said,
+  stops when asked (or when the microphone is refused), and the server's
+  AI then writes its summary and action items; where the browser cannot
+  listen, the transcript is typed or pasted (`p76-meeting-notes`).

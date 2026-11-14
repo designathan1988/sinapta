@@ -25,11 +25,8 @@ import { editorCommands } from "../features/editor/index.ts";
 import { aiFeatureCommands } from "../features/ai/index.ts";
 import { peekCommands } from "../features/row-peek/index.ts";
 import { templateCommands } from "../features/templates/index.ts";
-import {
-  browserNotifier,
-  inboxCommands,
-  startDesktopNotices,
-} from "../features/inbox/index.ts";
+import { inboxCommands } from "../features/inbox/index.ts";
+import { startServices } from "./services.ts";
 import { markdownImportCommands } from "../features/markdown-import/index.ts";
 import { searchFilterCommands } from "../features/command-palette/index.ts";
 import { startReminderNotices } from "./reminder-notices.ts";
@@ -60,6 +57,7 @@ import {
   accountCommands,
   aiCommands,
   linkPreviewCommands,
+  meetingCommands,
   syncCommands,
   createCommandRegistry,
   createDispatcher,
@@ -77,8 +75,6 @@ import {
   createIndexedDbSnapshots,
   startAccount,
   createOutbox,
-  startAi,
-  startLinkPreviews,
   createSyncLink,
   type SyncLink,
   startAssetStore,
@@ -110,6 +106,7 @@ const COMMANDS = [
   ...syncCommands,
   ...aiCommands,
   ...linkPreviewCommands,
+  ...meetingCommands,
   ...aiFeatureCommands,
   ...settingsCommands,
   ...persistenceCommands,
@@ -179,9 +176,7 @@ async function startPersistence(
   });
   // The workspace on the server, once someone signs in (ADR-0013).
   sync.start({ store, dispatch, propsSchemas, outbox: createOutbox(adapter) });
-  startAi({ store, dispatch });
-  startLinkPreviews({ store, dispatch });
-  startDesktopNotices(store, browserNotifier());
+  startServices(store, dispatch);
   return { isFirstRun };
 }
 

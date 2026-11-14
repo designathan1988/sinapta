@@ -210,3 +210,4 @@ export {
   setLinkPreview,
   type LinkPreview,
 } from "./link-preview.commands.ts";
+export { meetingCommands, setMeetingSummary } from "./meeting.commands.ts";

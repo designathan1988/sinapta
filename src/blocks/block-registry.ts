@@ -29,6 +29,7 @@ import { simpleTableDefinition } from "./simple-table/index.ts";
 import { syncedBlockDefinition } from "./synced-block/index.ts";
 import { tableOfContentsDefinition } from "./table-of-contents/index.ts";
 import { teamspaceDefinition } from "./teamspace/index.ts";
+import { meetingNotesDefinition } from "./meeting-notes/index.ts";
 import { toDoDefinition } from "./to-do/index.ts";
 import { toggleDefinition } from "./toggle/index.ts";
 import { videoDefinition } from "./video/index.ts";
@@ -64,6 +65,7 @@ export const BLOCK_DEFINITIONS: readonly BlockDefinition[] = [
   buttonDefinition,
   linkedViewDefinition,
   teamspaceDefinition,
+  meetingNotesDefinition,
 ];
 
 const BY_TYPE: ReadonlyMap<string, BlockDefinition> = new Map(

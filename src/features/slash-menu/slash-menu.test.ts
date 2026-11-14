@@ -41,7 +41,7 @@ describe("selectSlashItems", () => {
     expect(labels).toContain("Button");
     expect(labels).toContain("Database");
     expect(labels).toContain("Linked view of database");
-    expect(labels).toHaveLength(32);
+    expect(labels).toHaveLength(33);
   });
 
   it("filters by the query without regard to case", () => {

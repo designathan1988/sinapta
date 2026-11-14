@@ -183,6 +183,10 @@ owner listed here exists.
 | The inbox's notices from people: mentions, replies, edits to one's pages, pages shared with a guest | `src/features/inbox/inbox-notices.selectors.ts`, `inbox-changes.selectors.ts` | 27 |
 | Settings › Notifications: the kinds of notice the inbox shows, kept per person | `src/features/settings/settings-notifications.view.ts`, `src/features/inbox/inbox.commands.ts` (`toggleNotices`) | 27 |
 | Desktop notifications: each new notice shown by the system while on | `src/features/inbox/inbox-notifier.ts` | 31 |
+| AI Meeting Notes: the block, its recording and transcript | `src/blocks/meeting-notes/` | 31 |
+| Listening while a meeting records: the browser's speech recognition | `src/features/meeting-notes/transcriber.ts` | 31 |
+| A meeting's summary and action items asked of the server's AI | `src/persistence/meeting-client.ts`, `src/state/meeting.commands.ts` | 31 |
+| What runs beside the app once started | `src/app/services.ts` | 31 |
 | Reminder notifications while the app is open | `src/app/reminder-notices.ts` | 17 |
 | A page's history: its content, restoring a version, the full-window view, what each version changed | `src/features/page-history/` | 17 |
 | Marking commented text | `src/model/rich-text-comments.ts`, `src/ui/rich-text/rich-text-projection.ts` | 17 |

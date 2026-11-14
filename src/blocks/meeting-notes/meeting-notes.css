@@ -1,0 +1,95 @@
+@layer blocks {
+  /* Notion's AI Meeting Notes: a card with its title and button across
+     the top, then the summary, the action items and the transcript. */
+  .meeting-notes {
+    display: grid;
+    gap: var(--space-stack-sm);
+    padding: var(--space-inset-md);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-lg);
+    color: var(--color-text-primary);
+  }
+
+  .meeting-notes__head {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+  }
+
+  .meeting-notes__mark {
+    display: inline-grid;
+    color: var(--color-text-accent);
+  }
+
+  .meeting-notes__title {
+    flex: 1;
+    min-inline-size: 0;
+    padding: var(--space-none);
+    border: none;
+    background-color: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .meeting-notes__button {
+    flex: none;
+    padding: var(--space-inset-xxs) var(--space-inset-sm);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-raised);
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    justify-self: start;
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    &[data-recording] {
+      color: var(--color-text-danger);
+    }
+  }
+
+  .meeting-notes__state,
+  .meeting-notes__live,
+  .meeting-notes__hint {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-regular);
+  }
+
+  .meeting-notes__part {
+    display: grid;
+    gap: var(--space-stack-xs);
+  }
+
+  .meeting-notes__label {
+    display: flex;
+    gap: var(--space-inline-sm);
+    margin: var(--space-none);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .meeting-notes__text,
+  .meeting-notes__hint {
+    margin: var(--space-none);
+    white-space: pre-wrap;
+  }
+
+  .meeting-notes__field {
+    padding: var(--space-inset-xs) var(--space-inset-sm);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-field);
+    background-color: var(--color-bg-field);
+    color: inherit;
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+    resize: vertical;
+  }
+}

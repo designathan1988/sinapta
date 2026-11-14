@@ -52,6 +52,7 @@ export const BLOCK_LOOKS: Readonly<Record<string, SlashLook>> = {
   breadcrumb: { icon: "breadcrumb", group: ADVANCED },
   "synced-block": { icon: "synced", group: ADVANCED },
   button: { icon: "button", group: ADVANCED },
+  "meeting-notes": { icon: "sparkles", group: ADVANCED },
 };
 
 const HEADING_ICONS: readonly IconName[] = [

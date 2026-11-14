@@ -14,6 +14,7 @@ import {
   DATE_TEXT,
   EDITOR_TEXT,
   INTEGRATION_TEXT,
+  MEETING_TEXT,
   MOVE_TEXT,
   ONBOARDING_TEXT,
   PAGE_TEXT,
@@ -55,6 +56,7 @@ export const COPY = {
   teamspace: TEAMSPACE_TEXT.teamspace,
   moveTo: MOVE_TEXT.moveTo,
   integration: INTEGRATION_TEXT.integration,
+  meeting: MEETING_TEXT.meeting,
 } as const;
 
 export { pluralize } from "./copy/index.ts";
