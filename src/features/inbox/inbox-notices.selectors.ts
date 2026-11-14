@@ -49,6 +49,7 @@ function mentions(state: AppState, me: string, read: ReadonlySet<string>) {
         text: `${COPY.inbox.mentioned} ${textOf(block)}`,
         isRead: read.has(key),
         isNotice: true,
+        kind: "mention",
       },
     ];
   });
@@ -74,6 +75,7 @@ function replies(state: AppState, me: string, read: ReadonlySet<string>) {
             text: `${author.name} ${COPY.inbox.replied} ${comment.text}`,
             isRead: read.has(key),
             isNotice: true,
+            kind: "mention",
           },
         ];
       });

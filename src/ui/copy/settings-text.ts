@@ -9,6 +9,7 @@ export const SETTINGS_TEXT = {
     sections: {
       account: "My account",
       preferences: "Preferences",
+      notifications: "Notifications",
       general: "General",
       people: "People",
       teamspaces: "Teamspaces",
@@ -33,6 +34,17 @@ export const SETTINGS_TEXT = {
       owner: "Workspace owner",
       member: "Member",
       guest: "Guest",
+    },
+    notificationsLead: "Decide when and how you want to be notified",
+    inApp: "In-app notifications",
+    notices: {
+      mention: [
+        "Mentions and replies",
+        "When someone mentions you or replies to a discussion you are in.",
+      ],
+      edit: ["Page updates", "When someone else edits a page you created."],
+      share: ["Page invitations", "When a page is shared with you."],
+      reminder: ["Reminders", "When a date you set to remind you falls due."],
     },
     appearance: "Appearance",
     appearanceHint: "Choose how Pagecraft looks on this device.",

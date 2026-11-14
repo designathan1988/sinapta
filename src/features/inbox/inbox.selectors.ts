@@ -11,7 +11,7 @@ import {
   type PageBlock,
 } from "../../blocks/page/index.ts";
 import type { Block, BlockId, Workspace } from "../../model/index.ts";
-import type { AppState } from "../../state/index.ts";
+import { type AppState, type NoticeKind } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { selectNotices } from "./inbox-notices.selectors.ts";
 
@@ -27,6 +27,8 @@ export interface Reminder {
   // From another person (a mention, a reply, an edit, a share), not a
   // reminder this person set.
   readonly isNotice?: boolean;
+  // Which switch of Settings › Notifications turns it off.
+  readonly kind: NoticeKind;
 }
 
 function pageOf(workspace: Workspace, block: Block): PageBlock | undefined {
@@ -71,6 +73,7 @@ function rowReminders(
         date,
         text: property.name,
         isRead,
+        kind: "reminder",
       },
     ];
   });
@@ -97,6 +100,7 @@ export function selectAllReminders(state: AppState): Reminder[] {
           date: mention.date,
           text: textOf(block),
           isRead: read.has(key),
+          kind: "reminder",
         },
       ];
     });
@@ -105,8 +109,9 @@ export function selectAllReminders(state: AppState): Reminder[] {
 
 // The reminders due by today, newest first.
 export function selectReminders(state: AppState, today: string): Reminder[] {
+  const muted = new Set(state.ui.mutedNotices);
   return [...selectAllReminders(state), ...selectNotices(state)]
-    .filter((item) => item.date <= today)
+    .filter((item) => item.date <= today && !muted.has(item.kind))
     .sort((a, b) => b.date.localeCompare(a.date));
 }
 

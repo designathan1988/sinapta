@@ -65,8 +65,8 @@ in `src/persistence/`.
   text remains.)
 - [x] 27.2 People mentions ("@" lists the workspace's people), each
   comment's author, the inbox's mentions and replies, the edits others
-  make to one's pages, and a guest's shared pages. (Notification settings
-  remain.)
+  make to one's pages, and a guest's shared pages; Settings ›
+  Notifications turns each kind off or on.
 - [x] 27.3 Page history names who wrote each version.
 
 ## Milestone 28: People properties

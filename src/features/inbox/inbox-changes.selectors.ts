@@ -68,6 +68,7 @@ export function edits(state: AppState, context: NoticeContext): Reminder[] {
         text: `${edit.editedBy.name} ${COPY.inbox.edited}`,
         isRead: read.has(key),
         isNotice: true,
+        kind: "edit",
       },
     ];
   });
@@ -92,6 +93,7 @@ export function shares(state: AppState, context: NoticeContext): Reminder[] {
         text: COPY.inbox.sharedWithYou,
         isRead: read.has(key),
         isNotice: true,
+        kind: "share",
       },
     ];
   });

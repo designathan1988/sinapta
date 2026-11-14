@@ -10,6 +10,8 @@ export {
   type CopiedBlocks,
   type LastTone,
   type MapCamera,
+  type NoticeKind,
+  NOTICE_KINDS,
   type OpenOverlay,
   type OverlayChild,
   type PersistenceState,

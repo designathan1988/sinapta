@@ -1,7 +1,11 @@
 // The part of the `ui` slice that is saved and restored on reload.
 import * as v from "valibot";
 import { blockIdSchema, viewIdSchema } from "../model/index.ts";
-import { createInitialUiState, type UiState } from "./app-state.ts";
+import {
+  createInitialUiState,
+  NOTICE_KINDS,
+  type UiState,
+} from "./app-state.ts";
 import { PEEK_WIDTH } from "./widths.ts";
 
 const persistedUiSchema = v.object({
@@ -14,6 +18,7 @@ const persistedUiSchema = v.object({
   recentPageIds: v.optional(v.array(blockIdSchema), []),
   isHomeOpen: v.optional(v.boolean(), false),
   readReminders: v.optional(v.array(v.string()), []),
+  mutedNotices: v.optional(v.array(v.picklist(NOTICE_KINDS)), []),
 });
 
 export type PersistedUi = v.InferOutput<typeof persistedUiSchema>;
@@ -29,6 +34,7 @@ export function toPersistedUi(ui: UiState): PersistedUi {
     recentPageIds: [...ui.recentPageIds],
     isHomeOpen: ui.isHomeOpen,
     readReminders: [...ui.readReminders],
+    mutedNotices: [...ui.mutedNotices],
   };
 }
 

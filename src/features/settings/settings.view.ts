@@ -22,6 +22,7 @@ import { renderSelect } from "../../ui/select/index.ts";
 import { SETTINGS_OVERLAY_KIND } from "../../ui/shortcuts/index.ts";
 import { renderTeamspaceSettings } from "../teamspaces/index.ts";
 import { renderImportRow } from "./settings-import.view.ts";
+import { renderNotifications } from "./settings-notifications.view.ts";
 import { renderRow } from "./settings-row.view.ts";
 import {
   renderAccount,
@@ -42,6 +43,7 @@ const SECTIONS: readonly {
 }[] = [
   { id: "account", icon: "person", group: "account" },
   { id: "preferences", icon: "settings", group: "account" },
+  { id: "notifications", icon: "bell", group: "account" },
   { id: "general", icon: "settings", group: "workspace" },
   { id: "people", icon: "person", group: "workspace" },
   { id: "teamspaces", icon: "building", group: "workspace" },
@@ -54,6 +56,7 @@ const RENDERERS: Record<
 > = {
   account: renderAccount,
   preferences: (state, dispatch) => renderPreferences(state, dispatch),
+  notifications: renderNotifications,
   general: renderGeneral,
   people: renderPeople,
   teamspaces: renderTeamspaceSettings,

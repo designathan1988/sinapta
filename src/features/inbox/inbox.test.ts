@@ -66,6 +66,7 @@ describe("the inbox", () => {
         date: "2026-11-10",
         text: "Call Ana 2026-11-10",
         isRead: false,
+        kind: "reminder",
       },
     ]);
   });
@@ -122,6 +123,7 @@ describe("the inbox", () => {
         date: "2026-11-11",
         text: "Due",
         isRead: false,
+        kind: "reminder",
       },
     ]);
   });

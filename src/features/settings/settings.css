@@ -175,3 +175,25 @@
     }
   }
 }
+
+@layer features {
+  /* A group of rows in a section, as Notion's "In-app notifications". */
+  .settings__subtitle {
+    margin: var(--space-stack-lg) var(--space-none) var(--space-stack-xs);
+    padding-block-end: var(--space-stack-sm);
+    border-block-end: var(--size-border-thin) solid var(--color-border-subtle);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-medium);
+  }
+
+  /* A switch at a row's end: the bare button around its mark. */
+  .settings__switch {
+    display: inline-grid;
+    place-items: center;
+    padding: var(--space-none);
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+  }
+}

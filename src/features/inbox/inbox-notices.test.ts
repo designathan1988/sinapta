@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { buildWorkspace, toBlockId } from "../../model/index.ts";
 import { createInitialState, type AppState } from "../../state/index.ts";
 import { selectNotices } from "./inbox-notices.selectors.ts";
+import { selectReminders } from "./inbox.selectors.ts";
 
 const PAGE = { icon: null, isFavorite: false, isTrashed: false };
 const AT = "2026-11-14T10:00:00.000Z";
@@ -104,6 +105,17 @@ describe("the inbox's notices", () => {
     });
 
     expect(notices.map((notice) => notice.text)).toContain("Shared with you");
+  });
+
+  it("leaves out the kinds turned off in Settings › Notifications", () => {
+    const state = signedInAs("u1");
+
+    const notices = selectReminders(
+      { ...state, ui: { ...state.ui, mutedNotices: ["mention"] } },
+      "2026-12-31",
+    );
+
+    expect(notices).toEqual([]);
   });
 
   it("lists nothing while no one is signed in", () => {

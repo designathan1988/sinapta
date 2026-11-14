@@ -113,6 +113,8 @@ export interface UiState {
   } | null;
   // The reminders read in the inbox, by block and date.
   readonly readReminders: readonly string[];
+  // The kinds of notice this person turned off in Settings › Notifications.
+  readonly mutedNotices: readonly NoticeKind[];
   // The versions of the page whose history is open, once read.
   readonly pageVersions: {
     readonly pageId: BlockId;
@@ -146,6 +148,9 @@ export interface UiState {
   // Where a map view was zoomed and moved to; the others frame their pins.
   readonly mapCamera?: MapCamera;
 }
+
+export const NOTICE_KINDS = ["mention", "edit", "share", "reminder"] as const;
+export type NoticeKind = (typeof NOTICE_KINDS)[number];
 
 export interface MapCamera {
   readonly viewId: string;
@@ -208,6 +213,7 @@ export function createInitialUiState(): UiState {
     peek: null,
     pageVersions: null,
     readReminders: [],
+    mutedNotices: [],
     viewSearches: {},
     searchFilters: NO_SEARCH_FILTERS,
     sidebarWidth: SIDEBAR_WIDTH.initial,

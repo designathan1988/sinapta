@@ -39,6 +39,7 @@ describe("settings, as Notion's", () => {
     expect(sections.map((item) => item.textContent.trim())).toEqual([
       "My account",
       "Preferences",
+      "Notifications",
       "General",
       "People",
       "Teamspaces",
@@ -53,7 +54,7 @@ describe("settings, as Notion's", () => {
   it("opens another section from the list", () => {
     const { sections, sent } = rendered();
 
-    sections[5]?.click();
+    sections[6]?.click();
 
     expect(sent).toContainEqual(
       expect.objectContaining({
@@ -90,7 +91,7 @@ describe("settings, as Notion's", () => {
   it("asks the server for the people when People opens", () => {
     const { sections, sent } = rendered();
 
-    sections[3]?.click();
+    sections[4]?.click();
 
     expect(sent).toContainEqual({
       type: "sync.request",

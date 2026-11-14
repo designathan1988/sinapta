@@ -1,4 +1,8 @@
-export { inboxCommands, markRemindersRead } from "./inbox.commands.ts";
+export {
+  inboxCommands,
+  markRemindersRead,
+  toggleNotices,
+} from "./inbox.commands.ts";
 export {
   selectAllReminders,
   selectReminders,
