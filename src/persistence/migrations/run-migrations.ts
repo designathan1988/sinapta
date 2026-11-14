@@ -34,6 +34,7 @@ import { addAutomationWebhooks } from "./0032-automation-webhook.ts";
 import { addAutomationSlack } from "./0033-automation-slack.ts";
 import { addAutomationNotices } from "./0034-automation-notices.ts";
 import { addDataSources } from "./0035-data-sources.ts";
+import { addSourceOwners } from "./0036-source-owners.ts";
 
 // A pure function from format version n to n + 1.
 export type Migration = (
@@ -77,6 +78,7 @@ export const MIGRATIONS: readonly Migration[] = [
   addAutomationSlack,
   addAutomationNotices,
   addDataSources,
+  addSourceOwners,
 ];
 
 export type MigrationResult =

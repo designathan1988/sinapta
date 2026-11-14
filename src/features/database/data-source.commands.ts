@@ -16,7 +16,7 @@ import {
   type Operation,
   type ViewId,
 } from "../../model/index.ts";
-import { defineCommand } from "../../state/index.ts";
+import { defineCommand, type AppState } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { DEFAULT_VIEW_NAME, emptyView } from "./database.commands.ts";
 
@@ -50,6 +50,20 @@ export const linkDataSource = defineCommand<{
   },
 });
 
+// A source added to this database, unlinked, is a database of its own
+// again, listed in the sidebar.
+function released(
+  state: AppState,
+  command: { readonly databaseId: BlockId; readonly sourceId: BlockId },
+): Operation[] {
+  const source = selectDatabase(state, command.sourceId);
+  if (source?.props.sourceOf !== command.databaseId) return [];
+  const { sourceOf: _owner, ...props } = source.props;
+  return [
+    { type: "record.update", kind: "block", id: source.id, patch: { props } },
+  ];
+}
+
 // Unlinks a source; the views that showed it show the database again.
 export const unlinkDataSource = defineCommand<{
   databaseId: BlockId;
@@ -75,16 +89,19 @@ export const unlinkDataSource = defineCommand<{
       ];
     });
     const update = withSources(database, sources, command.meta.now);
-    return { operations: [update, ...views] };
+    return {
+      operations: [update, ...views, ...released(state, command)],
+    };
   },
 });
 
 function sourceRecord(
   ids: { readonly id: BlockId; readonly viewId: ViewId },
-  parentId: BlockId | null,
+  owner: DatabaseBlock,
   now: string,
 ): Block {
   const { id, viewId } = ids;
+  const parentId = owner.parentId;
   return {
     id,
     type: DATABASE_TYPE,
@@ -99,6 +116,7 @@ function sourceRecord(
       viewIds: [viewId],
       templateIds: [],
       defaultTemplateId: null,
+      sourceOf: owner.id,
     },
     createdAt: now,
     updatedAt: now,
@@ -116,7 +134,7 @@ export const addDataSource = defineCommand<{ databaseId: BlockId }>({
     if (database === undefined || id === undefined || viewId === undefined)
       return {};
     const { now } = command.meta;
-    const record = sourceRecord({ id, viewId }, database.parentId, now);
+    const record = sourceRecord({ id, viewId }, database, now);
     const siblings = siblingIds(state.workspace, database.parentId);
     const index = siblings.indexOf(database.id) + 1;
     const sources = [...(database.props.sourceIds ?? []), id];

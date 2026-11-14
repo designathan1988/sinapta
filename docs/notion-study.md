@@ -1516,9 +1516,13 @@ Groups, Notion and Pagecraft alike (Pagecraft changed to match):
     source" beside it and links it, Link existing data source links
     another database, and a view's Source chooses among them (its rows
     and properties then those of the source); a linked source opens or
-    unlinks, its views going back to the database's own rows. One
-    difference: Pagecraft's added source is also a page in the sidebar,
-    where Notion keeps it inside the database.
+    unlinks, its views going back to the database's own rows. A source
+    added there stays out of the sidebar while linked, as Notion keeps it
+    inside the database (schema 36), and shows again once unlinked.
+    Found on the way: a view's Source set back to the database came back
+    after a reload, because an update from the server, carrying the
+    whole record, never took a cleared field away; fixed for every
+    optional field of a block or a view (`src/model/operation.schema.ts`).
 69. **done** [real-user-testing skill, the human hand: Pagecraft
     `h1-updates`, `h1c-tooltip-time`, `h2-view-settings`; Notion
     `n128-tooltip-time`, `n129-vs-hand`] Tested as a person does it

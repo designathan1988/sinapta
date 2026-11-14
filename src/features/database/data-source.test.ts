@@ -34,6 +34,7 @@ describe("a database's data sources, as Notion's", () => {
     const parent = state.workspace.rootIds;
 
     expect(source?.props.title).toEqual([{ text: "New data source" }]);
+    expect(source?.props.sourceOf).toBe(databaseId);
     expect(parent.indexOf(sourceId)).toBe(parent.indexOf(databaseId) + 1);
   });
 
@@ -67,8 +68,10 @@ describe("a database's data sources, as Notion's", () => {
 
     app.dispatch(unlinkDataSource.create({ databaseId, sourceId }));
 
+    const source = selectDatabase(app.store.getState(), sourceId);
     expect(app.database().props.sourceIds).toEqual([]);
     expect(app.view().sourceId).toBeUndefined();
+    expect(source?.props).not.toHaveProperty("sourceOf");
     expect(titles()).toEqual(["Own row"]);
   });
 });

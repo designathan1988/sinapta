@@ -54,6 +54,9 @@ export const databasePropsSchema = v.object({
   // The other databases it holds as data sources (version 35), as
   // Notion's Manage data sources: its views may show any of them.
   sourceIds: v.optional(v.array(blockIdSchema)),
+  // The database it was added to as a data source (version 36): kept
+  // inside that database, as Notion's, not listed in the sidebar.
+  sourceOf: v.optional(blockIdSchema),
 });
 
 // Property type name to the schema of that type's config, supplied by the

@@ -100,4 +100,29 @@ describe("selectTreeRows", () => {
 
     expect(rows.map((row) => row.isDatabase)).toEqual([false, true]);
   });
+
+  it("keeps a data source added to a database inside it, as Notion's", () => {
+    const database = (title: string, extra: object) => ({
+      type: "database",
+      props: {
+        ...page(title),
+        properties: [],
+        viewIds: [],
+        templateIds: [],
+        defaultTemplateId: null,
+        ...extra,
+      },
+    });
+    const listed = (sourceIds: string[]) =>
+      selectTreeRows({
+        ...createInitialState(),
+        workspace: buildWorkspace([
+          { id: "d", ...database("Tasks", { sourceIds }) },
+          { id: "s", ...database("New data source", { sourceOf: "d" }) },
+        ]),
+      }).map((row) => row.title);
+
+    expect(listed(["s"])).toEqual(["Tasks"]);
+    expect(listed([])).toEqual(["Tasks", "New data source"]);
+  });
 });

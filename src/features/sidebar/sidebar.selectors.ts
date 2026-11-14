@@ -3,6 +3,7 @@ import {
   selectPage,
   selectPageTitle,
 } from "../../blocks/page/index.ts";
+import { selectDatabase } from "../../blocks/database/index.ts";
 import type { BlockId } from "../../model/index.ts";
 import type { AppState } from "../../state/index.ts";
 
@@ -27,10 +28,20 @@ interface Walk {
   readonly level: number;
 }
 
+// A data source added to a database lives inside it, as Notion's, while
+// that database still lists it.
+function isKeptInside(state: AppState, id: BlockId): boolean {
+  const owner = selectDatabase(state, id)?.props.sourceOf;
+  if (owner === undefined) return false;
+  const sources = selectDatabase(state, owner)?.props.sourceIds ?? [];
+  return sources.includes(id);
+}
+
 function addRows(state: AppState, walk: Walk, rows: TreeRow[]): void {
   for (const id of walk.ids) {
     const page = selectPage(state, id);
     if (page === undefined || page.props.isTrashed) continue;
+    if (isKeptInside(state, id)) continue;
     // The rows of a database are shown in its table, not in the tree.
     const childIds = page.type === DATABASE_TYPE ? [] : page.childIds;
     const childPageIds = childIds.filter((childId) => {

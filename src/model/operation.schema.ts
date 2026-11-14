@@ -67,11 +67,38 @@ const wireOperationSchema = v.union([
 const wireOperationsSchema = v.array(wireOperationSchema);
 
 // Operations read from the server, or undefined when one is malformed.
+// The optional top-level fields of a block and of a view: an update on
+// the wire carries the whole record, so one it lacks was cleared.
+function optionalKeys(entries: Readonly<Record<string, v.GenericSchema>>) {
+  return Object.entries(entries).flatMap(([key, schema]) =>
+    schema.type === "optional" ? [key] : [],
+  );
+}
+
+const CLEARABLE: Readonly<Record<"block" | "view", readonly string[]>> = {
+  block: optionalKeys(blockSchema.entries),
+  view: optionalKeys(viewSchema.entries),
+};
+
+// The update as the receiver applies it: the whole record, with each
+// optional field it lacks set to undefined, which takes that field away.
+function asWhole(operation: Operation): Operation {
+  if (operation.type !== "record.update" || operation.kind === "settings")
+    return operation;
+  const cleared: Record<string, undefined> = {};
+  for (const key of CLEARABLE[operation.kind])
+    if (!(key in operation.patch)) cleared[key] = undefined;
+  // Two branches, so that each kind keeps its own patch type.
+  return operation.kind === "block"
+    ? { ...operation, patch: Object.assign(cleared, operation.patch) }
+    : { ...operation, patch: Object.assign(cleared, operation.patch) };
+}
+
 export function parseWireOperations(
   json: unknown,
 ): readonly Operation[] | undefined {
   const result = v.safeParse(wireOperationsSchema, json);
-  return result.success ? result.output : undefined;
+  return result.success ? result.output.map(asWhole) : undefined;
 }
 
 export interface CurrentRecords {

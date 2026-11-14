@@ -40,9 +40,12 @@ function nameOf(database: DatabaseBlock): string {
 // How many of the container's views show a source (null: its own rows).
 function viewsShowing(context: TableContext, sourceId: BlockId | null) {
   const own = holderDatabase(context);
+  const linked = new Set(own.props.sourceIds ?? []);
   return own.props.viewIds.filter((viewId) => {
-    const view = context.state.workspace.views[viewId];
-    return (view?.sourceId ?? null) === sourceId;
+    const chosen = context.state.workspace.views[viewId]?.sourceId;
+    // A source no longer linked shows the database's own rows.
+    const shown = chosen !== undefined && linked.has(chosen) ? chosen : null;
+    return shown === sourceId;
   }).length;
 }
 

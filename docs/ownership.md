@@ -341,7 +341,10 @@ owner listed here exists.
 | Import direction, file and function limits, banned names | `eslint.config.js` | 1 |
 | Native-resolution captures of Pagecraft and Notion, each control pointed at | `scripts/capture.ts` | 20 |
 | A person's hand in captures: reach, clicks, drags, wheel, typing, and what it feels after each step | `scripts/capture-gestures.ts` (motion, typing and sight in `scripts/capture-*.ts` beside it) | 20 |
-| How to test as a real user and judge feedback | `.claude/skills/real-user-testing/SKILL.md` | 20 |
+| How to drive the app with a person's gestures, and photograph each state | `.claude/skills/real-user-testing/SKILL.md` | 20 |
+| What the app lets a person do, read live from the code | `scripts/inventory.ts` (`npm run inventory`) | 20 |
+| How to script and judge a complete test of a part or of the app | `.claude/skills/feature-test-scripts/SKILL.md` | 20 |
+| Test scripts of each part, with their results | `docs/test-scripts/` (status in its `README.md`) | 20 |
 | What Notion looks like and does, and how far Pagecraft matches it | `docs/notion-study.md` | 20 |
 | Raw-value ban and class naming in CSS | `stylelint.config.js` | 1 |
 | Content Security Policy | `vite.config.ts` (added to the built page) | 1 |
