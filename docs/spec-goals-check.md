@@ -1,12 +1,12 @@
 # Specification goals: itemized check
 
-Checked on 2026-11-14, at commit `test(app): back, forward, copy link
-and print` and after it. Every goal of the specification and of the
+Checked on 2026-11-14, at commit `docs: the itemized check of every
+specification goal`. Every goal of the specification and of the
 plans that widened it is listed once, with its status and the evidence
 for it.
 
 - **Test**: a test file that exercises the goal; `npm run verify` runs
-  them all (2,264 tests, all passing, the suite in 8.6 s).
+  them all (2,272 tests, all passing, the suite in about 8 s).
 - **Photo**: a capture plan in `.captures/plans/` whose photos were taken
   with `npm run capture` from the running app and looked at; `pNN` are
   Pagecraft, `nNN` Notion.
@@ -87,9 +87,52 @@ version 3 scope of ADR-0013 and the plan
 | Word and character count of the page | Done | `src/features/page-info/page-info.test.ts` |
 | Word count of a block selection | n/a | Notion shows none (finding 53, `n99-home-customize`) |
 
-## S2 §4.3–4.5: databases
+## S2 §4.3: blocks
 
-See the section added below from the database audit.
+Paths: `blk/` is `src/blocks/`, `db/` is `src/features/database/`.
+
+| Goal | Status | Evidence |
+| --- | --- | --- |
+| Simple table with header row and column | Done | `blk/simple-table/simple-table.test.ts`, `simple-table-view.test.ts` |
+| Columns, 2 to 5, resizable | Done | `blk/column-list/column-list.test.ts`, `column-cap.test.ts`, `blk/column/column-view.test.ts` |
+| Equation block and inline TeX | Done | `blk/equation/equation.test.ts`, `src/features/editor/editor-equation.test.ts`, `src/ui/rich-text/equation.test.ts`, `src/model/tex/tex-parse.test.ts` |
+| Breadcrumb block | Done | `blk/breadcrumb/breadcrumb.test.ts` |
+| File, PDF, video, audio | Done | `blk/media-blocks.test.ts` |
+| Embed | Done, narrowed | `blk/embed/embed.test.ts` (31 hosts); photo `p79-paste-as` |
+| Synced block | Done | `blk/synced-block/synced-block.test.ts` |
+| Button block: insert blocks, add a database row | Done | `blk/button/button.test.ts`, `button-view.test.ts` |
+| Inline database and linked view | Done | `db/inline-database.test.ts`, `db/database-inline-view.test.ts`, `db/linked-view.test.ts`, `db/linked-view-view.test.ts` |
+
+## S2 §4.4: database properties
+
+| Goal | Status | Evidence |
+| --- | --- | --- |
+| Status with To-do, In progress, Complete | Done | `db/properties/status/status.test.ts`, `status-checkbox.test.ts`, `db/row-groups-status.test.ts` |
+| Options: rename, recolor, reorder, delete; descriptions | Done | `db/option.test.ts`, `db/property-edit-view.test.ts` |
+| Number formats, bar and ring | Done | `db/properties/number/number.test.ts`, `number-config-view.test.ts`; photos `p19-properties`, `p19-number-tiles` |
+| Date end, time, formats, relative dates | Done | `db/properties/date/date.test.ts`, `date-filters.test.ts`, `db/cell-date-view.test.ts` |
+| Files and media | Done | `db/properties/files/files.test.ts`, `files-editor-view.test.ts` |
+| Unique ID with prefix | Done | `db/properties/unique-id/unique-id.test.ts` |
+| Relation, one way or two way | Done | `db/properties/relation/relation.test.ts` ("a one-way relation") |
+| Rollup with every function | Done | `db/properties/rollup/rollup.test.ts`, `rollup-filters.test.ts`, `rollup-notion.test.ts` |
+| Formula, with Notion 2.0's functions | Done | `db/properties/formula/formula.test.ts`, `formula-notion2.test.ts`; photo `p77-formula2` |
+| Button property: set values, open a page | Done | `db/button-press.test.ts`, `db/button-automation-view.test.ts` |
+
+## S2 §4.5: database views and behavior
+
+| Goal | Status | Evidence |
+| --- | --- | --- |
+| Filter groups with and / or, typed operators | Done | `db/filter-edit.test.ts`, `db/table-model.test.ts`, `db/filter-operators.test.ts`; photo `p24-between` |
+| Group by in table, list and gallery; collapse; hide empty; board sub-groups | Done | `db/grouped-layouts-view.test.ts`, `db/row-groups.test.ts`, `db/layouts/board/board-lanes.test.ts` |
+| Column calculations | Done | `db/calculations.test.ts` (sum, average, median, min, max, range, dates, percents, per group) |
+| Row selection, bulk edit, drag order, wrap, freeze, fill down | Done | `db/row-bulk.test.ts`, `db/table-rows-view.test.ts` |
+| Board: order, columns, card size and preview, by status, multi-select, checkbox or date | Done | `db/layouts/board/board-card.test.ts`, `board-view.test.ts`, `board.test.ts`; photo `p34-board` |
+| Gallery card size and preview; calendar week view and options | Done | `db/layouts/row-card/row-card*.test.ts`, `db/layouts/calendar/calendar*.test.ts` |
+| Timeline, chart (column, bar, line, donut), form, feed | Done | `db/layouts/timeline/*.test.ts`, `db/layouts/chart/chart-view.test.ts`, `db/layouts/form/form-view.test.ts`, `db/layouts/feed/feed-view.test.ts` |
+| Open rows to the side, centered or full page; previous and next | Done | `src/features/row-peek/peek.test.ts`, `db/row-open.test.ts` |
+| Row templates and a default | Done | `db/template.test.ts`, `db/templates-menu-view.test.ts` |
+| CSV import and export | Done | `db/csv-import.test.ts`, `db/csv-export.test.ts` |
+| Lock a database or a view | Done | `db/view-lock.test.ts`, `blk/page/page-lock.test.ts` |
 
 ## S2 §4.6: workspace
 
@@ -139,7 +182,7 @@ See the section added below from the database audit.
 | --- | --- | --- |
 | Typing under 16 ms on 1,000 blocks | Done | `src/features/editor/editor-typing-speed.test.ts`: a keystroke's command and the page drawn again |
 | A 5,000-row table responsive | Done | `table-model-speed.test.ts` (sort, filter, group, formulas, rollups under 100 ms), `table-render-speed.test.ts` (drawn window, a change redrawn under 50 ms) |
-| Full tests under 10 s; verify under 30 s | Done | the suite: 8.75 s for 2,264 tests; `npm run verify` (types, lint, styles, format, tests): 25 s |
+| Full tests under 10 s; verify under 30 s | Done | the suite: about 8 s for 2,272 tests; `npm run verify` (types, lint, styles, format, tests): 25 s |
 | WCAG 2.2 AA contrast | Done | `scripts/token-contrast.test.ts` |
 | Every action by keyboard; focus visible | Done | `scoped-keys.test.ts`, `table-keys.test.ts`, `slash-menu-keys.test.ts`, `mention-menu-keys.test.ts`; `:focus-visible` in every control's CSS; photo `sc4-keyboard` |
 | Reload restores the open page and the sidebar | Done | `workspace-repository.test.ts`; photos `s05-reload`, `sc3-reload` |

@@ -54,6 +54,28 @@ describe("column calculations", () => {
     expect(calculate(rows, points, "sum")).toBe("13");
     expect(calculate(rows, points, "average")).toBe("4.33");
     expect(calculate(rows, points, "median")).toBe("2");
+    expect(calculate(rows, points, "min")).toBe("1");
+    expect(calculate(rows, points, "max")).toBe("10");
+    expect(calculate(rows, points, "range")).toBe("9");
+  });
+
+  it("finds the earliest and latest dates and the range between them", () => {
+    const app = createDatabaseApp(
+      [{ name: "Due", type: "date" }],
+      [
+        ["a", { start: "2026-11-02" }],
+        ["b", { start: "2026-11-20" }],
+        ["c", { start: "2026-11-10" }],
+      ],
+    );
+    const { rows } = modelOf(app);
+    const due = property(app, 0);
+
+    expect(calculate(rows, due, "earliest-date")).toContain("2");
+    expect(calculate(rows, due, "latest-date")).toContain("20");
+    expect(calculate(rows, due, "date-range")).toBe(
+      "November 2, 2026 → November 20, 2026",
+    );
   });
 
   it("works out the share of checked boxes", () => {

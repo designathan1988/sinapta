@@ -154,3 +154,26 @@ describe("the relation property", () => {
     expect(app.valueOf(app.write, app.project)).toEqual([app.alpha]);
   });
 });
+
+describe("a one-way relation", () => {
+  it("keeps no inverse property on the other database", () => {
+    const app = createApp();
+
+    app.dispatch(
+      setRelationTarget.create({
+        databaseId: app.databaseId,
+        propertyId: app.project,
+        targetId: app.projects,
+        isTwoWay: false,
+      }),
+    );
+    app.relate(app.write, [app.alpha]);
+
+    expect(app.inverse()).toBeUndefined();
+    expect(app.database().props.properties[0]?.config).toMatchObject({
+      databaseId: app.projects,
+      isTwoWay: false,
+    });
+    expect(app.valueOf(app.write, app.project)).toEqual([app.alpha]);
+  });
+});
