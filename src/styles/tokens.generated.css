@@ -309,6 +309,7 @@
     --base-size-15x5: 15.5rem;
     --base-size-15x625: 15.625rem;
     --base-size-3x5625: 3.5625rem;
+    --base-size-28x5: 28.5rem;
     --base-size-17x25: 17.25rem;
     --base-size-16x875: 16.875rem;
     --base-size-2x75: 2.75rem;
@@ -565,6 +566,7 @@
     --size-menu-date: var(--base-size-15x5);
     --size-menu-date-rule: var(--base-size-16x25);
     --size-menu-short: var(--base-size-15x625);
+    --size-menu-share: var(--base-size-28x5);
     --size-menu-tile: var(--base-size-3x5625);
     --size-menu-narrow: var(--base-size-12x5);
     --size-menu-row: var(--base-size-7);

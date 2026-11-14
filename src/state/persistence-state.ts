@@ -34,6 +34,8 @@ export interface PersistenceState {
   readonly account: AccountState;
   // The workspaces on the server and the one joined.
   readonly sync: SyncState;
+  // A page published to the web, shown to anyone: read only, alone.
+  readonly isPublic: boolean;
 }
 
 export const INITIAL_PERSISTENCE: PersistenceState = {
@@ -47,4 +49,5 @@ export const INITIAL_PERSISTENCE: PersistenceState = {
   assetUrls: {},
   account: SIGNED_OUT_LOCAL,
   sync: NOT_SYNCED,
+  isPublic: false,
 };

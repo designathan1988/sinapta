@@ -1,0 +1,185 @@
+@layer features {
+  /* The top bar's Share, as Notion's: words, no icon. */
+  .share__button {
+    min-block-size: var(--size-control-sm);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: none;
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: var(--color-bg-hover);
+    }
+  }
+
+  /* Notion's Share menu: 456 px, tabs over the body, a foot under a rule. */
+  .share[popover] {
+    inline-size: var(--size-menu-share);
+    padding: var(--space-none);
+  }
+
+  .share__tabs {
+    display: flex;
+    gap: var(--space-inline-md);
+    align-items: center;
+    padding: var(--space-none) var(--space-inset-md);
+    border-block-end: var(--size-border-thin) solid var(--color-border-default);
+  }
+
+  .share__tab {
+    min-block-size: var(--size-sign-in-field);
+    padding: var(--space-none) var(--space-inset-xs);
+    border: none;
+    border-block-end: var(--size-border-thick) solid transparent;
+    background: none;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+
+    &[aria-selected="true"] {
+      border-block-end-color: var(--color-text-primary);
+      color: var(--color-text-primary);
+    }
+  }
+
+  .share__learn {
+    margin-inline-start: auto;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+  }
+
+  .share__body {
+    display: grid;
+    gap: var(--space-stack-sm);
+    padding: var(--space-inset-md);
+  }
+
+  .share__invite,
+  .share__actions {
+    display: flex;
+    gap: var(--space-inline-sm);
+  }
+
+  .share__field {
+    flex: 1;
+    min-block-size: var(--size-control-md);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: none;
+    border-radius: var(--radius-field);
+    background-color: var(--color-bg-hover);
+    box-shadow: inset 0 0 0 var(--size-border-thin) var(--color-border-default);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+  }
+
+  .share__primary,
+  .share__secondary {
+    display: inline-flex;
+    gap: var(--space-inline-xs);
+    align-items: center;
+    justify-content: center;
+    min-block-size: var(--size-control-md);
+    padding: var(--space-none) var(--space-inset-md);
+    border: none;
+    border-radius: var(--radius-field);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+  }
+
+  .share__primary {
+    background-color: var(--color-accent-fill);
+    color: var(--color-text-on-accent);
+  }
+
+  .share__secondary {
+    background: none;
+    box-shadow: inset 0 0 0 var(--size-border-thin) var(--color-border-default);
+    color: var(--color-text-primary);
+  }
+
+  .share__wide {
+    inline-size: 100%;
+  }
+
+  .share__people {
+    display: grid;
+    gap: var(--space-stack-xs);
+    margin: var(--space-none);
+    padding: var(--space-none);
+    list-style: none;
+  }
+
+  .share__person,
+  .share__general {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+  }
+
+  .share__avatar,
+  .share__lock {
+    display: grid;
+    flex: none;
+    place-items: center;
+    inline-size: var(--size-control-md);
+    block-size: var(--size-control-md);
+    border-radius: var(--radius-full);
+    background-color: var(--color-bg-hover);
+    color: var(--color-text-secondary);
+  }
+
+  .share__lock {
+    border-radius: var(--radius-md);
+  }
+
+  .share__who {
+    display: grid;
+    flex: 1;
+    min-inline-size: 0;
+  }
+
+  .share__muted,
+  .share__label,
+  .share__note {
+    margin: var(--space-none);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+  }
+
+  .share__label {
+    font-weight: var(--font-weight-medium);
+  }
+
+  .share__select {
+    padding: var(--space-none);
+    border: none;
+    background: none;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+  }
+
+  .share__title {
+    margin: var(--space-none);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-strong);
+    text-align: center;
+  }
+
+  .share__publish > .share__muted {
+    text-align: center;
+  }
+
+  .share__foot {
+    display: flex;
+    justify-content: flex-end;
+    padding: var(--space-inset-sm) var(--space-inset-md);
+    border-block-start: var(--size-border-thin) solid
+      var(--color-border-default);
+  }
+}

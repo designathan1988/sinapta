@@ -1,9 +1,14 @@
 // Settings › My account, General and People on the server (ADR-0013):
 // the account's name, the workspace's name, its members and invitations.
-import { renameAccount, setPeople, type SyncRequest } from "../state/index.ts";
+import {
+  renameAccount,
+  setPeople,
+  setSharing,
+  type SyncRequest,
+} from "../state/index.ts";
 import { readUser } from "./account.schema.ts";
 import { getJson, type Sync } from "./sync-session.ts";
-import { readPeople } from "./sync.schema.ts";
+import { readPeople, readSharing } from "./sync.schema.ts";
 
 export type PeopleRequest = Exclude<
   SyncRequest,
@@ -38,6 +43,29 @@ function routeOf(request: PeopleRequest, base: string): Asked | undefined {
       return [`${base}/name`, { name: request.name }];
     case "profile":
       return undefined;
+    default:
+      return sharingRoute(request, base);
+  }
+}
+
+type SharingRequest = Extract<
+  PeopleRequest,
+  { kind: "sharing" | "share" | "unshare" | "general" | "publish" }
+>;
+
+function sharingRoute(request: SharingRequest, base: string): Asked {
+  const page = `${base}/pages/${request.pageId}/sharing`;
+  switch (request.kind) {
+    case "sharing":
+      return [page, undefined];
+    case "share":
+      return [page, { email: request.email, access: request.access }];
+    case "unshare":
+      return [`${page}/remove`, { email: request.email }];
+    case "general":
+      return [`${page}/general`, { general: request.general }];
+    case "publish":
+      return [`${page}/publish`, { published: request.published }];
   }
 }
 
@@ -62,5 +90,10 @@ export async function answerPeople(
   if (asked === undefined) return;
   const [path, body] = asked;
   const reply = await getJson(sync.send, path, body);
+  if ("pageId" in request) {
+    const sharing = readSharing(reply, request.pageId);
+    if (sharing !== undefined) sync.dispatch(setSharing.create({ sharing }));
+    return;
+  }
   if (request.kind !== "rename") publishPeople(sync, reply);
 }

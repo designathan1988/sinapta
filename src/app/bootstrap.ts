@@ -169,7 +169,7 @@ async function startPersistence(
 
 // The one dispatcher, with every command, tidier and guard. A change a
 // lock refuses says so, as Notion's locked pages do.
-function createAppDispatch(store: AppStore, sync: SyncLink): Dispatch {
+export function createAppDispatch(store: AppStore, sync: SyncLink): Dispatch {
   const dispatchCommand = createDispatcher({
     store,
     registry: createCommandRegistry(COMMANDS),

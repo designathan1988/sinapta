@@ -59,7 +59,16 @@ export const setReadOnly = defineCommand<{ isReadOnly: boolean }>({
   },
 });
 
+// A page published to the web: nothing of it can change (ADR-0013).
+export const showPublicPage = defineCommand<NoPayload>({
+  type: "persistence.showPublicPage",
+  handle: (state) => ({
+    persistence: { ...state.persistence, isReadOnly: true, isPublic: true },
+  }),
+});
+
 export const persistenceCommands = [
+  showPublicPage,
   setSaveStatus,
   setReadOnly,
   requestExport,

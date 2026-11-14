@@ -81,6 +81,7 @@ export {
   requestExport,
   requestImport,
   setReadOnly,
+  showPublicPage,
   setSaveStatus,
 } from "./persistence.commands.ts";
 export {
@@ -158,11 +159,19 @@ export {
   syncCommands,
 } from "./sync.commands.ts";
 export type { Transaction } from "./history.ts";
-export { requestSync, setPeople, setWorkspaces } from "./sync.commands.ts";
+export {
+  requestSync,
+  setPeople,
+  setSharing,
+  setWorkspaces,
+} from "./sync.commands.ts";
 export {
   NOT_SYNCED,
   type InviteSummary,
+  type GeneralAccess,
   type MemberSummary,
+  type PageAccess,
+  type PageSharing,
   type SyncRequest,
   type SyncState,
   type WorkspaceSummary,

@@ -16,6 +16,7 @@ import {
   PAGE_TEXT,
   PROPERTY_TEXT,
   SETTINGS_TEXT,
+  SHARE_TEXT,
   SIDEBAR_VIEWS_TEXT,
   TEMPLATE_TEXT,
   WORKSPACE_TEXT,
@@ -43,6 +44,7 @@ export const COPY = {
   },
   onboarding: ONBOARDING_TEXT.onboarding,
   account: ACCOUNT_TEXT.account,
+  share: SHARE_TEXT.share,
 } as const;
 
 export { pluralize } from "./copy/index.ts";

@@ -7,6 +7,7 @@ import type { AppState } from "./app-state.ts";
 import type {
   InviteSummary,
   MemberSummary,
+  PageSharing,
   SyncRequest,
   SyncState,
   WorkspaceSummary,
@@ -71,7 +72,14 @@ export const setPeople = defineCommand<{
     withSync(state, { members, invites, request: null }),
 });
 
+// A page's sharing as the server holds it.
+export const setSharing = defineCommand<{ sharing: PageSharing }>({
+  type: "sync.setSharing",
+  handle: (state, { sharing }) => withSync(state, { sharing, request: null }),
+});
+
 export const syncCommands = [
+  setSharing,
   setPeople,
   applyRemote,
   loadServerWorkspace,

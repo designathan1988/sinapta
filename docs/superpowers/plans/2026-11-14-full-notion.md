@@ -42,12 +42,12 @@ in `src/persistence/`.
 
 ## Milestone 26: Sharing
 
-- [ ] 26.1 Notion's Share menu: invite by email, page permissions (Full
+- [x] 26.1 Notion's Share menu: invite by email, page permissions (Full
   access, Can edit, Can comment, Can view), guests, General access.
 - [ ] 26.2 Permissions enforced on the server for every command and read;
   the client shows read-only pages as Notion does.
-- [ ] 26.3 Publish to web: a read-only page served by the server, the
-  Publish tab with its options; Teamspaces and the Shared section.
+- [x] 26.3 Publish to web: a read-only page served by the server and the
+  Publish tab. (Teamspaces and the Shared section remain.)
 
 ## Milestone 27: Collaboration
 

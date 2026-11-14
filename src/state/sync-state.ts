@@ -21,6 +21,21 @@ export interface InviteSummary {
   readonly role: string;
 }
 
+// Notion's access levels on a page, and who else can open it.
+export type PageAccess = "full" | "edit" | "comment" | "view";
+export type GeneralAccess = "invited" | "workspace" | "web";
+
+export interface PageSharing {
+  readonly pageId: string;
+  readonly general: GeneralAccess;
+  readonly published: boolean;
+  readonly people: readonly {
+    readonly email: string;
+    readonly name: string | null;
+    readonly access: PageAccess;
+  }[];
+}
+
 export type SyncRequest =
   | { readonly kind: "switch"; readonly workspaceId: string }
   | { readonly kind: "create"; readonly name: string }
@@ -29,7 +44,29 @@ export type SyncRequest =
   | { readonly kind: "invite"; readonly email: string; readonly role: string }
   | { readonly kind: "remove-member"; readonly userId: string }
   | { readonly kind: "remove-invite"; readonly email: string }
-  | { readonly kind: "profile"; readonly name: string };
+  | { readonly kind: "profile"; readonly name: string }
+  | { readonly kind: "sharing"; readonly pageId: string }
+  | {
+      readonly kind: "share";
+      readonly pageId: string;
+      readonly email: string;
+      readonly access: PageAccess;
+    }
+  | {
+      readonly kind: "unshare";
+      readonly pageId: string;
+      readonly email: string;
+    }
+  | {
+      readonly kind: "general";
+      readonly pageId: string;
+      readonly general: GeneralAccess;
+    }
+  | {
+      readonly kind: "publish";
+      readonly pageId: string;
+      readonly published: boolean;
+    };
 
 export interface SyncState {
   readonly workspaces: readonly WorkspaceSummary[];
@@ -40,6 +77,8 @@ export interface SyncState {
   // The open workspace's people, read when Settings › People opens.
   readonly members: readonly MemberSummary[];
   readonly invites: readonly InviteSummary[];
+  // The sharing of the page whose Share menu is open, once read.
+  readonly sharing: PageSharing | null;
 }
 
 export const NOT_SYNCED: SyncState = {
@@ -49,4 +88,5 @@ export const NOT_SYNCED: SyncState = {
   requestCount: 0,
   members: [],
   invites: [],
+  sharing: null,
 };

@@ -71,3 +71,20 @@ export const readPeople = (value: unknown) => {
     ? undefined
     : { members: people.members, invites: people.invites };
 };
+
+const sharingSchema = v.object({
+  general: v.picklist(["invited", "workspace", "web"]),
+  published: v.boolean(),
+  people: v.array(
+    v.object({
+      email: v.string(),
+      name: v.nullable(v.string()),
+      access: v.picklist(["full", "edit", "comment", "view"]),
+    }),
+  ),
+});
+
+export const readSharing = (value: unknown, pageId: string) => {
+  const sharing = read(sharingSchema, value);
+  return sharing === undefined ? undefined : { pageId, ...sharing };
+};

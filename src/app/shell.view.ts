@@ -16,6 +16,7 @@ import { renderPageInfo } from "../features/page-info/index.ts";
 import { renderPageMenuButton } from "../features/page-menu/index.ts";
 import { renderPageOutline } from "../features/page-outline/index.ts";
 import { renderPeek } from "../features/row-peek/index.ts";
+import { renderShareButton } from "../features/share/index.ts";
 import { renderButton } from "../ui/button/index.ts";
 import { COPY } from "../ui/copy.ts";
 import { renderOverlay } from "./shell-overlays.view.ts";
@@ -37,7 +38,9 @@ function renderShowSidebar(
   state: AppState,
   dispatch: Dispatch,
 ): TemplateResult | typeof nothing {
-  if (selectIsSidebarShown(state)) return nothing;
+  if (selectIsSidebarShown(state) || state.persistence.isPublic) {
+    return nothing;
+  }
   return html`<span data-sidebar-open
     >${renderButton({
       label: COPY.shell.showSidebar,
@@ -57,7 +60,16 @@ function renderTopBar(state: AppState, dispatch: Dispatch): TemplateResult {
         : renderBreadcrumbs(state, dispatch)
     }
     <span class="app__spacer"></span>
-    <span class="app__save-status" role="status"
+    ${state.persistence.isPublic ? nothing : renderStatusAndTools(state, dispatch)}
+  </header>`;
+}
+
+// What a page shows at the bar's end, except on a published page.
+function renderStatusAndTools(
+  state: AppState,
+  dispatch: Dispatch,
+): TemplateResult {
+  return html`<span class="app__save-status" role="status"
       >${
         state.persistence.isReadOnly
           ? COPY.shell.readOnlyTab
@@ -69,10 +81,10 @@ function renderTopBar(state: AppState, dispatch: Dispatch): TemplateResult {
         ? nothing
         : [
             renderPageInfo(state, dispatch),
+            renderShareButton(state, dispatch),
             renderActivePageMenu(state, dispatch),
           ]
-    }
-  </header>`;
+    }`;
 }
 
 export function renderShell(
