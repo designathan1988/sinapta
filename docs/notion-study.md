@@ -1348,6 +1348,22 @@ items above, found while photographing them:
     which also fixed typing straight after a mention at a line's end (the
     letters were lost). Notion's heading was put back ("Heading four",
     `n105-fix-heading`).
+58. **done** [`n106-column`; Pagecraft `p95-column`] At 1440 × 900 Notion's
+    text runs 708 px (224 to 932 in a 1170 px frame, beside its scroll
+    bar), its title box 720 px. Pagecraft's column was 704 px; it is now
+    708 px, 231 to 939 in the same main area.
+59. **done** [`n107-blocks-words`; Pagecraft `p96-selection-count`] Three
+    blocks selected with Shift+Down, then the page's "…": the selection
+    is gone and the foot reads the page's "23 palavras". In Pagecraft the
+    menu of selected blocks (their handle) keeps the selection, is headed
+    "2 blocks", acts on all of them and ends with their words and
+    characters.
+60. **done** [`n108-connections`; Pagecraft `p98-apps`, `p98b-apps-off`]
+    Notion's Settings › Conexões lists Gmail, Google Calendar, Slack,
+    Outlook, iCloud and Asana, then "Atlassian, Box e GitHub, e mais",
+    each with "Conectar". Pagecraft lists the same apps and each connects
+    here (ADR-0014, decision 6); a public holiday calendar's events showed
+    under Home's Upcoming, and both test connections were removed after.
 
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,

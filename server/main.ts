@@ -1,6 +1,7 @@
 // `npm run serve`: the built app and its API on one port, without Vite.
 // The port is PORT, or 5199.
 import { webPushSender } from "./push.ts";
+import { webOutside } from "./outside.ts";
 import { readFile } from "node:fs/promises";
 import { createServer, type ServerResponse } from "node:http";
 import { extname, join, normalize, resolve } from "node:path";
@@ -54,6 +55,7 @@ const api = createApi(ROUTES, {
   events: createEventHub(),
   passwordCost: PASSWORD_COST,
   push: webPushSender,
+  outside: webOutside,
 });
 const port = Number(process.env.PORT ?? "5199");
 

@@ -97,4 +97,35 @@ describe("Home's favorites", () => {
     expect(section?.textContent).not.toContain("Other");
     expect(rendered([]).host.querySelector("#home-favorites")).toBeNull();
   });
+
+  it("lists the connected calendars' coming events under Upcoming", () => {
+    const initial = createInitialState();
+    const sync = {
+      ...initial.persistence.sync,
+      calendarEvents: [
+        { title: "Launch review", date: "2026-11-20", time: "09:30" },
+        { title: "Holiday", date: "2026-11-23", time: null },
+      ],
+    };
+    const state = {
+      ...initial,
+      persistence: { ...initial.persistence, sync },
+      ui: { ...initial.ui, isHomeOpen: true },
+    };
+    const host = document.createElement("div");
+
+    render(
+      renderHome(state, () => ({ ok: true })),
+      host,
+    );
+
+    const events = [...host.querySelectorAll("[data-event]")].map((item) =>
+      item.textContent.replace(/\s+/g, " ").trim(),
+    );
+    expect(events).toEqual([
+      "Fri, Nov 20 Launch review 09:30",
+      "Mon, Nov 23 Holiday All day",
+    ]);
+    expect(host.textContent).not.toContain("Nothing dated");
+  });
 });

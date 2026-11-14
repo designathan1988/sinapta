@@ -99,6 +99,12 @@ export type SyncRequest =
   | { readonly kind: "create-integration"; readonly name: string }
   | { readonly kind: "remove-integration"; readonly integrationId: string }
   | {
+      readonly kind: "connect-app";
+      readonly app: string;
+      readonly address?: string;
+    }
+  | { readonly kind: "disconnect-app"; readonly app: string }
+  | {
       readonly kind: "connect-integration";
       readonly integrationId: string;
       readonly pageId: string;
@@ -163,6 +169,22 @@ export interface SyncState {
   // shown once.
   readonly integrations: readonly IntegrationSummary[];
   readonly newSecret: { readonly name: string; readonly secret: string } | null;
+  // The apps connected (Settings › Connections), and the coming events of
+  // the connected calendars, for Home.
+  readonly apps: readonly ConnectedApp[];
+  readonly calendarEvents: readonly CalendarEventSummary[];
+}
+
+export interface ConnectedApp {
+  readonly app: string;
+  // The host of the address it reaches, as a webhook's own is secret.
+  readonly host: string | null;
+}
+
+export interface CalendarEventSummary {
+  readonly title: string;
+  readonly date: string;
+  readonly time: string | null;
 }
 
 export const NOT_SYNCED: SyncState = {
@@ -180,4 +202,6 @@ export const NOT_SYNCED: SyncState = {
   teamspaces: [],
   integrations: [],
   newSecret: null,
+  apps: [],
+  calendarEvents: [],
 };

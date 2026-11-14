@@ -92,4 +92,31 @@
     padding: 0;
     list-style: none;
   }
+
+  .integrations__status {
+    margin-inline-start: var(--space-inline-xs);
+    color: var(--color-text-success);
+    font-size: var(--font-size-xs);
+  }
+
+  /* An app that needs an address: Connect opens its field below. */
+  .integrations__connect {
+    display: grid;
+    justify-items: end;
+    gap: var(--space-stack-xs);
+
+    & > summary {
+      list-style: none;
+      cursor: pointer;
+    }
+
+    & > summary::-webkit-details-marker {
+      display: none;
+    }
+  }
+
+  .integrations__address {
+    display: flex;
+    gap: var(--space-inline-sm);
+  }
 }

@@ -181,6 +181,15 @@ export {
   type AssetId,
   type AssetSaveResult,
 } from "./asset.schema.ts";
+export {
+  APP_IDS,
+  APP_SPECS,
+  appOfLink,
+  appSpec,
+  needsAddress,
+  type AppKind,
+  type AppSpec,
+} from "./app-connection.ts";
 export { parseCsv, writeCsv } from "./csv.ts";
 export {
   isPlan,

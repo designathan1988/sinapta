@@ -58,6 +58,7 @@ export const WORKSPACE_TEXT = {
       "The page and its subpages were saved as a ZIP of Markdown files.",
     print: "Print or save as PDF",
     lockPage: "Lock page",
+    emailPage: "Email page",
     lockDatabase: "Lock database",
     copyLink: "Copy link",
     copyLinkKeys: "Ctrl+L",

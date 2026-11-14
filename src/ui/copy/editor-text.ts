@@ -120,6 +120,7 @@ export const EDITOR_TEXT = {
   },
   pasteAs: {
     title: "Paste as",
+    preview: "Preview",
     mention: "Mention",
     url: "URL",
     bookmark: "Create bookmark",

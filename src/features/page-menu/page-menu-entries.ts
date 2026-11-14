@@ -32,6 +32,7 @@ import {
   styleItems,
 } from "./page-menu-style.view.ts";
 import { layoutItems } from "./page-menu-layout.view.ts";
+import { emailItem } from "./page-menu-email.view.ts";
 
 const TEXT = COPY.pageMenu;
 const DIVIDER: MenuEntry = { kind: "divider" };
@@ -201,7 +202,13 @@ export function pageMenuEntries(
     page.id,
     dispatch,
   );
-  const acts = [copyLink, copyContentsItem(state, page), duplicate, moveTo];
+  const acts = [
+    copyLink,
+    copyContentsItem(state, page),
+    ...emailItem(state, page),
+    duplicate,
+    moveTo,
+  ];
   return grouped([
     acts.flatMap((item) => (item === undefined ? [] : [item])),
     [

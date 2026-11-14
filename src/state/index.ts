@@ -162,6 +162,7 @@ export {
   loadServerWorkspace,
   syncCommands,
 } from "./sync.commands.ts";
+export { setApps } from "./app-connections.commands.ts";
 export type { Transaction } from "./history.ts";
 export {
   replayOffline,
@@ -183,6 +184,8 @@ export {
   type MemberSummary,
   type ListedTeamspace,
   type IntegrationSummary,
+  type CalendarEventSummary,
+  type ConnectedApp,
   type PageAccess,
   type PageSharing,
   type Presence,

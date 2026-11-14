@@ -12,7 +12,7 @@ const askSchema = v.object({ url: v.pipe(v.string(), v.url()) });
 const PRIVATE_HOST =
   /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|0\.|\[?::1\]?$|169\.254\.)/i;
 
-function isFetchable(url: URL): boolean {
+export function isFetchable(url: URL): boolean {
   return (
     (url.protocol === "http:" || url.protocol === "https:") &&
     !PRIVATE_HOST.test(url.hostname)

@@ -120,4 +120,14 @@ export const MIGRATIONS: readonly string[] = [
   // 9: a workspace's plan, as Notion's; every plan is free on this
   // server, and each keeps Notion's limits.
   `ALTER TABLE workspaces ADD COLUMN plan TEXT NOT NULL DEFAULT 'free';`,
+  // 10: the apps connected to a workspace, as Notion's Connections, and
+  // the address each one reaches (a channel's webhook, a calendar's iCal).
+  `CREATE TABLE app_connections (
+     workspace_id TEXT NOT NULL REFERENCES workspaces (id) ON DELETE CASCADE,
+     app TEXT NOT NULL,
+     address TEXT,
+     connected_by TEXT NOT NULL,
+     created_at INTEGER NOT NULL,
+     PRIMARY KEY (workspace_id, app)
+   );`,
 ];

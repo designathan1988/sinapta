@@ -52,6 +52,24 @@ the record should say so.
    (ADR-0009 already says so for the token source files); it is never
    edited by hand.
 
+6. **App connections.** Notion's connections (Gmail, Google Calendar,
+   Slack, Outlook, iCloud, Asana, GitHub, Jira, Figma, Google Drive) sign
+   in through each company's OAuth with Notion's own registered client,
+   which this server does not have. Each connects instead the way the app
+   lets anyone in, with no new dependency: Slack by a channel's incoming
+   webhook (the workspace's mention notices are posted to it); Google
+   Calendar, Outlook and iCloud by a calendar's private iCal address (its
+   coming events show under Home's Upcoming); Gmail by the page menu's
+   "Email page", a `mailto:` draft in the device's mail app; Asana,
+   GitHub, Jira, Figma and Google Drive by previewing their links when
+   pasted. Addresses must be `https` on the open web; the server keeps
+   them and tells clients only their host (`server/app-connections.ts`,
+   migration 10).
+7. **Plans.** A workspace has Notion's plan, Free by default (migration
+   9); its owners choose another in Settings › Plans at no cost, as no
+   payment runs here. Each plan keeps Notion's limits: files up to 5 MB on
+   Free, and page history of 7, 30, 90 days or all.
+
 ## Options Considered
 
 ### Speech: Chrome's `SpeechRecognition` only

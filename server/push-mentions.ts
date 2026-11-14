@@ -2,6 +2,7 @@
 // other devices, as Notion's notices are: once per block and person, never
 // the author, only members of the workspace; and pages shared with them.
 import type { ApiContext } from "./api.ts";
+import { notifyChannels } from "./app-connections.ts";
 import { pushNotice } from "./push.ts";
 import { findUser } from "./users.ts";
 import { membership } from "./workspaces.ts";
@@ -86,6 +87,23 @@ export async function pushMentions(
     body: `${author.name} mentioned you`,
     url: "/",
   });
+  if (people.length > 0) {
+    const names = people.map((id) => nameOf(context, id)).join(", ");
+    await notifyChannels(
+      context,
+      workspaceId,
+      `${author.name} mentioned ${names} in Pagecraft`,
+    );
+  }
+}
+
+function nameOf(context: ApiContext, userId: string): string {
+  const row: unknown = context.db
+    .prepare("SELECT name FROM users WHERE id = ?")
+    .get(userId);
+  const name: unknown =
+    typeof row === "object" && row !== null ? Reflect.get(row, "name") : null;
+  return typeof name === "string" ? name : "someone";
 }
 
 // A page shared with someone who has an account: told on their devices.

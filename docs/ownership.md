@@ -177,7 +177,7 @@ owner listed here exists.
 | Seeds: block trees that become pages with new ids | `src/features/onboarding/seed.ts` | 17 |
 | The template gallery and its built-in page templates | `src/features/templates/` | 17 |
 | A page saved as a template (the flag) and the gallery's "Your templates" | `src/blocks/page/page-template.commands.ts`, `src/features/templates/own-template.commands.ts`, `own-templates.view.ts` | 31 |
-| Connections' "Connect apps" (Notion's app connections, shown and not available here) | `src/features/integrations/third-party.view.ts` | 31 |
+| Connected apps: the catalog, the server's store and routes, a channel's notices, a calendar's events, Connections' "Connect apps", Home's events, "Email page" and the Paste-as preview | `src/model/app-connection.ts`, `server/app-connections.ts`, `server/ical.ts`, `server/outside.ts`, `src/persistence/integration-client.ts`, `src/features/integrations/third-party.view.ts`, `src/features/home/home.view.ts`, `src/features/page-menu/page-menu-email.view.ts`, `src/features/editor/editor-paste-as.view.ts` | 31 |
 | A workspace's plan and its limits (file size, page history), Settings › Plans and the workspace menu's Upgrade | `src/model/plan.ts`, `src/state/plan.selectors.ts`, `server/members.ts` (`setWorkspacePlan`), `src/features/settings/settings-plans.view.ts`, `src/features/sidebar/workspace-menu.ts` | 31 |
 | Comments: discussions on a page, a block, its text or a row's property value; replies, resolving, deleting after a question | `src/features/comments/` | 17 |
 | Value discussions leaving with their property | `src/features/comments/value-discussion-tidy.ts` | 20 |

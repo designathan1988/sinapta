@@ -11,6 +11,7 @@ import {
 import {
   setActivePage,
   type AppState,
+  type CalendarEventSummary,
   type Dispatch,
 } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
@@ -88,6 +89,31 @@ function renderDate(item: UpcomingDate, dispatch: Dispatch): TemplateResult {
   </li>`;
 }
 
+// A coming event of a connected calendar (Settings › Connections), with
+// its day and time; it opens nothing, as it lives in that calendar.
+function renderEvent(event: CalendarEventSummary): TemplateResult {
+  const day = DAY_FORMAT.format(new Date(`${event.date}T00:00:00Z`));
+  return html`<li class="home__date" data-event>
+    <span class="home__date-day">${day}</span>
+    <span class="home__card-title">${event.title}</span>
+    <span class="home__date-property">${event.time ?? TEXT.allDay}</span>
+  </li>`;
+}
+
+function renderUpcoming(
+  upcoming: readonly UpcomingDate[],
+  events: readonly CalendarEventSummary[],
+  dispatch: Dispatch,
+) {
+  if (upcoming.length === 0 && events.length === 0) {
+    return html`<p class="home__empty">${TEXT.noUpcoming}</p>`;
+  }
+  return html`<ul class="home__dates">
+    ${upcoming.map((item) => renderDate(item, dispatch))}
+    ${events.map(renderEvent)}
+  </ul>`;
+}
+
 // The favorites, as cards; nothing while there are none.
 function renderFavorites(state: AppState, dispatch: Dispatch) {
   const favorites = selectFavoritePages(state).slice(0, RECENT_SHOWN);
@@ -123,13 +149,7 @@ export function renderHome(
     ${renderFavorites(state, dispatch)}
     <section class="home__section" aria-labelledby="home-upcoming">
       <h2 class="home__heading" id="home-upcoming">${TEXT.upcoming}</h2>
-      ${
-        upcoming.length === 0
-          ? html`<p class="home__empty">${TEXT.noUpcoming}</p>`
-          : html`<ul class="home__dates">
-              ${upcoming.map((item) => renderDate(item, dispatch))}
-            </ul>`
-      }
+      ${renderUpcoming(upcoming, state.persistence.sync.calendarEvents, dispatch)}
     </section>
   </article>`;
 }

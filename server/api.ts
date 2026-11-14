@@ -24,6 +24,15 @@ export interface ApiContext {
   readonly passwordCost: number;
   // Sends Web Push notices; none, and no notice leaves the server.
   readonly push?: PushSender;
+  // Reaches a connected app's address; none, and nothing leaves.
+  readonly outside?: Outside;
+}
+
+// What the server asks of the web for a connected app: a calendar's text,
+// and a message posted to a channel's webhook.
+export interface Outside {
+  readonly getText: (url: URL) => Promise<string | undefined>;
+  readonly postJson: (url: URL, body: unknown) => Promise<void>;
 }
 
 export type Route = (

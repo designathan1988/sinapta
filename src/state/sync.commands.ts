@@ -1,5 +1,6 @@
 // Changes that come from the server (ADR-0013). They change the workspace
 // like any transaction but stay out of this client's undo history.
+import { setApps } from "./app-connections.commands.ts";
 import type { Operation, PageAccess, Workspace } from "../model/index.ts";
 import { createInitialUiState } from "./app-state.ts";
 import {
@@ -161,6 +162,7 @@ export const setConnection = defineCommand<{
 });
 
 export const syncCommands = [
+  setApps,
   setIntegrations,
   setTeamspaceList,
   requestOpenSharing,

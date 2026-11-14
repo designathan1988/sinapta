@@ -95,7 +95,7 @@ export function renderConnections(
 ): TemplateResult {
   if (state.persistence.account.user === null) {
     return html`<p class="settings__hint">${TEXT.signedOut}</p>
-      ${renderThirdPartyApps()}`;
+      ${renderThirdPartyApps(state, dispatch)}`;
   }
   const { integrations } = state.persistence.sync;
   return html`<p class="settings__hint">${TEXT.lead}</p>
@@ -118,5 +118,5 @@ export function renderConnections(
         }
       </tbody>
     </table>
-    ${renderThirdPartyApps()}`;
+    ${renderThirdPartyApps(state, dispatch)}`;
 }

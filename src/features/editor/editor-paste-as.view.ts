@@ -1,5 +1,6 @@
 // The "Paste as" menu Notion opens under a pasted web address: Mention,
 // URL (the link as pasted), Create bookmark and Embed.
+import { appOfLink } from "../../model/index.ts";
 import { nothing, type TemplateResult } from "lit-html";
 import { parseBlockId } from "../../model/index.ts";
 import {
@@ -32,8 +33,24 @@ export function openPasteAs(
   dispatch(openOverlay.create({ overlay }));
 }
 
+// A link to an app connected in Settings › Connections, such as GitHub or
+// Figma, is offered first as a preview: its page's card.
+function previewEntry(
+  href: string,
+  state: AppState,
+  choose: () => void,
+): MenuEntry[] {
+  const app = appOfLink(href);
+  const isConnected =
+    app !== undefined &&
+    state.persistence.sync.apps.some((each) => each.app === app.id);
+  if (!isConnected) return [];
+  return [{ label: TEXT.preview, description: app.name, onSelect: choose }];
+}
+
 function entries(
   typed: Typed & { href: string },
+  state: AppState,
   dispatch: Dispatch,
 ): MenuEntry[] {
   const choose = (kind: PasteAsKind) => (): void => {
@@ -44,6 +61,7 @@ function entries(
   };
   return [
     { kind: "section", label: TEXT.title },
+    ...previewEntry(typed.href, state, choose("bookmark")),
     { label: TEXT.mention, onSelect: choose("mention") },
     { label: TEXT.url, onSelect: close },
     { label: TEXT.bookmark, onSelect: choose("bookmark") },
@@ -64,7 +82,7 @@ export function renderPasteAs(
   if (start === undefined || end === undefined) return nothing;
   return renderMenu({
     label: TEXT.title,
-    items: entries({ blockId, start, end, href }, dispatch),
+    items: entries({ blockId, start, end, href }, state, dispatch),
     onClose: () => dispatch(closeOverlay.create({})),
     isNarrow: true,
   });

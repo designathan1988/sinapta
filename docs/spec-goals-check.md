@@ -13,11 +13,7 @@ for it.
 - **Finding**: an item of `docs/notion-study.md`, where Notion's own
   behaviour was recorded.
 
-Status: **Done** (built and evidenced); **Done, as §1 asks** (a third
-party's service that a local server cannot run, such as Slack or payment:
-§1 asks for its menu to be drawn as Notion's and to say so, and it is);
-**Not in Notion** (a goal of an earlier plan that Notion today does not
-have; matching Notion means leaving it out, and the finding shows it).
+Status: **Done** (built and evidenced), for every row.
 
 A script checks this table: every test file and photo it names exists
 (124 rows, none missing, 2026-11-14). Every task of
@@ -181,7 +177,7 @@ Paths: `blk/` is `src/blocks/`, `db/` is `src/features/database/`.
 | Map view | Done | `layouts/map/map.test.ts`; photos `p44-map`, `p58-map-move`; the first frame from the pins: `map.test.ts` |
 | AI: Ask AI, Space prompt, streaming, autofill, chat | Done | `server/ai.test.ts`, `ai-stream.test.ts`, `ai-fill.test.ts`, `src/persistence/ai-client.test.ts`; photos `p43-ai`, `p49`–`p51`, `p60-ai-stream`, `p86-start`; Insert below, Replace, Discard and the chat: `src/features/ai/ai.test.ts`; Space on an empty line: `editor-input.test.ts`; the Ollama branch: `server/ai.test.ts` |
 | Integrations and the public API | Done | `server/public-api.test.ts`; photo `p74-integrations` |
-| Notion's app connections (Slack, Google Drive, GitHub, Jira, Figma, Asana) | Done, as §1 asks | Settings › Connections › "Connect apps", each "Connect" disabled with "Needs Notion's servers": they run on Notion's servers, which a local server cannot reach; `src/features/integrations/third-party-view.test.ts`; photo `p93-plans-apps` |
+| Notion's app connections (Gmail, Google Calendar, Slack, Outlook, iCloud, Asana, GitHub, Jira, Figma, Google Drive) | Done | each connects the way the app lets anyone in (ADR-0014, decision 6): Slack's channel webhook receives the mention notices, a calendar's iCal address puts its events under Home's Upcoming, Gmail adds "Email page", and the others' links are offered as a preview when pasted: `server/app-connections.test.ts`, `server/ical.test.ts`, `src/model/app-connection.test.ts`, `third-party-view.test.ts`, `home-view.test.ts`, `page-menu-email.test.ts`, `editor-paste-preview.test.ts`; photos `n108-connections`, `p98-apps` (a public holiday calendar's events on Home), `p98b-apps-off` |
 | Plans and Upgrade | Done | Notion's Free, Plus, Business and Enterprise, each with Notion's limits: files up to 5 MB on Free (50 MB, this server's largest, above), page history of 7, 30, 90 days or all; the workspace menu's Upgrade opens them and a choice applies at once, at no cost, by the workspace's owners only (payment, Notion's own service, has no part on this server): `server/member-routes.test.ts`, `settings-plans-view.test.ts`, `page-history-plan.test.ts`, `asset-store.test.ts`; photo `p97-plans` |
 | Link previews from a server | Done | `server/link-preview.test.ts`, `src/state/link-preview.test.ts`; photo `p73-bookmark`; no host on this machine or its network is fetched: `server/link-preview.test.ts`; the card: `src/blocks/bookmark/bookmark-view.test.ts` |
 | AI Meeting Notes with transcription from the microphone | Done | `transcriber.test.ts`, `recorder-listener.test.ts`, `src/persistence/meeting-client.test.ts`, `server/transcription.test.ts`; photo `p87-meeting-mic`: Chrome's microphone played a spoken WAV (made with Windows' speech synthesizer), the app recorded it in 6-second pieces, the server's local Whisper model (`Xenova/whisper-base.en`, Transformers.js) wrote the words, and the AI summed them up. The small model mishears some words of a synthetic voice ("lunch" for "launch"); typed notes and a refused microphone: `meeting-notes.test.ts`, `transcriber.test.ts` |

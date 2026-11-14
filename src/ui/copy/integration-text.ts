@@ -21,11 +21,24 @@ export const INTEGRATION_TEXT = {
   },
   thirdParty: {
     title: "Connect apps",
-    lead: "Notion's own connections run on Notion's servers. This local server cannot reach them, so they are shown here and cannot be turned on.",
-    apps: ["Slack", "Google Drive", "GitHub", "Jira", "Figma", "Asana"],
+    lead: "Connect apps to use with Pagecraft. Each connects the way it lets anyone in: a channel's webhook, a calendar's private address, or links previewed as they are pasted.",
     connect: "Connect",
-    unavailable: "Needs Notion's servers",
+    disconnect: "Disconnect",
+    connected: "Connected",
+    signedOut: "Sign in to a Pagecraft server to connect apps.",
+    kinds: {
+      webhook: "Post the workspace's notices, such as mentions, to a channel.",
+      calendar: "Show the calendar's coming events under Home's Upcoming.",
+      mail: "Email a page from its menu, with the mail app on this device.",
+      links: "Preview its links when they are pasted into a page.",
+    },
+    addressLabel: {
+      webhook: "The channel's incoming webhook address",
+      calendar: "The calendar's private address in iCal format",
+    },
+    addressPlaceholder: "https://…",
   },
+
   plans: {
     title: "Plans",
     lead: "Every plan is free on this server: choosing one takes no payment. Each keeps Notion's limits on file size and page history.",

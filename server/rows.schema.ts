@@ -121,3 +121,8 @@ export const integrationRowSchema = v.object({
 });
 
 export const pageIdRowSchema = v.object({ page_id: v.string() });
+
+export const appConnectionRowSchema = v.object({
+  app: v.string(),
+  address: v.nullable(v.string()),
+});

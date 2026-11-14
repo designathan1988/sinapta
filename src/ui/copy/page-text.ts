@@ -120,5 +120,6 @@ export const PAGE_TEXT = {
     favorites: "Favorites",
     upcoming: "Upcoming",
     noUpcoming: "Nothing dated in the next 7 days.",
+    allDay: "All day",
   },
 } as const;
