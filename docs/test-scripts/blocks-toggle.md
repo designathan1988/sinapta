@@ -40,7 +40,7 @@
 | T16 | Ctrl+Alt+T with several, mixed | | all open, then all close | not run | |
 | T17 | Ctrl+Alt+T in a subpage | | parent's toggles untouched | not run | |
 | T18 | Ctrl+Enter on a paragraph | | nothing happens to toggles | not run | |
-| T19 | Enter at the end of an open toggle | type `\nInside one` | new line inside the toggle (Notion) | **finding**: the new line goes beside the toggle at page level (`toggle:Alpha / paragraph:Inside one`); to confirm with a Notion photo. Owner `src/features/editor/` (`splitBlock`) | 01/03 |
+| T19 | Enter at the end of an open toggle | type `\nInside one` | new line inside the toggle (Notion) | **finding, fixed in code, re-run pending**: the new line went beside the toggle at page level (`toggle:Alpha / paragraph:Inside one`). Fixed on 2026-11-14 in `src/features/editor/editor-structure.commands.ts` (`splitBlock`, `newLinePlace`: the new line becomes the toggle's first child), with a unit test; not yet photographed again | 01/03 |
 | T20 | Enter on a closed toggle | | sibling after, children intact | not run | |
 | T21 | Enter on an empty toggle | | per Notion | not run | |
 | T22 | Backspace at the start | | becomes text, children kept | not run | |
@@ -66,6 +66,7 @@
 | T40 | Dark theme | plan with `"theme": "dark"` | contrast of arrow and wash | not run | |
 | T41 | Notion, same steps | Notion plan | numbers in `docs/notion-study.md` | not run: needed to confirm T08, T19, T24, T29c | |
 
-Totals: 43 cases (T01–T41, T29b, T29c) — 18 pass, 4 findings (T08, T19,
-T24, T29c, all to confirm with Notion), 21 not run. No console errors, page
+Totals: 43 cases (T01–T41, T29b, T29c) — 18 pass, 4 findings (T08, T24,
+T29c to confirm with Notion; T19 fixed in code, re-run pending), 21 not
+run. No console errors, page
 errors or server errors in either run.
