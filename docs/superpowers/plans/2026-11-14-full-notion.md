@@ -58,7 +58,8 @@ in `src/persistence/`.
 - [x] 26.3 Publish to web: a read-only page served by the server and the
   Publish tab, and the sidebar's Shared section: the top pages shared
   with people, and "Start collaborating" while none is. Teamspaces:
-  Settings › Teamspaces and its "Create a teamspace", the sidebar's
+  Settings › Teamspaces with its Owners, Access filter and search, and
+  its "Create a teamspace", the sidebar's
   Teamspaces section, pages added inside; a teamspace open to the
   workspace or closed to its members, who join and leave in Settings, and
   the server sends a closed one to its members and maker alone.

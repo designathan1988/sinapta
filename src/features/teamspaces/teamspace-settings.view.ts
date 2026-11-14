@@ -2,7 +2,6 @@
 // workspace's teamspaces in a table, and "New teamspace".
 import "./teamspaces.css";
 import { html, type TemplateResult } from "lit-html";
-import { selectTeamspaces } from "../../blocks/teamspace/index.ts";
 import {
   openOverlay,
   type AppState,
@@ -11,6 +10,10 @@ import {
 import { COPY } from "../../ui/copy.ts";
 import { TEAMSPACE_CREATE_OVERLAY } from "./teamspace-create.view.ts";
 import { renderTeamspaceRow } from "./teamspace-row.view.ts";
+import {
+  renderTeamspaceFilters,
+  selectShownTeamspaces,
+} from "./teamspace-filters.view.ts";
 
 const TEXT = COPY.teamspace;
 
@@ -32,7 +35,7 @@ export function renderTeamspaceSettings(
   state: AppState,
   dispatch: Dispatch,
 ): TemplateResult {
-  const teamspaces = selectTeamspaces(state);
+  const teamspaces = selectShownTeamspaces(state);
   return html`<p class="settings__hint">${TEXT.settingsHint}</p>
     <div class="teamspaces__head">
       <div>
@@ -41,10 +44,12 @@ export function renderTeamspaceSettings(
       </div>
       ${renderNewButton(dispatch)}
     </div>
+    ${renderTeamspaceFilters(state, dispatch)}
     <table class="teamspaces__table">
       <thead>
         <tr>
           <th>${TEXT.columnName}</th>
+          <th>${TEXT.columnOwners}</th>
           <th>${TEXT.columnAccess}</th>
           <th>${TEXT.columnMembers}</th>
           <th>${TEXT.columnUpdated}</th>
@@ -54,7 +59,7 @@ export function renderTeamspaceSettings(
         ${
           teamspaces.length === 0
             ? html`<tr>
-                <td class="teamspaces__none" colspan="4">${TEXT.none}</td>
+                <td class="teamspaces__none" colspan="5">${TEXT.none}</td>
               </tr>`
             : teamspaces.map((teamspace) =>
                 renderTeamspaceRow(teamspace, state, dispatch),

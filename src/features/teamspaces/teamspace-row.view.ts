@@ -90,6 +90,7 @@ export function renderTeamspaceRow(
       >
       ${name}
     </td>
+    <td>${teamspace.createdBy?.name ?? ""}</td>
     <td>${renderAccess(teamspace, state, dispatch)}</td>
     <td>${isClosed ? renderMembers(teamspace, state, dispatch) : nothing}</td>
     <td>${DAY.format(new Date(teamspace.updatedAt))}</td>

@@ -1254,8 +1254,11 @@ items above, found while photographing them:
     and dialog (a new "card" dialog: the title read only, the close
     button alone), a Teamspaces section in the sidebar above Shared, each
     teamspace a row with its letter that opens and closes it and "+" for
-    a page inside. Left: Owners and the filters of Notion's table, closed
-    teamspaces with their own members, the round gray close button.
+    a page inside. Since then: the table's Owners, an Access filter and a
+    search over it (`p68-teamspace-filters`), closed teamspaces with their
+    own members (`p63-closed-teamspace`). Left: Notion's Active and
+    Security filters (Pagecraft archives no teamspace and has no security
+    settings) and the round gray close button.
 
 Test data left as found (2026-11-13): "Linha teste"'s "Caixa de
 seleção" was ticked when the row was made (its "Atualizações" panel,
@@ -1405,6 +1408,23 @@ against the reference on every run.
   dismiss. One overlay at a time, kept in `ui.overlay`.
 
 ## Last run
+
+2026-11-14, review server and the signed-in Notion window, 1440 × 900,
+light theme (`n86`–`n93`, `p52`–`p68`).
+
+- Notion read without changes: the sidebar's Shared and Private, the
+  Share menu "Começar a colaborar" opens, Settings › Teamspaces and its
+  "Create a teamspace", Settings › Notifications, the top bar's
+  "🔒 Particular ⌄" and its "Move page to…", the menus' row insets.
+  "Começar a colaborar" made one empty page and a mistaken selector two
+  more; all three went to Notion's trash (item 47).
+- Pagecraft, each signed in as Review, Grace (member) or Viewer (guest):
+  Shared and Start collaborating, a guest's locked view-only page,
+  teamspaces open and closed, a member kept from the others' private
+  pages, faces and carets of others in the text, inbox notices and their
+  settings, the map moved, zoomed and picked, grouping by person, the AI
+  streamed, the page's place and Move to's popover, the teamspaces'
+  filters.
 
 2026-11-11, review server, 820 × 640, dark theme.
 

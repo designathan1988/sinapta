@@ -166,3 +166,26 @@
     }
   }
 }
+
+@layer features {
+  /* Notion's filters over the table: access, then the search. */
+  .teamspaces__filters {
+    display: flex;
+    gap: var(--space-inline-sm);
+    align-items: center;
+    justify-content: space-between;
+    margin-block-start: var(--space-stack-md);
+  }
+
+  .teamspaces__search {
+    inline-size: 40%;
+    min-block-size: var(--size-control-sm);
+    padding: var(--space-none) var(--space-inset-sm);
+    border: var(--size-border-thin) solid var(--color-border-default);
+    border-radius: var(--radius-field);
+    background-color: var(--color-bg-field);
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+  }
+}
