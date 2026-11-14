@@ -1,21 +1,28 @@
 # Specification goals: itemized check
 
-Checked on 2026-11-14, at commit `docs: the itemized check of every
-specification goal`. Every goal of the specification and of the
+Checked on 2026-11-14, last after the commit `test(app): keyboard reach
+of the main screen`. Every goal of the specification and of the
 plans that widened it is listed once, with its status and the evidence
 for it.
 
 - **Test**: a test file that exercises the goal; `npm run verify` runs
-  them all (2,272 tests, all passing, the suite in about 8 s).
+  them all (2,361 tests, all passing, the suite in about 8 s).
 - **Photo**: a capture plan in `.captures/plans/` whose photos were taken
   with `npm run capture` from the running app and looked at; `pNN` are
   Pagecraft, `nNN` Notion.
 - **Finding**: an item of `docs/notion-study.md`, where Notion's own
   behaviour was recorded.
 
-Status: **Done** (built and evidenced), **Done, narrowed** (built; the
-part that cannot be built or shown here is named), **n/a** (Notion today
-does not have it; the finding says so).
+Status: **Done** (built and evidenced); **Done, as §1 asks** (a third
+party's service that a local server cannot run, such as Slack or payment:
+§1 asks for its menu to be drawn as Notion's and to say so, and it is);
+**Not in Notion** (a goal of an earlier plan that Notion today does not
+have; matching Notion means leaving it out, and the finding shows it).
+
+A script checks this table: every test file and photo it names exists
+(124 rows, none missing, 2026-11-14). Every task of
+`docs/superpowers/plans/2026-11-14-full-notion.md` (22.1 to 31.4) was
+matched to a row of "Version 3" below.
 
 Sources: S1 is `docs/specification.md` §1 "In scope"; S2 is
 `docs/superpowers/specs/2026-11-11-notion-parity-design.md` §4; V3 is the
@@ -54,7 +61,7 @@ version 3 scope of ADR-0013 and the plan
 | Goal | Status | Evidence |
 | --- | --- | --- |
 | Page column about 708 px, Full width | Done | `--size-content-max` 44rem in `editor.css`; `page-style.test.ts` |
-| A 900 px width mode | n/a | Notion's Appearance offers Full width only (finding 52, `n99-home-customize`) |
+| A 900 px width mode | Not in Notion | Notion's Appearance offers Full width only (finding 52, `n99-home-customize`) |
 | Cover across the main area, Reposition, icon over the cover's foot | Done | `editor-cover.test.ts`; photo `p80-discussions` |
 | Add icon, Add cover, Add comment on hover | Done | `editor-title-view.test.ts` |
 | Page style Default, Serif, Mono; Small text | Done | `page-style.test.ts`, `page-menu-view.test.ts`; photo `p81-layout` |
@@ -65,7 +72,7 @@ version 3 scope of ADR-0013 and the plan
 | An empty page's start list | Done | `src/features/editor/editor-start.test.ts`; photos `n101-empty-page`, `p86-start`; finding 54 |
 | Placeholder in a focused empty block | Done | `editor-block-menu.test.ts`; `src/blocks/paragraph/paragraph-view.test.ts` |
 | Home: recent pages, upcoming dates | Done | `src/features/home/home.test.ts` |
-| Home: favorites | n/a | Notion's Home is a sidebar tab today (finding 53, item 37) |
+| Home: favorites | Done | Home lists the favorite pages as cards: `src/features/home/home-view.test.ts` ("Home's favorites"); Notion's Home is a sidebar tab today (finding 53, item 37) |
 
 ## S2 §4.2: editing
 
@@ -85,7 +92,7 @@ version 3 scope of ADR-0013 and the plan
 | Callout icon and color; image width, alignment, full screen | Done | `callout.test.ts`, `src/blocks/image/image*.test.ts`; dragging the width handle: `image-view.test.ts` |
 | Nested numbered list styles | Done | `numbered-list.test.ts` |
 | Word and character count of the page | Done | `src/features/page-info/page-info.test.ts` |
-| Word count of a block selection | n/a | Notion shows none: blocks selected (finding 53, `n99-home-customize`) or text highlighted (finding 55, `n103-selection-words`) leave the page menu's foot on the page's total, as Pagecraft's |
+| Word count of a block selection | Not in Notion | Notion shows none: blocks selected (finding 53, `n99-home-customize`) or text highlighted (finding 55, `n103-selection-words`) leave the page menu's foot on the page's total, as Pagecraft's |
 
 ## S2 §4.3: blocks
 
@@ -161,7 +168,7 @@ Paths: `blk/` is `src/blocks/`, `db/` is `src/features/database/`.
 | Goal | Status | Evidence |
 | --- | --- | --- |
 | Local server, SQLite, migrations, health route | Done | `server/api-origin.test.ts` (health), `src/app/architecture.test.ts` (server and app kept apart); photo `s01-health` |
-| Accounts, scrypt, session cookie, same-origin check, sign-in screens | Done | `server/account-routes.test.ts`, `server/api-origin.test.ts` (a foreign page's change refused), `sign-in-view.test.ts`; photos `p35-sign-in`, `p36-log-out` |
+| Accounts, scrypt, session cookie, same-origin check, sign-in screens, Settings › My account | Done | `server/account-routes.test.ts`, `server/api-origin.test.ts` (a foreign page's change refused), `sign-in-view.test.ts`; photos `p35-sign-in`, `p36-log-out`; My account's name and email: `src/features/settings/settings-account-view.test.ts`, `server/account-routes.test.ts` |
 | Sync: snapshot, operation log, live events, rebase, outbox | Done | `server/workspace-routes.test.ts`, `src/persistence/sync-rebase.test.ts`; photo `s02-sync`; the outbox retried after the server cannot be reached, with Syncing… and Offline: `src/persistence/sync-session.test.ts`, `src/app/shell-view.test.ts` |
 | Several workspaces: create, switch, rename, icon, delete, leave | Done | `server/workspace-delete.test.ts`, `server/member-routes.test.ts`, `src/features/settings/settings-general-view.test.ts`; photos `p37-workspaces`, `p83-workspace-general`, `p84-delete-workspace`; the list and the last one opened: `server/workspace-routes.test.ts`; Log out: `account-client.test.ts`, profile name: `server/account-routes.test.ts` |
 | Members, invitations, roles | Done | `member-routes.test.ts`, `settings-view.test.ts`; photo `p38-people` |
@@ -174,8 +181,8 @@ Paths: `blk/` is `src/blocks/`, `db/` is `src/features/database/`.
 | Map view | Done | `layouts/map/map.test.ts`; photos `p44-map`, `p58-map-move`; the first frame from the pins: `map.test.ts` |
 | AI: Ask AI, Space prompt, streaming, autofill, chat | Done | `server/ai.test.ts`, `ai-stream.test.ts`, `ai-fill.test.ts`, `src/persistence/ai-client.test.ts`; photos `p43-ai`, `p49`–`p51`, `p60-ai-stream`, `p86-start`; Insert below, Replace, Discard and the chat: `src/features/ai/ai.test.ts`; Space on an empty line: `editor-input.test.ts`; the Ollama branch: `server/ai.test.ts` |
 | Integrations and the public API | Done | `server/public-api.test.ts`; photo `p74-integrations` |
-| Notion's app connections (Slack, Google Drive, GitHub, Jira, Figma, Asana) | Shown, not available | Settings › Connections › "Connect apps", each "Connect" disabled with "Needs Notion's servers": they run on Notion's servers, which a local server cannot reach; `src/features/integrations/third-party-view.test.ts`; photo `p93-plans-apps` |
-| Plans and Upgrade | Shown, not available | Workspace menu "Upgrade" opens Settings › Plans: "Free, on your own server"; Upgrade is disabled, as payment is Notion's own service; `src/features/settings/settings-plans-view.test.ts`; photo `p93-plans-apps` |
+| Notion's app connections (Slack, Google Drive, GitHub, Jira, Figma, Asana) | Done, as §1 asks | Settings › Connections › "Connect apps", each "Connect" disabled with "Needs Notion's servers": they run on Notion's servers, which a local server cannot reach; `src/features/integrations/third-party-view.test.ts`; photo `p93-plans-apps` |
+| Plans and Upgrade | Done, as §1 asks | Workspace menu "Upgrade" opens Settings › Plans: "Free, on your own server"; Upgrade is disabled, as payment is Notion's own service; `src/features/settings/settings-plans-view.test.ts`; photo `p93-plans-apps` |
 | Link previews from a server | Done | `server/link-preview.test.ts`, `src/state/link-preview.test.ts`; photo `p73-bookmark`; no host on this machine or its network is fetched: `server/link-preview.test.ts`; the card: `src/blocks/bookmark/bookmark-view.test.ts` |
 | AI Meeting Notes with transcription from the microphone | Done | `transcriber.test.ts`, `recorder-listener.test.ts`, `src/persistence/meeting-client.test.ts`, `server/transcription.test.ts`; photo `p87-meeting-mic`: Chrome's microphone played a spoken WAV (made with Windows' speech synthesizer), the app recorded it in 6-second pieces, the server's local Whisper model (`Xenova/whisper-base.en`, Transformers.js) wrote the words, and the AI summed them up. The small model mishears some words of a synthetic voice ("lunch" for "launch"); typed notes and a refused microphone: `meeting-notes.test.ts`, `transcriber.test.ts` |
 
