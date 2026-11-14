@@ -31,7 +31,7 @@ in `src/persistence/`.
   applied outside undo after taking back this client's unconfirmed ones.
 - [x] 24.3 The unconfirmed transactions kept in IndexedDB (the meta store's
   "outbox"), retried while open and made again on the server's workspace
-  after a reload. (The sync state in the top bar remains.)
+  after a reload; the top bar says Syncing… or Offline while changes wait.
 
 ## Milestone 25: Workspaces
 
@@ -59,7 +59,7 @@ in `src/persistence/`.
 - [x] 27.2 People mentions ("@" lists the workspace's people), each
   comment's author, the inbox's mentions and replies. (Invites, page
   changes and notification settings remain.)
-- [ ] 27.3 Page history and updates with authors.
+- [x] 27.3 Page history names who wrote each version.
 
 ## Milestone 28: People properties
 

@@ -72,6 +72,22 @@ function renderPreview(
   </section>`;
 }
 
+// Who wrote a version, as Notion's history names it: the one who last
+// changed a block of it (ADR-0013); nothing for versions before servers.
+function authorOf(version: PageVersion): string | undefined {
+  const edited = version.blocks
+    .filter((block) => block.editedBy !== undefined)
+    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  return edited[0]?.editedBy?.name;
+}
+
+function authorWho(version: PageVersion) {
+  const author = authorOf(version);
+  return author === undefined
+    ? nothing
+    : html`<span class="page-history__who">${author}</span>`;
+}
+
 function renderVersions(
   versions: readonly PageVersion[],
   activeIndex: number,
@@ -89,7 +105,7 @@ function renderVersions(
               choose(index);
             }}
           >
-            ${WHEN.format(new Date(version.takenAt))}
+            ${WHEN.format(new Date(version.takenAt))} ${authorWho(version)}
           </button>
         </li>`,
     )}

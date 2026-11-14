@@ -56,6 +56,13 @@ function renderShowSidebar(
   >`;
 }
 
+// What the bar says while changes travel to the server, as Notion's
+// "Offline"; nothing once they are all there.
+const SYNC_WORDS: Readonly<Record<string, string>> = {
+  syncing: COPY.verify.syncing,
+  offline: COPY.verify.offline,
+};
+
 function renderTopBar(state: AppState, dispatch: Dispatch): TemplateResult {
   return html`<header class="app__top-bar">
     ${renderShowSidebar(state, dispatch)}
@@ -78,7 +85,8 @@ function renderStatusAndTools(
       >${
         state.persistence.isReadOnly
           ? COPY.shell.readOnlyTab
-          : COPY.saveStatus[state.persistence.status]
+          : (SYNC_WORDS[state.persistence.sync.connection] ??
+            COPY.saveStatus[state.persistence.status])
       }</span
     >
     ${

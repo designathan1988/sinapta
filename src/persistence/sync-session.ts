@@ -4,6 +4,7 @@
 import { parseWireOperations, type PropsSchemas } from "../model/index.ts";
 import {
   applyRemote,
+  setConnection,
   setPresence,
   type AppStore,
   type Dispatch,
@@ -82,16 +83,21 @@ export function flush(link: Link, session: Session): void {
   const entry = session.pending[session.pending.length - session.unsent];
   if (entry === undefined) return;
   session.isSending = true;
+  sync.dispatch(setConnection.create({ connection: "syncing" }));
   const path = `/api/workspaces/${session.id}/operations`;
   const body = { clientId: session.clientId, operations: entry.operations };
   getJson(sync.send, path, body).then(
     () => {
       session.isSending = false;
       session.unsent -= 1;
+      if (session.unsent === 0) {
+        sync.dispatch(setConnection.create({ connection: "synced" }));
+      }
       flush(link, session);
     },
     () => {
       session.isSending = false;
+      sync.dispatch(setConnection.create({ connection: "offline" }));
       setTimeout(() => {
         flush(link, session);
       }, RETRY_MS);

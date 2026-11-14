@@ -4,5 +4,7 @@ export const VERIFY_TEXT = {
     verify: "Verify",
     unverify: "Remove verification",
     verifiedBy: "Verified by",
+    syncing: "Syncing…",
+    offline: "Offline",
   },
 } as const;

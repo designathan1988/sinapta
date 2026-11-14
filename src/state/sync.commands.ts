@@ -94,7 +94,18 @@ export const replayOffline = defineCommand<{
   handle: (_state, { operations }) => ({ operations }),
 });
 
+export const setConnection = defineCommand<{
+  connection: SyncState["connection"];
+}>({
+  type: "sync.setConnection",
+  handle: (state, { connection }) =>
+    connection === state.persistence.sync.connection
+      ? {}
+      : withSync(state, { connection }),
+});
+
 export const syncCommands = [
+  setConnection,
   replayOffline,
   setPresence,
   setSharing,

@@ -88,6 +88,9 @@ export interface SyncState {
   readonly sharing: PageSharing | null;
   // Everyone with the workspace open now, this person included.
   readonly presence: readonly Presence[];
+  // Whether this client's changes are all on the server, on their way, or
+  // waiting for it to answer again.
+  readonly connection: "synced" | "syncing" | "offline";
 }
 
 export const NOT_SYNCED: SyncState = {
@@ -99,4 +102,5 @@ export const NOT_SYNCED: SyncState = {
   invites: [],
   sharing: null,
   presence: [],
+  connection: "synced",
 };
