@@ -8,6 +8,7 @@ export {
 export {
   MOVE_TO_FROM,
   MOVE_TO_OVERLAY_KIND,
+  NEW_PAGE_PURPOSE,
   MOVE_TO_PLACE_PANEL,
 } from "./page-menu-items.ts";
 export { PAGE_RENAME_OVERLAY, renderPageRename } from "./page-rename.view.ts";

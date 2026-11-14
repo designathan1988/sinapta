@@ -13,6 +13,7 @@ import {
 import { announce } from "../../ui/announcer/index.ts";
 import { COPY } from "../../ui/copy.ts";
 import { renderIcon } from "../../ui/icon/index.ts";
+import { MOVE_TO_OVERLAY_KIND, NEW_PAGE_PURPOSE } from "../page-menu/index.ts";
 import { showPopoverWhenConnected } from "../../ui/overlay/index.ts";
 import type { ScopedKeyHandler, ScopedKeys } from "../../ui/shortcuts/index.ts";
 import {
@@ -40,7 +41,16 @@ function choose(
   const typed = { blockId, start, end };
   dispatch(closeOverlay.create({}));
   const { action } = item;
-  if (action?.kind === "subpage") {
+  if (action?.kind === "page-in") {
+    // Where the page goes is chosen in the Move to popover.
+    const values = {
+      purpose: [NEW_PAGE_PURPOSE],
+      title: [action.title],
+      range: [String(start), String(end)],
+    };
+    const overlay = { kind: MOVE_TO_OVERLAY_KIND, anchorId: blockId, values };
+    dispatch(openOverlay.create({ overlay }));
+  } else if (action?.kind === "subpage") {
     dispatch(createSubpageAt.create({ ...typed, title: action.title }));
   } else if (action?.kind === "link") {
     dispatch(linkPageAt.create({ ...typed, pageId: action.pageId }));
@@ -90,6 +100,12 @@ export const mentionMenuKeys: ScopedKeys = {
   },
 };
 
+const ICONS = {
+  subpage: "plus",
+  "page-in": "arrow-up-right",
+  link: "page",
+} as const;
+
 function renderOption(
   item: MentionItem,
   index: number,
@@ -109,7 +125,7 @@ function renderOption(
       item.action === undefined
         ? nothing
         : html`<span class="mention-menu__icon" aria-hidden="true"
-            >${renderIcon(item.action.kind === "subpage" ? "plus" : "page")}</span
+            >${renderIcon(ICONS[item.action.kind])}</span
           >`
     }
     <span class="mention-menu__label">${item.label}</span>

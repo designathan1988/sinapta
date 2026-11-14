@@ -29,6 +29,9 @@ import {
 
 // Opened from this menu; rendered by the move-to feature.
 export const MOVE_TO_OVERLAY_KIND = "move-to";
+// The Move to popover choosing where a new page goes, for "+"'s
+// "New page in…".
+export const NEW_PAGE_PURPOSE = "new-page";
 // Move to as Notion's popover: under the "…" whose menu opened it (its
 // anchor kept under MOVE_TO_FROM), or under the open page's place.
 export const MOVE_TO_PLACE_PANEL = "place";

@@ -28,6 +28,7 @@ const DATE_FORMAT = new Intl.DateTimeFormat("en-US", {
 // What a "+" item makes in place of the line: a subpage, or a link.
 export type PlusAction =
   | { readonly kind: "subpage"; readonly title: string }
+  | { readonly kind: "page-in"; readonly title: string }
   | { readonly kind: "link"; readonly pageId: BlockId };
 
 export interface MentionItem {
@@ -138,6 +139,11 @@ function plusItems(state: AppState, typed: Typed): MentionItem[] {
             label: TEXT.newSubpage(title),
             span: { text: title },
             action: { kind: "subpage", title },
+          },
+          {
+            label: TEXT.newPageIn(title),
+            span: { text: title },
+            action: { kind: "page-in", title },
           },
         ];
   const links = pageItems(state, typed.needle).map((item) => {

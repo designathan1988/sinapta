@@ -83,6 +83,11 @@ describe("the + menu", () => {
         span: { text: "Road" },
         action: { kind: "subpage", title: "Road" },
       },
+      {
+        label: "New page “Road” in…",
+        span: { text: "Road" },
+        action: { kind: "page-in", title: "Road" },
+      },
       expect.objectContaining({
         label: "Roadmap plan",
         action: { kind: "link", pageId: "plan" },

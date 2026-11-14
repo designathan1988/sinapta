@@ -4,7 +4,12 @@
 // what was typed goes and the new block comes after the line.
 import { PAGE_LINK_TYPE } from "../../blocks/page-link/index.ts";
 import { PAGE_TYPE } from "../../blocks/page/index.ts";
-import type { BlockId } from "../../model/index.ts";
+import {
+  listOf,
+  siblingIds,
+  type BlockId,
+  type Operation,
+} from "../../model/index.ts";
 import { defineCommand } from "../../state/index.ts";
 import { closed, placeAt, type Typed } from "./editor-place.ts";
 
@@ -44,4 +49,42 @@ export const linkPageAt = defineCommand<Typed & { pageId: BlockId }>({
   },
 });
 
-export const editorPlusCommands = [createSubpageAt, linkPageAt];
+// "New page “…” in…": the page made where the person chose, at the end of
+// that page or teamspace or at the top level, and the line links to it.
+export const createPageInAt = defineCommand<
+  Typed & { title: string; parentId: BlockId | null }
+>({
+  type: "page.createInFromPlus",
+  newBlockIds: 2,
+  handle(state, command) {
+    const [pageId, linkId] = command.meta.blockIds;
+    if (pageId === undefined) return {};
+    const { now } = command.meta;
+    const { parentId } = command;
+    const title = command.title.trim();
+    const page = {
+      ...{ id: pageId, type: PAGE_TYPE, parentId, childIds: [] },
+      props: {
+        title: title === "" ? [] : [{ text: title }],
+        ...{ icon: null, isFavorite: false, isTrashed: false },
+      },
+      ...{ createdAt: now, updatedAt: now },
+    };
+    const index = siblingIds(state.workspace, parentId).length;
+    const link = placeAt(state, command, {
+      type: PAGE_LINK_TYPE,
+      props: { pageId },
+      newId: linkId,
+      now,
+    });
+    if (link.length === 0) return {};
+    const operations: Operation[] = [
+      { type: "record.create", kind: "block", record: page },
+      { type: "list.insert", list: listOf(parentId), id: pageId, index },
+      ...link,
+    ];
+    return { operations, ui: closed(state) };
+  },
+});
+
+export const editorPlusCommands = [createSubpageAt, linkPageAt, createPageInAt];

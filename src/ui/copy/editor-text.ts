@@ -37,6 +37,7 @@ export const EDITOR_TEXT = {
     remindTomorrow: "Remind me tomorrow",
     remindNextWeek: "Remind me next week",
     newSubpage: (title: string) => `New subpage “${title}”`,
+    newPageIn: (title: string) => `New page “${title}” in…`,
     linkToPage: "Link to page",
   },
   blockMenu: {

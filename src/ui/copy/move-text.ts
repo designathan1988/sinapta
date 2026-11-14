@@ -7,6 +7,7 @@ export const MOVE_TEXT = {
     topLevel: "Top level",
     search: "Move page to…",
     searchBlock: "Move block to…",
+    searchNewPage: "Add page to…",
     suggested: "Suggested",
     moved: "Page moved.",
     notMoved: "The page cannot move further that way.",

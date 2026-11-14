@@ -16,7 +16,11 @@ import { editorCommands as textCommands } from "./editor.commands.ts";
 export { setBlockColor } from "./editor-color.commands.ts";
 export { writeSystemClipboard } from "./editor-clipboard.view.ts";
 export { insertMentionAt } from "./editor-mention.commands.ts";
-export { createSubpageAt, linkPageAt } from "./editor-plus.commands.ts";
+export {
+  createPageInAt,
+  createSubpageAt,
+  linkPageAt,
+} from "./editor-plus.commands.ts";
 export { convertBlock } from "./editor-convert.commands.ts";
 export { moveBlocksToPage } from "./editor-move.commands.ts";
 export { propsFor as pastedBlockProps } from "./editor-paste-blocks.commands.ts";

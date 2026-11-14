@@ -39,9 +39,9 @@ function renderSearch(
 export function renderMovePopover(
   state: AppState,
   dispatch: Dispatch,
-  moving: { readonly entries: readonly MoveEntry[]; readonly isPage: boolean },
+  moving: { readonly entries: readonly MoveEntry[]; readonly search: string },
 ): TemplateResult {
-  const { entries, isPage } = moving;
+  const { entries, search } = moving;
   const query = state.ui.overlay?.query ?? "";
   const words = query.trim().toLowerCase();
   const shown = entries.filter((entry) =>
@@ -58,7 +58,7 @@ export function renderMovePopover(
       if (event.key === "Escape") dispatch(closeOverlay.create({}));
     }}
   >
-    ${renderSearch(query, dispatch, isPage ? COPY.moveTo.search : COPY.moveTo.searchBlock)}
+    ${renderSearch(query, dispatch, search)}
     <p class="move-to__heading">${COPY.moveTo.suggested}</p>
     <ul class="move-to__list">
       ${

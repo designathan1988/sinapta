@@ -2,7 +2,11 @@ import { describe, expect, it } from "vitest";
 import { toBlockId } from "../../model/index.ts";
 import { UNDO_COMMAND } from "../../state/index.ts";
 import { createApp, PAGE, text } from "./editor-builder.ts";
-import { createSubpageAt, linkPageAt } from "./editor-plus.commands.ts";
+import {
+  createPageInAt,
+  createSubpageAt,
+  linkPageAt,
+} from "./editor-plus.commands.ts";
 
 const A = toBlockId("a");
 const OTHER = toBlockId("other");
@@ -70,5 +74,53 @@ describe("block.linkFromPlus", () => {
     app.dispatch({ type: UNDO_COMMAND });
 
     expect(app.outline()).toEqual(["paragraph:+the"]);
+  });
+});
+
+describe("page.createInFromPlus", () => {
+  it("makes the page where the person chose and links the line to it", () => {
+    const app = createApp([text("a", "+Ideas")], [{ id: "other" }]);
+
+    app.dispatch(
+      createPageInAt.create({
+        blockId: A,
+        start: 0,
+        end: 6,
+        title: "Ideas",
+        parentId: OTHER,
+      }),
+    );
+
+    const { blocks } = app.store.getState().workspace;
+    const pageId = blocks[OTHER]?.childIds.at(-1);
+    const made = pageId === undefined ? undefined : blocks[pageId];
+    expect(made).toMatchObject({
+      type: "page",
+      props: { title: [{ text: "Ideas" }] },
+    });
+    expect(children(app)[0]).toMatchObject({
+      id: A,
+      type: "page-link",
+      props: { pageId },
+    });
+  });
+
+  it("makes it at the top level when chosen so", () => {
+    const app = createApp([text("a", "See +Ideas")]);
+
+    app.dispatch(
+      createPageInAt.create({
+        blockId: A,
+        start: 4,
+        end: 10,
+        title: "Ideas",
+        parentId: null,
+      }),
+    );
+
+    const { rootIds, blocks } = app.store.getState().workspace;
+    const made = blocks[rootIds.at(-1) ?? PAGE];
+    expect(made?.props.title).toEqual([{ text: "Ideas" }]);
+    expect(app.outline()).toEqual(["paragraph:See "]);
   });
 });

@@ -25,6 +25,7 @@ import { renderIcon } from "../../ui/icon/index.ts";
 import { moveBlocksToPage, selectPageIdOf } from "../editor/index.ts";
 import { MOVE_TO_OVERLAY_KIND } from "../page-menu/index.ts";
 import { renderMovePopover } from "./move-to-popover.view.ts";
+import { holdsNewPage, newPageIn, newPageRequestOf } from "./new-page-in.ts";
 import { selectPageRows, selectTreeRows } from "../sidebar/index.ts";
 import { selectSidebarTeamspaces } from "../../blocks/teamspace/index.ts";
 
@@ -110,29 +111,56 @@ export function renderOption(entry: MoveEntry): TemplateResult {
 function selectEntries(state: AppState, dispatch: Dispatch): MoveEntry[] {
   const movedId = parseBlockId(state.ui.overlay?.anchorId ?? "");
   if (movedId === undefined) return [];
+  const request = newPageRequestOf(state.ui.overlay);
+  if (request !== undefined) {
+    const pages = selectAllPages(state).filter((page) =>
+      holdsNewPage(state, page.id),
+    );
+    return placeEntries(state, pages, newPageIn(request, dispatch));
+  }
   const isPage = selectPage(state, movedId) !== undefined;
   const moveTo = (parentId: BlockId | null) => () => {
     dispatch(moveCommand(state, movedId, parentId));
     dispatch(closeOverlay.create({}));
     if (!isPage) announce(COPY.blockMenu.movedToPage);
   };
-  const pages = selectDestinations(state, movedId).map((page) => ({
+  if (!isPage) {
+    return pageEntries(state, selectDestinations(state, movedId), moveTo);
+  }
+  return placeEntries(state, selectDestinations(state, movedId), moveTo);
+}
+
+type Choose = (parentId: BlockId | null) => () => void;
+
+function pageEntries(
+  state: AppState,
+  pages: readonly PageBlock[],
+  choose: Choose,
+): MoveEntry[] {
+  return pages.map((page) => ({
     icon: iconOf(page),
     label: selectBreadcrumbs(state, page.id).map(titleOf).join(" / "),
-    onChoose: moveTo(page.id),
+    onChoose: choose(page.id),
   }));
-  if (!isPage) return pages;
+}
+
+// The top level, the teamspaces, then the pages.
+function placeEntries(
+  state: AppState,
+  pages: readonly PageBlock[],
+  choose: Choose,
+): MoveEntry[] {
   const teamspaces = selectSidebarTeamspaces(state).map((teamspace) => ({
     icon: firstGrapheme(teamspace.props.name).toUpperCase(),
     label: teamspace.props.name,
-    onChoose: moveTo(teamspace.id),
+    onChoose: choose(teamspace.id),
   }));
   const top = {
     icon: renderIcon("home"),
     label: COPY.moveTo.topLevel,
-    onChoose: moveTo(null),
+    onChoose: choose(null),
   };
-  return [top, ...teamspaces, ...pages];
+  return [top, ...teamspaces, ...pageEntries(state, pages, choose)];
 }
 
 // A single-pointer and keyboard alternative to dragging a page elsewhere:
@@ -144,5 +172,11 @@ export function renderMoveTo(
   const entries = selectEntries(state, dispatch);
   const movedId = parseBlockId(state.ui.overlay?.anchorId ?? "");
   const isPage = selectPage(state, movedId ?? null) !== undefined;
-  return renderMovePopover(state, dispatch, { entries, isPage });
+  const search =
+    newPageRequestOf(state.ui.overlay) !== undefined
+      ? COPY.moveTo.searchNewPage
+      : isPage
+        ? COPY.moveTo.search
+        : COPY.moveTo.searchBlock;
+  return renderMovePopover(state, dispatch, { entries, search });
 }
