@@ -25,6 +25,7 @@ export const WORKSPACE_TEXT = {
     search: "Search",
     searchShortcut: "Ctrl+K",
     private: "Private",
+    shared: "Shared",
     untitled: "Untitled",
     addSubpage: "Add a page inside",
     expandPage: "Expand",

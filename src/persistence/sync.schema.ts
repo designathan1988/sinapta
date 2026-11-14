@@ -120,3 +120,8 @@ const outboxSchema = v.object({
 
 // The stored outbox, or undefined when there is none or it is unreadable.
 export const readOutbox = (value: unknown) => read(outboxSchema, value);
+
+const sharedSchema = v.object({ pageIds: v.array(v.string()) });
+
+export const readSharedIds = (value: unknown) =>
+  read(sharedSchema, value)?.pageIds;

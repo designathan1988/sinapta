@@ -50,7 +50,8 @@ in `src/persistence/`.
   pages they may edit. (Members' "Only people invited" pages and the
   client's read-only look remain.)
 - [x] 26.3 Publish to web: a read-only page served by the server and the
-  Publish tab. (Teamspaces and the Shared section remain.)
+  Publish tab, and the sidebar's Shared section: the top pages shared
+  with people. (Teamspaces remain.)
 
 ## Milestone 27: Collaboration
 

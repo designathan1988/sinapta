@@ -76,7 +76,20 @@ export const setPeople = defineCommand<{
 // A page's sharing as the server holds it.
 export const setSharing = defineCommand<{ sharing: PageSharing }>({
   type: "sync.setSharing",
-  handle: (state, { sharing }) => withSync(state, { sharing, request: null }),
+  handle: (state, { sharing }) => {
+    const others = state.persistence.sync.shared.filter(
+      (id) => id !== sharing.pageId,
+    );
+    const isShared = sharing.people.length > 0;
+    const shared = isShared ? [...others, sharing.pageId] : others;
+    return withSync(state, { sharing, shared, request: null });
+  },
+});
+
+// The pages shared with people, as the server lists them.
+export const setShared = defineCommand<{ pageIds: readonly string[] }>({
+  type: "sync.setShared",
+  handle: (state, { pageIds }) => withSync(state, { shared: pageIds }),
 });
 
 // Who has the workspace open, as the server last said.
@@ -105,6 +118,7 @@ export const setConnection = defineCommand<{
 });
 
 export const syncCommands = [
+  setShared,
   setConnection,
   replayOffline,
   setPresence,

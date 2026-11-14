@@ -8,6 +8,7 @@ import {
 } from "../src/model/index.ts";
 import { answer, type ApiContext, type RouteTable } from "./api.ts";
 import type { ApiRequest, ApiResponse } from "./http-exchange.ts";
+import { idRowSchema, readRows } from "./rows.schema.ts";
 import { sessionUser } from "./sessions.ts";
 import {
   ACCESS,
@@ -99,6 +100,21 @@ export const SHARING_ROUTES: RouteTable = {
   [`POST ${BASE}/publish`]: changing(publishSchema, (context, page, body) => {
     setPublished(context, page, body.published);
   }),
+  // The pages shared with people, for the sidebar's Shared section.
+  "GET /api/workspaces/:id/shared": (request, context) => {
+    const user = sessionUser(context, request);
+    if (user === undefined) return answer(401, { error: "signed-out" });
+    const workspace = membership(context, request.params.id ?? "", user.id);
+    if (workspace === undefined) return answer(404, { error: "not-found" });
+    const found = context.db
+      .prepare(
+        "SELECT DISTINCT page_id AS id FROM page_shares WHERE workspace_id = ?",
+      )
+      .all(workspace.id);
+    return answer(200, {
+      pageIds: readRows(idRowSchema, found).map((row) => row.id),
+    });
+  },
   "GET /api/public/:id/:page": (request, context) => {
     const pageId = parseBlockId(request.params.page ?? "");
     const workspaceId = request.params.id ?? "";

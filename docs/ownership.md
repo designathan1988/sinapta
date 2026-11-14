@@ -266,7 +266,8 @@ owner listed here exists.
 | Settings › General and People routes, the owner's alone | `server/member-routes.ts` | 25 |
 | Each workspace as it stands now, built by the model; a page alone | `server/workspace-state.ts` | 26 |
 | A page's sharing: invited people, general access, published | `server/sharing.ts` | 26 |
-| The Share menu's routes and published pages read by anyone | `server/sharing-routes.ts` | 26 |
+| The Share menu's routes, the shared pages listed for the sidebar, and published pages read by anyone | `server/sharing-routes.ts` | 26 |
+| The sidebar's Shared section: the top pages shared with people | `src/features/sidebar/sidebar.selectors.ts` (`selectTreeRows`), `sidebar.view.ts` | 26 |
 | What a guest reaches: the pages shared with them, read and written at their access | `server/guest-access.ts` | 26 |
 | Who is where: each person's open page, kept a minute, sent to the workspace | `server/presence.ts` | 27 |
 | Notion AI: a local Ollama model, or what plain text allows | `server/ai.ts` | 30 |

@@ -57,6 +57,17 @@ describe("selectTreeRows", () => {
     expect(rows[1]?.hasChildren).toBe(false);
   });
 
+  it("lists the pages shared with people under Shared, the rest under Private", () => {
+    const state = createState();
+    const sync = { ...state.persistence.sync, shared: ["a"] };
+    const shared = { ...state, persistence: { ...state.persistence, sync } };
+
+    expect(selectTreeRows(shared, "shared").map((row) => row.title)).toEqual([
+      "Alpha",
+    ]);
+    expect(selectTreeRows(shared).map((row) => row.title)).toEqual([""]);
+  });
+
   it("marks the active page and makes it the tab stop", () => {
     const rows = selectTreeRows(createState({ activePageId: toBlockId("b") }));
 

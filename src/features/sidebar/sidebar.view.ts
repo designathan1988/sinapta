@@ -44,18 +44,32 @@ function renderHome(state: AppState, dispatch: Dispatch): TemplateResult {
   </div>`;
 }
 
+// Notion's Shared section: the top pages shared with people, when any.
+function renderShared(
+  state: AppState,
+  dispatch: Dispatch,
+): TemplateResult | typeof nothing {
+  const rows = selectTreeRows(state, "shared");
+  if (rows.length === 0) return nothing;
+  return html`<section class="sidebar__section">
+    <h2 class="sidebar__heading" id="sidebar-shared">${COPY.sidebar.shared}</h2>
+    ${renderTree(rows, { state, dispatch })}
+  </section>`;
+}
+
 function renderPrivate(state: AppState, dispatch: Dispatch): TemplateResult {
   const rows = selectTreeRows(state);
-  return html`<section class="sidebar__section">
-    <h2 class="sidebar__heading" id="sidebar-private">
-      ${COPY.sidebar.private}
-    </h2>
-    ${
-      rows.length === 0
-        ? html`<p class="sidebar__empty">${COPY.shell.emptyWorkspace}</p>`
-        : renderTree(rows, { state, dispatch })
-    }
-  </section>`;
+  return html`${renderShared(state, dispatch)}
+    <section class="sidebar__section">
+      <h2 class="sidebar__heading" id="sidebar-private">
+        ${COPY.sidebar.private}
+      </h2>
+      ${
+        rows.length === 0
+          ? html`<p class="sidebar__empty">${COPY.shell.emptyWorkspace}</p>`
+          : renderTree(rows, { state, dispatch })
+      }
+    </section>`;
 }
 
 // The sections in the order "Customize sidebar" left them.

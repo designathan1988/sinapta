@@ -163,6 +163,7 @@ export {
   replayOffline,
   requestSync,
   setConnection,
+  setShared,
   setPeople,
   setPresence,
   setSharing,

@@ -125,6 +125,7 @@ async function join(link: Link, sync: Sync, wanted?: string): Promise<void> {
   await download(link, sync, listen(link, sync, chosen));
   // The workspace's people, for "@" and the comments' authors.
   sync.dispatch(requestSync.create({ request: { kind: "people" } }));
+  sync.dispatch(requestSync.create({ request: { kind: "shared" } }));
 }
 
 function leave(link: Link): void {

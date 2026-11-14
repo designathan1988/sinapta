@@ -57,9 +57,18 @@ function addRows(state: AppState, walk: Walk, rows: TreeRow[]): void {
 
 // The rows the sidebar shows, in order: pages, with the children of
 // expanded pages, without trashed pages.
-export function selectTreeRows(state: AppState): TreeRow[] {
+// The workspace's top pages under Private, or those shared with people
+// under Shared (ADR-0013).
+export function selectTreeRows(
+  state: AppState,
+  section: "private" | "shared" = "private",
+): TreeRow[] {
+  const shared = new Set(state.persistence.sync.shared);
+  const ids = state.workspace.rootIds.filter(
+    (id) => shared.has(id) === (section === "shared"),
+  );
   const rows: TreeRow[] = [];
-  addRows(state, { ids: state.workspace.rootIds, level: 1 }, rows);
+  addRows(state, { ids, level: 1 }, rows);
   const tabStop = Math.max(
     0,
     rows.findIndex((row) => row.isActive),

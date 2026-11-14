@@ -3,12 +3,13 @@
 import {
   renameAccount,
   setPeople,
+  setShared,
   setSharing,
   type SyncRequest,
 } from "../state/index.ts";
 import { readUser } from "./account.schema.ts";
 import { getJson, type Sync } from "./sync-session.ts";
-import { readPeople, readSharing } from "./sync.schema.ts";
+import { readPeople, readSharedIds, readSharing } from "./sync.schema.ts";
 
 export type PeopleRequest = Exclude<
   SyncRequest,
@@ -27,6 +28,8 @@ function routeOf(request: PeopleRequest, base: string): Asked | undefined {
   switch (request.kind) {
     case "people":
       return [`${base}/members`, undefined];
+    case "shared":
+      return [`${base}/shared`, undefined];
     case "invite":
       return [`${base}/members`, { email: request.email, role: request.role }];
     case "remove-member":
@@ -78,33 +81,41 @@ function sharingRoute(request: SharingRequest, base: string): Asked {
   }
 }
 
+async function answerProfile(sync: Sync, name: string): Promise<void> {
+  const reply = await getJson(sync.send, "/api/account/profile", { name });
+  const user = readUser(reply);
+  if (user !== undefined) {
+    sync.dispatch(renameAccount.create({ name: user.name }));
+  }
+}
+
+// Records what the server answered a request about the workspace.
+function record(sync: Sync, request: PeopleRequest, reply: unknown): void {
+  if ("pageId" in request) {
+    const sharing = readSharing(reply, request.pageId);
+    if (sharing !== undefined) sync.dispatch(setSharing.create({ sharing }));
+  } else if (request.kind === "shared") {
+    const pageIds = readSharedIds(reply);
+    if (pageIds !== undefined) sync.dispatch(setShared.create({ pageIds }));
+  } else if (request.kind !== "rename" && request.kind !== "ai-fill") {
+    publishPeople(sync, reply);
+  }
+}
+
 // Asks the server, then records what came back: the people, the account's
-// name, or the workspaces with the new name.
+// name, the page's sharing or the shared pages.
 export async function answerPeople(
   sync: Sync,
   request: PeopleRequest,
   workspaceId: string | null,
 ): Promise<void> {
   if (request.kind === "profile") {
-    const reply = await getJson(sync.send, "/api/account/profile", {
-      name: request.name,
-    });
-    const user = readUser(reply);
-    if (user !== undefined)
-      sync.dispatch(renameAccount.create({ name: user.name }));
+    await answerProfile(sync, request.name);
     return;
   }
   if (workspaceId === null) return;
   const asked = routeOf(request, `/api/workspaces/${workspaceId}`);
   if (asked === undefined) return;
   const [path, body] = asked;
-  const reply = await getJson(sync.send, path, body);
-  if ("pageId" in request) {
-    const sharing = readSharing(reply, request.pageId);
-    if (sharing !== undefined) sync.dispatch(setSharing.create({ sharing }));
-    return;
-  }
-  if (request.kind !== "rename" && request.kind !== "ai-fill") {
-    publishPeople(sync, reply);
-  }
+  record(sync, request, await getJson(sync.send, path, body));
 }

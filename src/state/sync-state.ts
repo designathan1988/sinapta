@@ -48,6 +48,7 @@ export type SyncRequest =
   | { readonly kind: "create"; readonly name: string }
   | { readonly kind: "rename"; readonly name: string }
   | { readonly kind: "people" }
+  | { readonly kind: "shared" }
   | { readonly kind: "invite"; readonly email: string; readonly role: string }
   | { readonly kind: "remove-member"; readonly userId: string }
   | { readonly kind: "remove-invite"; readonly email: string }
@@ -97,6 +98,8 @@ export interface SyncState {
   // Whether this client's changes are all on the server, on their way, or
   // waiting for it to answer again.
   readonly connection: "synced" | "syncing" | "offline";
+  // The pages shared with people: the sidebar lists them under Shared.
+  readonly shared: readonly string[];
 }
 
 export const NOT_SYNCED: SyncState = {
@@ -109,4 +112,5 @@ export const NOT_SYNCED: SyncState = {
   sharing: null,
   presence: [],
   connection: "synced",
+  shared: [],
 };
