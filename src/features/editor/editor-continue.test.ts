@@ -29,9 +29,7 @@ describe("clicking below a page's blocks", () => {
       },
     ]);
 
-    expect(sent.map((command) => command.type)).toEqual([
-      "block.append",
-    ]);
+    expect(sent.map((command) => command.type)).toEqual(["block.append"]);
   });
 
   it("goes to the page's own empty last line instead of adding one", () => {
