@@ -23,4 +23,33 @@ export const MIGRATIONS: readonly string[] = [
      expires_at INTEGER NOT NULL,
      tries INTEGER NOT NULL DEFAULT 0
    );`,
+  // 2: workspaces, their members, a snapshot each and the log of the
+  // operations made since, in the order the server received them.
+  `CREATE TABLE workspaces (
+     id TEXT PRIMARY KEY,
+     name TEXT NOT NULL,
+     icon TEXT,
+     created_at INTEGER NOT NULL
+   );
+   CREATE TABLE members (
+     workspace_id TEXT NOT NULL REFERENCES workspaces (id) ON DELETE CASCADE,
+     user_id TEXT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+     role TEXT NOT NULL,
+     PRIMARY KEY (workspace_id, user_id)
+   );
+   CREATE INDEX members_by_user ON members (user_id);
+   CREATE TABLE snapshots (
+     workspace_id TEXT PRIMARY KEY REFERENCES workspaces (id) ON DELETE CASCADE,
+     seq INTEGER NOT NULL,
+     body TEXT NOT NULL
+   );
+   CREATE TABLE operations (
+     workspace_id TEXT NOT NULL REFERENCES workspaces (id) ON DELETE CASCADE,
+     seq INTEGER NOT NULL,
+     client_id TEXT NOT NULL,
+     user_id TEXT NOT NULL,
+     body TEXT NOT NULL,
+     created_at INTEGER NOT NULL,
+     PRIMARY KEY (workspace_id, seq)
+   );`,
 ];

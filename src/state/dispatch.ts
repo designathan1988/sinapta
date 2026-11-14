@@ -22,6 +22,7 @@ import {
   recordTransaction,
   travelHistory,
   UNDO_COMMAND,
+  type Transaction,
 } from "./history.ts";
 import type { AppStore } from "./store.ts";
 import { applyTidily, type Tidier } from "./tidy.ts";
@@ -54,9 +55,14 @@ export interface DispatcherOptions {
   readonly tidiers?: readonly Tidier[];
   // Rules that refuse a change; see guard.ts.
   readonly guards?: readonly Guard[];
+  // Told of each transaction this client made, after the store has it, so
+  // that the server can share it (ADR-0013).
+  readonly onTransaction?: (transaction: Transaction, state: AppState) => void;
 }
 
-type Next = { readonly state: AppState } | { readonly error: DispatchError };
+type Next =
+  | { readonly state: AppState; readonly transaction?: Transaction }
+  | { readonly error: DispatchError };
 
 // A workspace that replaces the current one (a load, an import, the first
 // run's pages) is checked whole: every block, and every id at the top level.
@@ -92,6 +98,19 @@ function applyEffect(
     return { state: { workspace: effect.workspace, ui, history, persistence } };
   }
   if (operations.length === 0) return { state: { ...state, ui, persistence } };
+  return applyOperationsEffect(state, effect, { now, tidiers });
+}
+
+// A transaction's operations, tidied and checked; recorded in the undo
+// history unless another client made them.
+function applyOperationsEffect(
+  state: AppState,
+  effect: CommandEffect,
+  { now, tidiers }: EffectContext,
+): Next {
+  const operations = effect.operations ?? [];
+  const ui = effect.ui ?? state.ui;
+  const persistence = effect.persistence ?? state.persistence;
   const result = applyTidily(state.workspace, operations, tidiers);
   if (!result.ok) {
     return { error: { kind: "operation-failed", error: result.error } };
@@ -104,6 +123,11 @@ function applyEffect(
   if (violation !== undefined) {
     return { error: { kind: "invariant-broken", violation } };
   }
+  if (effect.isRemote === true) {
+    return {
+      state: { ...state, workspace: result.workspace, ui, persistence },
+    };
+  }
   const history = recordTransaction(state, {
     applied: result.applied,
     inverse: result.inverse,
@@ -112,6 +136,7 @@ function applyEffect(
   });
   return {
     state: { workspace: result.workspace, ui, history, persistence },
+    transaction: { applied: result.applied, inverse: result.inverse },
   };
 }
 
@@ -158,10 +183,10 @@ function isRefusedWhileReadOnly(
 
 function nextState(state: AppState, command: Command, sources: Sources): Next {
   if (command.type === UNDO_COMMAND) {
-    return { state: travelHistory(state, "undo") };
+    return travelHistory(state, "undo");
   }
   if (command.type === REDO_COMMAND) {
-    return { state: travelHistory(state, "redo") };
+    return travelHistory(state, "redo");
   }
   const definition = sources.registry.get(command.type);
   if (definition === undefined) {
@@ -207,6 +232,9 @@ export function createDispatcher(options: DispatcherOptions): Dispatch {
       store.setState(result.state, true);
     } finally {
       isNotifying = false;
+    }
+    if (result.transaction !== undefined) {
+      options.onTransaction?.(result.transaction, result.state);
     }
     return { ok: true };
   };

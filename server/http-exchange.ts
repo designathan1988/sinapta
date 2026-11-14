@@ -13,12 +13,21 @@ export interface ApiRequest {
   // one, names the host it was sent to.
   readonly sameOrigin: boolean;
   readonly body: unknown;
+  // The parts of the path a route names with ":", as ":id".
+  readonly params: Readonly<Record<string, string>>;
+}
+
+// A response that stays open and sends events (Server-Sent Events): the
+// route sends, and is told when the client leaves.
+export interface EventStream {
+  readonly start: (send: (event: string, data: unknown) => void) => () => void;
 }
 
 export interface ApiResponse {
   readonly status: number;
   readonly body?: unknown;
   readonly cookies?: readonly string[];
+  readonly stream?: EventStream;
 }
 
 function parseCookies(header: string | undefined): Map<string, string> {
@@ -74,13 +83,32 @@ export async function readRequest(
     cookies: parseCookies(request.headers.cookie),
     sameOrigin: isSameOrigin(request),
     body: hasBody ? await readBody(request) : undefined,
+    params: {},
   };
+}
+
+function writeStream(response: ServerResponse, stream: EventStream): void {
+  response.writeHead(200, {
+    "Content-Type": "text/event-stream; charset=utf-8",
+    "Cache-Control": "no-store",
+    Connection: "keep-alive",
+  });
+  const END = "\n\n";
+  response.write(`: open${END}`);
+  const stop = stream.start((event, data) => {
+    response.write(`event: ${event}\ndata: ${JSON.stringify(data)}${END}`);
+  });
+  response.on("close", stop);
 }
 
 export function writeResponse(
   response: ServerResponse,
   result: ApiResponse,
 ): void {
+  if (result.stream !== undefined) {
+    writeStream(response, result.stream);
+    return;
+  }
   response.statusCode = result.status;
   response.setHeader("Cache-Control", "no-store");
   if (result.cookies !== undefined && result.cookies.length > 0) {

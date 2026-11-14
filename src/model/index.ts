@@ -203,3 +203,8 @@ export {
   suggestInsert,
   type SuggestionKind,
 } from "./rich-text-suggestions.ts";
+export {
+  parseWireOperations,
+  toWireOperations,
+  type CurrentRecords,
+} from "./operation.schema.ts";

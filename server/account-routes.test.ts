@@ -1,44 +1,16 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import type { ApiContext } from "./api.ts";
-import { openDatabase } from "./database.ts";
-import type { ApiRequest, ApiResponse } from "./http-exchange.ts";
-import { ROUTES } from "./routes.ts";
-import { SESSION_COOKIE } from "./sessions.ts";
+import { createTestServer, type TestServer } from "./test-context.ts";
 
-let context: ApiContext;
 let logged: string[];
-let clock: number;
+let clock: { now: number };
+let call: TestServer["call"];
 
 beforeEach(() => {
-  logged = [];
-  clock = Date.UTC(2026, 10, 14);
-  context = {
-    db: openDatabase(":memory:"),
-    now: () => clock,
-    log: (line) => logged.push(line),
-    secure: false,
-  };
+  clock = { now: Date.UTC(2026, 10, 14) };
+  const server = createTestServer(clock);
+  logged = server.logged;
+  call = server.call;
 });
-
-async function call(
-  key: string,
-  body?: unknown,
-  cookie?: string,
-): Promise<ApiResponse> {
-  const [method = "GET", path = "/"] = key.split(" ");
-  const token = cookie?.split(";")[0]?.split("=")[1];
-  const request: ApiRequest = {
-    method,
-    path,
-    query: new URLSearchParams(),
-    cookies: new Map(token === undefined ? [] : [[SESSION_COOKIE, token]]),
-    sameOrigin: true,
-    body,
-  };
-  const route = ROUTES[key];
-  if (route === undefined) throw new Error(`no route ${key}`);
-  return route(request, context);
-}
 
 const ANA = {
   email: "Ana@Example.com ",
@@ -106,7 +78,7 @@ describe("accounts", () => {
   it("refuses a code after ten minutes", async () => {
     await call("POST /api/account/code", { email: "bia@example.com" });
     const code = /(\d{6})$/.exec(logged[0] ?? "")?.[1] ?? "";
-    clock += 11 * 60_000;
+    clock.now += 11 * 60_000;
 
     const late = await call("POST /api/account/code/verify", {
       email: "bia@example.com",

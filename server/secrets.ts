@@ -9,26 +9,45 @@ import {
   timingSafeEqual,
 } from "node:crypto";
 
-const SCRYPT = { N: 2 ** 15, r: 8, p: 1, maxmem: 64 * 1024 * 1024 };
+// scrypt's cost N: the server's, and a cheap one for tests. The cost is
+// kept in each hash, so a later change of cost still reads old hashes.
+export const PASSWORD_COST = 2 ** 15;
+export const TEST_PASSWORD_COST = 2 ** 10;
 const KEY_LENGTH = 64;
 
-function derive(password: string, salt: Buffer): Buffer {
-  return scryptSync(password.normalize("NFC"), salt, KEY_LENGTH, SCRYPT);
+function derive(password: string, salt: Buffer, cost: number): Buffer {
+  const options = { N: cost, r: 8, p: 1, maxmem: 64 * 1024 * 1024 };
+  return scryptSync(password.normalize("NFC"), salt, KEY_LENGTH, options);
 }
 
-export function hashPassword(password: string): string {
+export function hashPassword(password: string, cost: number): string {
   const salt = randomBytes(16);
-  const key = derive(password, salt);
-  return `scrypt$${salt.toString("base64")}$${key.toString("base64")}`;
+  const key = derive(password, salt, cost);
+  const parts = [
+    "scrypt",
+    String(cost),
+    salt.toString("base64"),
+    key.toString("base64"),
+  ];
+  return parts.join("$");
 }
 
 export function verifyPassword(password: string, stored: string): boolean {
-  const [kind, salt, key] = stored.split("$");
-  if (kind !== "scrypt" || salt === undefined || key === undefined) {
+  const parts = stored.split("$");
+  // The first hashes had no cost in them: they were made at 2^15.
+  if (parts.length === 3) parts.splice(1, 0, String(PASSWORD_COST));
+  const [kind, cost, salt, key] = parts;
+  const n = Number(cost);
+  if (
+    kind !== "scrypt" ||
+    !Number.isInteger(n) ||
+    salt === undefined ||
+    key === undefined
+  ) {
     return false;
   }
   const expected = Buffer.from(key, "base64");
-  const actual = derive(password, Buffer.from(salt, "base64"));
+  const actual = derive(password, Buffer.from(salt, "base64"), n);
   return actual.length === expected.length && timingSafeEqual(actual, expected);
 }
 

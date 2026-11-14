@@ -11,3 +11,4 @@ export { createTabCoordination } from "./tab-lock.ts";
 export { startFileTools } from "./workspace-file.ts";
 export { startAssetStore } from "./asset-store.ts";
 export { startAccount, type Fetch } from "./account-client.ts";
+export { createSyncLink, type SyncLink } from "./sync-client.ts";

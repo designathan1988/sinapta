@@ -25,10 +25,10 @@ in `src/persistence/`.
 
 ## Milestone 24: Sync
 
-- [ ] 24.1 Workspace on the server: upload the local workspace at first
+- [x] 24.1 Workspace on the server: upload the local workspace at first
   sign-in, download it on another browser.
-- [ ] 24.2 Command log with sequences, SSE stream, remote commands applied
-  through dispatch outside undo, own commands replayed; replay test.
+- [x] 24.2 Operation log with sequences, SSE stream, the others' operations
+  applied outside undo after taking back this client's unconfirmed ones.
 - [ ] 24.3 Offline queue in IndexedDB, reconnect, the sync state in the
   top bar as Notion shows it.
 

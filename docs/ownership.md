@@ -24,12 +24,14 @@ owner listed here exists.
 | The persistence slice's shape and initial value | `src/state/persistence-state.ts` | 22 |
 | The account's state: who is signed in, the sign-in step, the question asked | `src/state/account-state.ts` | 23 |
 | Sign-in and account commands | `src/state/account.commands.ts` | 23 |
+| Applying the others' operations and the server's workspace | `src/state/sync.commands.ts` | 24 |
 | Cross-feature selectors over `AppState` | `src/state/app-state.selectors.ts` | 1 |
 | Loading a whole workspace into the store | `src/state/workspace.commands.ts` | 1 |
 | The saved part of the `ui` slice | `src/state/ui.schema.ts` | 1 |
 | Test store and dispatcher | `src/state/state-builder.ts` | 1 |
 | Domain types and JSON schemas | `src/model/` | 1 |
 | Operation types and inverses | `src/model/operation.ts` | 1 |
+| Operations as they travel between clients: whole records, parsed | `src/model/operation.schema.ts` | 24 |
 | Applying operations to workspace data | `src/model/apply-operation.ts` | 1 |
 | Workspace invariants (parent and child agreement, no cycles) | `src/model/workspace-invariants.ts` | 1 |
 | Id generation and parsing | `src/model/id.ts` | 1 |
@@ -54,6 +56,10 @@ owner listed here exists.
 | Migrations | `src/persistence/migrations/run-migrations.ts` plus one file per format change | 1 |
 | Asking the server who is signed in and the sign-in screen's questions | `src/persistence/account-client.ts` | 23 |
 | Parsing the server's account answers | `src/persistence/account.schema.ts` | 23 |
+| Joining the workspace on the server, uploading or downloading it, following the account | `src/persistence/sync-client.ts` | 24 |
+| One joined workspace: sending transactions in order, receiving the others' | `src/persistence/sync-session.ts` | 24 |
+| Putting this client's unconfirmed transactions after the others' | `src/persistence/sync-rebase.ts` | 24 |
+| Parsing the server's workspace answers and events | `src/persistence/sync.schema.ts` | 24 |
 | JSON export and import, and carrying out export and import requests | `src/persistence/workspace-file.ts` | 7 |
 | Keeping files beside the workspace: asset ids, blobs, base64 | `src/persistence/asset-store.ts` | 14 |
 | Handing files people add to the asset store | `src/ui/asset/` | 14 |
@@ -231,6 +237,13 @@ owner listed here exists.
 | The users table | `server/users.ts` | 23 |
 | Sign-in, sign-up, codes, sign-out, the signed-in user | `server/account-routes.ts` | 23 |
 | The account routes' request bodies | `server/account.schema.ts` | 23 |
+| Matching a path to a route with ":" parts | `server/route-match.ts` | 24 |
+| The clients listening to each workspace (Server-Sent Events) | `server/workspace-events.ts` | 24 |
+| Workspaces, members, snapshots and the operation log | `server/workspaces.ts` | 24 |
+| The workspace routes | `server/workspace-routes.ts` | 24 |
+| The workspace routes' request bodies | `server/workspace.schema.ts` | 24 |
+| A server on an in-memory database for tests | `server/test-context.ts` | 24 |
+| The root render: the sign-in page or the app | `src/app/root-render.ts` | 23 |
 
 ## Styles and tokens
 

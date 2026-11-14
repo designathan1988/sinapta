@@ -59,18 +59,24 @@ Forces:
    members with Notion's roles (Workspace owner, Member, Guest) and page
    permissions (Full access, Can edit, Can comment, Can view). The
    client keeps its local-first copy in IndexedDB as today.
-6. **Sync and real time.** The server is the sequencer. A client sends
-   each command it dispatched, with the last server sequence it has seen;
-   the server checks the sender's permission, appends the command to the
-   workspace's log with the next sequence, and pushes it to every other
-   open client of that workspace over Server-Sent Events. A client applies
-   remote commands through `dispatch` (they do not enter its undo
-   history) and replays its own unconfirmed commands after them. Commands
-   are already serializable and deterministic, so the same log gives the
-   same workspace everywhere. Snapshots every 500 commands bound the
-   replay. Offline, commands queue in IndexedDB and are sent in order on
-   reconnect. Presence (who is on which page and block) rides the same
-   event stream.
+6. **Sync and real time.** The server is the sequencer of *operations*,
+   not commands: a command makes new ids and reads the clock, so replaying
+   it elsewhere would give another result, while the operations a
+   transaction applied (`record.create`, `record.update`, `record.delete`,
+   `list.insert`, `list.remove`) give the same workspace everywhere. The
+   dispatcher tells the sync client of each transaction this client made
+   (undo and redo included); an update travels carrying the whole record
+   as the transaction left it, so the model's own schemas read it on the
+   server and on the other clients, and the last writer of a record wins.
+   The client sends its transactions one at a time, in order; the server
+   appends each to the workspace's log with the next sequence number and
+   pushes it to every open client over Server-Sent Events. A client that
+   receives the others' operations while some of its own are unconfirmed
+   takes its own back, applies theirs, and makes its own again, as one
+   transaction outside its undo history (`sync.applyRemote`). A gap in the
+   sequence, or operations that do not apply, read the whole workspace
+   again. Snapshots will bound the replay. Offline, transactions wait and
+   are retried. Presence will ride the same event stream.
 7. **Layers.** Network code on the client lives in `src/persistence/`
    (it persists to a remote store), which still imports only `state` and
    `model`. The server imports `src/model/` for its schemas, so a
@@ -137,9 +143,8 @@ log, so this matches Notion's behavior closely enough for one machine.
 
 - Easier: every feature that needs other people (mentions, comments from
   others, share menus, presence, inbox notices) has a place to live.
-- Harder: commands must stay deterministic (no `Date.now()` or random ids
-  inside a command handler; they come in the payload, as they already
-  should). A test checks replaying a log twice gives equal workspaces.
+- Harder: two people changing the same record at once keep the later
+  one's version of the whole record; Notion merges per block too.
 - The specification's sections 1, 3 and 4 change; `docs/architecture.md`
   and `docs/ownership.md` gain the server's rows.
 - Revisit: WebSockets if a flow needs the client to stream many events per

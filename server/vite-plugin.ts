@@ -5,6 +5,8 @@ import type { Connect, Plugin } from "vite";
 import { createApi } from "./api.ts";
 import { openDatabase } from "./database.ts";
 import { ROUTES } from "./routes.ts";
+import { PASSWORD_COST } from "./secrets.ts";
+import { createEventHub } from "./workspace-events.ts";
 
 export const DATABASE_FILE = resolve(".data/pagecraft.sqlite");
 
@@ -13,7 +15,14 @@ function apiMiddleware(log: (line: string) => void): {
   close: () => void;
 } {
   const db = openDatabase(DATABASE_FILE);
-  const api = createApi(ROUTES, { db, now: Date.now, log, secure: false });
+  const api = createApi(ROUTES, {
+    db,
+    now: Date.now,
+    log,
+    secure: false,
+    events: createEventHub(),
+    passwordCost: PASSWORD_COST,
+  });
   return {
     handle: (request, response, next) => {
       api(request, response).then(

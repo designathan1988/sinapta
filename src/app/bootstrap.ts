@@ -1,6 +1,5 @@
 // The composition root: creates the one store, registers every command and
 // owns the single root render.
-import { render } from "lit-html";
 import {
   BLOCK_COMMANDS,
   BLOCK_PROPS_SCHEMAS,
@@ -53,12 +52,12 @@ import {
   type AppStore,
   type Dispatch,
   accountCommands,
+  syncCommands,
   createCommandRegistry,
   createDispatcher,
   createInitialState,
   assetCommands,
   persistenceCommands,
-  selectTheme,
   settingsCommands,
   pageVersionCommands,
   uiCommands,
@@ -69,6 +68,8 @@ import {
   createTabCoordination,
   createIndexedDbSnapshots,
   startAccount,
+  createSyncLink,
+  type SyncLink,
   startAssetStore,
   startFileTools,
   startSnapshots,
@@ -76,7 +77,7 @@ import {
   type RepositoryStart,
 } from "../persistence/index.ts";
 import { installAssetSaver } from "../ui/asset/index.ts";
-import { installSelectionSync, restoreSelection } from "../ui/caret/index.ts";
+import { installSelectionSync } from "../ui/caret/index.ts";
 import { announce } from "../ui/announcer/index.ts";
 import { COPY } from "../ui/copy.ts";
 import {
@@ -90,13 +91,12 @@ import { startRouter } from "./router.ts";
 import { watchViewport } from "./viewport.ts";
 import { startOffline } from "./offline.ts";
 import { runShortcutAction } from "./shortcut-actions.ts";
-import { applyTheme } from "./theme.ts";
-import { renderShell } from "./shell.view.ts";
-import { renderSignIn } from "../features/sign-in/index.ts";
+import { rootRenderer } from "./root-render.ts";
 
 const COMMANDS = [
   ...uiCommands,
   ...accountCommands,
+  ...syncCommands,
   ...settingsCommands,
   ...persistenceCommands,
   ...assetCommands,
@@ -136,6 +136,7 @@ const SCOPED_KEYS = [
 async function startPersistence(
   store: AppStore,
   dispatch: Dispatch,
+  sync: SyncLink,
 ): Promise<RepositoryStart> {
   const adapter = createIndexedDbAdapter();
   const propsSchemas = withPropertyConfigs(BLOCK_PROPS_SCHEMAS);
@@ -161,12 +162,14 @@ async function startPersistence(
     storage: createIndexedDbSnapshots(),
     contentOf: pageContent,
   });
+  // The workspace on the server, once someone signs in (ADR-0013).
+  sync.start({ store, dispatch, propsSchemas });
   return { isFirstRun };
 }
 
 // The one dispatcher, with every command, tidier and guard. A change a
 // lock refuses says so, as Notion's locked pages do.
-function createAppDispatch(store: AppStore): Dispatch {
+function createAppDispatch(store: AppStore, sync: SyncLink): Dispatch {
   const dispatchCommand = createDispatcher({
     store,
     registry: createCommandRegistry(COMMANDS),
@@ -177,6 +180,7 @@ function createAppDispatch(store: AppStore): Dispatch {
       valueDiscussionTidier,
     ],
     guards: [lockGuard],
+    onTransaction: sync.onTransaction,
   });
   return (command) => {
     const result = dispatchCommand(command);
@@ -187,34 +191,14 @@ function createAppDispatch(store: AppStore): Dispatch {
   };
 }
 
-// The one root render: Notion's sign-in page while no one is signed in to
-// the server, else the app.
-function rootRenderer(
-  store: AppStore,
-  dispatch: Dispatch,
-  container: HTMLElement,
-): () => void {
-  return () => {
-    const state = store.getState();
-    applyTheme(selectTheme(state));
-    const isSignedOut = state.persistence.account.status === "signed-out";
-    render(
-      isSignedOut
-        ? renderSignIn(state, dispatch)
-        : renderShell(state, dispatch),
-      container,
-    );
-    restoreSelection(container, state.ui.selection);
-  };
-}
-
 export async function startApp(container: HTMLElement): Promise<void> {
   const store = createAppStore(createInitialState());
-  const dispatch = createAppDispatch(store);
+  const sync = createSyncLink();
+  const dispatch = createAppDispatch(store, sync);
   const renderRoot = rootRenderer(store, dispatch, container);
   // Nothing is rendered until stored data is in the store, so the first
   // paint already has the saved theme and layout.
-  const { isFirstRun } = await startPersistence(store, dispatch);
+  const { isFirstRun } = await startPersistence(store, dispatch, sync);
   // Who is signed in to the server, before the first paint (ADR-0013).
   await startAccount({ store, dispatch });
   // A first visit opens a short tour; it is saved like any other change.

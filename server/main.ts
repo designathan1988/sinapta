@@ -6,7 +6,9 @@ import { extname, join, normalize, resolve } from "node:path";
 import { createApi } from "./api.ts";
 import { openDatabase } from "./database.ts";
 import { ROUTES } from "./routes.ts";
+import { PASSWORD_COST } from "./secrets.ts";
 import { DATABASE_FILE } from "./vite-plugin.ts";
+import { createEventHub } from "./workspace-events.ts";
 
 const DIST = resolve("dist");
 const TYPES: Readonly<Record<string, string>> = {
@@ -48,6 +50,8 @@ const api = createApi(ROUTES, {
     console.log(line);
   },
   secure: false,
+  events: createEventHub(),
+  passwordCost: PASSWORD_COST,
 });
 const port = Number(process.env.PORT ?? "5199");
 

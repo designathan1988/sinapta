@@ -70,12 +70,23 @@ type Direction = "undo" | "redo";
 
 // Moves one entry from one stack to the other and applies it. Returns the
 // same state when there is nothing to move.
-export function travelHistory(state: AppState, direction: Direction): AppState {
+export interface Travel {
+  readonly state: AppState;
+  // The transaction undo or redo made, for the server (ADR-0013).
+  readonly transaction?: Transaction;
+}
+
+export interface Transaction {
+  readonly applied: readonly Operation[];
+  readonly inverse: readonly Operation[];
+}
+
+export function travelHistory(state: AppState, direction: Direction): Travel {
   const from = state.history[direction];
   const entry = from.at(-1);
-  if (entry === undefined) return state;
+  if (entry === undefined) return { state };
   const result = applyOperations(state.workspace, entry.operations);
-  if (!result.ok) return state;
+  if (!result.ok) return { state };
   const opposite: Direction = direction === "undo" ? "redo" : "undo";
   const history: HistoryState = {
     ...state.history,
@@ -87,5 +98,8 @@ export function travelHistory(state: AppState, direction: Direction): AppState {
     selection: entry.selection,
     activePageId: entry.activePageId,
   };
-  return { ...state, workspace: result.workspace, ui, history };
+  return {
+    state: { ...state, workspace: result.workspace, ui, history },
+    transaction: { applied: entry.operations, inverse: result.inverse },
+  };
 }

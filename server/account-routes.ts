@@ -79,7 +79,7 @@ export const ACCOUNT_ROUTES: RouteTable = {
     if (findUser(context, body.email) !== undefined) {
       return answer(409, { error: "email-taken" });
     }
-    const passwordHash = hashPassword(body.password);
+    const passwordHash = hashPassword(body.password, context.passwordCost);
     return signedIn(
       context,
       createUser(context, { ...body, passwordHash }),

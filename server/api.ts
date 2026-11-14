@@ -2,6 +2,8 @@
 // refuses cross-site changes, and turns failures into answers.
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Database } from "./database.ts";
+import { matchRoute } from "./route-match.ts";
+import type { EventHub } from "./workspace-events.ts";
 import {
   readRequest,
   writeResponse,
@@ -15,6 +17,10 @@ export interface ApiContext {
   readonly log: (line: string) => void;
   // Cookies carry Secure when the server is reached over HTTPS.
   readonly secure: boolean;
+  // The clients listening to each workspace.
+  readonly events: EventHub;
+  // scrypt's cost for new password hashes.
+  readonly passwordCost: number;
 }
 
 export type Route = (
@@ -45,12 +51,12 @@ async function route(
   request: ApiRequest,
   context: ApiContext,
 ): Promise<ApiResponse> {
-  const handler = routes[`${request.method} ${request.path}`];
-  if (handler === undefined) return answer(404, { error: "not-found" });
+  const match = matchRoute(routes, request.method, request.path);
+  if (match === undefined) return answer(404, { error: "not-found" });
   if (!SAFE_METHODS.has(request.method) && !request.sameOrigin) {
     return answer(403, { error: "cross-origin" });
   }
-  return handler(request, context);
+  return match.route({ ...request, params: match.params }, context);
 }
 
 // Answers requests under /api and reports whether it did, so that a dev

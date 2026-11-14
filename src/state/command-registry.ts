@@ -40,6 +40,9 @@ export interface CommandEffect {
   // Transactions with the same key that follow each other closely become
   // one undo step, so that undo removes a typed word, not one letter.
   readonly mergeKey?: string;
+  // Operations another client made (ADR-0013): applied outside this
+  // client's undo history and not sent back to the server.
+  readonly isRemote?: boolean;
 }
 
 export type CommandHandler<TPayload> = (

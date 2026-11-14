@@ -35,3 +35,33 @@ export function readRow<TSchema extends v.GenericSchema>(
 ): v.InferOutput<TSchema> | undefined {
   return row === undefined ? undefined : v.parse(schema, row);
 }
+
+export const workspaceRowSchema = v.object({
+  id: v.string(),
+  name: v.string(),
+  icon: v.nullable(v.string()),
+  role: v.string(),
+});
+
+export type WorkspaceRow = v.InferOutput<typeof workspaceRowSchema>;
+
+export const snapshotRowSchema = v.object({
+  seq: v.number(),
+  body: v.string(),
+});
+
+export const operationRowSchema = v.object({
+  seq: v.number(),
+  client_id: v.string(),
+  body: v.string(),
+});
+
+export const lastSeqRowSchema = v.object({ seq: v.nullable(v.number()) });
+
+// Many rows of one schema.
+export function readRows<TSchema extends v.GenericSchema>(
+  schema: TSchema,
+  rows: readonly unknown[],
+): v.InferOutput<TSchema>[] {
+  return rows.map((row) => v.parse(schema, row));
+}

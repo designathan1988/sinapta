@@ -151,3 +151,9 @@ export {
   requestAccount,
   setAccountStep,
 } from "./account.commands.ts";
+export {
+  applyRemote,
+  loadServerWorkspace,
+  syncCommands,
+} from "./sync.commands.ts";
+export type { Transaction } from "./history.ts";
