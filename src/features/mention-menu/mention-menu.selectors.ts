@@ -96,6 +96,25 @@ function dateItems(today: string, needle: string): MentionItem[] {
   return [...named, ...typed, ...reminderItems(today, needle)];
 }
 
+// The workspace's people, as Notion lists them first after "@".
+function personItems(state: AppState, needle: string): MentionItem[] {
+  const { user } = state.persistence.account;
+  const members = state.persistence.sync.members;
+  const people =
+    members.length > 0 || user === null
+      ? members
+      : [{ id: user.id, name: user.name, email: user.email, role: "owner" }];
+  return people
+    .filter((person) => fold(person.name).includes(needle))
+    .map((person) => ({
+      label: person.name,
+      span: {
+        text: `@${person.name}`,
+        mention: { kind: "person", userId: person.id, name: person.name },
+      },
+    }));
+}
+
 export interface OpenMentionMenu {
   readonly blockId: BlockId;
   // Offsets of the "@" or "[[" and of the caret in the block's text.
@@ -154,7 +173,9 @@ export function selectOpenMentionMenu(
   const { blockId, start, end, marker, needle } = typed;
   const pages = pageItems(state, needle);
   const items =
-    marker === "@" ? [...pages, ...dateItems(today, needle)] : pages;
+    marker === "@"
+      ? [...personItems(state, needle), ...pages, ...dateItems(today, needle)]
+      : pages;
   if (items.length === 0) return;
   const activeIndex = Math.min(
     state.ui.overlay?.activeIndex ?? 0,

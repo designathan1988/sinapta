@@ -35,9 +35,10 @@ function takeText(event: SubmitEvent): string {
   return text;
 }
 
-export function renderAvatar(): TemplateResult {
+// The author's initial in a circle; "You" when the comment has no author.
+export function renderAvatar(name: string = TEXT.author): TemplateResult {
   return html`<span class="comments__avatar" aria-hidden="true"
-    >${TEXT.author.slice(0, 1)}</span
+    >${name.slice(0, 1).toUpperCase()}</span
   >`;
 }
 
@@ -119,10 +120,10 @@ function renderComment(
       ? renderQuote(discussion, context)
       : nothing;
   return html`<li class="comments__comment">
-    ${renderAvatar()}
+    ${renderAvatar(comment.author?.name)}
     <div class="comments__body">
       <p class="comments__meta">
-        <strong>${TEXT.author}</strong>
+        <strong>${comment.author?.name ?? TEXT.author}</strong>
         <time datetime=${comment.createdAt}
           >${commentTime(comment.createdAt, context.now)}</time
         >

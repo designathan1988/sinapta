@@ -83,6 +83,7 @@ owner listed here exists.
 | Settings › My account, General and People | `src/features/settings/settings-people.view.ts` | 25 |
 | Notion's Share menu: Share and Publish tabs, the top bar's Share | `src/features/share/` | 26 |
 | The faces of the others on the open page | `src/features/presence/` | 27 |
+| The inbox's notices from others: mentions of the person, replies to them | `src/features/inbox/inbox-notices.selectors.ts` | 27 |
 | A page published to the web, shown alone and read only | `src/app/public-page.ts` | 26 |
 | Notion's sign-in screen: the address, password, login code and profile steps, the other ways in | `src/features/sign-in/` | 23 |
 | A page as one HTML file | `src/features/markdown-export/html-export.selectors.ts` | 20 |

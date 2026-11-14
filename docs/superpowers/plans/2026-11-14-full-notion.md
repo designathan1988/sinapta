@@ -55,8 +55,9 @@ in `src/persistence/`.
 
 - [x] 27.1 Presence: the faces of the others on the open page in the top
   bar. (Others' cursors and the block they edit remain.)
-- [ ] 27.2 People mentions, comments from others, the inbox's notices
-  (mentions, replies, invites, page changes), notification settings.
+- [x] 27.2 People mentions ("@" lists the workspace's people), each
+  comment's author, the inbox's mentions and replies. (Invites, page
+  changes and notification settings remain.)
 - [ ] 27.3 Page history and updates with authors.
 
 ## Milestone 28: People properties

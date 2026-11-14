@@ -34,11 +34,13 @@ export function isCover(cover: string): boolean {
 export const PAGE_FONTS = ["default", "serif", "mono"] as const;
 const pageFontSchema = v.picklist(PAGE_FONTS);
 
-// A comment, by the one person who uses the app.
+// A comment, and who wrote it once there is a server (ADR-0013); one
+// without an author is the owner's.
 export const pageCommentSchema = v.object({
   id: blockIdSchema,
   text: v.string(),
   createdAt: v.string(),
+  author: v.optional(v.object({ id: v.string(), name: v.string() })),
   // The emoji the owner reacted with, as Notion's reactions; a comment
   // started by a reaction alone has no text.
   reactions: v.optional(v.array(v.string())),

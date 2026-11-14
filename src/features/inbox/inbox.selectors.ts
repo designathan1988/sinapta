@@ -13,6 +13,7 @@ import {
 import type { Block, BlockId, Workspace } from "../../model/index.ts";
 import type { AppState } from "../../state/index.ts";
 import { COPY } from "../../ui/copy.ts";
+import { selectNotices } from "./inbox-notices.selectors.ts";
 
 export interface Reminder {
   readonly key: string;
@@ -101,7 +102,7 @@ export function selectAllReminders(state: AppState): Reminder[] {
 
 // The reminders due by today, newest first.
 export function selectReminders(state: AppState, today: string): Reminder[] {
-  return selectAllReminders(state)
+  return [...selectAllReminders(state), ...selectNotices(state)]
     .filter((item) => item.date <= today)
     .sort((a, b) => b.date.localeCompare(a.date));
 }

@@ -8,6 +8,7 @@ import {
 } from "../model/index.ts";
 import {
   loadServerWorkspace,
+  requestSync,
   setWorkspaces,
   type AccountStatus,
   type SyncRequest,
@@ -117,6 +118,8 @@ async function join(link: Link, sync: Sync, wanted?: string): Promise<void> {
   );
   await getJson(sync.send, `/api/workspaces/${chosen}/open`, {});
   await download(link, sync, listen(link, sync, chosen));
+  // The workspace's people, for "@" and the comments' authors.
+  sync.dispatch(requestSync.create({ request: { kind: "people" } }));
 }
 
 function leave(link: Link): void {

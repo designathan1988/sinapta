@@ -23,6 +23,13 @@ export const mentionSchema = v.variant("kind", [
     date: v.pipe(v.string(), v.isoDate()),
     isReminder: v.optional(v.boolean()),
   }),
+  // A person of the workspace (ADR-0013), named as they were when
+  // mentioned.
+  v.object({
+    kind: v.literal("person"),
+    userId: v.pipe(v.string(), v.minLength(1)),
+    name: v.string(),
+  }),
 ]);
 
 // The tones in order, for lists of colors to choose from.

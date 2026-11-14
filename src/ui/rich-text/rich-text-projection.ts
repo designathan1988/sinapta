@@ -42,6 +42,7 @@ function mentionNode(span: TextSpan, mention: Mention): Node {
   element.className = "mention";
   element.setAttribute("contenteditable", "false");
   if (mention.kind === "page") element.dataset.pageId = mention.pageId;
+  else if (mention.kind === "person") element.dataset.personId = mention.userId;
   else {
     element.dataset.date = mention.date;
     if (mention.isReminder === true) element.dataset.reminder = "";

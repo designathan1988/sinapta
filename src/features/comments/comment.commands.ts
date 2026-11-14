@@ -85,6 +85,12 @@ function aboutOf(
   return { quote: textOfRange(rich, range) };
 }
 
+// The signed-in person writes the comment; with no server, the owner.
+function authorOf(state: AppState) {
+  const { user } = state.persistence.account;
+  return user === null ? {} : { author: { id: user.id, name: user.name } };
+}
+
 export const startDiscussion = defineCommand<StartDiscussionPayload>({
   type: "comment.start",
   newBlockIds: 2,
@@ -100,6 +106,7 @@ export const startDiscussion = defineCommand<StartDiscussionPayload>({
       id: commentId,
       text,
       createdAt: command.meta.now,
+      ...authorOf(state),
       ...(reaction !== undefined && { reactions: [reaction] }),
     };
     const discussion: Discussion = {
@@ -147,7 +154,12 @@ export const replyToDiscussion = defineCommand<{
     const [id] = command.meta.blockIds;
     const text = command.text.trim();
     if (id === undefined || text === "") return {};
-    const comment = { id, text, createdAt: command.meta.now };
+    const comment = {
+      id,
+      text,
+      createdAt: command.meta.now,
+      ...authorOf(state),
+    };
     const result = changeDiscussion(state, command, (discussion) => ({
       ...discussion,
       comments: [...discussion.comments, comment],

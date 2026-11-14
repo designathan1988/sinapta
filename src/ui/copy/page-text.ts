@@ -11,6 +11,8 @@ export const PAGE_TEXT = {
     copyLink: "Copy link",
   },
   inbox: {
+    mentioned: "You were mentioned:",
+    replied: "replied:",
     open: "Inbox",
     title: "Inbox",
     close: "Close inbox",
