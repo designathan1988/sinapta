@@ -24,6 +24,9 @@ export interface Reminder {
   readonly date: string;
   readonly text: string;
   readonly isRead: boolean;
+  // From another person (a mention, a reply, an edit, a share), not a
+  // reminder this person set.
+  readonly isNotice?: boolean;
 }
 
 function pageOf(workspace: Workspace, block: Block): PageBlock | undefined {

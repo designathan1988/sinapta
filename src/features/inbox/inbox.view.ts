@@ -45,7 +45,13 @@ function renderItem(reminder: Reminder, dispatch: Dispatch): TemplateResult {
     >
       ${renderIcon("bell")}
       <span class="inbox__text">
-        <span class="inbox__title">${TEXT.reminder}: ${reminder.text}</span>
+        <span class="inbox__title"
+          >${
+            reminder.isNotice === true
+              ? reminder.text
+              : `${TEXT.reminder}: ${reminder.text}`
+          }</span
+        >
         <span class="inbox__meta"
           >${reminder.pageTitle} ·
           ${DAY.format(new Date(`${reminder.date}T00:00:00Z`))}</span

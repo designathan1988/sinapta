@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildWorkspace } from "../../model/index.ts";
+import { buildWorkspace, toBlockId } from "../../model/index.ts";
 import { createInitialState, type AppState } from "../../state/index.ts";
 import { selectNotices } from "./inbox-notices.selectors.ts";
 
@@ -69,6 +69,41 @@ describe("the inbox's notices", () => {
       "Grace replied: Yes",
     ]);
     expect(notices.every((notice) => notice.pageTitle === "Plans")).toBe(true);
+  });
+
+  it("tells the maker of a page that someone else edited it", () => {
+    const state = signedInAs("u1");
+    const page = state.workspace.blocks[toBlockId("p1")];
+    const line = state.workspace.blocks[toBlockId("b1")];
+    if (page === undefined || line === undefined) throw new Error("no page");
+    const blocks = {
+      ...state.workspace.blocks,
+      [page.id]: { ...page, createdBy: { id: "u1", name: "Me" } },
+      [line.id]: {
+        ...line,
+        updatedAt: "2026-11-14T11:00:00.000Z",
+        editedBy: { id: "u2", name: "Grace" },
+      },
+    };
+
+    const notices = selectNotices({
+      ...state,
+      workspace: { ...state.workspace, blocks },
+    });
+
+    expect(notices.map((notice) => notice.text)).toContain("Grace edited");
+  });
+
+  it("tells a guest which pages were shared with them", () => {
+    const state = signedInAs("u1");
+    const sync = { ...state.persistence.sync, access: { p1: "view" as const } };
+
+    const notices = selectNotices({
+      ...state,
+      persistence: { ...state.persistence, sync },
+    });
+
+    expect(notices.map((notice) => notice.text)).toContain("Shared with you");
   });
 
   it("lists nothing while no one is signed in", () => {

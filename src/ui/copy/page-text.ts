@@ -13,6 +13,8 @@ export const PAGE_TEXT = {
   inbox: {
     mentioned: "You were mentioned:",
     replied: "replied:",
+    edited: "edited",
+    sharedWithYou: "Shared with you",
     open: "Inbox",
     title: "Inbox",
     close: "Close inbox",
