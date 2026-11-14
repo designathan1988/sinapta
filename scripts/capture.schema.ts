@@ -1,12 +1,14 @@
 // The steps of a capture, read from a JSON file:
 // { "url"?, "theme"?: "dark" | "light", "guest"?: true, "steps": [ { "name", "eval"?,
-//   "click"?, "clickAt"?: [x, y], "type"?, "press"?, "hover"?, "expect"?, "clip"?, "pad"?,
+//   "click"?, "clickAt"?: [x, y], "drag"?, "by"?: [dx, dy], "type"?, "press"?,
+//   "hover"?, "expect"?, "clip"?, "pad"?,
 //   "wait"?, "read"? } ] }. Selectors are Playwright's (CSS, or
 // text=Label). The url defaults to the review server; click, type and
 // press act, hover points with the real mouse, expect names what must
 // appear after the action (else it is done once more, then the step
-// fails with a photo), clip photographs a region around an element, and
-// read prints a value measured in the page.
+// fails with a photo), clip photographs a region around an element, drag
+// presses the real mouse on an element and moves it by "by" before
+// letting go, and read prints a value measured in the page.
 import * as v from "valibot";
 
 const stepSchema = v.object({
@@ -14,6 +16,8 @@ const stepSchema = v.object({
   eval: v.optional(v.string()),
   click: v.optional(v.string()),
   clickAt: v.optional(v.tuple([v.number(), v.number()])),
+  drag: v.optional(v.string()),
+  by: v.optional(v.tuple([v.number(), v.number()])),
   type: v.optional(v.string()),
   press: v.optional(v.string()),
   hover: v.optional(v.string()),

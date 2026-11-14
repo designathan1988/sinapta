@@ -85,7 +85,7 @@ version 3 scope of ADR-0013 and the plan
 | A URL pasted over text links it; alone it offers Mention, URL, bookmark, embed | Done | `editor-paste-view.test.ts`, `editor-paste-as.test.ts`; photos `n95-paste-plus`, `p79-paste-as`; finding 49 |
 | Alt+drag duplicates, drag onto a sidebar page, Move to, Turn into page, Copy link to block | Done | `editor-block-drag.test.ts`, `editor-move-page.test.ts`, `editor-block-menu.test.ts`; photos `p66-move-popover`, `p72-move-block` |
 | Code: language, highlighting, wrap, copy, caption | Done | `src/blocks/code/code*.test.ts` |
-| Callout icon and color; image width, alignment, full screen | Done | `callout.test.ts`, `src/blocks/image/image*.test.ts`; dragging the width handle: `image-view.test.ts` |
+| Callout icon and color; image width, alignment, full screen | Done | `callout.test.ts`, `src/blocks/image/image*.test.ts`; dragging the width handle: `image-view.test.ts`; dragged with the mouse in the running app, 100 to 41 percent: photo `p99-image-drag` |
 | Nested numbered list styles | Done | `numbered-list.test.ts` |
 | Word and character count of the page | Done | `src/features/page-info/page-info.test.ts` |
 | Word and character count of the page or the block selection | Done | the page: the page menu's foot, `page-info.test.ts`; the blocks selected: their menu, headed "2 blocks", ends with their words and characters and acts on all of them: `editor-block-menu.test.ts`; photo `p96-selection-count` (Notion's own page menu clears the selection, `n107-blocks-words`) |
@@ -163,7 +163,7 @@ Paths: `blk/` is `src/blocks/`, `db/` is `src/features/database/`.
 
 | Goal | Status | Evidence |
 | --- | --- | --- |
-| Local server, SQLite, migrations, health route | Done | `server/api-origin.test.ts` (health), `src/app/architecture.test.ts` (server and app kept apart); photo `s01-health` |
+| Local server, SQLite, migrations, health route | Done | `server/api-origin.test.ts` (health), `src/app/architecture.test.ts` (server and app kept apart); photo `s01-health`; the Vite plugin mounts it in the review server every capture runs against, as in `p97-plans` and `p98-apps`, which reached its routes |
 | Accounts, scrypt, session cookie, same-origin check, sign-in screens, Settings › My account | Done | `server/account-routes.test.ts`, `server/api-origin.test.ts` (a foreign page's change refused), `sign-in-view.test.ts`; photos `p35-sign-in`, `p36-log-out`; My account's name and email: `src/features/settings/settings-account-view.test.ts`, `server/account-routes.test.ts` |
 | Sync: snapshot, operation log, live events, rebase, outbox | Done | `server/workspace-routes.test.ts`, `src/persistence/sync-rebase.test.ts`; photo `s02-sync`; the outbox retried after the server cannot be reached, with Syncing… and Offline: `src/persistence/sync-session.test.ts`, `src/app/shell-view.test.ts` |
 | Several workspaces: create, switch, rename, icon, delete, leave | Done | `server/workspace-delete.test.ts`, `server/member-routes.test.ts`, `src/features/settings/settings-general-view.test.ts`; photos `p37-workspaces`, `p83-workspace-general`, `p84-delete-workspace`; the list and the last one opened: `server/workspace-routes.test.ts`; Log out: `account-client.test.ts`, profile name: `server/account-routes.test.ts` |

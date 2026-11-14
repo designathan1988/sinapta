@@ -127,14 +127,34 @@ async function press(page: Page, step: CaptureStep): Promise<void> {
   if (step.press !== undefined) await page.keyboard.press(step.press);
 }
 
+// Presses the mouse on an element's middle and moves it in steps by an
+// offset, as a hand drags, then lets go.
+async function drag(page: Page, step: CaptureStep): Promise<void> {
+  if (step.drag === undefined) return;
+  const box = await page.locator(step.drag).first().boundingBox();
+  if (box === null) throw new Error(`nothing to drag: ${step.drag}`);
+  const [dx, dy] = step.by ?? [0, 0];
+  const x = box.x + box.width / 2;
+  const y = box.y + box.height / 2;
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  await page.mouse.move(x + dx, y + dy, { steps: 12 });
+  await page.mouse.up();
+}
+
 async function act(page: Page, step: CaptureStep): Promise<void> {
   if (step.eval !== undefined) await page.evaluate(step.eval);
   await press(page, step);
+  await drag(page, step);
   // After a click the mouse stays on what it clicked: submenus that open
   // on hover close when it leaves. Otherwise it rests in a corner.
   if (step.hover !== undefined) {
     await page.locator(step.hover).first().hover({ timeout: 10000 });
-  } else if (step.click === undefined && step.clickAt === undefined) {
+  } else if (
+    step.click === undefined &&
+    step.clickAt === undefined &&
+    step.drag === undefined
+  ) {
     await page.mouse.move(2, 2);
   }
 }
