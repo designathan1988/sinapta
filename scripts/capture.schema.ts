@@ -1,6 +1,7 @@
 // The steps of a capture, read from a JSON file:
 // { "url"?, "theme"?: "dark" | "light", "guest"?: true, "steps": [ { "name", "eval"?,
-//   "click"?, "clickAt"?: [x, y], "rightClick"?, "drag"?, "by"?: [dx, dy],
+//   "click"?, "clickAt"?: [x, y], "rightClick"?, "doubleClick"?, "drag"?,
+//   "by"?: [dx, dy], "hold"?,
 //   "type"?, "press"?,
 //   "hover"?, "expect"?, "clip"?, "pad"?,
 //   "wait"?, "read"? } ] }. Selectors are Playwright's (CSS, or
@@ -17,8 +18,15 @@ const stepSchema = v.object({
   eval: v.optional(v.string()),
   click: v.optional(v.string()),
   clickAt: v.optional(v.tuple([v.number(), v.number()])),
+  // A file the click's file chooser is given, as a person picks one.
+  upload: v.optional(v.string()),
+  // How many clicks clickAt makes: 2 double-clicks a word.
+  clicks: v.optional(v.number()),
   drag: v.optional(v.string()),
   rightClick: v.optional(v.string()),
+  doubleClick: v.optional(v.string()),
+  // A key held down while dragging, as "Alt".
+  hold: v.optional(v.string()),
   by: v.optional(v.tuple([v.number(), v.number()])),
   type: v.optional(v.string()),
   press: v.optional(v.string()),

@@ -7,6 +7,7 @@ import { join, resolve } from "node:path";
 const PUSH_PROFILE = resolve(".captures/profiles/push");
 import { chromium, type Page } from "playwright-core";
 import type { CapturePlan, CaptureStep } from "./capture.schema.ts";
+import { drag, press } from "./capture-actions.ts";
 import {
   CHROME,
   NOTION_PORT,
@@ -133,40 +134,6 @@ async function actAndExpect(page: Page, step: CaptureStep): Promise<void> {
   }
 }
 
-// Clicks by selector or at a point, then types or presses a key.
-async function press(page: Page, step: CaptureStep): Promise<void> {
-  if (step.click !== undefined) {
-    await page.locator(step.click).first().click({ timeout: 10000 });
-  }
-  if (step.rightClick !== undefined) {
-    await page
-      .locator(step.rightClick)
-      .first()
-      .click({ button: "right", timeout: 10000 });
-  }
-  if (step.clickAt !== undefined) {
-    const [x, y] = step.clickAt;
-    await page.mouse.click(x, y);
-  }
-  if (step.type !== undefined) await page.keyboard.type(step.type);
-  if (step.press !== undefined) await page.keyboard.press(step.press);
-}
-
-// Presses the mouse on an element's middle and moves it in steps by an
-// offset, as a hand drags, then lets go.
-async function drag(page: Page, step: CaptureStep): Promise<void> {
-  if (step.drag === undefined) return;
-  const box = await page.locator(step.drag).first().boundingBox();
-  if (box === null) throw new Error(`nothing to drag: ${step.drag}`);
-  const [dx, dy] = step.by ?? [0, 0];
-  const x = box.x + box.width / 2;
-  const y = box.y + box.height / 2;
-  await page.mouse.move(x, y);
-  await page.mouse.down();
-  await page.mouse.move(x + dx, y + dy, { steps: 12 });
-  await page.mouse.up();
-}
-
 async function act(page: Page, step: CaptureStep): Promise<void> {
   if (step.eval !== undefined) await page.evaluate(step.eval);
   await press(page, step);
@@ -179,6 +146,7 @@ async function act(page: Page, step: CaptureStep): Promise<void> {
     step.click === undefined &&
     step.clickAt === undefined &&
     step.rightClick === undefined &&
+    step.doubleClick === undefined &&
     step.drag === undefined
   ) {
     await page.mouse.move(2, 2);
