@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { safeHref, safeImageSource } from "./link-href.ts";
+import { safeHref, safeImageSource, typedHref } from "./link-href.ts";
 
 describe("safeHref", () => {
   it.each([
@@ -47,4 +47,23 @@ describe("safeImageSource", () => {
   ])("refuses %j", (source) => {
     expect(safeImageSource(source)).toBeUndefined();
   });
+});
+
+describe("typedHref", () => {
+  it.each([
+    ["example.com", "https://example.com/"],
+    ["www.example.org/a?b=1", "https://www.example.org/a?b=1"],
+    ["ann@example.com", "mailto:ann@example.com"],
+    ["https://example.com/x", "https://example.com/x"],
+    ["localhost.dev:8080/p", "https://localhost.dev:8080/p"],
+  ])("takes %s as Notion does", (typed, href) => {
+    expect(typedHref(typed)).toBe(href);
+  });
+
+  it.each(["not a link", "javascript:alert(1)", "file", ""])(
+    "refuses %s",
+    (typed) => {
+      expect(typedHref(typed)).toBeUndefined();
+    },
+  );
 });

@@ -67,6 +67,21 @@ describe("block.split", () => {
   });
 });
 
+describe("block.split in an empty nested list item", () => {
+  it("moves the item out one level and keeps it a list item, as Notion", () => {
+    const { dispatch, outline } = createApp([
+      {
+        ...text("a", "second", "numbered-list"),
+        children: [text("b", "", "numbered-list")],
+      },
+    ]);
+
+    dispatch(splitBlock.create({ blockId: B, offset: 0 }));
+
+    expect(outline()).toEqual(["numbered-list:second", "numbered-list:"]);
+  });
+});
+
 describe("block.split in an empty nested paragraph", () => {
   it("moves the paragraph out one level instead of adding a block", () => {
     const { dispatch, outline } = createApp([

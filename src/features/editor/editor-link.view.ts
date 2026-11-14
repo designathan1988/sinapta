@@ -2,7 +2,7 @@
 import "./editor-link.css";
 import { html, nothing, type TemplateResult } from "lit-html";
 import { ref } from "lit-html/directives/ref.js";
-import { parseBlockId, safeHref } from "../../model/index.ts";
+import { parseBlockId, typedHref } from "../../model/index.ts";
 import {
   closeOverlay,
   openOverlay,
@@ -94,9 +94,9 @@ export function renderLinkField(
         ? event.target.elements.namedItem("href")
         : null;
     if (!(input instanceof HTMLInputElement)) return;
-    const isValid = safeHref(input.value) !== undefined;
-    input.setAttribute("aria-invalid", String(!isValid));
-    if (isValid) finish(input.value);
+    const href = typedHref(input.value);
+    input.setAttribute("aria-invalid", String(href === undefined));
+    if (href !== undefined) finish(href);
   };
   const onEscape = (event: KeyboardEvent): void => {
     if (event.key === "Escape") dispatch(closeOverlay.create({}));

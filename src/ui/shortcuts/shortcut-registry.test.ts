@@ -41,6 +41,13 @@ describe("Notion's navigation keys", () => {
 });
 
 describe("matchShortcut", () => {
+  it("leaves a key the focused part already took to that part", () => {
+    const link = stroke({ key: "k", ctrlKey: true, defaultPrevented: true });
+
+    expect(matchShortcut(link)).toBeUndefined();
+    expect(matchShortcut({ ...link, defaultPrevented: false })).toBeDefined();
+  });
+
   it.each([
     ["Ctrl+Z", stroke({ ctrlKey: true }), UNDO_COMMAND],
     ["Cmd+Z", stroke({ metaKey: true }), UNDO_COMMAND],

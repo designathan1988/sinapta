@@ -103,6 +103,22 @@ function typeAtEndCommands(text: string, init: InputEventInit): Command[] {
   return typeAtEndSent(text, init, "paragraph");
 }
 
+describe("block Markdown in a list item, as Notion's", () => {
+  const space = { inputType: "insertText", data: " " };
+
+  it("turns a bullet into a to-do on [] and a space", () => {
+    const sent = typeAtEndSent("[]", space, "bulleted-list");
+
+    expect(sent).toEqual([
+      expect.objectContaining({ type: "block.convert", blockType: "to-do" }),
+    ]);
+  });
+
+  it("types the bullet's own prefix as it is", () => {
+    expect(typeAtEnd("-", space, "bulleted-list")).toEqual(["text.replace"]);
+  });
+});
+
 describe("inline Markdown while typing", () => {
   it("formats the text once its closing marker is typed", () => {
     const sent = typeAtEnd("**bold*", { inputType: "insertText", data: "*" });

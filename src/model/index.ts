@@ -140,7 +140,12 @@ export {
   serializeBlockClipboard,
   type ClipboardBlock,
 } from "./block-clipboard.schema.ts";
-export { safeHref, safeImageSource, safeWebAddress } from "./link-href.ts";
+export {
+  safeHref,
+  safeImageSource,
+  safeWebAddress,
+  typedHref,
+} from "./link-href.ts";
 export {
   insertMention,
   isInMention,

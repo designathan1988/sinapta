@@ -110,7 +110,12 @@ export function insertText(
     suggestion: _suggestion,
     ...style
   } = before.at(-1) ?? { text: "" };
-  const inserted = withText(style, text.normalize("NFC"));
+  // As Notion's, a link grows only from inside: text typed at its end is
+  // plain words after it.
+  const isLinkEnd = style.href !== undefined && after[0]?.href !== style.href;
+  const { href: _href, ...unlinked } = style;
+  const kept = isLinkEnd ? unlinked : style;
+  const inserted = withText(kept, text.normalize("NFC"));
   return normalize([...before, inserted, ...after]);
 }
 

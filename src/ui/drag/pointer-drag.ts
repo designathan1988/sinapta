@@ -1,5 +1,7 @@
 // Pointer drag to reorder items in a list or tree. While the pointer is
 // down the browser owns the interaction; the caller is told once, on drop.
+import "./drag.css";
+
 export type DragPosition = "before" | "after" | "inside";
 
 // Places that take blocks dropped on them, such as the pages in the

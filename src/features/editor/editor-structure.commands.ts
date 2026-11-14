@@ -85,12 +85,13 @@ export const splitBlock = defineCommand<{ blockId: BlockId; offset: number }>({
     if (!isTextBlock(block) || block.parentId === null || id === undefined)
       return {};
     const { now } = command.meta;
+    // As Notion's, Enter in an empty nested block steps out one level and
+    // keeps its kind; an empty list item at the top leaves the list.
+    const outdented = textOf(block) === "" ? outdent(state, block) : [];
+    if (outdented.length > 0) return { operations: outdented };
     if (textOf(block) === "" && block.type !== PARAGRAPH_TYPE) {
       return { operations: [convertOperation(block, PARAGRAPH_TYPE, now)] };
     }
-    // Enter in an empty nested paragraph steps out one level.
-    const outdented = textOf(block) === "" ? outdent(state, block) : [];
-    if (outdented.length > 0) return { operations: outdented };
     const offset = snapToBoundary(textOf(block), command.offset);
     const [before, after] = splitRichText(block.props.text, offset);
     const type = blockDefinition(block.type)?.continuesAs ?? PARAGRAPH_TYPE;

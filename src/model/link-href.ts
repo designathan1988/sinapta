@@ -9,6 +9,21 @@ export function safeHref(href: string): string | undefined {
   return url.href;
 }
 
+// A scheme ends at "://" or is mailto:, so "host.dev:8080" has none.
+const HAS_SCHEME = /^(?:[a-z][a-z0-9+.-]*:\/\/|mailto:)/i;
+const EMAIL = /^[^\s@/]+@[^\s@/]+\.[^\s@/]+$/;
+const DOMAIN = /^[^\s/@:]+\.[a-z]{2,}(?::\d+)?(?:[/?#]\S*)?$/i;
+
+// What a person types in a link field, as Notion takes it: an address
+// with no scheme is a web address ("example.com"), or an email address
+// ("ann@example.com"); then the same rules as safeHref.
+export function typedHref(text: string): string | undefined {
+  const trimmed = text.trim();
+  if (HAS_SCHEME.test(trimmed)) return safeHref(trimmed);
+  if (EMAIL.test(trimmed)) return safeHref(`mailto:${trimmed}`);
+  return DOMAIN.test(trimmed) ? safeHref(`https://${trimmed}`) : undefined;
+}
+
 const IMAGE_PROTOCOLS = new Set(["http:", "https:"]);
 // Raster images only: an SVG can carry script, and a data address keeps it
 // inside the workspace file, where it is shown in other browsers too.

@@ -16,6 +16,9 @@ export interface KeyStroke {
   readonly altKey: boolean;
   // True while an input method is composing text.
   readonly isComposing: boolean;
+  // True when the focused part already took the key, as the editor's
+  // Ctrl+K for a link on selected text: the key is that part's.
+  readonly defaultPrevented?: boolean;
 }
 
 // What a shortcut does that is not a command: Notion's navigation keys,
@@ -139,7 +142,7 @@ export function matchShortcut(
   shortcuts: readonly Shortcut[] = SHORTCUTS,
 ): Shortcut | undefined {
   // Keys pressed while composing belong to the input method.
-  if (stroke.isComposing) return undefined;
+  if (stroke.isComposing || stroke.defaultPrevented === true) return undefined;
   const hasModifier = stroke.ctrlKey || stroke.metaKey;
   return shortcuts.find(
     (shortcut) =>

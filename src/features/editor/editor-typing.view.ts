@@ -2,30 +2,55 @@
 // prefix converts the block; "/", "@", "[[" and "+" open their menus, which
 // their own features show; a closing marker formats inline Markdown.
 import { isTextBlock, textOf } from "../../blocks/index.ts";
+import { BULLETED_LIST_TYPE } from "../../blocks/bulleted-list/index.ts";
 import { CODE_TYPE } from "../../blocks/code/index.ts";
+import { HEADING_TYPE } from "../../blocks/heading/index.ts";
+import { NUMBERED_LIST_TYPE } from "../../blocks/numbered-list/index.ts";
 import { PARAGRAPH_TYPE } from "../../blocks/paragraph/index.ts";
-import { matchInlineMarkdown } from "../../model/index.ts";
+import { QUOTE_TYPE } from "../../blocks/quote/index.ts";
+import { TO_DO_TYPE } from "../../blocks/to-do/index.ts";
+import { TOGGLE_TYPE } from "../../blocks/toggle/index.ts";
+import { matchInlineMarkdown, type Block } from "../../model/index.ts";
 import {
   openOverlay,
   type AppState,
   type Dispatch,
 } from "../../state/index.ts";
-import { matchBlockShortcut } from "./block-shortcut.ts";
+import { matchBlockShortcut, type BlockShortcut } from "./block-shortcut.ts";
 import type { InputContext, Target } from "./editor-input.view.ts";
 import { applyInlineMarkdown } from "./editor.commands.ts";
 
-// A space after a shortcut at the start of a paragraph converts the
-// paragraph instead of being typed.
+// A space after a shortcut at the start of a text block converts the block
+// instead of being typed: a paragraph, and as Notion's a list item, a
+// to-do, a toggle, a quote or a heading ("[] " in a bullet makes a to-do).
+const TURNS: ReadonlySet<string> = new Set([
+  PARAGRAPH_TYPE,
+  BULLETED_LIST_TYPE,
+  NUMBERED_LIST_TYPE,
+  TO_DO_TYPE,
+  TOGGLE_TYPE,
+  QUOTE_TYPE,
+  HEADING_TYPE,
+]);
+
+// The prefix of the block's own kind is typed as it is, as "- " in a
+// bullet; a heading's prefix of another level still changes it.
+function isOwnKind(shortcut: BlockShortcut, block: Block): boolean {
+  return (
+    shortcut.blockType === block.type &&
+    shortcut.extraProps?.level === block.props.level
+  );
+}
+
 export function shortcutFor(target: Target, text: string, state: AppState) {
   const block = state.workspace.blocks[target.blockId];
-  const isCandidate =
-    text === " " &&
-    target.start === target.end &&
-    block?.type === PARAGRAPH_TYPE;
-  if (!isCandidate || !isTextBlock(block)) return undefined;
+  const isTyped = text === " " && target.start === target.end;
+  if (!isTyped || !isTextBlock(block) || !TURNS.has(block.type)) {
+    return undefined;
+  }
   const prefix = textOf(block).slice(0, target.start);
   const shortcut = matchBlockShortcut(prefix);
-  return shortcut === undefined
+  return shortcut === undefined || isOwnKind(shortcut, block)
     ? undefined
     : { ...shortcut, removePrefix: prefix.length };
 }

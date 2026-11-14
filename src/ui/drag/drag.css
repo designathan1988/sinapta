@@ -1,0 +1,12 @@
+@layer ui {
+  /* While something is carried, the hand shows it is held, over text as
+     anywhere else, and the text under it is not selected. */
+  :root:has([data-dragging]) {
+    cursor: grabbing;
+    user-select: none;
+
+    & * {
+      cursor: inherit;
+    }
+  }
+}

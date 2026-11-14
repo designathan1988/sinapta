@@ -14,8 +14,9 @@ export function renderTrashedBanner(
   const pageId = page.id;
   // The trash asks before deleting: its anchor names the page.
   const confirm = { kind: TRASH_OVERLAY, anchorId: pageId };
-  return html`<div class="editor__trashed" role="status">
-    <span>${COPY.trash.pageInTrash}</span>
+  // Only the words are announced, not the buttons' names after them.
+  return html`<div class="editor__trashed">
+    <span role="status">${COPY.trash.pageInTrash}</span>
     <button
       type="button"
       class="editor__trashed-action"

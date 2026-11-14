@@ -70,8 +70,10 @@ function arrowAction(event: KeyboardEvent, context: InputContext) {
   if (direction === undefined) return undefined;
   const hasMod = event.ctrlKey || event.metaKey;
   if (event.altKey || (hasMod && event.shiftKey)) {
-    return () =>
-      context.dispatch(moveSelectedBlocksBy.create({ offset: direction }));
+    return () => {
+      const command = moveSelectedBlocksBy.create({ offset: direction });
+      if (context.dispatch(command).ok) announce(COPY.blockMenu.moved);
+    };
   }
   return event.shiftKey
     ? () => {

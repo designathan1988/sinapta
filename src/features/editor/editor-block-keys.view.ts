@@ -22,7 +22,9 @@ import {
   type BlockProps,
 } from "../../model/index.ts";
 import { setActivePage, type AppState } from "../../state/index.ts";
+import { announce } from "../../ui/announcer/index.ts";
 import { readSelection } from "../../ui/caret/index.ts";
+import { COPY } from "../../ui/copy.ts";
 import type { KeyStroke } from "../../ui/shortcuts/index.ts";
 import { turnIntoCommand } from "./editor-convert.commands.ts";
 import type { InputContext } from "./editor-input.view.ts";
@@ -197,7 +199,9 @@ export function runBlockKeyAction(
   };
   const command = commands[action.kind]();
   if (command === undefined) return false;
-  dispatch(command);
+  const result = dispatch(command);
+  // A move by key is told, as a move by drag is.
+  if (action.kind === "move" && result.ok) announce(COPY.blockMenu.moved);
   return true;
 }
 
