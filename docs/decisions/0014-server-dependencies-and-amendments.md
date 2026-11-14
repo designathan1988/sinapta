@@ -115,8 +115,17 @@ the record should say so.
    payment, as the sign-in has its own test provider, and the card
    networks' published test numbers decline as they do at a real
    processor (4000 0000 0000 0002 when added, 4000 0000 0000 0341 on each
-   charge). Moving real money needs an account with a payment company
-   registered as that processor; none is registered here.
+   charge). With `PAGECRAFT_STRIPE_SECRET_KEY` set, Stripe is the
+   processor (`server/stripe.ts`): Billing's "Add card" sends the owner to
+   Stripe Checkout in setup mode, so the card's number is typed on
+   Stripe's page and never reaches this server; back at
+   `/api/billing/checkout/return` the server reads the saved card from
+   Stripe and keeps its brand, last four digits, expiry and Stripe's
+   customer and payment method; each upgrade is a PaymentIntent confirmed
+   off session, a decline leaving the plan as it was. Real money moves
+   once the owner registers a Stripe account's key; none is registered on
+   this machine, so the Stripe path is checked against Stripe's API as
+   documented (`server/stripe.test.ts`), not against Stripe itself.
 
 ## Options Considered
 

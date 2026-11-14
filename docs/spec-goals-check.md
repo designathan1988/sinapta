@@ -68,6 +68,15 @@ Checked against the sources, goal by goal (2026-11-14, last):
   - `w10-billing`: Plans refuses Plus without a card and leads to
     Billing; a test card saved there upgrades the workspace and leaves a
     paid invoice; back to Free, and the card removed.
+  - `w11-board` (§4.4, §4.5): a select and a percent number, Count all,
+    the exported CSV's text, a board by Stage, Alt+→ moving a card, card
+    size Large, Lock database (no new view, rows still added).
+  - `w12-blocks` (§4.2): nested bullets •, ◦, ▪; a JavaScript code block
+    in Notion's token colors, wrapped; a callout's icon chosen by search
+    and Enter, and its Blue background; an image uploaded through the
+    file picker at its own size.
+  - `w13-filter` (§4.5): Add advanced filter, Add filter rule's list, a
+    group, Delete filter.
   Bugs these walks found are fixed with a test each: a database title's
   Enter adding a hidden line and unique IDs starting at 2, a child listed
   twice after a synced block, text typed after inline Markdown keeping
@@ -135,19 +144,19 @@ version 3 scope of ADR-0013 and the plan
 
 | Goal | Status | Evidence |
 | --- | --- | --- |
-| Block prefixes and inline Markdown while typing | Done | `editor-convert.test.ts`, `src/model/inline-markdown.test.ts` |
-| Esc, Ctrl+A, Ctrl+D, Ctrl+Shift+Arrow, Ctrl+Enter, Ctrl+Alt+T, Ctrl+Shift+H, Ctrl+Shift+0–9 | Done | `editor-block-keys.test.ts`, `editor-selection-keys.test.ts`, `editor-move.test.ts` |
-| Block color and background; /red, /red background, /default | Done | `editor-color.test.ts`, `slash-menu.test.ts` |
+| Block prefixes and inline Markdown while typing | Done | `editor-convert.test.ts`, `src/model/inline-markdown.test.ts`; walk `w2-editing` (prefixes, inline Markdown, text after it plain) |
+| Esc, Ctrl+A, Ctrl+D, Ctrl+Shift+Arrow, Ctrl+Enter, Ctrl+Alt+T, Ctrl+Shift+H, Ctrl+Shift+0–9 | Done | `editor-block-keys.test.ts`, `editor-selection-keys.test.ts`, `editor-move.test.ts`; walk `w8-keys` (Ctrl+Shift+4, 0 and 7, Ctrl+Enter, Ctrl+Alt+T closing and opening, Ctrl+Shift+H) |
+| Block color and background; /red, /red background, /default | Done | `editor-color.test.ts`, `slash-menu.test.ts`; walk `w12-blocks` (a callout's Blue background from its menu); `w8-keys` (red text) |
 | Heading 4, toggle headings, subpages as blocks, /page | Done | `src/blocks/heading/heading.test.ts`, `editor-subpages.test.ts` |
 | @ pages, dates, people, reminders; [[ links | Done | `src/features/mention-menu/mention-menu.test.ts` (people after @), `src/app/reminder-notices.test.ts`; a date near today reads @Today, @Tomorrow, @Yesterday and every mention is followed by a space, as Notion's: `src/ui/rich-text/date-mention.test.ts`, `rich-text-projection.test.ts`, `editor-mention.test.ts`; photos `n104-date-mention`, `p94-date-mention` (finding 57) |
 | "+" for a new subpage, a new page in a chosen place, or a link to a page | Done | `src/features/editor/editor-plus.test.ts`, `mention-menu.test.ts`; photos `n97-plus`, `p78-plus`, `p91-page-in`; finding 50 |
-| :emoji and the emoji picker | Done | `src/features/emoji-menu/emoji-menu.test.ts`, `src/ui/emoji/emoji-picker.test.ts` |
-| Copy blocks with their structure; paste web HTML as blocks | Done | `editor-selection-keys.test.ts`, `src/ui/rich-text/pasted-html-blocks.test.ts` |
+| :emoji and the emoji picker | Done | `src/features/emoji-menu/emoji-menu.test.ts`, `src/ui/emoji/emoji-picker.test.ts`; walk `w12-blocks` ("rocket" searched, Enter chooses it) |
+| Copy blocks with their structure; paste web HTML as blocks | Done | `editor-selection-keys.test.ts`, `src/ui/rich-text/pasted-html-blocks.test.ts`; walk `w8-keys` (Ctrl+C gives plain text and HTML, Ctrl+V rebuilds the callout) |
 | A URL pasted over text links it; alone it offers Mention, URL, bookmark, embed | Done | `editor-paste-view.test.ts`, `editor-paste-as.test.ts`; photos `n95-paste-plus`, `p79-paste-as`; finding 49 |
-| Alt+drag duplicates, drag onto a sidebar page, Move to, Turn into page, Copy link to block | Done | `editor-block-drag.test.ts`, `editor-move-page.test.ts`, `editor-block-menu.test.ts`; photos `p66-move-popover`, `p72-move-block` |
-| Code: language, highlighting, wrap, copy, caption | Done | `src/blocks/code/code*.test.ts` |
-| Callout icon and color; image width, alignment, full screen | Done | `callout.test.ts`, `src/blocks/image/image*.test.ts`; dragging the width handle: `image-view.test.ts`; dragged with the mouse in the running app, 100 to 41 percent: photo `p99-image-drag` |
-| Nested numbered list styles | Done | `numbered-list.test.ts` |
+| Alt+drag duplicates, drag onto a sidebar page, Move to, Turn into page, Copy link to block | Done | `editor-block-drag.test.ts`, `editor-move-page.test.ts`, `editor-block-menu.test.ts`; photos `p66-move-popover`, `p72-move-block`; walk `w8-keys` (Alt+drag drops a copy, the original stays) |
+| Code: language, highlighting, wrap, copy, caption | Done | `src/blocks/code/code*.test.ts`; walks `w8-keys`, `w12-blocks` (JavaScript chosen, Notion's token colors read from its stylesheet, Wrap keeps spaces) |
+| Callout icon and color; image width, alignment, full screen | Done | `callout.test.ts`, `src/blocks/image/image*.test.ts`; dragging the width handle: `image-view.test.ts`; dragged with the mouse in the running app, 100 to 41 percent: photo `p99-image-drag`; walk `w12-blocks` (icon 🚀, Blue background, an image uploaded through the file picker at its own size) |
+| Nested numbered list styles | Done | `numbered-list.test.ts`; walks `w8-keys` (1. a. i.), `w12-blocks` (bullets •, ◦, ▪) |
 | Word and character count of the page | Done | `src/features/page-info/page-info.test.ts` |
 | Word and character count of the page or the block selection | Done | the page: the page menu's foot, `page-info.test.ts`; the blocks selected: their menu, headed "2 blocks", ends with their words and characters and acts on all of them: `editor-block-menu.test.ts`; photo `p96-selection-count` (Notion's own page menu clears the selection, `n107-blocks-words`) |
 
@@ -172,31 +181,31 @@ Paths: `blk/` is `src/blocks/`, `db/` is `src/features/database/`.
 | Goal | Status | Evidence |
 | --- | --- | --- |
 | Status with To-do, In progress, Complete | Done | `db/properties/status/status.test.ts`, `status-checkbox.test.ts`, `db/row-groups-status.test.ts` |
-| Options: rename, recolor, reorder, delete; descriptions | Done | `db/option.test.ts`, `db/property-edit-view.test.ts` |
-| Number formats, bar and ring | Done | `db/properties/number/number.test.ts`, `number-config-view.test.ts`; photos `p19-properties`, `p19-number-tiles` |
-| Date end, time, formats, relative dates | Done | `db/properties/date/date.test.ts`, `date-filters.test.ts`, `db/cell-date-view.test.ts` |
+| Options: rename, recolor, reorder, delete; descriptions | Done | `db/option.test.ts`, `db/property-edit-view.test.ts`; walk `w9-data` (High renamed Urgent, recolored red) |
+| Number formats, bar and ring | Done | `db/properties/number/number.test.ts`, `number-config-view.test.ts`; photos `p19-properties`, `p19-number-tiles`; walks `w9-data` (Currency, $1,200.00), `w11-board` (Percent, 25%) |
+| Date end, time, formats, relative dates | Done | `db/properties/date/date.test.ts`, `date-filters.test.ts`, `db/cell-date-view.test.ts`; walk `w9-data` (typed start, End date, Include time, the end's own time) |
 | Files and media | Done | `db/properties/files/files.test.ts`, `files-editor-view.test.ts` |
 | Unique ID with prefix | Done | `db/properties/unique-id/unique-id.test.ts` |
-| Relation, one way or two way | Done | `db/properties/relation/relation.test.ts` ("a one-way relation") |
-| Rollup with every function | Done | `db/properties/rollup/rollup.test.ts`, `rollup-filters.test.ts`, `rollup-notion.test.ts` |
-| Formula, with Notion 2.0's functions | Done | `db/properties/formula/formula.test.ts`, `formula-notion2.test.ts`; photo `p77-formula2` |
+| Relation, one way or two way | Done | `db/properties/relation/relation.test.ts` ("a one-way relation"); walk `w9-data` (related to Tasks, searched and picked) |
+| Rollup with every function | Done | `db/properties/rollup/rollup.test.ts`, `rollup-filters.test.ts`, `rollup-notion.test.ts`; walk `w9-data` (a rollup of the relation's names) |
+| Formula, with Notion 2.0's functions | Done | `db/properties/formula/formula.test.ts`, `formula-notion2.test.ts`; photo `p77-formula2`; walk `w9-data` (prop("Budget") * 2 gives 2400 and 600) |
 | Button property: set values, open a page | Done | `db/button-press.test.ts`, `db/button-automation-view.test.ts` |
 
 ## S2 §4.5: database views and behavior
 
 | Goal | Status | Evidence |
 | --- | --- | --- |
-| Filter groups with and / or, typed operators | Done | `db/filter-edit.test.ts`, `db/table-model.test.ts`, `db/filter-operators.test.ts`; photo `p24-between` |
-| Group by in table, list and gallery; collapse; hide empty; board sub-groups | Done | `db/grouped-layouts-view.test.ts`, `db/row-groups.test.ts`, `db/layouts/board/board-lanes.test.ts` |
-| Column calculations | Done | `db/calculations.test.ts` (sum, average, median, min, max, range, dates, percents, per group) |
-| Row selection, bulk edit, drag order, wrap, freeze, fill down | Done | `db/row-bulk.test.ts`, `db/table-rows-view.test.ts` |
-| Board: order, columns, card size and preview, by status, multi-select, checkbox or date | Done | `db/layouts/board/board-card.test.ts`, `board-view.test.ts`, `board.test.ts`; photo `p34-board` |
+| Filter groups with and / or, typed operators | Done | `db/filter-edit.test.ts`, `db/table-model.test.ts`, `db/filter-operators.test.ts`; photo `p24-between`; walks `w9-data`, `w13-filter` (Add to advanced filter, Add advanced filter, Add filter rule's list, a group, Delete filter; the first control 76 px in, as Notion's) |
+| Group by in table, list and gallery; collapse; hide empty; board sub-groups | Done | `db/grouped-layouts-view.test.ts`, `db/row-groups.test.ts`, `db/layouts/board/board-lanes.test.ts`; walk `w9-data` (grouped by Priority, Urgent collapsed and opened) |
+| Column calculations | Done | `db/calculations.test.ts` (sum, average, median, min, max, range, dates, percents, per group); walks `w9-data` (Sum in the column's currency), `w11-board` (Count all) |
+| Row selection, bulk edit, drag order, wrap, freeze, fill down | Done | `db/row-bulk.test.ts`, `db/table-rows-view.test.ts`; walk `w9-data` (a row ticked, the bulk bar, Escape lets go) |
+| Board: order, columns, card size and preview, by status, multi-select, checkbox or date | Done | `db/layouts/board/board-card.test.ts`, `board-view.test.ts`, `board.test.ts`; photo `p34-board`; walk `w11-board` (columns by Stage, Alt+→ moves a card, card size Large) |
 | Gallery card size and preview; calendar week view and options | Done | `db/layouts/row-card/row-card*.test.ts`, `db/layouts/calendar/calendar*.test.ts` |
 | Timeline, chart (column, bar, line, donut), form, feed | Done | `db/layouts/timeline/*.test.ts`, `db/layouts/chart/chart-view.test.ts`, `db/layouts/form/form-view.test.ts`, `db/layouts/feed/feed-view.test.ts` |
 | Open rows to the side, centered or full page; previous and next | Done | `src/features/row-peek/peek.test.ts`, `db/row-open.test.ts` |
 | Row templates and a default | Done | `db/template.test.ts`, `db/templates-menu-view.test.ts` |
-| CSV import and export | Done | `db/csv-import.test.ts`, `db/csv-export.test.ts` |
-| Lock a database or a view | Done | `db/view-lock.test.ts`, `blk/page/page-lock.test.ts` |
+| CSV import and export | Done | `db/csv-import.test.ts`, `db/csv-export.test.ts`; walks `w9-data` (a CSV imported through the file picker), `w11-board` (the exported CSV's text read) |
+| Lock a database or a view | Done | `db/view-lock.test.ts`, `blk/page/page-lock.test.ts`; walks `w9-data` (Lock view: a lock on the tab, no new property), `w11-board` (Lock database: no new view, rows still added) |
 
 ## S2 §4.6: workspace
 
@@ -240,7 +249,7 @@ Paths: `blk/` is `src/blocks/`, `db/` is `src/features/database/`.
 | Integrations and the public API | Done | `server/public-api.test.ts`; photo `p74-integrations` |
 | Notion's app connections (Gmail, Google Calendar, Slack, Outlook, iCloud, Asana, GitHub, Jira, Figma, Google Drive) | Done | each connects the way the app lets anyone in (ADR-0014, decision 6): Slack's channel webhook receives the mention notices, a calendar's iCal address puts its events under Home's Upcoming, Gmail adds "Email page", and the others' links are offered as a preview when pasted: `server/app-connections.test.ts`, `server/ical.test.ts`, `src/model/app-connection.test.ts`, `third-party-view.test.ts`, `home-view.test.ts`, `page-menu-email.test.ts`, `editor-paste-preview.test.ts`; photos `n108-connections`, `p98-apps` (a public holiday calendar's events on Home), `p98b-apps-off` |
 | Plans and Upgrade | Done | Notion's Free, Plus, Business and Enterprise, each with Notion's limits: files up to 5 MB on Free (50 MB, this server's largest, above), page history of 7, 30, 90 days or all; the workspace menu's Upgrade opens them, and the workspace's owners choose; a paid plan is charged to the workspace's card for each member (Plus $12, Business $24 a month): `server/member-routes.test.ts`, `settings-plans-view.test.ts`, `page-history-plan.test.ts`, `asset-store.test.ts`; photo `p97-plans` |
-| Billing: a card, charges and invoices | Done | Settings › Billing keeps the card through the server's payment processor (checked by Luhn, expiry and CVC; only brand, last four, expiry and the processor's token kept), an upgrade without a card says so and goes through once one is saved, a declined card or charge leaves the plan as it was, and each charge is an invoice (ADR-0014, decision 12): `server/billing.test.ts`, `src/model/billing.test.ts`, `src/persistence/billing-client.test.ts`, `settings-billing-view.test.ts`; walk `w10-billing`. Real money moves only once a payment company is registered as the processor |
+| Billing: a card, charges and invoices | Done | Settings › Billing keeps the card through the server's payment processor (checked by Luhn, expiry and CVC; only brand, last four, expiry and the processor's token kept), an upgrade without a card says so and goes through once one is saved, a declined card or charge leaves the plan as it was, and each charge is an invoice (ADR-0014, decision 12): `server/billing.test.ts`, `src/model/billing.test.ts`, `src/persistence/billing-client.test.ts`, `settings-billing-view.test.ts`; walk `w10-billing`. With a Stripe key the card is saved on Stripe Checkout's page and each upgrade is a Stripe PaymentIntent: `server/stripe.test.ts`, `src/app/billing-return.test.ts`; real money moves once the owner registers a Stripe account's key, none being registered on this machine |
 | Link previews from a server | Done | `server/link-preview.test.ts`, `src/state/link-preview.test.ts`; photo `p73-bookmark`; no host on this machine or its network is fetched: `server/link-preview.test.ts`; the card: `src/blocks/bookmark/bookmark-view.test.ts` |
 | AI Meeting Notes with transcription from the microphone | Done | `transcriber.test.ts`, `recorder-listener.test.ts`, `src/persistence/meeting-client.test.ts`, `server/transcription.test.ts`; photo `p87-meeting-mic`: Chrome's microphone played a spoken WAV (made with Windows' speech synthesizer), the app recorded it in 6-second pieces, the server's local Whisper model (`Xenova/whisper-base.en`, Transformers.js) wrote the words, and the AI summed them up. The small model mishears some words of a synthetic voice ("lunch" for "launch"); typed notes and a refused microphone: `meeting-notes.test.ts`, `transcriber.test.ts` |
 

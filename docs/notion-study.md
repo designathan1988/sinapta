@@ -1423,6 +1423,26 @@ Groups, Notion and Pagecraft alike (Pagecraft changed to match):
   the target's conditions); the related-rows results are covered by
   `rollup-filters.test.ts`.
 
+61. **done** [`n110-advanced-filter`, `n111-filter-cleanup`; Pagecraft
+    `w13-filter`] Notion's advanced filter: a 473 px panel, "Where" 30 px
+    in, the rule's property 76 px in from the panel's edge (Pagecraft:
+    76 px, in a 458 px panel); at its foot "Add filter rule ⌄" (Add
+    filter rule; Add filter group, "A group to nest more filters") and
+    "Delete filter" under a line. The Filter menu ends with "Add advanced
+    filter". Pagecraft now has all three.
+62. **done** [`n114-cleanup-css`; Pagecraft `x-code`] Notion's code colors
+    (Prism), light: keyword rgb(0, 119, 170), string rgb(102, 153, 0),
+    number rgb(153, 0, 85), function rgb(221, 74, 104), comment
+    rgb(112, 128, 144), punctuation rgb(153, 153, 153); dark: keyword
+    rgb(102, 162, 204), string rgb(189, 224, 82), number rgb(209, 148,
+    158), function rgb(236, 236, 147), comment rgb(153, 128, 102).
+    Pagecraft's tokens are now these (`base.color.prism`).
+63. **done** [Pagecraft `w12-blocks`] Nested bullets turn •, ◦, ▪ by
+    depth, as Notion's; an image smaller than the column keeps its own
+    size until a width is chosen.
+64. **done** [Pagecraft `w11-board`, `w13-filter`] "1 rule" and "1 sort"
+    in the singular on the pills, as Notion's "1 regra".
+
 ## Controls
 
 **Now** says what the control is today: "native" (a browser `<select>`
@@ -1513,6 +1533,19 @@ against the reference on every run.
   dismiss. One overlay at a time, kept in `ui.overlay`.
 
 ## Last run
+
+2026-11-14, Notion's advanced filter and code colors: the signed-in
+Notion window and the review server, 1440 × 900 (`n110`–`n114`,
+`w11-board`, `w12-blocks`, `w13-filter`).
+
+- Notion: a Número filter moved to the advanced filter, measured, its
+  "Add filter rule" list read, then deleted with its own Delete filter;
+  the filter bar was hidden again. A test code block by "/code" became a
+  CodePen embed with an empty toggle; both, and a "/código" line left
+  by a later try, were deleted, and the page ends again at "Toggle
+  item". The code colors were then read from Notion's stylesheet,
+  changing nothing.
+- Findings 61–64 below.
 
 2026-11-14, more walks: the review server, 1440 × 900, light theme
 (`w8-keys`, `w9-data`, `w10-billing`).

@@ -183,6 +183,8 @@ owner listed here exists.
 | Value discussions leaving with their property | `src/features/comments/value-discussion-tidy.ts` | 20 |
 | Keeping page versions in storage | `src/persistence/snapshot-store.ts` | 17 |
 | Billing: plan prices and card checks, the card and invoices on the server, the payment processor, Settings › Billing and the plan request | `src/model/billing.ts`, `server/billing.ts`, `server/billing-store.ts`, `server/billing.schema.ts`, `server/payments.ts`, `src/state/billing.commands.ts`, `src/persistence/billing-client.ts`, `src/persistence/billing.schema.ts`, `src/features/settings/settings-billing.view.ts` | 31 |
+| Stripe as the payment processor, and a card saved on its page | `server/stripe.ts`, `server/stripe.schema.ts`, `server/billing-checkout.ts`, `server/billing-owner.ts`, `src/app/billing-return.ts` | 31 |
+| The advanced filter's foot: Add filter rule's list, Delete filter | `src/features/database/filter-panel-actions.view.ts` | 31 |
 | The requests that leave the open workspace as it is: integrations, apps, billing | `src/persistence/side-requests.ts` | 31 |
 | Keys that apply while one part of the interface is active, listed once | `src/app/scoped-keys.ts` | 31 |
 | Where a menu opened at the pointer goes, inside the window | `src/ui/menu/menu-point.ts` | 31 |
