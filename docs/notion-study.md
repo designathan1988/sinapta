@@ -1514,6 +1514,21 @@ against the reference on every run.
 
 ## Last run
 
+2026-11-14, closing: the signed-in Notion window and the review server,
+1440 × 900, light theme (`n104`–`n108`, `p94`–`p100`).
+
+- Notion: an "@today" mention (undone; the heading put back by
+  `n105-fix-heading`), the text column measured, three blocks selected
+  then the page menu, and Settings › Conexões, read only.
+- Pagecraft: date mentions, the 708 px column, the menu of selected
+  blocks, Settings › Plans (Upgrade to Plus and back to Free), the app
+  connections (GitHub and a public holiday calendar connected, its events
+  on Home, then both disconnected), an image's width dragged with the
+  mouse, and a passkey added with Chrome's virtual authenticator, then
+  used to sign in after Log out. A review server left running since
+  01:04 served old server code; it was stopped, and each capture since
+  starts its own.
+
 2026-11-14, last: the signed-in Notion window and the review server,
 1440 × 900, light theme (`n103`, `p92`–`p93`).
 

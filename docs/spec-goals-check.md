@@ -15,10 +15,21 @@ for it.
 
 Status: **Done** (built and evidenced), for every row.
 
-A script checks this table: every test file and photo it names exists
-(124 rows, none missing, 2026-11-14). Every task of
-`docs/superpowers/plans/2026-11-14-full-notion.md` (22.1 to 31.4) was
-matched to a row of "Version 3" below.
+Checked against the sources, goal by goal (2026-11-14, last):
+
+- Every row of `docs/specification.md` §1 "In scope" and "Quality
+  targets" has its row under S1 and Quality targets.
+- Each of the 77 rows of the parity design's §4 tables was matched to a
+  row here by a script; the 14 it could not match by their words were
+  matched by hand (the icon over the cover, the sidebar's items, the empty
+  page's start list, block prefixes, inline Markdown, Esc and Ctrl+A, the
+  block keys, mentions, emoji, embeds, column calculations, templates,
+  the navigation keys, reminders), each to the row that covers it.
+- Every task of `docs/superpowers/plans/2026-11-14-full-notion.md` (22.1
+  to 31.4) has its row under "Version 3", and ADR-0014's decisions 6 to 8
+  (app connections, plans, passkeys) have theirs.
+- A script checks that every test file and photo this table names exists:
+  none is missing.
 
 Sources: S1 is `docs/specification.md` §1 "In scope"; S2 is
 `docs/superpowers/specs/2026-11-11-notion-parity-design.md` §4; V3 is the
